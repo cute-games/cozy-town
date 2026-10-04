@@ -3326,7 +3326,7 @@ function newIn(sh){S.newin=S.newin||{};let L=S.newin[sh];if(!Array.isArray(L))L=
 function newInHTML(sh){if(!S||!NEWIN_SHOPS[sh])return'';const L=newIn(sh);if(!L.some(Boolean))return'';
   return`<div class="sec">✨ New in! <small class="nisub">Buy one and something new pops up!</small></div><div class="grid newin">${L.map((it,i)=>{if(!it)return'';const img=it.kind==='furn'?thumb(it.k,it.c):'';
     return`<button class="it ni${NEWPOP===sh+i?' pop':''}" data-a="nbuy:${sh}:${i}"><span class="nbadge">NEW</span>${img?`<img class="nimg" src="${img}" alt="">`:`<span class="em">${it.i}</span>`}<span>${esc(it.n)} <i class="dot" style="background:${it.c}"></i></span><span class="pr">${it.p} 🪙</span></button>`;}).join('')}</div>`;}
-ACT.nbuy=(sh,i)=>{const L=newIn(sh),it=L[+i];if(!it)return;if(S.coins<it.p){SFX.no();toast('Not enough coins yet! 🪙');return;}
+ACT.nbuy=(sh,i)=>{if(typeof sh==='string'&&sh.includes(':')){const p=sh.split(':');sh=p[0];i=p[1];}const L=newIn(sh),it=L[+i];if(!it)return;if(S.coins<it.p){SFX.no();toast('Not enough coins yet! 🪙');return;}
   S.coins-=it.p;SFX.coin();SFX.yay();
   if(it.kind==='hat'){S.outfits=S.outfits||[];S.outfits.push({k:it.k,c:it.c});toast(it.i+' '+it.n+'! Try it on at the 🪞 mirror.',3.2);qEvent('clothes');}
   else if(it.kind==='col'){S.xcol=S.xcol||{};(S.xcol[it.k]=S.xcol[it.k]||[]).push(it.c);toast(it.i+' '+it.n+'! Try it on at the 🪞 mirror.',3.2);qEvent('clothes');}
@@ -4448,7 +4448,7 @@ function tcPaper(){const C=CUT,k=C.kids[C.pi],mk=k.mk,all=mk.every(Boolean);
     <div class="ttop"><button class="btn ${C.key?'mint':'white'} sm" data-a="tkey">🔑 ${C.key?'Hide answers':'Answer key'}</button><button class="btn white sm" data-a="tstop">🚪 Stop</button></div>
     <div class="paper">${rows}</div>${foot}`,{lock:true,cls:'tpaper'});}
 const tcOn=()=>{const C=CUT;return!!(C&&C.tch&&C.stage==='grade');};
-ACT.tmk=(i,v)=>{if(!tcOn())return;const C=CUT,k=C.kids[C.pi],q=k.hw[+i];if(!q||k.mk[+i])return;const right=q.ans===q.a;
+ACT.tmk=(i,v)=>{if(typeof i==='string'&&i.includes(':')){const p=i.split(':');i=p[0];v=p[1];}if(!tcOn())return;const C=CUT,k=C.kids[C.pi],q=k.hw[+i];if(!q||k.mk[+i])return;const right=q.ans===q.a;
   if((v==='ok')!==right){C.oops++;SFX.no();k.hint[+i]=true;tcPaper();return;}
   k.mk[+i]=v;if(v==='ok')SFX.pop();else SFX.tap();tcPaper();};
 ACT.tkey=()=>{if(!tcOn())return;CUT.key=!CUT.key;SFX.tap();tcPaper();};
