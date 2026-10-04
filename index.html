@@ -83,7 +83,7 @@ button{font-family:inherit}
 .btn.dsPulse{animation:dsPulse 1.3s ease-in-out infinite}
 @keyframes dsPulse{0%,100%{transform:scale(1);box-shadow:0 4px 0 rgba(61,44,94,.3),0 0 0 0 rgba(255,212,92,.9)}50%{transform:scale(1.06);box-shadow:0 4px 0 rgba(61,44,94,.3),0 0 0 10px rgba(255,212,92,0)}}
 @media (max-width:600px){#bar{gap:9px}#bar .btn{font-size:16px;padding:10px 10px}#bar .brow .btn{font-size:14px;padding:10px 4px}#bar .btn.sm{font-size:14px;padding:7px 12px}}
-#toast{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 200px);transform:translate(-50%,12px);opacity:0;transition:opacity .2s,transform .2s;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:18px;box-shadow:0 4px 0 var(--soft);padding:8px 16px;font-weight:700;font-size:19px;max-width:min(520px,calc(100vw - 32px));text-align:center;width:max-content}
+#toast{position:fixed;z-index:30;pointer-events:none;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 200px);transform:translate(-50%,12px);opacity:0;transition:opacity .2s,transform .2s;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:18px;box-shadow:0 4px 0 var(--soft);padding:8px 16px;font-weight:700;font-size:19px;max-width:min(520px,calc(100vw - 32px));text-align:center;width:max-content}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 #panel{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 14px) calc(env(safe-area-inset-right,0px) + 14px) calc(env(safe-area-inset-bottom,0px) + 14px) calc(env(safe-area-inset-left,0px) + 14px);background:rgba(46,35,71,.3)}
 #panel.bottom{align-items:flex-end;background:transparent}
@@ -427,7 +427,13 @@ button{font-family:inherit}
 .tqa{display:flex;align-items:center;gap:6px;margin-left:auto}.hand{font-family:'Comic Sans MS','Chalkboard SE','Marker Felt',cursive;font-size:20px;color:#2a4fc9;padding:2px 8px;background:#eef4ff;border-radius:10px}
 .tb{min-width:50px;padding:8px 10px;font-size:20px}.mk{font-size:30px;font-weight:900;min-width:50px;text-align:center}.mk.ok{color:#22a05a}.mk.x{color:#ff3b5c}
 .tgrade{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}.stamp{font-size:34px;font-weight:900;color:#ff3b5c;border:4px solid #ff3b5c;border-radius:50%;min-width:72px;height:72px;display:flex;align-items:center;justify-content:center;transform:rotate(-12deg);animation:nipop .5s ease-out}
-.tgbtns{display:flex;gap:8px;flex-wrap:wrap;flex:1}.pjs.tg{font-size:22px;font-weight:900;color:#ff3b5c}
+.tgbtns{display:flex;gap:8px;flex-wrap:wrap;flex:1}
+.tkey{display:inline-block;margin-left:8px;font-size:15px;font-weight:800;color:#1f9a57;background:#e3f8ec;border-radius:8px;padding:1px 7px}
+.tq.oops{background:#fff1f4;border-radius:10px}.thint{flex-basis:100%;font-size:15px;font-weight:700;color:#c0284b;padding:2px 4px 4px}
+.ttop{display:flex;justify-content:space-between;gap:8px;margin:4px 0 6px}.tfoot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}.tfoot .tsp{flex:1}.btn.sm{min-height:40px;font-size:16px;padding:6px 12px}
+@media (max-height:500px){.tpaper{padding:10px 14px 12px}.tpaper .hd{margin-bottom:2px}.tpaper .hd h2{font-size:21px}.tpaper .note{font-size:13px;margin:0 0 2px}.tpaper .ttop{margin:2px 0 4px}
+  .tpaper .tq{padding:3px 0}.tpaper .tpic{font-size:18px}.tpaper .hand{font-size:17px}.tpaper .tb{min-height:36px;padding:3px 9px;font-size:17px}.tpaper .mk{font-size:24px;min-width:40px}
+  .tpaper .stamp{min-width:48px;height:48px;font-size:22px;border-width:3px}.tpaper .tfoot{margin-top:6px}.tpaper .tfoot .btn{min-height:40px;font-size:16px;padding:6px 12px}.tpaper .thint{font-size:13px}}.pjs.tg{font-size:22px;font-weight:900;color:#ff3b5c}
 .psrow.cur{background:#e6f7ff;border-radius:14px;opacity:1}
 .pji{font-size:30px;width:40px;text-align:center}.psrow>div{flex:1;display:flex;flex-direction:column;min-width:0}.psrow b{font-size:17px}.psrow i{font-style:normal;font-size:14px;opacity:.8}
 .pjs{font-size:15px;white-space:nowrap;font-weight:800}
@@ -474,11 +480,12 @@ button{font-family:inherit}
   <div id="bar" hidden></div>
   <div id="rvStars" hidden aria-hidden="true"><b><span class="bg">★</span><span class="fg">★</span></b><b><span class="bg">★</span><span class="fg">★</span></b><b><span class="bg">★</span><span class="fg">★</span></b></div>
   <div id="dtut" hidden role="dialog" aria-label="How the designer job works"><div id="dtCard"><div id="dtPic"></div><div id="dtCap"></div><div id="dtDots"></div><div class="row"><button class="btn white" id="dtSkip">Skip</button><button class="btn mint" id="dtNext">Next ▶</button></div></div></div>
-  <div id="toast" role="status" aria-live="polite"></div>
+  
   <div id="note" hidden role="alert"><span class="ni">🍕</span><div><b id="noteT"></b><span id="noteX"></span><small>Tap to close</small></div></div>
 </div>
 <div id="tut" hidden><div id="tutHole"></div><div id="tutCard" role="dialog" aria-label="Pizza job tips"><div class="tutHd"><span class="tutAv">👨‍🍳</span><b id="tutT"></b></div><p id="tutX"></p><div class="tutRow"><button class="btn white" id="tutSkip">Skip</button><button class="btn mint" id="tutNext">Next ›</button></div><div id="tutDots"></div></div></div>
 <div id="panel" hidden><div class="card" id="card"></div></div>
+<div id="toast" role="status" aria-live="polite"></div>
 <div id="title">
   <h1 class="logo" aria-label="Cozy Town"><span style="--c:#ff7aa8;--r:-6deg;--i:0">C</span><span style="--c:#ffd45c;--r:4deg;--i:1">o</span><span style="--c:#5fd4b0;--r:-3deg;--i:2">z</span><span style="--c:#7cc8ff;--r:5deg;--i:3">y</span><span class="sp" style="--i:4;--r:0deg"></span><span style="--c:#b79cff;--r:-4deg;--i:5">T</span><span style="--c:#ff8a6b;--r:3deg;--i:6">o</span><span style="--c:#ff7aa8;--r:-5deg;--i:7">w</span><span style="--c:#ffd45c;--r:4deg;--i:8">n</span></h1>
   <p class="tag">Your own little life in the city</p>
@@ -4406,15 +4413,16 @@ const hwR=n=>Math.floor(Math.random()*n);
 const HW_ANIM=[['🦁','lion','tiger'],['🐘','elephant','hippo'],['🦒','giraffe','zebra'],['🐧','penguin','parrot'],['🦓','zebra','horse'],['🐙','octopus','jellyfish'],['🐢','turtle','frog'],['🦉','owl','eagle'],['🐬','dolphin','shark'],['🐝','bee','fly'],['🦊','fox','dog'],['🐰','rabbit','mouse']];
 const HW_SPELL=[['🐱','cat','kat'],['🐶','dog','dgo'],['🍌','banana','bananna'],['🏠','house','hous'],['☀️','sun','son'],['🌈','rainbow','ranebow'],['🍎','apple','aple'],['🐟','fish','fihs'],['🌙','moon','mone'],['🎂','cake','caik'],['🌳','tree','tre'],['⭐','star','starr']];
 const HW_OPP=[['hot','cold','warm'],['big','small','tall'],['happy','sad','funny'],['up','down','over'],['fast','slow','quick'],['day','night','noon'],['old','new','big'],['wet','dry','rainy']];
-const HW_HIST=[['🔺','Who built the pyramids?','Egyptians','Vikings'],['🛡️','What did knights wear?','armor','pajamas'],['⛵','What did Vikings sail in?','longships','submarines'],['🦕','When did dinosaurs live?','long, long ago','last summer'],
-  ['🏰','Who lived in castles?','kings and queens','astronauts'],['🛞','Which came first?','the wheel','the car'],['🏛️','Who built long roads in Italy?','the Romans','the penguins'],['✈️','Who flew the first plane?','the Wright brothers','the Vikings'],
-  ['🗿','Where are the giant stone heads?','Easter Island','the Moon'],['🕯️','Before lamps, people used…','candles','phones'],['📜','Long ago, people wrote on…','paper scrolls','tablets'],['🐎','Before cars, people rode…','horses','scooters']];
+const HW_HIST=[['🏰','Who lived in castles?','kings and queens','astronauts'],['🛡️','What did knights wear?','armor','pajamas'],['🦕','Are dinosaurs still alive today?','no, they lived long ago','yes, in my garden'],
+  ['🔺','Where are the big pyramids?','in Egypt','on the Moon'],['🐎','Before cars, people rode…','horses','skateboards'],['🕯️','Before lamps, people used…','candles','phones'],
+  ['⛵','Vikings sailed in…','wooden ships','airplanes'],['🪶','Long ago, people wrote with…','feather pens','computers'],['👑','What does a king wear on his head?','a crown','a swim cap'],
+  ['🪨','Cave people lived in…','caves','big hotels'],['🏹','Long ago, hunters used…','bows and arrows','video games'],['🐫','In the desert, people rode…','camels','penguins']];
 function hwQ(subj){
   if(subj==='math'){const t=pick(['add','sub','count','mul']);
     if(t==='add'){const a=1+hwR(5),b=1+hwR(4),e=pick(['🍎','⭐','🐟','🌸','🍪']);return{pic:e.repeat(a)+' + '+e.repeat(b),q:'How many in all?',a:String(a+b),w:[String(a+b+1),String(a+b-1)]};}
     if(t==='sub'){const a=5+hwR(6),b=1+hwR(4);return{pic:'➖',q:`${a} − ${b} = ?`,a:String(a-b),w:[String(a-b+1),String(a+b)]};}
     if(t==='count'){const n=3+hwR(6),e=pick(['🐞','🎈','🍓','🐥']);return{pic:e.repeat(n),q:'How many are there?',a:String(n),w:[String(n+1),String(n-1)]};}
-    const a=2+hwR(4),b=2+hwR(3);return{pic:'✖️',q:`${a} × ${b} = ?`,a:String(a*b),w:[String(a*b+a),String(a+b)]};}
+    const a=2+hwR(4),b=2+hwR(2);return{pic:'✖️',q:`${a} × ${b} = ?`,a:String(a*b),w:[String(a*b+a),String(a*b+1)]};}
   if(subj==='english'){const t=pick(['animal','spell','opp']);
     if(t==='animal'){const [p,a,w]=pick(HW_ANIM);return{pic:p,q:'What animal is this?',a,w:[w]};}
     if(t==='spell'){const [p,a,w]=pick(HW_SPELL);return{pic:p,q:'Spell it!',a,w:[w]};}
@@ -4423,24 +4431,38 @@ function hwQ(subj){
 function hwMake(subj,k){const out=[],seen=new Set(),acc=clamp(k.acc-k.warn*.1,.2,.97);
   for(let n=0;out.length<3&&n<40;n++){const q=hwQ(subj),key=q.q+q.pic;if(seen.has(key))continue;seen.add(key);const w=q.w.filter(x=>x!==q.a);q.ans=Math.random()<acc||!w.length?q.a:pick(w);out.push(q);}
   return out;}
-function tcPaperStart(){const C=CUT;for(const k of C.kids)k.hw=hwMake(C.id,k);C.pi=0;C.mk=[null,null,null];C.minus=false;C.giveF=false;tcPaper();}
-function tcGrade(k){const C=CUT,n=k.hw.filter(q=>q.ans===q.a).length;if(C.giveF)return'F';let g=['D','C','B','A'][n];if(C.minus)g+='−';else if(!k.warn&&n>0)g+='+';return g;}
-function tcPaper(){const C=CUT,k=C.kids[C.pi],mk=C.mk,all=mk.every(Boolean);
-  const rows=k.hw.map((q,i)=>`<div class="tq"><div class="tqq"><span class="tpic">${q.pic}</span><span><b>${i+1}.</b> ${esc(q.q)}</span></div>
-    <div class="tqa"><span class="hand">${esc(q.ans)}</span>${mk[i]?`<span class="mk ${mk[i]}">${mk[i]==='ok'?'✔':'✗'}</span>`:`<button class="btn mint tb" data-a="tmk:${i}:ok" aria-label="Right">✔</button><button class="btn pink tb" data-a="tmk:${i}:x" aria-label="Wrong">✗</button>`}</div></div>`).join('');
-  let foot='';if(all){const g=tcGrade(k);foot=`<div class="tgrade"><span class="stamp">${g}</span><div class="tgbtns">${k.warn>=3?`<button class="btn ${C.giveF?'pink':'white'}" data-a="tgf">📕 ${C.giveF?'F given!':'Give an F for goofing off'}</button>`
-      :k.warn?`<button class="btn ${C.minus?'pink':'white'}" data-a="tgm">➖ ${C.minus?'Minus given!':'Minus for goofing off'}</button>`:''}<button class="btn butter" data-a="tnext">${C.pi<C.kids.length-1?'Next paper ▶':'Done! 🎉'}</button></div></div>`;}
+function tcPaperStart(){const C=CUT;for(const k of C.kids){k.hw=hwMake(C.id,k);k.mk=[null,null,null];k.hint=[];k.minus=false;k.giveF=false;k.seen=false;}C.pi=0;C.key=false;C.ask=false;tcPaper();}
+function tcGrade(k){const n=k.hw.filter(q=>q.ans===q.a).length;if(k.giveF)return'F';let g=['D','C','B','A'][n];if(k.minus)g+='−';else if(!k.warn&&n>0)g+='+';return g;}
+function tcPaper(){const C=CUT,k=C.kids[C.pi],mk=k.mk,all=mk.every(Boolean);
+  if(C.ask){openPanel(`<div class="hd"><h2>🚪 Stop grading?</h2></div><p class="line">Mrs. Maple will grade the rest of the papers for you. You still get paid for the class!</p>
+    <div class="row"><button class="btn butter" data-a="tstopy">✅ Yes, stop</button><button class="btn white" data-a="tstopn">✏️ No, keep grading</button></div>`,{lock:true,cls:'tpaper'});return;}
+  const rows=k.hw.map((q,i)=>{const show=C.key||k.hint[i];return`<div class="tq${k.hint[i]&&!mk[i]?' oops':''}"><div class="tqq"><span class="tpic">${q.pic}</span><span><b>${i+1}.</b> ${esc(q.q)}${show?`<span class="tkey">🔑 ${esc(q.a)}</span>`:''}</span></div>
+    <div class="tqa"><span class="hand">${esc(q.ans)}</span>${mk[i]?`<span class="mk ${mk[i]}">${mk[i]==='ok'?'✔':'✗'}</span>`:`<button class="btn mint tb" data-a="tmk:${i}:ok" aria-label="Right">✔</button><button class="btn pink tb" data-a="tmk:${i}:x" aria-label="Wrong">✗</button>`}</div>
+    ${k.hint[i]&&!mk[i]?`<div class="thint">🤔 Look again! The right answer is <b>${esc(q.a)}</b>. Is “${esc(q.ans)}” right?</div>`:''}</div>`;}).join('');
+  const last=C.pi>=C.kids.length-1,back=C.pi>0?`<button class="btn white" data-a="tback">◀ Back</button>`:'';
+  const extra=all?(k.warn>=3?`<button class="btn ${k.giveF?'pink':'white'}" data-a="tgf">📕 ${k.giveF?'F given!':'Give an F'}</button>`
+      :k.warn?`<button class="btn ${k.minus?'pink':'white'}" data-a="tgm">➖ ${k.minus?'Minus given!':'Give a minus'}</button>`:''):'';
+  const foot=`<div class="tfoot">${all?`<span class="stamp">${tcGrade(k)}</span>`:''}${extra}<span class="tsp"></span>${back}${all?`<button class="btn butter" data-a="tnext">${last?'Done! 🎉':'Next ▶'}</button>`:''}</div>`;
   openPanel(`<div class="hd"><h2>📄 ${esc(k.nm)}'s homework</h2><span class="psn">${C.pi+1} of ${C.kids.length}</span></div>
     <p class="note">${k.warn?'📝 '+'⚠️'.repeat(k.warn)+' '+esc(k.nm)+' goofed off '+k.warn+' time'+(k.warn>1?'s':'')+' in class.':'😇 '+esc(k.nm)+' listened nicely in class.'} Mark every answer: ✔ right or ✗ wrong!</p>
+    <div class="ttop"><button class="btn ${C.key?'mint':'white'} sm" data-a="tkey">🔑 ${C.key?'Hide answers':'Answer key'}</button><button class="btn white sm" data-a="tstop">🚪 Stop</button></div>
     <div class="paper">${rows}</div>${foot}`,{lock:true,cls:'tpaper'});}
-ACT.tmk=(i,v)=>{const C=CUT;if(!C||!C.tch||C.stage!=='grade')return;const k=C.kids[C.pi],q=k.hw[+i];if(!q||C.mk[+i])return;const right=q.ans===q.a;
-  if((v==='ok')!==right){C.oops++;SFX.no();toast(right?'Hmm, look again: that answer is right! 🧐':`Look closer! Is “${q.ans}” really right? 🧐`,2.8);return;}
-  C.mk[+i]=v;if(v==='ok')SFX.pop();else SFX.tap();tcPaper();};
-ACT.tgm=()=>{const C=CUT;if(!C||!C.tch)return;C.minus=!C.minus;SFX.tap();tcPaper();};
-ACT.tgf=()=>{const C=CUT;if(!C||!C.tch)return;C.giveF=!C.giveF;SFX.tap();tcPaper();};
-ACT.tnext=()=>{const C=CUT;if(!C||!C.tch||C.stage!=='grade'||!C.mk.every(Boolean))return;const k=C.kids[C.pi];k.grade=tcGrade(k);SFX.pop();
-  const pp=C.pile.pop();if(pp)C.L.g.remove(pp);
-  if(C.pi<C.kids.length-1){C.pi++;C.mk=[null,null,null];C.minus=false;C.giveF=false;tcPaper();}else{C.stage='done';C.st=C.t;tcSummary();}};
+const tcOn=()=>{const C=CUT;return!!(C&&C.tch&&C.stage==='grade');};
+ACT.tmk=(i,v)=>{if(!tcOn())return;const C=CUT,k=C.kids[C.pi],q=k.hw[+i];if(!q||k.mk[+i])return;const right=q.ans===q.a;
+  if((v==='ok')!==right){C.oops++;SFX.no();k.hint[+i]=true;tcPaper();return;}
+  k.mk[+i]=v;if(v==='ok')SFX.pop();else SFX.tap();tcPaper();};
+ACT.tkey=()=>{if(!tcOn())return;CUT.key=!CUT.key;SFX.tap();tcPaper();};
+ACT.tgm=()=>{if(!tcOn())return;const k=CUT.kids[CUT.pi];k.minus=!k.minus;SFX.tap();tcPaper();};
+ACT.tgf=()=>{if(!tcOn())return;const k=CUT.kids[CUT.pi];k.giveF=!k.giveF;SFX.tap();tcPaper();};
+ACT.tback=()=>{if(!tcOn()||CUT.pi<=0)return;CUT.pi--;SFX.tap();tcPaper();};
+ACT.tnext=()=>{if(!tcOn())return;const C=CUT,k=C.kids[C.pi];if(!k.mk.every(Boolean))return;k.grade=tcGrade(k);SFX.pop();
+  if(!k.seen){k.seen=true;const pp=C.pile.pop();if(pp)C.L.g.remove(pp);}
+  if(C.pi<C.kids.length-1){C.pi++;tcPaper();}else{C.stage='done';C.st=C.t;tcSummary();}};
+ACT.tstop=()=>{if(!tcOn())return;CUT.ask=true;SFX.tap();tcPaper();};
+ACT.tstopn=()=>{if(!tcOn())return;CUT.ask=false;SFX.tap();tcPaper();};
+ACT.tstopy=()=>{if(!tcOn())return;const C=CUT;C.ask=false;for(const k of C.kids){k.hw.forEach((q,i)=>{if(!k.mk[i])k.mk[i]=q.ans===q.a?'ok':'x';});k.grade=tcGrade(k);}
+  for(const pp of C.pile)C.L.g.remove(pp);C.pile=[];C.stage='done';C.st=C.t;SFX.pop();tcSummary();};
+
 function tcSummary(){const C=CUT,S0=SUBJ[C.id],eps=C.caught+C.missed,ratio=eps?C.caught/eps:1,stars=clamp(1+(ratio>=.45?1:0)+(ratio>=.8&&C.oops<=2?1:0),1,3),pay=30+stars*15;
   S.coins+=pay;S.tcTotal=(S.tcTotal||0)+1;const d=tc();d.done++;d.o=null;d.wait=rand(25,40);hardEvent('teach',1);qEvent('teach');addXP('read',4);change();saveLocal();
   addMsg('dr','dr',`${stars>=3?'🌟':stars===2?'😊':'🙂'} Thank you for teaching the ${S0.n} class! You got ${'⭐'.repeat(stars)} and ${pay} 🪙. ${stars>=3?'The kids loved it! 🎉':stars===2?'Nice job!':'Next time, stop more kids from goofing off! 💪'}`,{q:1});
