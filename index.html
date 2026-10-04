@@ -282,6 +282,7 @@ button{font-family:inherit}
 .cut #pad{visibility:hidden}
 @media (max-width:600px){#mmBtn{width:132px;height:132px}#pad{width:132px;height:90px}}
 @media (max-height:500px){#mmBtn{width:104px;height:104px}#pad{width:104px;height:68px}#padH{font-size:11px}}
+@media (max-height:500px) and (orientation:landscape){#joy{left:calc(env(safe-area-inset-left,0px) + 300px);bottom:calc(env(safe-area-inset-bottom,0px) + 16px)}}
 /* 💬 Messages */
 .chats{display:flex;flex-direction:column;gap:8px;margin-top:8px}
 .chat{display:flex;align-items:center;gap:10px;width:100%;text-align:left;font:inherit;color:#3d2c5e;background:#fff;border:3px solid #3d2c5e;border-radius:18px;padding:8px 10px;cursor:pointer;touch-action:manipulation}
@@ -3544,7 +3545,7 @@ ACT.crdone=()=>{const n=$('crName'),nm=(n.value||'').trim().slice(0,14);if(!nm){
   closeCreator(()=>{buildPlayerBody();change();if(mode==='intro'){INTRO=2;introStep();}else toast('Looking great, '+S.name+'! ✨');});};
 ACT.crcancel=()=>{closePanel();closeCreator();};
 ACT.mylook=()=>openCreator('edit');
-function closeCreator(cb){fade(()=>{if(CR.av)scene.remove(CR.av.root);camera.clearViewOffset();const pv=CR.prev;CR=null;setLoc(pv.loc);P.x=pv.x;P.z=pv.z;P.yaw=pv.yaw;P.pitch=pv.pitch;$('hud').hidden=false;resize();if(cb)cb();});}
+function closeCreator(cb){if(!CR||CR.closing)return;CR.closing=true;fade(()=>{if(!CR)return;if(CR.av)scene.remove(CR.av.root);camera.clearViewOffset();const pv=CR.prev;CR=null;setLoc(pv.loc);P.x=pv.x;P.z=pv.z;P.yaw=pv.yaw;P.pitch=pv.pitch;$('hud').hidden=false;resize();if(cb)cb();});}
 function crCam(dt){const w=innerWidth,h=innerHeight,port=w/h<.95,th=Math.tan(15*Math.PI/180);
   const cx=port?w/2:w*.27,cy=port?h*.23:h*.5,W2=2*Math.max(cx,w-cx),H2=2*Math.max(cy,h-cy),frac=port?.36:.64,d=2.3*(H2/h)/(2*th*frac);
   camera.fov=30;camera.aspect=W2/H2;camera.setViewOffset(W2,H2,W2/2-cx,H2/2-cy,w,h);
