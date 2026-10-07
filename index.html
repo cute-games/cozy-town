@@ -447,7 +447,7 @@ button{font-family:inherit}
 #knockCard .kc-t{font-size:22px;font-weight:900}
 #knockCard .kc-m{margin:6px 0 12px;font-size:16px;font-weight:700;line-height:1.35}
 #knockCard .kc-b{display:flex;gap:10px;justify-content:center}
-@keyframes kcPop{0%{transform:translateX(-50%) scale(.6);opacity:0}70%{transform:translateX(-50%) scale(1.06);opacity:1}100%{transform:translateX(-50%) scale(1)}}
+@keyframes kcPop{0%{transform:translateX(-50%) scale(.6);opacity:0}70%{transform:translateX(-50%) scale(1.06);opacity:1}100%{transform:translateX(-50%) scale(1)}}/* 😴 sleeping together: the bed card at the bottom, and the phone wiggles when friends ring */#zzCard{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translateX(-50%);width:min(380px,calc(100vw - 32px));background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:22px;box-shadow:0 5px 0 var(--soft);padding:8px 12px 14px;text-align:center;pointer-events:auto}#zzCard[hidden]{display:none}#zzCard .zt{font-size:22px;font-weight:900}#zzCard .zs{font-size:15px;font-weight:700;line-height:1.25;margin:2px 0 10px}#zzCard .zb{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}#zzCard .btn{font-size:18px;padding:10px 12px}body.zz #joy,body.zz #moveBtns,body.zz #actWrap{visibility:hidden}#bPhone.ring{animation:noteWiggle .4s ease-in-out 6}
 /* 7 Oct 2026: homework paper readable in light and dark; bigger right/wrong buttons; class messages at the top; buttons at least 44 px */.tpaper .paper{color:#3d2c5e}.tpaper .tqq{color:#3d2c5e;font-size:17px;font-weight:700}.tpaper .tb{min-width:58px;min-height:52px;font-size:22px}.tpaper .tb+.tb{margin-left:10px}@media (max-height:500px){.tpaper .tb{min-height:44px;min-width:52px;font-size:19px}.tpaper .tqq{font-size:16px}}@media (min-width:700px) and (min-height:600px){#card.tpaper{width:min(640px,92vw);max-width:min(640px,92vw)}}body.tch #toast{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto}.pill{min-height:44px}.sw{min-width:44px;min-height:44px}.ph-home{height:44px;background:none;position:relative}.ph-home::after{content:'';position:absolute;left:0;right:0;top:17px;height:10px;border-radius:99px;background:rgba(255,255,255,.6)}@media (max-height:500px){#card{max-height:calc(100vh - 16px);max-height:calc(100dvh - 16px);overflow-y:auto;overscroll-behavior:contain}#card:has(.earn) .row:last-child{position:sticky;bottom:0;background:var(--paper);padding:6px 0 2px;margin-bottom:0}}.ph-back{width:44px;height:44px}.qbtn{min-height:44px}.x{width:44px;height:44px;min-height:44px;border-width:3px}.qtag{color:#3d2c5e}</style>
 </head>
 <body>
@@ -689,6 +689,7 @@ const SFX={
   step(){tone(150+Math.random()*40,.06,'triangle',.13,0,95);},
   creak(){tone(300,.5,'sawtooth',.022,0,170);},
   late(){tone(660,.12,'square',.05);tone(520,.2,'square',.05,.14);},
+  ring(){for(let k=0;k<2;k++)for(let i=0;i<8;i++)tone(i%2?1047:1319,.06,'triangle',.11,k*.75+i*.07);},
 };
 function playTune(){const s=[0,4,7,12,7,4,5,9,12,9,7,4,0];s.forEach((n,i)=>tone(523.25*Math.pow(2,n/12),.3,'triangle',.13,i*.2));}
 
@@ -2139,6 +2140,7 @@ function freshState(){return{v:1,t:0,name:'',day:1,time:8,coins:120,hunger:85,ba
 const LS='cozytown-save-1';
 function readLocal(){try{return JSON.parse(localStorage.getItem(LS));}catch(e){return null;}}
 function snap(){let loc=CUR?CUR.id:'city',x=P.x,z=P.z,yaw=P.yaw;
+  if(P.sit&&P.sit.bk)[x,z,yaw]=P.sit.bk;   /* in bed: save the spot beside the bed, not the pillow */
   if(CR&&CR.prev){loc=CR.prev.loc;x=CR.prev.x;z=CR.prev.z;yaw=CR.prev.yaw;}
   if(loc==='client'){const hid=S.ds&&((S.ds.o&&S.ds.o.h)||S.ds.prevH),H=hid&&HOUSE(hid);if(H){loc='city';x=H.x+Math.sin(H.ry)*1.7;z=H.z+Math.cos(H.ry)*1.7;yaw=H.ry+Math.PI;}else loc='studio';}
   if(loc==='visit'){const d=laneHostDoor();loc='city';x=d[0];z=d[1];yaw=d[2];}
@@ -2643,7 +2645,7 @@ function mpUpsert(p){const pr=p.presence||{};if(!pr.nm)return;let a=MP.peers.get
   const s=pr.say;if(s&&typeof s==='object'&&s.id!==a.sayId){a.sayId=s.id;const txt=Number.isInteger(s.m)&&QUICK[s.m]?QUICK[s.m]:Number.isInteger(s.e)&&EMOS[s.e]?EMOS[s.e]:null;if(txt&&!fresh)mpBubble(a,txt);}
   const bk=JSON.stringify(pr.bl||null);if(bk!==a.bk){a.bk=bk;if(pr.bl)ballFrom(a,pr.bl);else if(!BS.mine&&BS.own===a.peer)ballOwnerGone();}
   const ck=JSON.stringify(pr.sc||null);if(ck!==a.ck){a.ck=ck;if(pr.sc)scoreFrom(a,pr.sc);}
-  clockFrom(a,pr.ck);}
+  a.zz=pr.zz===1?1:0;zzRung(a,pr.rg);clockFrom(a,pr.ck);}
 /* 🕰️ one clock for everyone: my clock rides along in presence as ck:[day,hour], refreshed only after 5 game minutes
    (or a new day), so standing still sends little. A friend ahead by 2+ game minutes pulls my clock forward, never back.
    A brand-new player first finishes Rosie's welcome in the morning, then joins the friends' time */
@@ -2776,6 +2778,7 @@ function hostAnswer(ok,quiet){const q=HOST.cur;if(!q)return;HOST.cur=null;const 
 function mpTick(dt){if(!MP.grp)return;const loc=CUR?CUR.id:'city';
   MP.t+=dt;if(MP.t>=.15){MP.t=0;const st={nm:S.name||'Friend',lk:packLook(),loc,x:Math.round(P.x*100)/100,z:Math.round(P.z*100)/100,ry:Math.round(P.yaw*100)/100,mv:P.moving?1:0,ck:mpClock()};
     {const b=LOC.city.ball,m=S.match||{l:0,r:0,v:0},r2=v=>Math.round(v*100)/100;st.sc=[m.l|0,m.r|0,m.v|0];st.bl=BS.mine&&b?[r2(b.x),r2(b.z),r2(b.vx),r2(b.vz),BS.k,Math.round((b.reset||0)*10)/10]:null;}
+    st.zz=zzIn()?1:null;st.rg=ZZ.rg&&Date.now()-ZZ.rgT<12000?ZZ.rg:null;   /* 😴 in bed / 🔔 a ring (optional; null clears them: presence merges) */
     laneStamp(st);const key=JSON.stringify(st);if(key!==MP.lastKey){MP.lastKey=key;MP.grp.presence(st).catch(()=>{});}}
   for(const a of MP.peers.values()){if(!a.av)continue;const sp=peerSpot(a),vis=!!sp;a.av.root.visible=vis;if(sp){a.tx=sp[0];a.tz=sp[1];a.ry=sp[2];}
     const d=Math.hypot(a.tx-a.x,a.tz-a.z);if(d>8){a.x=a.tx;a.z=a.tz;}else{const k=Math.min(1,dt*8);a.x+=(a.tx-a.x)*k;a.z+=(a.tz-a.z)*k;}
@@ -2925,7 +2928,7 @@ function setFloor(k){if(FLOOR_M.map)FLOOR_M.map.dispose();FLOOR_M.map=floorTex(k
 let tvT=0,tvLast=-1;
 function useFurn(rec,fx,fz){const F=FURN[rec.it.t];
   switch(F.use){
-    case 'sleep':return sleep();
+    case 'sleep':return sleep(rec,fx,fz);
     case 'sit':P.sit={x:rec.g.position.x+fx*.1,z:rec.g.position.z+fz*.1,yaw:rec.it.r*Math.PI/2+Math.PI};P.x=P.sit.x;P.z=P.sit.z;P.yaw=P.sit.yaw;P.pitch=-.05;SFX.pop();toast('Comfy! Move to stand up.');return;
     case 'tv':rec.on=!rec.on;SFX.tap();if(rec.on){rec.t0=tvT;toast(pick(['A dancing cat! 🐱','The funny cat show! 😹','Kitty is dancing! 🎶','Meow meow dance party! 🐾']));}return;
     case 'lamp':rec.it.on=rec.it.on?0:1;setLamp(rec);SFX.tap();change();return;
@@ -3026,10 +3029,42 @@ function padTap(){const n=padTaps;padTaps=0;const pg=PAD.pages[PAD.i];
   if(pg.length)PAD.del=pg;PAD.pages.splice(PAD.i,1);if(!PAD.pages.length)PAD.pages.push([]);PAD.i=clamp(PAD.i-1,0,PAD.pages.length-1);
   SFX.pop();padFlip();toast(pg.length?'🗑️ Page deleted! You can get it back in ⚙️ Settings':'🗑️ Empty page removed',3);}
 /* ---- sleeping ---- */
-function sleep(){
-  if(S.time>=7&&S.time<19){toast("You're not sleepy yet. Come back in the evening! 🌙");return;}
-  fade(()=>{if(S.time>=19)S.day++;S.time=7.5;S.coins+=40;S.hunger=Math.max(S.hunger,40);newDay();P.sit=null;toast('Good morning! It\'s '+wdName()+', day '+S.day+' ☀️  +40 🪙 pocket money',4);doneTask('sleep');change();});
-}
+/* 😴 beds work from 21:00 to 7:00. You lie down; when every active player is in bed (alone: just you) the night skips to
+   7:00 on the shared clock, so everyone wakes up on the same morning. With friends online a card shows "😴 2 of 3 in bed"
+   and can ring the others' phones (one ring a minute per friend). Presence: zz:1 while in bed, rg:{id,to:[peers]} = a ring */
+const ZZ={t:0,go:0,rx:0,bt:0,sent:new Map(),seen:new Set(),rg:null,rgT:0};
+const zzIn=()=>!!(P.sit&&P.sit.bed);
+function isActivePeer(a){return !!a;}   /* every online player counts, old versions too (job 6: not when marked away) */
+function sleep(rec,fx,fz){
+  if(S.time>=7&&S.time<21){toast('Not sleepy yet, beds work from 21:00 🌙',3);return;}
+  const g=rec.g.position,f=FURN[rec.it.t].d/2+.35;P.sit={x:g.x-fx*.55,z:g.z-fz*.55,yaw:rec.it.r*Math.PI/2+Math.PI,h:.92,bed:1,bk:[P.x,P.z,P.yaw]};   /* head on the pillow */
+  P.x=P.sit.x;P.z=P.sit.z;P.yaw=P.sit.yaw;P.pitch=-.12;ZZ.t=0;SFX.pop();floatText('💤',g.x+fx*f,1.0,g.z+fz*f,{h:.4});toast('💤 Good night!',2);}
+function zzTick(dt){if(zzIn()&&S.time>=7&&S.time<21)zzMorning();   /* morning came (a friend's clock, or the night ran out) */
+  if(!zzIn()){ZZ.t=0;zzCard(false);return;}
+  let n=1,all=1;for(const a of MP.peers.values())if(isActivePeer(a)){all++;if(a.zz)n++;}zzCard(all>1,n,all);
+  if(n===all){ZZ.t+=dt;if(ZZ.t>=1.2&&!ZZ.go)zzSkip();}else ZZ.t=0;}
+function zzSkip(){ZZ.go=1;const d=S.time>=21?S.day+1:S.day;   /* the next 7:00 on the shared clock: the same morning for everyone */
+  fade(()=>{ZZ.go=0;if(!zzIn())return;if((d-S.day)*24+7-S.time>0){const nd=d!==S.day;S.day=d;S.time=7;if(nd)newDay();}zzMorning();});}
+function zzMorning(){standUp();S.hunger=Math.max(S.hunger,40);toast('Good morning! It\'s '+wdName()+', day '+S.day+' ☀️',4);doneTask('sleep');change();}
+function zzCard(on,n,all){let el=$('zzCard');
+  if(!on){if(el&&!el.hidden){el.hidden=true;document.body.classList.remove('zz');}return;}
+  if(!el){el=document.createElement('div');el.id='zzCard';el.hidden=true;$('hud').appendChild(el);
+    el.innerHTML='<div class="zt"></div><div class="zs">The night skips when everyone is in bed 🌙</div><div class="zb"><button class="btn butter" id="zzRing">🔔 Ring the others</button><button class="btn white" id="zzUp">🧍 Get up</button></div>';
+    $('zzRing').onclick=()=>{audioInit();zzRing();};$('zzUp').onclick=()=>{SFX.tap();standUp();};}
+  const t='😴 '+n+' of '+all+' in bed';if(el.firstChild.textContent!==t)el.firstChild.textContent=t;
+  if(el.hidden){el.hidden=false;document.body.classList.add('zz');}}
+/* 🔔 rings every active friend who is not in bed; each friend at most once a minute, so pressing again too soon sends nothing */
+function zzRing(){if(!zzIn())return;const now=Date.now(),to=[];let up=0;
+  for(const a of MP.peers.values())if(isActivePeer(a)&&!a.zz){up++;if(now-(ZZ.sent.get(a.peer)||0)>=60000)to.push(a.peer);}
+  if(!up)return;if(!to.length){SFX.talk();toast('Friend is busy doing something. We can\'t sleep! 😢 Let\'s stay up ALL NIGHT! 🤪',4.2);return;}
+  for(const p of to)ZZ.sent.set(p,now);ZZ.rg={id:now.toString(36).slice(-6)+Math.random().toString(36).slice(2,5),to};ZZ.rgT=now;
+  SFX.ding();toast('🔔 Ring ring! Your friends\' phones are ringing 📱',3);}
+function zzRung(a,rg){if(!rg||typeof rg!=='object'||typeof rg.id!=='string'||rg.id.length>24||!Array.isArray(rg.to)||!MP.me||!rg.to.includes(MP.me))return;
+  const k=a.peer+'|'+rg.id;if(ZZ.seen.has(k))return;ZZ.seen.add(k);const now=Date.now();
+  if(!PLAYING||zzIn()||now-ZZ.rx<60000)return;ZZ.rx=now;   /* my phone rings once a minute at most */
+  SFX.ring();try{if(navigator.vibrate)navigator.vibrate([200,120,200]);}catch(e){}
+  const b=$('bPhone');b.classList.remove('ring');void b.offsetWidth;b.classList.add('ring');clearTimeout(ZZ.bt);ZZ.bt=setTimeout(()=>b.classList.remove('ring'),2800);
+  toast('Friends want to skip the night, waiting on you!',4);}
 
 /* ---- places ---- */
 function setLoc(id){CUR=LOC[id];P.cy=0;for(const k in LOC)LOC[k].g.visible=LOC[k]===CUR;
@@ -3095,12 +3130,12 @@ function targets(){const out=CUR.inter.slice();
   if(S.time>=8&&S.time<20)for(const s of SHOPPERS)if(s.L===CUR)out.push(s.target);
   if(CUR.id==='city'){for(const l of LITTER)out.push(l.target);for(const w of WALKERS)if(w.state!=='home')out.push(w.target);if(sittersOut())for(const s of SITTERS)out.push(s.target);if(PSX.on)for(const j of PSX.judges)out.push(j.target);}
   return out;}
-function findTarget(){if(P.ride)return P.ride.kind==='swing'?{icon:'🧍',label:'Get off the swing',act:stopRide}:null;if(P.sit)return{icon:'🧍',label:'Stand up',act:standUp};
+function findTarget(){if(P.ride)return P.ride.kind==='swing'?{icon:'🧍',label:'Get off the swing',act:stopRide}:null;if(P.sit)return{icon:'🧍',label:P.sit.bed?'Get up':'Stand up',act:standUp};
   const fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw);let best=null,bs=1e9;
   for(const t of targets()){if(t.when&&!t.when())continue;let tx=t.x,tz=t.z;if(t.rect){tx=clamp(P.x,t.rect.x1,t.rect.x2);tz=clamp(P.z,t.rect.z1,t.rect.z2);}const dx=tx-P.x,dz=tz-P.z,d=Math.hypot(dx,dz);if(d>t.r)continue;const c=d<.01?1:(dx*fx+dz*fz)/d;if(c<.25&&d>1)continue;let s=d*(1.7-c);if(t.pri&&t.pri())s*=.25;if(s<bs){bs=s;best=t;}}
   return best;}
 function useTarget(){if(!TARGET)return;SFX.tap();try{TARGET.act();}catch(e){console.error(e);}}
-function standUp(){if(!P.sit)return;const fx=Math.sin(P.yaw+Math.PI),fz=Math.cos(P.yaw+Math.PI);P.sit=null;[P.x,P.z]=collideXZ(P.x-fx*0,P.z,.3,CUR);
+function standUp(){if(!P.sit)return;if(P.sit.bk){const b=P.sit.bk;P.sit=null;[P.x,P.z]=collideXZ(b[0],b[1],.3,CUR);P.yaw=b[2];P.pitch=0;return;}const fx=Math.sin(P.yaw+Math.PI),fz=Math.cos(P.yaw+Math.PI);P.sit=null;[P.x,P.z]=collideXZ(P.x-fx*0,P.z,.3,CUR);
   const nx=P.x-Math.sin(P.yaw)*.55,nz=P.z-Math.cos(P.yaw)*.55;[P.x,P.z]=collideXZ(nx,nz,.3,CUR);}
 
 /* ---- player ---- */
@@ -3164,7 +3199,7 @@ function updateCamera(dt){const bob=P.moving&&P.jy<=0?Math.sin(P.bobT)*.04:0;P.b
   if(PB){const show=PLAYING&&!P.sit&&!CR&&!P.ride;PB.root.visible=show;if(show){const fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw);PB.root.position.set(P.x-fx*.13,P.jy+(P.cy||0),P.z-fz*.13);PB.root.rotation.y=P.yaw+Math.PI;animPerson(PB,dt,P.moving&&P.jy<=0,P.run?1.5:1);
     if(P.jy>0){PB.legs[0].rotation.x=.55;PB.legs[1].rotation.x=-.25;}}}
   if(P.sit){P.x=P.sit.x;P.z=P.sit.z;}
-  camera.position.set(P.x,(P.sit?1.05:1.5)+P.bobA+P.jy-P.dip+(P.cy||0),P.z);camera.rotation.set(P.pitch,P.yaw,0,'YXZ');}
+  camera.position.set(P.x,(P.sit?P.sit.h||1.05:1.5)+P.bobA+P.jy-P.dip+(P.cy||0),P.z);camera.rotation.set(P.pitch,P.yaw,0,'YXZ');}
 
 /* ---- decorating ---- */
 const DECO={on:false,placing:null,ghost:null,sel:null,mark:null,valid:false,x:0,z:0,r:0,X:null};
@@ -3173,7 +3208,7 @@ const HOMEX={id:'home',L:()=>LOC.home,list:()=>S.home.items,W:()=>HOMEW,D:()=>HO
   blocked:R=>(R.x1<1.1&&R.x2>-1.1&&R.z2>HOMED-1.6)||(R.x1<HOMEGX+1.1&&R.x2>HOMEGX-1.1&&R.z1<-HOMED+1.6)};
 const CLX={id:'client',L:()=>LOC.client,list:()=>dsItems(),W:()=>CLW,D:()=>CLD,map:()=>CL_ITEMS,add:it=>addClItem(it),rm:u=>removeClItem(u),blocked:R=>R.x1<1.25&&R.x2>-1.25&&R.z2>CLD-1.75};
 const DX=()=>DECO.X||HOMEX;
-function decoStart(){const X=CUR.id==='home'?HOMEX:CUR.id==='client'&&dsHere()?CLX:null;if(!X)return;DECO.X=X;DECO.on=true;P.sit=null;X.L().grid.visible=true;$('cross').classList.add('big');$('actWrap').hidden=true;renderBar();
+function decoStart(){const X=CUR.id==='home'?HOMEX:CUR.id==='client'&&dsHere()?CLX:null;if(!X)return;if(zzIn())standUp();DECO.X=X;DECO.on=true;P.sit=null;X.L().grid.visible=true;$('cross').classList.add('big');$('actWrap').hidden=true;renderBar();
   if(X===HOMEX)toast('Look at something to move it, or open the shop 🛍️',3.4);}
 function decoEnd(){if(DECO.placing)decoCancel();DECO.on=false;DX().L().grid.visible=false;$('cross').classList.remove('big');$('bar').hidden=true;selMark(null);change();}
 function renderBar(){const b=$('bar');b.hidden=!DECO.on;if(!DECO.on)return;
@@ -4674,7 +4709,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     if(CUR.id==='pets')updatePen(dt);
     if(CUR.id==='toys'&&CUR.train){const T=CUR.train;T.userData.t=(T.userData.t||0)+dt*.9;T.children.forEach((c,i)=>{const a=T.userData.t-i*.32;c.position.set(Math.cos(a)*.88,0,Math.sin(a)*.55);c.rotation.y=Math.atan2(-Math.sin(a)*.88,Math.cos(a)*.55);});}
     for(const w of WALKERS)w.update(dt);
-    updateCars(dt);mpTick(dt);laneTick(dt);for(const s of SHOPPERS)s.update(dt);
+    updateCars(dt);mpTick(dt);laneTick(dt);zzTick(dt);for(const s of SHOPPERS)s.update(dt);
     updGarden(dt);
     {const vis=CUR.id==='city'&&sittersOut();for(const s of SITTERS){s.p.root.visible=vis;if(vis){s.t+=dt;s.p.head.rotation.y=Math.sin(s.t*.5)*.35;if(s.p.wave>0){s.p.wave-=dt;s.p.arms[1].rotation.z=2.5+Math.sin(s.p.wave*14)*.35;}else s.p.arms[1].rotation.z*=.85;}}}
     psUpdate(dt);
