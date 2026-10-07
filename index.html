@@ -175,7 +175,7 @@ button{font-family:inherit}
 .ing.ok{border-color:#2f9a77;color:#2f9a77}
 #nav{pointer-events:auto;display:flex;align-items:center;gap:8px;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:999px;box-shadow:0 4px 0 var(--soft);padding:3px 4px 3px 12px;font-weight:800;font-size:18px;max-width:100%}
 #navArrow{display:inline-block;font-size:24px;transition:transform .15s}
-#nav .x{width:34px;height:34px;font-size:16px;border-width:2px;box-shadow:0 2px 0 #3d2c5e}
+#nav .x{width:44px;height:44px;font-size:16px;box-shadow:0 2px 0 #3d2c5e}
 .mapwrap{position:relative;margin-top:6px}
 #mapc{width:100%;display:block;border-radius:16px;border:3px solid #3d2c5e;background:#9fe486;touch-action:none}
 .places{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
@@ -196,7 +196,7 @@ button{font-family:inherit}
 .qmsg .pill{font-size:15px}
 .emo{font-size:26px;width:48px;height:48px;border-radius:14px;border:2.5px solid #3d2c5e;background:#fff;cursor:pointer;touch-action:manipulation}
 .pk{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
-.ph-row{display:flex;justify-content:space-between;align-items:center;background:#fff;border:3px solid #3d2c5e;border-radius:16px;padding:8px 12px;margin-top:8px;font-weight:800;font-size:17px}
+.ph-row{display:flex;justify-content:space-between;align-items:center;background:#fff;border:3px solid #3d2c5e;border-radius:16px;padding:8px 12px;margin-top:8px;font-weight:800;font-size:17px;color:#3d2c5e}
 .ph-row .hearts{position:static;font-size:17px}
 #title{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;overflow:hidden}
 .logo{margin:0;font-weight:800;font-size:clamp(54px,13.5vw,136px);line-height:1;white-space:nowrap;max-width:100%}
@@ -214,7 +214,7 @@ button{font-family:inherit}
 #mmBtn[hidden]{display:none}
 #mm{display:block;width:100%;height:100%;border-radius:50%}
 .mmPal{position:absolute;right:-8px;bottom:-4px;width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid var(--line);font-size:15px;line-height:24px;text-align:center}
-#jobTxt{pointer-events:auto;cursor:pointer;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:16px;box-shadow:0 4px 0 var(--soft);padding:5px 12px;font-weight:700;font-size:16px;line-height:1.3;max-width:min(270px,100%)}
+#jobTxt{pointer-events:auto;cursor:pointer;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:16px;box-shadow:0 4px 0 var(--soft);padding:9px 12px;font-weight:700;font-size:16px;line-height:1.3;max-width:min(270px,100%)}
 #jobTxt .tm{font-weight:800;font-size:20px}
 #jobTxt small{font-weight:600;opacity:.8}
 #jobTxt.late{background:#ffd9d9;animation:jobPulse 1s ease-in-out infinite}
@@ -260,7 +260,7 @@ button{font-family:inherit}
 .dotb.on{background:var(--butter);box-shadow:0 0 0 3px var(--line)}
 #dotPrev{width:100%;height:auto;border:3px solid var(--line);border-radius:14px;display:block}
 .earn{font-size:20px;font-weight:700;margin:6px 0 0}
-@media (max-width:600px){#mmBtn{width:112px;height:112px}#jobTxt{font-size:14px;padding:4px 10px}#jobTxt .tm{font-size:17px}.jobc .ji{font-size:30px}.jobc b{font-size:14px}.jobc small{font-size:11px}.dots{grid-template-columns:repeat(3,1fr)}.dotb{font-size:14px;padding:6px;gap:6px}.dotb i{flex-basis:24px;height:24px}#note span#noteX{font-size:15px}#note .ni{font-size:32px}}
+@media (max-width:600px){#mmBtn{width:112px;height:112px}#jobTxt{font-size:14px;padding:10px 10px}#jobTxt .tm{font-size:17px}.jobc .ji{font-size:30px}.jobc b{font-size:14px}.jobc small{font-size:11px}.dots{grid-template-columns:repeat(3,1fr)}.dotb{font-size:14px;padding:6px;gap:6px}.dotb i{flex-basis:24px;height:24px}#note span#noteX{font-size:15px}#note .ni{font-size:32px}}
 @media (max-height:500px){#mmBtn{width:100px;height:100px}}
 @media (max-width:600px){#left{max-width:calc(100% - 245px)}.chip{height:36px;font-size:16px;padding:0 10px 0 8px}.chip .e{font-size:17px}.bar{width:44px}.ib{width:48px;height:48px;font-size:22px}#topbtns{gap:7px}#tasks{font-size:14px}#tasks h3{font-size:15px}#act{width:86px;height:86px;font-size:40px}#actWrap{bottom:calc(env(safe-area-inset-bottom,0px) + 124px)}#bJump{width:78px;height:78px;font-size:34px}#bRun{width:64px;height:64px;font-size:28px}#joy{width:124px;height:124px}}
 #err{position:fixed;left:12px;right:12px;bottom:12px;z-index:50;background:#fff;color:#3d2c5e;border:3px solid #3d2c5e;border-radius:14px;padding:10px 14px;font:600 15px var(--font)}
@@ -430,10 +430,10 @@ button{font-family:inherit}
 .tgbtns{display:flex;gap:8px;flex-wrap:wrap;flex:1}
 .tkey{display:inline-block;margin-left:8px;font-size:15px;font-weight:800;color:#1f9a57;background:#e3f8ec;border-radius:8px;padding:1px 7px}
 .tq.oops{background:#fff1f4;border-radius:10px}.thint{flex-basis:100%;font-size:15px;font-weight:700;color:#c0284b;padding:2px 4px 4px}
-.ttop{display:flex;justify-content:space-between;gap:8px;margin:4px 0 6px}.tfoot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}.tfoot .tsp{flex:1}.btn.sm{min-height:40px;font-size:16px;padding:6px 12px}
+.ttop{display:flex;justify-content:space-between;gap:8px;margin:4px 0 6px}.tfoot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}.tfoot .tsp{flex:1}.btn.sm{min-height:44px;min-width:44px;font-size:16px;padding:6px 12px}
 @media (max-height:500px){.tpaper{padding:10px 14px 12px}.tpaper .hd{margin-bottom:2px}.tpaper .hd h2{font-size:21px}.tpaper .note{font-size:13px;margin:0 0 2px}.tpaper .ttop{margin:2px 0 4px}
   .tpaper .tq{padding:3px 0}.tpaper .tpic{font-size:18px}.tpaper .hand{font-size:17px}.tpaper .tb{min-height:36px;padding:3px 9px;font-size:17px}.tpaper .mk{font-size:24px;min-width:40px}
-  .tpaper .stamp{min-width:48px;height:48px;font-size:22px;border-width:3px}.tpaper .tfoot{margin-top:6px}.tpaper .tfoot .btn{min-height:40px;font-size:16px;padding:6px 12px}.tpaper .thint{font-size:13px}}.pjs.tg{font-size:22px;font-weight:900;color:#ff3b5c}
+  .tpaper .stamp{min-width:48px;height:48px;font-size:22px;border-width:3px}.tpaper .tfoot{margin-top:6px}.tpaper .tfoot .btn{min-height:44px;font-size:16px;padding:6px 12px}.tpaper .thint{font-size:13px}}.pjs.tg{font-size:22px;font-weight:900;color:#ff3b5c}
 .psrow.cur{background:#e6f7ff;border-radius:14px;opacity:1}
 .pji{font-size:30px;width:40px;text-align:center}.psrow>div{flex:1;display:flex;flex-direction:column;min-width:0}.psrow b{font-size:17px}.psrow i{font-style:normal;font-size:14px;opacity:.8}
 .pjs{font-size:15px;white-space:nowrap;font-weight:800}
@@ -475,8 +475,8 @@ button{font-family:inherit}
   </div>
   <div id="cross"></div>
   <div id="joy"><div id="knob"></div></div>
-  <div id="moveBtns"><div id="swMeter" hidden aria-hidden="true"><i id="swFill"></i></div><button class="btn" id="bRun" aria-label="Run" aria-pressed="false">🏃</button><button class="btn mint" id="bJump" aria-label="Jump">⬆️</button></div>
-  <div id="actWrap" hidden><div id="actLbl"></div><button class="btn" id="act" aria-label="Use"></button></div>
+  <div id="moveBtns"><div id="swMeter" hidden aria-hidden="true"><i id="swFill"></i></div><button class="btn rnd" id="bRun" aria-label="Run" aria-pressed="false">🏃</button><button class="btn mint rnd" id="bJump" aria-label="Jump">⬆️</button></div>
+  <div id="actWrap" hidden><div id="actLbl"></div><button class="btn rnd" id="act" aria-label="Use"></button></div>
   <div id="bar" hidden></div>
   <div id="rvStars" hidden aria-hidden="true"><b><span class="bg">★</span><span class="fg">★</span></b><b><span class="bg">★</span><span class="fg">★</span></b><b><span class="bg">★</span><span class="fg">★</span></b></div>
   <div id="dtut" hidden role="dialog" aria-label="How the designer job works"><div id="dtCard"><div id="dtPic"></div><div id="dtCap"></div><div id="dtDots"></div><div class="row"><button class="btn white" id="dtSkip">Skip</button><button class="btn mint" id="dtNext">Next ▶</button></div></div></div>
@@ -1298,12 +1298,13 @@ function buildSky(){
   const sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.BufferAttribute(pos,3));
   stars=new THREE.Points(sg,new THREE.PointsMaterial({color:'#ffffff',size:2.4,sizeAttenuation:false,transparent:true,opacity:0,fog:false,depthWrite:false}));stars.frustumCulled=false;scene.add(stars);
   outside=new THREE.Group();scene.add(outside);
+  const mr=Math.random;Math.random=seeded(13);try{   /* 🌳 the same clouds, hills and far trees on every load (same drawing work every time) */
   for(let i=0;i<16;i++){const c=new THREE.Group();const n=3+(Math.random()*3|0);for(let k=0;k<n;k++)sph(c,rand(5,9),null,k*6.5-n*3.2+rand(-2,2),rand(-1.5,1.5),rand(-3,3),{mat:CLOUD,olMat:OLC,ol:.55,ws:12,hs:8,s:[1,.68,1]});
     const a=rand(0,TAU),r=rand(80,220);c.position.set(Math.cos(a)*r,rand(48,80),Math.sin(a)*r);c.userData.sp=rand(.6,1.5);bake(c,false);outside.add(c);clouds.push(c);}
   const hills=new THREE.Group();outside.add(hills);
   for(let i=0;i<28;i++){const a=i/28*TAU+rand(-.08,.08),r=rand(205,250);sph(hills,rand(40,62),pick(['#86d37c','#79c973','#93dc85']),Math.cos(a)*r,-rand(8,18),Math.sin(a)*r,{ol:.9,ws:18,hs:10,s:[1,.5,1]});}
   for(let i=0;i<110;i++){const a=rand(0,TAU),r=rand(94,160);const x=Math.cos(a)*r,z=Math.sin(a)*r;if(Math.abs(x)<7||Math.abs(z)<7||(x<-78&&Math.abs(z)<38)||(Math.abs(Math.abs(x)-50)<7&&Math.abs(z)<95)||(Math.abs(Math.abs(z)-50)<7&&Math.abs(x)<95))continue;(Math.random()<.5?pine:tree)(hills,x,z,rand(1.3,2.2));}
-  bake(hills,false);
+  bake(hills,false);}finally{Math.random=mr;}
 }
 
 /* ---- the town ---- */
@@ -2828,7 +2829,7 @@ const SHOP_SPOTS={
   bakery:{n:2,buy:0,spots:[[0,-2.5,Math.PI],[-1.6,-2.5,Math.PI],[1.6,-2.5,Math.PI],[-4.9,-1.0,-Math.PI/2],[0,1.2,0],[1.6,2.8,0]]},
   icecream:{n:2,buy:0,spots:[[0,-2.5,Math.PI],[-1.6,-2.5,Math.PI],[1.6,-2.5,Math.PI],[-4.0,-2.6,Math.PI],[0,1.0,0],[1.6,2.8,0]]},
   library:{n:2,buy:-1,spots:[[-3.7,-3.4,Math.PI],[-1.2,-3.4,Math.PI],[1.3,-3.4,Math.PI],[3.8,-3.4,Math.PI],[-4.8,-1.5,-Math.PI/2],[4.8,-1.5,Math.PI/2],[0,1.8,0],[4.4,2.9,Math.PI]]},
-  clothes:{n:2,buy:4,spots:[[-3.6,-2.85,Math.PI],[0,-2.85,Math.PI],[3.6,-2.85,Math.PI],[5.0,.5,Math.PI/2],[3.6,3.15,Math.PI],[-5.4,-.85,Math.PI],[0,1.2,0],[-1.8,.4,0],[1.5,3.2,0]]}};
+  clothes:{n:2,buy:4,spots:[[-3.6,-2.85,Math.PI],[0,-2.85,Math.PI],[3.6,-2.85,Math.PI],[4.9,-1.2,Math.PI/2],[3.6,3.15,Math.PI],[-5.4,-.85,Math.PI],[0,1.2,0],[-1.8,.4,0],[1.5,3.2,0]]}};
 function segFree(L,a,b){const len=Math.hypot(b[0]-a[0],b[1]-a[1]),n=Math.max(1,Math.ceil(len/.3));for(let i=0;i<=n;i++){const t=i/n,x=L.ox+a[0]+(b[0]-a[0])*t,z=L.oz+a[1]+(b[1]-a[1])*t;for(const c of L.cols)if(pushOut(x,z,.3,c))return false;}return true;}
 class Shopper{
   constructor(id,cfg){this.L=LOC[id];this.cfg=cfg;this.p=bakePerson(makePerson(randomLook()));this.g=this.p.root;scene.add(this.g);this.i=Math.floor(Math.random()*cfg.spots.length);
@@ -4730,6 +4731,7 @@ async function boot(){
   try{
     const cv=$('c');renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,powerPreference:'high-performance'});
     renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+    {const K=THREE.ShaderChunk,f=K.shadowmap_pars_fragment;if(f.includes('return shadow;'))K.shadowmap_pars_fragment=f.replace('return shadow;','return mix(shadow,1.0,smoothstep(.72,.98,max(abs(shadowCoord.x-.5),abs(shadowCoord.y-.5))*2.));');}   /* 🌳 shadows fade out softly far away instead of popping in */
     initMaterials(renderer.capabilities.isWebGL2);
     scene=new THREE.Scene();FOG=new THREE.Fog('#c4ecff',55,270);scene.fog=FOG;
     camera=new THREE.PerspectiveCamera(70,1,.1,700);camera.rotation.order='YXZ';
