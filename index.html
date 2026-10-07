@@ -884,8 +884,8 @@ function makePet(type,col){
   }
   return {root,b,legs,tail,head,type,phase:Math.random()*6};
 }
-function animPet(p,dt,moving){
-  p.phase+=dt*(moving?11:2.2);
+function animPet(p,dt,moving,spd=1){
+  p.phase+=dt*(moving?11*spd:2.2);
   const a=moving?Math.sin(p.phase)*.6:0;
   p.legs.forEach((l,i)=>{l.rotation.x=lerp(l.rotation.x,(i%2?a:-a)*(i<2?1:-1),.35);});
   p.b.position.y=moving?(p.type==='bunny'?Math.abs(Math.sin(p.phase*.5))*.14:Math.abs(Math.sin(p.phase))*.02):lerp(p.b.position.y,0,.3);
@@ -2093,7 +2093,7 @@ function buildPetShop(){
 
 /* ================= game ================= */
 const HOUR=30;
-const P={x:-17,z:-4.8,yaw:0,pitch:0,bobT:0,bobA:0,moving:false,sit:null,jy:0,vy:0,dip:0,run:false};
+const P={x:-17,z:-4.8,yaw:0,pitch:0,bobT:0,bobA:0,moving:false,sit:null,jy:0,vy:0,dip:0,run:false,hd:Math.PI};
 let S=null,PLAYING=false,PET_ACTORS=[],FRIEND_ACTORS=[],PEN=[],KEEPERS=[],LITTER=[],HOME_ITEMS=new Map(),TARGET=null;
 const UI={open:false,onClose:null,lock:false};
 const DEFAULT_LOOK={skin:'#fdc991',hair:'#8d6238',style:'long',eyes:'round',mouth:'smile',top:'#fdc1fa',bottom:'#37a4fc',shoes:'#8c6137',outfit:'sweater',hat:'none',glasses:'none'};
@@ -2463,14 +2463,51 @@ class Friend{
   }
 }
 function hopY(e,dt){if(!e.hopT&&!e.hopA)return 0;if(e.hopT>0){e.hopT-=dt;if(e.hopT<=0){e.hopT=0;e.hopA=.001;}return 0;}e.hopA+=dt*2.6;if(e.hopA>=1){e.hopA=0;return 0;}return Math.sin(e.hopA*Math.PI)*.32;}
+/* 🐾 followers keep a cozy gap (about 2 m): stand still and they stay put (no circling, no crowding);
+   walk off (3.5 m) and they trot after you, side by side behind the way you walk; very far away = they pop over */
+const fOff=n=>(n%2?-.5:.5)*Math.ceil(n/2);   /* follower n's place: 0 right behind, then left, right, further out */
+const FOLW={x:0,z:0},FA={x:0,z:0};   /* FOLW: where you stood last frame: moved without walking (a lesson, a ride, a jump to a place) = "behind" is behind your back again. FA: a follower's next spot */
+const STEPS=new Float32Array(48),STN={n:0,loc:null};   /* your last 24 footsteps (0.5 m apart): a blocked follower takes the way you walked (through a gate, round a fence) */
+const onRoad=(x,z)=>Math.abs(x)<84&&Math.abs(z)<84&&(Math.abs(z+50)<4.3||Math.abs(z)<4.3||Math.abs(z-50)<4.3||Math.abs(x+50)<4.3||Math.abs(x)<4.3||Math.abs(x-50)<4.3);   /* the town's car roads */
+function fPush(e,o,k){if(o===e||o.loc!==CUR.id||o.mode==='away')return;let qx=FA.x-o.x,qz=FA.z-o.z,q=Math.hypot(qx,qz);if(q>=.6)return;if(q<1e-3){qx=Math.sin(k)*1e-3;qz=Math.cos(k)*1e-3;q=1e-3;}FA.x+=qx/q*(.6-q);FA.z+=qz/q*(.6-q);}
+function fAvoid(e,x,z,k){FA.x=x;FA.z=z;for(const o of PET_ACTORS)fPush(e,o,k);for(const o of FRIEND_ACTORS)fPush(e,o,k);}   /* pets and friends go round each other and never stand inside each other */
+function fMove(e,x,z,k,cap){fAvoid(e,x,z,k);let mx=FA.x-e.x,mz=FA.z-e.z;const m=Math.hypot(mx,mz);if(m>cap){mx*=cap/m;mz*=cap/m;}[e.x,e.z]=collideXZ(e.x+mx,e.z+mz,e.r,CUR);}   /* small steps only: never through a thin fence */
 function followStep(e,dt,idx){
-  const fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw),rx=Math.cos(P.yaw),rz=-Math.sin(P.yaw);
-  const side=[0,-.8,.8,-1.4,1.4][idx%5],back=1.5+(idx>2?.8:0);
-  const tx=P.x-fx*back+rx*side,tz=P.z-fz*back+rz*side,dx=tx-e.x,dz=tz-e.z,d=Math.hypot(dx,dz);
-  if(d>14){[e.x,e.z]=collideXZ(tx,tz,e.r,CUR);e.moving=false;return;}
-  if(d>.35){const s=Math.min(d,(d>2.5?5.4:2.8)*dt);[e.x,e.z]=collideXZ(e.x+dx/d*s,e.z+dz/d*s,e.r,CUR);e.face=Math.atan2(dx,dz);e.moving=true;}
-  else{e.moving=false;e.face=angLerp(e.face,Math.atan2(P.x-e.x,P.z-e.z),.08);}
+  if(!P.moving&&(P.x!==FOLW.x||P.z!==FOLW.z)){P.hd=P.yaw+Math.PI;STN.n=0;}FOLW.x=P.x;FOLW.z=P.z;
+  if(STN.loc!==CUR.id){STN.loc=CUR.id;STN.n=0;}if(P.moving){const j=(STN.n+23)%24*2;if(!STN.n||Math.hypot(P.x-STEPS[j],P.z-STEPS[j+1])>.5){STEPS[STN.n%24*2]=P.x;STEPS[STN.n%24*2+1]=P.z;STN.n++;}}
+  const ax=e.x-P.x,az=e.z-P.z,pd=Math.hypot(ax,az),a=P.hd+Math.PI+fOff(idx);
+  const tx=P.x+Math.sin(a)*2,tz=P.z+Math.cos(a)*2,dx=tx-e.x,dz=tz-e.z,d=Math.hypot(dx,dz);
+  if(d>14){[e.x,e.z]=collideXZ(tx,tz,e.r,CUR);e.moving=false;e.far=e.stk=0;e.wp=-1;return;}
+  if(!e.fol){if(pd<3.5)e.far=0;else if(pd>Math.max(3.5,e.far||0)){e.fol=1;e.far=0;e.stk=0;e.wp=-1;}}   /* you came back near it: it forgets it was stuck */
+  else if((pd<2.35||d<.3)&&!(P.moving&&ax*Math.sin(P.hd)+az*Math.cos(P.hd)<0)||e.stk>.6&&!P.moving){e.far=e.stk>.6?pd+1.5:0;e.fol=0;e.wp=-1;}  /* close enough (or stuck at a wall): wait here */
+  if(e.fol&&d>(e.moving?.05:.3)){let gx=tx,gz=tz;if(e.stk>.15&&!(e.wp>=0)&&!((e.tr-=dt)>0)){e.wp=fTrail(e);e.tr=.5;}   /* blocked: take the way you walked (looks again every 0.5 s) */
+    if(e.wp>=0){if(e.wp<STN.n-24||e.wp>=STN.n)e.wp=-1;else{const j=e.wp%24*2;gx=STEPS[j];gz=STEPS[j+1];if(Math.hypot(gx-P.x,gz-P.z)<2.5){e.wp=-1;gx=tx;gz=tz;}else if(Math.hypot(gx-e.x,gz-e.z)<.35)e.wp++;}}
+    const gdx=gx-e.x,gdz=gz-e.z,gd=Math.hypot(gdx,gdz)||1e-6,sp=Math.min(6.2,d*3),s=Math.min(gd,sp*dt),ox=e.x,oz=e.z;   /* the further away, the faster; slows down gently near its spot (no stop-and-go when you walk slowly) */
+    fMove(e,e.x+gdx/gd*s,e.z+gdz/gd*s,idx,s+.05);if(Math.hypot(e.x-ox,e.z-oz)<s*.3)e.stk=(e.stk||0)+dt;else e.stk=e.tr=0;e.face=Math.atan2(gdx,gdz);e.moving=true;e.spd=clamp(sp/3,.6,1.8);}
+  else{let vx=0,vz=0;const hx=Math.sin(P.hd),hz=Math.cos(P.hd),l=ax*hz-az*hx,ox=e.x,oz=e.z;   /* waiting: only small natural moves */
+    if(P.moving&&pd<1.4&&ax*hx+az*hz>0&&Math.abs(l)<.9){if(!e.dg)e.dg=l<0?-1:1;vx=hz*e.dg*3.5;vz=-hx*e.dg*3.5;}else e.dg=0;   /* you walk into it: it steps out of your way */
+    if(!e.dg&&CUR.id==='city'&&pd>.9&&onRoad(e.x,e.z)&&!onRoad(P.x,P.z)){vx=-ax/pd*2.5;vz=-az/pd*2.5;}   /* never wait on the road (cars stop for pets): come to you on the pavement */
+    fMove(e,ox+vx*dt,oz+vz*dt,idx,4*dt);   /* this also gets it out of furniture you just put on its spot */
+    const mv=Math.hypot(e.x-ox,e.z-oz);if(e.dg&&mv<dt)e.dg=-e.dg;e.moving=mv>dt*1.5;e.spd=1;e.face=e.moving?Math.atan2(e.x-ox,e.z-oz):angLerp(e.face,Math.atan2(-ax,-az),.08);}
 }
+/* a free straight way from a to b: no wall, fence or water in between (only the walls near that way are checked: cheap) */
+const FL=[];
+function fNear(list,x1,z1,x2,z2){for(const c of list){const r=c.cr;if((r!==undefined?c.cx+r:c.x2)<x1||(r!==undefined?c.cx-r:c.x1)>x2||(r!==undefined?c.cz+r:c.z2)<z1||(r!==undefined?c.cz-r:c.z1)>z2)continue;FL.push(c);}}
+function fLine(ax,az,bx,bz){const L=CUR,b=L.bounds,dx=bx-ax,dz=bz-az,n=Math.ceil(Math.hypot(dx,dz)/.45),x1=Math.min(ax,bx)-.3,z1=Math.min(az,bz)-.3,x2=Math.max(ax,bx)+.3,z2=Math.max(az,bz)+.3;
+  FL.length=0;fNear(L.cols,x1,z1,x2,z2);fNear(L.dcols,x1,z1,x2,z2);
+  for(let i=1;i<=n;i++){const px=ax+dx*i/n,pz=az+dz*i/n;if(px<b.x1+.24||px>b.x2-.24||pz<b.z1+.24||pz>b.z2-.24)return false;
+    for(const c of FL){const q=pushOut(px,pz,.25,c);if(q&&Math.abs(q[0]-px)+Math.abs(q[1]-pz)>.01)return false;}}
+  return true;}
+const fClear=(x,z)=>fLine(P.x,P.z,x,z);
+function fTrail(e){for(let k=STN.n-1;k>=Math.max(0,STN.n-24);k--){const j=k%24*2;if(fLine(e.x,e.z,STEPS[j],STEPS[j+1]))return k;}return -1;}   /* your newest footstep it can walk straight to */
+/* pop a follower a cozy gap from you; it waits there. Beside you (doors, "Take me home", loading): out of view and never in the doorway behind you.
+   front=1 ("Bring my pets to me"): in front of you, all of it in view. Never behind a wall or fence (the way to you is free), never on another pet or friend */
+function nearMe(e,n,front){const sd=n%2?-1:1,b=P.yaw+Math.PI,f=fOff(front?n-1:n),C=[b+f*.45,3,b+f*.45,2.4];
+  for(const r of[2,1.4])for(const s of[sd,-sd])for(let j=0;j<4;j++)C.push(b+s*(1.6+.35*j),r);
+  if(!front)C.push(C.shift(),C.shift(),C.shift(),C.shift());   /* beside you first, in front only if there is no room */
+  C.push(b+f*.15,2.6,b+Math.PI-f*.3,2);   /* a narrow corridor: just in front, or behind you */
+  const rd=CUR.id==='city'&&!onRoad(P.x,P.z);let i=0;for(;i<C.length;i+=2){const x=P.x+Math.sin(C[i])*C[i+1],z=P.z+Math.cos(C[i])*C[i+1];fAvoid(e,x,z,0);if(FA.x===x&&FA.z===z&&!(rd&&onRoad(x,z))&&fClear(x,z))break;}if(i>=C.length)i=0;
+  [e.x,e.z]=collideXZ(P.x+Math.sin(C[i])*C[i+1],P.z+Math.cos(C[i])*C[i+1],e.r,CUR);e.loc=CUR.id;e.fol=0;e.far=e.stk=0;e.wp=-1;e.moving=false;e.face=Math.atan2(P.x-e.x,P.z-e.z);}
 
 /* ---- pets ---- */
 class Pet{
@@ -2479,12 +2516,12 @@ class Pet{
     this.x=d.x;this.z=d.z;this.loc=d.loc;this.face=0;this.moving=false;this.r=.25;this.wt=0;this.tx=d.x;this.tz=d.z;
     this.target={x:0,z:0,r:2.1,icon:PET_TYPES[d.type].icon,label:()=>'Play with '+d.name,act:()=>openPet(this),obj:this.g};}
   update(dt,idx){const d=this.d;if(this.ps)return;
-    if(!d.stay){if(this.loc!==CUR.id){this.loc=CUR.id;this.x=P.x+.8;this.z=P.z+.8;}followStep(this,dt,idx);}
+    if(!d.stay){if(this.loc!==CUR.id)nearMe(this,idx);followStep(this,dt,idx);}
     else if(this.loc===CUR.id){this.wt-=dt;if(this.wt<=0){this.wt=rand(2,6);const a=rand(0,TAU),r=rand(0,1.6);this.tx=d.sx+Math.cos(a)*r;this.tz=d.sz+Math.sin(a)*r;}
       const dx=this.tx-this.x,dz=this.tz-this.z,dd=Math.hypot(dx,dz);if(dd>.1){const s=Math.min(dd,1.1*dt);[this.x,this.z]=collideXZ(this.x+dx/dd*s,this.z+dz/dd*s,this.r,CUR);this.face=Math.atan2(dx,dz);this.moving=true;}else this.moving=false;}
     d.happy=Math.max(0,d.happy-dt/HOUR*2);d.loc=this.loc;d.x=this.x;d.z=this.z;
     this.g.visible=this.loc===CUR.id;this.g.position.set(this.x,hopY(this,dt),this.z);this.g.rotation.y=angLerp(this.g.rotation.y,this.face,Math.min(1,dt*8));
-    animPet(this.m,dt,this.moving);this.target.x=this.x;this.target.z=this.z;this.tag.visible=Math.hypot(P.x-this.x,P.z-this.z)>1.3;}
+    animPet(this.m,dt,this.moving,d.stay?1:this.spd);this.target.x=this.x;this.target.z=this.z;this.tag.visible=Math.hypot(P.x-this.x,P.z-this.z)>1.3;}
 }
 function addPetActor(d){const p=new Pet(d);PET_ACTORS.push(p);return p;}
 function rebuildPet(p){const pos=p.g.position.clone(),rot=p.g.rotation.y;scene.remove(p.g);p.m=makePet(p.d.type,p.d.col);addOutfit(p.m,p.d);p.g=p.m.root;p.g.add(p.tag);p.g.position.copy(pos);p.g.rotation.y=rot;scene.add(p.g);p.target.obj=p.g;}
@@ -3021,9 +3058,10 @@ function setLoc(id){CUR=LOC[id];P.cy=0;for(const k in LOC)LOC[k].g.visible=LOC[k
   for(const k of KEEPERS)k.p.root.visible=k.L===CUR;for(const a of PEN)a.m.root.visible=CUR.id==='pets';
   if(LOC.clothes&&LOC.clothes.manq)for(const m of LOC.clothes.manq)m.visible=id==='clothes';
   $('bDeco').hidden=id!=='home';renderer.setClearColor(id==='studio'?'#fff4fa':'#000000');updSky();}
-function bringFollowers(){let i=0;for(const f of FRIEND_ACTORS)if(f.mode==='follow'){f.loc=CUR.id;f.x=P.x+Math.sin(P.yaw)*1.4+(i?.6:0);f.z=P.z+Math.cos(P.yaw)*1.4;[f.x,f.z]=collideXZ(f.x,f.z,f.r,CUR);i++;
+function bringFollowers(){let n=0;P.hd=P.yaw+Math.PI;for(const f of FRIEND_ACTORS)if(f.mode==='follow')f.loc=null;for(const p of PET_ACTORS)if(!p.d.stay)p.loc=null;   /* placed one by one below */
+  for(const f of FRIEND_ACTORS)if(f.mode==='follow'){nearMe(f,++n);
     if(CUR.id==='home')homeVisit(f);}
-  for(const p of PET_ACTORS)if(!p.d.stay){p.loc=CUR.id;p.x=P.x+Math.sin(P.yaw)*1.2+rand(-.6,.6);p.z=P.z+Math.cos(P.yaw)*1.2;[p.x,p.z]=collideXZ(p.x,p.z,p.r,CUR);}}
+  for(const p of PET_ACTORS)if(!p.d.stay)nearMe(p,++n);}
 function enter(id,via){if(id==='home'){LANE.via=LANE.nextVia;LANE.nextVia=null;}SFX.door();qEvent('enter:'+id);fade(()=>{setLoc(id);const d=DOORS[id+(via||'')],L=LOC[id];P.x=L.ox+d.inside[0];P.z=L.oz+d.inside[1];P.yaw=d.inside[2];P.pitch=0;P.sit=null;bringFollowers();if(id==='home')doneTask('home');if(id==='pizza')pizzaIn();if(id==='cafe'&&FRIEND_ACTORS.some(f=>f.mode==='follow'))qEvent('cafevisit');saveLocal();});}
 function exitTo(id,via){if(DECO.on)decoEnd();SFX.door();fade(()=>{setLoc('city');const d=(id==='home'&&!via&&LANE.via!=null&&LOC.city.lane)?{city:LOC.city.lane[LANE.via].door}:DOORS[id+(via||'')];if(id==='home')LANE.via=null;P.x=d.city[0];P.z=d.city[1];P.yaw=d.city[2];P.pitch=0;P.sit=null;bringFollowers();saveLocal();});}
 function homeVisit(f){const st=frSt(f.d.id);setTimeout(()=>{if(CUR.id!=='home')return;const n=S.home.items.length;
@@ -3129,7 +3167,7 @@ function updatePlayer(dt){
   if(P.sit){if(m>.35)standUp();else{P.moving=false;return;}}
   P.run=!!(K.ShiftLeft||K.ShiftRight||IN.run);
   if(m>.06){const run=P.run,boost=1+(sk('sport').lv-1)*.03,sp=4.3*(run?1.65:1)*boost*(S.hunger<=0?.6:1),sy=Math.sin(P.yaw),cy=Math.cos(P.yaw);
-    const ox=P.x,oz=P.z;[P.x,P.z]=collideXZ(P.x+(-sy*f+cy*s)*sp*dt,P.z+(-cy*f-sy*s)*sp*dt,.3,CUR,solids());P.moving=true;P.bobT+=dt*sp*2.3;
+    const ox=P.x,oz=P.z;[P.x,P.z]=collideXZ(P.x+(-sy*f+cy*s)*sp*dt,P.z+(-cy*f-sy*s)*sp*dt,.3,CUR,solids());P.moving=true;P.bobT+=dt*sp*2.3;P.hd=Math.atan2(-sy*f+cy*s,-cy*f-sy*s);
     if(run){const dd=Math.hypot(P.x-ox,P.z-oz);qEvent('run',dd);P.ra=(P.ra||0)+dd;if(P.ra>=50){P.ra-=50;addXP('sport',1);}}}
   else P.moving=false;
   for(const e of [...FRIEND_ACTORS,...PET_ACTORS]){if(e.loc!==CUR.id||e.mode==='away')continue;const dx=e.x-P.x,dz=e.z-P.z,d=Math.hypot(dx,dz),m2=.7;if(d<m2&&d>1e-4){[e.x,e.z]=collideXZ(P.x+dx/d*m2,P.z+dz/d*m2,e.r,CUR);}}
@@ -3274,7 +3312,7 @@ ACT.pwear=k=>{const p=PT;if(!p||!S.bag[k]||!ACCS[k])return;const d=p.d,o=petOutf
 ACT.poff=sl=>{const p=PT;if(!p)return;const d=p.d,o=petOutfit(d);const list=sl?[sl]:PSLOTS.map(x=>x[0]);let any=false;for(const x of list)if(o[x]){S.bag[o[x]]=(S.bag[o[x]]||0)+1;delete o[x];any=true;}
   if(!any)return;rebuildPet(p);SFX.pop();change();ACT.pdress('Taken off!');};
 ACT.pback=()=>renderPet();
-ACT.pstay=()=>{const p=PT,d=p.d;d.stay=!d.stay;if(d.stay){d.sx=p.x;d.sz=p.z;renderPet(d.name+' will stay here and wait for you.');}else renderPet(d.name+' will follow you!');change();};
+ACT.pstay=()=>{const p=PT,d=p.d;d.stay=!d.stay;p.far=0;if(d.stay){d.sx=p.x;d.sz=p.z;renderPet(d.name+' will stay here and wait for you.');}else renderPet(d.name+' will follow you!');change();};
 
 /* adopting */
 let AD=null;const ADOPT_COST=100;
@@ -3499,10 +3537,8 @@ function openSettings(){const fromTitle=!PLAYING;
     <p class="note">${TOUCHY?'Walk: drag on the left side. Look: drag on the right side. Jump: ⬆️. Run: 🏃. Tap things to use them.':'Walk: WASD. Look: drag with the mouse. Jump: Space. Run: hold Shift. Use things: E or click. Bag: B.'}<br>✏️ Notepad: draw on it! Tap it 2× for a new page, 3× to go back, 4× to delete.</p>
     <div class="row"><button class="btn coral" data-a="wipe">${WIPE?'Tap again to start over':'🗑️ Start a new game'}</button></div>`,{onClose:()=>{WIPE=false;}});}
 ACT.fetchpets=()=>{if(!S||!S.pets.length){toast('You don\'t have any pets yet! Adopt one at the Pet Shop. 🐾',3);return;}
-  let i=0;for(const p of PET_ACTORS){const d=p.d;d.stay=false;const ang=P.yaw+Math.PI+(i%2?.5:-.5)*(1+(i>>1)*.5),back=1.2+(i>>1)*.5;
-    let x=P.x-Math.sin(P.yaw)*1.2+Math.cos(ang)*0,z=P.z-Math.cos(P.yaw)*1.2;
-    x=P.x+Math.sin(ang)*back;z=P.z+Math.cos(ang)*back;[x,z]=collideXZ(x,z,p.r,CUR);
-    p.loc=CUR.id;p.x=x;p.z=z;d.loc=CUR.id;d.x=x;d.z=z;p.tx=x;p.tz=z;p.g.visible=true;p.g.position.set(x,p.g.position.y,z);i++;}
+  let n=0;for(const p of PET_ACTORS)p.loc=null;for(const p of PET_ACTORS){const d=p.d;d.stay=false;nearMe(p,++n,1);
+    d.loc=p.loc;d.x=p.tx=p.x;d.z=p.tz=p.z;p.g.visible=true;p.g.position.set(p.x,p.g.position.y,p.z);}
   SFX.yay();change();saveLocal();const nm=S.pets.length===1?S.pets[0].name:S.pets.length+' pets';toast('🐾 '+nm+' '+(S.pets.length===1?'is':'are')+' right here with you!',3);closePanel();};
 ACT.gohome=()=>{LANE.via=null;closePanel();if(DECO.on)decoEnd();fade(()=>{if(CR){if(CR.av)scene.remove(CR.av.root);CR=null;camera.clearViewOffset();}setLoc('home');const L=LOC.home;P.x=L.ox;P.z=L.oz+DOORS.home.inside[1];P.yaw=0;P.pitch=0;P.sit=null;P.ride=null;
   $('hud').hidden=false;resize();bringFollowers();saveLocal();toast('Home sweet home! 🏡',2.6);});};
@@ -4156,6 +4192,7 @@ function psFlop(x,u,dt){const g=x.r.m.root,m=x.r.m,BY=PS.top+.03,F=Math.PI/2;
   const px=g.position.x,pz=g.position.z,mv=Math.hypot(q[0]-px,q[2]-pz),gy=lerp(BY,0,clamp((q[0]+35.15)/.4,0,1));
   psPose(g,m,q[0],gy+(mv>.004?Math.abs(Math.sin(u*14))*.05:0),q[2],mv>.004?Math.atan2(q[0]-px,q[2]-pz):g.rotation.y);animPet(m,dt,mv>.004);}
 function psCut(dt){const C=CUT,p=C.p,m=p.m,t=(C.t+=dt),u=t-C.st,sm=k=>k*k*(3-2*k),BY=PS.top+.03,PY=PS.top+.08,FACE=Math.PI/2,pd3=PS.pad[3],me=C.order[3];
+  for(const w of PET_ACTORS)if(w!==p&&w.loc==='city')w.g.visible=false;for(const f of FRIEND_ACTORS)if(f.mode==='follow')f.g.visible=false;   /* 🐾 your other pets and friends watch from out of sight, so the show stays clear */
   const showCam=()=>psCamTo(PS.cam[0],PS.cam[1],PS.sx,.35,PS.sz,dt,3.2),judgeCam=()=>psCamTo(PS.jcam[0],PS.jcam[1],PS.jx,.95,PS.sz,dt,3.4);
   const youWait=()=>{psPetPose(p,pd3[0],PY,pd3[1],FACE+.35);animPet(m,dt,false);};
   if(C.stage==='intro'){showCam();const k=sm(clamp(u/1.7,0,1));psPetPose(p,lerp(C.px,pd3[0],k),lerp(0,PY,k)+Math.sin(Math.PI*k)*.9,lerp(C.pz,pd3[1],k),k<.85?Math.atan2(pd3[0]-C.px,pd3[1]-C.pz):FACE+.35);animPet(m,dt,k<1);
@@ -4362,6 +4399,7 @@ function tcDesk(id){if(!tcHere(id)){SFX.tap();toast(S.job==='teacher'?"This isn'
   CUT={tch:1,t:0,st:0,shake:0,stage:'sit',id,L,kids:L.kids,next:2.5,caught:0,missed:0,oops:0,pile:[],planes:[]};
   tcBar('📚 Get ready… the lesson is about to start!');SFX.pop();}
 function tcCut(dt){const C=CUT,L=C.L,t=(C.t+=dt),u=t-C.st;
+  for(const w of FRIEND_ACTORS)if(w.loc===L.id)w.g.visible=false;for(const w of PET_ACTORS)if(w.loc===L.id)w.g.visible=false;   /* 🐾 pets and friends who came along wait out of sight in class, so nobody blocks the kids */
   const gr=C.stage==='grade'||C.stage==='done';P.cy=lerp(P.cy||0,gr?.2:.85,Math.min(1,dt*3));if(gr)psCamTo(L.ox,L.oz-3.65,L.ox,.55,L.oz-2.6,dt,3);else psCamTo(L.ox,L.oz-3.75,L.ox,.55,L.oz+.75,dt,3);
   for(const k of C.kids)tcAnim(k,dt);tcPlanes(dt);
   if(C.stage==='sit'){if(u>2.2){C.stage='lesson';C.st=t;C.len=40;SFX.ding();popText('🔔 The '+SUBJ[C.id].n+' lesson starts!');setTimeout(()=>{if(CUT&&CUT.tch)toast('✋ Tap a kid who goofs off to stop them!',3.6);},900);}return;}
@@ -4639,7 +4677,7 @@ function startGame(){
   else{let loc=S.loc;P.x=S.px;P.z=S.pz;P.yaw=isFinite(S.yaw)?S.yaw:0;P.pitch=0;
     if(!LOC[loc]||loc==='studio'){loc='city';P.x=-17;P.z=-4.6;P.yaw=0;}
     loc=safeSpot(loc)||'city';setLoc(loc);[P.x,P.z]=collideXZ(P.x,P.z,.3,CUR);
-    for(const p of PET_ACTORS)if(!p.d.stay&&p.loc!==CUR.id){p.loc=CUR.id;p.x=P.x+.8;p.z=P.z+.8;}
+    let n=0;for(const p of PET_ACTORS)if(!p.d.stay&&p.loc!==CUR.id)nearMe(p,++n);
     toast('Welcome back, '+(S.name||'friend')+'! 💗',3);}
   heldInit();askT=0;jobHud(true);dcardUpd(true);
   updHud(true);if(CSAVE.ref){CSAVE.dirty=true;cloudFlush();}
