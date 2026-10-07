@@ -418,7 +418,7 @@ button{font-family:inherit}
 .psrow.on{opacity:1}.psrow.me{background:#fff3c4;border-radius:14px}
 .ni{position:relative}.ni .nbadge{position:absolute;top:4px;right:6px;background:#ff4d8d;color:#fff;font-size:11px;font-weight:900;border-radius:8px;padding:1px 6px}
 .ni .nimg{width:58px;height:58px;object-fit:contain}.nisub{font-weight:600;opacity:.7;font-size:12px}
-.ni.pop{animation:nipop .7s ease-out}@keyframes nipop{0%{transform:scale(.2) rotate(-8deg);opacity:0}60%{transform:scale(1.12) rotate(2deg);opacity:1}100%{transform:scale(1)}}
+.ni.nipop{animation:nipop .7s ease-out}@keyframes nipop{0%{transform:scale(.2) rotate(-8deg);opacity:0}60%{transform:scale(1.12) rotate(2deg);opacity:1}100%{transform:scale(1)}}
 #tchBar{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#fff;border:3px solid #3d2c5e;border-radius:18px;padding:8px 16px;font-weight:800;font-size:16px;color:#3d2c5e;z-index:30;white-space:nowrap;box-shadow:0 4px 0 #3d2c5e;max-width:94vw;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
 .cut.tch #pad{visibility:visible}
 .tpaper .paper{background:#fffef6;border:2px solid #e2d9f2;border-radius:14px;padding:4px 10px}
@@ -448,7 +448,7 @@ button{font-family:inherit}
 #knockCard .kc-m{margin:6px 0 12px;font-size:16px;font-weight:700;line-height:1.35}
 #knockCard .kc-b{display:flex;gap:10px;justify-content:center}
 @keyframes kcPop{0%{transform:translateX(-50%) scale(.6);opacity:0}70%{transform:translateX(-50%) scale(1.06);opacity:1}100%{transform:translateX(-50%) scale(1)}}
-</style>
+/* 7 Oct 2026: homework paper readable in light and dark; bigger right/wrong buttons; class messages at the top; buttons at least 44 px */.tpaper .paper{color:#3d2c5e}.tpaper .tqq{color:#3d2c5e;font-size:17px;font-weight:700}.tpaper .tb{min-width:58px;min-height:52px;font-size:22px}.tpaper .tb+.tb{margin-left:10px}@media (max-height:500px){.tpaper .tb{min-height:44px;min-width:52px;font-size:19px}.tpaper .tqq{font-size:16px}}@media (min-width:700px) and (min-height:600px){#card.tpaper{width:min(640px,92vw);max-width:min(640px,92vw)}}body.tch #toast{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto}.pill{min-height:44px}.sw{min-width:44px;min-height:44px}.ph-home{height:44px;background:none;position:relative}.ph-home::after{content:'';position:absolute;left:0;right:0;top:17px;height:10px;border-radius:99px;background:rgba(255,255,255,.6)}@media (max-height:500px){#card{max-height:calc(100vh - 16px);max-height:calc(100dvh - 16px);overflow-y:auto;overscroll-behavior:contain}#card:has(.earn) .row:last-child{position:sticky;bottom:0;background:var(--paper);padding:6px 0 2px;margin-bottom:0}}.ph-back{width:44px;height:44px}.qbtn{min-height:44px}.x{width:44px;height:44px;min-height:44px;border-width:3px}.qtag{color:#3d2c5e}</style>
 </head>
 <body>
 <canvas id="c"></canvas>
@@ -2427,10 +2427,10 @@ const FRIENDS=[
     lines:["Pizza is the best food. Extra cheese!","I'm building a robot at home. It can almost wave!","A T. rex had teeth as big as bananas!","The pet shop has a puppy that does a little spin!","Let's race to the fountain sometime!"]},
   {id:'luna',name:'Luna',look:{skin:'#f6d3bb',hair:'#f2d16b',style:'long',top:'#b79cff',bottom:'#ffffff',shoes:'#b79cff',dress:true,scale:.95},fav:'icecream',home:27,
     hello:"Hi! My name's Luna!",greet:"Hi! My name's Luna!",only:true,giftAsk:"A present for me?!",
-    lines:["I LOVE ICE CREAM AND DRAWING! Hmm, I wonder which is better..."]},
+    lines:["I LOVE ICE CREAM AND DRAWING! Hmm, I wonder which is better...","I drew a cat eating ice cream. Best. Drawing. EVER!","Strawberry or chocolate? I pick BOTH!","I want to draw every house in town. Yours is next!"]},
   {id:'finn',name:'Finn',look:{skin:'#8a5a3c',hair:'#1f1a2e',style:'curly',top:'#ffd45c',bottom:'#5b8cff',shoes:'#2e2347',scale:.98},fav:'apple',home:29,
     hello:"Hi!",greet:"Hi!",only:true,giftAsk:"A present for me?!",
-    lines:["I'm gonna be a firefighter when I grow up!"]},
+    lines:["I'm gonna be a firefighter when I grow up!","Firefighters need energy. That's why I eat apples!","When I'm a firefighter, I'll rescue cats from trees!","I run every day. Firefighters have to be fast!"]},
 ];
 function frSt(id){return S.fr[id]||(S.fr[id]={pts:0,met:0,chat:0,gift:0,visit:0});}
 const heartsOf=id=>Math.min(5,Math.floor(frSt(id).pts/10));
@@ -3039,19 +3039,19 @@ function setupInput(){
   T.addEventListener('pointerdown',e=>{
     if(!PLAYING||UI.open)return;audioInit();
     const w=innerWidth,h=innerHeight;
-    if(IN.joy.id===null&&e.pointerType!=='mouse'&&e.clientX<w*.42&&e.clientY>h*.3){
+    if(!(CUT&&CUT.tch)&&IN.joy.id===null&&e.pointerType!=='mouse'&&e.clientX<w*.42&&e.clientY>h*.3){
       IN.joy.id=e.pointerId;const ox=clamp(e.clientX,74,w*.42),oy=clamp(e.clientY,74,h-74);IN.joy.ox=ox;IN.joy.oy=oy;IN.joy.x=0;IN.joy.y=0;
       joy.style.left=(ox-70)+'px';joy.style.top=(oy-70)+'px';joy.style.bottom='auto';joy.classList.add('on');
-    }else if(IN.look.id===null){IN.look.id=e.pointerId;IN.look.lx=IN.look.sx=e.clientX;IN.look.ly=IN.look.sy=e.clientY;IN.look.t=performance.now();IN.look.moved=0;}
+    }else if(IN.look.id===null){IN.look.id=e.pointerId;IN.look.lx=IN.look.sx=e.clientX;IN.look.ly=IN.look.sy=e.clientY;IN.look.t=performance.now();IN.look.moved=0;IN.look.cls=!!(CUT&&CUT.tch);}
     try{T.setPointerCapture(e.pointerId);}catch(_){}e.preventDefault();
   });
   T.addEventListener('pointermove',e=>{
     if(e.pointerId===IN.joy.id){let dx=e.clientX-IN.joy.ox,dy=e.clientY-IN.joy.oy;const d=Math.hypot(dx,dy),m=56;if(d>m){dx*=m/d;dy*=m/d;}IN.joy.x=dx/m;IN.joy.y=dy/m;knob.style.transform=`translate(${dx}px,${dy}px)`;}
     else if(e.pointerId===IN.look.id){const dx=e.clientX-IN.look.lx,dy=e.clientY-IN.look.ly;IN.look.lx=e.clientX;IN.look.ly=e.clientY;IN.look.moved+=Math.abs(dx)+Math.abs(dy);
-      const k=(e.pointerType==='mouse'?.0045:.0062)*SET.look;P.yaw-=dx*k;P.pitch=clamp(P.pitch-dy*k,-1.25,1.25);}
+      if(!IN.look.cls&&!(CUT&&CUT.tch)){const k=(e.pointerType==='mouse'?.0045:.0062)*SET.look;P.yaw-=dx*k;P.pitch=clamp(P.pitch-dy*k,-1.25,1.25);}}
   });
   const up=e=>{if(e.pointerId===IN.joy.id){IN.joy.id=null;IN.joy.x=IN.joy.y=0;joyHome();}
-    else if(e.pointerId===IN.look.id){IN.look.id=null;if(e.type==='pointerup'&&IN.look.moved<12&&performance.now()-IN.look.t<350)tapAt(e.clientX,e.clientY);}};
+    else if(e.pointerId===IN.look.id){IN.look.id=null;const cl=IN.look.cls;if(e.type==='pointerup'&&IN.look.moved<(cl?40:12)&&performance.now()-IN.look.t<(cl?700:350))tapAt(e.clientX,e.clientY);}};
   T.addEventListener('pointerup',up);T.addEventListener('pointercancel',up);
   addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return;IN.keys[e.code]=true;
     if(e.code==='Escape'){if(UI.open&&!UI.lock)closePanel();else if(DECO.placing)decoCancel();return;}
@@ -3233,7 +3233,7 @@ function renderFriend(line,sub){const f=FR,st=frSt(f.d.id),h=heartsOf(f.d.id),fo
     <p class="line">${esc(fill(line))}</p>${sub||`<div class="row"><button class="btn mint" data-a="fchat">💬 Chat</button><button class="btn butter" data-a="fgift">🎁 Give a present</button>
     ${f.d.id==='rosie'?'<button class="btn lilac" data-a="fjob">💼 Jobs</button>':''}${fol?'<button class="btn sky" data-a="fstop">👋 See you later</button>':`<button class="btn sky" data-a="fhang" ${h<1?'disabled':''}>🤝 Hang out${h<1?' (needs 1 ♥)':''}</button>`}
     <button class="btn white" data-a="close">Bye!</button></div>`}`,{bottom:true,onClose:()=>{if(f.mode==='talk')f.mode=f.prev==='follow'?'follow':'walk';FR=null;}});}
-ACT.fchat=()=>{const f=FR,st=frSt(f.d.id);SFX.talk();qEvent('chat',1,f.d.id);qEvent('chat:'+f.d.id);if(st.chat!==S.day){st.chat=S.day;addPts(f,4);addXP('friends',4);renderFriend(pick(f.d.lines));}else renderFriend(pick(f.d.only?f.d.lines:f.d.lines.concat(["We talked so much today! Let's hang out.","Hehe, you're fun to talk to!"])));};
+ACT.fchat=()=>{const f=FR,st=frSt(f.d.id);SFX.talk();qEvent('chat',1,f.d.id);qEvent('chat:'+f.d.id);const pk=a=>{const L=a.length>1?a.filter(x=>x!==f.d._last):a,r=pick(L.length?L:a);f.d._last=r;return r;};if(st.chat!==S.day){st.chat=S.day;addPts(f,4);addXP('friends',4);renderFriend(pk(f.d.lines));}else renderFriend(pk(f.d.only?f.d.lines:f.d.lines.concat(["We talked so much today! Let's hang out.","Hehe, you're fun to talk to!"])));};
 ACT.fgift=()=>{const foods=Object.keys(S.bag).filter(k=>FOODS[k]&&S.bag[k]>0);
   if(!foods.length){renderFriend("You don't have any food in your bag. The market has yummy stuff!");return;}
   renderFriend(FR.d.giftAsk||'Ooh, a present? For me?',`<div class="grid" style="margin-top:12px">${foods.map(k=>`<button class="it" data-a="give:${k}"><span class="em">${FOODS[k].i}</span><span>${FOODS[k].n}</span><span class="have">×${S.bag[k]}</span></button>`).join('')}</div><div class="row"><button class="btn white" data-a="fback">Back</button></div>`);};
@@ -3325,7 +3325,7 @@ function newIn(sh){S.newin=S.newin||{};let L=S.newin[sh];if(!Array.isArray(L))L=
   return L;}
 function newInHTML(sh){if(!S||!NEWIN_SHOPS[sh])return'';const L=newIn(sh);if(!L.some(Boolean))return'';
   return`<div class="sec">✨ New in! <small class="nisub">Buy one and something new pops up!</small></div><div class="grid newin">${L.map((it,i)=>{if(!it)return'';const img=it.kind==='furn'?thumb(it.k,it.c):'';
-    return`<button class="it ni${NEWPOP===sh+i?' pop':''}" data-a="nbuy:${sh}:${i}"><span class="nbadge">NEW</span>${img?`<img class="nimg" src="${img}" alt="">`:`<span class="em">${it.i}</span>`}<span>${esc(it.n)} <i class="dot" style="background:${it.c}"></i></span><span class="pr">${it.p} 🪙</span></button>`;}).join('')}</div>`;}
+    return`<button class="it ni${NEWPOP===sh+i?' nipop':''}" data-a="nbuy:${sh}:${i}"><span class="nbadge">NEW</span>${img?`<img class="nimg" src="${img}" alt="">`:`<span class="em">${it.i}</span>`}<span>${esc(it.n)} <i class="dot" style="background:${it.c}"></i></span><span class="pr">${it.p} 🪙</span></button>`;}).join('')}</div>`;}
 ACT.nbuy=(sh,i)=>{if(typeof sh==='string'&&sh.includes(':')){const p=sh.split(':');sh=p[0];i=p[1];}const L=newIn(sh),it=L[+i];if(!it)return;if(S.coins<it.p){SFX.no();toast('Not enough coins yet! 🪙');return;}
   S.coins-=it.p;SFX.coin();SFX.yay();
   if(it.kind==='hat'){S.outfits=S.outfits||[];S.outfits.push({k:it.k,c:it.c});toast(it.i+' '+it.n+'! Try it on at the 🪞 mirror.',3.2);qEvent('clothes');}
@@ -4390,9 +4390,9 @@ function tcPlane(k){const C=CUT,g=new THREE.Group();cone(g,.07,.22,'#ffffff',0,0
   C.planes.push({g,a:[k.x,1.25,k.z+.5],b:[rand(-2.4,2.4),.03,rand(-1.8,2.6)],t:0,dur:1.6,delay:.5});}
 function tcPlanes(dt){for(const pl of CUT.planes){pl.t+=dt;const k=clamp((pl.t-pl.delay)/pl.dur,0,1);pl.g.visible=pl.t>pl.delay;
   const x=lerp(pl.a[0],pl.b[0],k),z=lerp(pl.a[2],pl.b[2],k),y=lerp(pl.a[1],pl.b[1],k)+Math.sin(Math.PI*k)*.9;if(k<1)pl.g.rotation.set(0,Math.atan2(pl.b[0]-pl.a[0],pl.b[2]-pl.a[2]),Math.sin(pl.t*6)*.3);pl.g.position.set(x,y,z);}}
-function tcTap(cx,cy){const C=CUT;if(!C||C.stage!=='lesson')return;const r=renderer.domElement.getBoundingClientRect(),v=new THREE.Vector3();let best=null,bd=1e9;
-  for(const k of C.kids){v.set(0,1.0,0);k.p.root.localToWorld(v);v.project(camera);const sx=r.left+(v.x+1)/2*r.width,sy=r.top+(1-v.y)/2*r.height,d=Math.hypot(sx-cx,sy-cy);if(d<bd){bd=d;best=k;}}
-  if(best&&bd<Math.max(80,r.width*.11))tcScold(best);}
+function tcTap(cx,cy){const C=CUT;if(!C||C.stage!=='lesson')return;const r=renderer.domElement.getBoundingClientRect(),v=new THREE.Vector3();let best=null,bd=1e9,bg=null,bgd=1e9;
+  for(const k of C.kids){v.set(0,1.0,0);k.p.root.localToWorld(v);v.project(camera);const sx=r.left+(v.x+1)/2*r.width,sy=r.top+(1-v.y)/2*r.height,d=Math.hypot(sx-cx,sy-cy);if(d<bd){bd=d;best=k;}if(k.goof&&d<bgd){bgd=d;bg=k;}}
+  if(bg&&bgd<Math.max(80,r.width*.11)*1.2)tcScold(bg);else if(best&&bd<Math.max(80,r.width*.11))tcScold(best);}
 function tcScold(k){const C=CUT;if(!k.goof){SFX.tap();toast(`😇 ${k.nm} is listening nicely!`,2);return;}
   C.caught++;k.warn=Math.min(3,k.warn+1);tcStop(k);SFX.no();popText(`✋ Stop goofing off, ${k.nm}!`);
   const b=label('😳',.34);b.position.y=2.0;k.p.root.add(b);setTimeout(()=>k.p.root.remove(b),1300);
