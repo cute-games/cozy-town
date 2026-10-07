@@ -39,7 +39,7 @@ button{font-family:inherit}
 .btn.mint{background:var(--mint)}.btn.butter{background:var(--butter)}.btn.sky{background:var(--sky)}.btn.lilac{background:var(--lilac)}.btn.white{background:#fff}.btn.coral{background:var(--coral)}
 .ib{width:56px;height:56px;min-height:0;padding:0;border-radius:50%;font-size:26px}
 #left{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);left:calc(env(safe-area-inset-left,0px) + 12px);display:flex;flex-direction:column;gap:10px;align-items:flex-start;max-width:calc(100% - 210px)}
-#stats{display:flex;flex-wrap:wrap;gap:8px}
+#stats{display:flex;flex-wrap:wrap;gap:8px;max-width:100%}/* the chips stay in the left column: a long day label never pushes the tummy chip under the top buttons */
 .chip{display:inline-flex;align-items:center;gap:6px;height:42px;padding:0 14px 0 10px;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:999px;box-shadow:0 4px 0 var(--soft);font-weight:800;font-size:19px;white-space:nowrap}
 .chip .e{font-size:21px;line-height:1}
 .bar{display:inline-block;width:62px;height:13px;border-radius:99px;background:var(--paper2);border:2px solid var(--line);overflow:hidden}
@@ -175,7 +175,7 @@ button{font-family:inherit}
 .ing.ok{border-color:#2f9a77;color:#2f9a77}
 #nav{pointer-events:auto;display:flex;align-items:center;gap:8px;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:999px;box-shadow:0 4px 0 var(--soft);padding:3px 4px 3px 12px;font-weight:800;font-size:18px;max-width:100%}
 #navArrow{display:inline-block;font-size:24px;transition:transform .15s}
-#nav .x{width:34px;height:34px;font-size:16px;border-width:2px;box-shadow:0 2px 0 #3d2c5e}
+#nav .x{width:44px;height:44px;font-size:16px;box-shadow:0 2px 0 #3d2c5e}
 .mapwrap{position:relative;margin-top:6px}
 #mapc{width:100%;display:block;border-radius:16px;border:3px solid #3d2c5e;background:#9fe486;touch-action:none}
 .places{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
@@ -196,7 +196,7 @@ button{font-family:inherit}
 .qmsg .pill{font-size:15px}
 .emo{font-size:26px;width:48px;height:48px;border-radius:14px;border:2.5px solid #3d2c5e;background:#fff;cursor:pointer;touch-action:manipulation}
 .pk{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
-.ph-row{display:flex;justify-content:space-between;align-items:center;background:#fff;border:3px solid #3d2c5e;border-radius:16px;padding:8px 12px;margin-top:8px;font-weight:800;font-size:17px}
+.ph-row{display:flex;justify-content:space-between;align-items:center;background:#fff;border:3px solid #3d2c5e;border-radius:16px;padding:8px 12px;margin-top:8px;font-weight:800;font-size:17px;color:#3d2c5e}
 .ph-row .hearts{position:static;font-size:17px}
 #title{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;overflow:hidden}
 .logo{margin:0;font-weight:800;font-size:clamp(54px,13.5vw,136px);line-height:1;white-space:nowrap;max-width:100%}
@@ -214,7 +214,7 @@ button{font-family:inherit}
 #mmBtn[hidden]{display:none}
 #mm{display:block;width:100%;height:100%;border-radius:50%}
 .mmPal{position:absolute;right:-8px;bottom:-4px;width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid var(--line);font-size:15px;line-height:24px;text-align:center}
-#jobTxt{pointer-events:auto;cursor:pointer;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:16px;box-shadow:0 4px 0 var(--soft);padding:5px 12px;font-weight:700;font-size:16px;line-height:1.3;max-width:min(270px,100%)}
+#jobTxt{pointer-events:auto;cursor:pointer;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:16px;box-shadow:0 4px 0 var(--soft);padding:9px 12px;font-weight:700;font-size:16px;line-height:1.3;max-width:min(270px,100%);min-height:44px;align-content:center}
 #jobTxt .tm{font-weight:800;font-size:20px}
 #jobTxt small{font-weight:600;opacity:.8}
 #jobTxt.late{background:#ffd9d9;animation:jobPulse 1s ease-in-out infinite}
@@ -260,7 +260,7 @@ button{font-family:inherit}
 .dotb.on{background:var(--butter);box-shadow:0 0 0 3px var(--line)}
 #dotPrev{width:100%;height:auto;border:3px solid var(--line);border-radius:14px;display:block}
 .earn{font-size:20px;font-weight:700;margin:6px 0 0}
-@media (max-width:600px){#mmBtn{width:112px;height:112px}#jobTxt{font-size:14px;padding:4px 10px}#jobTxt .tm{font-size:17px}.jobc .ji{font-size:30px}.jobc b{font-size:14px}.jobc small{font-size:11px}.dots{grid-template-columns:repeat(3,1fr)}.dotb{font-size:14px;padding:6px;gap:6px}.dotb i{flex-basis:24px;height:24px}#note span#noteX{font-size:15px}#note .ni{font-size:32px}}
+@media (max-width:600px){#mmBtn{width:112px;height:112px}#jobTxt{font-size:14px;padding:10px 10px}#jobTxt .tm{font-size:17px}.jobc .ji{font-size:30px}.jobc b{font-size:14px}.jobc small{font-size:11px}.dots{grid-template-columns:repeat(3,1fr)}.dotb{font-size:14px;padding:6px;gap:6px}.dotb i{flex-basis:24px;height:24px}#note span#noteX{font-size:15px}#note .ni{font-size:32px}}
 @media (max-height:500px){#mmBtn{width:100px;height:100px}}
 @media (max-width:600px){#left{max-width:calc(100% - 245px)}.chip{height:36px;font-size:16px;padding:0 10px 0 8px}.chip .e{font-size:17px}.bar{width:44px}.ib{width:48px;height:48px;font-size:22px}#topbtns{gap:7px}#tasks{font-size:14px}#tasks h3{font-size:15px}#act{width:86px;height:86px;font-size:40px}#actWrap{bottom:calc(env(safe-area-inset-bottom,0px) + 124px)}#bJump{width:78px;height:78px;font-size:34px}#bRun{width:64px;height:64px;font-size:28px}#joy{width:124px;height:124px}}
 #err{position:fixed;left:12px;right:12px;bottom:12px;z-index:50;background:#fff;color:#3d2c5e;border:3px solid #3d2c5e;border-radius:14px;padding:10px 14px;font:600 15px var(--font)}
@@ -430,10 +430,10 @@ button{font-family:inherit}
 .tgbtns{display:flex;gap:8px;flex-wrap:wrap;flex:1}
 .tkey{display:inline-block;margin-left:8px;font-size:15px;font-weight:800;color:#1f9a57;background:#e3f8ec;border-radius:8px;padding:1px 7px}
 .tq.oops{background:#fff1f4;border-radius:10px}.thint{flex-basis:100%;font-size:15px;font-weight:700;color:#c0284b;padding:2px 4px 4px}
-.ttop{display:flex;justify-content:space-between;gap:8px;margin:4px 0 6px}.tfoot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}.tfoot .tsp{flex:1}.btn.sm{min-height:40px;font-size:16px;padding:6px 12px}
+.ttop{display:flex;justify-content:space-between;gap:8px;margin:4px 0 6px}.tfoot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}.tfoot .tsp{flex:1}.btn.sm{min-height:44px;min-width:44px;font-size:16px;padding:6px 12px}
 @media (max-height:500px){.tpaper{padding:10px 14px 12px}.tpaper .hd{margin-bottom:2px}.tpaper .hd h2{font-size:21px}.tpaper .note{font-size:13px;margin:0 0 2px}.tpaper .ttop{margin:2px 0 4px}
   .tpaper .tq{padding:3px 0}.tpaper .tpic{font-size:18px}.tpaper .hand{font-size:17px}.tpaper .tb{min-height:36px;padding:3px 9px;font-size:17px}.tpaper .mk{font-size:24px;min-width:40px}
-  .tpaper .stamp{min-width:48px;height:48px;font-size:22px;border-width:3px}.tpaper .tfoot{margin-top:6px}.tpaper .tfoot .btn{min-height:40px;font-size:16px;padding:6px 12px}.tpaper .thint{font-size:13px}}.pjs.tg{font-size:22px;font-weight:900;color:#ff3b5c}
+  .tpaper .stamp{min-width:48px;height:48px;font-size:22px;border-width:3px}.tpaper .tfoot{margin-top:6px}.tpaper .tfoot .btn{min-height:44px;font-size:16px;padding:6px 12px}.tpaper .thint{font-size:13px}}.pjs.tg{font-size:22px;font-weight:900;color:#ff3b5c}
 .psrow.cur{background:#e6f7ff;border-radius:14px;opacity:1}
 .pji{font-size:30px;width:40px;text-align:center}.psrow>div{flex:1;display:flex;flex-direction:column;min-width:0}.psrow b{font-size:17px}.psrow i{font-style:normal;font-size:14px;opacity:.8}
 .pjs{font-size:15px;white-space:nowrap;font-weight:800}
@@ -447,7 +447,7 @@ button{font-family:inherit}
 #knockCard .kc-t{font-size:22px;font-weight:900}
 #knockCard .kc-m{margin:6px 0 12px;font-size:16px;font-weight:700;line-height:1.35}
 #knockCard .kc-b{display:flex;gap:10px;justify-content:center}
-@keyframes kcPop{0%{transform:translateX(-50%) scale(.6);opacity:0}70%{transform:translateX(-50%) scale(1.06);opacity:1}100%{transform:translateX(-50%) scale(1)}}
+@keyframes kcPop{0%{transform:translateX(-50%) scale(.6);opacity:0}70%{transform:translateX(-50%) scale(1.06);opacity:1}100%{transform:translateX(-50%) scale(1)}}/* 😴 sleeping together: the bed card at the bottom, and the phone wiggles when friends ring */#zzCard{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translateX(-50%);width:min(380px,calc(100vw - 32px));background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:22px;box-shadow:0 5px 0 var(--soft);padding:8px 12px 14px;text-align:center;pointer-events:auto}#zzCard[hidden]{display:none}#zzCard .zt{font-size:22px;font-weight:900}#zzCard .zs{font-size:15px;font-weight:700;line-height:1.25;margin:2px 0 10px}#zzCard .zb{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}#zzCard .btn{font-size:18px;padding:10px 12px}body.zz #joy,body.zz #moveBtns,body.zz #actWrap{visibility:hidden}#bPhone.ring{animation:noteWiggle .4s ease-in-out 6}
 /* 7 Oct 2026: homework paper readable in light and dark; bigger right/wrong buttons; class messages at the top; buttons at least 44 px */.tpaper .paper{color:#3d2c5e}.tpaper .tqq{color:#3d2c5e;font-size:17px;font-weight:700}.tpaper .tb{min-width:58px;min-height:52px;font-size:22px}.tpaper .tb+.tb{margin-left:10px}@media (max-height:500px){.tpaper .tb{min-height:44px;min-width:52px;font-size:19px}.tpaper .tqq{font-size:16px}}@media (min-width:700px) and (min-height:600px){#card.tpaper{width:min(640px,92vw);max-width:min(640px,92vw)}}body.tch #toast{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto}.pill{min-height:44px}.sw{min-width:44px;min-height:44px}.ph-home{height:44px;background:none;position:relative}.ph-home::after{content:'';position:absolute;left:0;right:0;top:17px;height:10px;border-radius:99px;background:rgba(255,255,255,.6)}@media (max-height:500px){#card{max-height:calc(100vh - 16px);max-height:calc(100dvh - 16px);overflow-y:auto;overscroll-behavior:contain}#card:has(.earn) .row:last-child{position:sticky;bottom:0;background:var(--paper);padding:6px 0 2px;margin-bottom:0}}.ph-back{width:44px;height:44px}.qbtn{min-height:44px}.x{width:44px;height:44px;min-height:44px;border-width:3px}.qtag{color:#3d2c5e}</style>
 </head>
 <body>
@@ -475,8 +475,8 @@ button{font-family:inherit}
   </div>
   <div id="cross"></div>
   <div id="joy"><div id="knob"></div></div>
-  <div id="moveBtns"><div id="swMeter" hidden aria-hidden="true"><i id="swFill"></i></div><button class="btn" id="bRun" aria-label="Run" aria-pressed="false">🏃</button><button class="btn mint" id="bJump" aria-label="Jump">⬆️</button></div>
-  <div id="actWrap" hidden><div id="actLbl"></div><button class="btn" id="act" aria-label="Use"></button></div>
+  <div id="moveBtns"><div id="swMeter" hidden aria-hidden="true"><i id="swFill"></i></div><button class="btn rnd" id="bRun" aria-label="Run" aria-pressed="false">🏃</button><button class="btn mint rnd" id="bJump" aria-label="Jump">⬆️</button></div>
+  <div id="actWrap" hidden><div id="actLbl"></div><button class="btn rnd" id="act" aria-label="Use"></button></div>
   <div id="bar" hidden></div>
   <div id="rvStars" hidden aria-hidden="true"><b><span class="bg">★</span><span class="fg">★</span></b><b><span class="bg">★</span><span class="fg">★</span></b><b><span class="bg">★</span><span class="fg">★</span></b></div>
   <div id="dtut" hidden role="dialog" aria-label="How the designer job works"><div id="dtCard"><div id="dtPic"></div><div id="dtCap"></div><div id="dtDots"></div><div class="row"><button class="btn white" id="dtSkip">Skip</button><button class="btn mint" id="dtNext">Next ▶</button></div></div></div>
@@ -657,7 +657,7 @@ function floatText(text,x,y,z,o={}){const s=label(text,o.h||.4,{bg:null,bw:0,pad
 function updFloats(dt){for(let i=FLOATS.length-1;i>=0;i--){const f=FLOATS[i];f.t+=dt;f.s.position.y+=dt*.55;f.s.material.opacity=1-Math.max(0,(f.t/f.life-.55)*2.2);if(f.t>=f.life){scene.remove(f.s);f.s.material.map.dispose();f.s.material.dispose();FLOATS.splice(i,1);}}}
 
 /* ---- sound ---- */
-const SET=Object.assign({look:1,sound:true,gfx:'nice',day:true},(()=>{try{return JSON.parse(localStorage.getItem('cozytown-settings'))||{};}catch(e){return{};}})());
+const SET=Object.assign({look:1,sound:true,gfx:'nice'},(()=>{try{return JSON.parse(localStorage.getItem('cozytown-settings'))||{};}catch(e){return{};}})());
 function saveSet(){try{localStorage.setItem('cozytown-settings',JSON.stringify(SET));}catch(e){}}
 let AC=null;
 function audioInit(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){AC=null;}}if(AC&&AC.state==='suspended')AC.resume().catch(()=>{});}
@@ -679,6 +679,7 @@ const SFX={
   land(){tone(160,.08,'triangle',.12,0,110);},
   honk(){tone(420,.14,'square',.06);tone(420,.16,'square',.06,.2);},
   kick(){tone(160,.1,'triangle',.2,0,90);},
+  shot(){tone(120,.16,'triangle',.28,0,60);tone(520,.22,'sine',.05,.03,1300);},
   quack(){tone(520,.08,'square',.05,0,380);tone(500,.09,'square',.05,.13,360);},
   whee(){tone(500,.6,'sine',.1,0,1100);},
   splash(){for(let i=0;i<5;i++)tone(900+Math.random()*900,.06,'sine',.05,i*.04);},
@@ -693,6 +694,7 @@ const SFX={
   hit(){tone(620,.06,'square',.06,0,360);tone(1300,.05,'triangle',.07);},
   swish(){tone(1200,.13,'sine',.03,0,420);},
   aww(){tone(587,.16,'sine',.08,0,466);tone(466,.24,'sine',.07,.15,392);},
+  ring(){for(let k=0;k<2;k++)for(let i=0;i<8;i++)tone(i%2?1047:1319,.06,'triangle',.11,k*.75+i*.07);},
 };
 function playTune(){const s=[0,4,7,12,7,4,5,9,12,9,7,4,0];s.forEach((n,i)=>tone(523.25*Math.pow(2,n/12),.3,'triangle',.13,i*.2));}
 
@@ -888,8 +890,8 @@ function makePet(type,col){
   }
   return {root,b,legs,tail,head,type,phase:Math.random()*6};
 }
-function animPet(p,dt,moving){
-  p.phase+=dt*(moving?11:2.2);
+function animPet(p,dt,moving,spd=1){
+  p.phase+=dt*(moving?11*spd:2.2);
   const a=moving?Math.sin(p.phase)*.6:0;
   p.legs.forEach((l,i)=>{l.rotation.x=lerp(l.rotation.x,(i%2?a:-a)*(i<2?1:-1),.35);});
   p.b.position.y=moving?(p.type==='bunny'?Math.abs(Math.sin(p.phase*.5))*.14:Math.abs(Math.sin(p.phase))*.02):lerp(p.b.position.y,0,.3);
@@ -1304,12 +1306,13 @@ function buildSky(){
   const sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.BufferAttribute(pos,3));
   stars=new THREE.Points(sg,new THREE.PointsMaterial({color:'#ffffff',size:2.4,sizeAttenuation:false,transparent:true,opacity:0,fog:false,depthWrite:false}));stars.frustumCulled=false;scene.add(stars);
   outside=new THREE.Group();scene.add(outside);
+  const mr=Math.random;Math.random=seeded(13);try{   /* 🌳 the same clouds, hills and far trees on every load (same drawing work every time) */
   for(let i=0;i<16;i++){const c=new THREE.Group();const n=3+(Math.random()*3|0);for(let k=0;k<n;k++)sph(c,rand(5,9),null,k*6.5-n*3.2+rand(-2,2),rand(-1.5,1.5),rand(-3,3),{mat:CLOUD,olMat:OLC,ol:.55,ws:12,hs:8,s:[1,.68,1]});
     const a=rand(0,TAU),r=rand(80,220);c.position.set(Math.cos(a)*r,rand(48,80),Math.sin(a)*r);c.userData.sp=rand(.6,1.5);bake(c,false);outside.add(c);clouds.push(c);}
   const hills=new THREE.Group();outside.add(hills);
   for(let i=0;i<28;i++){const a=i/28*TAU+rand(-.08,.08),r=rand(205,250);sph(hills,rand(40,62),pick(['#86d37c','#79c973','#93dc85']),Math.cos(a)*r,-rand(8,18),Math.sin(a)*r,{ol:.9,ws:18,hs:10,s:[1,.5,1]});}
   for(let i=0;i<110;i++){const a=rand(0,TAU),r=rand(94,160);const x=Math.cos(a)*r,z=Math.sin(a)*r;if(Math.abs(x)<7||Math.abs(z)<7||(x<-78&&Math.abs(z)<38)||(Math.abs(Math.abs(x)-50)<7&&Math.abs(z)<95)||(Math.abs(Math.abs(z)-50)<7&&Math.abs(x)<95))continue;(Math.random()<.5?pine:tree)(hills,x,z,rand(1.3,2.2));}
-  bake(hills,false);
+  bake(hills,false);}finally{Math.random=mr;}
 }
 
 /* ---- the town ---- */
@@ -2401,8 +2404,10 @@ function buildPetShop(){
 }
 
 /* ================= game ================= */
-const HOUR=30;
-const P={x:-17,z:-4.8,yaw:0,pitch:0,bobT:0,bobA:0,moving:false,sit:null,jy:0,vy:0,dip:0,run:false};
+/* 🕰️ the clock: day 7:00→21:00 takes 10 real minutes, night 21:00→7:00 takes 5. HOUR = real seconds per game hour
+   right now (the main loop sets it every frame), so hunger, pet happiness and plants keep counting game hours */
+const hourLen=h=>h>=7&&h<21?600/14:300/10;let HOUR=hourLen(12);
+const P={x:-17,z:-4.8,yaw:0,pitch:0,bobT:0,bobA:0,moving:false,sit:null,jy:0,vy:0,dip:0,run:false,hd:Math.PI};
 let S=null,PLAYING=false,PET_ACTORS=[],FRIEND_ACTORS=[],PEN=[],KEEPERS=[],LITTER=[],HOME_ITEMS=new Map(),TARGET=null;
 const UI={open:false,onClose:null,lock:false};
 const DEFAULT_LOOK={skin:'#fdc991',hair:'#8d6238',style:'long',eyes:'round',mouth:'smile',top:'#fdc1fa',bottom:'#37a4fc',shoes:'#8c6137',outfit:'sweater',hat:'none',glasses:'none'};
@@ -2446,6 +2451,7 @@ function freshState(){return{v:1,t:0,name:'',day:1,time:8,coins:120,hunger:85,ba
 const LS='cozytown-save-1';
 function readLocal(){try{return JSON.parse(localStorage.getItem(LS));}catch(e){return null;}}
 function snap(){let loc=CUR?CUR.id:'city',x=P.x,z=P.z,yaw=P.yaw;
+  if(P.sit&&P.sit.bk)[x,z,yaw]=P.sit.bk;   /* in bed: save the spot beside the bed, not the pillow */
   if(CR&&CR.prev){loc=CR.prev.loc;x=CR.prev.x;z=CR.prev.z;yaw=CR.prev.yaw;}
   if(loc==='client'){const hid=S.ds&&((S.ds.o&&S.ds.o.h)||S.ds.prevH),H=hid&&HOUSE(hid);if(H){loc='city';x=H.x+Math.sin(H.ry)*1.7;z=H.z+Math.cos(H.ry)*1.7;yaw=H.ry+Math.PI;}else loc='studio';}
   if(loc==='visit'){const d=laneHostDoor();loc='city';x=d[0];z=d[1];yaw=d[2];}
@@ -2772,14 +2778,51 @@ class Friend{
   }
 }
 function hopY(e,dt){if(!e.hopT&&!e.hopA)return 0;if(e.hopT>0){e.hopT-=dt;if(e.hopT<=0){e.hopT=0;e.hopA=.001;}return 0;}e.hopA+=dt*2.6;if(e.hopA>=1){e.hopA=0;return 0;}return Math.sin(e.hopA*Math.PI)*.32;}
+/* 🐾 followers keep a cozy gap (about 2 m): stand still and they stay put (no circling, no crowding);
+   walk off (3.5 m) and they trot after you, side by side behind the way you walk; very far away = they pop over */
+const fOff=n=>(n%2?-.5:.5)*Math.ceil(n/2);   /* follower n's place: 0 right behind, then left, right, further out */
+const FOLW={x:0,z:0},FA={x:0,z:0};   /* FOLW: where you stood last frame: moved without walking (a lesson, a ride, a jump to a place) = "behind" is behind your back again. FA: a follower's next spot */
+const STEPS=new Float32Array(48),STN={n:0,loc:null};   /* your last 24 footsteps (0.5 m apart): a blocked follower takes the way you walked (through a gate, round a fence) */
+const onRoad=(x,z)=>Math.abs(x)<84&&Math.abs(z)<84&&(Math.abs(z+50)<4.3||Math.abs(z)<4.3||Math.abs(z-50)<4.3||Math.abs(x+50)<4.3||Math.abs(x)<4.3||Math.abs(x-50)<4.3);   /* the town's car roads */
+function fPush(e,o,k){if(o===e||o.loc!==CUR.id||o.mode==='away')return;let qx=FA.x-o.x,qz=FA.z-o.z,q=Math.hypot(qx,qz);if(q>=.6)return;if(q<1e-3){qx=Math.sin(k)*1e-3;qz=Math.cos(k)*1e-3;q=1e-3;}FA.x+=qx/q*(.6-q);FA.z+=qz/q*(.6-q);}
+function fAvoid(e,x,z,k){FA.x=x;FA.z=z;for(const o of PET_ACTORS)fPush(e,o,k);for(const o of FRIEND_ACTORS)fPush(e,o,k);}   /* pets and friends go round each other and never stand inside each other */
+function fMove(e,x,z,k,cap){fAvoid(e,x,z,k);let mx=FA.x-e.x,mz=FA.z-e.z;const m=Math.hypot(mx,mz);if(m>cap){mx*=cap/m;mz*=cap/m;}[e.x,e.z]=collideXZ(e.x+mx,e.z+mz,e.r,CUR);}   /* small steps only: never through a thin fence */
 function followStep(e,dt,idx){
-  const fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw),rx=Math.cos(P.yaw),rz=-Math.sin(P.yaw);
-  const side=[0,-.8,.8,-1.4,1.4][idx%5],back=1.5+(idx>2?.8:0);
-  const tx=P.x-fx*back+rx*side,tz=P.z-fz*back+rz*side,dx=tx-e.x,dz=tz-e.z,d=Math.hypot(dx,dz);
-  if(d>14){[e.x,e.z]=collideXZ(tx,tz,e.r,CUR);e.moving=false;return;}
-  if(d>.35){const s=Math.min(d,(d>2.5?5.4:2.8)*dt);[e.x,e.z]=collideXZ(e.x+dx/d*s,e.z+dz/d*s,e.r,CUR);e.face=Math.atan2(dx,dz);e.moving=true;}
-  else{e.moving=false;e.face=angLerp(e.face,Math.atan2(P.x-e.x,P.z-e.z),.08);}
+  if(!P.moving&&(P.x!==FOLW.x||P.z!==FOLW.z)){P.hd=P.yaw+Math.PI;STN.n=0;}FOLW.x=P.x;FOLW.z=P.z;
+  if(STN.loc!==CUR.id){STN.loc=CUR.id;STN.n=0;}if(P.moving){const j=(STN.n+23)%24*2;if(!STN.n||Math.hypot(P.x-STEPS[j],P.z-STEPS[j+1])>.5){STEPS[STN.n%24*2]=P.x;STEPS[STN.n%24*2+1]=P.z;STN.n++;}}
+  const ax=e.x-P.x,az=e.z-P.z,pd=Math.hypot(ax,az),a=P.hd+Math.PI+fOff(idx);
+  const tx=P.x+Math.sin(a)*2,tz=P.z+Math.cos(a)*2,dx=tx-e.x,dz=tz-e.z,d=Math.hypot(dx,dz);
+  if(d>14){[e.x,e.z]=collideXZ(tx,tz,e.r,CUR);e.moving=false;e.far=e.stk=0;e.wp=-1;return;}
+  if(!e.fol){if(pd<3.5)e.far=0;else if(pd>Math.max(3.5,e.far||0)){e.fol=1;e.far=0;e.stk=0;e.wp=-1;}}   /* you came back near it: it forgets it was stuck */
+  else if((pd<2.35||d<.3)&&!(P.moving&&ax*Math.sin(P.hd)+az*Math.cos(P.hd)<0)||e.stk>.6&&!P.moving){e.far=e.stk>.6?pd+1.5:0;e.fol=0;e.wp=-1;}  /* close enough (or stuck at a wall): wait here */
+  if(e.fol&&d>(e.moving?.05:.3)){let gx=tx,gz=tz;if(e.stk>.15&&!(e.wp>=0)&&!((e.tr-=dt)>0)){e.wp=fTrail(e);e.tr=.5;}   /* blocked: take the way you walked (looks again every 0.5 s) */
+    if(e.wp>=0){if(e.wp<STN.n-24||e.wp>=STN.n)e.wp=-1;else{const j=e.wp%24*2;gx=STEPS[j];gz=STEPS[j+1];if(Math.hypot(gx-P.x,gz-P.z)<2.5){e.wp=-1;gx=tx;gz=tz;}else if(Math.hypot(gx-e.x,gz-e.z)<.35)e.wp++;}}
+    const gdx=gx-e.x,gdz=gz-e.z,gd=Math.hypot(gdx,gdz)||1e-6,sp=Math.min(6.2,d*3),s=Math.min(gd,sp*dt),ox=e.x,oz=e.z;   /* the further away, the faster; slows down gently near its spot (no stop-and-go when you walk slowly) */
+    fMove(e,e.x+gdx/gd*s,e.z+gdz/gd*s,idx,s+.05);if(Math.hypot(e.x-ox,e.z-oz)<s*.3)e.stk=(e.stk||0)+dt;else e.stk=e.tr=0;e.face=Math.atan2(gdx,gdz);e.moving=true;e.spd=clamp(sp/3,.6,1.8);}
+  else{let vx=0,vz=0;const hx=Math.sin(P.hd),hz=Math.cos(P.hd),l=ax*hz-az*hx,ox=e.x,oz=e.z;   /* waiting: only small natural moves */
+    if(P.moving&&pd<1.4&&ax*hx+az*hz>0&&Math.abs(l)<.9){if(!e.dg)e.dg=l<0?-1:1;vx=hz*e.dg*3.5;vz=-hx*e.dg*3.5;}else e.dg=0;   /* you walk into it: it steps out of your way */
+    if(!e.dg&&CUR.id==='city'&&pd>.9&&onRoad(e.x,e.z)&&!onRoad(P.x,P.z)){vx=-ax/pd*2.5;vz=-az/pd*2.5;}   /* never wait on the road (cars stop for pets): come to you on the pavement */
+    fMove(e,ox+vx*dt,oz+vz*dt,idx,4*dt);   /* this also gets it out of furniture you just put on its spot */
+    const mv=Math.hypot(e.x-ox,e.z-oz);if(e.dg&&mv<dt)e.dg=-e.dg;e.moving=mv>dt*1.5;e.spd=1;e.face=e.moving?Math.atan2(e.x-ox,e.z-oz):angLerp(e.face,Math.atan2(-ax,-az),.08);}
 }
+/* a free straight way from a to b: no wall, fence or water in between (only the walls near that way are checked: cheap) */
+const FL=[];
+function fNear(list,x1,z1,x2,z2){for(const c of list){const r=c.cr;if((r!==undefined?c.cx+r:c.x2)<x1||(r!==undefined?c.cx-r:c.x1)>x2||(r!==undefined?c.cz+r:c.z2)<z1||(r!==undefined?c.cz-r:c.z1)>z2)continue;FL.push(c);}}
+function fLine(ax,az,bx,bz){const L=CUR,b=L.bounds,dx=bx-ax,dz=bz-az,n=Math.ceil(Math.hypot(dx,dz)/.45),x1=Math.min(ax,bx)-.3,z1=Math.min(az,bz)-.3,x2=Math.max(ax,bx)+.3,z2=Math.max(az,bz)+.3;
+  FL.length=0;fNear(L.cols,x1,z1,x2,z2);fNear(L.dcols,x1,z1,x2,z2);
+  for(let i=1;i<=n;i++){const px=ax+dx*i/n,pz=az+dz*i/n;if(px<b.x1+.24||px>b.x2-.24||pz<b.z1+.24||pz>b.z2-.24)return false;
+    for(const c of FL){const q=pushOut(px,pz,.25,c);if(q&&Math.abs(q[0]-px)+Math.abs(q[1]-pz)>.01)return false;}}
+  return true;}
+const fClear=(x,z)=>fLine(P.x,P.z,x,z);
+function fTrail(e){for(let k=STN.n-1;k>=Math.max(0,STN.n-24);k--){const j=k%24*2;if(fLine(e.x,e.z,STEPS[j],STEPS[j+1]))return k;}return -1;}   /* your newest footstep it can walk straight to */
+/* pop a follower a cozy gap from you; it waits there. Beside you (doors, "Take me home", loading): out of view and never in the doorway behind you.
+   front=1 ("Bring my pets to me"): in front of you, all of it in view. Never behind a wall or fence (the way to you is free), never on another pet or friend */
+function nearMe(e,n,front){const sd=n%2?-1:1,b=P.yaw+Math.PI,f=fOff(front?n-1:n),C=[b+f*.45,3,b+f*.45,2.4];
+  for(const r of[2,1.4])for(const s of[sd,-sd])for(let j=0;j<4;j++)C.push(b+s*(1.6+.35*j),r);
+  if(!front)C.push(C.shift(),C.shift(),C.shift(),C.shift());   /* beside you first, in front only if there is no room */
+  C.push(b+f*.15,2.6,b+Math.PI-f*.3,2);   /* a narrow corridor: just in front, or behind you */
+  const rd=CUR.id==='city'&&!onRoad(P.x,P.z);let i=0;for(;i<C.length;i+=2){const x=P.x+Math.sin(C[i])*C[i+1],z=P.z+Math.cos(C[i])*C[i+1];fAvoid(e,x,z,0);if(FA.x===x&&FA.z===z&&!(rd&&onRoad(x,z))&&fClear(x,z))break;}if(i>=C.length)i=0;
+  [e.x,e.z]=collideXZ(P.x+Math.sin(C[i])*C[i+1],P.z+Math.cos(C[i])*C[i+1],e.r,CUR);e.loc=CUR.id;e.fol=0;e.far=e.stk=0;e.wp=-1;e.moving=false;e.face=Math.atan2(P.x-e.x,P.z-e.z);}
 
 /* ---- pets ---- */
 class Pet{
@@ -2788,12 +2831,12 @@ class Pet{
     this.x=d.x;this.z=d.z;this.loc=d.loc;this.face=0;this.moving=false;this.r=.25;this.wt=0;this.tx=d.x;this.tz=d.z;
     this.target={x:0,z:0,r:2.1,icon:PET_TYPES[d.type].icon,label:()=>'Play with '+d.name,act:()=>openPet(this),obj:this.g};}
   update(dt,idx){const d=this.d;if(this.ps)return;
-    if(!d.stay){if(this.loc!==CUR.id){this.loc=CUR.id;this.x=P.x+.8;this.z=P.z+.8;}followStep(this,dt,idx);}
+    if(!d.stay){if(this.loc!==CUR.id)nearMe(this,idx);followStep(this,dt,idx);}
     else if(this.loc===CUR.id){this.wt-=dt;if(this.wt<=0){this.wt=rand(2,6);const a=rand(0,TAU),r=rand(0,1.6);this.tx=d.sx+Math.cos(a)*r;this.tz=d.sz+Math.sin(a)*r;}
       const dx=this.tx-this.x,dz=this.tz-this.z,dd=Math.hypot(dx,dz);if(dd>.1){const s=Math.min(dd,1.1*dt);[this.x,this.z]=collideXZ(this.x+dx/dd*s,this.z+dz/dd*s,this.r,CUR);this.face=Math.atan2(dx,dz);this.moving=true;}else this.moving=false;}
     d.happy=Math.max(0,d.happy-dt/HOUR*2);d.loc=this.loc;d.x=this.x;d.z=this.z;
     this.g.visible=this.loc===CUR.id;this.g.position.set(this.x,hopY(this,dt),this.z);this.g.rotation.y=angLerp(this.g.rotation.y,this.face,Math.min(1,dt*8));
-    animPet(this.m,dt,this.moving);this.target.x=this.x;this.target.z=this.z;this.tag.visible=Math.hypot(P.x-this.x,P.z-this.z)>1.3;}
+    animPet(this.m,dt,this.moving,d.stay?1:this.spd);this.target.x=this.x;this.target.z=this.z;this.tag.visible=Math.hypot(P.x-this.x,P.z-this.z)>1.3;}
 }
 function addPetActor(d){const p=new Pet(d);PET_ACTORS.push(p);return p;}
 function rebuildPet(p){const pos=p.g.position.clone(),rot=p.g.rotation.y;scene.remove(p.g);p.m=makePet(p.d.type,p.d.col);addOutfit(p.m,p.d);p.g=p.m.root;p.g.add(p.tag);p.g.position.copy(pos);p.g.rotation.y=rot;scene.add(p.g);p.target.obj=p.g;}
@@ -2879,9 +2922,28 @@ function feedDucks(i){const k=['bread','bagel','croissant','pretzel'].find(b=>S.
     if(!ok)duckGo(d,pd.x+ax/al*(pd.r*.85)+rand(-.4,.4),pd.z+az/al*(pd.r*.85)+rand(-.4,.4));}
   setTimeout(()=>{SFX.quack();for(const d of LOC.city.ducks)if(d.pond===i)floatText('💗',d.x,.9,d.z,{h:.5});},1500);
   toast('Quack quack! The ducks love your '+FOODS[k].n.toLowerCase()+'! 🦆',3);addXP('pets',2);qEvent('ducks');change();}
-/* ---- the football on the sports field ---- */
-function buildBall(){const L=LOC.city,g=new THREE.Group();sph(g,.22,'#ffffff',0,0,0,{ws:14,hs:10,ol:.02});
-  for(const [x,y,z] of [[0,1,0],[0,-1,0],[1,0,0],[-1,0,0],[0,0,1],[0,0,-1]])sph(g,.075,'#2e2347',x*.2,y*.2,z*.2,{ws:6,hs:5,ol:false});bake(g,true);L.dyn.add(g);L.ball.g=g;g.position.set(L.ball.x,.22,L.ball.z);}
+/* ---- the football on the sports field: a real round ball (12 dark pentagons, white hexagons, thin seams) ---- */
+function ballTex(){const W=512,H=256,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d'),im=x.createImageData(W,H),D=im.data,
+  t=(1+Math.sqrt(5))/2,V=[[-1,t,0],[1,t,0],[-1,-t,0],[1,-t,0],[0,-1,t],[0,1,t],[0,-1,-t],[0,1,-t],[t,0,-1],[t,0,1],[-t,0,-1],[-t,0,1]].map(v=>{const l=Math.hypot(v[0],v[1],v[2]);return[v[0]/l,v[1]/l,v[2]/l];}),
+  dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],N=[],CS=[],SN=[];for(const v of V)N.push(v[0]/2.3274,v[1]/2.3274,v[2]/2.3274);
+  /* pentagons sit on the 12 corners of an icosahedron, hexagons on its 20 triangles (scaled by each face's distance, like a real ball) */
+  for(let i=0;i<12;i++)for(let j=i+1;j<12;j++)for(let k=j+1;k<12;k++){const a=V[i],b=V[j],e=V[k];if(dot(a,b)>.4&&dot(b,e)>.4&&dot(a,e)>.4){const s=[a[0]+b[0]+e[0],a[1]+b[1]+e[1],a[2]+b[2]+e[2]],l=Math.hypot(s[0],s[1],s[2])*2.2673;N.push(s[0]/l,s[1]/l,s[2]/l);}}
+  const F=new Float64Array(N),nf=F.length;for(let i=0;i<W;i++){const ph=(i+.5)/W*TAU;CS.push(-Math.cos(ph));SN.push(Math.sin(ph));}
+  for(let j=0;j<H;j++){const th=(j+.5)/H*Math.PI,st=Math.sin(th),py=Math.cos(th);for(let i=0;i<W;i++){const px=CS[i]*st,pz=SN[i]*st;
+    let b1=-9,b2=-9,bi=0;for(let f=0;f<nf;f+=3){const s=px*F[f]+py*F[f+1]+pz*F[f+2];if(s>b1){b2=b1;b1=s;bi=f;}else if(s>b2)b2=s;}
+    const e=bi<36?0:clamp((b1-b2-.004)/.004,0,1),o=(j*W+i)*4;D[o]=46+209*e;D[o+1]=35+220*e;D[o+2]=71+184*e;D[o+3]=255;}}
+  x.putImageData(im,0,0);const T=new THREE.CanvasTexture(c);T.anisotropy=4;return T;}
+function buildBall(){const L=LOC.city,g=new THREE.Group(),m=toon({map:ballTex(),emissive:new THREE.Color('#ffd27a'),emissiveIntensity:0});
+  const s=sph(g,BR,'#ffffff',0,0,0,{ws:32,hs:20,ol:.02,mat:m});s.castShadow=s.receiveShadow=true;L.dyn.add(g);L.ball.g=g;L.ball.m=m;g.position.set(L.ball.x,BR,L.ball.z);
+  /* the soft glow ring and the aim arrow (shown only when you can kick) */
+  const fx=new THREE.Group(),ring=new THREE.Mesh(new THREE.RingGeometry(.3,.44,40),new THREE.MeshBasicMaterial({color:'#fff3c4',transparent:true,opacity:.8,depthWrite:false}));
+  ring.rotation.x=-Math.PI/2;ring.position.y=.03;fx.add(ring);
+  const ag=new THREE.BufferGeometry();ag.setAttribute('position',new THREE.BufferAttribute(new Float32Array(42),3));ag.setIndex([0,1,2,0,2,3,4,5,6,7,8,9,7,9,10,11,12,13]);ag.addGroup(0,9,0);ag.addGroup(9,9,1);
+  const arrow=new THREE.Mesh(ag,[new THREE.MeshBasicMaterial({color:INK,transparent:true,opacity:.55,depthWrite:false,side:THREE.DoubleSide}),new THREE.MeshBasicMaterial({color:'#fff3c4',transparent:true,opacity:.95,depthWrite:false,side:THREE.DoubleSide})]);
+  arrow.position.y=.04;arrow.frustumCulled=false;fx.add(arrow);ballArrow(arrow,.9);fx.visible=false;L.dyn.add(fx);L.ball.fx={g:fx,ring,arrow};}
+/* the arrow lies on the grass in front of the ball: longer = stronger (ink edge first, then the colour on top) */
+function ballArrow(A,len){if(A.userData.len===len)return;A.userData.len=len;const p=A.geometry.attributes.position,a=p.array,s=.36,w=.07,hw=.2,o=.05,e=s+len,h=e-.34;
+  [[-w-o,s-o],[w+o,s-o],[w+o,h],[-w-o,h],[-hw-o*1.7,h-o],[hw+o*1.7,h-o],[0,e+o*1.9],[-w,s],[w,s],[w,h+.01],[-w,h+.01],[-hw,h],[hw,h],[0,e]].forEach(([x,z],i)=>{a[i*3]=x;a[i*3+1]=0;a[i*3+2]=z;});p.needsUpdate=true;}
 const GZ1=66.1,GZ2=70.9,BR=.22,GOALS=[{gx:-39,s:-1},{gx:-11,s:1}];
 function ballHit(b,cx,cz,rr,e){let nx=b.x-cx,nz=b.z-cz;const d=Math.hypot(nx,nz);if(d>=rr)return;
   if(d<1e-6){nx=-b.vx;nz=-b.vz;const l=Math.hypot(nx,nz)||1;nx/=l;nz/=l;}else{nx/=d;nz/=d;}
@@ -2912,13 +2974,45 @@ function scoreFrom(a,sc){if(!Array.isArray(sc)||sc.length<3)return;const [l,r,v]
 function updBall(dt){const b=LOC.city.ball;if(!b||!b.g)return;
   if(b.reset>0){b.reset-=dt;if(b.reset<=0){b.reset=0;b.x=-25;b.z=68.5;b.vx=b.vz=0;}}
   if(CUR.id==='city'&&PLAYING&&!b.reset){const dx=b.x-P.x,dz=b.z-P.z,d=Math.hypot(dx,dz);
-    if(d<.65&&b.cool<=0){const sp=(P.run?10:6.5)+Math.random(),fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw),nx=dx/(d||1),nz=dz/(d||1);b.vx=(nx*.5+fx*.5)*sp;b.vz=(nz*.5+fz*.5)*sp;b.cool=.3;SFX.kick();ballKick();}}
+    /* running into the ball kicks it (touch area a bit bigger than before; not while you hold the kick button) */
+    if(d<.85&&b.cool<=0&&!KC.on){const sp=(P.run?10:6.5)+Math.random(),fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw),nx=dx/(d||1),nz=dz/(d||1);[b.vx,b.vz]=aimGoal(b.x,b.z,(nx*.5+fx*.5)*sp,(nz*.5+fz*.5)*sp);b.cool=.3;SFX.kick();ballKick();}}
   b.cool-=dt;const spd=Math.hypot(b.vx,b.vz),n=Math.max(1,Math.ceil(spd*dt/.06)),h=dt/n;
   for(let i=0;i<n;i++){b.x+=b.vx*h;b.z+=b.vz*h;ballWalls(b);}
   const fr=Math.exp(-1.0*dt);b.vx*=fr;b.vz*=fr;
   const inGoal=b.z>GZ1&&b.z<GZ2&&(b.x<-39.1||b.x>-10.9);
   if(!b.reset&&inGoal&&ballMine()){b.reset=2.2;SFX.yay();S.match=S.match||{l:0,r:0,v:0};S.match.v=(S.match.v||0)+1;const blue=b.x>-25;if(blue)S.match.l++;else S.match.r++;drawScore();toast('⚽ GOAL for '+(blue?'Blue':'Pink')+'! Blue '+S.match.l+' – '+S.match.r+' Pink',3);for(let i=0;i<5;i++)setTimeout(()=>floatText(pick(['⭐','🎉','✨']),b.x+rand(-1,1),1.2+rand(0,1),b.z+rand(-1,1),{h:.6}),i*120);addXP('sport',5);qEvent('goal');}
-  b.g.rotation.x+=b.vz*dt/.22;b.g.rotation.z-=b.vx*dt/.22;b.g.position.set(b.x,.22,b.z);}
+  /* it really rolls: it turns around the flat axis across the way it moves */
+  const v=Math.hypot(b.vx,b.vz);if(v>1e-3){BAX.set(b.vz/v,0,-b.vx/v);BQ.setFromAxisAngle(BAX,v*dt/BR);b.g.quaternion.premultiply(BQ);}b.g.position.set(b.x,BR,b.z);ballFx(b,dt);}
+const BQ=new THREE.Quaternion(),BAX=new THREE.Vector3(),C_IDLE=new THREE.Color('#fff3c4'),C_SOFT=new THREE.Color('#ffd45c'),C_HARD=new THREE.Color('#ff6b4a');
+/* gentle help: a goal roughly in front of the kick (within 45°) bends it a little toward the goal mouth (only at the kick, never a homing ball) */
+const AG=[0,0];
+function aimGoal(x,z,vx,vz){const sp=Math.hypot(vx,vz);AG[0]=vx;AG[1]=vz;if(sp<1e-3)return AG;let dx=vx/sp,dz=vz/sp;
+  for(const G of GOALS){let gx=G.gx+G.s*.3-x,gz=(GZ1+GZ2)/2-z;const gl=Math.hypot(gx,gz);if(gl<.5)continue;gx/=gl;gz/=gl;const a=Math.acos(clamp(dx*gx+dz*gz,-1,1));if(a>=Math.PI/4)continue;
+    const w=.4*Math.min(1,(Math.PI/4-a)/.45);dx=dx*(1-w)+gx*w;dz=dz*(1-w)+gz*w;const l=Math.hypot(dx,dz)||1;dx/=l;dz/=l;break;}
+  AG[0]=dx*sp;AG[1]=dz*sp;return AG;}
+/* the kick button: a quick tap is a soft pass, hold it and the power grows (let go = strong shot); the ball goes where you look */
+const KR=2,KC={on:false,t:0,key:false,pid:null,eat:false,fill:false,deg:-1};
+const BALLT={x:0,z:0,r:KR,icon:'⚽',label:()=>KC.on?'Let go to shoot! 💥':TOUCHY?'Tap: pass · Hold: shoot!':'E: pass · Hold E: shoot!',when:ballNear,pri:()=>true,act:()=>ballShoot(-1)};
+function ballNear(){const b=LOC.city.ball;if(!b||!b.g||b.reset||CUR.id!=='city')return false;BALLT.x=b.x;BALLT.z=b.z;if(KC.on)return true;
+  const dx=b.x-P.x,dz=b.z-P.z,d=Math.hypot(dx,dz);return d>=1||d<.6||-dx*Math.sin(P.yaw)-dz*Math.cos(P.yaw)>d*.2;}
+function kickPow(){return clamp((KC.t-.3)/.8,0,1);}
+function ballHold(key,pid){if(KC.on||TARGET!==BALLT)return;KC.on=true;KC.t=0;KC.key=key;KC.pid=pid;KC.eat=!key;KC.fill=true;
+  const l=$('actLbl');l.style.minWidth=l.getBoundingClientRect().width+'px';}/* the label keeps its width while you hold, so the button stays under your thumb */
+/* the hold ends: clear the orange fill and the fixed label width */
+function kcClr(){KC.fill=false;KC.deg=-1;$('act').style.backgroundImage='';$('actLbl').style.minWidth='';}
+function ballLet(){if(!KC.on)return;KC.eat=!KC.key;ballShoot(KC.t<.3?-1:kickPow());}
+function ballShoot(p){const b=LOC.city.ball;KC.on=false;KC.key=false;KC.pid=null;
+  if(!b||!b.g||b.reset||CUR.id!=='city'||!PLAYING||UI.open||Math.hypot(b.x-P.x,b.z-P.z)>KR+.6)return;
+  const sp=p<0?5.2:5.2+10.8*p;[b.vx,b.vz]=aimGoal(b.x,b.z,-Math.sin(P.yaw)*sp,-Math.cos(P.yaw)*sp);b.cool=.35;ballKick();SFX.kick();if(p>=.5)SFX.shot();
+  floatText(p<.2?'👟':p>=.95?'💥 Wow!':'💥',b.x,.7,b.z,{h:p<.2?.3:.42,life:1});}
+/* glow + aim arrow while you can kick; the ⚽ button fills up while you hold it */
+function ballFx(b,dt){const F=b.fx,A=$('act');if(KC.on){KC.t+=dt;const far=Math.hypot(b.x-P.x,b.z-P.z)>KR+1.5;if(TARGET!==BALLT||b.reset||!PLAYING||UI.open||CUR.id!=='city'||far){KC.on=false;if(far&&!b.reset&&PLAYING&&!UI.open)toast('The ball rolled away! Run after it 🏃',1.6);}}
+  const on=PLAYING&&CUR.id==='city'&&TARGET===BALLT&&!b.reset;F.g.visible=on;b.m.emissiveIntensity=0;
+  if(KC.fill&&!KC.on)kcClr();if(!on)return;
+  const pu=Math.sin(performance.now()/160),p=KC.on?kickPow():0,ag=aimGoal(b.x,b.z,-Math.sin(P.yaw),-Math.cos(P.yaw)),ax=ag[0],az=ag[1],fm=F.arrow.material[1];
+  F.g.position.set(b.x,0,b.z);F.ring.scale.setScalar(1+pu*.07);F.ring.material.opacity=.6+pu*.25;b.m.emissiveIntensity=.14+pu*.08;
+  F.arrow.rotation.y=Math.atan2(ax,az);ballArrow(F.arrow,KC.on?Math.round((1+3.2*p)*20)/20:.9);if(KC.on)fm.color.copy(C_SOFT).lerp(C_HARD,p);else fm.color.copy(C_IDLE);
+  if(KC.on){const dg=Math.round(p*360);if(dg!==KC.deg){KC.deg=dg;A.style.backgroundImage=dg?'conic-gradient(#ff8a5c '+dg+'deg,transparent 0)':'';}}}
 /* ---- one big world: everyone who opens Cozy Town plays together ---- */
 const WORLD='cozy-world',EARLY={room:null,db:null,user:null};
 const MP={me:'',room:null,grp:null,peers:new Map(),list:[],t:0,lastKey:'',ready:false,unsub:null,said:0,state:'idle',tries:0,help:false,rt:0};
@@ -2949,7 +3043,24 @@ function mpUpsert(p){const pr=p.presence||{};if(!pr.nm)return;let a=MP.peers.get
   const lk=JSON.stringify(pr.lk||{});if(lk!==a.lk||nm!==a.nm||!a.av){a.lk=lk;a.nm=nm;mpBuildAv(a,cleanLook(pr.lk));if(fresh){const sp=peerSpot(a)||[a.rx,a.rz,a.rry];a.x=a.tx=sp[0];a.z=a.tz=sp[1];a.ry=sp[2];}}
   const s=pr.say;if(s&&typeof s==='object'&&s.id!==a.sayId){a.sayId=s.id;const txt=Number.isInteger(s.m)&&QUICK[s.m]?QUICK[s.m]:Number.isInteger(s.e)&&EMOS[s.e]?EMOS[s.e]:null;if(txt&&!fresh)mpBubble(a,txt);}
   const bk=JSON.stringify(pr.bl||null);if(bk!==a.bk){a.bk=bk;if(pr.bl)ballFrom(a,pr.bl);else if(!BS.mine&&BS.own===a.peer)ballOwnerGone();}
-  const ck=JSON.stringify(pr.sc||null);if(ck!==a.ck){a.ck=ck;if(pr.sc)scoreFrom(a,pr.sc);}}
+  const ck=JSON.stringify(pr.sc||null);if(ck!==a.ck){a.ck=ck;if(pr.sc)scoreFrom(a,pr.sc);}
+  a.zz=pr.zz===1?1:0;zzRung(a,pr.rg);clockFrom(a,pr.ck);}
+/* 🕰️ one clock for everyone: my clock rides along in presence as ck:[day,hour], refreshed only after 5 game minutes
+   (or a new day), so standing still sends little. A friend ahead by 2+ game minutes pulls my clock forward, never back.
+   A brand-new player first finishes Rosie's welcome in the morning, then joins the friends' time */
+function mpClock(){const c=MP.ck;if(!c||c[0]!==S.day||Math.abs(S.time-c[1])>=1/12)MP.ck=[S.day,Math.floor(S.time*100)/100];return MP.ck;}
+function clockFrom(a,ck){if(!Array.isArray(ck)||!S.intro)return;const k=ck.join(',');if(k===a.clk)return;a.clk=k;   /* old versions send no ck */
+  const d=ck[0],h=ck[1];if(!Number.isInteger(d)||d<1||d>=1e5||!Number.isFinite(h)||h<0||h>=24)return;
+  const ahead=(d-S.day)*24+h-S.time;if(ahead<1/30)return;
+  if(ahead<1){const nd=d!==S.day;S.day=d;S.time=h;if(nd){newDay();change();}return;}   /* a small catch-up is quiet, like a normal midnight */
+  const T=MP.ckTo;if(!T||(d-T[0])*24+h-T[1]>0)MP.ckTo=[d,h];if(!T)setTimeout(clockJump,400);}
+/* a big jump (1 game hour or more) waits until no message, tips or class is on screen, so it never cuts a hello or a tip
+   (and the new-day messages come after it), then fades like the bed and tells the time */
+function clockJump(n=0){if(!MP.ckTo||!S||!PLAYING){MP.ckTo=null;return;}
+  if(n<300&&($('toast').classList.contains('show')||fading||TUT||DTUT||CUT)){setTimeout(()=>clockJump(n+1),400);return;}
+  fade(()=>{const T=MP.ckTo;MP.ckTo=null;if(!T||!S)return;const ahead=(T[0]-S.day)*24+T[1]-S.time;if(ahead<1/30)return;
+    const nd=T[0]!==S.day;S.day=T[0];S.time=T[1];if(nd){newDay();change();}
+    if(ahead>=1)toast('🕰️ Same time as your friends: '+wdName()+', day '+S.day+' · '+clockStr(S.time),3.4);});}
 function mpBuildAv(a,look){mpDropAv(a);const p=makePerson(lookToPerson(look));bakePerson(p);const tg=label('⭐ '+a.nm,.3);tg.position.y=2.0;p.root.add(tg);scene.add(p.root);a.av=p;a.av.root.position.set(a.x,0,a.z);}
 function mpDropAv(a){if(a.av){scene.remove(a.av.root);a.av=null;}a.bub=null;}
 function mpBubble(a,txt){if(!a.av)return;if(a.bub&&a.bub.parent)a.bub.parent.remove(a.bub);const b=label(txt,.36);b.position.y=2.45;a.av.root.add(b);a.bub=b;a.bubT=5;SFX.talk();
@@ -3066,8 +3177,9 @@ function hostAnswer(ok,quiet){const q=HOST.cur;if(!q)return;HOST.cur=null;const 
   else if(!quiet)toast('💛 Okay! '+q.nm+' can try again later.',2.4);
   setTimeout(hostCard,700);}
 function mpTick(dt){if(!MP.grp)return;const loc=CUR?CUR.id:'city';
-  MP.t+=dt;if(MP.t>=.15){MP.t=0;const st={nm:S.name||'Friend',lk:packLook(),loc,x:Math.round(P.x*100)/100,z:Math.round(P.z*100)/100,ry:Math.round(P.yaw*100)/100,mv:P.moving?1:0};
+  MP.t+=dt;if(MP.t>=.15){MP.t=0;const st={nm:S.name||'Friend',lk:packLook(),loc,x:Math.round(P.x*100)/100,z:Math.round(P.z*100)/100,ry:Math.round(P.yaw*100)/100,mv:P.moving?1:0,ck:mpClock()};
     {const b=LOC.city.ball,m=S.match||{l:0,r:0,v:0},r2=v=>Math.round(v*100)/100;st.sc=[m.l|0,m.r|0,m.v|0];st.bl=BS.mine&&b?[r2(b.x),r2(b.z),r2(b.vx),r2(b.vz),BS.k,Math.round((b.reset||0)*10)/10]:null;}
+    st.zz=zzIn()?1:null;st.rg=ZZ.rg&&Date.now()-ZZ.rgT<12000?ZZ.rg:null;   /* 😴 in bed / 🔔 a ring (optional; null clears them: presence merges) */
     laneStamp(st);const key=JSON.stringify(st);if(key!==MP.lastKey){MP.lastKey=key;MP.grp.presence(st).catch(()=>{});}}
   for(const a of MP.peers.values()){if(!a.av)continue;const sp=peerSpot(a),vis=!!sp;a.av.root.visible=vis;if(sp){a.tx=sp[0];a.tz=sp[1];a.ry=sp[2];}
     const d=Math.hypot(a.tx-a.x,a.tz-a.z);if(d>8){a.x=a.tx;a.z=a.tz;}else{const k=Math.min(1,dt*8);a.x+=(a.tx-a.x)*k;a.z+=(a.tz-a.z)*k;}
@@ -3102,7 +3214,7 @@ const SHOP_SPOTS={
   bakery:{n:2,buy:0,spots:[[0,-2.5,Math.PI],[-1.6,-2.5,Math.PI],[1.6,-2.5,Math.PI],[-4.9,-1.0,-Math.PI/2],[0,1.2,0],[1.6,2.8,0]]},
   icecream:{n:2,buy:0,spots:[[0,-2.5,Math.PI],[-1.6,-2.5,Math.PI],[1.6,-2.5,Math.PI],[-4.0,-2.6,Math.PI],[0,1.0,0],[1.6,2.8,0]]},
   library:{n:2,buy:-1,spots:[[-3.7,-3.4,Math.PI],[-1.2,-3.4,Math.PI],[1.3,-3.4,Math.PI],[3.8,-3.4,Math.PI],[-4.8,-1.5,-Math.PI/2],[4.8,-1.5,Math.PI/2],[0,1.8,0],[4.4,2.9,Math.PI]]},
-  clothes:{n:2,buy:4,spots:[[-3.6,-2.85,Math.PI],[0,-2.85,Math.PI],[3.6,-2.85,Math.PI],[5.0,.5,Math.PI/2],[3.6,3.15,Math.PI],[-5.4,-.85,Math.PI],[0,1.2,0],[-1.8,.4,0],[1.5,3.2,0]]}};
+  clothes:{n:2,buy:4,spots:[[-3.6,-2.85,Math.PI],[0,-2.85,Math.PI],[3.6,-2.85,Math.PI],[4.9,-1.2,Math.PI/2],[3.6,3.15,Math.PI],[-5.4,-.85,Math.PI],[0,1.2,0],[-1.8,.4,0],[1.5,3.2,0]]}};
 function segFree(L,a,b){const len=Math.hypot(b[0]-a[0],b[1]-a[1]),n=Math.max(1,Math.ceil(len/.3));for(let i=0;i<=n;i++){const t=i/n,x=L.ox+a[0]+(b[0]-a[0])*t,z=L.oz+a[1]+(b[1]-a[1])*t;for(const c of L.cols)if(pushOut(x,z,.3,c))return false;}return true;}
 class Shopper{
   constructor(id,cfg){this.L=LOC[id];this.cfg=cfg;this.p=bakePerson(makePerson(randomLook()));this.g=this.p.root;scene.add(this.g);this.i=Math.floor(Math.random()*cfg.spots.length);
@@ -3217,7 +3329,7 @@ function setFloor(k){if(FLOOR_M.map)FLOOR_M.map.dispose();FLOOR_M.map=floorTex(k
 let tvT=0,tvLast=-1;
 function useFurn(rec,fx,fz){const F=FURN[rec.it.t];
   switch(F.use){
-    case 'sleep':return sleep();
+    case 'sleep':return sleep(rec,fx,fz);
     case 'sit':P.sit={x:rec.g.position.x+fx*.1,z:rec.g.position.z+fz*.1,yaw:rec.it.r*Math.PI/2+Math.PI};P.x=P.sit.x;P.z=P.sit.z;P.yaw=P.sit.yaw;P.pitch=-.05;SFX.pop();toast('Comfy! Move to stand up.');return;
     case 'tv':rec.on=!rec.on;SFX.tap();if(rec.on){rec.t0=tvT;toast(pick(['A dancing cat! 🐱','The funny cat show! 😹','Kitty is dancing! 🎶','Meow meow dance party! 🐾']));}return;
     case 'lamp':rec.it.on=rec.it.on?0:1;setLamp(rec);SFX.tap();change();return;
@@ -3281,8 +3393,6 @@ function climbUpdate(dt){const C=CLIMB;if(CUR!==C.L){CLIMB=null;P.cy=0;return;}C
   P.yaw=angLerp(C.y0,C.ya,a);P.pitch=lerp(C.p0,C.dir>0?.3:-.45,a);P.x=lerp(C.x0,C.x1,e);P.z=lerp(C.z0,C.z1,clamp(e*2.2,0,1));
   P.cy=C.dir*C.h*clamp((e-.12)/.88,0,1);P.moving=false;C.st-=dt;if(C.st<=0&&k<1){C.st=.2;SFX.step();}
   if(k>=1&&!C.fd){C.fd=true;fade(()=>{if(CLIMB!==C)return;CLIMB=null;C.end();});}}
-/* ☀️ Always day (Settings): the clock runs 8:00 → 17:00, all bright daylight, then it's the next morning */
-function dayKeep(){if(!S)return;if(S.time<8)S.time=8;else if(S.time>=17){S.time=8;S.day++;newDay();change();if(PLAYING)toast('☀️ Good morning! It\'s '+wdName()+', day '+S.day,3);}}
 /* ✏️ notepad: draw notes. Tap it 2× = new page, 3× = go back, 4× = delete (Settings can bring the last one back) */
 const PADK='cozytown-notes-1';
 const PAD=(()=>{try{const o=JSON.parse(localStorage.getItem(PADK));if(o&&Array.isArray(o.pages)&&o.pages.length)return{pages:o.pages,i:clamp(o.i|0,0,o.pages.length-1),del:o.del||null};}catch(e){}return{pages:[[]],i:0,del:null};})();
@@ -3322,10 +3432,42 @@ function padTap(){const n=padTaps;padTaps=0;const pg=PAD.pages[PAD.i];
   if(pg.length)PAD.del=pg;PAD.pages.splice(PAD.i,1);if(!PAD.pages.length)PAD.pages.push([]);PAD.i=clamp(PAD.i-1,0,PAD.pages.length-1);
   SFX.pop();padFlip();toast(pg.length?'🗑️ Page deleted! You can get it back in ⚙️ Settings':'🗑️ Empty page removed',3);}
 /* ---- sleeping ---- */
-function sleep(){
-  if(SET.day?S.time<14:(S.time>=7&&S.time<19)){toast(SET.day?"You're not sleepy yet. Come back in the afternoon! 😴":"You're not sleepy yet. Come back in the evening! 🌙");return;}
-  fade(()=>{if(S.time>=19||SET.day)S.day++;S.time=SET.day?8:7.5;S.coins+=40;S.hunger=Math.max(S.hunger,40);newDay();P.sit=null;toast('Good morning! It\'s '+wdName()+', day '+S.day+' ☀️  +40 🪙 pocket money',4);doneTask('sleep');change();});
-}
+/* 😴 beds work from 21:00 to 7:00. You lie down; when every active player is in bed (alone: just you) the night skips to
+   7:00 on the shared clock, so everyone wakes up on the same morning. With friends online a card shows "😴 2 of 3 in bed"
+   and can ring the others' phones (one ring a minute per friend). Presence: zz:1 while in bed, rg:{id,to:[peers]} = a ring */
+const ZZ={t:0,go:0,rx:0,bt:0,sent:new Map(),seen:new Set(),rg:null,rgT:0};
+const zzIn=()=>!!(P.sit&&P.sit.bed);
+function isActivePeer(a){return !!a;}   /* every online player counts, old versions too (job 6: not when marked away) */
+function sleep(rec,fx,fz){
+  if(S.time>=7&&S.time<21){toast('Not sleepy yet, beds work from 21:00 🌙',3);return;}
+  const g=rec.g.position,f=FURN[rec.it.t].d/2+.35;P.sit={x:g.x-fx*.55,z:g.z-fz*.55,yaw:rec.it.r*Math.PI/2+Math.PI,h:.92,bed:1,bk:[P.x,P.z,P.yaw]};   /* head on the pillow */
+  P.x=P.sit.x;P.z=P.sit.z;P.yaw=P.sit.yaw;P.pitch=-.12;ZZ.t=0;SFX.pop();floatText('💤',g.x+fx*f,1.0,g.z+fz*f,{h:.4});toast('💤 Good night!',2);}
+function zzTick(dt){if(zzIn()&&S.time>=7&&S.time<21)zzMorning();   /* morning came (a friend's clock, or the night ran out) */
+  if(!zzIn()){ZZ.t=0;zzCard(false);return;}
+  let n=1,all=1;for(const a of MP.peers.values())if(isActivePeer(a)){all++;if(a.zz)n++;}zzCard(all>1,n,all);
+  if(n===all){ZZ.t+=dt;if(ZZ.t>=1.2&&!ZZ.go)zzSkip();}else ZZ.t=0;}
+function zzSkip(){ZZ.go=1;const d=S.time>=21?S.day+1:S.day;   /* the next 7:00 on the shared clock: the same morning for everyone */
+  fade(()=>{ZZ.go=0;if(!zzIn())return;if((d-S.day)*24+7-S.time>0){const nd=d!==S.day;S.day=d;S.time=7;if(nd)newDay();}zzMorning();});}
+function zzMorning(){standUp();S.hunger=Math.max(S.hunger,40);toast('Good morning! It\'s '+wdName()+', day '+S.day+' ☀️',4);doneTask('sleep');change();}
+function zzCard(on,n,all){let el=$('zzCard');
+  if(!on){if(el&&!el.hidden){el.hidden=true;document.body.classList.remove('zz');}return;}
+  if(!el){el=document.createElement('div');el.id='zzCard';el.hidden=true;$('hud').appendChild(el);
+    el.innerHTML='<div class="zt"></div><div class="zs">The night skips when everyone is in bed 🌙</div><div class="zb"><button class="btn butter" id="zzRing">🔔 Ring the others</button><button class="btn white" id="zzUp">🧍 Get up</button></div>';
+    $('zzRing').onclick=()=>{audioInit();zzRing();};$('zzUp').onclick=()=>{SFX.tap();standUp();};}
+  const t='😴 '+n+' of '+all+' in bed';if(el.firstChild.textContent!==t)el.firstChild.textContent=t;
+  if(el.hidden){el.hidden=false;document.body.classList.add('zz');}}
+/* 🔔 rings every active friend who is not in bed; each friend at most once a minute, so pressing again too soon sends nothing */
+function zzRing(){if(!zzIn())return;const now=Date.now(),to=[];let up=0;
+  for(const a of MP.peers.values())if(isActivePeer(a)&&!a.zz){up++;if(now-(ZZ.sent.get(a.peer)||0)>=60000)to.push(a.peer);}
+  if(!up)return;if(!to.length){SFX.talk();toast('Friend is busy doing something. We can\'t sleep! 😢 Let\'s stay up ALL NIGHT! 🤪',4.2);return;}
+  for(const p of to)ZZ.sent.set(p,now);ZZ.rg={id:now.toString(36).slice(-6)+Math.random().toString(36).slice(2,5),to};ZZ.rgT=now;
+  SFX.ding();toast('🔔 Ring ring! Your friends\' phones are ringing 📱',3);}
+function zzRung(a,rg){if(!rg||typeof rg!=='object'||typeof rg.id!=='string'||rg.id.length>24||!Array.isArray(rg.to)||!MP.me||!rg.to.includes(MP.me))return;
+  const k=a.peer+'|'+rg.id;if(ZZ.seen.has(k))return;ZZ.seen.add(k);const now=Date.now();
+  if(!PLAYING||zzIn()||now-ZZ.rx<60000)return;ZZ.rx=now;   /* my phone rings once a minute at most */
+  SFX.ring();try{if(navigator.vibrate)navigator.vibrate([200,120,200]);}catch(e){}
+  const b=$('bPhone');b.classList.remove('ring');void b.offsetWidth;b.classList.add('ring');clearTimeout(ZZ.bt);ZZ.bt=setTimeout(()=>b.classList.remove('ring'),2800);
+  toast('Friends want to skip the night, waiting on you!',4);}
 
 /* ---- places ---- */
 function setLoc(id){CUR=LOC[id];P.cy=0;for(const k in LOC)LOC[k].g.visible=LOC[k]===CUR;
@@ -3334,9 +3476,10 @@ function setLoc(id){CUR=LOC[id];P.cy=0;for(const k in LOC)LOC[k].g.visible=LOC[k
   for(const k of KEEPERS)k.p.root.visible=k.L===CUR;for(const a of PEN)a.m.root.visible=CUR.id==='pets';
   if(LOC.clothes&&LOC.clothes.manq)for(const m of LOC.clothes.manq)m.visible=id==='clothes';
   $('bDeco').hidden=id!=='home';renderer.setClearColor(id==='studio'?'#fff4fa':'#000000');updSky();}
-function bringFollowers(quiet){let i=0;for(const f of FRIEND_ACTORS)if(f.mode==='follow'){f.loc=CUR.id;f.x=P.x+Math.sin(P.yaw)*1.4+(i?.6:0);f.z=P.z+Math.cos(P.yaw)*1.4;[f.x,f.z]=collideXZ(f.x,f.z,f.r,CUR);i++;
+function bringFollowers(quiet){let n=0;P.hd=P.yaw+Math.PI;for(const f of FRIEND_ACTORS)if(f.mode==='follow')f.loc=null;for(const p of PET_ACTORS)if(!p.d.stay)p.loc=null;   /* placed one by one below */
+  for(const f of FRIEND_ACTORS)if(f.mode==='follow'){nearMe(f,++n);
     if(CUR.id==='home'&&!quiet)homeVisit(f);}
-  for(const p of PET_ACTORS)if(!p.d.stay){p.loc=CUR.id;p.x=P.x+Math.sin(P.yaw)*1.2+rand(-.6,.6);p.z=P.z+Math.cos(P.yaw)*1.2;[p.x,p.z]=collideXZ(p.x,p.z,p.r,CUR);}}
+  for(const p of PET_ACTORS)if(!p.d.stay)nearMe(p,++n);}
 function enter(id,via){if(id==='home'){LANE.via=LANE.nextVia;LANE.nextVia=null;}SFX.door();qEvent('enter:'+id);fade(()=>{setLoc(id);const d=DOORS[id+(via||'')],L=LOC[id];P.x=L.ox+d.inside[0];P.z=L.oz+d.inside[1];P.yaw=d.inside[2];P.pitch=0;P.sit=null;bringFollowers();if(id==='home')doneTask('home');if(id==='pizza')pizzaIn();if(id==='beach')beachIn();if(id==='cafe'&&FRIEND_ACTORS.some(f=>f.mode==='follow'))qEvent('cafevisit');saveLocal();});}
 function exitTo(id,via){if(DECO.on)decoEnd();SFX.door();fade(()=>{setLoc('city');const d=(id==='home'&&!via&&LANE.via!=null&&LOC.city.lane)?{city:LOC.city.lane[LANE.via].door}:DOORS[id+(via||'')];if(id==='home')LANE.via=null;P.x=d.city[0];P.z=d.city[1];P.yaw=d.city[2];P.pitch=0;P.sit=null;bringFollowers();saveLocal();});}
 function homeVisit(f){const st=frSt(f.d.id);setTimeout(()=>{if(CUR.id!=='home')return;const n=S.home.items.length;
@@ -3361,7 +3504,7 @@ function setupInput(){
   T.addEventListener('pointermove',e=>{
     if(e.pointerId===IN.joy.id){let dx=e.clientX-IN.joy.ox,dy=e.clientY-IN.joy.oy;const d=Math.hypot(dx,dy),m=56;if(d>m){dx*=m/d;dy*=m/d;}IN.joy.x=dx/m;IN.joy.y=dy/m;knob.style.transform=`translate(${dx}px,${dy}px)`;}
     else if(e.pointerId===IN.look.id){const dx=e.clientX-IN.look.lx,dy=e.clientY-IN.look.ly;IN.look.lx=e.clientX;IN.look.ly=e.clientY;IN.look.moved+=Math.abs(dx)+Math.abs(dy);
-      if(!IN.look.cls&&!(CUT&&CUT.tch)){const k=(e.pointerType==='mouse'?.0045:.0062)*SET.look;P.yaw-=dx*k;P.pitch=clamp(P.pitch-dy*k,-1.25,1.25);}}
+      if(!IN.look.cls&&!(CUT&&CUT.tch)){const k=(e.pointerType==='mouse'?.0045:.0062)*SET.look;ballLookMine();P.yaw-=dx*k;P.pitch=clamp(P.pitch-dy*k,-1.25,1.25);}}
   });
   const up=e=>{if(e.pointerId===IN.joy.id){IN.joy.id=null;IN.joy.x=IN.joy.y=0;joyHome();}
     else if(e.pointerId===IN.look.id){IN.look.id=null;const cl=IN.look.cls;if(e.type==='pointerup'&&IN.look.moved<(cl?40:12)&&performance.now()-IN.look.t<(cl?700:350))tapAt(e.clientX,e.clientY);}};
@@ -3372,10 +3515,10 @@ function setupInput(){
     if(CUT&&CUT.claw&&(e.code==='Space'||e.code==='Enter'||e.code==='KeyE')){e.preventDefault();ACT.clawtap();return;}
     if(!PLAYING||UI.open)return;
     if(e.code==='Space'){e.preventDefault();jump();}
-    if(e.code==='KeyE'||e.code==='Enter'){e.preventDefault();if(DECO.on)return;if(TARGET)useTarget();}
+    if(e.code==='KeyE'||e.code==='Enter'){e.preventDefault();if(DECO.on)return;if(TARGET===BALLT){if(!e.repeat)ballHold(true,null);}else if(TARGET)useTarget();}
     if(e.code==='KeyB')openBag();if(e.code==='KeyP')openPhone();if(e.code==='KeyM')openPhone('map');if(e.code==='KeyR'&&DECO.placing)decoTurn();});
-  addEventListener('keyup',e=>{IN.keys[e.code]=false;});
-  addEventListener('blur',()=>{IN.keys={};});
+  addEventListener('keyup',e=>{IN.keys[e.code]=false;if(KC.key&&(e.code==='KeyE'||e.code==='Enter'))ballLet();});
+  addEventListener('blur',()=>{IN.keys={};KC.on=false;});
 }
 const RAY=new THREE.Raycaster(),NDC=new THREE.Vector2();
 function tapAt(cx,cy){if(CUT){if(CUT.tch)tcTap(cx,cy);return;}if(DECO.on){decoTap(cx,cy);return;}if(TN.on){tnSwing();return;}
@@ -3389,14 +3532,15 @@ function targets(){const out=CUR.inter.slice();
   for(const p of PET_ACTORS)if(p.loc===CUR.id)out.push(p.target);
   if(CUR.id==='pets')for(const a of PEN)out.push(a.target);
   if(S.time>=8&&S.time<20)for(const s of SHOPPERS)if(s.L===CUR)out.push(s.target);
-  if(CUR.id==='city'){for(const l of LITTER)out.push(l.target);for(const w of WALKERS)if(w.state!=='home')out.push(w.target);if(sittersOut())for(const s of SITTERS)out.push(s.target);if(PSX.on)for(const j of PSX.judges)out.push(j.target);}
+  if(CUR.id==='city'){for(const l of LITTER)out.push(l.target);for(const w of WALKERS)if(w.state!=='home')out.push(w.target);if(sittersOut())for(const s of SITTERS)out.push(s.target);if(PSX.on)for(const j of PSX.judges)out.push(j.target);out.push(BALLT);}
   return out;}
-function findTarget(){if(TN.on)return TN.tg;if(P.ride)return P.ride.kind==='swing'?{icon:'🧍',label:'Get off the swing',act:stopRide}:null;if(P.sit)return{icon:'🧍',label:'Stand up',act:standUp};
+function findTarget(){if(TN.on)return TN.tg;if(P.ride)return P.ride.kind==='swing'?{icon:'🧍',label:'Get off the swing',act:stopRide}:null;if(P.sit)return{icon:'🧍',label:P.sit.bed?'Get up':'Stand up',act:standUp};
+  if(KC.on){if(ballNear())return BALLT;KC.on=false;kcClr();}
   const fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw);let best=null,bs=1e9;
   for(const t of targets()){if(t.when&&!t.when())continue;let tx=t.x,tz=t.z;if(t.rect){tx=clamp(P.x,t.rect.x1,t.rect.x2);tz=clamp(P.z,t.rect.z1,t.rect.z2);}const dx=tx-P.x,dz=tz-P.z,d=Math.hypot(dx,dz);if(d>t.r)continue;const c=d<.01?1:(dx*fx+dz*fz)/d;if(c<.25&&d>1)continue;let s=d*(1.7-c);if(t.pri&&t.pri())s*=.25;if(s<bs){bs=s;best=t;}}
   return best;}
 function useTarget(){if(!TARGET)return;SFX.tap();try{TARGET.act();}catch(e){console.error(e);}}
-function standUp(){if(!P.sit)return;const fx=Math.sin(P.yaw+Math.PI),fz=Math.cos(P.yaw+Math.PI);P.sit=null;[P.x,P.z]=collideXZ(P.x-fx*0,P.z,.3,CUR);
+function standUp(){if(!P.sit)return;if(P.sit.bk){const b=P.sit.bk;P.sit=null;[P.x,P.z]=collideXZ(b[0],b[1],.3,CUR);P.yaw=b[2];P.pitch=0;return;}const fx=Math.sin(P.yaw+Math.PI),fz=Math.cos(P.yaw+Math.PI);P.sit=null;[P.x,P.z]=collideXZ(P.x-fx*0,P.z,.3,CUR);
   const nx=P.x-Math.sin(P.yaw)*.55,nz=P.z-Math.cos(P.yaw)*.55;[P.x,P.z]=collideXZ(nx,nz,.3,CUR);}
 
 /* ---- player ---- */
@@ -3442,7 +3586,7 @@ function updatePlayer(dt){
   if(P.sit){if(m>.35)standUp();else{P.moving=false;return;}}
   P.run=!!(K.ShiftLeft||K.ShiftRight||IN.run);
   if(m>.06){const run=P.run,boost=1+(sk('sport').lv-1)*.03,sp=4.3*(run?1.65:1)*boost*(S.hunger<=0?.6:1),sy=Math.sin(P.yaw),cy=Math.cos(P.yaw);
-    const ox=P.x,oz=P.z;[P.x,P.z]=collideXZ(P.x+(-sy*f+cy*s)*sp*dt,P.z+(-cy*f-sy*s)*sp*dt,.3,CUR,solids());P.moving=true;P.bobT+=dt*sp*2.3;
+    const ox=P.x,oz=P.z;[P.x,P.z]=collideXZ(P.x+(-sy*f+cy*s)*sp*dt,P.z+(-cy*f-sy*s)*sp*dt,.3,CUR,solids());P.moving=true;P.bobT+=dt*sp*2.3;P.hd=Math.atan2(-sy*f+cy*s,-cy*f-sy*s);
     if(run){const dd=Math.hypot(P.x-ox,P.z-oz);qEvent('run',dd);P.ra=(P.ra||0)+dd;if(P.ra>=50){P.ra-=50;addXP('sport',1);}}}
   else P.moving=false;
   for(const e of [...FRIEND_ACTORS,...PET_ACTORS]){if(e.loc!==CUR.id||e.mode==='away')continue;const dx=e.x-P.x,dz=e.z-P.z,d=Math.hypot(dx,dz),m2=.7;if(d<m2&&d>1e-4){[e.x,e.z]=collideXZ(P.x+dx/d*m2,P.z+dz/d*m2,e.r,CUR);}}
@@ -3460,7 +3604,15 @@ function updateCamera(dt){const bob=P.moving&&P.jy<=0?Math.sin(P.bobT)*.04:0;P.b
   if(PB){const show=PLAYING&&!P.sit&&!CR&&!P.ride;PB.root.visible=show;if(show){const fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw);PB.root.position.set(P.x-fx*.13,P.jy+(P.cy||0),P.z-fz*.13);PB.root.rotation.y=P.yaw+Math.PI;animPerson(PB,dt,P.moving&&P.jy<=0,P.run?1.5:1);
     if(P.jy>0){PB.legs[0].rotation.x=.55;PB.legs[1].rotation.x=-.25;}}}
   if(P.sit){P.x=P.sit.x;P.z=P.sit.z;}
-  camera.position.set(P.x,(P.sit?1.05:1.5)+P.bobA+P.jy-P.dip+(P.cy||0),P.z);camera.rotation.set(P.pitch,P.yaw,0,'YXZ');}
+  camera.position.set(P.x,(P.sit?P.sit.h||1.05:1.5)+P.bobA+P.jy-P.dip+(P.cy||0),P.z);ballLook(dt);camera.rotation.set(P.pitch+BLK.a,P.yaw,0,'YXZ');}
+/* ⚽ while the ball is your kick target the view dips a little, so you see the ball, its glow and the arrow (a = extra tilt, not your own look;
+   when you look around yourself the tilt becomes yours and the helper waits a moment, so it never fights your finger) */
+const BLK={a:0,q:0};
+function ballLook(dt){let t=0;BLK.q-=dt;if(CUR.id!=='city'){BLK.a=0;return;}const b=LOC.city.ball;
+  if(TARGET===BALLT&&PLAYING&&!P.sit&&!P.ride&&!CUT&&!CR&&BLK.q<=0&&P.pitch<.3&&b){const d=Math.max(.5,Math.hypot(b.x-P.x,b.z-P.z)),por=innerHeight>innerWidth;
+    t=clamp((por?.3:.5)*BASEFOV*Math.PI/360-Math.atan2(1.5-BR,d)-P.pitch,por?-.65:-.55,0);}/* phone upright: the ball sits higher, above the buttons */
+  if(BLK.q<=0||t>BLK.a)BLK.a+=(t-BLK.a)*Math.min(1,dt*4);}
+function ballLookMine(){if(BLK.a){P.pitch=clamp(P.pitch+BLK.a,-1.25,1.25);BLK.a=0;}BLK.q=1.5;}
 
 /* ---- decorating ---- */
 const DECO={on:false,placing:null,ghost:null,sel:null,mark:null,valid:false,x:0,z:0,r:0,X:null};
@@ -3471,7 +3623,7 @@ const HOMEX={id:'home',L:()=>homeFl()?LOC.home.up:LOC.home,list:()=>S.home.items
   blocked:R=>(!!LOC.home.up&&R.x1<-HOMEW+3&&R.z1<1.4&&R.z2>-1.4)||(!homeFl()&&((R.x1<1.1&&R.x2>-1.1&&R.z2>HOMED-1.6)||(R.x1<HOMEGX+1.1&&R.x2>HOMEGX-1.1&&R.z1<-HOMED+1.6)))};
 const CLX={id:'client',L:()=>LOC.client,list:()=>dsItems(),W:()=>CLW,D:()=>CLD,map:()=>CL_ITEMS,add:it=>addClItem(it),rm:u=>removeClItem(u),blocked:R=>R.x1<1.25&&R.x2>-1.25&&R.z2>CLD-1.75};
 const DX=()=>DECO.X||HOMEX;
-function decoStart(){const X=CUR.id==='home'&&!CLIMB?HOMEX:CUR.id==='client'&&dsHere()?CLX:null;if(!X)return;DECO.X=X;DECO.on=true;P.sit=null;X.L().grid.visible=true;$('cross').classList.add('big');$('actWrap').hidden=true;renderBar();
+function decoStart(){const X=CUR.id==='home'&&!CLIMB?HOMEX:CUR.id==='client'&&dsHere()?CLX:null;if(!X)return;if(zzIn())standUp();DECO.X=X;DECO.on=true;P.sit=null;X.L().grid.visible=true;$('cross').classList.add('big');$('actWrap').hidden=true;renderBar();
   if(X===HOMEX)toast('Look at something to move it, or open the shop 🛍️',3.4);}
 function decoEnd(){if(DECO.placing)decoCancel();DECO.on=false;DX().L().grid.visible=false;if(DX()===HOMEX&&LOC.home.up)LOC.home.grid.visible=LOC.home.up.grid.visible=false;$('cross').classList.remove('big');$('bar').hidden=true;selMark(null);change();}
 function renderBar(){const b=$('bar');b.hidden=!DECO.on;if(!DECO.on)return;
@@ -3590,7 +3742,7 @@ ACT.pwear=k=>{const p=PT;if(!p||!S.bag[k]||!ACCS[k])return;const d=p.d,o=petOutf
 ACT.poff=sl=>{const p=PT;if(!p)return;const d=p.d,o=petOutfit(d);const list=sl?[sl]:PSLOTS.map(x=>x[0]);let any=false;for(const x of list)if(o[x]){S.bag[o[x]]=(S.bag[o[x]]||0)+1;delete o[x];any=true;}
   if(!any)return;rebuildPet(p);SFX.pop();change();ACT.pdress('Taken off!');};
 ACT.pback=()=>renderPet();
-ACT.pstay=()=>{const p=PT,d=p.d;d.stay=!d.stay;if(d.stay){d.sx=p.x;d.sz=p.z;renderPet(d.name+' will stay here and wait for you.');}else renderPet(d.name+' will follow you!');change();};
+ACT.pstay=()=>{const p=PT,d=p.d;d.stay=!d.stay;p.far=0;if(d.stay){d.sx=p.x;d.sz=p.z;renderPet(d.name+' will stay here and wait for you.');}else renderPet(d.name+' will follow you!');change();};
 
 /* adopting */
 let AD=null;const ADOPT_COST=100;
@@ -3809,7 +3961,6 @@ function openSettings(){const fromTitle=!PLAYING;
     <div class="opt"><span>Look speed</span><span class="row" style="margin:0">${[['Slow',.6],['Normal',1],['Fast',1.6]].map(([n,v])=>`<button class="btn ${SET.look===v?'butter':'white'}" data-a="slook:${v}">${n}</button>`).join('')}</span></div>
     <div class="opt"><span>Sound</span><button class="btn ${SET.sound?'mint':'white'}" data-a="ssound">${SET.sound?'🔊 On':'🔇 Off'}</button></div>
     <div class="opt"><span>Graphics</span><span class="row" style="margin:0"><button class="btn ${SET.gfx==='nice'?'butter':'white'}" data-a="sgfx:nice">Pretty</button><button class="btn ${SET.gfx==='fast'?'butter':'white'}" data-a="sgfx:fast">Fast</button></span></div>
-    <div class="opt"><span>${SET.day?'Time: ☀️ Always day':'Time: 🌗 Day & night'}</span><button class="btn white" data-a="sday">${SET.day?'🌙 Normal day & night':'☀️ Always day'}</button></div>
     <div class="opt"><span>🍕 Pizza job</span><button class="btn white" data-a="tutgo">📖 Show me the tips</button></div>
     <div class="opt"><span>🎨 Designer job</span><button class="btn white" data-a="dtutgo">📖 Show me the tips</button></div>
     <div class="opt"><span>✏️ Notepad</span><button class="btn ${PAD.del?'butter':'white'}" data-a="padrest"${PAD.del?'':' disabled'}>↩️ Last page</button></div>
@@ -3818,10 +3969,8 @@ function openSettings(){const fromTitle=!PLAYING;
     <p class="note">${TOUCHY?'Walk: drag on the left side. Look: drag on the right side. Jump: ⬆️. Run: 🏃. Tap things to use them.':'Walk: WASD. Look: drag with the mouse. Jump: Space. Run: hold Shift. Use things: E or click. Bag: B.'}<br>✏️ Notepad: draw on it! Tap it 2× for a new page, 3× to go back, 4× to delete.</p>
     <div class="row"><button class="btn coral" data-a="wipe">${WIPE?'Tap again to start over':'🗑️ Start a new game'}</button></div>`,{onClose:()=>{WIPE=false;}});}
 ACT.fetchpets=()=>{if(!S||!S.pets.length){toast('You don\'t have any pets yet! Adopt one at the Pet Shop. 🐾',3);return;}
-  let i=0;for(const p of PET_ACTORS){const d=p.d;d.stay=false;const ang=P.yaw+Math.PI+(i%2?.5:-.5)*(1+(i>>1)*.5),back=1.2+(i>>1)*.5;
-    let x=P.x-Math.sin(P.yaw)*1.2+Math.cos(ang)*0,z=P.z-Math.cos(P.yaw)*1.2;
-    x=P.x+Math.sin(ang)*back;z=P.z+Math.cos(ang)*back;[x,z]=collideXZ(x,z,p.r,CUR);
-    p.loc=CUR.id;p.x=x;p.z=z;d.loc=CUR.id;d.x=x;d.z=z;p.tx=x;p.tz=z;p.g.visible=true;p.g.position.set(x,p.g.position.y,z);i++;}
+  let n=0;for(const p of PET_ACTORS)p.loc=null;for(const p of PET_ACTORS){const d=p.d;d.stay=false;nearMe(p,++n,1);
+    d.loc=p.loc;d.x=p.tx=p.x;d.z=p.tz=p.z;p.g.visible=true;p.g.position.set(p.x,p.g.position.y,p.z);}
   SFX.yay();change();saveLocal();const nm=S.pets.length===1?S.pets[0].name:S.pets.length+' pets';toast('🐾 '+nm+' '+(S.pets.length===1?'is':'are')+' right here with you!',3);closePanel();};
 ACT.gohome=()=>{LANE.via=null;closePanel();if(DECO.on)decoEnd();fade(()=>{if(CR){if(CR.av)scene.remove(CR.av.root);CR=null;camera.clearViewOffset();}setLoc('home');const L=LOC.home;P.x=L.ox;P.z=L.oz+DOORS.home.inside[1];P.yaw=0;P.pitch=0;P.sit=null;P.ride=null;
   $('hud').hidden=false;resize();bringFollowers();saveLocal();toast('Home sweet home! 🏡',2.6);});};
@@ -3829,7 +3978,6 @@ let WIPE=false;
 ACT.slook=v=>{SET.look=+v;saveSet();openSettings();};
 ACT.ssound=()=>{SET.sound=!SET.sound;saveSet();audioInit();openSettings();};
 ACT.sgfx=v=>{SET.gfx=v;saveSet();applyGfx();openSettings();};
-ACT.sday=()=>{SET.day=!SET.day;saveSet();if(SET.day&&PLAYING&&S)dayKeep();SFX.tap();toast(SET.day?'☀️ Always day! Nice and sunny.':'🌗 Day and night are back.',2.6);openSettings();};
 ACT.padrest=()=>{if(!PAD.del){toast('No deleted page to bring back',2);return;}SFX.tap();
   openPanel(`<div class="hd"><h2>✏️ Last page</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div><p class="line">Do you want to bring back the last page you deleted?</p><canvas id="padPrev" width="340" height="230"></canvas><div class="row"><button class="btn mint" data-a="padyes">✅ Yes, bring it back</button><button class="btn white" data-a="padno">No</button></div>`);
   const c=$('padPrev');padPaint(c.getContext('2d'),c.width,c.height,PAD.del,2,false);};
@@ -4475,6 +4623,7 @@ function psFlop(x,u,dt){const g=x.r.m.root,m=x.r.m,BY=PS.top+.03,F=Math.PI/2;
   const px=g.position.x,pz=g.position.z,mv=Math.hypot(q[0]-px,q[2]-pz),gy=lerp(BY,0,clamp((q[0]+35.15)/.4,0,1));
   psPose(g,m,q[0],gy+(mv>.004?Math.abs(Math.sin(u*14))*.05:0),q[2],mv>.004?Math.atan2(q[0]-px,q[2]-pz):g.rotation.y);animPet(m,dt,mv>.004);}
 function psCut(dt){const C=CUT,p=C.p,m=p.m,t=(C.t+=dt),u=t-C.st,sm=k=>k*k*(3-2*k),BY=PS.top+.03,PY=PS.top+.08,FACE=Math.PI/2,pd3=PS.pad[3],me=C.order[3];
+  for(const w of PET_ACTORS)if(w!==p&&w.loc==='city')w.g.visible=false;for(const f of FRIEND_ACTORS)if(f.mode==='follow')f.g.visible=false;   /* 🐾 your other pets and friends watch from out of sight, so the show stays clear */
   const showCam=()=>psCamTo(PS.cam[0],PS.cam[1],PS.sx,.35,PS.sz,dt,3.2),judgeCam=()=>psCamTo(PS.jcam[0],PS.jcam[1],PS.jx,.95,PS.sz,dt,3.4);
   const youWait=()=>{psPetPose(p,pd3[0],PY,pd3[1],FACE+.35);animPet(m,dt,false);};
   if(C.stage==='intro'){showCam();const k=sm(clamp(u/1.7,0,1));psPetPose(p,lerp(C.px,pd3[0],k),lerp(0,PY,k)+Math.sin(Math.PI*k)*.9,lerp(C.pz,pd3[1],k),k<.85?Math.atan2(pd3[0]-C.px,pd3[1]-C.pz):FACE+.35);animPet(m,dt,k<1);
@@ -4649,7 +4798,7 @@ function tcGoing(id){return!!(S&&S.job==='teacher'&&S.tc&&S.tc.o&&S.tc.o.subj===
 function tcHere(id){return tcGoing(id)&&!!CUR&&CUR.id==='cl_'+id;}
 const tcDoor=S0=>S0.pos==='middle'?'the middle door':'the door on the '+S0.pos;
 function tcNew(){const d=tc(),id=pick(Object.keys(SUBJ).filter(k=>k!==d.last)),S0=SUBJ[id];d.o={subj:id};d.last=id;
-  const x=`Good ${S.time<12?'morning':'afternoon'}, ${S.name||'teacher'}! ☀️ Today I'd like you to teach the ${S0.n} class, if that's okay! ${S0.i} Go to the school. In the hallway, the ${S0.n} room is ${tcDoor(S0)}.`;
+  const x=`Good ${S.time<5||S.time>=18?'evening':S.time<12?'morning':'afternoon'}, ${S.name||'teacher'}! ${nightF(S.time)>.5?'🌙':'☀️'} Today I'd like you to teach the ${S0.n} class, if that's okay! ${S0.i} Go to the school. In the hallway, the ${S0.n} room is ${tcDoor(S0)}.`;
   addMsg('dr','dr',x,{t2:'📚 Your class today: '+S0.n});SFX.ding();try{if(navigator.vibrate)navigator.vibrate([120,80,120]);}catch(e){}
   showNote('📚 Message from the school!',x,false,'📚','dr');change();jobHud(true);}
 function tcTick(dt){const d=tc();if(!d.o&&d.done<TC_MAX&&!CUT){d.wait-=dt;if(d.wait<=0)tcNew();}jobHud();}
@@ -4681,6 +4830,7 @@ function tcDesk(id){if(!tcHere(id)){SFX.tap();toast(S.job==='teacher'?"This isn'
   CUT={tch:1,t:0,st:0,shake:0,stage:'sit',id,L,kids:L.kids,next:2.5,caught:0,missed:0,oops:0,pile:[],planes:[]};
   tcBar('📚 Get ready… the lesson is about to start!');SFX.pop();}
 function tcCut(dt){const C=CUT,L=C.L,t=(C.t+=dt),u=t-C.st;
+  for(const w of FRIEND_ACTORS)if(w.loc===L.id)w.g.visible=false;for(const w of PET_ACTORS)if(w.loc===L.id)w.g.visible=false;   /* 🐾 pets and friends who came along wait out of sight in class, so nobody blocks the kids */
   const gr=C.stage==='grade'||C.stage==='done';P.cy=lerp(P.cy||0,gr?.2:.85,Math.min(1,dt*3));if(gr)psCamTo(L.ox,L.oz-3.65,L.ox,.55,L.oz-2.6,dt,3);else psCamTo(L.ox,L.oz-3.75,L.ox,.55,L.oz+.75,dt,3);
   for(const k of C.kids)tcAnim(k,dt);tcPlanes(dt);
   if(C.stage==='sit'){if(u>2.2){C.stage='lesson';C.st=t;C.len=40;SFX.ding();popText('🔔 The '+SUBJ[C.id].n+' lesson starts!');setTimeout(()=>{if(CUT&&CUT.tch)toast('✋ Tap a kid who goofs off to stop them!',3.6);},900);}return;}
@@ -4929,7 +5079,12 @@ function updHud(force){$('coins').textContent=S.coins;const fd=$('food');fd.styl
   $('clock').textContent=clockStr(S.time);$('dayN').textContent=dayLabel();$('sunIc').textContent=nightF(S.time)>.5?'🌙':'☀️';if(force)renderTasks();}
 function showAction(){$('moveBtns').hidden=!PLAYING||DECO.on||!!CUT;const w=$('actWrap');if(!PLAYING||UI.open||DECO.on||!TARGET){w.hidden=true;return;}
   w.hidden=false;const lb=typeof TARGET.label==='function'?TARGET.label():TARGET.label,ic=typeof TARGET.icon==='function'?TARGET.icon():TARGET.icon;if($('actLbl').textContent!==lb)$('actLbl').textContent=lb;if($('act').textContent!==ic)$('act').textContent=ic;}
-$('act').addEventListener('click',()=>{audioInit();useTarget();});
+$('act').addEventListener('click',()=>{audioInit();if(KC.eat){KC.eat=false;return;}useTarget();});
+/* the ⚽ button can be held: press = start the power, let go = kick (only for the ball; everything else still uses a normal tap) */
+$('act').style.touchAction='none';
+$('act').addEventListener('pointerdown',e=>{if(e.button===0&&TARGET===BALLT){audioInit();ballHold(false,e.pointerId);}});
+for(const ev of['pointerup','pointercancel'])addEventListener(ev,e=>{if(KC.on&&!KC.key&&e.pointerId===KC.pid)ballLet();},true);
+addEventListener('pointerdown',()=>{KC.eat=false;},true);
 $('bJump').addEventListener('pointerdown',e=>{e.preventDefault();jump();});
 $('bRun').addEventListener('click',()=>{audioInit();setRun(!IN.run);SFX.tap();});
 $('bBag').addEventListener('click',()=>{audioInit();SFX.tap();openBag();});
@@ -4958,7 +5113,7 @@ function startGame(){
   else{let loc=S.loc;P.x=S.px;P.z=S.pz;P.yaw=isFinite(S.yaw)?S.yaw:0;P.pitch=0;
     if(!LOC[loc]||loc==='studio'){loc='city';P.x=-17;P.z=-4.6;P.yaw=0;}
     loc=safeSpot(loc)||'city';setLoc(loc);[P.x,P.z]=collideXZ(P.x,P.z,.3,CUR);
-    for(const p of PET_ACTORS)if(!p.d.stay&&p.loc!==CUR.id){p.loc=CUR.id;p.x=P.x+.8;p.z=P.z+.8;}
+    let n=0;for(const p of PET_ACTORS)if(!p.d.stay&&p.loc!==CUR.id)nearMe(p,++n);
     toast('Welcome back, '+(S.name||'friend')+'! 💗',3);}
   heldInit();askT=0;jobHud(true);dcardUpd(true);
   updHud(true);if(CSAVE.ref){CSAVE.dirty=true;cloudFlush();}
@@ -4971,14 +5126,14 @@ function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);c
 let last=performance.now(),saveT=0,titleT=0,hardT=0,navT=0;
 function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last)/1000);last=now;
   if(PLAYING){
-    if(!UI.open||true){S.time+=dt/HOUR;if(SET.day)dayKeep();else if(S.time>=24){S.time-=24;S.day++;newDay();change();}
+    if(!UI.open||true){HOUR=hourLen(S.time);S.time+=dt/HOUR;if(S.time>=24){S.time-=24;S.day++;newDay();change();}
       S.hunger=Math.max(0,S.hunger-dt/HOUR*4);if(S.hunger<20&&!hungryWarn){hungryWarn=true;toast('Your tummy is rumbling! Eat something from your 🎒 bag.',4);}if(S.hunger>30)hungryWarn=false;}
     updatePlayer(dt);
     let fi=0;for(const f of FRIEND_ACTORS)f.update(dt,f.mode==='follow'?fi++:0);PET_ACTORS.forEach((p,i)=>p.update(dt,fi+i+(fi?0:1)));
     if(CUR.id==='pets')updatePen(dt);
     if(CUR.id==='toys'&&CUR.train){const T=CUR.train;T.userData.t=(T.userData.t||0)+dt*.9;T.children.forEach((c,i)=>{const a=T.userData.t-i*.32;c.position.set(Math.cos(a)*.88,0,Math.sin(a)*.55);c.rotation.y=Math.atan2(-Math.sin(a)*.88,Math.cos(a)*.55);});}
     for(const w of WALKERS)w.update(dt);
-    updateCars(dt);mpTick(dt);laneTick(dt);for(const s of SHOPPERS)s.update(dt);
+    updateCars(dt);mpTick(dt);laneTick(dt);zzTick(dt);for(const s of SHOPPERS)s.update(dt);
     updGarden(dt);
     {const vis=CUR.id==='city'&&sittersOut();for(const s of SITTERS){s.p.root.visible=vis;if(vis){s.t+=dt;s.p.head.rotation.y=Math.sin(s.t*.5)*.35;if(s.p.wave>0){s.p.wave-=dt;s.p.arms[1].rotation.z=2.5+Math.sin(s.p.wave*14)*.35;}else s.p.arms[1].rotation.z*=.85;}}}
     psUpdate(dt);
@@ -5011,6 +5166,7 @@ async function boot(){
   try{
     const cv=$('c');renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,powerPreference:'high-performance'});
     renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+    {const K=THREE.ShaderChunk,f=K.shadowmap_pars_fragment;if(f.includes('return shadow;'))K.shadowmap_pars_fragment=f.replace('return shadow;','return mix(shadow,1.0,smoothstep(.72,.98,max(abs(shadowCoord.x-.5),abs(shadowCoord.y-.5))*2.));');}   /* 🌳 shadows fade out softly far away instead of popping in */
     initMaterials(renderer.capabilities.isWebGL2);
     scene=new THREE.Scene();FOG=new THREE.Fog('#c4ecff',55,270);scene.fog=FOG;
     camera=new THREE.PerspectiveCamera(70,1,.1,700);camera.rotation.order='YXZ';
