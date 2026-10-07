@@ -1646,12 +1646,13 @@ function floorTex(kind){const c=document.createElement('canvas');c.width=c.heigh
   else if(kind==='carpet'){x.fillStyle='#a9c8ff';x.fillRect(0,0,256,256);x.fillStyle='rgba(255,255,255,.4)';const r=seeded(5);for(let i=0;i<140;i++){x.beginPath();x.arc(r()*256,r()*256,2.2,0,TAU);x.fill();}}
   else{const [a,b]=kind==='pink'?['#ffd1e0','#ffeaf2']:kind==='mint'?['#c4f0df','#e8fbf3']:kind==='pizza'?['#fff7ee','#ffcdbf']:['#ffffff','#d9cbff'];for(let i=0;i<4;i++)for(let j=0;j<4;j++){x.fillStyle=(i+j)%2?a:b;x.fillRect(i*64,j*64,64,64);}x.strokeStyle='rgba(61,44,94,.22)';x.lineWidth=3;for(let i=0;i<=4;i++){x.beginPath();x.moveTo(i*64,0);x.lineTo(i*64,256);x.stroke();x.beginPath();x.moveTo(0,i*64);x.lineTo(256,i*64);x.stroke();}}
   const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(3,2.5);t.anisotropy=4;return t;}
-function shell(L,g,W,D,H,wallMat,floorMat,ceil,into){const T=into||L.g;
+function shell(L,g,W,D,H,wallMat,floorMat,ceil,into,gap){const T=into||L.g;
   const fl=new THREE.Mesh(new THREE.PlaneGeometry(W,D),floorMat);fl.rotation.x=-Math.PI/2;fl.receiveShadow=true;fl.userData.keep=1;T.add(fl);
   const ce=new THREE.Mesh(new THREE.PlaneGeometry(W,D),new THREE.MeshBasicMaterial({color:ceil}));ce.rotation.x=Math.PI/2;ce.position.y=H;ce.userData.keep=1;T.add(ce);
-  const t=.3;box(g,W+2*t,H,t,null,0,0,-D/2-t/2,{mat:wallMat,ol:false});box(g,W+2*t,H,t,null,0,0,D/2+t/2,{mat:wallMat,ol:false});
-  box(g,t,H,D,null,-W/2-t/2,0,0,{mat:wallMat,ol:false});box(g,t,H,D,null,W/2+t/2,0,0,{mat:wallMat,ol:false});
-  const bb='#ffffff';box(g,W,.14,.06,bb,0,0,-D/2+.03,{ol:.02});box(g,W,.14,.06,bb,0,0,D/2-.03,{ol:.02});box(g,.06,.14,D,bb,-W/2+.03,0,0,{ol:.02});box(g,.06,.14,D,bb,W/2-.03,0,0,{ol:.02});
+  /* gap: a doorway (half its width) in the middle of the west wall, to the big house's stairs */
+  const t=.3,ws=gap?D/2-gap:D,wz=gap?[-(gap+ws/2),gap+ws/2]:[0];box(g,W+2*t,H,t,null,0,0,-D/2-t/2,{mat:wallMat,ol:false});box(g,W+2*t,H,t,null,0,0,D/2+t/2,{mat:wallMat,ol:false});
+  for(const z of wz)box(g,t,H,ws,null,-W/2-t/2,0,z,{mat:wallMat,ol:false});if(gap)box(g,t,H-2.6,2*gap,null,-W/2-t/2,2.6,0,{mat:wallMat,ol:false});box(g,t,H,D,null,W/2+t/2,0,0,{mat:wallMat,ol:false});
+  const bb='#ffffff';box(g,W,.14,.06,bb,0,0,-D/2+.03,{ol:.02});box(g,W,.14,.06,bb,0,0,D/2-.03,{ol:.02});for(const z of wz)box(g,.06,.14,ws,bb,-W/2+.03,0,z,{ol:.02});box(g,.06,.14,D,bb,W/2-.03,0,0,{ol:.02});
   cyl(g,.42,.3,.16,'#ffffff',0,H-.16,0,{seg:16});sph(g,.22,null,0,H-.2,0,{mat:GLOW,ol:false,ws:12,hs:8});
   col(L,-W/2-1,-D/2-1,W/2+1,-D/2);col(L,-W/2-1,D/2,W/2+1,D/2+1);col(L,-W/2-1,-D/2,-W/2,D/2);col(L,W/2,-D/2,W/2+1,D/2);
 }
@@ -1662,6 +1663,8 @@ function drawScore(){const L=LOC.city;if(!L||!L.score)return;const m=(typeof S!=
   x.fillStyle='#ffd45c';x.font=`800 90px ${FONT}`;x.fillText(':',W/2,132);t.needsUpdate=true;}
 function newMatch(){S.match={l:0,r:0,v:((S.match&&S.match.v)||0)+1};drawScore();SFX.pop();toast('🏆 New match! Blue 0 – 0 Pink',2.6);}
 let HOMEW=6,HOMED=5,HOMEGX=4.4;
+/* 🪜 the big house's upstairs room sits UPX m east of the ground floor room; UPG = half the width of the stair doorway */
+const UPX=40,UPG=.85;
 function buildHome(){
   const L=makeLoc('home','in',300,0,[-6,-5,6,5]);
   WALL_M=toon({color:'#ffd6e0'});FLOOR_M=toon({map:floorTex('wood')});
@@ -1674,19 +1677,48 @@ function homeShell(L,big){if(L.big===big&&L.shellG)return;L.big=big;
   if(L.shellG){L.g.remove(L.shellG);L.shellG.traverse(o=>{if(o.geometry)o.geometry.dispose();});}
   const W=big?18:12,D=big?14:10,H=big?3.6:3.2,g=new THREE.Group(),sh=new THREE.Group();g.add(sh);L.g.add(g);L.shellG=g;
   HOMEW=W/2;HOMED=D/2;HOMEGX=big?6.6:4.4;L.cols.length=0;
-  shell(L,sh,W,D,H,WALL_M,FLOOR_M,'#f7eef2',g);
+  shell(L,sh,W,D,H,WALL_M,FLOOR_M,'#f7eef2',g,big?UPG:0);
   doorAt(sh,0,HOMED-.02,Math.PI,'#5fd4b0',false,true);doorAt(sh,HOMEGX,-HOMED+.02,0,'#5fd4b0',false,true);
   for(const x of big?[-6.5,-3,1.5]:[-3,1.5])windowIn(sh,x,1.0,-HOMED+.02,0);
   for(const z of big?[-3.2,2.6]:[0]){windowIn(sh,HOMEW-.02,1.0,z,-Math.PI/2,'#7fdcb5');windowIn(sh,-HOMEW+.02,1.0,z,Math.PI/2,'#7fdcb5');}
-  if(big)for(const x of[-5,5])windowIn(sh,x,1.0,HOMED-.02,Math.PI);
+  if(big){for(const x of[-5,5])windowIn(sh,x,1.0,HOMED-.02,Math.PI);upFloor(L,sh,W,D,H,WALL_M,FLOOR_M);}
   bake(sh,false);
-  const gh=new THREE.GridHelper(W,W*2,0xb79cff,0xd9c8ff);gh.scale.z=D/W;gh.position.y=.012;gh.visible=!!(L.grid&&L.grid.visible);g.add(gh);L.grid=gh;
+  const grid=x=>{const gh=new THREE.GridHelper(W,W*2,0xb79cff,0xd9c8ff);gh.scale.z=D/W;gh.position.set(x,.012,0);g.add(gh);return gh;};
+  const gv=!!(L.grid&&L.grid.visible);L.grid=grid(0);L.grid.visible=gv;
   L.inter=L.inter.filter(i=>!i.hdoor);
   inter(L,{x:0,z:HOMED-.7,r:1.9,icon:'🚪',label:'Go outside',act:()=>exitTo('home'),hdoor:1});
   inter(L,{x:HOMEGX,z:-HOMED+.7,r:1.8,icon:'🌱',label:'Go to your garden',act:()=>exitTo('home','back'),hdoor:1});
   L.bounds={x1:L.ox-HOMEW,z1:L.oz-HOMED,x2:L.ox+HOMEW,z2:L.oz+HOMED};
+  L.up=null;if(big){const gu=grid(UPX);gu.visible=false;L.up={ox:L.ox+UPX,oz:L.oz,items:L.items,grid:gu,w:HOMEW};upSpots(L,'hdoor');}
   DOORS.home.inside=[0,HOMED-1.3,0];DOORS.homeback.inside=[HOMEGX,-HOMED+1.4,Math.PI];
   if(FLOOR_M.map)FLOOR_M.map.repeat.set(HOMEW/2,HOMED/2);}
+/* 🪜 the big house's second floor (in your home, and in a friend's when you visit): stairs go up behind a doorway in the west wall;
+   upstairs is a room just as big, with the same paint and floor, and the stairs down at the same spot */
+function upFloor(L,sh,W,D,H,wm,fm){const ug=new THREE.Group();ug.position.x=UPX;sh.add(ug);
+  shell({ox:L.ox+UPX,oz:L.oz,cols:L.cols},ug,W,D,H,wm,fm,'#f7eef2',ug,UPG);
+  for(const x of[-6.5,-3,1.5,6.6])windowIn(ug,x,1.0,-D/2+.02,0);for(const x of[-5,0,5])windowIn(ug,x,1.0,D/2-.02,Math.PI);
+  for(const z of[-3.2,2.6]){windowIn(ug,W/2-.02,1.0,z,-Math.PI/2,'#7fdcb5');windowIn(ug,-W/2+.02,1.0,z,Math.PI/2,'#7fdcb5');}
+  const dk=new THREE.MeshBasicMaterial({color:'#3b3157',side:THREE.BackSide}),n=12,sd=4.2/n,sr=H/n,x0=-W/2,t=.3,a=Math.atan2(H,4.2);
+  for(const [g,up] of[[sh,1],[ug,0]]){
+    for(const k of[-1,1])box(g,4.2,H,t,null,x0-2.1,0,k*(UPG+t/2),{mat:wm,ol:false});box(g,t,H,2*UPG+2*t,null,x0-4.2-t/2,0,0,{mat:wm,ol:false});
+    for(let i=0;i<n-1+up;i++)box(g,sd,up?(i+1)*sr:H-(i+1)*sr,2*UPG,'#d9a46c',x0-(i+.5)*sd,up?0:-H,0,{ol:.012});
+    const hole=new THREE.Mesh(new THREE.BoxGeometry(4.2,up?3.2:H,2*UPG),dk);hole.position.set(x0-2.1,up?H+1.6:-H/2,0);g.add(hole);
+    if(!up)box(g,4.2,.1,2*UPG,'#f7eef2',x0-2.1,H,0,{ol:false});
+    for(const k of[-1,1])box(g,.1,2.7,.1,'#ffffff',x0+.04,0,k*(UPG+.05),{ol:.015});box(g,.1,.1,2*UPG+.2,'#ffffff',x0+.04,2.6,0,{ol:.015});
+    box(g,Math.hypot(4.2,H),.07,.08,'#ffffff',x0-2.1,(up?H:-H)/2+.95,-UPG+.07,{rz:up?-a:a,center:true,ol:.01});
+    const pg=new THREE.Group();pg.userData.keep=1;g.add(pg);plate(pg,up?'⬆️ Upstairs':'⬇️ Downstairs','#ffffff','#3d2c5e',1.0,.28,x0+.03,(2.6+H)/2,0,Math.PI/2);}}
+function upSpots(L,fl){const w=L.up.w;L.bounds.x2+=UPX;
+  inter(L,{x:-w+.9,z:0,r:1.6,icon:'⬆️',label:'Go upstairs',act:()=>hclimb(1),[fl]:1});
+  inter(L,{x:UPX-w+.9,z:0,r:1.6,icon:'⬇️',label:'Go downstairs',act:()=>hclimb(-1),[fl]:1});}
+/* which floor of your house you stand on: 0 = ground floor, 1 = upstairs */
+const homeFl=()=>CUR===LOC.home&&LOC.home.up&&P.x>LOC.home.ox+UPX/2?1:0;
+/* only the floor you stand on draws its furniture (fewer draw calls on iPads) */
+function floorVis(){const L=CUR;if(!L||!L.up||!L.items)return;const f=P.x>L.ox+UPX/2?1:0;if(f===L.vf)return;L.vf=f;for(const g of L.items.children)g.visible=(g.userData.fl|0)===f;}
+/* up or down the big house stairs: the same step-by-step climb as in the flats */
+function hclimb(dir){const L=CUR,U=L.up;if(CLIMB||CUT||fading||!U)return;if(DECO.on)decoEnd();P.sit=null;SFX.tap();const x0=L.ox+(dir>0?0:UPX)-U.w;
+  CLIMB={t:0,L,dir,x0:P.x,z0:P.z,y0:P.yaw,p0:P.pitch,x1:x0-3.3,z1:L.oz,ya:Math.PI/2,h:3,st:0,fd:false,end:()=>{
+    [P.x,P.z]=collideXZ(L.ox+(dir>0?UPX:0)-U.w+2.6,L.oz,.3,L);P.yaw=-Math.PI/2;P.pitch=0;P.cy=0;bringFollowers(true);saveLocal();
+    toast(dir<0?'🏡 Back downstairs':L===LOC.home?'🏡 Upstairs! Tap 🛋️ to decorate up here too.':'🏡 Upstairs!',2.6);}};}
 
 /* ===== 🏡 Friends Lane: the west road goes on past the edge of town, with a house lot for every player ===== */
 const LANE_PLOTS=[[-97,-1],[-111,-1],[-125,-1],[-97,1],[-111,1],[-125,1]].map(([X,s],j)=>({j,X,s}));
@@ -1723,17 +1755,18 @@ function buildLane(L,st){
 const VOX=2700;
 function buildVisit(){const L=makeLoc('visit','in',VOX,0,[-6,-5,6,5]);L.wallM=toon({color:'#ffd6e0'});L.floorM=toon({map:floorTex('wood')});L.fk='wood';
   L.items=new THREE.Group();L.items.visible=false;scene.add(L.items);visitShell(L,false);return L;}
-function visitShell(L,big){if(L.big===big&&L.shellG)return;L.big=big;if(L.shellG)L.g.remove(L.shellG);
+function visitShell(L,big,up){up=!!(big&&up);if(L.big===big&&L.hasUp===up&&L.shellG)return;L.big=big;L.hasUp=up;if(L.shellG)L.g.remove(L.shellG);
   const W=big?18:12,D=big?14:10,H=big?3.6:3.2,hw=W/2,hd=D/2,gx=big?6.6:4.4,g=new THREE.Group(),sh=new THREE.Group();g.add(sh);L.g.add(g);L.shellG=g;L.W=hw;L.D=hd;L.cols.length=0;
-  shell(L,sh,W,D,H,L.wallM,L.floorM,'#f7eef2',g);
+  shell(L,sh,W,D,H,L.wallM,L.floorM,'#f7eef2',g,up?UPG:0);
   doorAt(sh,0,hd-.02,Math.PI,'#5fd4b0',false,true);doorAt(sh,gx,-hd+.02,0,'#5fd4b0',false,true);
   for(const x of big?[-6.5,-3,1.5]:[-3,1.5])windowIn(sh,x,1.0,-hd+.02,0);
   for(const z of big?[-3.2,2.6]:[0]){windowIn(sh,hw-.02,1.0,z,-Math.PI/2,'#7fdcb5');windowIn(sh,-hw+.02,1.0,z,Math.PI/2,'#7fdcb5');}
   if(big)for(const x of[-5,5])windowIn(sh,x,1.0,hd-.02,Math.PI);
+  if(up)upFloor(L,sh,W,D,H,L.wallM,L.floorM);
   bake(sh,false);
   L.inter=L.inter.filter(i=>!i.vdoor);
   inter(L,{x:0,z:hd-.7,r:1.9,icon:'🚪',label:'Go outside',act:()=>visLeave('👋 Bye, '+VIS.nm+'! Thanks for having me!'),vdoor:1});
-  L.bounds={x1:L.ox-hw,z1:L.oz-hd,x2:L.ox+hw,z2:L.oz+hd};}
+  L.bounds={x1:L.ox-hw,z1:L.oz-hd,x2:L.ox+hw,z2:L.oz+hd};L.up=up?{ox:L.ox+UPX,oz:L.oz,w:hw}:null;if(up)upSpots(L,'vdoor');}
 /* 🎨 the client's room for the Interior designer job. There is just one, re-painted for every client. */
 const CLW=3.6,CLD=3.0;let CL_WALL=null,CL_FLOOR=null;
 function buildClientRoom(){const L=makeLoc('client','in',2100,0,[-CLW,-CLD,CLW,CLD]);
@@ -2698,10 +2731,11 @@ function laneStamp(st){st.jt=MP.jt||0;st.bh=S.bighouse?1:0;
   let hosting=performance.now()<HOST.until;if(!hosting&&MP.me)for(const a of MP.peers.values())if(a.loc==='visit'&&a.ho===MP.me){hosting=true;break;}
   st.hm=null;if(hosting){const lim=MP.pmax||(window.WEBNET?60000:3600);st.hm=homeSnap(0);st.hm=homeSnap(Math.max(0,lim-jsonBytes(st)));}}
 const TENC=new TextEncoder();function jsonBytes(o){return TENC.encode(JSON.stringify(o)).length;}
-/* the house layout rides along in presence; Claude rooms cap presence at 4 KiB, so a very full house sends what fits (placed-first items first) */
-function homeSnap(budget){const h=S.home,r=v=>Math.round(v*10)/10,out=[];let used=0;
-  for(const it of h.items.slice(0,160)){const s=[it.t,it.c||'',r(it.x),r(it.z),it.r|0,it.on?1:0].join(',');if(budget!=null&&used+s.length+1>budget)break;out.push(s);used+=s.length+1;}
-  return{b:S.bighouse?1:0,w:h.wall,f:h.floor,i:out.join(';')};}
+/* the house layout rides along in presence; Claude rooms cap presence at 4 KiB, so a very full house sends what fits (placed-first items first).
+   i = the ground floor (old versions only read this); u = upstairs in the big house, sent with what is left, so it is dropped first */
+function homeSnap(budget){const h=S.home,r=v=>Math.round(v*10)/10;let used=0;
+  const rows=fl=>{const out=[];for(const it of h.items.filter(it=>(it.f&&S.bighouse?1:0)===fl).slice(0,160)){const s=[it.t,it.c||'',r(it.x),r(it.z),it.r|0,it.on?1:0].join(',');if(budget!=null&&used+s.length+1>budget)break;out.push(s);used+=s.length+1;}return out.join(';');};
+  const o={b:S.bighouse?1:0,w:h.wall,f:h.floor,i:rows(0)};if(S.bighouse)o.u=rows(1);return o;}
 function goKnock(peer){const a=MP.peers.get(peer),j=LANE.slotOf.get(peer);if(!a||j==null||!LOC.city.lane){toast('🏠 Their house is not on Friends Lane right now.',2.8);return;}
   const d=LOC.city.lane[j].door;if(DECO.on)decoEnd();if(P.ride)stopRide();if(P.sit)standUp();closePanel();SFX.door();
   fade(()=>{setLoc('city');P.x=d[0]+Math.sin(d[2]+Math.PI)*1.6;P.z=d[1]+Math.cos(d[2]+Math.PI)*1.6;P.yaw=d[2]+Math.PI;P.pitch=.06;P.sit=null;bringFollowers();saveLocal();setTimeout(()=>laneKnock(peer),450);});}
@@ -2728,18 +2762,18 @@ function visEnter(a){if(fading||CUT){VIS.t=performance.now();return;}
   fade(()=>{visFill(a.hm);setLoc('visit');const L=LOC.visit;P.x=L.ox;P.z=L.oz+L.D-1.3;P.yaw=0;P.pitch=0;P.sit=null;bringFollowers();SFX.yay();toast('🏠 Welcome to '+a.nm+"'s house!",3);});}
 function visLeave(msg){const d=laneHostDoor();visReset();if(msg)toast(msg,3.2);SFX.door();
   fade(()=>{setLoc('city');P.x=d[0];P.z=d[1];P.yaw=d[2];P.pitch=0;P.sit=null;bringFollowers();saveLocal();});}
-function visFill(hm){const L=LOC.visit;if(!L||!hm||typeof hm!=='object')return;visitShell(L,!!hm.b);
+function visFill(hm){const L=LOC.visit;if(!L||!hm||typeof hm!=='object')return;visitShell(L,!!hm.b,typeof hm.u==='string');
   L.wallM.color.set(HEX.test(hm.w)?hm.w:'#ffd6e0');const fk=FLOORS[hm.f]?hm.f:'wood';
   if(L.fk!==fk){L.fk=fk;if(L.floorM.map)L.floorM.map.dispose();L.floorM.map=floorTex(fk);L.floorM.needsUpdate=true;}L.floorM.map.repeat.set(L.W/2,L.D/2);
   for(const c of [...L.items.children])L.items.remove(c);L.dcols.length=0;L.inter=L.inter.filter(i=>i.vdoor);
-  const rows=typeof hm.i==='string'&&hm.i?hm.i.split(';').slice(0,160):[];
-  for(const row of rows){const [t,c,xs,zs,rs,on]=row.split(','),F=FURN[t];if(!F)continue;const x=+xs,z=+zs,r=(+rs||0)&3;
+  const rows=[];L.vf=-1;for(const fl of L.up?[0,1]:[0]){const v=hm[fl?'u':'i'];if(typeof v==='string'&&v)for(const row of v.split(';').slice(0,160))rows.push([row,fl]);}
+  for(const [row,fl] of rows){const [t,c,xs,zs,rs,on]=row.split(','),F=FURN[t];if(!F)continue;const x=+xs,z=+zs,r=(+rs||0)&3,ox=L.ox+fl*UPX;
     if(!Number.isFinite(x)||!Number.isFinite(z)||Math.abs(x)>L.W||Math.abs(z)>L.D)continue;
-    const g=buildFurn(t,HEX.test(c)?c:null);g.position.set(L.ox+x,0,L.oz+z);g.rotation.y=r*Math.PI/2;g.traverse(o=>{if(o.isMesh&&o.material!==OL){o.castShadow=true;o.receiveShadow=true;}});L.items.add(g);
+    const g=buildFurn(t,HEX.test(c)?c:null);g.position.set(ox+x,0,L.oz+z);g.rotation.y=r*Math.PI/2;g.traverse(o=>{if(o.isMesh&&o.material!==OL){o.castShadow=true;o.receiveShadow=true;}});g.userData.fl=fl;L.items.add(g);
     if(F.use==='lamp')setLamp({g,it:{on:on==='1'}});
-    const R=fpRect(t,x,z,r),rect={x1:L.ox+R.x1,z1:L.oz+R.z1,x2:L.ox+R.x2,z2:L.oz+R.z2};if(!F.flat)L.dcols.push(rect);
-    if(F.use==='sit'){const yaw=r*Math.PI/2+Math.PI;L.inter.push({x:L.ox+x,z:L.oz+z,r:1.7,rect,icon:'🪑',label:'Sit down',
-      act:()=>{P.sit={x:L.ox+x,z:L.oz+z,yaw};P.x=P.sit.x;P.z=P.sit.z;P.yaw=yaw;P.pitch=-.12;SFX.pop();toast('Comfy! Move to stand up.');}});}}}
+    const R=fpRect(t,x,z,r),rect={x1:ox+R.x1,z1:L.oz+R.z1,x2:ox+R.x2,z2:L.oz+R.z2};if(!F.flat)L.dcols.push(rect);
+    if(F.use==='sit'){const yaw=r*Math.PI/2+Math.PI;L.inter.push({x:ox+x,z:L.oz+z,r:1.7,rect,icon:'🪑',label:'Sit down',
+      act:()=>{P.sit={x:ox+x,z:L.oz+z,yaw};P.x=P.sit.x;P.z=P.sit.z;P.yaw=yaw;P.pitch=-.12;SFX.pop();toast('Comfy! Move to stand up.');}});}}}
 function hostSeeKnock(a){const kn=a.kn;if(!kn||!MP.me||kn.to!==MP.me||typeof kn.id!=='string')return;const key=a.peer+'|'+kn.id;if(HOST.seen.has(key))return;HOST.seen.add(key);
   HOST.queue.push({peer:a.peer,id:kn.id,nm:a.nm});hostCard();}
 function hostCard(){if(HOST.cur||!HOST.queue.length)return;const q=HOST.queue.shift();if(!MP.peers.has(q.peer)){hostCard();return;}HOST.cur=q;
@@ -2874,12 +2908,12 @@ function wish(){if(S.coins<1){SFX.no();toast('You need 1 🪙 to make a wish.');
 /* ---- home furniture ---- */
 function fpRect(t,x,z,r){const F=FURN[t],sw=(r%2)?F.d:F.w,sd=(r%2)?F.w:F.d;return{x1:x-sw/2,x2:x+sw/2,z1:z-sd/2,z2:z+sd/2};}
 function addHomeItem(it){
-  const L=LOC.home,F=FURN[it.t];const g=buildFurn(it.t,it.c);g.position.set(L.ox+it.x,0,L.oz+it.z);g.rotation.y=it.r*Math.PI/2;
-  g.traverse(o=>{if(o.isMesh&&o.material!==OL){o.castShadow=true;o.receiveShadow=true;}});g.userData.u=it.u;L.items.add(g);
+  const L=LOC.home,F=FURN[it.t],up=it.f&&L.up?1:0,ox=L.ox+up*UPX;const g=buildFurn(it.t,it.c);g.position.set(ox+it.x,0,L.oz+it.z);g.rotation.y=it.r*Math.PI/2;
+  g.traverse(o=>{if(o.isMesh&&o.material!==OL){o.castShadow=true;o.receiveShadow=true;}});g.userData.u=it.u;g.userData.fl=up;L.items.add(g);L.vf=-1;
   const rec={it,g,col:null,inter:null};
-  if(!F.flat){const R=fpRect(it.t,it.x,it.z,it.r);rec.col={x1:L.ox+R.x1,z1:L.oz+R.z1,x2:L.ox+R.x2,z2:L.oz+R.z2};L.dcols.push(rec.col);}
+  if(!F.flat){const R=fpRect(it.t,it.x,it.z,it.r);rec.col={x1:ox+R.x1,z1:L.oz+R.z1,x2:ox+R.x2,z2:L.oz+R.z2};L.dcols.push(rec.col);}
   if(F.use){const fx=Math.sin(it.r*Math.PI/2),fz=Math.cos(it.r*Math.PI/2),reach=Math.max(F.w,F.d)/2+1.1;
-    const R2=fpRect(it.t,it.x,it.z,it.r);rec.inter={x:L.ox+it.x,z:L.oz+it.z,r:1.7,rect:{x1:L.ox+R2.x1,z1:L.oz+R2.z1,x2:L.ox+R2.x2,z2:L.oz+R2.z2},obj:g,icon:{sleep:'😴',sit:'🪑',tv:'📺',lamp:'💡',piano:'🎹',fridge:'🧊',bath:'🛁',cook:'🍳',dress:'👗'}[F.use],
+    const R2=fpRect(it.t,it.x,it.z,it.r);rec.inter={x:ox+it.x,z:L.oz+it.z,r:1.7,rect:{x1:ox+R2.x1,z1:L.oz+R2.z1,x2:ox+R2.x2,z2:L.oz+R2.z2},obj:g,icon:{sleep:'😴',sit:'🪑',tv:'📺',lamp:'💡',piano:'🎹',fridge:'🧊',bath:'🛁',cook:'🍳',dress:'👗'}[F.use],
       label:()=>({sleep:'Sleep',sit:'Sit down',tv:rec.on?'Turn off the TV':'Watch TV',lamp:it.on?'Turn off the lamp':'Turn on the lamp',piano:'Play the piano',fridge:'Grab a snack',bath:'Take a bubble bath',cook:'Cook something',dress:'Change your look'}[F.use]),
       act:()=>useFurn(rec,fx,fz)};L.inter.push(rec.inter);
     if(F.use==='lamp')setLamp(rec);}
@@ -2897,7 +2931,7 @@ function growFurniture(){for(const it of S.home.items){const F=FURN[it.t];if(!F)
 function openBigHouse(){if(S.bighouse){toast('🏡 This is your big house! Enjoy all that space 🎉',3);return;}
   const lv=sk('decor').lv,ok=lv>=10&&S.coins>=BIG_PRICE;
   openPanel(`<div class="hd"><h2>🏡 Bigger house</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
-    <p class="ph-sub">A huge room inside, and a second floor with a balcony outside! All your furniture comes with you.</p>
+    <p class="ph-sub">A huge room inside, and stairs up to a whole second floor to decorate! All your furniture comes with you.</p>
     <div class="ph-row"><span>🛋️ Decorating level 10</span><span>${lv>=10?'✅':'level '+lv}</span></div>
     <div class="ph-row"><span>🪙 ${BIG_PRICE} coins</span><span>${S.coins>=BIG_PRICE?'✅':S.coins+' / '+BIG_PRICE}</span></div>
     ${ok?`<div class="row" style="justify-content:center;margin-top:12px"><button class="btn mint" data-a="bighouse">🏡 Buy it!</button></div>`
@@ -2962,12 +2996,14 @@ function knockFlat(f,d){const num=f*10+d,sp=FLAT_SPOT[num];if(!sp||CUT||CLIMB)re
 /* going up or down the stairs: a little climbing walk, then you're on the next floor */
 let CLIMB=null,TUT=null;
 function climb(f,dir){if(CLIMB||CUT||!LOC['apt'+(f+dir)])return;const L=LOC['apt'+f];P.sit=null;SFX.tap();
-  CLIMB={t:0,f,dir,x0:P.x,z0:P.z,y0:P.yaw,p0:P.pitch,x1:L.ox+8.7,z1:L.oz+(dir>0?-1.475:1.475),st:0,fd:false};}
-function climbUpdate(dt){const C=CLIMB;C.t+=dt;const T=1.6,k=clamp(C.t/T,0,1),e=k*k*(3-2*k),a=clamp(C.t/.45,0,1);
-  P.yaw=angLerp(C.y0,-Math.PI/2,a);P.pitch=lerp(C.p0,C.dir>0?.3:-.45,a);P.x=lerp(C.x0,C.x1,e);P.z=lerp(C.z0,C.z1,clamp(e*2.2,0,1));
-  P.cy=C.dir*2.7*clamp((e-.12)/.88,0,1);P.moving=false;C.st-=dt;if(C.st<=0&&k<1){C.st=.2;SFX.step();}
-  if(k>=1&&!C.fd){C.fd=true;fade(()=>{const nf=C.f+C.dir,L=LOC['apt'+nf];setLoc('apt'+nf);P.x=L.ox+5;P.z=L.oz+(C.dir>0?1.4:-1.4);P.yaw=Math.PI/2;P.pitch=0;CLIMB=null;bringFollowers();saveLocal();
-    toast(`🏢 Floor ${nf} · flats ${nf}1–${nf}5`,2.6);});}}
+  CLIMB={t:0,L,dir,x0:P.x,z0:P.z,y0:P.yaw,p0:P.pitch,x1:L.ox+8.7,z1:L.oz+(dir>0?-1.475:1.475),ya:-Math.PI/2,h:2.7,st:0,fd:false,end:()=>{
+    const nf=f+dir,L=LOC['apt'+nf];setLoc('apt'+nf);P.x=L.ox+5;P.z=L.oz+(dir>0?1.4:-1.4);P.yaw=Math.PI/2;P.pitch=0;bringFollowers();saveLocal();
+    toast(`🏢 Floor ${nf} · flats ${nf}1–${nf}5`,2.6);}};}
+/* the climb (flats and the big house): walk onto the stairs, step by step up (or down), then the next floor. Stops if something else moved you away */
+function climbUpdate(dt){const C=CLIMB;if(CUR!==C.L){CLIMB=null;P.cy=0;return;}C.t+=dt;const T=1.6,k=clamp(C.t/T,0,1),e=k*k*(3-2*k),a=clamp(C.t/.45,0,1);
+  P.yaw=angLerp(C.y0,C.ya,a);P.pitch=lerp(C.p0,C.dir>0?.3:-.45,a);P.x=lerp(C.x0,C.x1,e);P.z=lerp(C.z0,C.z1,clamp(e*2.2,0,1));
+  P.cy=C.dir*C.h*clamp((e-.12)/.88,0,1);P.moving=false;C.st-=dt;if(C.st<=0&&k<1){C.st=.2;SFX.step();}
+  if(k>=1&&!C.fd){C.fd=true;fade(()=>{if(CLIMB!==C)return;CLIMB=null;C.end();});}}
 /* ☀️ Always day (Settings): the clock runs 8:00 → 17:00, all bright daylight, then it's the next morning */
 function dayKeep(){if(!S)return;if(S.time<8)S.time=8;else if(S.time>=17){S.time=8;S.day++;newDay();change();if(PLAYING)toast('☀️ Good morning! It\'s '+wdName()+', day '+S.day,3);}}
 /* ✏️ notepad: draw notes. Tap it 2× = new page, 3× = go back, 4× = delete (Settings can bring the last one back) */
@@ -3021,8 +3057,8 @@ function setLoc(id){CUR=LOC[id];P.cy=0;for(const k in LOC)LOC[k].g.visible=LOC[k
   for(const k of KEEPERS)k.p.root.visible=k.L===CUR;for(const a of PEN)a.m.root.visible=CUR.id==='pets';
   if(LOC.clothes&&LOC.clothes.manq)for(const m of LOC.clothes.manq)m.visible=id==='clothes';
   $('bDeco').hidden=id!=='home';renderer.setClearColor(id==='studio'?'#fff4fa':'#000000');updSky();}
-function bringFollowers(){let i=0;for(const f of FRIEND_ACTORS)if(f.mode==='follow'){f.loc=CUR.id;f.x=P.x+Math.sin(P.yaw)*1.4+(i?.6:0);f.z=P.z+Math.cos(P.yaw)*1.4;[f.x,f.z]=collideXZ(f.x,f.z,f.r,CUR);i++;
-    if(CUR.id==='home')homeVisit(f);}
+function bringFollowers(quiet){let i=0;for(const f of FRIEND_ACTORS)if(f.mode==='follow'){f.loc=CUR.id;f.x=P.x+Math.sin(P.yaw)*1.4+(i?.6:0);f.z=P.z+Math.cos(P.yaw)*1.4;[f.x,f.z]=collideXZ(f.x,f.z,f.r,CUR);i++;
+    if(CUR.id==='home'&&!quiet)homeVisit(f);}
   for(const p of PET_ACTORS)if(!p.d.stay){p.loc=CUR.id;p.x=P.x+Math.sin(P.yaw)*1.2+rand(-.6,.6);p.z=P.z+Math.cos(P.yaw)*1.2;[p.x,p.z]=collideXZ(p.x,p.z,p.r,CUR);}}
 function enter(id,via){if(id==='home'){LANE.via=LANE.nextVia;LANE.nextVia=null;}SFX.door();qEvent('enter:'+id);fade(()=>{setLoc(id);const d=DOORS[id+(via||'')],L=LOC[id];P.x=L.ox+d.inside[0];P.z=L.oz+d.inside[1];P.yaw=d.inside[2];P.pitch=0;P.sit=null;bringFollowers();if(id==='home')doneTask('home');if(id==='pizza')pizzaIn();if(id==='cafe'&&FRIEND_ACTORS.some(f=>f.mode==='follow'))qEvent('cafevisit');saveLocal();});}
 function exitTo(id,via){if(DECO.on)decoEnd();SFX.door();fade(()=>{setLoc('city');const d=(id==='home'&&!via&&LANE.via!=null&&LOC.city.lane)?{city:LOC.city.lane[LANE.via].door}:DOORS[id+(via||'')];if(id==='home')LANE.via=null;P.x=d.city[0];P.z=d.city[1];P.yaw=d.city[2];P.pitch=0;P.sit=null;bringFollowers();saveLocal();});}
@@ -3152,13 +3188,15 @@ function updateCamera(dt){const bob=P.moving&&P.jy<=0?Math.sin(P.bobT)*.04:0;P.b
 /* ---- decorating ---- */
 const DECO={on:false,placing:null,ghost:null,sel:null,mark:null,valid:false,x:0,z:0,r:0,X:null};
 /* the same decorating tools work in your own house and in a client's room */
-const HOMEX={id:'home',L:()=>LOC.home,list:()=>S.home.items,W:()=>HOMEW,D:()=>HOMED,map:()=>HOME_ITEMS,add:it=>addHomeItem(it),rm:u=>removeHomeItem(u),
-  blocked:R=>(R.x1<1.1&&R.x2>-1.1&&R.z2>HOMED-1.6)||(R.x1<HOMEGX+1.1&&R.x2>HOMEGX-1.1&&R.z1<-HOMED+1.6)};
+/* in the big house it works on the floor you stand on (upstairs things are saved with f:1); the stairs' landing stays free */
+const HOMEX={id:'home',L:()=>homeFl()?LOC.home.up:LOC.home,list:()=>S.home.items,W:()=>HOMEW,D:()=>HOMED,map:()=>HOME_ITEMS,add:it=>addHomeItem(it),rm:u=>removeHomeItem(u),
+  on:o=>(o.f|0)===homeFl(),put:it=>{if(homeFl())it.f=1;else delete it.f;},
+  blocked:R=>(!!LOC.home.up&&R.x1<-HOMEW+3&&R.z1<1.4&&R.z2>-1.4)||(!homeFl()&&((R.x1<1.1&&R.x2>-1.1&&R.z2>HOMED-1.6)||(R.x1<HOMEGX+1.1&&R.x2>HOMEGX-1.1&&R.z1<-HOMED+1.6)))};
 const CLX={id:'client',L:()=>LOC.client,list:()=>dsItems(),W:()=>CLW,D:()=>CLD,map:()=>CL_ITEMS,add:it=>addClItem(it),rm:u=>removeClItem(u),blocked:R=>R.x1<1.25&&R.x2>-1.25&&R.z2>CLD-1.75};
 const DX=()=>DECO.X||HOMEX;
-function decoStart(){const X=CUR.id==='home'?HOMEX:CUR.id==='client'&&dsHere()?CLX:null;if(!X)return;DECO.X=X;DECO.on=true;P.sit=null;X.L().grid.visible=true;$('cross').classList.add('big');$('actWrap').hidden=true;renderBar();
+function decoStart(){const X=CUR.id==='home'&&!CLIMB?HOMEX:CUR.id==='client'&&dsHere()?CLX:null;if(!X)return;DECO.X=X;DECO.on=true;P.sit=null;X.L().grid.visible=true;$('cross').classList.add('big');$('actWrap').hidden=true;renderBar();
   if(X===HOMEX)toast('Look at something to move it, or open the shop 🛍️',3.4);}
-function decoEnd(){if(DECO.placing)decoCancel();DECO.on=false;DX().L().grid.visible=false;$('cross').classList.remove('big');$('bar').hidden=true;selMark(null);change();}
+function decoEnd(){if(DECO.placing)decoCancel();DECO.on=false;DX().L().grid.visible=false;if(DX()===HOMEX&&LOC.home.up)LOC.home.grid.visible=LOC.home.up.grid.visible=false;$('cross').classList.remove('big');$('bar').hidden=true;selMark(null);change();}
 function renderBar(){const b=$('bar');b.hidden=!DECO.on;if(!DECO.on)return;
   if(DECO.placing)b.innerHTML=`<button class="btn sky" data-d="turn">🔄 Turn</button><button class="btn mint" data-d="place" ${DECO.valid?'':'disabled'}>✅ Put it here</button><button class="btn white" data-d="cancel">✖ Cancel</button>`;
   else if(DX()===CLX)b.innerHTML=`<button class="btn butter${dsItems().length?'':' dsPulse'}" data-d="furn">🛋️ Furniture</button>${DECO.sel?`<div class="brow"><button class="btn sky" data-d="move">✋ Move</button><button class="btn lilac" data-d="away">🗑️ Remove</button></div>`:''}<button class="btn mint" data-d="finish">🎉 Finished!</button><button class="btn white sm" data-d="leave">🚪 Leave</button>`;
@@ -3177,7 +3215,7 @@ function decoUpdate(){
     x=clamp(x,-W+sw+.02,W-sw-.02);z=clamp(z,-D+sd+.02,D-sd-.02);DECO.x=x;DECO.z=z;
     DECO.ghost.position.set(L.ox+x,0,L.oz+z);DECO.ghost.rotation.y=DECO.r*Math.PI/2;
     const R=fpRect(it.t,x,z,DECO.r);let ok=true;
-    if(!F.flat){for(const o of X.list()){if(FURN[o.t].flat)continue;const Q=fpRect(o.t,o.x,o.z,o.r);if(R.x1<Q.x2-.01&&R.x2>Q.x1+.01&&R.z1<Q.z2-.01&&R.z2>Q.z1+.01){ok=false;break;}}
+    if(!F.flat){for(const o of X.list()){if(FURN[o.t].flat||(X.on&&!X.on(o)))continue;const Q=fpRect(o.t,o.x,o.z,o.r);if(R.x1<Q.x2-.01&&R.x2>Q.x1+.01&&R.z1<Q.z2-.01&&R.z2>Q.z1+.01){ok=false;break;}}
       const px=P.x-L.ox,pz=P.z-L.oz;if(px>R.x1-.32&&px<R.x2+.32&&pz>R.z1-.32&&pz<R.z2+.32)ok=false;
       if(X.blocked(R))ok=false;}
     if(ok!==DECO.valid){DECO.valid=ok;DECO.ghost.userData.fp.material.color.set(ok?'#5fd4b0':'#ff5d6c');renderBar();}
@@ -3190,16 +3228,16 @@ function selMark(it){DECO.sel=it;if(DECO.mark){scene.remove(DECO.mark);DECO.mark
   if(it){const L=DX().L(),R=fpRect(it.t,it.x,it.z,it.r);const m=new THREE.Mesh(new THREE.PlaneGeometry(R.x2-R.x1+.3,R.z2-R.z1+.3),new THREE.MeshBasicMaterial({color:'#ffd45c',transparent:true,opacity:.55,depthWrite:false}));
     m.rotation.x=-Math.PI/2;m.position.set(L.ox+it.x,.035,L.oz+it.z);scene.add(m);DECO.mark=m;}}
 function decoTurn(){if(!DECO.placing)return;DECO.r=(DECO.r+1)%4;SFX.tap();}
-function decoPlace(){if(!DECO.placing||!DECO.valid)return;const X=DX(),it=DECO.placing;it.x=DECO.x;it.z=DECO.z;it.r=DECO.r;delete it._from;X.list().push(it);X.add(it);
+function decoPlace(){if(!DECO.placing||!DECO.valid)return;const X=DX(),it=DECO.placing;it.x=DECO.x;it.z=DECO.z;it.r=DECO.r;delete it._from;if(X.put)X.put(it);X.list().push(it);X.add(it);
   scene.remove(DECO.ghost);DECO.ghost=null;DECO.placing=null;DECO.valid=false;SFX.pop();
   if(X===HOMEX){doneTask('decor');qEvent('decor');qEvent('place:'+it.t);if(FLOWER_TYPES.includes(it.t)){qEvent('placeflower');addXP('garden',4);}else addXP('decor',3);}
   else{addXP('decor',2);dcardUpd();jobHud(true);}change();renderBar();}
 function decoCancel(){if(!DECO.placing)return;const X=DX(),it=DECO.placing;
-  if(X===HOMEX)S.home.store.push(it);else if(it._from){Object.assign(it,it._from);delete it._from;X.list().push(it);X.add(it);}
+  if(X===HOMEX){delete it.f;S.home.store.push(it);}else if(it._from){Object.assign(it,it._from);delete it._from;X.list().push(it);X.add(it);}
   scene.remove(DECO.ghost);DECO.ghost=null;DECO.placing=null;DECO.valid=false;change();renderBar();}
 function decoMove(){const X=DX(),it=DECO.sel;if(!it)return;const L=X.list();L.splice(L.indexOf(it),1);X.rm(it.u);if(X===CLX)it._from={x:it.x,z:it.z,r:it.r};startPlacing(it);}
 function decoAway(){const X=DX(),it=DECO.sel;if(!it)return;const L=X.list();L.splice(L.indexOf(it),1);X.rm(it.u);selMark(null);SFX.pop();
-  if(X===HOMEX){S.home.store.push(it);toast('Put away. Find it in 🛍️ Shop → My stuff.');}else{dcardUpd();jobHud(true);}change();renderBar();}
+  if(X===HOMEX){delete it.f;S.home.store.push(it);toast('Put away. Find it in 🛍️ Shop → My stuff.');}else{dcardUpd();jobHud(true);}change();renderBar();}
 $('bar').addEventListener('click',e=>{const b=e.target.closest('[data-d]');if(!b||b.disabled)return;SFX.tap();
   ({turn:decoTurn,place:decoPlace,cancel:decoCancel,shop:()=>openCatalog('buy'),move:decoMove,away:decoAway,done:decoEnd,furn:()=>openPhone('furn'),finish:dsFinishAsk,leave:()=>exitClient()})[b.dataset.d]();});
 
@@ -4665,7 +4703,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     psUpdate(dt);
     for(const k of KEEPERS)if(k.L===CUR){k.p.root.rotation.y=angLerp(k.p.root.rotation.y,Math.atan2(P.x-k.x,P.z-k.z),.05);animPerson(k.p,dt,false);}
     if(CUR&&CUR.id==='studio'&&!CR&&!fading){setLoc('city');P.x=-17;P.z=-4.6;P.yaw=0;P.pitch=0;P.sit=null;P.ride=null;$('hud').hidden=false;camera.clearViewOffset();resize();saveLocal();}
-    if(CUT)cutUpdate(dt);if(CLIMB)climbUpdate(dt);
+    if(CUT)cutUpdate(dt);if(CLIMB)climbUpdate(dt);floorVis();
     if(CR)crCam(dt);else if(P.ride)updateRide(dt);else updateCamera(dt);if(CUT)cutCam(dt);swingUI();
     if(DECO.on)decoUpdate();
     TARGET=(UI.open||DECO.on||CUT||CLIMB||TUT||DTUT)?null:findTarget();showAction();jobTick(dt);
