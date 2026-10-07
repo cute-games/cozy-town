@@ -39,7 +39,7 @@ button{font-family:inherit}
 .btn.mint{background:var(--mint)}.btn.butter{background:var(--butter)}.btn.sky{background:var(--sky)}.btn.lilac{background:var(--lilac)}.btn.white{background:#fff}.btn.coral{background:var(--coral)}
 .ib{width:56px;height:56px;min-height:0;padding:0;border-radius:50%;font-size:26px}
 #left{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);left:calc(env(safe-area-inset-left,0px) + 12px);display:flex;flex-direction:column;gap:10px;align-items:flex-start;max-width:calc(100% - 210px)}
-#stats{display:flex;flex-wrap:wrap;gap:8px}
+#stats{display:flex;flex-wrap:wrap;gap:8px;max-width:100%}/* the chips stay in the left column: a long day label never pushes the tummy chip under the top buttons */
 .chip{display:inline-flex;align-items:center;gap:6px;height:42px;padding:0 14px 0 10px;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:999px;box-shadow:0 4px 0 var(--soft);font-weight:800;font-size:19px;white-space:nowrap}
 .chip .e{font-size:21px;line-height:1}
 .bar{display:inline-block;width:62px;height:13px;border-radius:99px;background:var(--paper2);border:2px solid var(--line);overflow:hidden}
@@ -214,7 +214,7 @@ button{font-family:inherit}
 #mmBtn[hidden]{display:none}
 #mm{display:block;width:100%;height:100%;border-radius:50%}
 .mmPal{position:absolute;right:-8px;bottom:-4px;width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid var(--line);font-size:15px;line-height:24px;text-align:center}
-#jobTxt{pointer-events:auto;cursor:pointer;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:16px;box-shadow:0 4px 0 var(--soft);padding:5px 12px;font-weight:700;font-size:16px;line-height:1.3;max-width:min(270px,100%)}
+#jobTxt{pointer-events:auto;cursor:pointer;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:16px;box-shadow:0 4px 0 var(--soft);padding:5px 12px;font-weight:700;font-size:16px;line-height:1.3;max-width:min(270px,100%);min-height:44px;align-content:center}
 #jobTxt .tm{font-weight:800;font-size:20px}
 #jobTxt small{font-weight:600;opacity:.8}
 #jobTxt.late{background:#ffd9d9;animation:jobPulse 1s ease-in-out infinite}
@@ -657,7 +657,7 @@ function floatText(text,x,y,z,o={}){const s=label(text,o.h||.4,{bg:null,bw:0,pad
 function updFloats(dt){for(let i=FLOATS.length-1;i>=0;i--){const f=FLOATS[i];f.t+=dt;f.s.position.y+=dt*.55;f.s.material.opacity=1-Math.max(0,(f.t/f.life-.55)*2.2);if(f.t>=f.life){scene.remove(f.s);f.s.material.map.dispose();f.s.material.dispose();FLOATS.splice(i,1);}}}
 
 /* ---- sound ---- */
-const SET=Object.assign({look:1,sound:true,gfx:'nice',day:true},(()=>{try{return JSON.parse(localStorage.getItem('cozytown-settings'))||{};}catch(e){return{};}})());
+const SET=Object.assign({look:1,sound:true,gfx:'nice'},(()=>{try{return JSON.parse(localStorage.getItem('cozytown-settings'))||{};}catch(e){return{};}})());
 function saveSet(){try{localStorage.setItem('cozytown-settings',JSON.stringify(SET));}catch(e){}}
 let AC=null;
 function audioInit(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){AC=null;}}if(AC&&AC.state==='suspended')AC.resume().catch(()=>{});}
@@ -2092,7 +2092,9 @@ function buildPetShop(){
 }
 
 /* ================= game ================= */
-const HOUR=30;
+/* 🕰️ the clock: day 7:00→21:00 takes 10 real minutes, night 21:00→7:00 takes 5. HOUR = real seconds per game hour
+   right now (the main loop sets it every frame), so hunger, pet happiness and plants keep counting game hours */
+const hourLen=h=>h>=7&&h<21?600/14:300/10;let HOUR=hourLen(12);
 const P={x:-17,z:-4.8,yaw:0,pitch:0,bobT:0,bobA:0,moving:false,sit:null,jy:0,vy:0,dip:0,run:false};
 let S=null,PLAYING=false,PET_ACTORS=[],FRIEND_ACTORS=[],PEN=[],KEEPERS=[],LITTER=[],HOME_ITEMS=new Map(),TARGET=null;
 const UI={open:false,onClose:null,lock:false};
@@ -2640,7 +2642,24 @@ function mpUpsert(p){const pr=p.presence||{};if(!pr.nm)return;let a=MP.peers.get
   const lk=JSON.stringify(pr.lk||{});if(lk!==a.lk||nm!==a.nm||!a.av){a.lk=lk;a.nm=nm;mpBuildAv(a,cleanLook(pr.lk));if(fresh){const sp=peerSpot(a)||[a.rx,a.rz,a.rry];a.x=a.tx=sp[0];a.z=a.tz=sp[1];a.ry=sp[2];}}
   const s=pr.say;if(s&&typeof s==='object'&&s.id!==a.sayId){a.sayId=s.id;const txt=Number.isInteger(s.m)&&QUICK[s.m]?QUICK[s.m]:Number.isInteger(s.e)&&EMOS[s.e]?EMOS[s.e]:null;if(txt&&!fresh)mpBubble(a,txt);}
   const bk=JSON.stringify(pr.bl||null);if(bk!==a.bk){a.bk=bk;if(pr.bl)ballFrom(a,pr.bl);else if(!BS.mine&&BS.own===a.peer)ballOwnerGone();}
-  const ck=JSON.stringify(pr.sc||null);if(ck!==a.ck){a.ck=ck;if(pr.sc)scoreFrom(a,pr.sc);}}
+  const ck=JSON.stringify(pr.sc||null);if(ck!==a.ck){a.ck=ck;if(pr.sc)scoreFrom(a,pr.sc);}
+  clockFrom(a,pr.ck);}
+/* 🕰️ one clock for everyone: my clock rides along in presence as ck:[day,hour], refreshed only after 5 game minutes
+   (or a new day), so standing still sends little. A friend ahead by 2+ game minutes pulls my clock forward, never back.
+   A brand-new player first finishes Rosie's welcome in the morning, then joins the friends' time */
+function mpClock(){const c=MP.ck;if(!c||c[0]!==S.day||Math.abs(S.time-c[1])>=1/12)MP.ck=[S.day,Math.floor(S.time*100)/100];return MP.ck;}
+function clockFrom(a,ck){if(!Array.isArray(ck)||!S.intro)return;const k=ck.join(',');if(k===a.clk)return;a.clk=k;   /* old versions send no ck */
+  const d=ck[0],h=ck[1];if(!Number.isInteger(d)||d<1||d>=1e5||!Number.isFinite(h)||h<0||h>=24)return;
+  const ahead=(d-S.day)*24+h-S.time;if(ahead<1/30)return;
+  if(ahead<1){const nd=d!==S.day;S.day=d;S.time=h;if(nd){newDay();change();}return;}   /* a small catch-up is quiet, like a normal midnight */
+  const T=MP.ckTo;if(!T||(d-T[0])*24+h-T[1]>0)MP.ckTo=[d,h];if(!T)setTimeout(clockJump,400);}
+/* a big jump (1 game hour or more) waits until no message, tips or class is on screen, so it never cuts a hello or a tip
+   (and the new-day messages come after it), then fades like the bed and tells the time */
+function clockJump(n=0){if(!MP.ckTo||!S||!PLAYING){MP.ckTo=null;return;}
+  if(n<300&&($('toast').classList.contains('show')||fading||TUT||DTUT||CUT)){setTimeout(()=>clockJump(n+1),400);return;}
+  fade(()=>{const T=MP.ckTo;MP.ckTo=null;if(!T||!S)return;const ahead=(T[0]-S.day)*24+T[1]-S.time;if(ahead<1/30)return;
+    const nd=T[0]!==S.day;S.day=T[0];S.time=T[1];if(nd){newDay();change();}
+    if(ahead>=1)toast('🕰️ Same time as your friends: '+wdName()+', day '+S.day+' · '+clockStr(S.time),3.4);});}
 function mpBuildAv(a,look){mpDropAv(a);const p=makePerson(lookToPerson(look));bakePerson(p);const tg=label('⭐ '+a.nm,.3);tg.position.y=2.0;p.root.add(tg);scene.add(p.root);a.av=p;a.av.root.position.set(a.x,0,a.z);}
 function mpDropAv(a){if(a.av){scene.remove(a.av.root);a.av=null;}a.bub=null;}
 function mpBubble(a,txt){if(!a.av)return;if(a.bub&&a.bub.parent)a.bub.parent.remove(a.bub);const b=label(txt,.36);b.position.y=2.45;a.av.root.add(b);a.bub=b;a.bubT=5;SFX.talk();
@@ -2755,7 +2774,7 @@ function hostAnswer(ok,quiet){const q=HOST.cur;if(!q)return;HOST.cur=null;const 
   else if(!quiet)toast('💛 Okay! '+q.nm+' can try again later.',2.4);
   setTimeout(hostCard,700);}
 function mpTick(dt){if(!MP.grp)return;const loc=CUR?CUR.id:'city';
-  MP.t+=dt;if(MP.t>=.15){MP.t=0;const st={nm:S.name||'Friend',lk:packLook(),loc,x:Math.round(P.x*100)/100,z:Math.round(P.z*100)/100,ry:Math.round(P.yaw*100)/100,mv:P.moving?1:0};
+  MP.t+=dt;if(MP.t>=.15){MP.t=0;const st={nm:S.name||'Friend',lk:packLook(),loc,x:Math.round(P.x*100)/100,z:Math.round(P.z*100)/100,ry:Math.round(P.yaw*100)/100,mv:P.moving?1:0,ck:mpClock()};
     {const b=LOC.city.ball,m=S.match||{l:0,r:0,v:0},r2=v=>Math.round(v*100)/100;st.sc=[m.l|0,m.r|0,m.v|0];st.bl=BS.mine&&b?[r2(b.x),r2(b.z),r2(b.vx),r2(b.vz),BS.k,Math.round((b.reset||0)*10)/10]:null;}
     laneStamp(st);const key=JSON.stringify(st);if(key!==MP.lastKey){MP.lastKey=key;MP.grp.presence(st).catch(()=>{});}}
   for(const a of MP.peers.values()){if(!a.av)continue;const sp=peerSpot(a),vis=!!sp;a.av.root.visible=vis;if(sp){a.tx=sp[0];a.tz=sp[1];a.ry=sp[2];}
@@ -2968,8 +2987,6 @@ function climbUpdate(dt){const C=CLIMB;C.t+=dt;const T=1.6,k=clamp(C.t/T,0,1),e=
   P.cy=C.dir*2.7*clamp((e-.12)/.88,0,1);P.moving=false;C.st-=dt;if(C.st<=0&&k<1){C.st=.2;SFX.step();}
   if(k>=1&&!C.fd){C.fd=true;fade(()=>{const nf=C.f+C.dir,L=LOC['apt'+nf];setLoc('apt'+nf);P.x=L.ox+5;P.z=L.oz+(C.dir>0?1.4:-1.4);P.yaw=Math.PI/2;P.pitch=0;CLIMB=null;bringFollowers();saveLocal();
     toast(`🏢 Floor ${nf} · flats ${nf}1–${nf}5`,2.6);});}}
-/* ☀️ Always day (Settings): the clock runs 8:00 → 17:00, all bright daylight, then it's the next morning */
-function dayKeep(){if(!S)return;if(S.time<8)S.time=8;else if(S.time>=17){S.time=8;S.day++;newDay();change();if(PLAYING)toast('☀️ Good morning! It\'s '+wdName()+', day '+S.day,3);}}
 /* ✏️ notepad: draw notes. Tap it 2× = new page, 3× = go back, 4× = delete (Settings can bring the last one back) */
 const PADK='cozytown-notes-1';
 const PAD=(()=>{try{const o=JSON.parse(localStorage.getItem(PADK));if(o&&Array.isArray(o.pages)&&o.pages.length)return{pages:o.pages,i:clamp(o.i|0,0,o.pages.length-1),del:o.del||null};}catch(e){}return{pages:[[]],i:0,del:null};})();
@@ -3010,8 +3027,8 @@ function padTap(){const n=padTaps;padTaps=0;const pg=PAD.pages[PAD.i];
   SFX.pop();padFlip();toast(pg.length?'🗑️ Page deleted! You can get it back in ⚙️ Settings':'🗑️ Empty page removed',3);}
 /* ---- sleeping ---- */
 function sleep(){
-  if(SET.day?S.time<14:(S.time>=7&&S.time<19)){toast(SET.day?"You're not sleepy yet. Come back in the afternoon! 😴":"You're not sleepy yet. Come back in the evening! 🌙");return;}
-  fade(()=>{if(S.time>=19||SET.day)S.day++;S.time=SET.day?8:7.5;S.coins+=40;S.hunger=Math.max(S.hunger,40);newDay();P.sit=null;toast('Good morning! It\'s '+wdName()+', day '+S.day+' ☀️  +40 🪙 pocket money',4);doneTask('sleep');change();});
+  if(S.time>=7&&S.time<19){toast("You're not sleepy yet. Come back in the evening! 🌙");return;}
+  fade(()=>{if(S.time>=19)S.day++;S.time=7.5;S.coins+=40;S.hunger=Math.max(S.hunger,40);newDay();P.sit=null;toast('Good morning! It\'s '+wdName()+', day '+S.day+' ☀️  +40 🪙 pocket money',4);doneTask('sleep');change();});
 }
 
 /* ---- places ---- */
@@ -3490,7 +3507,6 @@ function openSettings(){const fromTitle=!PLAYING;
     <div class="opt"><span>Look speed</span><span class="row" style="margin:0">${[['Slow',.6],['Normal',1],['Fast',1.6]].map(([n,v])=>`<button class="btn ${SET.look===v?'butter':'white'}" data-a="slook:${v}">${n}</button>`).join('')}</span></div>
     <div class="opt"><span>Sound</span><button class="btn ${SET.sound?'mint':'white'}" data-a="ssound">${SET.sound?'🔊 On':'🔇 Off'}</button></div>
     <div class="opt"><span>Graphics</span><span class="row" style="margin:0"><button class="btn ${SET.gfx==='nice'?'butter':'white'}" data-a="sgfx:nice">Pretty</button><button class="btn ${SET.gfx==='fast'?'butter':'white'}" data-a="sgfx:fast">Fast</button></span></div>
-    <div class="opt"><span>${SET.day?'Time: ☀️ Always day':'Time: 🌗 Day & night'}</span><button class="btn white" data-a="sday">${SET.day?'🌙 Normal day & night':'☀️ Always day'}</button></div>
     <div class="opt"><span>🍕 Pizza job</span><button class="btn white" data-a="tutgo">📖 Show me the tips</button></div>
     <div class="opt"><span>🎨 Designer job</span><button class="btn white" data-a="dtutgo">📖 Show me the tips</button></div>
     <div class="opt"><span>✏️ Notepad</span><button class="btn ${PAD.del?'butter':'white'}" data-a="padrest"${PAD.del?'':' disabled'}>↩️ Last page</button></div>
@@ -3510,7 +3526,6 @@ let WIPE=false;
 ACT.slook=v=>{SET.look=+v;saveSet();openSettings();};
 ACT.ssound=()=>{SET.sound=!SET.sound;saveSet();audioInit();openSettings();};
 ACT.sgfx=v=>{SET.gfx=v;saveSet();applyGfx();openSettings();};
-ACT.sday=()=>{SET.day=!SET.day;saveSet();if(SET.day&&PLAYING&&S)dayKeep();SFX.tap();toast(SET.day?'☀️ Always day! Nice and sunny.':'🌗 Day and night are back.',2.6);openSettings();};
 ACT.padrest=()=>{if(!PAD.del){toast('No deleted page to bring back',2);return;}SFX.tap();
   openPanel(`<div class="hd"><h2>✏️ Last page</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div><p class="line">Do you want to bring back the last page you deleted?</p><canvas id="padPrev" width="340" height="230"></canvas><div class="row"><button class="btn mint" data-a="padyes">✅ Yes, bring it back</button><button class="btn white" data-a="padno">No</button></div>`);
   const c=$('padPrev');padPaint(c.getContext('2d'),c.width,c.height,PAD.del,2,false);};
@@ -4330,7 +4345,7 @@ function tcGoing(id){return!!(S&&S.job==='teacher'&&S.tc&&S.tc.o&&S.tc.o.subj===
 function tcHere(id){return tcGoing(id)&&!!CUR&&CUR.id==='cl_'+id;}
 const tcDoor=S0=>S0.pos==='middle'?'the middle door':'the door on the '+S0.pos;
 function tcNew(){const d=tc(),id=pick(Object.keys(SUBJ).filter(k=>k!==d.last)),S0=SUBJ[id];d.o={subj:id};d.last=id;
-  const x=`Good ${S.time<12?'morning':'afternoon'}, ${S.name||'teacher'}! ☀️ Today I'd like you to teach the ${S0.n} class, if that's okay! ${S0.i} Go to the school. In the hallway, the ${S0.n} room is ${tcDoor(S0)}.`;
+  const x=`Good ${S.time<5||S.time>=18?'evening':S.time<12?'morning':'afternoon'}, ${S.name||'teacher'}! ${nightF(S.time)>.5?'🌙':'☀️'} Today I'd like you to teach the ${S0.n} class, if that's okay! ${S0.i} Go to the school. In the hallway, the ${S0.n} room is ${tcDoor(S0)}.`;
   addMsg('dr','dr',x,{t2:'📚 Your class today: '+S0.n});SFX.ding();try{if(navigator.vibrate)navigator.vibrate([120,80,120]);}catch(e){}
   showNote('📚 Message from the school!',x,false,'📚','dr');change();jobHud(true);}
 function tcTick(dt){const d=tc();if(!d.o&&d.done<TC_MAX&&!CUT){d.wait-=dt;if(d.wait<=0)tcNew();}jobHud();}
@@ -4652,7 +4667,7 @@ function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);c
 let last=performance.now(),saveT=0,titleT=0,hardT=0,navT=0;
 function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last)/1000);last=now;
   if(PLAYING){
-    if(!UI.open||true){S.time+=dt/HOUR;if(SET.day)dayKeep();else if(S.time>=24){S.time-=24;S.day++;newDay();change();}
+    if(!UI.open||true){HOUR=hourLen(S.time);S.time+=dt/HOUR;if(S.time>=24){S.time-=24;S.day++;newDay();change();}
       S.hunger=Math.max(0,S.hunger-dt/HOUR*4);if(S.hunger<20&&!hungryWarn){hungryWarn=true;toast('Your tummy is rumbling! Eat something from your 🎒 bag.',4);}if(S.hunger>30)hungryWarn=false;}
     updatePlayer(dt);
     let fi=0;for(const f of FRIEND_ACTORS)f.update(dt,f.mode==='follow'?fi++:0);PET_ACTORS.forEach((p,i)=>p.update(dt,fi+i+(fi?0:1)));
