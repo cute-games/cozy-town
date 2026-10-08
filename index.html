@@ -545,6 +545,7 @@ button{font-family:inherit}
 </script>
 <script>
 'use strict';
+const COZY_BUILD=2026100901;   /* ✨ version stamp: make this number BIGGER on every update (date + a counter: 2026100901, 2026100902…). The Home Screen app compares it with the file online and updates itself */
 /* ================= core ================= */
 const $=id=>document.getElementById(id);
 const clamp=(v,a,b)=>v<a?a:v>b?b:v;
@@ -3584,6 +3585,62 @@ function awayExit(msg){if(!PLAYING)return;saveLocal();if(CSAVE.ref){CSAVE.dirty=
   m.textContent=msg;T.hidden=false;b.disabled=false;b.textContent='Play';try{b.focus({preventScroll:true});}catch(e){}}
 function awResume(){const m=$('tMsg');if(m)m.remove();document.body.classList.remove('away');$('title').hidden=true;$('hud').hidden=!!AW.hud;PLAYING=true;
   AW.t=0;NET.t=0;mpConnect();updHud(true);jobHud(true);dcardUpd(true);toast('Welcome back, '+(S.name||'friend')+'! 💗',3);if(CSAVE.ref){CSAVE.dirty=true;cloudFlush();}}
+
+/* ---- ✨ updates: the Home Screen app gets the newest Cozy Town (GitHub version only; inside Claude all of this stays off) ----
+   An iPad Home Screen app keeps its old copy. So on start and whenever the app comes back to the front (at most once in 20 s)
+   we quietly fetch index.html again past every cache and compare COZY_BUILD. A bigger stamp = newer. The same stamp but a
+   different game script = someone forgot to bump it: newer too. A smaller stamp never counts (no going back).
+   Newer on the title: save and reload at once. Newer while playing: a "✨ New Cozy Town update!" button; tap = save, then reload.
+   Loop guard: at most one automatic reload per new version per session (sessionStorage + the ?u= address), so a server that
+   still sends the old file can never cause a reload loop: the button shows instead. No internet = no reload, nothing changes. */
+const UPD={on:!!(window.WEBNET&&window.WEBNET.on)&&!window.claude&&/^https?:$/.test(location.protocol),el:document.currentScript,me:'',came:'',last:-1e9,fail:-1e9,busy:false,go:false,newer:null,iv:0,K:'cozytown-update'};
+function updHash(s){let h=2166136261;for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),16777619);return(h>>>0).toString(36)+'.'+s.length.toString(36);}
+function updMine(){if(UPD.me==='')UPD.me=(s=>s?COZY_BUILD+':'+updHash(s.text.replace(/\r\n?/g,'\n')):null)(UPD.el||[...document.scripts].find(x=>x.text.includes('const COZY_BUILD=')));return UPD.me;}   /* this copy: stamp + its game script */
+function updRead(t){t=t.replace(/\r\n?/g,'\n');const k=t.indexOf('const COZY_BUILD='),s=k<0?-1:t.lastIndexOf('<script',k),a=s<0?-1:t.indexOf('>',s)+1,b=a<1?-1:t.indexOf('<\/script>',k);if(b<0)return null;   /* the file online: the same two things */
+  const code=t.slice(a,b),m=/const COZY_BUILD=(\d+);/.exec(code);return m?{n:+m[1],id:m[1]+':'+updHash(code)}:null;}
+const updSS=()=>{try{return JSON.parse(sessionStorage.getItem(UPD.K))||{};}catch(e){return{};}};
+function updSSet(o){try{sessionStorage.setItem(UPD.K,JSON.stringify(o));}catch(e){}}
+const updTried=id=>id===UPD.came||(updSS().tried||[]).includes(id);
+async function updFetch(url,mode){const ac=window.AbortController?new AbortController():null,tm=setTimeout(()=>{if(ac)ac.abort();},25000);
+  try{const r=await fetch(url,{cache:mode,signal:ac?ac.signal:undefined});return r.ok?await r.text():null;}catch(e){return null;}finally{clearTimeout(tm);}}
+async function updCheck(){const now=performance.now();if(!UPD.on||UPD.busy||UPD.go||now-UPD.last<20000)return;UPD.last=now;UPD.busy=true;
+  const t=await updFetch(location.pathname+'?cz='+Date.now(),'no-store');UPD.busy=false;if(t==null)return;   /* offline, 404, too slow: try again next time */
+  const f=updRead(t);if(f&&(f.n>COZY_BUILD||f.n===COZY_BUILD&&!!updMine()&&f.id!==updMine())){UPD.newer=f;if(!UPD.iv)UPD.iv=setInterval(updAct,500);updAct();}}   /* found once = stays until tapped */
+function updAct(){if(UPD.go)return;const f=UPD.newer;if(f&&!PLAYING&&!UI.open&&navigator.onLine!==false&&performance.now()-UPD.fail>60000&&!updTried(f.id)){updGo(true);return;}updPill();}
+function updPill(){const f=UPD.newer,T=$('title');let b=$('updBtn');
+  const on=!!f&&(PLAYING?!!(S&&S.intro)&&!UI.open&&!CUT&&!CR&&!TUT&&!DTUT&&!$('hud').hidden:!T.hidden&&!UI.open);   /* waits while a card, a show or a lesson is on (and on short phone screens while the action button is up: no room) */
+  if(!on){if(b&&!b.hidden){b.hidden=true;T.classList.toggle('upd',!!$('tUpd'));}return;}
+  if(!b){b=document.createElement('button');b.id='updBtn';b.type='button';b.className='btn butter upd';b.addEventListener('click',()=>{if(UPD.go)return;audioInit();SFX.tap();updGo(false);});}
+  if(b.dataset.k!=='new'){b.dataset.k='new';b.classList.remove('busy');b.innerHTML='<span class="ue">✨</span><span class="ut"><b>New Cozy Town update!</b><small>Tap to get it</small></span>';}
+  if(PLAYING){if(b.parentNode!==$('hud'))$('hud').appendChild(b);}else if(b.parentNode!==T)T.insertBefore(b,T.querySelector('.menu'));
+  T.classList.toggle('upd',!PLAYING||!!$('tUpd'));if(b.hidden)b.hidden=false;}
+async function updGo(auto){const f=UPD.newer;if(UPD.go||!f)return;UPD.go=true;const b=$('updBtn'),busy=b&&!b.hidden,pb=$('tPlay');
+  if(auto)pb.textContent='✨ Updating…';   /* on the title: Play waits for the new copy */
+  if(busy){b.dataset.k='go';b.classList.add('busy');b.innerHTML='<span class="ue">✨</span><span class="ut"><b>Getting the update…</b><small>Your game is saved 💾</small></span>';}
+  const save=()=>{try{if(DECO.on)decoEnd();}catch(e){}if(!S)return;const p=PLAYING;PLAYING=true;try{saveLocal();padSave();saveSet();}catch(e){}PLAYING=p;};save();   /* furniture in your hands goes back to storage first; the title after a break has S too */
+  const t=await updFetch(location.pathname,'reload');   /* refresh the saved copy of the plain address (the next start from the Home Screen) */
+  const back=()=>{UPD.go=false;if(b)b.dataset.k='';if(pb.textContent==='✨ Updating…')pb.textContent=pb.disabled?'Loading…':'Play';updPill();};
+  if(t==null){UPD.fail=performance.now();if(!auto)toast('📡 No internet right now. Try again in a moment!',3);back();return;}
+  save();const o=updSS();o.tried=(o.tried||[]).concat(f.id).slice(-6);o.from=updMine();updSSet(o);   /* the loop guard */
+  location.replace(location.pathname+'?u='+encodeURIComponent(f.id)+'~'+Date.now().toString(36)+location.hash);   /* a new address: never an old copy */
+  setTimeout(back,15000);}   /* still here? the button comes back */
+if(UPD.on){const st=document.createElement('style');st.textContent='#updBtn{position:absolute;top:calc(env(safe-area-inset-top,0px) + 80px);right:calc(env(safe-area-inset-right,0px) + 12px);z-index:6;max-width:min(330px,calc(100% - 24px));min-height:56px;padding:6px 16px 6px 10px;border-radius:999px;gap:9px;white-space:normal;text-align:left;justify-content:flex-start;background:linear-gradient(135deg,#fff6c4,#ffd45c 60%,#ffc2df);animation:updGlow 2.6s ease-in-out infinite}'
+  +'#updBtn:active{animation:none}#updBtn .ue{font-size:28px;line-height:1;flex:none;animation:updTw 2.6s ease-in-out infinite}#updBtn .ut{display:flex;flex-direction:column;line-height:1.12}#updBtn b{font-size:18px;font-weight:800}#updBtn small{font-size:14px;font-weight:700;color:#5a4680}'
+  +'#updBtn.busy{animation:none}#updBtn.busy .ue{animation:updSpin 1.4s linear infinite}#title #updBtn{position:relative;top:auto;right:auto;z-index:auto;max-width:min(420px,100%)}#title.upd .tag{display:none}'
+  +'#tUpd{margin:0;max-width:min(620px,100%);background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:20px;box-shadow:0 4px 0 var(--soft);padding:10px 18px;font-weight:800;font-size:clamp(18px,2.8vw,24px);line-height:1.3}'
+  +'@media (max-width:600px){#updBtn{top:calc(env(safe-area-inset-top,0px) + 146px);max-width:210px;padding-right:12px}#updBtn b{font-size:15px}#updBtn small{font-size:13px}#updBtn .ue{font-size:24px}}@media (max-height:500px){#tUpd{font-size:18px;padding:6px 14px}#actWrap:not([hidden])~#updBtn,.swinging #updBtn{visibility:hidden}}'
+  +'@keyframes updGlow{0%,100%{box-shadow:0 5px 0 #3d2c5e,0 0 0 0 rgba(255,212,92,0)}50%{box-shadow:0 5px 0 #3d2c5e,0 0 0 7px rgba(255,212,92,.6)}}@keyframes updTw{0%,70%,100%{transform:none}78%{transform:rotate(-16deg) scale(1.2)}86%{transform:rotate(12deg) scale(1.1)}}'
+  +'@keyframes updSpin{to{transform:rotate(360deg)}}@media (prefers-reduced-motion:reduce){#updBtn,#updBtn .ue{animation:none}}'
+  +'#tVer{position:absolute;right:calc(env(safe-area-inset-right,0px) + 10px);bottom:calc(env(safe-area-inset-bottom,0px) + 8px);background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:700;line-height:1.5;opacity:.9;pointer-events:none}';document.head.appendChild(st);
+  {const v=document.createElement('div');v.id='tVer';v.textContent='Version '+COZY_BUILD;$('title').appendChild(v);}   /* small, on the title: which copy is running */
+  const q=/[?&]u=([^&#]*)/.exec(location.search);
+  if(q){try{UPD.came=decodeURIComponent(q[1]).split('~')[0];}catch(e){}try{history.replaceState(history.state,'',location.pathname+location.hash);}catch(e){}   /* back from an update: tidy the address */
+    const o=updSS(),fresh=o.from?o.from!==updMine():UPD.came===updMine();delete o.from;updSSet(o);
+    if(fresh){const T=$('title'),m=document.createElement('p');m.id='tUpd';m.setAttribute('role','status');m.textContent='✨ Cozy Town is updated!';T.insertBefore(m,T.querySelector('.menu'));T.classList.add('upd');}}
+  $('tPlay').addEventListener('click',e=>{if(UPD.go){e.stopImmediatePropagation();return;}const m=$('tUpd');if(m){m.remove();$('title').classList.remove('upd');}});   /* (runs before the game's own Play) */
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')setTimeout(updCheck,500);});
+  addEventListener('pageshow',e=>{if(e.persisted)setTimeout(updCheck,500);});addEventListener('focus',()=>setTimeout(updCheck,500));
+  setTimeout(updCheck,800);}
 
 /* ---- places ---- */
 function setLoc(id){CUR=LOC[id];P.cy=0;for(const k in LOC)LOC[k].g.visible=LOC[k]===CUR;
