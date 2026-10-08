@@ -3210,8 +3210,8 @@ const TUT_STEPS=[
   {t:'Your notepad ✏️',el:'pad',x:"Write the flat number here so you don't forget it! Tap it 2× for a new page, 3× to go back, 4× to delete."},
   {t:'Messages 📱',el:'bPhone',x:'Forgot the number? Open your phone and tap 💬 Messages. All your orders are saved there!'},
   {t:'Big buildings 🏢',x:'Apartment buildings have lots of flats. Go inside, go up the stairs, and find the door with the right number. Flat 25 means floor 2, door 5!'},
-  {t:'RARE customers ⭐',x:"Gold messages are RARE customers. They want it super FAST! Be quick and they give a great review: more orders! Too slow? A bad review 😬"},
-  {t:"Let's go! 🛵",x:'Come to the Pizzeria and talk to me to start working. You can see these tips again in ⚙️ Settings. Good luck!'}];
+  {t:'RARE customers ⭐',x:"Gold messages are RARE customers. They want it super FAST! Be quick and they give a great review: a new star ⭐ and more coins for every pizza! Too slow? A bad review 😬"},
+  {t:"Let's go! 🛵",x:'Come to the Pizzeria and talk to me to start working. Pizza time is 12:00–21:00, Monday to Friday. You can see these tips again in ⚙️ Settings. Good luck!'}];
 let tutT=0;
 function tutStart(){if(TUT||!PLAYING)return;if(UI.open)closePanel();TUT={i:0};$('tut').hidden=false;tutShow();}
 function tutShow(){if(!TUT)return;const st=TUT_STEPS[TUT.i],el=st.el?$(st.el):null,hole=$('tutHole'),card=$('tutCard');
@@ -3918,7 +3918,7 @@ for(const ev of['pointerup','pointercancel'])$('panel').addEventListener(ev,()=>
 
 /* ================= jobs: Rosie helps you pick one ================= */
 const JOBS={delivery:{i:'🍕',n:'Pizza delivery',d:"Bring pizzas to people's houses!"},designer:{i:'🎨',n:'Interior designer',d:'Decorate rooms for people and get stars!'},teacher:{i:'📚',n:'Teacher',d:'Teach a class and grade homework!'}};
-const DLV_DAY=5,PIZZAS=['cheese','pepperoni','veggie','pineapple','mushroom','super cheesy'],DLV_TIMES=[[120,50],[180,45],[300,40],[1800,30]],PIZZERIA=[59.2,8.6];
+const DLV_DAY=3,PIZZAS=['cheese','pepperoni','veggie','pineapple','mushroom','super cheesy'],DLV_TIMES=[120,180,300,1800],PIZZERIA=[59.2,8.6];
 const DOT_COLS=[['#ff3b3b','Red'],['#2f7bff','Blue'],['#16c75a','Green'],['#ffd000','Yellow'],['#a24dff','Purple'],['#ff8a00','Orange'],['#ff4fd8','Pink'],['#1d1622','Black'],['#ffffff','White']];
 const WHO={
   n1:{nm:'Mia',look:{skin:'#f5cfb0',hair:'#5a3a24',style:'pigtails',top:'#ffd45c',bottom:'#7cc8ff',shoes:'#ff7aa8',eyes:'sparkle',mouth:'small',scale:.9}},
@@ -3956,7 +3956,11 @@ const RARE_P=.22,STAR_T=['New pizza kid','Pizza helper','Speedy driver','Pizza p
 const resList=id=>[WHO[id],...(MORE[id]||[])];
 function oWho(o){return o.v!=null&&VIPS[o.v]?VIPS[o.v]:(resList(o.h)[o.w|0]||WHO[o.h]);}
 const dlStars=()=>clamp(S.dlStars|0,0,5);
-const dlMax=()=>DLV_DAY+dlStars();
+/* 🍕 pizza day: 3 pizzas, then the chef says stop. Insist and he bakes 3 more (6 at most). Pay per pizza grows with your Pizza stars:
+   3 pizzas at 0 ⭐ earn less than a teacher's day (2 classes, 90–150 🪙), at 5 ⭐ a little more than a designer's best day (3 rooms × 200 🪙) */
+const dlMax=()=>dl().more?DLV_DAY*2:DLV_DAY,PZ_PAY=[25,60,100,135,175,210],dlPay=s=>PZ_PAY[clamp(s==null?dlStars():s|0,0,5)];
+const dlOff=()=>{const d=dl();return!!d.end||d.done>=dlMax();};   /* no more orders today */
+const dlAsk=()=>{const d=dl();return d.done>=DLV_DAY&&d.done<DLV_DAY*2&&!d.more&&!d.end;};   /* 3 done: the chef asks "enough?" */
 const starsH=n=>`<span class="stars">${'★'.repeat(n)}<i>${'★'.repeat(5-n)}</i></span>`;
 /* real walking distance along the paths, from the Pizzeria door to a house door */
 let RTD=null;
@@ -3968,9 +3972,11 @@ function routeLen(x,z){if(!RTD){const n=WP.length,d=new Array(n).fill(1e9),done=
 const doorLen=H=>routeLen(H.x+Math.sin(H.ry),H.z+Math.cos(H.ry));
 /* VIPs are always a rush: about 5 m per second plus a little, so you need to RUN. Flats add time for the stairs. */
 function rareLim(H,flat){let t=12+doorLen(H)/5.2;if(flat)t+=12+(Math.floor(flat/10)-1)*8;return Math.max(20,Math.round(t/5)*5);}
-const pizzaOpen=()=>S.time>=8&&S.time<20;
+const pizzaOpen=()=>wdIdx()<5&&S.time>=12&&S.time<21,PZ_TIME='Pizza time is 12:00–21:00, Monday to Friday';   /* orders come only then; the Pizzeria itself stays open */
+const pzNext=()=>wdIdx()===4||wdIdx()===5?'on Monday':'tomorrow';
+const pzShutLine=()=>(wdIdx()>4?"It's the WEEKEND! 😎 My oven is having a rest. ":S.time<12?"Too early! 🥱 My pizza dough is still sleeping. ":"The kitchen is CLOSED! Even chefs need to sleep! 🌙 ")+PZ_TIME+' 🍕';
 const mmss=t=>{t=Math.max(0,Math.ceil(t));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0');};
-function dl(){const d=S.dl||(S.dl={});if(d.day!==S.day){d.day=S.day;d.done=0;d.on=false;d.rares=0;d.lr=false;}if(!d.dot)d.dot='#ff3b3b';if(!isFinite(d.wait))d.wait=6;return d;}
+function dl(){const d=S.dl||(S.dl={});if(d.day!==S.day){d.day=S.day;d.done=0;d.on=false;d.rares=0;d.lr=false;d.more=0;d.end=0;}if(!d.dot)d.dot='#ff3b3b';if(!isFinite(d.wait))d.wait=6;return d;}
 function dlCarrying(){return!!(S&&S.job==='delivery'&&S.dl&&S.dl.o&&S.dl.o.st==='carry');}
 function dlWaiting(){return!!(S&&S.job==='delivery'&&S.dl&&S.dl.o&&S.dl.o.st==='wait');}
 function hasDlOrder(){return!!(S&&S.job==='delivery'&&S.dl&&S.dl.o);}
@@ -4024,16 +4030,18 @@ ACT.fjob=()=>{JOBCTX='talk';renderFriend(S.job?`Right now your job is ${JOBS[S.j
 ACT.findrosie=()=>{const f=FRIEND_ACTORS.find(a=>a.d.id==='rosie');if(!f||f.mode==='away'){SFX.no();toast('😴 Rosie is sleeping now. Find her in the morning!',3.2);return;}setNavTo({id:'rosie',n:'Rosie',i:'👧',nt:1,door:[f.x,f.z],actor:f});};
 
 /* the chef at the pizzeria */
-function chefSay(line,btns){const K=KEEPERS.find(k=>k.name==='Chef Blaze');if(K)K.p.wave=1.2;SFX.talk();
-  openPanel(`<div class="who" style="--c:#ff7a1f">🔥 Chef Blaze</div><p class="line">${esc(line)}</p><div class="row">${(btns||[['🛒 Buy food','pzshop'],['OK!','close']]).map(([t,a],i)=>`<button class="btn ${i?'white':'mint'}" data-a="${a}">${t}</button>`).join('')}</div>`,{bottom:true});}
+function chefSay(line,btns,lock){const K=KEEPERS.find(k=>k.name==='Chef Blaze');if(K)K.p.wave=1.2;SFX.talk();
+  openPanel(`<div class="who" style="--c:#ff7a1f">${CUR.id==='pizza'?'🔥':'📱'} Chef Blaze</div><p class="line">${esc(line)}</p><div class="row">${(btns||[['🛒 Buy food','pzshop'],['OK!','close']]).map(([t,a],i)=>`<button class="btn ${i?'white':'mint'}" data-a="${a}">${t}</button>`).join('')}</div>`,{bottom:true,lock:!!lock});}
 ACT.pzshop=()=>openShop('pizza');
 function chefTalk(){if(S.job!=='delivery'){chefSay("WELCOME to my kitchen! 🔥 I'm Chef Blaze. The BEST pizza in town — I promise! Hungry?",[['🛒 Buy food','pzshop'],['Bye!','close']]);return;}
   const d=dl(),o=d.o;
   if(o&&o.st==='wait'){pickUp();return;}
   if(o){const W=oWho(o);chefSay(o.r?`What are you doing back here?! ⭐ ${W.nm} is WAITING! Go, go, GO! 🛵`:`Why are you still here?! ${W.nm} is waiting for that ${o.pz} pizza! GO, GO, GO! 🛵`,[['🛵 Yes, Chef!','close']]);return;}
   if(d.fb){const f=d.fb;d.fb=null;change();chefSay(f==='bad'?"A BAD review?! 😱 Come ON! I know you can be faster than that! Next time: run, run, RUN! 🏃":"A FIVE-star review! 🌟 BEAUTIFUL! That's how we do it in MY kitchen!",[['🔥 Yes, Chef!','close']]);return;}
-  if(d.done>=dlMax()){chefSay(`${dlMax()} deliveries today! BEAUTIFUL work! 🌟 Now go and rest — come back tomorrow!`);return;}
-  if(!pizzaOpen()){chefSay("The kitchen is CLOSED! Even chefs need to sleep! 🌙 Come back in the morning.");return;}
+  if(dlAsk()){chefAsk();return;}
+  if(d.done>=DLV_DAY*2){chefSay("That's it, see ya!",[['👋 Bye, Chef!','close']]);return;}
+  if(d.end==='rest'){chefSay(`You again?! 😄 No more pizzas today: go and CHILL! See you ${pzNext()}!`);return;}
+  if(!pizzaOpen()){chefSay(pzShutLine());return;}
   if(!d.on){d.on=true;d.wait=Math.min(d.wait,5);change();}
   chefSay(d.quiet>0?"It's very quiet… 😟 People read that bad review. Wait here — an order will come soon!":"No orders yet! Patience… wait right here, they'll come! 📩");}
 function pickUp(){const d=dl(),o=d.o;if(!o||o.st!=='wait')return;o.st='carry';o.left=o.lim;change();SFX.pop();jobHud(true);
@@ -4042,15 +4050,32 @@ function pickUp(){const d=dl(),o=d.o;if(!o||o.st!=='wait')return;o.st='carry';o.
   else chefSay(`Here it is! One PERFECT ${o.pz} pizza for ${W.nm}! 🍕 Take it to ${at}. Now go — don't let it get cold!`,[["🛵 Yes, Chef!",'close']]);}
 function pizzaIn(){if(S.job!=='delivery')return;const d=dl();
   if(d.o&&d.o.st==='wait'){setTimeout(()=>toast('📩 Talk to Chef Blaze to pick up the pizza!',3),600);return;}
-  if(!d.o&&!d.on&&d.done<dlMax()&&pizzaOpen()){d.on=true;d.wait=Math.min(d.wait,6);change();setTimeout(()=>{if(CUR.id==='pizza'&&!UI.open)chefSay('Welcome to work! 🍕 Wait here, an order will come soon!',[['OK!','close']]);},700);}}
+  if(d.o)return;
+  if(dlAsk()){setTimeout(()=>{if(CUR.id==='pizza'&&!UI.open&&!CUT)chefTalk();},700);return;}
+  if(dlOff())return;
+  if(!pizzaOpen()){setTimeout(()=>{if(CUR.id==='pizza'&&!UI.open)toast('🕛 '+PZ_TIME+' 🍕',3.4);},600);return;}
+  if(!d.on){d.on=true;d.wait=Math.min(d.wait,6);change();setTimeout(()=>{if(CUR.id==='pizza'&&!UI.open)chefSay('Welcome to work! 🍕 Wait here, an order will come soon!',[['OK!','close']]);},700);}}
+
+/* after the 3rd pizza: "enough?" — the kid decides. After the 6th or at 21:00 the chef says bye */
+function chefAsk(){if(!pizzaOpen()){dlShut();return;}chefSay("Right! That's enough. Chill for today!",[['Yay! Chef, bye!','pzrest'],['PIZZAS MUST BE DELIVERED','pzmore']],1);}
+function dlShut(){const d=dl();d.end='shut';change();jobHud(true);chefSay("Today's done, great work! Ciao!",[['👋 Ciao!','close']]);}
+ACT.pzrest=()=>{closePanel();if(!dlAsk())return;dl().end='rest';change();jobHud(true);SFX.yay();toast(`😎 Chill time! Pizza time again ${pzNext()} at 12:00.`,3.4);};
+ACT.pzmore=()=>{if(!dlAsk()){closePanel();return;}if(!pizzaOpen()){dlShut();return;}const d=dl();d.more=1;d.on=true;d.wait=Math.min(d.wait,8);change();jobHud(true);
+  chefSay("You absolute maniac! Fine! I'll bake THREE more. Three! And not ONE more!",[['🛵 Yes, Chef!','close']]);};
+/* a delivery is done: the chef calls when the day's pizzas are done or the Pizzeria closed (waits until nothing else is on screen) */
+function dlAfter(bad,n=0){if(!S||S.job!=='delivery')return;if(UI.open||CUT||TUT||fading||$('toast').classList.contains('show')){if(n<150)setTimeout(()=>dlAfter(bad,n+1),800);return;}const d=dl();
+  if(d.done>=DLV_DAY*2&&!d.end){d.end='six';change();jobHud(true);SFX.yay();chefSay("That's it, see ya!",[['👋 Bye, Chef!','close']]);}
+  else if(d.on&&!d.end&&!d.o&&!pizzaOpen())dlShut();
+  else if(dlAsk())chefAsk();
+  else toast(bad?'😟 Bad review… it will be quiet for a while. Be FAST next time! 💪':d.on&&pizzaOpen()&&!dlOff()?'🍕 Nice delivery! A new order will come soon.':'🍕 Nice delivery!',3.4);}
 
 /* a new order comes in */
 function newOrder(){const d=dl();let H=pick(HOUSES.filter(h=>h.id!==d.last));const pz=pick(PIZZAS);
   const rare=(S.dlTotal||0)>=2&&!d.lr&&(d.rares||0)<3&&Math.random()<RARE_P;let o,far=false;
   if(rare){const L=HOUSES.filter(h=>h.id!==d.last).sort((a,b)=>doorLen(b)-doorLen(a));far=Math.random()<.6;H=pick(far?L.slice(0,4):L.slice(-4));}
   const flat=isApt(H.id)?(1+Math.floor(Math.random()*3))*10+1+Math.floor(Math.random()*5):0;
-  if(rare){let v=Math.floor(Math.random()*VIPS.length);if(v===d.lv)v=(v+1)%VIPS.length;d.lv=v;d.rares=(d.rares||0)+1;const lim=rareLim(H,flat);o={h:H.id,pz,lim,pay:100+10*dlStars(),st:'wait',left:lim,r:1,v};}
-  else{const [lim,pay]=pick(DLV_TIMES);o={h:H.id,pz,lim,pay,st:'wait',left:lim,w:Math.floor(Math.random()*resList(H.id).length)};}
+  if(rare){let v=Math.floor(Math.random()*VIPS.length);if(v===d.lv)v=(v+1)%VIPS.length;d.lv=v;d.rares=(d.rares||0)+1;const lim=rareLim(H,flat);o={h:H.id,pz,lim,pay:dlPay()+50,st:'wait',left:lim,r:1,v};}
+  else{const lim=pick(DLV_TIMES);o={h:H.id,pz,lim,pay:dlPay(),st:'wait',left:lim,w:Math.floor(Math.random()*resList(H.id).length)};}
   if(flat)o.flat=flat;d.o=o;d.lr=rare;d.last=H.id;if(d.quiet>0)d.quiet--;change();
   SFX.ding();if(rare)setTimeout(()=>SFX.rare(),650);try{if(navigator.vibrate)navigator.vibrate(rare?[120,80,120,80,320]:[120,80,120]);}catch(e){}
   const W=oWho(o);
@@ -4093,8 +4118,9 @@ function jobHud(force){const el=$('job'),on=!!(PLAYING&&S&&(S.job==='delivery'||
     const inA=CUR.id.startsWith('apt'),where=!o.flat?`🍕 → <b>${esc(H.n)}</b>${m}`:inA&&APT.b===o.h?'🍕 Find the right door! <small class="nw">(flat number: 📱 Messages)</small>':inA?`🍕 Wrong building! → <b>${esc(H.n)}</b>`:`🍕 → <b>${esc(H.n)}</b>${m} <small class="nw">· flat number in 📱</small>`;
     h=`<div>${o.r?'<span class="rt">⭐ RARE</span> ':''}${where}</div><div class="tm">${late?'⏰ Late! Hurry!':'⏱️ '+mmss(o.left)+(o.lim>=1800?' <small>no rush 😌</small>':'')}</div>`;}
   else if(o)h=(o.r?'<span class="rt">⭐ RARE</span> ':'')+(inPz?'📩 Pick up the pizza from <b>Chef Blaze</b>!':'📩 New order! Go to the <b>Pizzeria</b> 🍕');
-  else if(d.done>=dlMax())h=`🌟 All ${dlMax()} done today! See you tomorrow`;
-  else if(!pizzaOpen())h='🌙 The Pizzeria opens at 8:00';
+  else if(dlAsk())h=`🌟 ${d.done} pizzas done! Talk to <b>Chef Blaze</b>`;
+  else if(dlOff())h=`😎 Done for today! <small>(${d.done} 🍕)</small>`;
+  else if(!pizzaOpen())h=(wdIdx()>4?'😎 ':'🕛 ')+PZ_TIME;
   else if(d.on)h=`🍕 Waiting for an order… <small>(${d.done}/${dlMax()})</small>`;
   else h='🍕 Go to the <b>Pizzeria</b> to start work';
   if(force||h!==jobHud.last){$('jobTxt').innerHTML=h;jobHud.last=h;}
@@ -4190,17 +4216,17 @@ function cutUpdate(dt){const C=CUT;if(!C)return;if(C.rev){revUpdate(dt);return;}
     if(u>1.5){const fl=C.H.flat;endCut();toast(fl?'😅 Wrong door! Check the flat number in 📱 Messages':'😅 Wrong house! Look for the dot on your map 🗺️',3.4);}}}
 function cutCam(dt){const C=CUT;if(!C||C.shake<=0)return;C.shake-=dt;const a=C.shake*.12;camera.position.x+=rand(-a,a);camera.position.y+=rand(-a,a)*.6;camera.rotation.z=rand(-a,a)*.25;}
 function cutSay(){const C=CUT,o=dl().o,W=C.W;let line,extra='',btn='';
-  if(C.ok){const late=o.left<=0,s0=dlStars();let pay,tip=0,rv='';C.late=late;
-    if(o.r){if(!late){pay=o.pay;S.dlStars=Math.min(5,s0+1);line=pick([`Hmm… I don't really like pizza… *sniff*… but WOW, that was SO fast! I'm giving you five stars! ⭐⭐⭐⭐⭐`,`Pizza? I'm not a pizza person… but you were super quick! I'm impressed. Five stars! ⭐⭐⭐⭐⭐`,`Already here?! Lightning fast! Maybe pizza isn't so bad after all… Five stars! ⭐⭐⭐⭐⭐`]);}
-      else{pay=15;S.dlStars=Math.max(0,s0-1);line=pick([`Hmph! Too slow! And it's cold. See? This is why I don't like pizza. One star. ⭐ I'm telling EVERYONE!`,`Finally! I waited and waited… One star for you. Hmph! ⭐ I'm writing a bad review!`]);}
-      const s1=dlStars();rv=!late?`<p class="earn rv">🌟 Great review! Pizza stars: ${starsH(s1)}<br><small>${s0>=5?'You already have all 5 stars! 👑':s1>=5?"You're a Pizza legend! 👑":'More orders and bigger tips are coming! 🍕'}</small></p>`:`<p class="earn rv bad">😬 BAD review! ${s1<s0?'You lost a pizza star. ':''}Pizza stars: ${starsH(s1)}<br><small>People read reviews… fewer orders will come for a while.</small></p>`;}
-    else{pay=late?Math.ceil(o.pay/2):o.pay;tip=late?0:2*s0;
+  if(C.ok){const late=o.left<=0,s0=dlStars(),op=(o.pay|0)||dlPay(s0)+(o.r?50:0);let pay,rv='';C.late=late;
+    if(o.r){if(!late){pay=op;S.dlStars=Math.min(5,s0+1);line=pick([`Hmm… I don't really like pizza… *sniff*… but WOW, that was SO fast! I'm giving you five stars! ⭐⭐⭐⭐⭐`,`Pizza? I'm not a pizza person… but you were super quick! I'm impressed. Five stars! ⭐⭐⭐⭐⭐`,`Already here?! Lightning fast! Maybe pizza isn't so bad after all… Five stars! ⭐⭐⭐⭐⭐`]);}
+      else{pay=Math.ceil(dlPay(s0)/2);S.dlStars=Math.max(0,s0-1);line=pick([`Hmph! Too slow! And it's cold. See? This is why I don't like pizza. One star. ⭐ I'm telling EVERYONE!`,`Finally! I waited and waited… One star for you. Hmph! ⭐ I'm writing a bad review!`]);}
+      const s1=dlStars();rv=!late?`<p class="earn rv">🌟 Great review! Pizza stars: ${starsH(s1)}<br><small>${s0>=5?'You already have all 5 stars! 👑':s1>=5?"You're a Pizza legend! 👑":'More coins for every pizza now! 🪙'}</small></p>`:`<p class="earn rv bad">😬 BAD review! ${s1<s0?'You lost a pizza star. ':''}Pizza stars: ${starsH(s1)}<br><small>People read reviews… fewer orders will come for a while.</small></p>`;}
+    else{pay=late?Math.ceil(op/2):op;
       line=late?`There you are! It's a little cold… but thank you for my ${o.pz} pizza! 🙂`:pick([`Yay, my ${o.pz} pizza! 😋 Thank you so much!`,`Mmm, it smells sooo good! Thank you! 🍕`,`My pizza! You're the best! 💗`]);}
-    S.coins+=pay+tip;const d=dl();d.done++;d.o=null;d.wait=rand(8,14)*(1-.07*dlStars());
+    S.coins+=pay;const d=dl();d.done++;d.o=null;d.wait=rand(8,14)*(1-.07*dlStars());
     if(o.r){d.fb=late?'bad':'good';if(late){d.wait=rand(32,42);d.quiet=2;}addMsg('pz','pz',late?`😬 ${W.nm} gave you a BAD review. Fewer people will order for a while…`:`🌟 ${W.nm} gave you a 5-star review! Great job!`,{q:1});}S.dlTotal=(S.dlTotal||0)+1;hardEvent('deliver',1);change();jobHud(true);SFX.coin();
     if(o.r&&late)setTimeout(()=>SFX.no(),250);else{setTimeout(()=>SFX.yay(),250);if(o.r)setTimeout(()=>SFX.rare(),700);}
-    popText('+'+(pay+tip)+' 🪙','coin');
-    extra=`<p class="earn">You got <b>${pay} 🪙</b>${tip?` + <b>${tip} 🪙</b> tip for your ${s0} ⭐!`:late&&!o.r?' (you were late)':'!'}</p>${rv}`;btn=`<div class="row"><button class="btn mint" data-a="cutbye">👋 Bye!</button></div>`;
+    popText('+'+pay+' 🪙','coin');
+    extra=`<p class="earn">You got <b>${pay} 🪙</b>${late?(o.r?'!':' (you were late)'):o.r?'! 💰 RARE bonus!':s0?` with your ${s0} ⭐!`:'!'}</p>${rv}`;btn=`<div class="row"><button class="btn mint" data-a="cutbye">👋 Bye!</button></div>`;
     if(HELD){HELD.visible=true;HELD.traverse(o=>o.renderOrder=26);C.box=HELD;C.s0=HELD.scale.x;scene.attach(HELD);C.b0=HELD.position.clone();C.b1=C.g.localToWorld(new THREE.Vector3(0,1.02,.68));}}
   else{line=pick(["What are you doing here?! I didn't order any pizza! 😠","Huh? What are you doing here? I didn't order a pizza! 😤"]);
     for(const s of[-1,1]){const br=new THREE.Mesh(new THREE.BoxGeometry(.13,.03,.02),mat('#1d1622'));br.position.set(s*.11,.32,.226);br.rotation.z=s*.38;C.p.head.add(br);}
@@ -4209,8 +4235,7 @@ function cutSay(){const C=CUT,o=dl().o,W=C.W;let line,extra='',btn='';
 ACT.cutbye=()=>{const C=CUT;if(!C||C.stage!==2)return;closePanel();C.stage=3;C.t3=C.t;C.p.wave=1.2;};
 function endCut(){const C=CUT;if(!C)return;if(C.rev){revEnd();return;}CUT=null;if(UI.open)closePanel();document.body.classList.remove('cut');
   scene.remove(C.g);C.g.traverse(o=>{if(o.geometry)o.geometry.dispose();});for(const t of C.tex||[])t.dispose();if(HELD){HELD.traverse(o=>o.renderOrder=0);heldHome();}P.pitch=0;[P.x,P.z]=collideXZ(P.x,P.z,.3,CUR);
-  const d=dl();if(C.ok&&d.done>=dlMax())setTimeout(()=>{SFX.yay();toast(`🌟 That's ${dlMax()} deliveries! Great job today! Come back tomorrow.`,4.2);},400);
-  else if(C.ok)setTimeout(()=>toast(C.rare&&C.late?'😟 Bad review… it will be quiet for a while. Be FAST next time! 💪':'🍕 Nice delivery! A new order will come soon.',3.4),300);}
+  if(C.ok){const bad=!!(C.rare&&C.late);setTimeout(()=>dlAfter(bad),400);}}
 
 /* ================= 🎨 INTERIOR DESIGNER JOB =================
    A client messages you → follow the dot to their house → decorate ONE room with furniture
@@ -4927,14 +4952,17 @@ function jobTick(dt){
   if(o&&o.st==='carry'&&!CUT&&!TUT&&!(UI.open&&CUR.id==='pizza')){const was=o.left;o.left-=dt;
     if(o.lim<1800&&was>30&&o.left<=30){toast('⏰ 30 seconds left! Hurry!',2.6);SFX.late();}
     if(was>0&&o.left<=0){toast("⏰ Oh no, you're late! Bring it anyway, quick!",3.4);SFX.late();}}
-  if(!o&&d.on&&d.done<dlMax()&&pizzaOpen()&&!CUT){d.wait-=dt;if(d.wait<=0)newOrder();}
+  /* waiting inside the Pizzeria when pizza time starts: the shift starts by itself */
+  if(!o&&!d.on&&CUR.id==='pizza'&&!dlOff()&&!dlAsk()&&pizzaOpen()&&!UI.open&&!CUT&&!TUT&&!fading&&!$('toast').classList.contains('show')){d.on=true;d.wait=Math.min(d.wait,6);change();jobHud(true);chefSay("Pizza time! 🕛 Welcome to work! 🍕 Wait here, an order will come soon!",[['OK!','close']]);}
+  if(!o&&d.on&&!dlOff()&&pizzaOpen()&&!CUT){d.wait-=dt;if(d.wait<=0)newOrder();}
+  if(!o&&d.on&&!d.end&&d.done<DLV_DAY*2&&!pizzaOpen()&&!UI.open&&!CUT&&!TUT&&!CLIMB&&!fading&&!DECO.on&&!CR&&!$('toast').classList.contains('show'))dlShut();
   if(HELD&&!CUT){HELD.visible=!!(o&&o.st==='carry')&&!DECO.on&&!CR&&CUR.id!=='studio';if(HELD.visible)heldFit();}
   jobT+=dt;if(jobT>.25){jobT=0;jobHud();}
   mmT+=dt;if(mmT>.07){mmT=0;drawMini();}}
 function jobPhone(){let h;
   if(!S.job)return`<p class="ph-sub">You don't have a job yet! Message <b>Rosie</b> or find her in town to pick one. 💬</p><div class="row"><button class="btn mint" data-a="phchat:ro">💬 Message Rosie</button><button class="btn white" data-a="findrosie">📍 Find Rosie</button></div>`;
   const J=JOBS[S.job];h=`<div class="qcard"><div class="qtop"><span class="qi">${J.i}</span><div><div class="qt">${J.n}</div><div class="qd">${J.d}</div></div></div></div>`;
-  if(S.job==='delivery'){const d=dl(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${dlMax()}</b> pizzas delivered</p><div class="qcard"><div class="qtop"><span class="qi">🌟</span><div><div class="qt">Pizza stars: ${starsH(dlStars())}</div><div class="qd"><b>${STAR_T[dlStars()]}</b> · Be fast for ⭐ RARE customers to win stars! More stars = more orders and tips.</div></div></div></div>`;
+  if(S.job==='delivery'){const d=dl(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${dlMax()}</b> pizzas delivered<br>🕛 ${PZ_TIME} 🍕</p><div class="qcard"><div class="qtop"><span class="qi">🌟</span><div><div class="qt">Pizza stars: ${starsH(dlStars())}</div><div class="qd"><b>${STAR_T[dlStars()]}</b> · <b>${dlPay()} 🪙</b> for every pizza! Be fast for ⭐ RARE customers to win stars. More stars = more coins!</div></div></div></div>`;
     if(o){const H=HOUSE(o.h);h+=`<div class="qcard"><div class="qtop"><span class="qi">🍕</span><div><div class="qt">${o.r?'⭐ RARE · ':''}${esc(oWho(o).nm)}: ${o.pz} pizza</div><div class="qd">${o.st==='wait'?'Pick it up at the Pizzeria first!':`Take it to the <b>${esc(H.n)}</b>${o.flat?', flat <b>'+o.flat+'</b>':''}. ${o.left>0?'⏱️ '+mmss(o.left):'⏰ Late!'}`}</div></div></div></div>`;}
     h+=`<div class="row"><button class="btn butter" data-a="nav:pizza">📍 Show me the Pizzeria</button><button class="btn sky" data-a="dotpick">🎨 Dot color</button></div>`;}
   if(S.job==='designer'){const d=ds(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${DS_MAX}</b> rooms decorated</p>`;
