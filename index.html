@@ -1471,7 +1471,7 @@ function buildCity(){
     box(st,.7,.74,3.3,'#ffffff',-32.75,0,SZ);box(st,.05,.62,3.34,'#ff4d6d',-33.12,.1,SZ,{ol:.015});box(st,.06,.06,3.36,'#ffd45c',-33.12,.7,SZ,{ol:false});
     for(const z of[21.05,22,22.95]){box(st,.44,.44,.44,'#9a6a43',-32.02,0,z);box(st,.48,.07,.48,'#ff9ec4',-32.02,.44,z,{ol:.012});box(st,.07,.62,.48,'#9a6a43',-31.76,.5,z);}
     col(L,-38.05,19.7,-34.5,24.3);col(L,-33.15,20.3,-31.7,23.7);
-    inter(L,{x:-34.25,z:SZ,r:2.7,icon:'🏆',label:()=>psTargetLabel(),act:()=>openShow(),pri:()=>isShowDay()&&!showDone()});}
+    inter(L,{x:-34.25,z:SZ,r:2.7,icon:'🏆',label:()=>psTargetLabel(),act:()=>openShow(),pri:()=>psOpen()&&!showDone()});}
   buildBoard(L,st);   /* 📌 the ideas board and a big old oak, just inside the park's north gate */
   /* ===== paved paths to every shop and front door ===== */
   {const PAV='#f6e9df',EDGE='#e2cfc4',pave=(x1,z1,x2,z2)=>{const w=Math.abs(x2-x1),d=Math.abs(z2-z1),cx=(x1+x2)/2,cz=(z1+z2)/2;flat(st,w,d,PAV,cx,.026,cz);
@@ -2439,7 +2439,7 @@ function openClothes(){S.wardrobe=S.wardrobe||{};S.outfits=S.outfits||[];
   else body=newInHTML('clothes')+`<div class="sec">All clothes</div><p class="note">Hats and glasses come in lots of colors. Try them on at the 🪞 mirror.</p>
     <div class="grid" style="margin-top:10px">${Object.entries(CLOTHES).map(([k,c])=>{const n=(c.hat||c.gl)?variants(k).length:0,mine=!(c.hat||c.gl)&&owns(k);
       return`<button class="it" data-a="cloth:${k}"><span class="em">${c.i}</span><span>${c.n}</span><span class="pr">${mine?'✔ Yours':c.p+' 🪙'}</span>${n?`<span class="have">You have ${n}</span>`:''}</button>`;}).join('')}</div>`;
-  openPanel(`<div class="hd"><h2>👗 Clothing store</h2><div class="chip">🪙 <b id="pc">${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>${body}`,{onClose:()=>{CLO.sel=null;}});}
+  openPanel(`<div class="hd"><h2>👗 Clothing store</h2><div class="chip">🪙 <b id="pc">${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>${shutNote('clothes')}${body}`,{onClose:()=>{CLO.sel=null;}});}
 const TASKS=[
   {id:'home',t:'Go inside your new house',r:10},{id:'buy',t:'Buy food at the market',r:10},{id:'eat',t:'Eat a snack from your bag',r:5},
   {id:'friend',t:'Make a friend',r:20},{id:'pet',t:'Adopt a pet',r:20},{id:'decor',t:'Decorate your house',r:20},
@@ -2520,7 +2520,26 @@ function wdName(d){return WDAYS[wdIdx(d)];}
 function isShowDay(d){return wdIdx(d)===5;}
 function showDone(){return!!(S&&S.show&&S.show.day===S.day);}
 function daysToShow(){return(5-wdIdx()+7)%7||7;}
-function dayLabel(){return(isShowDay()&&!showDone()?'🏆 ':'')+wdName().slice(0,3)+' · Day '+S.day;}
+function dayLabel(){return(psLeft()?'🏆 ':'')+wdName().slice(0,3)+' · Day '+S.day;}
+/* ☀️ Daytime: the shops, the library, the designer's clients and the school's classes run 8:00–20:00 (the Pizzeria keeps its own hours).
+   Your home, Friends Lane, the flats, the park, the school building and the fire station are always open. */
+const DAY_ON=8,DAY_OFF=20,PS_ON=9,PS_OFF=18;
+const SHUT={market:['Market','Mr. Bun'],pets:['Pet Shop','Ms. Paws'],flowers:['Flower Shop','Ms. Petal'],cafe:['Café','Mr. Mocha'],clothes:['Clothes Shop','Ms. Stitch'],
+  toys:['Toy Store','Mr. Toby'],bakery:['Bakery','Mrs. Crumb'],icecream:['Ice Cream Shop','Mr. Sprinkles'],library:['Library','Ms. Page']};
+function isDaytime(){return!!S&&S.time>=DAY_ON&&S.time<DAY_OFF;}
+function shopOpen(id){return!SHUT[id]||isDaytime();}
+function workAt(){return`🌙 Work starts at ${DAY_ON}:00 ☀️`;}
+/* a closed shop: the door says so and you stay outside; inside you can still look, but buying waits for the morning */
+function shutNote(id){return shopOpen(id)?'':`<p class="note">🌙 <b>Closed now.</b> You can look, but buying starts again at ${DAY_ON}:00 ☀️</p>`;}
+function shutBuy(id){if(shopOpen(id))return false;const s=SHUT[id],K=KEEPERS.find(k=>k.name===s[1]);if(K)K.p.wave=1.2;SFX.no();toast(`🌙 ${s[1]}: “Sorry, we're closed! Come back at ${DAY_ON}:00 ☀️”`,3.4);return true;}
+function shutDoors(){for(const id in SHUT){const t=LOC.city.inter.find(t=>t.label==='Go into the '+SHUT[id][0]);if(!t||t.shut)continue;const a=t.act,ic=t.icon;t.shut=1;
+  t.icon=()=>shopOpen(id)?ic:'🌙';t.say=()=>shopOpen(id)?'':`🌙 Closed · opens at ${DAY_ON}:00`;t.act=()=>{if(shopOpen(id)){a();return;}SFX.no();toast(`🌙 The ${SHUT[id][0]} is closed now. It opens at ${DAY_ON}:00 ☀️`,3.6);};}}
+let DAYW=null;
+function dayTick(){const d=isDaytime();if(DAYW===null){DAYW=d;shutDoors();return;}if(d===DAYW)return;DAYW=d;
+  if(!d&&CUR&&SHUT[CUR.id]){const s=SHUT[CUR.id],K=KEEPERS.find(k=>k.name===s[1]);if(K)K.p.wave=1.2;SFX.talk();toast(`🌙 ${s[1]}: “It's closing time! Buying stops now. See you at ${DAY_ON}:00 ☀️”`,4.2);}}
+/* 🏆 the Pet Show is on Saturdays from 9:00 to 18:00 (a show that already started always finishes) */
+function psOpen(){return isShowDay()&&!!S&&S.time>=PS_ON&&S.time<PS_OFF;}
+function psLeft(){return isShowDay()&&!showDone()&&!!S&&S.time<PS_OFF;}
 function newDay(){spawnLitter();for(const f of FRIEND_ACTORS)f.wake();for(const w of WALKERS)if(w.state!=='going')w.init();qNewDay();for(const r of PLOTS)plotRefresh(r);psDay();}
 
 /* ---- Skills: do things to level up ---- */
@@ -2531,7 +2550,7 @@ const SKILLS={garden:{i:'🌱',n:'Gardening',how:'Water flower beds and put plan
 const BOOK_FACTS=['Did you know? Octopuses have three hearts! 🐙','Did you know? Bees dance to tell their friends where flowers are! 🐝','Did you know? A group of flamingos is called a flamboyance! 🦩',
   'Did you know? Sloths can hold their breath longer than dolphins! 🦥','Did you know? Bananas are berries, but strawberries are not! 🍌','Did you know? Some cats sleep 16 hours a day! 😺',
   'Did you know? Snails can sleep for 3 years! 🐌','Did you know? The Moon has moonquakes! 🌙','Did you know? Cows have best friends! 🐄','Did you know? Honey never goes bad! 🍯'];
-function readBook(){SFX.pop();toast('📖 '+pick(BOOK_FACTS),4.6);if(cool('book',3))addXP('read',4);qEvent('read');}
+function readBook(){if(CUR&&CUR.id==='library'&&shutBuy('library'))return;SFX.pop();toast('📖 '+pick(BOOK_FACTS),4.6);if(cool('book',3))addXP('read',4);qEvent('read');}
 function knock(id){if(id&&dlCarrying()){deliverKnock(id);return;}if(id&&dsGoing(id)){enterClient();return;}SFX.knock();toast(pick(["Knock knock… nobody's home right now.","Knock knock… someone's playing music inside! 🎶","Knock knock… you hear a dog bark hello. 🐶","Knock knock… “Just a minute!” Someone is baking cookies! 🍪"]));}
 const MAXLV=10,xpNeed=lv=>10*lv;
 function sk(k){S.skills=S.skills||{};return S.skills[k]||(S.skills[k]={lv:1,xp:0});}
@@ -3262,7 +3281,7 @@ function buildActors(){
   const k13=makePerson({skin:'#f2d3b3',hair:'#9a6a43',style:'bun',top:'#7fdcb5',bottom:'#3f4c86',shoes:'#3d2c5e',dress:true,glasses:'glasses'});
   const chat=lines=>()=>toast('“'+pick(lines)+'”',3.4);
   for(const [p,L,x,z,name,shop] of [[k1,LOC.market,4.9,.95,'Mr. Bun','market'],[k2,LOC.pets,-4.9,.95,'Ms. Paws','pets'],[k3,LOC.flowers,4.1,.95,'Ms. Petal','flowers'],[k4,LOC.cafe,.3,-4.0,'Mr. Mocha','cafe'],[k5,LOC.clothes,3.6,1.25,'Ms. Stitch','clothes'],[k6,LOC.toys,-4.6,.2,'Mr. Toby','toys'],[k7,LOC.bakery,0,-4.2,'Mrs. Crumb','bakery'],[k8,LOC.icecream,0,-4.2,'Mr. Sprinkles','icecream'],
-    [k9,LOC.library,4.4,1.2,'Ms. Page',chat(['Shh! Find a book you like. 📚','Books are like magic doors! ✨','Try the shelves. Every book has a fun fact!'])],
+    [k9,LOC.library,4.4,1.2,'Ms. Page',(c=>()=>shopOpen('library')?c():toast(`“Shh… the library is closed now. 🌙 Come back at ${DAY_ON}:00 ☀️”`,3.4))(chat(['Shh! Find a book you like. 📚','Books are like magic doors! ✨','Try the shelves. Every book has a fun fact!']))],
     [k10,LOC.school,-4.6,-2.6,'Mr. Owl',chat(['Welcome to school! Tap the fun facts board to learn something. ✏️','The classrooms are down the hall: Math, English and History! 📚','Did you do your homework? Just kidding! 😄'])],
     [k13,LOC.school,4.6,-2.6,'Mrs. Maple',()=>tcTalk()],
     [k11,LOC.fire,1.4,1.0,'Chief Sparky',chat(['Hi! Want to slide down the fire pole? 🚒','Remember: never play with matches! 🔥','If you see smoke, tell a grown-up right away!'])],
@@ -3682,11 +3701,11 @@ ACT.close=()=>closePanel();
 ACT.tnGo=()=>{closePanel();tnStart();};
 ACT.cloth=k=>{const c=CLOTHES[k];if(!c)return;SFX.tap();
   if(c.hat||c.gl){CLO.sel=k;CLO.col=c.cols.find(x=>!variants(k).some(v=>v.c===x))||c.cols[0];openClothes();return;}
-  if(owns(k)){toast(c.i+' You have these already! Try them on at the 🪞 mirror.',3);return;}
+  if(owns(k)){toast(c.i+' You have these already! Try them on at the 🪞 mirror.',3);return;}if(shutBuy('clothes'))return;
   if(S.coins<c.p){SFX.no();toast('Not enough coins yet! 🪙');return;}S.coins-=c.p;S.wardrobe[k]=1;SFX.coin();SFX.yay();toast(c.i+' '+c.n+': it\'s yours! Try it on at the mirror. 🪞',3.2);qEvent('clothes');qEvent('buy:'+k);change();openClothes();};
 ACT.clocol=c=>{CLO.col=c;openClothes();};
 ACT.cloback=()=>{CLO.sel=null;openClothes();};
-ACT.clobuy=()=>{const k=CLO.sel,C=CLOTHES[k];if(!C)return;if(S.coins<C.p){SFX.no();toast('Not enough coins yet! 🪙');return;}S.coins-=C.p;S.outfits.push({k,c:CLO.col});SFX.coin();SFX.yay();
+ACT.clobuy=()=>{const k=CLO.sel,C=CLOTHES[k];if(!C||shutBuy('clothes'))return;if(S.coins<C.p){SFX.no();toast('Not enough coins yet! 🪙');return;}S.coins-=C.p;S.outfits.push({k,c:CLO.col});SFX.coin();SFX.yay();
   toast(C.i+' New '+C.n.toLowerCase()+'! Try it on at the 🪞 mirror.',3.2);qEvent('clothes');qEvent('buy:'+k);CLO.sel=null;change();openClothes();};
 ACT.plant=k=>plantSeed(k);
 const hearts=n=>'♥'.repeat(n)+'<span class="off">'+'♥'.repeat(5-n)+'</span>';
@@ -3750,12 +3769,12 @@ let AD=null;const ADOPT_COST=100;
 function openAdopt(type,col){if(S.pets.length>=3){toast('You have 3 pets already. That\'s a full house! 🏠');return;}
   const T=PET_TYPES[type];AD={type,col,name:pick(T.names)};SFX[T.snd]();renderAdopt();}
 function renderAdopt(){const T=PET_TYPES[AD.type];
-  openPanel(`<div class="hd"><h2>${T.icon} Adopt a ${T.name}</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
+  openPanel(`<div class="hd"><h2>${T.icon} Adopt a ${T.name}</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>${shutNote('pets')}
     <p class="note">Pick a color</p><div class="swrow">${T.cols.map(c=>`<button class="sw ${c===AD.col?'on':''}" style="background:${c}" data-a="acol:${c}" aria-label="Color"></button>`).join('')}</div>
     <p class="note">Give your ${T.name} a name</p><input class="inp" id="petName" maxlength="14" value="${esc(AD.name)}" autocomplete="off">
     <div class="row"><button class="btn mint" data-a="adopt" ${S.coins<ADOPT_COST?'disabled':''}>💗 Adopt for ${ADOPT_COST} 🪙</button></div>${S.coins<ADOPT_COST?`<p class="note">You need ${ADOPT_COST} 🪙. Pick up litter or check your mail to get more!</p>`:''}`);}
 ACT.acol=c=>{AD.name=($('petName').value||AD.name);AD.col=c;renderAdopt();};
-ACT.adopt=()=>{const nm=($('petName').value||'').trim().slice(0,14)||AD.name;if(S.coins<ADOPT_COST)return;S.coins-=ADOPT_COST;
+ACT.adopt=()=>{if(shutBuy('pets'))return;const nm=($('petName').value||'').trim().slice(0,14)||AD.name;if(S.coins<ADOPT_COST)return;S.coins-=ADOPT_COST;
   const d={id:uid(),type:AD.type,col:AD.col,name:nm,happy:80,stay:false,loc:CUR.id,x:P.x+.6,z:P.z+.8,sx:0,sz:0};S.pets.push(d);addPetActor(d);
   closePanel();SFX.yay();toast(`Welcome home, ${nm}! ${PET_TYPES[AD.type].icon} Look at ${nm} to play.`,4);doneTask('pet');change();};
 
@@ -3764,9 +3783,9 @@ let SHOP=null;
 function openShop(k){SHOP=k;const sh=SHOPS[k];SFX.talk();
   const list=(sh.items||[]).map(id=>({id,...itemInfo(id)})).concat((sh.furn||[]).map(t=>({id:t,n:FURN[t].n,i:FURN[t].i,p:FURN[t].p,f:1})));
   openPanel(`<div class="hd"><h2>${sh.title}</h2><div class="chip">🪙 <b id="pc">${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
-    ${sh.furn?'<p class="note">Furniture and decorations go to 📦 My stuff. Place them at home with 🛋️ Decorate.</p>':''}${newInHTML(k)}
+    ${shutNote(k)}${sh.furn?'<p class="note">Furniture and decorations go to 📦 My stuff. Place them at home with 🛋️ Decorate.</p>':''}${newInHTML(k)}
     <div class="grid" style="margin-top:10px">${list.map(it=>`<button class="it" data-a="buy:${it.id}"><span class="em">${it.i}</span><span>${it.n}</span><span class="pr">${it.p} 🪙</span><span class="have" id="hv-${it.id}">${it.f?'':(S.bag[it.id]?'You have '+S.bag[it.id]:'')}</span></button>`).join('')}</div>`);}
-ACT.buy=(id,b)=>{const sh=SHOPS[SHOP],F=(sh.furn&&sh.furn.includes(id))?FURN[id]:null,info=F||itemInfo(id);
+ACT.buy=(id,b)=>{if(shutBuy(SHOP))return;const sh=SHOPS[SHOP],F=(sh.furn&&sh.furn.includes(id))?FURN[id]:null,info=F||itemInfo(id);
   if(S.coins<info.p){SFX.no();toast('Not enough coins. Pick up litter or check your mail! 🪙');return;}
   S.coins-=info.p;SFX.coin();
   if(F){S.home.store.push({u:uid(),t:id,c:F.cols?pick(F.cols):null,x:0,z:0,r:0});toast(F.i+' '+F.n+' is waiting in 📦 My stuff at home!');}
@@ -3795,7 +3814,7 @@ function newIn(sh){S.newin=S.newin||{};let L=S.newin[sh];if(!Array.isArray(L))L=
 function newInHTML(sh){if(!S||!NEWIN_SHOPS[sh])return'';const L=newIn(sh);if(!L.some(Boolean))return'';
   return`<div class="sec">✨ New in! <small class="nisub">Buy one and something new pops up!</small></div><div class="grid newin">${L.map((it,i)=>{if(!it)return'';const img=it.kind==='furn'?thumb(it.k,it.c):'';
     return`<button class="it ni${NEWPOP===sh+i?' nipop':''}" data-a="nbuy:${sh}:${i}"><span class="nbadge">NEW</span>${img?`<img class="nimg" src="${img}" alt="">`:`<span class="em">${it.i}</span>`}<span>${esc(it.n)} <i class="dot" style="background:${it.c}"></i></span><span class="pr">${it.p} 🪙</span></button>`;}).join('')}</div>`;}
-ACT.nbuy=(sh,i)=>{if(typeof sh==='string'&&sh.includes(':')){const p=sh.split(':');sh=p[0];i=p[1];}const L=newIn(sh),it=L[+i];if(!it)return;if(S.coins<it.p){SFX.no();toast('Not enough coins yet! 🪙');return;}
+ACT.nbuy=(sh,i)=>{if(typeof sh==='string'&&sh.includes(':')){const p=sh.split(':');sh=p[0];i=p[1];}if(shutBuy(sh))return;const L=newIn(sh),it=L[+i];if(!it)return;if(S.coins<it.p){SFX.no();toast('Not enough coins yet! 🪙');return;}
   S.coins-=it.p;SFX.coin();SFX.yay();
   if(it.kind==='hat'){S.outfits=S.outfits||[];S.outfits.push({k:it.k,c:it.c});toast(it.i+' '+it.n+'! Try it on at the 🪞 mirror.',3.2);qEvent('clothes');}
   else if(it.kind==='col'){S.xcol=S.xcol||{};(S.xcol[it.k]=S.xcol[it.k]||[]).push(it.c);toast(it.i+' '+it.n+'! Try it on at the 🪞 mirror.',3.2);qEvent('clothes');}
@@ -3898,7 +3917,7 @@ function qCard(Q,st,k,hard){let foot;const p=hard?'h':'q',steps=Q.steps;
   return`<div class="qcard${hard?' hard':''}"><div class="qtop"><span class="qi">${Q.i}</span><div><div class="qt">${esc(Q.t)}${hard?'<span class="qtag">🔥 Hard</span>':''}${steps?'<span class="qtag tricky">🧩 Tricky</span>':''}</div><div class="qd">${esc(Q.d)}</div></div></div>${list}<div class="qfoot"><span class="qr">${Q.r} 🪙</span>${foot}</div></div>`;}
 function openPhone(app,chat){PH.app=app||null;PH.chat=chat||null;PH.jobs=false;if(chat){msgs().u[chat]=0;updPhoneBadge();}SFX.tap();renderPhone();}
 function renderPhone(){hardCheck();const a=PH.app,q=S.q,ready=readyCount();let body='';
-  if(!a){body=`<div class="ph-clock">${clockStr(S.time)}</div><div class="ph-date">${wdName()} · Day ${S.day}${isShowDay()&&!showDone()?' · 🏆 Pet Show today!':''}</div>
+  if(!a){body=`<div class="ph-clock">${clockStr(S.time)}</div><div class="ph-date">${wdName()} · Day ${S.day}${psLeft()?' · 🏆 Pet Show today!':''}</div>
     <div class="apps"><button class="app" data-a="phapp:msg"><span class="ic" style="background:#5fd4b0">💬</span>Messages${msgUnread()?`<span class="badge">${msgUnread()}</span>`:''}</button><button class="app" data-a="phapp:quest"><span class="ic" style="background:#ffd45c">🏆</span>Quest${ready?`<span class="badge">${ready}</span>`:''}</button>
     <button class="app" data-a="phapp:skills"><span class="ic" style="background:#b79cff">⭐</span>Skills</button>
     <button class="app" data-a="phapp:pets"><span class="ic" style="background:#7fdcb5">🐾</span>Pets</button>
@@ -3906,7 +3925,7 @@ function renderPhone(){hardCheck();const a=PH.app,q=S.q,ready=readyCount();let b
     <button class="app" data-a="phapp:mp"><span class="ic" style="background:#ff9ec4">👫</span>Friends</button>
     <button class="app" data-a="phapp:job"><span class="ic" style="background:#ffb36b">💼</span>Job${hasDlOrder()||(S.job==='designer'&&S.ds&&S.ds.o)||(S.job==='teacher'&&S.tc&&S.tc.o)?'<span class="badge">!</span>':''}</button>
     <button class="app" data-a="phapp:furn"><span class="ic" style="background:#ff9ec4">🛋️</span>Furniture</button>
-    <button class="app" data-a="phapp:cal"><span class="ic" style="background:#ff8a6b">📅</span>Calendar${isShowDay()&&!showDone()?'<span class="badge">!</span>':''}</button></div>`;}
+    <button class="app" data-a="phapp:cal"><span class="ic" style="background:#ff8a6b">📅</span>Calendar${psLeft()?'<span class="badge">!</span>':''}</button></div>`;}
   else{const hd=(t)=>`<div class="ph-hd"><button class="btn ph-back" data-a="phapp:" aria-label="Back to home screen">‹</button><h3>${t}</h3><span class="ph-coins">🪙 ${S.coins}</span></div>`;
     if(a==='quest'){const tab=PH.tab,dr=Object.values(q.st).filter(s=>s.s==='ready').length,hr=Object.values(S.hard).filter(s=>s.s==='ready').length;
       body=hd('🏆 Quest')+`<div class="ph-tabs"><button class="pill ${tab==='daily'?'on':''}" data-a="qtab:daily">📅 Daily${dr?' ('+dr+')':''}</button><button class="pill ${tab==='hard'?'on':''}" data-a="qtab:hard">🔥 Hard${hr?' ('+hr+')':''}</button></div>`;
@@ -4190,6 +4209,7 @@ function jobHud(force){const el=$('job'),on=!!(PLAYING&&S&&(S.job==='delivery'||
       else if(id==='school')h=`📚 Find the <b>${S0.i} ${S0.n}</b> room!`;
       else{const tg=jobTarget(),m=CUR.id==='city'&&tg?' <span class="nw">· '+Math.round(Math.hypot(tg.x-P.x,tg.z-P.z))+' m</span>':'';h=`📚 → <b>School</b> · ${S0.i} ${S0.n} class${m}`;}}
     else if(d.done>=TC_MAX)h=`🌟 All ${TC_MAX} classes done today!`;
+    else if(!isDaytime())h=workAt();
     else h=`📚 Waiting for a message from school… <small>(${d.done}/${TC_MAX})</small>`;
     if(force||h!==jobHud.last){$('jobTxt').innerHTML=h;jobHud.last=h;}
     $('jobTxt').classList.remove('late','rare');const mh=CUR.id!=='city';if($('mmBtn').hidden!==mh)$('mmBtn').hidden=mh;return;}
@@ -4199,6 +4219,7 @@ function jobHud(force){const el=$('job'),on=!!(PLAYING&&S&&(S.job==='delivery'||
       else{const tg=jobTarget(),m=CUR.id==='city'&&tg?' <span class="nw">· '+Math.round(Math.hypot(tg.x-P.x,tg.z-P.z))+' m</span>':'',inA=CUR.id.startsWith('apt');
         h=inA&&APT.b===o.h?`🎨 Find flat <b>${o.flat}</b>!`:inA?`🎨 Wrong building! → <b>${esc(H.n)}</b>`:`🎨 → <b>${esc(H.n)}</b>${o.flat?' · flat '+o.flat:''}${m}`;}}
     else if(d.done>=DS_MAX)h=`🌟 All ${DS_MAX} rooms done today!`;
+    else if(!isDaytime())h=workAt();
     else h=`🎨 Waiting for a client… <small>(${d.done}/${DS_MAX})</small>`;
     if(force||h!==jobHud.last){$('jobTxt').innerHTML=h;jobHud.last=h;}
     $('jobTxt').classList.remove('late','rare');const mh=CUR.id!=='city';if($('mmBtn').hidden!==mh)$('mmBtn').hidden=mh;return;}
@@ -4497,7 +4518,7 @@ const PS_KIDS=['Mia','Leo','Ava','Noah','Lily','Max','Zoe','Finn','Ella','Sam','
 const TRICKS=[['🌀','Spin'],['⬆️','Big jump'],['🤸','Flip'],['💃','Dance'],['🔄','Roll over'],['🙌','High five']];
 const PS_FLOP={sleep:{e:'😴',say:['Oh dear, a nap on stage!','Zzz… that is not a trick!','Wake up, sleepyhead! 💤']},
   butterfly:{e:'🦋',say:['Come back, little one!','A butterfly?! Focus!','Oh my, it ran away! 🦋']}};
-function psTargetLabel(){if(!S)return'🏆 Pet Show';if(!isShowDay())return'🏆 Pet Show is on Saturday';if(showDone())return'🏆 See you next Saturday!';return'🏆 Enter the Pet Show!';}
+function psTargetLabel(){if(!S)return'🏆 Pet Show';if(!isShowDay())return'🏆 Pet Show is on Saturday';if(showDone())return'🏆 See you next Saturday!';if(S.time<PS_ON)return`🏆 Pet Show starts at ${PS_ON}:00`;if(S.time>=PS_OFF)return'🏆 Pet Show is over for today';return'🏆 Enter the Pet Show!';}
 function psScore(d){return{style:petStyle(d),happy:clamp(Math.round(d.happy/20),1,5)};}
 function psScore10(d,pts){return{style:petStyle(d)*2,trick:PS_TR[clamp(pts|0,0,6)],happy:clamp(Math.ceil(d.happy/10),1,10)};}
 
@@ -4527,8 +4548,8 @@ function psRefresh(){if(CUT&&CUT.show){PSX.dirty=true;return;}PSX.dirty=false;fo
   PSX.rv.forEach((R,i)=>{const m=makePet(R.type,R.col);addOutfit(m,{outfit:Object.assign({},R.outfit)});m.root.visible=false;scene.add(m.root);
     const tg=label(R.name,.2);tg.position.y={bunny:1.0,hamster:.55}[R.type]||.82;m.root.add(tg);const r={R,m,tg,busy:false};PSX.rivals.push(r);psHome(r,i);});}
 function psHome(r,i){const pd=PS.pad[i],m=r.m;m.root.position.set(pd[0],PS.top+.08,pd[1]);m.root.rotation.set(0,psRot(i),0);m.b.rotation.set(0,0,0);m.b.position.set(0,0,0);if(m.head)m.head.rotation.x=0;m.legs[0].rotation.x=0;r.busy=false;}
-function psDay(){psRefresh();if(S&&isShowDay())setTimeout(()=>{if(S&&PLAYING&&isShowDay()&&!showDone())toast('🏆 It\'s Pet Show day! Dress up your pet and come to the park!',4.6);},4800);}
-function psUpdate(dt){const on=!!(S&&CUR&&CUR.id==='city'&&isShowDay());PSX.on=on;
+function psDay(){psRefresh();if(S&&isShowDay())setTimeout(()=>{if(S&&PLAYING&&psLeft())toast(`🏆 It's Pet Show day! The show is in the park from ${PS_ON}:00 to ${PS_OFF}:00. Dress up your pet!`,4.6);},4800);}
+function psUpdate(dt){const on=!!(S&&CUR&&CUR.id==='city'&&(psOpen()||CUT&&CUT.show||UI.open&&PSX.pc&&UI.onClose===PSX.pc));PSX.on=on;
   for(const pl of PSX.plates)pl.visible=on;
   const judging=!!(CUT&&CUT.show&&/^r?(jin|judge)$/.test(CUT.stage));
   for(const j of PSX.judges){const p=j.p,a=p.arms[1];p.root.visible=on;if(!on)continue;j.t+=dt;j.tg.visible=!judging;
@@ -4546,18 +4567,20 @@ function psCardsDown(){for(const j of PSX.judges){j.up=0;j.card.visible=false;ps
 function openShow(){if(!S)return;
   if(!isShowDay()){const n=daysToShow();SFX.talk();toast(`🏆 The Pet Show is every Saturday! Today is ${wdName()}, so it's in ${n} day${n>1?'s':''}. Get your pet ready!`,4.8);return;}
   if(showDone()){toast(`🏆 You already did today's show! Come back next Saturday.`,4);return;}
+  if(S.time<PS_ON){SFX.talk();toast(`🏆 The Pet Show starts at ${PS_ON}:00! The judges are on their way. Dress up your pet! 🎀`,4.6);return;}
+  if(S.time>=PS_OFF){SFX.talk();toast(`🏆 Today's Pet Show is over (${PS_ON}:00 to ${PS_OFF}:00). The next one is next Saturday!`,4.6);return;}
   if(!S.pets.length){SFX.no();toast('You need a pet for the Pet Show! Adopt one at the 🐾 Pet Shop.',4);return;}
   const here=PET_ACTORS.filter(p=>p.loc==='city'&&Math.hypot(p.x-P.x,p.z-P.z)<18);
   if(!here.length){SFX.no();toast('Bring a pet to the park! Tip: ⚙️ Settings → 🐾 Bring my pets to me',4.8);return;}
   if(PSX.dirty||!PSX.rivals.length)psRefresh();
-  SFX.yay();PSX.pick=here;const rv=PSX.rv||[];
+  SFX.yay();PSX.pick=here;const rv=PSX.rv||[];if(!PSX.pc)PSX.pc=()=>{};
   openPanel(`<div class="hd"><h2>🏆 Pet Show!</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
     <div class="psj">${PS_JUDGES.map(J=>`<div><span>${J.i}</span><b>${J.n}</b><i>loves ${J.love}</i></div>`).join('')}</div>
     <p class="note">Today's other pets: ${rv.map(R=>`${PET_TYPES[R.type].icon} <b>${esc(R.name)}</b> (${esc(R.owner)})`).join(', ')}. They practiced a lot! Can you beat them?</p>
     <p class="note">🥇 <b>200 🪙</b> + 🐾 Pets +2 levels · 🥈 60 🪙 · 🥉 25 🪙</p>
     <div class="pspick">${here.map((p,i)=>{const d=p.d,o=petOutfit(d),sc=psScore(d);return`<button class="pscard" data-a="psgo:${i}"><span class="pi">${PET_TYPES[d.type].icon}</span><b>${esc(d.name)}</b>
       <span class="pso">${PSLOTS.map(([sl])=>o[sl]?ACCS[o[sl]].i:'').join('')||'no outfit yet'}</span><span>👒 ${starRow(sc.style)}</span><span>🌼 ${starRow(sc.happy)}</span><i>⭐ Pick ${esc(d.name)}!</i></button>`;}).join('')}</div>
-    <p class="note">Tip: dress your pet in all 4 outfit spots, make it super happy, and hit the gold when you do tricks!</p>`);}
+    <p class="note">Tip: dress your pet in all 4 outfit spots, make it super happy, and hit the gold when you do tricks!</p>`,{onClose:PSX.pc});}
 ACT.psgo=i=>{const p=PSX.pick&&PSX.pick[+i];if(!p||CUT)return;closePanel();psStart(p);};
 /* how each other pet will do today: great, good, medium, bad — or out of the show */
 function psPlan(r,i){let x=Math.random()*100,form='good';for(const [p,v] of [[22,'great'],[28,'good'],[24,'medium'],[16,'bad'],[10,'out']]){x-=p;if(x<=0){form=v;break;}}
@@ -4720,14 +4743,14 @@ const clawK=()=>LOC.toys&&LOC.toys.cl;
 const tri=v=>{const f=((v%2)+2)%2;return f<1?f:2-f;};
 function clawOpen(){const K=clawK();if(!K||CUT||!S)return;SFX.talk();
   openPanel(`<div class="hd"><h2>🕹️ Claw machine</h2><div class="chip">🪙 <b id="pc">${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
-    <p class="line">Catch a capsule and win a prize! 🎁 Every try is <b>${CLAW_COST} 🪙</b>.</p>
+    ${shutNote('toys')}<p class="line">Catch a capsule and win a prize! 🎁 Every try is <b>${CLAW_COST} 🪙</b>.</p>
     <p class="note">First stop the claw left-right, then front-back, right above a capsule! Capsules have furniture, coins or a level-up inside. A <b>✨ gold capsule</b> has a golden treasure you can't buy anywhere, plus a level-up!</p>
     <div class="row"><button class="btn butter" data-a="clawgo" ${S.coins<CLAW_COST?'disabled':''}>🕹️ Play! (${CLAW_COST} 🪙)</button></div>${S.coins<CLAW_COST?'<p class="note">Not enough coins yet. Pick up litter or check your mail! 🪙</p>':''}`);}
 function clawNew(K){K.x=K.rx;K.z=K.rz;K.y=K.ry;K.open=.1;clawPose(K);
   CUT={claw:1,t:0,st:0,shake:0,stage:'x',K,t0:performance.now(),hold:null,res:null};clawPanel();}
-ACT.clawgo=()=>{const K=clawK();if(!K||CUT)return;if(S.coins<CLAW_COST){SFX.no();toast('Not enough coins! 🪙');return;}
+ACT.clawgo=()=>{const K=clawK();if(!K||CUT||shutBuy('toys'))return;if(S.coins<CLAW_COST){SFX.no();toast('Not enough coins! 🪙');return;}
   S.coins-=CLAW_COST;SFX.coin();change();closePanel();if(P.ride)stopRide();P.sit=null;document.body.classList.add('cut');$('note').hidden=true;clawNew(K);};
-ACT.clawagain=()=>{const C=CUT;if(!C||!C.claw)return;if(S.coins<CLAW_COST){SFX.no();return;}clawTidy(C);S.coins-=CLAW_COST;SFX.coin();change();clawNew(C.K);};
+ACT.clawagain=()=>{const C=CUT;if(!C||!C.claw||shutBuy('toys'))return;if(S.coins<CLAW_COST){SFX.no();return;}clawTidy(C);S.coins-=CLAW_COST;SFX.coin();change();clawNew(C.K);};
 ACT.clawdone=()=>{const C=CUT;if(!C||!C.claw)return;clawEnd();};
 function clawPanel(){const C=CUT;
   if(C.stage==='x')openPanel(`<div class="hd"><h2>🕹️ Left or right?</h2><span class="psn">Step 1 of 2</span></div><p class="note">Tap <b>⏹ STOP</b> when the claw is right above a capsule!</p><div class="row"><button class="btn butter psnow" data-a="clawtap">⏹ STOP</button></div>`,{bottom:true,lock:true});
@@ -4802,10 +4825,10 @@ function tcNew(){const d=tc(),id=pick(Object.keys(SUBJ).filter(k=>k!==d.last)),S
   const x=`Good ${S.time<5||S.time>=18?'evening':S.time<12?'morning':'afternoon'}, ${S.name||'teacher'}! ${nightF(S.time)>.5?'🌙':'☀️'} Today I'd like you to teach the ${S0.n} class, if that's okay! ${S0.i} Go to the school. In the hallway, the ${S0.n} room is ${tcDoor(S0)}.`;
   addMsg('dr','dr',x,{t2:'📚 Your class today: '+S0.n});SFX.ding();try{if(navigator.vibrate)navigator.vibrate([120,80,120]);}catch(e){}
   showNote('📚 Message from the school!',x,false,'📚','dr');change();jobHud(true);}
-function tcTick(dt){const d=tc();if(!d.o&&d.done<TC_MAX&&!CUT){d.wait-=dt;if(d.wait<=0)tcNew();}jobHud();}
+function tcTick(dt){const d=tc();if(!d.o&&d.done<TC_MAX&&!CUT&&isDaytime()){d.wait-=dt;if(d.wait<=0)tcNew();}jobHud();}
 function tcTalk(){const o=S&&S.job==='teacher'&&S.tc&&S.tc.o;
   if(o){const S0=SUBJ[o.subj];toast(`“Your class today is ${S0.n}! ${S0.i} It's ${tcDoor(S0)}. Good luck!”`,3.8);return;}
-  if(S&&S.job==='teacher'){toast(tc().done>=TC_MAX?'“You taught all your classes today! Thank you! 🌟”':'“No class right now. I will message you when a class needs you! 📱”',3.6);return;}
+  if(S&&S.job==='teacher'){toast(tc().done>=TC_MAX?'“You taught all your classes today! Thank you! 🌟”':!isDaytime()?`“No classes at night! 🌙 Work starts at ${DAY_ON}:00. I will message you! ☀️”`:'“No class right now. I will message you when a class needs you! 📱”',3.6);return;}
   toast('“Welcome to Cozy Town School! Want to be a teacher? Ask Rosie for a job! 📚”',3.8);}
 function tcClear(){for(const id in SUBJ){const L=LOC['cl_'+id];if(L&&L.kids){for(const k of L.kids)L.g.remove(k.p.root);L.kids=null;}}}
 function enterClass(id){const L=LOC['cl_'+id];if(!L||fading)return;SFX.door();
@@ -4949,7 +4972,7 @@ function tcEnd(){const C=CUT;if(!C||!C.tch)return;const L=C.L;for(const k of C.k
 function calBody(){const i0=wdIdx(),start=S.day-i0;let h='<div class="cal">';
   for(let i=0;i<7;i++){h+=`<div class="cd${i===i0?' today':''}${i===5?' show':''}"><b>${WDAYS[i].slice(0,3)}</b><span>${start+i}</span><i>${i===5?'🏆':i===i0?'⭐':''}</i></div>`;}
   h+='</div>';const n=daysToShow();
-  h+=`<p class="ph-sub"><b>Today is ${wdName()}!</b> ${isShowDay()?(showDone()?'You did the 🏆 Pet Show today. The next one is next Saturday!':'🏆 It\'s Pet Show day! Bring your pet to the park!'):`🏆 Pet Show in ${n} day${n>1?'s':''}: on Saturday, in the park.`}</p>`;
+  h+=`<p class="ph-sub"><b>Today is ${wdName()}!</b> ${isShowDay()?(showDone()?'You did the 🏆 Pet Show today. The next one is next Saturday!':S.time>=PS_OFF?'Today\'s 🏆 Pet Show is over. The next one is next Saturday!':`🏆 It's Pet Show day! Bring your pet to the park from ${PS_ON}:00 to ${PS_OFF}:00!`):`🏆 Pet Show in ${n} day${n>1?'s':''}: on Saturday, ${PS_ON}:00 to ${PS_OFF}:00, in the park.`}</p>`;
   h+=`<div class="caltips">${PS_JUDGES.map(J=>`<div><span>${J.i}</span><span><b>${J.n}</b> loves ${J.love}</span></div>`).join('')}</div>`;
   if(S.showLast)h+=`<p class="ph-sub">Last show: ${esc(S.showLast)}</p>`;if(S.showWins)h+=`<p class="ph-sub">🏆 Pet Show wins: ${S.showWins}</p>`;
   return h;}
@@ -4979,8 +5002,8 @@ function dsPhoto(T){if(PHOTOS.has(T.id))return PHOTOS.get(T.id);let url='';
 let DCARD_KEY='';
 function dcardUpd(force){const el=$('dcard');if(!el)return;const on=!!(PLAYING&&S&&S.job==='designer');if(el.hidden===on)el.hidden=!on;if($('pad').hidden!==on)$('pad').hidden=on;if(!on){DCARD_KEY='';return;}
   const d=ds(),o=d.o;
-  if(!o){const key='none:'+d.done;if(!force&&key===DCARD_KEY)return;DCARD_KEY=key;el.classList.add('empty');
-    el.innerHTML=`<div class="dct">🎨 ${d.done>=DS_MAX?'All done today! 🌟':'Waiting for a client…'}</div><div class="dcr"><span>${d.done} / ${DS_MAX} rooms today</span></div>`;return;}
+  if(!o){const key='none:'+d.done+':'+isDaytime();if(!force&&key===DCARD_KEY)return;DCARD_KEY=key;el.classList.add('empty');
+    el.innerHTML=`<div class="dct">🎨 ${d.done>=DS_MAX?'All done today! 🌟':!isDaytime()?`Clients come at ${DAY_ON}:00 ☀️`:'Waiting for a client…'}</div><div class="dcr"><span>${d.done} / ${DS_MAX} rooms today</span></div>`;return;}
   const T=dsTheme(o),R=DROOM[T.room],n=o.items.length,inR=CUR&&CUR.id==='client',key=[o.h,o.th,n,inR].join(':');if(!force&&key===DCARD_KEY)return;DCARD_KEY=key;el.classList.remove('empty');
   el.innerHTML=`<div class="dct">${T.e} ${esc(T.n)}</div><img class="dci" alt="" src="${dsPhoto(T)}"><div class="dcr"><span class="dcp">${T.pal.map(f=>`<i style="background:${FAMDOT[f]}"></i>`).join('')}${T.plants?'🌿':''}</span><span class="dcn">🪑 ${R.cnt[0]}–${R.cnt[1]}${inR?` <small>(${n})</small>`:''}</span></div>`;}
 $('dcard').addEventListener('click',()=>{audioInit();SFX.tap();dcardBig();});
@@ -5024,7 +5047,7 @@ ACT.dtutgo=()=>{closePanel();setTimeout(dtutStart,250);};
 /* the designer job, every frame */
 function dsTick(dt){const d=ds();
   if(!S.dsTut&&S.intro&&!DTUT&&!TUT&&!UI.open&&!CUT&&!CLIMB&&!fading&&(CUR.id==='city'||CUR.id==='client')){dtutT+=dt;if(dtutT>1.2)dtutStart();}else dtutT=0;
-  if(!d.o&&d.done<DS_MAX&&!CUT&&!DTUT){d.wait-=dt;if(d.wait<=0)dsNew();}
+  if(!d.o&&d.done<DS_MAX&&!CUT&&!DTUT&&isDaytime()){d.wait-=dt;if(d.wait<=0)dsNew();}
   if(HELD&&!CUT)HELD.visible=false;
   jobT+=dt;if(jobT>.25){jobT=0;jobHud();}mmT+=dt;if(mmT>.07){mmT=0;drawMini();}}
 
@@ -5053,11 +5076,11 @@ function jobPhone(){let h;
     h+=`<div class="row"><button class="btn butter" data-a="nav:pizza">📍 Show me the Pizzeria</button><button class="btn sky" data-a="dotpick">🎨 Dot color</button></div>`;}
   if(S.job==='designer'){const d=ds(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${DS_MAX}</b> rooms decorated</p>`;
     if(o){const T=dsTheme(o),H=HOUSE(o.h),W=dsWho(o);h+=`<div class="qcard"><div class="qtop"><span class="qi">${T.e}</span><div><div class="qt">${esc(W.nm)}: ${esc(T.n)}</div><div class="qd">At the <b>${esc(H.n)}</b>${o.flat?', flat <b>'+o.flat+'</b>':''}. Follow the dot on your map!</div></div></div></div>`;}
-    else h+=`<p class="ph-sub">${d.done>=DS_MAX?'🌟 All done for today! More clients tomorrow.':'🎨 A client will message you soon!'}</p>`;
+    else h+=`<p class="ph-sub">${d.done>=DS_MAX?'🌟 All done for today! More clients tomorrow.':!isDaytime()?workAt()+' Clients message you from 8:00 to 20:00.':'🎨 A client will message you soon!'}</p>`;
     h+=`<div class="row"><button class="btn sky" data-a="dotpick">🎨 Dot color</button><button class="btn white" data-a="dtutgo">📖 Tips</button></div>`;}
   if(S.job==='teacher'){const d=tc(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${TC_MAX}</b> classes taught</p>`;
     if(o){const S0=SUBJ[o.subj];h+=`<div class="qcard"><div class="qtop"><span class="qi">${S0.i}</span><div><div class="qt">Teach the ${S0.n} class</div><div class="qd">Go to <b>Cozy Town School</b>. In the hallway, it's ${tcDoor(S0)}.</div></div></div></div>`;}
-    else h+=`<p class="ph-sub">${d.done>=TC_MAX?'🌟 All classes done today! More tomorrow.':'📱 Mrs. Maple will message you when a class needs you.'}</p>`;
+    else h+=`<p class="ph-sub">${d.done>=TC_MAX?'🌟 All classes done today! More tomorrow.':!isDaytime()?workAt()+' Classes are from 8:00 to 20:00.':'📱 Mrs. Maple will message you when a class needs you.'}</p>`;
     h+=`<div class="row"><button class="btn butter" data-a="nav:school">📍 Show me the school</button><button class="btn sky" data-a="phchat:dr">💬 Messages</button></div>`;}
   return h+`<p class="ph-sub" style="margin-top:14px">Want a different job? Message Rosie!</p><div class="row"><button class="btn white" data-a="phchat:ro">💬 Message Rosie</button></div>`;}
 
@@ -5079,7 +5102,7 @@ let hudT=0,hungryWarn=false;
 function updHud(force){$('coins').textContent=S.coins;const fd=$('food');fd.style.width=Math.round(S.hunger)+'%';fd.classList.toggle('low',S.hunger<25);
   $('clock').textContent=clockStr(S.time);$('dayN').textContent=dayLabel();$('sunIc').textContent=nightF(S.time)>.5?'🌙':'☀️';if(force)renderTasks();}
 function showAction(){$('moveBtns').hidden=!PLAYING||DECO.on||!!CUT;const w=$('actWrap');if(!PLAYING||UI.open||DECO.on||!TARGET){w.hidden=true;return;}
-  w.hidden=false;const lb=typeof TARGET.label==='function'?TARGET.label():TARGET.label,ic=typeof TARGET.icon==='function'?TARGET.icon():TARGET.icon;if($('actLbl').textContent!==lb)$('actLbl').textContent=lb;if($('act').textContent!==ic)$('act').textContent=ic;}
+  w.hidden=false;const lb=TARGET.say&&TARGET.say()||(typeof TARGET.label==='function'?TARGET.label():TARGET.label),ic=typeof TARGET.icon==='function'?TARGET.icon():TARGET.icon;if($('actLbl').textContent!==lb)$('actLbl').textContent=lb;if($('act').textContent!==ic)$('act').textContent=ic;}
 $('act').addEventListener('click',()=>{audioInit();if(KC.eat){KC.eat=false;return;}useTarget();});
 /* the ⚽ button can be held: press = start the power, let go = kick (only for the ball; everything else still uses a normal tap) */
 $('act').style.touchAction='none';
@@ -5231,7 +5254,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     updateCars(dt);mpTick(dt);laneTick(dt);zzTick(dt);for(const s of SHOPPERS)s.update(dt);
     updGarden(dt);bdTick(dt);
     {const vis=CUR.id==='city'&&sittersOut();for(const s of SITTERS){s.p.root.visible=vis;if(vis){s.t+=dt;s.p.head.rotation.y=Math.sin(s.t*.5)*.35;if(s.p.wave>0){s.p.wave-=dt;s.p.arms[1].rotation.z=2.5+Math.sin(s.p.wave*14)*.35;}else s.p.arms[1].rotation.z*=.85;}}}
-    psUpdate(dt);
+    psUpdate(dt);dayTick();
     for(const k of KEEPERS)if(k.L===CUR){k.p.root.rotation.y=angLerp(k.p.root.rotation.y,Math.atan2(P.x-k.x,P.z-k.z),.05);animPerson(k.p,dt,false);}
     if(CUR&&CUR.id==='studio'&&!CR&&!fading){setLoc('city');P.x=-17;P.z=-4.6;P.yaw=0;P.pitch=0;P.sit=null;P.ride=null;$('hud').hidden=false;camera.clearViewOffset();resize();saveLocal();}
     if(CUT)cutUpdate(dt);if(CLIMB)climbUpdate(dt);floorVis();
