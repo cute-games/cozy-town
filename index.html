@@ -1331,7 +1331,9 @@ function buildSky(){
   for(let i=0;i<16;i++){const c=new THREE.Group();const n=3+(Math.random()*3|0);for(let k=0;k<n;k++)sph(c,rand(5,9),null,k*6.5-n*3.2+rand(-2,2),rand(-1.5,1.5),rand(-3,3),{mat:CLOUD,olMat:OLC,ol:.55,ws:12,hs:8,s:[1,.68,1]});
     const a=rand(0,TAU),r=rand(80,220);c.position.set(Math.cos(a)*r,rand(48,80),Math.sin(a)*r);c.userData.sp=rand(.6,1.5);bake(c,false);outside.add(c);clouds.push(c);}
   const hills=new THREE.Group();outside.add(hills);
-  for(let i=0;i<28;i++){const a=i/28*TAU+rand(-.08,.08),r=rand(205,250);sph(hills,rand(40,62),pick(['#86d37c','#79c973','#93dc85']),Math.cos(a)*r,-rand(8,18),Math.sin(a)*r,{ol:.9,ws:18,hs:10,s:[1,.5,1]});}
+  for(let i=0;i<28;i++){const a=i/28*TAU+rand(-.08,.08),r=rand(205,250),R=rand(40,62),c=pick(['#86d37c','#79c973','#93dc85']),y=-rand(8,18),x=Math.cos(a)*r;let z=Math.sin(a)*r;
+    const foot=R*Math.sqrt(Math.max(0,1-(2*y/R)**2));if(x<-60&&Math.abs(z)<44+foot)z=(z<0?-1:1)*(44+foot);   /* 🏡 Friends Lane runs west through a valley: hills step aside */
+    sph(hills,R,c,x,y,z,{ol:.9,ws:18,hs:10,s:[1,.5,1]});}
   for(let i=0;i<110;i++){const a=rand(0,TAU),r=rand(94,160);const x=Math.cos(a)*r,z=Math.sin(a)*r;if(Math.abs(x)<7||Math.abs(z)<7||(x<-78&&Math.abs(z)<38)||(Math.abs(Math.abs(x)-50)<7&&Math.abs(z)<95)||(Math.abs(Math.abs(z)-50)<7&&Math.abs(x)<95))continue;(Math.random()<.5?pine:tree)(hills,x,z,rand(1.3,2.2));}
   bake(hills,false);}finally{Math.random=mr;}
 }
@@ -1380,7 +1382,7 @@ const HOUSES=[
   {id:'n1',x:13,z:-57.98,ry:0,dc:'#5fd4b0',wc:'#ffd6e0',n:'Pink house'},{id:'n2',x:25,z:-57.98,ry:0,dc:'#ffd45c',wc:'#c9f2e3',n:'Green house'},
   {id:'n3',x:37,z:-57.98,ry:0,dc:'#7cc8ff',wc:'#fff1b8',n:'Yellow house'},{id:'s1',x:13,z:57.98,ry:Math.PI,dc:'#ff7aa8',wc:'#e6dbff',n:'Purple house'},
   {id:'s2',x:25,z:57.98,ry:Math.PI,dc:'#5fd4b0',wc:'#d9e8ff',n:'Blue house'},{id:'s3',x:37,z:57.98,ry:Math.PI,dc:'#ffd45c',wc:'#ffe0c4',n:'Peach house'},
-  {id:'nb',x:-31,z:-11.48,ry:0,dc:'#ffd45c',wc:'#bff0dc',n:'House next to yours'},{id:'ap1',x:-22,z:-26.98,ry:0,dc:'#7cc8ff',wc:'#ffd0b5',n:'Big apartments by your garden'},
+  {id:'nb',x:-31,z:-11.48,ry:0,dc:'#ffd45c',wc:'#bff0dc',n:'House by the flowers'},{id:'ap1',x:-22,z:-26.98,ry:0,dc:'#7cc8ff',wc:'#ffd0b5',n:'Big apartments by the flowers'},
   {id:'of',x:23,z:-26.98,ry:0,dc:'#b79cff',wc:'#c7e6ff',n:'Tall building behind the Market'},{id:'ap2',x:24,z:26.98,ry:Math.PI,dc:'#ff8a6b',wc:'#ffe0c4',n:'Apartments behind the Pet Shop'},
   {id:'ap3',x:-60.98,z:25,ry:Math.PI/2,dc:'#7cc8ff',wc:'#ffd0b5',n:'Apartments by the park'}];
 const HOUSE=id=>HOUSES.find(h=>h.id===id);
@@ -1412,39 +1414,10 @@ function buildCity(){
   for(let t=-78;t<=78;t+=6){if(nearX(t,[-50,0,50])||Math.abs(t)>79)continue;const lampHere=Math.abs(t%12)===0;
     for(const c of[-50,0,50])for(const s of[-1,1]){const pts=[[t,c+s*(lampHere?4.55:4.75)],[c+s*(lampHere?4.55:4.75),t]];
       for(const [px,pz] of pts){if(!lampHere&&px>63&&px<69&&pz>3.5&&pz<6)continue;if(lampHere){lampPost(st,px,pz);colC(L,px,pz,.16);}else{tree(st,px,pz,1);colC(L,px,pz,.26);}}}}
-  // NW block: your house, the neighbour, apartments
-  {const hs=new THREE.Group(),hb=new THREE.Group();L.g.add(hs,hb);
-   building(hs,{x:-17,z:-15,w:9,d:7,h:3.8,wall:'#d9c8ff',trim:'#b9a3f2',roof:'#ff7aa8',face:1,gable:true,rh:2.6,chimney:true,door:{x:-17,c:'#5fd4b0'}});
-   building(hb,{x:-17,z:-15,w:9,d:7,h:7.0,floors:2,wall:'#d9c8ff',trim:'#b9a3f2',roof:'#ff7aa8',face:1,gable:true,rh:2.8,chimney:true,door:{x:-17,c:'#5fd4b0'},bare:(dx,i)=>i>0&&Math.abs(dx)<1});
-   box(hb,3.6,.2,1.25,'#ffffff',-17,3.85,-10.9,{ol:.02});box(hb,3.6,.1,.1,'#ffffff',-17,4.8,-10.32,{ol:.015});
-   for(let i=0;i<9;i++)box(hb,.07,.75,.07,'#ffffff',-18.75+i*.4375,4.05,-10.32,{ol:.01});
-   for(const sx of[-18.75,-15.25])box(hb,.1,.1,1.2,'#ffffff',sx,4.8,-10.9,{ol:.015});
-   for(const [px,c] of[[-18.3,'#ff7aa8'],[-15.7,'#ffd45c']]){cyl(hb,.17,.13,.26,'#c98f5e',px,4.05,-10.62,{seg:10,ol:.015});sph(hb,.2,'#5fbf74',px,4.42,-10.62,{ws:10,hs:8,ol:.012});for(let k=0;k<4;k++)sph(hb,.08,c,px+(k%2-.5)*.18,4.55,-10.62+(k>1?.1:-.1),{ws:8,hs:6,ol:.01});}
-   bake(hs,true);bake(hb,true);hb.visible=false;L.myHouse={hs,hb};}
-  col(L,-21.6,-18.6,-12.4,-11.4);
-  // the sign by your house: buy the big house at Decorating level 10
-  {const sg=new THREE.Group();L.g.add(sg);box(sg,.14,1.25,.14,'#9a6a43',-20.4,0,-7.6,{ol:.02});box(sg,1.95,.95,.12,'#ffffff',-20.4,1.1,-7.6,{ol:.03});
-   const sale=signPlane('Bigger house!',1.8,.8,'#ff7aa8','#ffffff'),sold=signPlane('SOLD!',1.8,.8,'#5fd4b0','#ffffff');
-   for(const m of[sale,sold]){m.position.set(-20.4,1.575,-7.53);sg.add(m);}sold.visible=false;L.houseSign={sale,sold};colC(L,-20.4,-7.6,.15);
-   inter(L,{x:-20.4,z:-6.8,r:1.7,icon:'🏡',label:()=>S.bighouse?'Your big house!':'Bigger house',act:()=>openBigHouse()});}
+  // NW block: the Flower Corner (your house is on Friends Lane now), the neighbour, apartments
+  flowerCorner(L,st);
   building(st,{x:-31,z:-15,w:7,d:7,h:3.6,wall:'#bff0dc',roof:'#6aa9ff',face:1,gable:true,door:{x:-31,c:'#ffd45c'}});col(L,-34.6,-18.6,-27.4,-11.4);
   building(st,{x:-22,z:-31,w:18,d:8,h:9.6,wall:'#ffd0b5',face:1,boxes:true,door:{x:-22,c:'#7cc8ff'}});col(L,-31.1,-35.1,-12.9,-26.9);
-  fence(st,-21.6,-8.2,-17.9,-8.2,L);fence(st,-16.1,-8.2,-12.4,-8.2,L);fence(st,-21.6,-8.2,-21.6,-11.3,L);fence(st,-12.4,-8.2,-12.4,-11.3,L);
-  for(let i=0;i<4;i++)disc(st,.42,'#e9e0f7',-17,.03,-8.8-i*.72,{seg:16});
-  // your backyard garden
-  flat(st,12.3,6.0,'#a2e48a',-16.75,.012,-21.55);
-  fence(st,-23,-18.5,-23,-24.6,L);fence(st,-23,-24.6,-10.5,-24.6,L);fence(st,-10.5,-24.6,-10.5,-21.3,L);fence(st,-10.5,-19.3,-10.5,-18.5,L);
-  fence(st,-23,-18.5,-21.6,-18.5,L);fence(st,-12.4,-18.5,-10.5,-18.5,L);
-  doorAt(st,-14,-18.52,Math.PI,'#5fd4b0');
-  L.plots=[];for(const [i,x,z] of [[0,-21,-20.9],[1,-18.3,-20.9],[2,-15.6,-20.9],[3,-21,-23.0],[4,-18.3,-23.0],[5,-15.6,-23.0]]){box(st,1.8,.16,1.2,'#b07a52',x,0,z,{ol:.02});col(L,x-.92,z-.62,x+.92,z+.62);L.plots.push({i,x,z});}
-  box(st,1.6,2.0,1.4,'#ffd6e0',-11.9,0,-23.3);prism(st,1.9,1.8,.75,'#ff7aa8',-11.9,2.0,-23.3,{ry:Math.PI/2});box(st,.06,1.6,.8,'#5fd4b0',-12.73,0,-23.3,{ol:.015});col(L,-12.8,-24.05,-11.0,-22.55);
-  box(st,.8,.45,.5,'#c98f5e',-13.4,0,-23.95);for(let k=0;k<4;k++)box(st,.14,.2,.04,['#ff7aa8','#ffd45c','#5fd4b0','#ff8a6b'][k],-13.7+k*.2,.45,-23.95,{rx:-.2,ol:.01});col(L,-13.85,-24.25,-12.95,-23.65);
-  const ss=signPlane('🌱 Seeds',1.0,.34,'#ffffff','#3d2c5e');ss.position.set(-12.77,1.75,-23.3);ss.rotation.y=-Math.PI/2;L.g.add(ss);
-  const gs=signPlane('🌱 My Garden',1.5,.42,'#5fd4b0','#ffffff');gs.position.set(-10.42,1.05,-22.2);gs.rotation.y=Math.PI/2;L.g.add(gs);
-  cyl(st,.14,.16,.28,'#7cc8ff',-22.4,0,-19.3,{seg:12,ol:.015});cone(st,.04,.3,'#7cc8ff',-22.25,.25,-19.3,{rz:-1.0,seg:6,ol:.012});
-  for(let k=0;k<8;k++)disc(st,.36,'#e9e0f7',-8.9,.03,-9-k*1.45,{seg:14});disc(st,.36,'#e9e0f7',-9.8,.03,-20.3,{seg:14});
-  flowerBed(st,-19.8,-10.6,3,.9);flowerBed(st,-14.2,-10.6,3,.9);
-  mailbox(st,-15.4,-7.6,0);colC(L,-15.4,-7.6,.25);
   // NE block: market, café, offices
   building(st,{x:18,z:-15,w:12,d:8,h:4.6,wall:'#fff1b8',face:1,shop:true,awning:'#ff7aa8',sign:'🍎 Market',door:{x:18,glass:true}});col(L,11.9,-19.1,24.1,-10.6);
   building(st,{x:32,z:-14,w:7,d:6,h:4.2,wall:'#ffd6e0',face:1,shop:true,awning:'#5fd4b0',sign:'☕ Café',door:{x:32,glass:true}});col(L,28.4,-17.1,35.6,-10.6);
@@ -1464,7 +1437,7 @@ function buildCity(){
   const fx=-22,fz=22;buildFountain(st,L,fx,fz);
   L.benches=[];for(let i=0;i<4;i++){const a=Math.PI/4+i*Math.PI/2,bx=fx+Math.cos(a)*9.6,bz=fz+Math.sin(a)*9.6,ry=Math.atan2(fx-bx,fz-bz);bench(st,bx,bz,ry);colC(L,bx,bz,.75);L.benches.push({x:bx,z:bz,ry});}
   for(const [x,z] of [[-36,12.5],[-11.5,16],[-37.4,16.2],[-37.6,27.7],[-11.5,28],[-16,37.5],[-26,37.5],[-20,35.5],[-36,37.5],[-12.5,37.5]]){tree(st,x,z,1);colC(L,x,z,.28);}
-  L.beds=[{id:'h1',x:-19.8,z:-10.6,ix:-19.8,iz:-9.9},{id:'h2',x:-14.2,z:-10.6,ix:-14.2,iz:-9.9}];
+  L.beds=[{id:'h1',x:-19.8,z:-10.6,ix:-19.8,iz:-9.9,yard:1},{id:'h2',x:-14.2,z:-10.6,ix:-14.2,iz:-9.9,yard:1}];   /* h1, h2: the flower beds in front of your house (on Friends Lane) */
   for(const [i,sx,sz] of [[1,1,-1],[2,-1,-1],[3,-1,1],[4,1,1]]){const x=fx+sx*8.84,z=fz+sz*8.84;flowerBed(st,x,z,1.8,1.0);col(L,x-.95,z-.55,x+.95,z+.55);L.beds.push({id:'p'+i,x,z,ix:x,iz:z+(sz>0?-.9:.9)});}
   bench(st,-13,34.6,Math.PI);bench(st,-10,34.6,Math.PI);col(L,-14,34.2,-9,35.1);
   // playground
@@ -1618,18 +1591,14 @@ function buildCity(){
   bake(st,true,32);
   L.g.add(glowMesh(glowGeo(LAMPXZ.flatMap(([x,z])=>[[x,3.21,z,.8,[.5,.38,.18]],[x,.1,z,4.4,4.4,[.3,.23,.11]]]))));
   // doors and things to use
-  inter(L,{x:-14,z:-19.3,r:1.9,icon:'🏠',label:'Go inside your house',act:()=>enter('home','back')});
-  inter(L,{x:-13.4,z:-23.15,r:1.8,icon:'🌱',label:'Buy seeds',act:()=>openShop('seeds')});
-  inter(L,{x:-17,z:-10.5,r:2.2,icon:'🏠',label:'Go inside your house',act:()=>enter('home')});
   inter(L,{x:18,z:-10.1,r:2.4,icon:'🛒',label:'Go into the Market',act:()=>enter('market')});
   inter(L,{x:18,z:10.1,r:2.4,icon:'🐾',label:'Go into the Pet Shop',act:()=>enter('pets')});
   inter(L,{x:32,z:-10.1,r:2.3,icon:'☕',label:'Go into the Café',act:()=>enter('cafe')});
   inter(L,{x:31.5,z:10.1,r:2.3,icon:'🌷',label:'Go into the Flower Shop',act:()=>enter('flowers')});
-  inter(L,{x:-15.4,z:-7.1,r:1.8,icon:'📬',label:'Check your mail',act:checkMail});
   for(const [dx,dz] of [[0,5.3],[0,-5.3],[5.3,0],[-5.3,0]])inter(L,{x:fx+dx,z:fz+dz,r:2.2,icon:'✨',label:'Make a wish (1 🪙)',act:wish});
   L.swings.forEach((s,i)=>inter(L,{x:s.position.x,z:36.1,r:1.5,icon:'🎠',label:'Go on the swing',act:()=>startSwing(i)}));
   inter(L,{x:-37.2,z:28.1,r:1.8,icon:'🛝',label:'Go down the slide',act:startSlide});
-  for(const b of L.beds)inter(L,{x:b.ix,z:b.iz,r:1.9,icon:'💧',label:()=>S&&S.water&&S.water[b.id]===S.day?'These flowers are happy today':'Water the flowers',act:()=>waterBed(b)});
+  for(const b of L.beds){const t=inter(L,{x:b.ix,z:b.iz,r:1.9,icon:'💧',label:()=>S&&S.water&&S.water[b.id]===S.day?'These flowers are happy today':'Water the flowers',act:()=>waterBed(b)});if(b.yard)yardInt(t,b);}
   return L;
 }
 
@@ -2022,37 +1991,115 @@ function hclimb(dir){const L=CUR,U=L.up;if(CLIMB||CUT||fading||!U)return;if(DECO
     [P.x,P.z]=collideXZ(L.ox+(dir>0?UPX:0)-U.w+2.6,L.oz,.3,L);P.yaw=-Math.PI/2;P.pitch=0;P.cy=0;bringFollowers(true);saveLocal();
     toast(dir<0?'🏡 Back downstairs':L===LOC.home?'🏡 Upstairs! Tap 🛋️ to decorate up here too.':'🏡 Upstairs!',2.6);}};}
 
-/* ===== 🏡 Friends Lane: the west road goes on past the edge of town, with a house lot for every player ===== */
-const LANE_PLOTS=[[-97,-1],[-111,-1],[-125,-1],[-97,1],[-111,1],[-125,1]].map(([X,s],j)=>({j,X,s}));
-/* your own house's yard in town; a friend standing here is shown at their house on Friends Lane instead */
+/* ===== 🏡 Friends Lane: the west road goes on past the edge of town, with a house lot for every player. Your house is here too ===== */
+/* lots 0-5 are where old versions have them; 6-11 are further down the lane; when even more friends play, more lots appear */
+const LANE_PLOTS=[[-97,-1],[-111,-1],[-125,-1],[-97,1],[-111,1],[-125,1],[-139,-1],[-153,-1],[-167,-1],[-139,1],[-153,1],[-167,1]].map(([X,s],j)=>({j,X,s}));
+const LANE_MAX=30;   /* the lane stops growing at 30 lots */
+/* your old house's yard in town (old versions still have it there); a friend standing there is shown at their house on Friends Lane */
 const HOMELOT={x1:-23.6,x2:-10.4,z1:-27,z2:-6.8};
-/* turn a spot in your yard into the same spot on lane lot j (south lots are turned around) */
+/* the part of that old yard where you could stand (front yard, house, garden). In town it is the Flower Corner now and nobody
+   can stand in it, so a spot in here (in a save, or from an old version) always means "in your own yard" */
+const YARDR={x1:-23.6,x2:-10.4,z1:-24.6,z2:-6.8},inYardR=(x,z)=>x>YARDR.x1&&x<YARDR.x2&&z>YARDR.z1&&z<YARDR.z2;
+/* turn a spot in your yard into the same spot on lane lot j (south lots are turned around), and back */
 function lotPt(j,x,z){const p=LANE_PLOTS[j];return p.s<0?[x+p.X+17,z]:[p.X-(x+17),-z];}
+function lotBack(j,x,z){const p=LANE_PLOTS[j];return p.s<0?[x-p.X-17,z]:[p.X-x-17,-z];}
+function lotRect(j,c){const a=lotPt(j,c.x1,c.z1),b=lotPt(j,c.x2,c.z2);return{x1:Math.min(a[0],b[0]),z1:Math.min(a[1],b[1]),x2:Math.max(a[0],b[0]),z2:Math.max(a[1],b[1])};}
+const laneEnd=()=>LANE_PLOTS[LANE_PLOTS.length-1].X-13;   /* where the road ends (the newest lots are the furthest west) */
 function buildLane(L,st){
-  const ROAD='#8c90b4',SIDE='#f3e7df',CURB='#ddcdd0',x0=-84,x1=-138,cx=(x0+x1)/2,len=x0-x1;
-  flat(st,len,8,ROAD,cx,.02,0);
-  for(const s of[-1,1]){flat(st,len,3,SIDE,cx,.03,s*5.5);box(st,len,.08,.14,CURB,cx,0,s*4,{ol:.015});}
-  for(let t=x1+2;t<=x0-1;t+=3.2)box(st,1.4,.012,.16,'#ffffff',t,.03,0,{ol:false});
-  box(st,.4,.9,8.4,'#ffffff',x1+.2,0,0,{ol:.03});for(let k=-3;k<=3;k+=2)box(st,.42,.3,.9,'#ff6b6b',x1+.2,.45,k,{ol:false});
-  for(const x of[-91,-104,-118,-132])for(const s of[-1,1]){lampPost(st,x,s*4.55);colC(L,x,s*4.55,.16);}
-  const HG='#5fbf74';for(const s of[-1,1])box(st,58.6,1.1,.9,HG,-109.6,0,s*26.6,{ol:.03});box(st,.9,1.1,54.1,HG,-139.35,0,0,{ol:.03});
-  col(L,-141,-82,-80.4,-26.15);col(L,-141,26.15,-80.4,82);col(L,-141,-26.15,-138.9,26.15);
+  laneRoad(L,st,-84,laneEnd(),[-91,-104,-118,-132,-146,-160,-174]);
   for(const s of[-1,1]){box(st,.32,4.6,.32,'#ffffff',-84.6,0,s*4.45,{ol:.03});sph(st,.3,'#ffd45c',-84.6,4.85,s*4.45,{ws:10,hs:8});colC(L,-84.6,s*4.45,.25);}
   box(st,.26,1.05,9.5,'#ff7aa8',-84.6,4.0,0,{ol:.03});
   const sg=signPlane('🏡 Friends Lane',6.8,.82,'#ff7aa8','#ffffff');sg.position.set(-84.45,4.52,0);sg.rotation.y=Math.PI/2;L.g.add(sg);
-  L.lane=[];
-  for(const p of LANE_PLOTS){const j=p.j,P2=(x,z)=>lotPt(j,x,z),ry=p.s<0?0:Math.PI;
-    const F=(a,b,c,d)=>{const A=P2(a,b),B=P2(c,d);fence(st,A[0],A[1],B[0],B[1],L);};
-    F(-21.6,-8.2,-17.9,-8.2);F(-16.1,-8.2,-12.4,-8.2);F(-21.6,-8.2,-21.6,-11.3);F(-12.4,-8.2,-12.4,-11.3);
-    for(let i=0;i<4;i++){const [x,z]=P2(-17,-8.8-i*.72);disc(st,.42,'#e9e0f7',x,.03,z,{seg:16});}
-    for(const bx of[-19.8,-14.2]){const [x,z]=P2(bx,-10.6);flowerBed(st,x,z,3,.9);}
-    {const [x,z]=P2(-15.4,-7.6);mailbox(st,x,z,ry);colC(L,x,z,.25);}
-    const [sx,sz]=P2(-20.4,-7.6);box(st,.14,1.25,.14,'#9a6a43',sx,0,sz,{ol:.02});box(st,2.35,.95,.12,'#ffffff',sx,1.1,sz,{ol:.03});colC(L,sx,sz,.15);
-    const g=new THREE.Group();L.g.add(g);const [hx,hz]=P2(-17,-15),A=P2(-21.6,-18.6),B=P2(-12.4,-11.4),[ix,iz]=P2(-17,-10.5),[ox,oz]=P2(-17,-9.4);
-    L.lane.push({j,X:p.X,s:p.s,g,hx,hz,ry,sx,sz:sz+(p.s<0?.07:-.07),col:{x1:Math.min(A[0],B[0]),z1:Math.min(A[1],B[1]),x2:Math.max(A[0],B[0]),z2:Math.max(A[1],B[1])},
-      door:[ox,oz,p.s<0?Math.PI:0],sign:null,key:null});
-    inter(L,{x:ix,z:iz,r:3.0,icon:()=>laneIcon(j),label:()=>laneLabel(j),act:()=>laneDoor(j),when:()=>!!LANE.own[j]});}
-}
+  /* the end of the lane (a barrier and a hedge) moves along when the lane grows */
+  const e=new THREE.Group();L.g.add(e);box(e,.4,.9,8.4,'#ffffff',.2,0,0,{ol:.03});for(let k=-3;k<=3;k+=2)box(e,.42,.3,.9,'#ff6b6b',.2,.45,k,{ol:false});box(e,.9,1.1,54.1,'#5fbf74',-1.35,0,0,{ol:.03});bake(e,true);
+  L.laneE=e;L.laneC=[{z1:-82,x2:-80.4,z2:-26.15},{z1:26.15,x2:-80.4,z2:82},{z1:-26.15,z2:26.15},{z1:-4.2,z2:4.2}];L.cols.push(...L.laneC);laneEndSet(L);
+  L.lane=[];for(const p of LANE_PLOTS)laneLot(L,st,p);
+  buildYard(L);}
+function laneEndSet(L){const x=laneEnd(),[a,b,c,d]=L.laneC;L.laneE.position.x=x;a.x1=b.x1=c.x1=x-3;c.x2=x-.9;d.x1=x;d.x2=x+.4;L.bounds.x1=x-1;}
+/* a piece of the lane from xa to xb (xb is further west): road, pavements, hedges and street lamps */
+function laneRoad(L,g,xa,xb,lamps){const ROAD='#8c90b4',SIDE='#f3e7df',CURB='#ddcdd0',cx=(xa+xb)/2,len=xa-xb,hx=xa>-85?-80.3:xa-.9;
+  flat(g,len,8,ROAD,cx,.02,0);
+  for(const s of[-1,1]){flat(g,len,3,SIDE,cx,.03,s*5.5);box(g,len,.08,.14,CURB,cx,0,s*4,{ol:.015});box(g,hx-xb+.9,1.1,.9,'#5fbf74',(hx+xb-.9)/2,0,s*26.6,{ol:.03});}
+  for(let t=xb+2;t<=xa-1;t+=3.2)box(g,1.4,.012,.16,'#ffffff',t,.03,0,{ol:false});
+  for(const x of lamps)for(const s of[-1,1]){lampPost(g,x,s*4.55);colC(L,x,s*4.55,.16);}}
+/* what every lot has: a front fence, a little path, a mailbox and a sign. A house, flower beds and a name come with an owner */
+function laneLot(L,g,p){const j=p.j,P2=(x,z)=>lotPt(j,x,z),ry=p.s<0?0:Math.PI;
+  const F=(a,b,c,d)=>{const A=P2(a,b),B=P2(c,d);fence(g,A[0],A[1],B[0],B[1],L);};
+  F(-21.6,-8.2,-17.9,-8.2);F(-16.1,-8.2,-12.4,-8.2);F(-21.6,-8.2,-21.6,-11.3);F(-12.4,-8.2,-12.4,-11.3);
+  for(let i=0;i<4;i++){const [x,z]=P2(-17,-8.8-i*.72);disc(g,.42,'#e9e0f7',x,.03,z,{seg:16});}
+  {const [x,z]=P2(-15.4,-7.6);mailbox(g,x,z,ry);colC(L,x,z,.25);}
+  const [sx,sz]=P2(-20.4,-7.6);box(g,.14,1.25,.14,'#9a6a43',sx,0,sz,{ol:.02});box(g,2.35,.95,.12,'#ffffff',sx,1.1,sz,{ol:.03});colC(L,sx,sz,.15);
+  const lg=new THREE.Group();L.g.add(lg);const [hx,hz]=P2(-17,-15),A=P2(-21.6,-18.6),B=P2(-12.4,-11.4),[ix,iz]=P2(-17,-10.5),[ox,oz]=P2(-17,-9.4);
+  L.lane.push({j,X:p.X,s:p.s,g:lg,hx,hz,ry,sx,sz:sz+(p.s<0?.07:-.07),col:{x1:Math.min(A[0],B[0]),z1:Math.min(A[1],B[1]),x2:Math.max(A[0],B[0]),z2:Math.max(A[1],B[1])},
+    door:[ox,oz,p.s<0?Math.PI:0],sign:null,key:null});
+  inter(L,{x:ix,z:iz,r:3.0,icon:()=>laneIcon(j),label:()=>laneLabel(j),act:()=>laneDoor(j),when:()=>!!LANE.own[j]});}
+/* more friends than lots: two more lots appear at the end of the lane (with road, hedges and a street lamp). You always get one */
+function laneGrow(mine){const L=LOC.city;if(LANE_PLOTS.length>=LANE_MAX+(mine?2:0))return false;
+  const xa=laneEnd(),X=LANE_PLOTS[LANE_PLOTS.length-1].X-14,g=new THREE.Group();L.g.add(g);
+  for(const s of[-1,1]){const p={j:LANE_PLOTS.length,X,s};LANE_PLOTS.push(p);laneLot(L,g,p);}
+  const xb=laneEnd();laneRoad(L,g,xa,xb,[xb+6]);bake(g,true);
+  g.add(glowMesh(glowGeo([-1,1].flatMap(s=>[[xb+6,3.21,s*4.55,.8,[.5,.38,.18]],[xb+6,.1,s*4.55,4.4,4.4,[.3,.23,.11]]]))));
+  laneEndSet(L);return true;}
+/* 🌸 the Flower Corner: where your house stood in town before it moved to Friends Lane. A garden to look at over a low fence */
+function flowerCorner(L,st){const x1=-23.4,x2=-10.6,z1=-24.5,z2=-7.0,HG='#5fbf74',r=seeded(31);
+  flat(st,x2-x1,z2-z1,'#a2e48a',(x1+x2)/2,.012,(z1+z2)/2);
+  fence(st,x1,z2,x2,z2);for(const x of[x1,x2])box(st,.7,.8,z2-z1+.35,HG,x,0,(z1+z2-.35)/2,{ol:.03});box(st,x2-x1,.8,.7,HG,(x1+x2)/2,0,z1,{ol:.03});
+  tree(st,-20.2,-18.6,1.1);bench(st,-17.4,-15.6,0);
+  for(const [x,z] of [[-17,-7.9],[-17.35,-9.25],[-16.95,-10.6],[-17.3,-11.95],[-17.05,-13.3],[-17.35,-14.6]])disc(st,.36,'#e9e0f7',x,.03,z,{seg:14});
+  {const x=-13.4,z=-16.4;cyl(st,.1,.14,.75,'#e9e0f7',x,0,z,{seg:10,ol:.015});cyl(st,.46,.3,.15,'#e9e0f7',x,.75,z,{seg:16,ol:.015});disc(st,.38,'#9fd8f2',x,.905,z,{seg:16});}
+  for(const [x,z,R] of [[-21.2,-9.7,1.1],[-12.8,-9.7,1.1],[-12.9,-21.6,1.2],[-21.3,-22.3,1.0],[-15.5,-20.2,.9]]){sph(st,R,'#6cc97c',x,0,z,{s:[1,.32,1],ws:12,hs:6});
+    for(let k=0;k<Math.round(R*13);k++){const a=r()*TAU,d=Math.sqrt(r())*R*.8;sph(st,.09,FLOWER_COLS[k%5],x+Math.cos(a)*d,.2+(1-d/R)*.12+R*.06,z+Math.sin(a)*d,{ws:6,hs:4,ol:false});}}
+  for(const [x,z] of [[-22.2,-13.8],[-11.8,-13.4]]){const c='#5fbf74';sph(st,.6,c,x,.4,z,{ws:10,hs:8});sph(st,.45,c,x+.45,.32,z+.2,{ws:10,hs:8});sph(st,.42,c,x-.35,.3,z-.25,{ws:10,hs:8});}
+  for(const x of[-22.05,-19.95])box(st,.1,1.55,.1,'#ffffff',x,0,-7.3,{ol:.015});box(st,2.3,.62,.08,'#ffffff',-21,1.05,-7.3,{ol:.02});
+  const sg=signPlane('🌸 Flower Corner',2.15,.5,'#ff9ec4','#ffffff');sg.position.set(-21,1.36,-7.25);L.g.add(sg);
+  col(L,x1-.45,z1-.45,x2+.45,-6.85);}   /* nobody stands inside (see YARDR) */
+/* 🌱 your yard on Friends Lane: the garden behind your house, its gate, the back door, the mailbox and the "Bigger house!" sign.
+   It is built once at the old town-yard spots (the same numbers old saves use) and put on your lot; it moves along if your lot changes */
+const YARD={g:null,gin:null,cols:[],wc:[],ints:[],on:false,j:null,plaque:null};
+function buildYard(L){const g=new THREE.Group(),gin=new THREE.Group(),st=new THREE.Group(),FL={cols:YARD.cols,ox:0,oz:0};
+  gin.position.set(17,0,15);g.add(gin);gin.add(st);L.g.add(g);g.visible=false;YARD.g=g;YARD.gin=gin;
+  flat(st,12.3,6.0,'#a2e48a',-16.75,.012,-21.55);
+  fence(st,-23,-18.5,-23,-24.6,FL);fence(st,-23,-24.6,-10.5,-24.6,FL);fence(st,-10.5,-24.6,-10.5,-18.5,FL);fence(st,-23,-18.5,-21.6,-18.5,FL);
+  /* the garden gate is beside the house, under a little arch; stepping stones lead there from the street */
+  for(const x of[-12.32,-10.58]){box(st,.12,2.05,.12,'#ffffff',x,0,-18.5,{ol:.02});colC(FL,x,-18.5,.1);}box(st,1.9,.12,.16,'#ffffff',-11.45,1.98,-18.5,{ol:.02});box(st,1.62,.5,.06,'#ffffff',-11.45,2.05,-18.5,{ol:.02});
+  const gs=signPlane('🌱 My Garden',1.5,.42,'#5fd4b0','#ffffff'),gb=new THREE.Mesh(gs.geometry,gs.material);gs.position.set(-11.45,2.3,-18.455);gb.position.set(-11.45,2.3,-18.545);gb.rotation.y=Math.PI;gin.add(gs,gb);   /* readable from both sides */
+  for(let k=0;k<8;k++)disc(st,.36,'#e9e0f7',-11.45,.03,-7.6-k*1.4,{seg:14});
+  doorAt(st,-14,-18.52,Math.PI,'#5fd4b0');
+  L.plots=[];for(const [i,x,z] of [[0,-21,-20.9],[1,-18.3,-20.9],[2,-15.6,-20.9],[3,-21,-23.0],[4,-18.3,-23.0],[5,-15.6,-23.0]]){box(st,1.8,.16,1.2,'#b07a52',x,0,z,{ol:.02});col(FL,x-.92,z-.62,x+.92,z+.62);L.plots.push({i,x,z});}
+  box(st,1.6,2.0,1.4,'#ffd6e0',-11.9,0,-23.3);prism(st,1.9,1.8,.75,'#ff7aa8',-11.9,2.0,-23.3,{ry:Math.PI/2});box(st,.06,1.6,.8,'#5fd4b0',-12.73,0,-23.3,{ol:.015});col(FL,-12.8,-24.05,-11.0,-22.55);
+  box(st,.8,.45,.5,'#c98f5e',-13.4,0,-23.95);for(let k=0;k<4;k++)box(st,.14,.2,.04,['#ff7aa8','#ffd45c','#5fd4b0','#ff8a6b'][k],-13.7+k*.2,.45,-23.95,{rx:-.2,ol:.01});col(FL,-13.85,-24.25,-12.95,-23.65);
+  const ss=signPlane('🌱 Seeds',1.0,.34,'#ffffff','#3d2c5e');ss.position.set(-12.77,1.75,-23.3);ss.rotation.y=-Math.PI/2;gin.add(ss);
+  cyl(st,.14,.16,.28,'#7cc8ff',-22.4,0,-19.3,{seg:12,ol:.015});cone(st,.04,.3,'#7cc8ff',-22.25,.25,-19.3,{rz:-1.0,seg:6,ol:.012});
+  const pq=signPlane('Bigger house!',1.4,.36,'#ff7aa8','#ffffff');pq.position.set(-20.4,.8,-7.53);gin.add(pq);YARD.plaque=pq;   /* under your name sign, until you buy the big house */
+  bake(st,true);
+  const yi=(x,z,o)=>yardInt(inter(L,Object.assign({x,z},o)));
+  yi(-14,-19.3,{r:1.9,icon:'🏠',label:'Go inside your house',act:()=>enter('home','back')});
+  yi(-13.4,-23.15,{r:1.8,icon:'🌱',label:'Buy seeds',act:()=>openShop('seeds')});
+  yi(-15.4,-7.1,{r:1.8,icon:'📬',label:'Check your mail',act:checkMail});
+  yi(-20.4,-6.8,{r:1.7,icon:'🏡',label:()=>S.bighouse?'Your big house!':'Bigger house',act:()=>openBigHouse()});}
+/* a spot to use in your yard (given at the old town-yard spot): it moves with the yard. b = a flower bed that moves along */
+function yardInt(t,b){t.tx=t.x;t.tz=t.z;if(t.rect)t.trect=t.rect;if(b){b.tx=b.x;b.tz=b.z;t.bed=b;}t.when=()=>YARD.on;YARD.ints.push(t);if(YARD.j!=null)yardT(t,YARD.j);return t;}
+function yardT(t,j){[t.x,t.z]=lotPt(j,t.tx,t.tz);if(t.trect)t.rect=lotRect(j,t.trect);if(t.bed)[t.bed.x,t.bed.z]=lotPt(j,t.bed.tx,t.bed.tz);}
+const yardPt=(x,z)=>YARD.j==null?[x,z]:lotPt(YARD.j,x,z);
+/* put your yard on your lot: at the start, and when your lot changes (a friend who has lived on Friends Lane longer came online) */
+function yardPlace(){const j=LANE.mine,C=LOC.city;if(j==null||!YARD.g||j===YARD.j)return;const p=LANE_PLOTS[j],a=YARD.j,[cx,cz]=lotPt(j,-17,-15);
+  YARD.g.position.set(cx,0,cz);YARD.g.rotation.y=p.s<0?0:Math.PI;YARD.g.visible=true;
+  for(const c of YARD.wc){const i=C.cols.indexOf(c);if(i>=0)C.cols.splice(i,1);}
+  YARD.wc=YARD.cols.map(c=>{if(c.cr===undefined)return lotRect(j,c);const q=lotPt(j,c.cx,c.cz);return{cx:q[0],cz:q[1],cr:c.cr};});C.cols.push(...YARD.wc);
+  YARD.j=j;YARD.on=true;for(const t of YARD.ints)yardT(t,j);
+  const yw=v=>p.s<0?v:v+Math.PI,d=lotPt(j,-17,-9.6),bk=lotPt(j,-14,-19.7);DOORS.home.city=[d[0],d[1],yw(Math.PI)];DOORS.homeback.city=[bk[0],bk[1],yw(0)];
+  for(const [id,x,z,dx,dz] of[['home',-17,-15,-17,-10.4],['garden',-16.75,-21.5,-11.45,-17.6]]){const pl=PLACES.find(q=>q.id===id);[pl.x,pl.z]=lotPt(j,x,z);pl.door=lotPt(j,dx,dz);
+    if(NAV===pl&&BEACON)BEACON.position.set(pl.door[0],0,pl.door[1]);}
+  if(a!=null)yardHop(a,j);}
+/* your lot changed while playing: pets waiting in your yard (and you, if you stand in it) move along to the same spot */
+function yardHop(a,b){const mv=(x,z)=>{const q=lotBack(a,x,z);return inYardR(q[0],q[1])?lotPt(b,q[0],q[1]):null;},o=LANE_PLOTS[a];
+  for(const p of PET_ACTORS)if(p.loc==='city'){const q=mv(p.x,p.z),t=mv(p.tx,p.tz);if(q)[p.x,p.z]=q;if(t)[p.tx,p.tz]=t;}
+  if(!CUR||CUR.id!=='city')return;const q=mv(P.x,P.z),near=Math.hypot(P.x-o.X,P.z-o.s*15)<30;
+  if(q){[P.x,P.z]=q;if(o.s!==LANE_PLOTS[b].s)P.yaw+=Math.PI;bringFollowers(true);}
+  if(q||near)toast('🏡 Your house moved to a new spot on Friends Lane!',3.4);}
+/* a spot in your own yard is saved as the old town-yard spot (like old saves), so it stays in YOUR yard whichever lot is yours */
+function toSave(loc,x,z){if(loc==='city'&&LANE.mine!=null){const q=lotBack(LANE.mine,x,z);if(inYardR(q[0],q[1]))return q;}return[x,z];}
+function fromSave(loc,x,z){return loc==='city'&&LANE.mine!=null&&inYardR(x,z)?lotPt(LANE.mine,x,z):[x,z];}
 /* 🏠 a friend's house, inside: rebuilt from what their furniture looks like right now */
 const VOX=2700;
 function buildVisit(){const L=makeLoc('visit','in',VOX,0,[-6,-5,6,5]);L.wallM=toon({color:'#ffd6e0'});L.floorM=toon({map:floorTex('wood')});L.fk='wood';
@@ -2479,6 +2526,7 @@ function snap(){let loc=CUR?CUR.id:'city',x=P.x,z=P.z,yaw=P.yaw;
   if(loc==='client'){const hid=S.ds&&((S.ds.o&&S.ds.o.h)||S.ds.prevH),H=hid&&HOUSE(hid);if(H){loc='city';x=H.x+Math.sin(H.ry)*1.7;z=H.z+Math.cos(H.ry)*1.7;yaw=H.ry+Math.PI;}else loc='studio';}
   if(loc==='visit'){const d=laneHostDoor();loc='city';x=d[0];z=d[1];yaw=d[2];}
   if(loc==='studio'||!LOC[loc]||!isFinite(x)||!isFinite(z)){loc='city';x=-17;z=-4.6;yaw=0;}
+  {const q=toSave(loc,x,z);if(q[0]!==x&&LANE_PLOTS[LANE.mine].s>0)yaw-=Math.PI;x=q[0];z=q[1];}   /* in your yard: saved as the old town-yard spot (startGame turns it back) */
   S.loc=loc;S.px=x;S.pz=z;S.yaw=yaw;S.t=Date.now();}
 function safeSpot(loc){const L=LOC[loc];if(!L||loc==='studio')return null;const b=L.bounds;if(!isFinite(P.x)||!isFinite(P.z)||P.x<b.x1||P.x>b.x2||P.z<b.z1||P.z>b.z2){
   if((L.type==='in'||loc==='beach')&&DOORS[loc]){const d=DOORS[loc].inside;P.x=L.ox+d[0];P.z=L.oz+d[1];P.yaw=d[2];}else{P.x=-17;P.z=-4.6;P.yaw=0;}}return loc;}
@@ -2585,13 +2633,13 @@ function bumpLevel(k,n=1){if(!S||!SKILLS[k])return;const s=sk(k);for(let i=0;i<n
   s.xp=0;if(s.lv>=MAXLV)s.xp=0;SFX.yay();setTimeout(()=>toast(SKILLS[k].i+' '+SKILLS[k].n+' is now level '+s.lv+'! ⭐',3.6),300);
   floatText('⭐',P.x-Math.sin(P.yaw)*1.4,1.9,P.z-Math.cos(P.yaw)*1.4,{h:.6});change();}
 const CD={};function cool(k,s){const t=performance.now();if(CD[k]&&t-CD[k]<s*1000)return false;CD[k]=t;return true;}
-/* ---- your backyard garden ---- */
+/* ---- your backyard garden (behind your house on Friends Lane; it is part of your yard, see buildYard) ---- */
 const PLOTS=[];let PLANT=null;
 function plotStage(st){if(!st||!st.seed)return -1;if(st.g>=1)return 3;if(st.g>=.5)return 2;if(st.g>=.12)return 1;return 0;}
 function gardenInit(){S.garden=S.garden||[];for(let i=0;i<6;i++)S.garden[i]=S.garden[i]||{};
-  if(!PLOTS.length){const L=LOC.city;for(const pl of L.plots){const soilM=toon({color:'#7a5236'});const soil=new THREE.Mesh(new THREE.BoxGeometry(1.6,.05,1.0),soilM);soil.position.set(pl.x,.15,pl.z);soil.receiveShadow=true;L.dyn.add(soil);
-    const grp=new THREE.Group();grp.position.set(pl.x,.175,pl.z);L.dyn.add(grp);const rec={pl,soil,soilM,grp,key:'',icon:null,iconK:''};
-    rec.target={x:pl.x,z:pl.z,r:1.6,rect:{x1:pl.x-.92,z1:pl.z-.62,x2:pl.x+.92,z2:pl.z+.62},obj:grp,icon:'🌱',label:()=>plotLabel(rec),act:()=>usePlot(rec)};L.inter.push(rec.target);PLOTS.push(rec);}}
+  if(!PLOTS.length){const L=LOC.city,G=YARD.gin;for(const pl of L.plots){const soilM=toon({color:'#7a5236'});const soil=new THREE.Mesh(new THREE.BoxGeometry(1.6,.05,1.0),soilM);soil.position.set(pl.x,.15,pl.z);soil.receiveShadow=true;G.add(soil);
+    const grp=new THREE.Group();grp.position.set(pl.x,.175,pl.z);G.add(grp);const rec={pl,soil,soilM,grp,key:'',icon:null,iconK:''};
+    rec.target={x:pl.x,z:pl.z,r:1.6,rect:{x1:pl.x-.92,z1:pl.z-.62,x2:pl.x+.92,z2:pl.z+.62},obj:grp,icon:'🌱',label:()=>plotLabel(rec),act:()=>usePlot(rec)};L.inter.push(rec.target);yardInt(rec.target);PLOTS.push(rec);}}
   for(const r of PLOTS)plotRefresh(r);}
 function plotLabel(rec){const st=S.garden[rec.pl.i];if(!st.seed)return'Plant seeds';const K=SEEDS[st.seed];if(st.g>=1)return'Pick your '+K.pl;if(st.w!==S.day)return'Water your '+K.pl;return K.n+' growing… '+Math.floor(st.g*100)+'%';}
 function buildCrop(g,seed,sg){const o={ol:.012},spots=[[-.5,-.24],[0,-.24],[.5,-.24],[-.5,.24],[0,.24],[.5,.24]],G='#5fbf74',G2='#4fae64';
@@ -2609,22 +2657,22 @@ function buildCrop(g,seed,sg){const o={ol:.012},spots=[[-.5,-.24],[0,-.24],[.5,-
   }}
 function plotRefresh(rec){const st=S.garden[rec.pl.i]||{};rec.soilM.color.set(st.seed&&st.w===S.day?'#4a3020':'#7a5236');
   const sg=plotStage(st),key=sg+':'+(st.seed||'');
-  if(key!==rec.key){rec.key=key;while(rec.grp.children.length){const c=rec.grp.children[0];rec.grp.remove(c);c.traverse(o=>{if(o.geometry)o.geometry.dispose();});}if(sg>=0)buildCrop(rec.grp,st.seed,sg);rec.grp.traverse(o=>{if(o.isMesh&&o.material.side!==THREE.BackSide)o.castShadow=true;});}
+  if(key!==rec.key){rec.key=key;while(rec.grp.children.length){const c=rec.grp.children[0];rec.grp.remove(c);c.traverse(o=>{if(o.geometry)o.geometry.dispose();});}if(sg>=0){buildCrop(rec.grp,st.seed,sg);bake(rec.grp,true);}}   /* one piece per bed (few draw calls: the garden is in view all down Friends Lane) */
   const need=!st.seed?'':st.g>=1?'✨':st.w!==S.day?'💧':'';
-  if(need!==rec.iconK){rec.iconK=need;if(rec.icon){LOC.city.dyn.remove(rec.icon);rec.icon=null;}if(need){const s=label(need,.42,{bg:null,bw:0,pad:4});s.position.set(rec.pl.x,1.25,rec.pl.z);LOC.city.dyn.add(s);rec.icon=s;}}
+  if(need!==rec.iconK){rec.iconK=need;if(rec.icon){YARD.gin.remove(rec.icon);rec.icon=null;}if(need){const s=label(need,.42,{bg:null,bw:0,pad:4});s.position.set(rec.pl.x,1.25,rec.pl.z);YARD.gin.add(s);rec.icon=s;}}
   rec.target.icon=!st.seed?'🌱':st.g>=1?'🧺':st.w!==S.day?'💧':'🌿';}
 function usePlot(rec){const st=S.garden[rec.pl.i];
   if(!st.seed){const have=Object.keys(SEEDS).filter(k=>S.bag['seed_'+k]>0);if(!have.length){SFX.no();toast('You need seeds! Buy some at the seed box by the shed. 🌱',3.2);return;}
     PLANT=rec;openPanel(`<div class="hd"><h2>🌱 Plant seeds</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div><p class="note">What do you want to grow?</p><div class="grid" style="margin-top:8px">${have.map(k=>`<button class="it" data-a="plant:${k}"><span class="em">${SEEDS[k].i}</span><span>${SEEDS[k].n}</span><span class="have">×${S.bag['seed_'+k]}</span></button>`).join('')}</div>`);return;}
   if(st.g>=1)return harvest(rec);
-  if(st.w!==S.day){st.w=S.day;SFX.splash();for(let i=0;i<4;i++)setTimeout(()=>floatText('💧',rec.pl.x+rand(-.6,.6),.7,rec.pl.z+rand(-.3,.3),{h:.4}),i*120);toast('Glug glug! Now your plants can grow. 💧',2.6);addXP('garden',3);qEvent('water');qEvent('waterplot');plotRefresh(rec);change();return;}
+  if(st.w!==S.day){st.w=S.day;SFX.splash();const [wx,wz]=yardPt(rec.pl.x,rec.pl.z);for(let i=0;i<4;i++)setTimeout(()=>floatText('💧',wx+rand(-.6,.6),.7,wz+rand(-.3,.3),{h:.4}),i*120);toast('Glug glug! Now your plants can grow. 💧',2.6);addXP('garden',3);qEvent('water');qEvent('waterplot');plotRefresh(rec);change();return;}
   toast(SEEDS[st.seed].i+' Growing… '+Math.floor(st.g*100)+'%. Come back a bit later!',2.6);}
 function plantSeed(k){const rec=PLANT;if(!rec||!S.bag['seed_'+k])return;S.bag['seed_'+k]--;S.garden[rec.pl.i]={seed:k,g:0,w:0};PLANT=null;closePanel();SFX.pop();qEvent('plant:'+k);
   toast('You planted '+SEEDS[k].n.toLowerCase()+' seeds! Now give them water. 💧',3);addXP('garden',2);qEvent('plant');plotRefresh(rec);change();}
 function harvest(rec){const st=S.garden[rec.pl.i],K=SEEDS[st.seed];qEvent('harvest:'+st.seed);
   if(K.furn){S.home.store.push({u:uid(),t:K.furn,c:FURN[K.furn].cols?pick(FURN[K.furn].cols):null,x:0,z:0,r:0});toast(K.i+' You picked '+K.pl+'! A pot of them is waiting in 📦 My stuff at home.',3.6);}
   else{const [id,n]=K.yield;S.bag[id]=(S.bag[id]||0)+n;toast('🧺 You picked '+(n>1?n+' '+K.pl:'a '+K.pl)+'! '+K.i+' They\'re in your bag.',3.4);}
-  S.garden[rec.pl.i]={};SFX.yay();floatText(K.i,rec.pl.x,1.1,rec.pl.z,{h:.6});addXP('garden',5);qEvent('harvest');plotRefresh(rec);change();}
+  S.garden[rec.pl.i]={};SFX.yay();const [wx,wz]=yardPt(rec.pl.x,rec.pl.z);floatText(K.i,wx,1.1,wz,{h:.6});addXP('garden',5);qEvent('harvest');plotRefresh(rec);change();}
 function updGarden(dt){if(!S||!S.garden||!PLOTS.length)return;for(const rec of PLOTS){const st=S.garden[rec.pl.i];if(!st||!st.seed||st.g>=1||st.w!==S.day)continue;
   const before=plotStage(st);st.g=Math.min(1,st.g+dt/HOUR/SEEDS[st.seed].h);
   if(st.g>=1){toast('🧺 Your '+SEEDS[st.seed].rd+' ready to pick!',3.4);SFX.yay();change();}
@@ -2780,7 +2828,7 @@ function renderTasks(){const el=$('tasks');el.hidden=true;return;const left=TASK
 const FRIENDS=[
   {id:'rosie',name:'Rosie',look:{skin:'#ffd9bd',hair:'#e8734a',style:'pigtails',top:'#ff9ec4',bottom:'#6f7dff',shoes:'#ffffff',dress:true,scale:.95},fav:'cake',home:33,
     hello:"Hi! You must be new here! I'm Rosie.",
-    lines:["Do you like cake? I LOVE cake. Strawberry is the best!","The fountain in the park sparkles at night. So pretty!","I'm learning to ride my bike. I only fell twice today!","Your house is so purple! I love it.","Have you met Theo? He knows everything about dinosaurs."]},
+    lines:["Do you like cake? I LOVE cake. Strawberry is the best!","The fountain in the park sparkles at night. So pretty!","I'm learning to ride my bike. I only fell twice today!","Your house on Friends Lane is so cute! I love it.","Have you met Theo? He knows everything about dinosaurs."]},
   {id:'theo',name:'Theo',look:{skin:'#c98d63',hair:'#2e2347',style:'short',top:'#5fd4b0',bottom:'#3f4c86',shoes:'#ff7aa8',scale:.97},fav:'pizza',home:31,
     hello:"Oh, hey! I'm Theo. Did you know some dinosaurs had feathers?",
     lines:["Pizza is the best food. Extra cheese!","I'm building a robot at home. It can almost wave!","A T. rex had teeth as big as bananas!","The pet shop has a puppy that does a little spin!","Let's race to the fountain sometime!"]},
@@ -2872,13 +2920,13 @@ function nearMe(e,n,front){const sd=n%2?-1:1,b=P.yaw+Math.PI,f=fOff(front?n-1:n)
 class Pet{
   constructor(d){this.d=d;this.m=makePet(d.type,d.col);addOutfit(this.m,d);this.g=this.m.root;scene.add(this.g);
     const tg=label(d.name,.24);tg.position.y={bunny:1.0,hamster:.55}[d.type]||.82;this.g.add(tg);this.tag=tg;
-    this.x=d.x;this.z=d.z;this.loc=d.loc;this.face=0;this.moving=false;this.r=.25;this.wt=0;this.tx=d.x;this.tz=d.z;
+    [this.x,this.z]=fromSave(d.loc,d.x,d.z);this.loc=d.loc;this.face=0;this.moving=false;this.r=.25;this.wt=0;this.tx=this.x;this.tz=this.z;   /* waiting in your yard: in your yard on Friends Lane */
     this.target={x:0,z:0,r:2.1,icon:PET_TYPES[d.type].icon,label:()=>'Play with '+d.name,act:()=>openPet(this),obj:this.g};}
   update(dt,idx){const d=this.d;if(this.ps)return;
     if(!d.stay){if(this.loc!==CUR.id)nearMe(this,idx);followStep(this,dt,idx);}
-    else if(this.loc===CUR.id){this.wt-=dt;if(this.wt<=0){this.wt=rand(2,6);const a=rand(0,TAU),r=rand(0,1.6);this.tx=d.sx+Math.cos(a)*r;this.tz=d.sz+Math.sin(a)*r;}
+    else if(this.loc===CUR.id){this.wt-=dt;if(this.wt<=0){this.wt=rand(2,6);const a=rand(0,TAU),r=rand(0,1.6),c=fromSave(this.loc,d.sx,d.sz);this.tx=c[0]+Math.cos(a)*r;this.tz=c[1]+Math.sin(a)*r;}
       const dx=this.tx-this.x,dz=this.tz-this.z,dd=Math.hypot(dx,dz);if(dd>.1){const s=Math.min(dd,1.1*dt);[this.x,this.z]=collideXZ(this.x+dx/dd*s,this.z+dz/dd*s,this.r,CUR);this.face=Math.atan2(dx,dz);this.moving=true;}else this.moving=false;}
-    d.happy=Math.max(0,d.happy-dt/HOUR*2);d.loc=this.loc;d.x=this.x;d.z=this.z;
+    d.happy=Math.max(0,d.happy-dt/HOUR*2);d.loc=this.loc;[d.x,d.z]=toSave(this.loc,this.x,this.z);
     this.g.visible=this.loc===CUR.id;this.g.position.set(this.x,hopY(this,dt),this.z);this.g.rotation.y=angLerp(this.g.rotation.y,this.face,Math.min(1,dt*8));
     animPet(this.m,dt,this.moving,d.stay?1:this.spd);this.target.x=this.x;this.target.z=this.z;this.tag.visible=Math.hypot(P.x-this.x,P.z-this.z)>1.3;}
 }
@@ -3152,37 +3200,45 @@ function mpSay(m,e){if(!MP.grp)return;const say={id:(++MP.said)+'-'+(Date.now()%
 const PLACE_OF={city:'📍 In town',home:'🏠 At home',studio:'👗 Changing clothes',market:'🍎 At the Market',cafe:'☕ At the Café',pets:'🐾 At the Pet Shop',flowers:'🌷 At the Flower shop',clothes:'👗 At the Clothing store',toys:'🧸 At the Toy Store',bakery:'🥐 At the Bakery',icecream:'🍦 At the Ice Cream shop',library:'📚 At the Library',school:'🏫 At School',fire:'🚒 At the Fire Station'};
 /* ===================== 🏡 Friends Lane: everyone gets a house, and you can visit if they let you in ===================== */
 PLACE_OF.beach='🏖️ At the Beach';
-const LANE={own:[null,null,null,null,null,null],slotOf:new Map(),via:null,nextVia:null,t:9};
+const LANE={own:[],slotOf:new Map(),mine:null,t:9,free:null};   /* mine: your lot (always there, also when you play alone) */
 const VIS={host:null,nm:'',id:'',st:'',t:0,hm:'',seenHome:false,away:0};
 const HOST={seen:new Set(),queue:[],cur:null,an:null,until:0,ct:0};
 const LANE_PAL=[['#ffd6e0','#ff7aa8'],['#c9f2e3','#5fa8ff'],['#fff1b8','#ff8a6b'],['#e6dbff','#9b7cf0'],['#d9e8ff','#ff9ec4'],['#ffe0c4','#5fd4b0']];
 function hashStr(s){let h=5381;for(let i=0;i<s.length;i++)h=((h*33)^s.charCodeAt(i))>>>0;return h;}
 function laneMe(){return MP.me||'me';}
-/* every player (you too) gets a lot, picked from their name; whoever joined first keeps a lot if two names want the same one */
-function laneAssign(){const list=[{k:laneMe(),nm:cleanName(S.name||'Friend'),jt:MP.jt||0,big:!!S.bighouse}];
+/* every player (you too) gets a lot, picked from their name; if two names want the same lot, whoever came first (jt) keeps it.
+   jt is when you first lived on Friends Lane (saved), so the same friend keeps the same lot day after day.
+   Lots 0-5 use exactly the old versions' rule (they only know those 6); when they are full, lots 6-11 the same way, then more lots */
+function laneAssign(){const me=laneMe(),list=[{k:me,nm:cleanName(S.name||'Friend'),jt:MP.jt||0,big:!!S.bighouse}];
   for(const a of MP.peers.values())list.push({k:a.peer,nm:a.nm,jt:Number.isFinite(a.jt)?a.jt:9e15,big:!!a.bh});
   list.sort((a,b)=>a.jt-b.jt||(a.k<b.k?-1:a.k>b.k?1:0));
-  const own=[null,null,null,null,null,null],slot=new Map();
-  for(const p of list){let j=hashStr(p.nm.toLowerCase())%6,t=0;while(own[j]&&t<6){j=(j+1)%6;t++;}if(own[j])continue;own[j]=p;slot.set(p.k,j);}
+  const own=[],slot=new Map(),take=(b,h)=>{let j=b+h%6,t=0;while(own[j]&&t<6){j=b+(j-b+1)%6;t++;}return own[j]?-1:j;};
+  for(const p of list){const h=hashStr(p.nm.toLowerCase());let j=take(0,h);if(j<0)j=take(6,h);
+    if(j<0){j=12;while(own[j])j++;if(j>=LANE_MAX&&p.k!==me)continue;}
+    own[j]=p;slot.set(p.k,j);}
   return{own,slot};}
 function laneRefresh(force){const C=LOC.city;if(!C||!C.lane||typeof S==='undefined'||!S)return;const r=laneAssign();LANE.slotOf=r.slot;
-  for(const lp of C.lane){const o=r.own[lp.j];LANE.own[lp.j]=o;const key=o?[o.k===laneMe()?'ME':o.k,o.nm,o.big?1:0].join('|'):'';if(key!==lp.key||force){lp.key=key;laneHouse(lp,o);}}}
+  const m=r.slot.get(laneMe());while(C.lane.length<r.own.length&&laneGrow(m>=C.lane.length));   /* more players than lots: more lots appear */
+  LANE.own=C.lane.map(lp=>r.own[lp.j]||null);
+  for(const lp of C.lane){const o=LANE.own[lp.j];const key=o?[o.k===laneMe()?'ME':o.k,o.nm,o.big?1:0].join('|'):'';if(key!==lp.key||force){lp.key=key;laneHouse(lp,o);}}
+  if(m!=null&&m!==LANE.mine){LANE.mine=m;yardPlace();}}
 function laneHouse(lp,o){const C=LOC.city;for(const c of [...lp.g.children])lp.g.remove(c);
   const ci=C.cols.indexOf(lp.col);if(ci>=0)C.cols.splice(ci,1);
   const pal=o?LANE_PAL[hashStr(o.nm.toLowerCase())%LANE_PAL.length]:null;
-  const sg=signPlane(o?o.nm+"'s house":'For a friend 💛',2.2,.8,o?pal[1]:'#ffffff',o?'#ffffff':'#ff7aa8');sg.position.set(lp.sx,1.575,lp.sz);sg.rotation.y=lp.ry;lp.g.add(sg);
+  let sg;if(o)sg=signPlane(o.nm+"'s house",2.2,.8,pal[1],'#ffffff');else{const f=LANE.free||(LANE.free=signPlane('For a friend 💛',2.2,.8,'#ffffff','#ff7aa8'));sg=new THREE.Mesh(f.geometry,f.material);}   /* empty lots share one sign picture */
+  sg.position.set(lp.sx,1.575,lp.sz);sg.rotation.y=lp.ry;lp.g.add(sg);
   if(!o)return;
   const big=!!o.big,hg=new THREE.Group(),opt={x:lp.hx,z:lp.hz,w:9,d:7,h:big?7.0:3.8,wall:pal[0],trim:'#ffffff',roof:pal[1],face:lp.s<0?1:-1,gable:true,rh:big?2.8:2.6,chimney:true,door:{x:lp.hx,c:'#5fd4b0'}};
-  if(big)opt.floors=2;building(hg,opt);bake(hg,true);lp.g.add(hg);C.cols.push(lp.col);
+  if(big)opt.floors=2;building(hg,opt);for(const bx of[-19.8,-14.2]){const [x,z]=lotPt(lp.j,bx,-10.6);flowerBed(hg,x,z,3,.9);}bake(hg,true);lp.g.add(hg);C.cols.push(lp.col);
   const tg=label('🏠 '+o.nm,.9);tg.position.set(lp.hx,big?10.9:7.9,lp.hz);lp.g.add(tg);}
 function laneTick(dt){LANE.t+=dt;if(LANE.t>=1){LANE.t=0;laneRefresh();}visTick(dt);}
 function laneIcon(j){const o=LANE.own[j];return o&&o.k===laneMe()?'🏠':'🔔';}
 function laneLabel(j){const o=LANE.own[j];if(!o)return'';if(o.k===laneMe())return'Go inside your house';
   return VIS.st==='knock'&&VIS.host===o.k?'Waiting for '+o.nm+'…':'Knock on '+o.nm+"'s door";}
-function laneDoor(j){const o=LANE.own[j];if(!o)return;if(o.k===laneMe()){LANE.nextVia=j;enter('home');return;}laneKnock(o.k);}
-function laneHostDoor(){const j=LANE.slotOf.get(VIS.host),C=LOC.city;return j!=null&&C&&C.lane?C.lane[j].door:[-17,-9.6,Math.PI];}
-/* a friend standing in THEIR own yard shows up in front of their house on Friends Lane */
-function citySpot(a){const j=LANE.slotOf.get(a.peer);if(j!=null&&a.rx>HOMELOT.x1&&a.rx<HOMELOT.x2&&a.rz>HOMELOT.z1&&a.rz<HOMELOT.z2){const q=lotPt(j,a.rx,a.rz);return[q[0],q[1],LANE_PLOTS[j].s<0?a.rry:a.rry+Math.PI];}return[a.rx,a.rz,a.rry];}
+function laneDoor(j){const o=LANE.own[j];if(!o)return;if(o.k===laneMe()){enter('home');return;}laneKnock(o.k);}
+function laneHostDoor(){const j=LANE.slotOf.get(VIS.host),C=LOC.city;return j!=null&&C&&C.lane&&C.lane[j]?C.lane[j].door:[-17,-4.6,0];}
+/* a friend (old version) standing in THEIR own yard in town shows up at their house on Friends Lane */
+function citySpot(a){const j=LANE.slotOf.get(a.peer);if(j!=null&&inYardR(a.rx,a.rz)){const q=lotPt(j,a.rx,a.rz);return[q[0],q[1],LANE_PLOTS[j].s<0?a.rry:a.rry+Math.PI];}return[a.rx,a.rz,a.rry];}
 /* where a friend's avatar shows up in MY game (null = not here) */
 function peerSpot(a){const me=CUR.id,VD=VOX-LOC.home.ox;
   if(a.loc==='city')return me==='city'?citySpot(a):null;
@@ -3395,8 +3451,7 @@ function setLamp(rec){rec.g.traverse(o=>{if(o.userData.shade)o.material.emissive
 function rebuildHome(){for(const u of [...HOME_ITEMS.keys()])removeHomeItem(u);for(const it of S.home.items)addHomeItem(it);WALL_M.color.set(S.home.wall);setFloor(S.home.floor);}
 /* ---- the big house: Decorating level 10 + 500 coins ---- */
 const BIG_PRICE=800;
-function applyHouse(){const big=!!S.bighouse,C=LOC.city;homeShell(LOC.home,big);
-  if(C.myHouse){C.myHouse.hs.visible=!big;C.myHouse.hb.visible=big;}if(C.houseSign){C.houseSign.sale.visible=!big;C.houseSign.sold.visible=big;}}
+function applyHouse(){const big=!!S.bighouse;homeShell(LOC.home,big);if(YARD.plaque)YARD.plaque.visible=!big;}   /* your house on Friends Lane grows by itself (laneRefresh) */
 function growFurniture(){for(const it of S.home.items){const F=FURN[it.t];if(!F)continue;const sw=(it.r%2?F.d:F.w)/2,sd=(it.r%2?F.w:F.d)/2;
   it.x=clamp(it.x*1.5,-HOMEW+sw+.02,HOMEW-sw-.02);it.z=clamp(it.z*1.4,-HOMED+sd+.02,HOMED-sd-.02);}}
 function openBigHouse(){if(S.bighouse){toast('🏡 This is your big house! Enjoy all that space 🎉',3);return;}
@@ -3653,8 +3708,8 @@ function bringFollowers(quiet){let n=0;P.hd=P.yaw+Math.PI;for(const f of FRIEND_
   for(const f of FRIEND_ACTORS)if(f.mode==='follow'){nearMe(f,++n);
     if(CUR.id==='home'&&!quiet)homeVisit(f);}
   for(const p of PET_ACTORS)if(!p.d.stay)nearMe(p,++n);}
-function enter(id,via){if(id==='home'){LANE.via=LANE.nextVia;LANE.nextVia=null;}SFX.door();qEvent('enter:'+id);fade(()=>{setLoc(id);const d=DOORS[id+(via||'')],L=LOC[id];P.x=L.ox+d.inside[0];P.z=L.oz+d.inside[1];P.yaw=d.inside[2];P.pitch=0;P.sit=null;bringFollowers();if(id==='home')doneTask('home');if(id==='pizza')pizzaIn();if(id==='beach')beachIn();if(id==='cafe'&&FRIEND_ACTORS.some(f=>f.mode==='follow'))qEvent('cafevisit');saveLocal();});}
-function exitTo(id,via){if(DECO.on)decoEnd();SFX.door();fade(()=>{setLoc('city');const d=(id==='home'&&!via&&LANE.via!=null&&LOC.city.lane)?{city:LOC.city.lane[LANE.via].door}:DOORS[id+(via||'')];if(id==='home')LANE.via=null;P.x=d.city[0];P.z=d.city[1];P.yaw=d.city[2];P.pitch=0;P.sit=null;bringFollowers();saveLocal();});}
+function enter(id,via){SFX.door();qEvent('enter:'+id);fade(()=>{setLoc(id);const d=DOORS[id+(via||'')],L=LOC[id];P.x=L.ox+d.inside[0];P.z=L.oz+d.inside[1];P.yaw=d.inside[2];P.pitch=0;P.sit=null;bringFollowers();if(id==='home')doneTask('home');if(id==='pizza')pizzaIn();if(id==='beach')beachIn();if(id==='cafe'&&FRIEND_ACTORS.some(f=>f.mode==='follow'))qEvent('cafevisit');saveLocal();});}
+function exitTo(id,via){if(DECO.on)decoEnd();SFX.door();fade(()=>{setLoc('city');const d=DOORS[id+(via||'')];P.x=d.city[0];P.z=d.city[1];P.yaw=d.city[2];P.pitch=0;P.sit=null;bringFollowers();saveLocal();});}
 function homeVisit(f){const st=frSt(f.d.id);setTimeout(()=>{if(CUR.id!=='home')return;const n=S.home.items.length;
   const line=n>=8?"Wow, your house is SO cozy! I love it here!":n>=5?"Your house is really nice! I like your stuff.":"Your house is cute! Maybe add more furniture?";
   toast(f.d.name+': '+line,4);if(st.visit!==S.day){st.visit=S.day;addPts(f,5);}doneTask('visit');qEvent('visit');addXP('friends',5);},900);}
@@ -3915,7 +3970,7 @@ ACT.pwear=k=>{const p=PT;if(!p||!S.bag[k]||!ACCS[k])return;const d=p.d,o=petOutf
 ACT.poff=sl=>{const p=PT;if(!p)return;const d=p.d,o=petOutfit(d);const list=sl?[sl]:PSLOTS.map(x=>x[0]);let any=false;for(const x of list)if(o[x]){S.bag[o[x]]=(S.bag[o[x]]||0)+1;delete o[x];any=true;}
   if(!any)return;rebuildPet(p);SFX.pop();change();ACT.pdress('Taken off!');};
 ACT.pback=()=>renderPet();
-ACT.pstay=()=>{const p=PT,d=p.d;d.stay=!d.stay;p.far=0;if(d.stay){d.sx=p.x;d.sz=p.z;renderPet(d.name+' will stay here and wait for you.');}else renderPet(d.name+' will follow you!');change();};
+ACT.pstay=()=>{const p=PT,d=p.d;d.stay=!d.stay;p.far=0;if(d.stay){[d.sx,d.sz]=toSave(p.loc,p.x,p.z);renderPet(d.name+' will stay here and wait for you.');}else renderPet(d.name+' will follow you!');change();};
 
 /* adopting */
 let AD=null;const ADOPT_COST=100;
@@ -4007,7 +4062,7 @@ ACT.cbuy=()=>{const F=FURN[CAT.sel];if(S.coins<F.p)return;S.coins-=F.p;SFX.coin(
 ACT.cplace=i=>{if(!(CUR.id==='home'&&DECO.on&&DX()===HOMEX)){SFX.no();toast('🏠 Go home to place it! Tap 🛋️ in your house.',3.2);return;}const it=S.home.store.splice(+i,1)[0];if(!it)return;closePanel();startPlacing(it);change();};
 ACT.bighouse=()=>{if(S.bighouse||sk('decor').lv<10||S.coins<BIG_PRICE)return;S.coins-=BIG_PRICE;S.bighouse=true;closePanel();
   applyHouse();growFurniture();rebuildHome();SFX.coin();SFX.yay();change();toast('🎉 You got the big house! Go inside and see!',4.5);
-  for(let i=0;i<8;i++)setTimeout(()=>floatText(pick(['🎉','⭐','✨','🏡']),-17+rand(-3,3),4.5+rand(0,3),-10+rand(-1,1),{h:.8}),i*150);};
+  laneRefresh();const [hx,hz]=yardPt(-17,-10.5);for(let i=0;i<8;i++)setTimeout(()=>floatText(pick(['🎉','⭐','✨','🏡']),hx+rand(-3,3),4.5+rand(0,3),hz+rand(-1,1),{h:.8}),i*150);};
 ACT.wall=c=>{S.home.wall=c;WALL_M.color.set(c);SFX.pop();change();renderCatalog();};
 ACT.floor=k=>{S.home.floor=k;setFloor(k);SFX.pop();change();renderCatalog();};
 
@@ -4029,29 +4084,34 @@ PLACES.push({id:'beach',n:'Beach',i:'🏖️',x:80,z:0,w:8,d:14,c:'#f6dfa9',door
 const theN=pl=>pl.nt?pl.n:'the '+pl.n;
 const BLDS=[[-31,-15,7,7,'#bff0dc'],[-22,-31,18,8,'#ffd0b5'],[23,-31,20,8,'#c7e6ff'],[24,31,18,8,'#ffe0c4'],[13,-61.5,8,7,'#ffd6e0'],[25,-61.5,8,7,'#c9f2e3'],[37,-61.5,8,7,'#fff1b8'],[13,61.5,8,7,'#e6dbff'],[25,61.5,8,7,'#d9e8ff'],[37,61.5,8,7,'#ffe0c4'],[-66,25,10,20,'#ffd0b5']];
 const INSIDE_AT={beach:'beach',home:'home',market:'market',pets:'pets',flowers:'flowers',cafe:'cafe',clothes:'clothes',toys:'toys',bakery:'bakery',icecream:'icecream',library:'library',school:'school',fire:'fire',pizza:'pizza'};
-function drawMapBase(x,W,o={}){const S2=W/176,X=v=>(v+88)*S2,Z=v=>(v+88)*S2;
-  x.fillStyle='#9fe486';x.fillRect(0,0,W,W);
-  for(const p of PLACES.filter(p=>p.flat)){x.fillStyle=p.c;if(p.r){x.beginPath();x.arc(X(p.x),Z(p.z),p.r*S2,0,TAU);x.fill();}else x.fillRect(X(p.x-p.w/2),Z(p.z-p.d/2),p.w*S2,p.d*S2);}
+function drawMapBase(x,W,o={}){const S2=W/176,X=v=>(v+88)*S2,Z=v=>(v+88)*S2,PL=PLACES.filter(p=>p.x>-88);   /* places on Friends Lane are past the west edge */
+  x.fillStyle='#9fe486';x.fillRect(0,0,W,W);x.fillStyle='#bdeea2';x.fillRect(X(-23.4),Z(-24.5),12.8*S2,17.5*S2);   /* 🌸 the Flower Corner */
+  for(const p of PL.filter(p=>p.flat)){x.fillStyle=p.c;if(p.r){x.beginPath();x.arc(X(p.x),Z(p.z),p.r*S2,0,TAU);x.fill();}else x.fillRect(X(p.x-p.w/2),Z(p.z-p.d/2),p.w*S2,p.d*S2);}
   x.fillStyle='#b9bcd6';for(const c of[-50,0,50]){x.fillRect(X(-84),Z(c-4),168*S2,8*S2);x.fillRect(X(c-4),Z(-84),8*S2,168*S2);}
   x.fillStyle='#ffffff';for(const c of[-50,0,50])for(let t=-82;t<82;t+=6){x.fillRect(X(t),Z(c)-1,2.4*S2,2);x.fillRect(X(c)-1,Z(t),2,2.4*S2);}
   x.strokeStyle='#3d2c5e';x.lineWidth=2;for(const [bx,bz,w,d,c] of BLDS){x.fillStyle=c||'#d8cfe6';x.fillRect(X(bx-w/2),Z(bz-d/2),w*S2,d*S2);x.strokeRect(X(bx-w/2),Z(bz-d/2),w*S2,d*S2);}
-  for(const p of PLACES.filter(p=>!p.flat)){x.fillStyle=p.c;if(p.r){x.beginPath();x.arc(X(p.x),Z(p.z),p.r*S2,0,TAU);x.fill();x.stroke();}else{x.fillRect(X(p.x-p.w/2),Z(p.z-p.d/2),p.w*S2,p.d*S2);x.strokeRect(X(p.x-p.w/2),Z(p.z-p.d/2),p.w*S2,p.d*S2);}}
+  for(const p of PL.filter(p=>!p.flat)){x.fillStyle=p.c;if(p.r){x.beginPath();x.arc(X(p.x),Z(p.z),p.r*S2,0,TAU);x.fill();x.stroke();}else{x.fillRect(X(p.x-p.w/2),Z(p.z-p.d/2),p.w*S2,p.d*S2);x.strokeRect(X(p.x-p.w/2),Z(p.z-p.d/2),p.w*S2,p.d*S2);}}
+  /* 🏡 Friends Lane (with your house) is down the big road, past the west edge: a pink arrow there */
+  const ez=Z(0);x.fillStyle='#ff4d8d';x.strokeStyle='#ffffff';x.lineWidth=3;x.beginPath();x.moveTo(W*.006,ez);x.lineTo(W*.036,ez-W*.024);x.lineTo(W*.036,ez+W*.024);x.closePath();x.stroke();x.fill();
   x.textAlign='center';x.textBaseline='middle';
-  if(o.labels===false){x.font=`${Math.round(W/26)}px ${FONT}`;for(const p of PLACES)if(p.id!=='garden')x.fillText(p.i,X(p.x),Z(p.z));return;}
-  for(const p of PLACES){x.font=`${Math.round(W/22)}px ${FONT}`;x.fillText(p.i,X(p.x),Z(p.z)-W*.012);x.font=`800 ${Math.round(W/46)}px ${FONT}`;x.lineWidth=4;x.strokeStyle='#ffffff';x.strokeText(p.n,X(p.x),Z(p.z)+W*.028);x.fillStyle='#3d2c5e';x.fillText(p.n,X(p.x),Z(p.z)+W*.028);}}
+  if(o.labels===false){x.font=`${Math.round(W/26)}px ${FONT}`;for(const p of PL)if(p.id!=='garden')x.fillText(p.i,X(p.x),Z(p.z));x.fillText('🏠',W*.068,ez);return;}
+  for(const p of PL){x.font=`${Math.round(W/22)}px ${FONT}`;x.fillText(p.i,X(p.x),Z(p.z)-W*.012);x.font=`800 ${Math.round(W/46)}px ${FONT}`;x.lineWidth=4;x.strokeStyle='#ffffff';x.strokeText(p.n,X(p.x),Z(p.z)+W*.028);x.fillStyle='#3d2c5e';x.fillText(p.n,X(p.x),Z(p.z)+W*.028);}
+  x.font=`800 ${Math.round(W/46)}px ${FONT}`;x.textAlign='left';const t1='🏡 Friends Lane',t2='🏠 My House',lw=Math.max(x.measureText(t1).width,x.measureText(t2).width)+W*.03,lh=W*.064,lx=W*.042;
+  x.fillStyle='#ffffff';x.strokeStyle='#ff4d8d';x.lineWidth=3;rr(x,lx,ez-lh/2,lw,lh,lh*.3);x.fill();x.stroke();x.fillStyle='#3d2c5e';x.fillText(t1,lx+W*.015,ez-lh*.23);x.fillText(t2,lx+W*.015,ez+lh*.25);x.textAlign='center';}
 function drawMap(cv){const x=cv.getContext('2d'),W=cv.width,S2=W/176,X=v=>(v+88)*S2,Z=v=>(v+88)*S2;drawMapBase(x,W);
   {const T=jobTarget(),col=dl().dot;if(T){x.beginPath();x.arc(X(T.x),Z(T.z),W*.024,0,TAU);x.fillStyle=col;x.fill();x.lineWidth=4;x.strokeStyle=col==='#ffffff'?'#1d1622':'#ffffff';x.stroke();if(S.job==='delivery'&&dl().o.r){x.beginPath();x.arc(X(T.x),Z(T.z),W*.038,0,TAU);x.lineWidth=6;x.strokeStyle='#ffc400';x.stroke();}}}
-  if(NAV){x.strokeStyle='#ff4d8d';x.lineWidth=5;x.beginPath();x.arc(X(NAV.door[0]),Z(NAV.door[1]),W*.03,0,TAU);x.stroke();}
+  const cl=v=>clamp(v,-85,85);   /* off the map (Friends Lane): shown at its edge */
+  if(NAV){x.strokeStyle='#ff4d8d';x.lineWidth=5;x.beginPath();x.arc(X(cl(NAV.door[0])),Z(cl(NAV.door[1])),W*.03,0,TAU);x.stroke();}
   let px=P.x,pz=P.z,yaw=P.yaw;if(CUR&&CUR.id.startsWith('apt')){const H=HOUSE(APT.b);px=H.x+Math.sin(H.ry)*1.3;pz=H.z+Math.cos(H.ry)*1.3;}else if(CUR&&CUR.id!=='city'){const pl=PLACES.find(q=>q.id===INSIDE_AT[CUR.id]);if(pl){px=pl.door[0];pz=pl.door[1];}}
-  x.save();x.translate(X(px),Z(pz));x.rotate(-yaw);x.fillStyle='#ff4d8d';x.strokeStyle='#ffffff';x.lineWidth=3;x.beginPath();x.moveTo(0,-W*.03);x.lineTo(W*.02,W*.02);x.lineTo(0,W*.008);x.lineTo(-W*.02,W*.02);x.closePath();x.fill();x.stroke();x.restore();
+  x.save();x.translate(X(cl(px)),Z(cl(pz)));x.rotate(-yaw);x.fillStyle='#ff4d8d';x.strokeStyle='#ffffff';x.lineWidth=3;x.beginPath();x.moveTo(0,-W*.03);x.lineTo(W*.02,W*.02);x.lineTo(0,W*.008);x.lineTo(-W*.02,W*.02);x.closePath();x.fill();x.stroke();x.restore();
   x.font=`800 ${Math.round(W/36)}px ${FONT}`;x.fillStyle='#3d2c5e';x.textAlign='left';x.fillText('⬆ North',10,W*.035);}
 /* showing the way to a place */
 let NAV=null,BEACON=null;
-function setNav(id){const pl=PLACES.find(p=>p.id===id);if(pl)setNavTo(pl);}
-function setNavTo(pl){NAV=pl;closePanel();
+function setNav(id,quiet){const pl=PLACES.find(p=>p.id===id);if(pl)setNavTo(pl,quiet);}
+function setNavTo(pl,quiet){NAV=pl;if(!quiet)closePanel();
   if(!BEACON){BEACON=new THREE.Group();const m=new THREE.Mesh(new THREE.CylinderGeometry(.35,.35,16,12,1,true),new THREE.MeshBasicMaterial({color:'#ff7aa8',transparent:true,opacity:.35,depthWrite:false,side:THREE.DoubleSide}));m.position.y=8;BEACON.add(m);LOC.city.dyn.add(BEACON);}
   if(BEACON.pin){BEACON.remove(BEACON.pin);}const pin=label(pl.i,1.4,{bg:null,bw:0,pad:6});pin.position.y=3.4;BEACON.add(pin);BEACON.pin=pin;BEACON.position.set(pl.door[0],0,pl.door[1]);BEACON.visible=true;
-  $('nav').hidden=false;SFX.pop();toast('📍 Follow the arrow to '+theN(pl)+'!',2.8);updNav();}
+  $('nav').hidden=false;if(!quiet){SFX.pop();toast('📍 Follow the arrow to '+theN(pl)+'!',2.8);}updNav();}
 function clearNav(){NAV=null;$('nav').hidden=true;if(BEACON)BEACON.visible=false;}
 function updNav(){if(!NAV)return;if(NAV.actor){const f=NAV.actor;if(f.mode==='away'){toast('😴 '+NAV.n+' went home to sleep.',3);clearNav();return;}if(f.loc===CUR.id&&CUR.id!=='city'){toast('📍 You found '+NAV.n+'! 🎉',2.8);SFX.yay();clearNav();return;}
     if(f.loc==='city'){NAV.door[0]=f.x;NAV.door[1]=f.z;if(BEACON)BEACON.position.set(f.x,0,f.z);}}
@@ -4143,9 +4203,9 @@ function openSettings(){const fromTitle=!PLAYING;
     <div class="row"><button class="btn coral" data-a="wipe">${WIPE?'Tap again to start over':'🗑️ Start a new game'}</button></div>`,{onClose:()=>{WIPE=false;}});}
 ACT.fetchpets=()=>{if(!S||!S.pets.length){toast('You don\'t have any pets yet! Adopt one at the Pet Shop. 🐾',3);return;}
   let n=0;for(const p of PET_ACTORS)p.loc=null;for(const p of PET_ACTORS){const d=p.d;d.stay=false;nearMe(p,++n,1);
-    d.loc=p.loc;d.x=p.tx=p.x;d.z=p.tz=p.z;p.g.visible=true;p.g.position.set(p.x,p.g.position.y,p.z);}
+    d.loc=p.loc;p.tx=p.x;p.tz=p.z;[d.x,d.z]=toSave(p.loc,p.x,p.z);p.g.visible=true;p.g.position.set(p.x,p.g.position.y,p.z);}
   SFX.yay();change();saveLocal();const nm=S.pets.length===1?S.pets[0].name:S.pets.length+' pets';toast('🐾 '+nm+' '+(S.pets.length===1?'is':'are')+' right here with you!',3);closePanel();};
-ACT.gohome=()=>{LANE.via=null;closePanel();if(DECO.on)decoEnd();fade(()=>{if(CR){if(CR.av)scene.remove(CR.av.root);CR=null;camera.clearViewOffset();}setLoc('home');const L=LOC.home;P.x=L.ox;P.z=L.oz+DOORS.home.inside[1];P.yaw=0;P.pitch=0;P.sit=null;P.ride=null;
+ACT.gohome=()=>{closePanel();if(DECO.on)decoEnd();fade(()=>{if(CR){if(CR.av)scene.remove(CR.av.root);CR=null;camera.clearViewOffset();}setLoc('home');const L=LOC.home;P.x=L.ox;P.z=L.oz+DOORS.home.inside[1];P.yaw=0;P.pitch=0;P.sit=null;P.ride=null;
   $('hud').hidden=false;resize();bringFollowers();saveLocal();toast('Home sweet home! 🏡',2.6);});};
 let WIPE=false;
 ACT.slook=v=>{SET.look=+v;saveSet();openSettings();};
@@ -5267,16 +5327,16 @@ function jobPhone(){let h;
 
 /* intro */
 let INTRO=0;const ROSIE=()=>FRIEND_ACTORS[0];
-const INTRO_LINES=["Hi! You must be new here! I'm Rosie. I live in this town.","What's your name? And what do you look like? Show me!","{name}! What a great name. And I love your look! Welcome to Cozy Town!","Oh! Everyone in Cozy Town has a job. What job do you want to do?","This purple house is yours now. You can make it super cozy inside!",
+const INTRO_LINES=["Hi! You must be new here! I'm Rosie. I live in this town.","What's your name? And what do you look like? Show me!","{name}! What a great name. And I love your look! Welcome to Cozy Town!","Oh! Everyone in Cozy Town has a job. What job do you want to do?","Your new house is on Friends Lane, just down this road! Follow the pink arrow to find it. 🏡",
   "The market and the pet shop are just down the street. Look for the signs!","I'll be at the park by the fountain. Come find me! Bye for now!"];
 function introStep(){const f=ROSIE(),i=INTRO,line=INTRO_LINES[i];f.p.wave=.8;SFX.talk();
   if(i===1){openPanel(`<div class="who" style="--c:#ff9ec4">Rosie</div><p class="line">${esc(line)}</p><div class="row"><button class="btn mint" data-a="imake">✨ Make my character</button></div>`,{bottom:true,lock:true});return;}
   if(i===3){JOBCTX='intro';S.jobAsk=true;openPanel(`${rosieHd()}<p class="line">${esc(line)}</p>${jobCards()}<div class="row"><button class="btn white" data-a="jobskip">I'll pick later</button></div>`,{bottom:true,lock:true});return;}
   openPanel(`<div class="who" style="--c:#ff9ec4">Rosie</div><p class="line">${esc(fill(line))}</p><div class="row"><button class="btn mint" data-a="inext">${i===INTRO_LINES.length-1?'Bye, Rosie!':'Next'}</button></div>`,{bottom:true,lock:true});}
-ACT.inext=()=>{INTRO++;if(INTRO>=INTRO_LINES.length){closePanel();const f=ROSIE();f.mode='walk';f.node=1;f.prev=-1;S.intro=true;frSt('rosie').met=1;addPts(f,3);change();toast(TOUCHY?'Drag on the left to walk, and on the right to look around! Tap ⬆️ to jump and 🏃 to run.':'WASD to walk, drag the mouse to look, Space to jump, Shift to run, E to use things.',6);return;}introStep();};
+ACT.inext=()=>{INTRO++;if(INTRO>=INTRO_LINES.length){closePanel();const f=ROSIE();f.mode='walk';f.node=1;f.prev=-1;S.intro=true;frSt('rosie').met=1;addPts(f,3);setNav('home',true);change();toast(TOUCHY?'Drag on the left to walk, and on the right to look around! Tap ⬆️ to jump and 🏃 to run.':'WASD to walk, drag the mouse to look, Space to jump, Shift to run, E to use things.',6);return;}introStep();};
 ACT.imake=()=>openCreator('intro');
 ACT.iname=()=>{const n=$('nameIn'),v=(n&&n.value||'').trim().slice(0,14);if(!v){n&&n.focus();return;}n.blur();S.name=v;INTRO=2;introStep();};
-function startIntro(){const f=ROSIE();f.mode='talk';f.loc='city';f.x=-17;f.z=-7.3;f.face=0;P.x=-17;P.z=-4.6;P.yaw=0;P.pitch=-.05;INTRO=0;setTimeout(introStep,500);}
+function startIntro(){const f=ROSIE();f.mode='talk';f.loc='city';f.x=-16.8;f.z=-6.4;f.face=0;P.x=-14.8;P.z=-4.6;P.yaw=.84;P.pitch=-.05;INTRO=0;setTimeout(introStep,500);}
 
 /* ================= HUD ================= */
 let hudT=0,hungryWarn=false;
@@ -5307,7 +5367,9 @@ function startGame(){if(S){awResume();return;}   /* back from the away title: th
   const local=readLocal(),remote=CSAVE.remote;let st=local;if(remote&&(!local||(remote.t||0)>(local.t||0)))st=remote;
   S=Object.assign(freshState(),st||{});S.home=Object.assign(freshState().home,S.home||{});
   S.look=Object.assign({},DEFAULT_LOOK,S.look||{});buildPlayerBody();
-  applyHouse();rebuildHome();for(const d of S.pets)addPetActor(d);
+  applyHouse();rebuildHome();
+  const moved=!S.laneT;if(moved)S.laneT=Date.now();MP.jt=S.laneT;laneRefresh(true);   /* 🏡 your lot on Friends Lane (before pets and you are put in your yard) */
+  for(const d of S.pets)addPetActor(d);
   for(const f of FRIEND_ACTORS)f.wake();
   spawnLitter();gardenInit();for(const w of WALKERS)w.init();
   S.outfits=S.outfits||[];if(S.wardrobe)for(const k of Object.keys(S.wardrobe)){const C=CLOTHES[k];if(C&&(C.hat||C.gl)){if(!S.outfits.some(v=>v.k===k))S.outfits.push({k,c:C.cols[0]});delete S.wardrobe[k];}}
@@ -5316,10 +5378,13 @@ function startGame(){if(S){awResume();return;}   /* back from the away title: th
   $('title').hidden=true;$('hud').hidden=false;PLAYING=true;if(innerWidth<600)$('tasks').classList.add('min');
   if(!S.intro){setLoc('city');startIntro();}
   else{let loc=S.loc;P.x=S.px;P.z=S.pz;P.yaw=isFinite(S.yaw)?S.yaw:0;P.pitch=0;
+    if(loc==='city'&&inYardR(P.x,P.z)){[P.x,P.z]=fromSave(loc,P.x,P.z);if(LANE_PLOTS[LANE.mine].s>0)P.yaw+=Math.PI;}   /* in your yard (an old save: the old town yard): in your yard on Friends Lane */
     if(!LOC[loc]||loc==='studio'){loc='city';P.x=-17;P.z=-4.6;P.yaw=0;}
     loc=safeSpot(loc)||'city';setLoc(loc);[P.x,P.z]=collideXZ(P.x,P.z,.3,CUR);
     let n=0;for(const p of PET_ACTORS)if(!p.d.stay&&p.loc!==CUR.id)nearMe(p,++n);
-    toast('Welcome back, '+(S.name||'friend')+'! 💗',3);}
+    toast('Welcome back, '+(S.name||'friend')+'! 💗',3);
+    if(moved){const far=CUR.id==='city'&&P.x>-84;if(far)setNav('home',true);   /* the first time with your house on Friends Lane: the arrow shows the way */
+      setTimeout(()=>{if(PLAYING)toast('🏡 Your house moved to Friends Lane, with your garden'+(far?'! Follow the pink arrow.':'!'),5);},3400);}}
   heldInit();askT=0;jobHud(true);dcardUpd(true);
   updHud(true);if(CSAVE.ref){CSAVE.dirty=true;cloudFlush();}
 }
