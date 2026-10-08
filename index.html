@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Cozy Town</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -27,7 +27,7 @@
 *,*::before,*::after{box-sizing:inherit}
 [hidden]{display:none!important}
 html{height:100%;overflow:hidden;scroll-padding-top:env(safe-area-inset-top,0px)}
-body{height:100%;margin:0;overflow:hidden;background:#8fd3ff;color:var(--ink);font-family:var(--font);-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+body{height:100%;margin:0;overflow:hidden;background:#8fd3ff;color:var(--ink);font-family:var(--font);-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}/* 🔍 no page zoom while playing (pinch or double-tap); lists in cards still scroll */html,body{touch-action:pan-x pan-y}#c,#hud,#title{touch-action:none}
 button{font-family:inherit}
 #c{position:fixed;left:0;top:0;width:100%;height:100%;display:block}
 #touch{position:fixed;inset:0;z-index:1;touch-action:none}
@@ -61,7 +61,7 @@ button{font-family:inherit}
 #moveBtns{position:absolute;right:calc(env(safe-area-inset-right,0px) + 24px);bottom:calc(env(safe-area-inset-bottom,0px) + 30px);display:flex;align-items:flex-end;gap:14px}
 #bJump{width:88px;height:88px;min-height:0;border-radius:50%;padding:0;font-size:38px}
 #bRun{width:72px;height:72px;min-height:0;border-radius:50%;padding:0;font-size:32px;background:#fff}
-#bRun.on{background:var(--sky)}
+/* 🏃 run is a switch: ON = warm yellow, a glowing ring, an ON tag and a puff of speed; OFF = plain white */#bRun{position:relative}#bRun.on{background:var(--butter);box-shadow:0 5px 0 #3d2c5e,0 0 0 4px #fff,0 0 0 8px #ff8a6b,0 0 16px 8px rgba(255,138,107,.5);animation:runGlow 1.1s ease-in-out infinite alternate}#bRun.on::after{content:'ON';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:#3d2c5e;color:#fff;border:2px solid #fff;border-radius:99px;font:800 13px/17px var(--font);padding:0 8px;pointer-events:none}#bRun.on::before{content:'💨';position:absolute;right:-9px;bottom:0;font-size:22px;line-height:1;pointer-events:none}@keyframes runGlow{from{box-shadow:0 5px 0 #3d2c5e,0 0 0 4px #fff,0 0 0 8px #ff8a6b,0 0 8px 3px rgba(255,138,107,.35)}to{box-shadow:0 5px 0 #3d2c5e,0 0 0 4px #fff,0 0 0 8px #ff8a6b,0 0 20px 10px rgba(255,138,107,.6)}}@media (prefers-reduced-motion:reduce){#bRun.on{animation:none}}
 #swMeter{position:relative;width:26px;height:84px;border-radius:14px;background:#fff;border:3px solid #3d2c5e;overflow:hidden;box-shadow:0 5px 0 #3d2c5e;margin-bottom:6px}
 #swMeter[hidden]{display:none}
 #swFill{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(0deg,#5fd4b0,#ffd45c 55%,#ff7aa8)}
@@ -2337,7 +2337,8 @@ function buildSchool(){const {L,sh,pr}=room('school',1400,'#fff6dc','wood');
   const tb=signPlane('🏆 Our trophies',1.4,.3,'#ffffff','#3d2c5e');tb.position.set(-3.4,1.95,4.42);tb.rotation.y=Math.PI;L.g.add(tb);
   bake(sh,false);bake(pr,true);return L;}
 /* the three classrooms: a blackboard, the teacher's desk, and six desks for six kids */
-function buildClassrooms(){for(const id in SUBJ){const S0=SUBJ[id],{L,sh,pr}=room('cl_'+id,S0.ox,S0.wall,'wood');L.inter.pop();
+function buildClassrooms(){const glass=toon({color:'#9fd4f2',emissive:new THREE.Color('#5ab4e8'),emissiveIntensity:.22});   /* 🚪 the door to the hallway: its own glass, so it never turns white-orange in the evening (the shared window glass glows at night) */
+  for(const id in SUBJ){const S0=SUBJ[id],{L,sh,pr}=room('cl_'+id,S0.ox,S0.wall,'wood');L.inter.pop();sh.traverse(o=>{if(o.isMesh&&o.material===WIN)o.material=glass;});
   windowIn(sh,6-.02,1.0,-1.6,-Math.PI/2,S0.c);windowIn(sh,6-.02,1.0,1.8,-Math.PI/2,S0.c);
   box(pr,5.2,1.8,.08,'#a8714a',0,.9,-4.44);const bd=signPlane(S0.board,4.8,1.45,'#2f6b4f','#ffffff');bd.position.set(0,1.82,-4.39);L.g.add(bd);
   box(pr,1.2,.04,.12,'#a8714a',1.4,.88,-4.36,{ol:false});box(pr,.12,.04,.04,'#ffffff',1.1,.92,-4.36,{ol:false});box(pr,.18,.06,.08,'#ff9ec4',1.5,.92,-4.36,{ol:false});
@@ -3174,7 +3175,7 @@ function mpUpsert(p){const pr=p.presence||{};if(!pr.nm)return;let a=MP.peers.get
   const s=pr.say;if(s&&typeof s==='object'&&s.id!==a.sayId){a.sayId=s.id;const txt=Number.isInteger(s.m)&&QUICK[s.m]?QUICK[s.m]:Number.isInteger(s.e)&&EMOS[s.e]?EMOS[s.e]:null;if(txt&&!fresh)mpBubble(a,txt);}
   const bk=JSON.stringify(pr.bl||null);if(bk!==a.bk){a.bk=bk;if(pr.bl)ballFrom(a,pr.bl);else if(!BS.mine&&BS.own===a.peer)ballOwnerGone();}
   const ck=JSON.stringify(pr.sc||null);if(ck!==a.ck){a.ck=ck;if(pr.sc)scoreFrom(a,pr.sc);}
-  a.zz=pr.zz===1?1:0;a.aw=pr.aw===1?1:0;zzRung(a,pr.rg);clockFrom(a,pr.ck);}
+  a.zz=pr.zz===1?1:0;a.aw=pr.aw===1?1:0;zzRung(a,pr.rg);clockFrom(a,pr.ck);mpExtra(a,pr,fresh);}
 /* 🕰️ one clock for everyone: my clock rides along in presence as ck:[day,hour], refreshed only after 5 game minutes
    (or a new day), so standing still sends little. A friend ahead by 2+ game minutes pulls my clock forward, never back.
    A brand-new player first finishes Rosie's welcome in the morning, then joins the friends' time.
@@ -3196,8 +3197,8 @@ function clockJump(n=0){if(!MP.ckTo||!S||!PLAYING){MP.ckTo=null;return;}
   fade(()=>{const T=MP.ckTo;MP.ckTo=null;if(!T||!S)return;const ahead=(T[0]-S.day)*24+T[1]-S.time;if(ahead<1/30)return;
     const nd=T[0]!==S.day;S.day=T[0];S.time=T[1];if(nd){newDay();change();}
     if(ahead>=1)toast('🕰️ Same time as your friends: '+wdName()+', day '+S.day+' · '+clockStr(S.time),3.4);});}
-function mpBuildAv(a,look){mpDropAv(a);const p=makePerson(lookToPerson(look));bakePerson(p);const tg=label('⭐ '+a.nm,.3);tg.position.y=2.0;p.root.add(tg);scene.add(p.root);a.av=p;a.av.root.position.set(a.x,0,a.z);}
-function mpDropAv(a){if(a.av){scene.remove(a.av.root);a.av=null;}a.bub=null;}
+function mpBuildAv(a,look){mpDropAv(a);const p=makePerson(lookToPerson(look));bakePerson(p);const tg=label('⭐ '+a.nm,.3);tg.position.y=2.0;p.root.add(tg);p.tag=tg;scene.add(p.root);a.av=p;a.av.root.position.set(a.x,0,a.z);}
+function mpDropAv(a){if(a.av){scene.remove(a.av.root);a.av=null;}a.bub=null;a.lie=false;a.lieK='';if(a.zzs){a.zzs.material.map.dispose();a.zzs.material.dispose();a.zzs=null;}mpPetsDrop(a);}
 function mpBubble(a,txt){if(!a.av)return;if(a.bub&&a.bub.parent)a.bub.parent.remove(a.bub);const b=label(txt,.36);b.position.y=2.45;a.av.root.add(b);a.bub=b;a.bubT=5;SFX.talk();
   if(a.loc===CUR.id)a.av.wave=1.2;toast('⭐ '+a.nm+': '+txt,3.4);}
 function mpSay(m,e){if(!MP.grp)return;const say={id:(++MP.said)+'-'+(Date.now()%1e6)};if(m!==undefined)say.m=m;else say.e=e;MP.grp.presence({say}).catch(()=>{});
@@ -3323,11 +3324,69 @@ function mpTick(dt){if(!MP.grp)return;const loc=CUR?CUR.id:'city';
   MP.t+=dt;if(MP.t>=.15){MP.t=0;const st={nm:S.name||'Friend',lk:packLook(),loc,x:Math.round(P.x*100)/100,z:Math.round(P.z*100)/100,ry:Math.round(P.yaw*100)/100,mv:P.moving?1:0,ck:mpClock()};
     {const b=LOC.city.ball,m=S.match||{l:0,r:0,v:0},r2=v=>Math.round(v*100)/100;st.sc=[m.l|0,m.r|0,m.v|0];st.bl=BS.mine&&b?[r2(b.x),r2(b.z),r2(b.vx),r2(b.vz),BS.k,Math.round((b.reset||0)*10)/10]:null;}
     st.zz=zzIn()?1:null;st.aw=AW.on?1:null;st.rg=ZZ.rg&&Date.now()-ZZ.rgT<12000?ZZ.rg:null;   /* 😴 in bed / 🔔 a ring (optional; null clears them: presence merges) */
+    mpStamp(st);   /* 🦘 jumps, 🐾 pets with me (optional) */
     laneStamp(st);const key=JSON.stringify(st);if(key!==MP.lastKey){MP.lastKey=key;MP.grp.presence(st).catch(()=>{});}}
-  for(const a of MP.peers.values()){if(!a.av)continue;const sp=peerSpot(a),vis=!!sp;a.av.root.visible=vis;if(sp){a.tx=sp[0];a.tz=sp[1];a.ry=sp[2];}
-    const d=Math.hypot(a.tx-a.x,a.tz-a.z);if(d>8){a.x=a.tx;a.z=a.tz;}else{const k=Math.min(1,dt*8);a.x+=(a.tx-a.x)*k;a.z+=(a.tz-a.z)*k;}
-    a.av.root.position.set(a.x,0,a.z);a.av.root.rotation.y=angLerp(a.av.root.rotation.y,a.ry+Math.PI,Math.min(1,dt*8));if(vis)animPerson(a.av,dt,a.mv&&d>.02);
+  for(const a of MP.peers.values()){if(!a.av)continue;let sp=peerSpot(a);const vis=!!sp,lie=vis&&!!a.zz;a.av.root.visible=vis;if(lie)sp=mpBedSpot(a,sp);if(sp){a.tx=sp[0];a.tz=sp[1];a.ry=sp[2];}
+    const d=Math.hypot(a.tx-a.x,a.tz-a.z);if(d>8||lie!==!!a.lie){a.x=a.tx;a.z=a.tz;}else{const k=Math.min(1,dt*8);a.x+=(a.tx-a.x)*k;a.z+=(a.tz-a.z)*k;}
+    mpPose(a,dt,vis,lie,d);
     if(a.bub){a.bubT-=dt;if(a.bubT<=0){a.av.root.remove(a.bub);a.bub=null;}}}}
+/* 🦘🐾🛏️💤 more of a friend shows up (optional presence fields: old versions ignore them, and friends on old versions just don't send them):
+   jp = how many times they jumped (a new number = a hop), pt = the pets walking with them (at most 3: [kind, colour, name, outfit]).
+   In their bed (zz) they lie down on it; away ("Still there?") or asleep, a little 💤 floats over their head */
+function mpStamp(st){if(P.jn)st.jp=P.jn;const pt=[];
+  for(const d of S.pets){if(d.stay||!PET_TYPES[d.type]||pt.length>=3)continue;const o=d.outfit&&typeof d.outfit==='object'?d.outfit:{};
+    pt.push([d.type,HEX.test(d.col)?d.col:PET_TYPES[d.type].cols[0],String(d.name||'').slice(0,14),Object.values(o).filter(k=>ACCS[k]).join('.')]);}
+  st.pt=pt.length?pt:null;}
+function mpExtra(a,pr,fresh){const jp=Number.isInteger(pr.jp)?pr.jp:null;if(!fresh&&jp!==null&&jp!==a.jp)mpHop(a);a.jp=jp;
+  const pk=JSON.stringify(Array.isArray(pr.pt)?pr.pt.slice(0,3):null);if(pk!==a.pk){mpPetsBuild(a,pr.pt);a.pk=pk;}
+  a.bed=a.zz?mpBed(a):null;}
+function mpHop(a){if(a.zz||a.jy>0)return;a.jv=5.4;a.jy=.0001;if(a.pets)for(const q of a.pets)if(!q.hopT&&!q.hopA)q.hopT=.05+Math.random()*.15;}
+/* which bed they lie in: their house layout (hm, sent while they have a visitor) lists every bed; take the one whose pillow is closest to them.
+   [x,z,yaw] in their own house, like their head on the pillow (null = not found: then they lie where they are, turned like the nearest wall) */
+function mpBed(a){const h=a.hm;if(!h||typeof h!=='object')return null;let best=null,bd=1.2;
+  for(const fl of[0,1]){const v=h[fl?'u':'i'];if(typeof v!=='string'||!v)continue;
+    for(const row of v.split(';').slice(0,160)){const [t,c,xs,zs,rs]=row.split(','),F=FURN[t];if(!F||F.use!=='sleep')continue;
+      const r=(+rs||0)&3,fx=Math.sin(r*Math.PI/2),fz=Math.cos(r*Math.PI/2),x=LOC.home.ox+fl*UPX+(+xs)-fx*.55,z=LOC.home.oz+(+zs)-fz*.55,d=Math.hypot(x-a.rx,z-a.rz);
+      if(d<bd){bd=d;best=[x,z,r*Math.PI/2+Math.PI,t,HEX.test(c)?c:F.cols[0]];}}}
+  return best;}
+function mpBedSpot(a,sp){const b=a.bed,q=Math.PI/2;return b?[b[0]+sp[0]-a.rx,b[1]+sp[1]-a.rz,b[2]]:[sp[0],sp[1],Math.round(a.rry/q)*q];}
+function mpPose(a,dt,vis,lie,d){const p=a.av,R=p.root;
+  const k=lie?String(a.bed||'-'):'';if(k!==(a.lieK||'')){a.lieK=k;a.lie=lie;p.b.rotation.x=lie?.25-Math.PI/2:0;p.b.position.set(0,lie?-.33:0,lie?1.29:0);if(p.tag)p.tag.position.set(0,lie?1.25:2.0,lie?0.7:0);   /* on their back, head a little up on the pillow, feet to the end of the bed */
+    if(p.duv){R.remove(p.duv);p.duv.traverse(o=>{if(o.isMesh)o.geometry.dispose();});p.duv=null;}
+    if(lie){for(const l of p.legs)l.rotation.x=0;for(const r of p.arms)r.rotation.set(0,0,0);p.head.rotation.set(0,0,0);   /* tucked in under a puffy duvet in the bed's colour */
+      const b=a.bed,bunk=!!b&&b[3]==='bunkbed';p.duv=new THREE.Group();box(p.duv,bunk?.96:1.2,.2,1.2,b?b[4]:'#ff9ec4');p.duv.position.set(0,-.12,.96);R.add(p.duv);p.bunk=bunk;}}
+  if(a.jy>0||a.jv>0){a.jv-=18*dt;a.jy+=a.jv*dt;if(a.jy<=0)a.jy=a.jv=0;}
+  R.position.set(a.x,lie?0.62:a.jy||0,a.z);R.rotation.y=lie?a.ry+Math.PI:angLerp(R.rotation.y,a.ry+Math.PI,Math.min(1,dt*8));
+  if(vis&&!lie){animPerson(p,dt,a.mv&&d>.02);if(a.jy>0){p.legs[0].rotation.x=.55;p.legs[1].rotation.x=-.25;}}
+  const zz=vis&&(lie||!!a.aw);if(zz&&!a.zzs){a.zzs=label('💤',.42,{bg:null,bw:0,pad:8,stroke:'#ffffff',strokeW:10});R.add(a.zzs);}
+  if(a.zzs){a.zzs.visible=zz;if(zz){a.zzT=(a.zzT||0)+dt;const b=Math.sin(a.zzT*2.4)*.07;if(lie)a.zzs.position.set(p.bunk?.72:0,(p.bunk?.42:.7)+b,-.1);else a.zzs.position.set(0,(a.bub?2.95:2.5)+b,0);}}
+  mpPetsTick(a,dt,vis);}
+const mpOwn=(o,k)=>typeof k==='string'&&Object.prototype.hasOwnProperty.call(o,k);   /* only real kinds and outfits from a friend's data (never "constructor" and such) */
+function mpPetsBuild(a,pt){mpPetsDrop(a);if(!Array.isArray(pt))return;const L=[];
+  for(const x of pt.slice(0,3)){if(!Array.isArray(x)||!mpOwn(PET_TYPES,x[0]))continue;const T=PET_TYPES[x[0]];
+    const d={type:x[0],col:HEX.test(x[1])?x[1]:T.cols[0],outfit:{}};if(typeof x[3]==='string')for(const k of x[3].split('.').slice(0,4))if(mpOwn(ACCS,k))d.outfit[ACCS[k].s]=k;
+    const m=makePet(d.type,d.col);addOutfit(m,d);const keep=[...m.legs,m.tail].filter(Boolean);for(const g of keep)g.userData.keep=1;bake(m.b,false);for(const g of keep)bake(g,false);   /* few draw calls: only the legs and tail move */
+    const nm=(typeof x[2]==='string'?x[2]:'').replace(/[^\p{L}\p{N} _.'-]/gu,'').trim().slice(0,14),tg=label(nm&&!bdBad(nm)?nm:T.name,.24);   /* a name that isn't kind shows as just "puppy" */
+    tg.position.y={bunny:1.0,hamster:.55}[d.type]||.82;m.root.add(tg);m.root.visible=false;scene.add(m.root);
+    L.push({m,g:m.root,tag:tg,x:a.x,z:a.z,face:0,mv:false,spd:1});}
+  a.pets=L.length?L:null;a.trl=null;}
+function mpPetsDrop(a){if(a.pets)for(const q of a.pets){scene.remove(q.g);q.g.traverse(o=>{if(o.isMesh)o.geometry.dispose();});q.tag.material.map.dispose();q.tag.material.dispose();}a.pets=null;a.pk='';}
+/* a point s metres back along the way they walked (past its end: straight behind them), then o metres to the side */
+function mpTrail(a,s,o){const T=a.trl;let x=a.x,z=a.z,dx=Math.sin(a.ry),dz=Math.cos(a.ry);
+  for(let i=T.length-1;i>=0&&s>0;i--){const px=T[i][0],pz=T[i][1],l=Math.hypot(px-x,pz-z);if(l<1e-4)continue;const k=Math.min(1,s/l);dx=(px-x)/l;dz=(pz-z)/l;x+=(px-x)*k;z+=(pz-z)*k;s-=l*k;}
+  if(s>0){x+=dx*s;z+=dz*s;}return[x-dz*o,z+dx*o];}
+/* 🐾 their pets trot along the way they walked (so round corners and through doors, like they did), stop when they stop, never block you */
+function mpPetsTick(a,dt,vis){const L=a.pets;if(!L)return;
+  if(!vis){for(const q of L)q.g.visible=false;a.trl=null;return;}
+  const fresh=!a.trl;if(fresh)a.trl=[];const T=a.trl,n=T.length,m=n?Math.hypot(a.x-T[n-1][0],a.z-T[n-1][1]):1e9;
+  if(n&&m>8)T.length=0;if(!T.length||m>=.35){T.push([a.x,a.z]);if(T.length>40)T.shift();}   /* popped somewhere else: a new trail */
+  const near=Math.hypot(a.x-P.x,a.z-P.z)<24;
+  for(let i=0;i<L.length;i++){const q=L[i],[gx,gz]=mpTrail(a,1.4+i*.75,i===1?-.35:i===2?.35:0);
+    if(fresh||Math.hypot(gx-q.x,gz-q.z)>9){[q.x,q.z]=collideXZ(gx,gz,.25,CUR);q.mv=false;q.face=Math.atan2(a.x-q.x,a.z-q.z);q.g.rotation.y=q.face;}
+    else{const dx=gx-q.x,dz=gz-q.z,dd=Math.hypot(dx,dz);
+      if(dd>.06){const sp=Math.min(7,1+dd*3.2),s=Math.min(dd,sp*dt);let nx=q.x+dx/dd*s,nz=q.z+dz/dd*s;if(near)[nx,nz]=collideXZ(nx,nz,.22,CUR);q.x=nx;q.z=nz;q.face=Math.atan2(dx,dz);q.mv=dd>.15;q.spd=clamp(sp/3,.6,1.8);}
+      else{q.mv=false;q.face=angLerp(q.face,Math.atan2(a.x-q.x,a.z-q.z),Math.min(1,dt*3));}}
+    q.g.visible=true;q.g.position.set(q.x,hopY(q,dt),q.z);q.g.rotation.y=angLerp(q.g.rotation.y,q.face,Math.min(1,dt*8));animPet(q.m,dt,q.mv,q.spd);q.tag.visible=Math.hypot(P.x-q.x,P.z-q.z)>1.3;}}
 /* jump right next to a friend, even into the shop they are in */
 function warpTo(loc,fx,fz,nm){if(!LOC[loc])return;if(DECO.on)decoEnd();if(P.ride)stopRide();if(P.sit)standUp();closePanel();SFX.door();
   fade(()=>{setLoc(loc);let x=fx+2.4,z=fz;const fr=[...MP.peers.values()].find(a=>a.nm===nm),ry=fr?fr.ry:0;
@@ -3754,6 +3813,12 @@ function setupInput(){
   addEventListener('keyup',e=>{IN.keys[e.code]=false;if(KC.key&&(e.code==='KeyE'||e.code==='Enter'))ballLet();});
   addEventListener('blur',()=>{IN.keys={};KC.on=false;});
 }
+/* 🔍 no page zoom while playing. iOS ignores user-scalable=no, so: Safari's pinch (gesture events) is stopped, a two-finger move is stopped
+   (not on the game's own touch layer and buttons, which have touch-action:none, and not in text boxes or scrolling lists), and double-tap zoom is
+   off through touch-action in the CSS. Walking with one thumb and looking with the other still works: that is the touch layer */
+for(const t of['gesturestart','gesturechange','gestureend'])document.addEventListener(t,e=>e.preventDefault(),{passive:false});
+document.addEventListener('touchmove',e=>{if(e.touches.length<2||!e.cancelable)return;const t=e.target;if(t&&t.closest&&t.closest('#touch,#hud,input,textarea,.card,.ph-screen'))return;e.preventDefault();},{passive:false});
+document.addEventListener('dblclick',e=>{const t=e.target;if(!(t&&t.closest&&t.closest('input,textarea')))e.preventDefault();});
 const RAY=new THREE.Raycaster(),NDC=new THREE.Vector2();
 function tapAt(cx,cy){if(CUT){if(CUT.tch)tcTap(cx,cy);return;}if(DECO.on){decoTap(cx,cy);return;}if(TN.on){tnSwing();return;}
   NDC.set(cx/innerWidth*2-1,-(cy/innerHeight)*2+1);RAY.setFromCamera(NDC,camera);
@@ -3909,6 +3974,19 @@ function openPanel(html,o={}){const p=$('panel');p.classList.toggle('bottom',!!o
   IN.joy.id=null;IN.joy.x=IN.joy.y=0;IN.look.id=null;$('joy').classList.remove('on');$('knob').style.transform='';$('actWrap').hidden=true;}
 function closePanel(){const p=$('panel');if(p.hidden)return;p.hidden=true;UI.open=false;UI.lock=false;const f=UI.onClose;UI.onClose=null;if(f)f();}
 $('panel').addEventListener('pointerdown',e=>{if(e.target===$('panel')&&!UI.lock)closePanel();});
+/* ⌨️ typing on an iPad or phone: the keyboard covers the bottom of the screen (iOS only shrinks the "visual viewport"). While a text box in a card
+   has focus, the card area fits the part of the screen above the keyboard and the text box scrolls into view; done typing = back to normal */
+const KB={on:false,vv:null,iv:0};
+function kbTyping(){const el=document.activeElement,p=$('panel');return!!(el&&el.matches&&el.matches('input,textarea')&&!p.hidden&&p.contains(el));}
+function kbFit(){const vv=window.visualViewport,p=$('panel'),H=document.documentElement.clientHeight||innerHeight;
+  if(vv&&KB.vv!==vv){if(KB.vv){KB.vv.removeEventListener('resize',kbFit);KB.vv.removeEventListener('scroll',kbFit);}KB.vv=vv;vv.addEventListener('resize',kbFit);vv.addEventListener('scroll',kbFit);}
+  if(!(vv&&kbTyping()&&(vv.height<H-40||vv.offsetTop>1))){if(KB.on){KB.on=false;clearInterval(KB.iv);p.style.top=p.style.bottom=p.style.height=p.style.paddingTop=p.style.paddingBottom=$('card').style.maxHeight='';if(scrollX||scrollY)scrollTo(0,0);}return;}
+  const t=Math.max(0,Math.round(vv.offsetTop)),h=Math.round(Math.min(vv.height,H-t));
+  if(!KB.on){KB.on=true;KB.iv=setInterval(()=>{if(!kbTyping())kbFit();},400);}
+  if(p.style.top!==t+'px'||p.style.height!==h+'px'){p.style.top=t+'px';p.style.height=h+'px';p.style.bottom='auto';p.style.paddingTop=p.style.paddingBottom='6px';$('card').style.maxHeight=(h-12)+'px';}
+  const el=document.activeElement,c=el.closest('.card');if(c){const r=el.getBoundingClientRect(),cr=c.getBoundingClientRect(),f=c.querySelector('.crsave'),B=Math.min(cr.bottom,f&&f.offsetParent?f.getBoundingClientRect().top:1e9);   /* (not under the creator's sticky "That's me!" bar) */
+    let d=r.bottom>B-8?r.bottom-B+8:0;if(r.top-d<cr.top+8)d=r.top-cr.top-8;if(Math.abs(d)>1)c.scrollTop+=d;}}   /* its top always shows */
+document.addEventListener('focusin',()=>setTimeout(kbFit,0));document.addEventListener('focusout',()=>setTimeout(kbFit,60));kbFit();
 const ACT={};
 $('card').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||b.disabled)return;const [k,...r]=b.dataset.a.split(':');if(k!=='buy')SFX.tap();if(ACT[k])ACT[k](r.join(':'),b);});
 ACT.close=()=>closePanel();
@@ -5357,7 +5435,11 @@ $('act').addEventListener('pointerdown',e=>{if(e.button===0&&TARGET===BALLT){aud
 for(const ev of['pointerup','pointercancel'])addEventListener(ev,e=>{if(KC.on&&!KC.key&&e.pointerId===KC.pid)ballLet();},true);
 addEventListener('pointerdown',()=>{KC.eat=false;},true);
 $('bJump').addEventListener('pointerdown',e=>{e.preventDefault();jump();});
-$('bRun').addEventListener('click',()=>{audioInit();setRun(!IN.run);SFX.tap();});
+/* 🏃 run on/off: a touch flips it at once (pointerdown, so it also works while the other thumb holds the joystick: iOS sends no click then);
+   a click right after that touch is the same press, so it is skipped; a click on its own (keyboard Enter/Space) flips it too */
+let runPd=-1e9;
+$('bRun').addEventListener('pointerdown',e=>{if(e.button>0)return;e.preventDefault();runPd=performance.now();audioInit();setRun(!IN.run);SFX.tap();});
+$('bRun').addEventListener('click',()=>{if(performance.now()-runPd<1000)return;audioInit();setRun(!IN.run);SFX.tap();});
 $('bBag').addEventListener('click',()=>{audioInit();SFX.tap();openBag();});
 $('bPhone').addEventListener('click',()=>{audioInit();openPhone();});
 $('bChat').addEventListener('click',()=>{audioInit();openChat();});
