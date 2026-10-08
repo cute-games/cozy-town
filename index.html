@@ -3104,16 +3104,16 @@ const SHOP_SPOTS={
   toys:{n:3,buy:6,spots:[[-3.6,-3.3,Math.PI],[0,-3.3,Math.PI],[3.6,-3.3,Math.PI],[-1.4,-.4,Math.PI],[1.0,-.4,Math.PI],[3.6,.9,0],[-4.6,1.95,Math.PI],[0,1.6,0]]},
   bakery:{n:2,buy:0,spots:[[0,-2.5,Math.PI],[-1.6,-2.5,Math.PI],[1.6,-2.5,Math.PI],[-4.9,-1.0,-Math.PI/2],[0,1.2,0],[1.6,2.8,0]]},
   icecream:{n:2,buy:0,spots:[[0,-2.5,Math.PI],[-1.6,-2.5,Math.PI],[1.6,-2.5,Math.PI],[-4.0,-2.6,Math.PI],[0,1.0,0],[1.6,2.8,0]]},
-  library:{n:2,buy:-1,spots:[[-3.7,-3.4,Math.PI],[-1.2,-3.4,Math.PI],[1.3,-3.4,Math.PI],[3.8,-3.4,Math.PI],[-4.8,-1.5,-Math.PI/2],[4.8,-1.5,Math.PI/2],[0,1.8,0],[4.4,2.9,Math.PI]]},
+  library:{n:2,buy:-1,spots:[[-3.7,-3.15,Math.PI],[-1.2,-3.15,Math.PI],[1.3,-3.15,Math.PI],[3.8,-3.15,Math.PI],[-4.8,-1.5,-Math.PI/2],[4.8,-1.5,Math.PI/2],[0,1.8,0],[4.4,2.9,Math.PI]]},
   clothes:{n:2,buy:4,spots:[[-3.6,-2.85,Math.PI],[0,-2.85,Math.PI],[3.6,-2.85,Math.PI],[4.9,-1.2,Math.PI/2],[3.6,3.15,Math.PI],[-5.4,-.85,Math.PI],[0,1.2,0],[-1.8,.4,0],[1.5,3.2,0]]}};
 function segFree(L,a,b){const len=Math.hypot(b[0]-a[0],b[1]-a[1]),n=Math.max(1,Math.ceil(len/.3));for(let i=0;i<=n;i++){const t=i/n,x=L.ox+a[0]+(b[0]-a[0])*t,z=L.oz+a[1]+(b[1]-a[1])*t;for(const c of L.cols)if(pushOut(x,z,.3,c))return false;}return true;}
 class Shopper{
-  constructor(id,cfg){this.L=LOC[id];this.cfg=cfg;this.p=bakePerson(makePerson(randomLook()));this.g=this.p.root;scene.add(this.g);this.i=Math.floor(Math.random()*cfg.spots.length);
+  constructor(id,cfg){this.L=LOC[id];this.cfg=cfg;this.p=bakePerson(makePerson(randomLook()));this.g=this.p.root;scene.add(this.g);const fr=cfg.spots.map((s,j)=>j).filter(j=>!SHOPPERS.some(o=>o.L===this.L&&o.i===j));this.i=fr.length?pick(fr):Math.floor(Math.random()*cfg.spots.length);
     const s=cfg.spots[this.i];this.x=this.L.ox+s[0];this.z=this.L.oz+s[1];this.face=s[2]||0;this.next=-1;this.wait=rand(0,5);this.moving=false;
     this.target={x:0,z:0,r:2,icon:'👋',label:'Say hi',obj:this.g,act:()=>{this.p.wave=1.2;SFX.talk();toast('“'+pick(['I love this shop!','Shopping is so fun!','This is my favorite store!','Have you tried the new stuff?','Hi! Nice to see you here!'])+'”',2.6);}};}
   update(dt){const open=S.time>=8&&S.time<20,here=CUR===this.L;this.g.visible=open&&here;if(!open)return;
     if(this.wait>0){this.wait-=dt;this.moving=false;}
-    else{if(this.next<0){const nb=this.cfg.adj[this.i];this.next=nb.length?pick(nb):this.i;}
+    else{if(this.next<0){const nb=this.cfg.adj[this.i].filter(j=>!SHOPPERS.some(o=>o!==this&&o.L===this.L&&(o.i===j||o.next===j)));this.next=nb.length?pick(nb):this.i;}   /* 🛍️ never two shoppers on one spot (one hid the other's 👋 Say hi) */
       const t=this.cfg.spots[this.next],tx=this.L.ox+t[0],tz=this.L.oz+t[1],dx=tx-this.x,dz=tz-this.z,d=Math.hypot(dx,dz);
       if(d<.1){this.i=this.next;this.next=-1;this.wait=rand(2,6);this.face=t[2]||this.face;
         if(this.i===this.cfg.buy){this.wait=4;if(here){floatText(pick(['🛍️','🪙','💕']),this.x,2.2,this.z,{h:.5});const k=KEEPERS.find(q=>q.L===this.L);if(k)k.p.wave=1.2;}}}
