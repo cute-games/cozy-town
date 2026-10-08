@@ -651,6 +651,21 @@ function tagFit(r,sc,cam){const u=this.userData,e=this.matrixWorld.elements,c=ca
   const nat=u.h0*innerHeight/(2*d*Math.tan((cam.fov||70)*Math.PI/360)),mx=clamp(Math.min(innerWidth,innerHeight)*.065,26,48),k=nat>mx?mx/nat:1;
   if(k!==u.k){u.k=k;this.scale.set(u.w0*k,u.h0*k,1);this.updateMatrix();if(this.parent)this.matrixWorld.multiplyMatrices(this.parent.matrixWorld,this.matrix);}
   this.material.opacity=d<1.4?clamp((d-.95)/.45,0,1):1;}
+/* 🏠 a house's name label on Friends Lane: it fades out far away (with many friends online the far labels piled up)
+   and slides down from under the HUD (the clock, the buttons, the map column) onto its house */
+function laneTagR(r,sc,cam){const e=this.matrixWorld.elements,c=cam.matrixWorld.elements,d=Math.hypot(e[12]-c[12],e[13]-c[13],e[14]-c[14]);
+  this.material.opacity=clamp((34-d)/8,0,1);hudDodge(this,cam);}
+const HUDK={f:-1,r:[]},_hv=new THREE.Vector3(),_hw=new THREE.Vector3();
+function hudRects(){const f=renderer.info.render.frame;if(HUDK.f===f)return HUDK.r;HUDK.f=f;const R=HUDK.r;R.length=0;   /* (looked up once per drawn frame) */
+  if(!$('hud').hidden){for(const el of $('left').children){const b=boxOf(el);if(b)R.push(b);}for(const id of['topbtns','updBtn']){const b=boxOf($(id));if(b)R.push(b);}
+    const t=hudLow();if(t)R.push({left:-1e4,right:1e4,top:-1e4,bottom:t});}   /* (the whole top row band, and above the screen's top) */
+  return R;}
+function hudDodge(s,cam){s.center.y=.5;s.material.depthTest=true;if(s.material.opacity<=0)return;const R=hudRects();if(!R.length)return;
+  _hv.setFromMatrixPosition(s.matrixWorld);const z=-_hw.copy(_hv).applyMatrix4(cam.matrixWorldInverse).z;if(z<.2)return;_hv.project(cam);
+  const W=innerWidth,H=innerHeight,f=H/(2*Math.tan(cam.fov*Math.PI/360)),h=s.scale.y*f/z,w=s.scale.x*f/z,x=(_hv.x+1)/2*W,y=(1-_hv.y)/2*H;let dn=0;
+  if(x+w/2<0||x-w/2>W||y+h/2<0||y-h/2>H)return;   /* (off the screen anyway) */
+  for(let n=0;n<4;n++){let more=0;for(const b of R)if(x+w/2>b.left&&x-w/2<b.right&&y-h/2+dn<b.bottom+4&&y+h/2+dn>b.top){dn=b.bottom+4-(y-h/2);more=1;}if(!more)break;}
+  if(dn>Math.max(h*2.5,H*.22))s.material.opacity=0;else if(dn>0){s.center.y=.5+dn/h;s.material.depthTest=false;}}   /* (moved down onto its house: drawn on top of it; too far under the HUD: not shown) */
 function signPlane(text,w,h,bg,fg){
   const H=160,W=Math.round(H*w/h),c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
   const draw=()=>{x.fillStyle=bg;x.fillRect(0,0,W,H);let s=104;x.font=`800 ${s}px ${FONT}`;const tw=x.measureText(text).width;
@@ -712,41 +727,83 @@ function playTune(){const s=[0,4,7,12,7,4,5,9,12,9,7,4,0];s.forEach((n,i)=>tone(
 /* ---- toast & fade ---- */
 let toastT=0;
 /* 🍞 a message (toast) never sits on an open card, the top HUD buttons or the use button: it takes the first free spot from a wish list
-   (its usual spot first). While the "Still there?" or "Reconnecting…" card is up, messages wait in a little line and come one by one after it */
-const TQ={hold:false,line:false,q:[]};
-function toast(msg,sec=2.8){if(TQ.hold||TQ.line||TQ.q.length){TQ.q.push([msg,sec]);if(TQ.q.length>3)TQ.q.shift();if(!TQ.hold&&!TQ.line)toastNext();return;}toastShow(msg,sec);}
-function toastShow(msg,sec,line){const t=$('toast');t.textContent=msg;t.classList.add('show');TQ.line=!!line;try{toastPlace();popClear();}catch(e){}clearTimeout(toastT);
-  toastT=setTimeout(()=>{t.classList.remove('show');TQ.line=false;if(TQ.q.length&&!TQ.hold)toastT=setTimeout(toastNext,300);},sec*1000);}
-function toastNext(){const q=TQ.q.shift();if(q)toastShow(q[0],q[1],1);}
-function toastOff(){clearTimeout(toastT);$('toast').classList.remove('show');TQ.q.length=0;TQ.line=false;}   /* an old hint that no longer fits (a new class step) */
-function toastHold(on){if(on===TQ.hold)return;TQ.hold=on;if(on){clearTimeout(toastT);$('toast').classList.remove('show');TQ.line=false;}else if(!PLAYING)TQ.q.length=0;else toastNext();}
-/* where things on screen are (null = not shown), and what a message must keep clear: weight 10 = a card, 4 = the top HUD row, 3 = the use button, 1 = the map/notepad column */
+   (its usual spot first). While the "Still there?" or "Reconnecting…" card is up, messages wait in a little line and come one by one after it.
+   One message at a time, each one readable: a new message waits until the one on screen had time to be read (1.6 s, longer for long words; it
+   used to push it away at once, so "Welcome back" was gone after 5 ms). The answer to a new tap or key still shows at once, and the same words
+   again just stay longer. News (not the answer to a tap: a friend came, you are online…, or a message from before the card you opened) waits
+   while an open card leaves it no free spot, and comes when the card closes; news that waited 30 s is old and is skipped */
+const TQ={hold:false,line:false,q:[],cur:null,at:0,tm:0,card:-1e9,cev:null},T_OLD=30000,toastRead=m=>Math.min(m.s,Math.max(1.6,m.m.length*.05))*1000;
+function toastEv(){const e=window.event;return e&&/^(click|dblclick|pointer|mouse|touch|key|input|change|submit)/.test(e.type)?e:null;}   /* the tap or key this happens in */
+const toastWith=m=>m.ev?m.ev===TQ.cev:Math.abs(TQ.card-m.at)<100;   /* made together with the card that is open now */
+function toast(msg,sec=2.8){msg=String(msg);const t=$('toast'),on=t.classList.contains('show'),now=performance.now();
+  if(on&&t.textContent===msg){clearTimeout(toastT);toastT=setTimeout(toastEnd,sec*1000);return;}   /* the same words again: they stay longer */
+  if(TQ.q.some(m=>m.m===msg))return;const ev=toastEv(),m={m:msg,s:sec,at:now,ev,news:!ev&&now-TQ.card>100};   /* (right with a card that opens: its answer) */
+  if(!m.news&&!TQ.hold&&!TQ.line&&!(on&&ev&&TQ.cur&&TQ.cur.ev===ev)){toastShow(m);return;}   /* the answer to a new tap: at once */
+  TQ.q.push(m);if(TQ.q.length>3)TQ.q.shift();toastPump();}
+function toastShow(m){const t=$('toast'),st=t.style,was=[t.textContent,t.className,st.left,st.top,st.bottom,st.maxWidth];t.textContent=m.m;t.classList.add('show');let ok=true;try{ok=toastPlace(m);}catch(e){}
+  if(!ok&&!m.keep&&(m.news||TQ.card>m.at&&!toastWith(m))){[t.textContent,t.className,st.left,st.top,st.bottom,st.maxWidth]=was;return false;}   /* news, and no free spot beside the open card: not yet (all as it was) */
+  try{popClear();}catch(e){}TQ.cur=m;TQ.at=performance.now();TQ.line=!!m.keep;clearTimeout(toastT);toastT=setTimeout(toastEnd,m.s*1000);
+  TQ.sig=toastSig();if(!TQ.iv)TQ.iv=setInterval(toastWatch,300);setTimeout(toastWatch,0);   /* (a card that closes right after its answer) */
+  if(TQ.q.length){clearTimeout(TQ.tm);TQ.tm=setTimeout(toastPump,toastRead(m)+20);}return true;}
+/* while a message is up: a card closing, the use button (and its words) or the arrow bar coming or going finds it a new spot if it now sits on them */
+function toastSig(){return [UI.open,$('actWrap').hidden,$('actLbl').textContent,$('nav').hidden,$('hud').hidden].join('|');}
+function toastWatch(){if(!$('toast').classList.contains('show')){clearInterval(TQ.iv);TQ.iv=0;return;}const g=toastSig();if(g!==TQ.sig){TQ.sig=g;toastFit();}}
+function toastEnd(){$('toast').classList.remove('show');TQ.line=false;TQ.cur=null;if(TQ.q.length&&!TQ.hold){clearTimeout(TQ.tm);TQ.tm=setTimeout(toastPump,300);}}
+function toastPump(){clearTimeout(TQ.tm);TQ.tm=0;if(TQ.hold||!TQ.q.length)return;const now=performance.now();
+  if(TQ.cur&&$('toast').classList.contains('show')){const w=(TQ.line?TQ.cur.s*1000:toastRead(TQ.cur))-(now-TQ.at);if(w>0){TQ.tm=setTimeout(toastPump,w+20);return;}}   /* the one on screen gets its turn first */
+  for(let i=0;i<TQ.q.length;i++){const m=TQ.q[i];TQ.q.splice(i,1);if(!m.keep&&now-m.at>T_OLD){i--;continue;}   /* old news: skipped */
+    if(toastShow(m))return;TQ.q.splice(i,0,m);}
+  if(TQ.q.length)TQ.tm=setTimeout(toastPump,600);}   /* news waiting for a free spot: look again soon */
+/* a card opens (open) or the screen turns: a message from before that now has to sit on the card steps aside and waits until the card closes */
+function toastFit(open){const t=$('toast'),m=TQ.cur;if(!t.classList.contains('show'))return;let ok=true;try{ok=toastPlace(m);}catch(e){}
+  if(!ok&&m&&!m.keep&&(open?!toastWith(m):m.news)){m.news=true;clearTimeout(toastT);t.classList.remove('show');TQ.cur=null;TQ.q.unshift(m);if(TQ.q.length>3)TQ.q.pop();toastPump();}}
+function toastOff(){clearTimeout(toastT);clearTimeout(TQ.tm);$('toast').classList.remove('show');TQ.q.length=0;TQ.line=false;TQ.cur=null;}   /* an old hint that no longer fits (a new class step) */
+function toastHold(on){if(on===TQ.hold)return;TQ.hold=on;if(on){clearTimeout(toastT);clearTimeout(TQ.tm);$('toast').classList.remove('show');TQ.line=false;TQ.cur=null;}
+  else if(!PLAYING)TQ.q.length=0;else{for(const m of TQ.q)m.keep=1;toastPump();}}   /* the ones that waited come one by one, each for its full time */
+/* where things on screen are (null = not shown), and what a message must keep clear: weight 10 = a card, 4 = the top HUD row, 3 = the use button and the
+   pink arrow bar, 1 = the map/notepad column */
 function boxOf(el){if(!el||el.hidden)return null;const r=el.getBoundingClientRect();if(r.width<2||r.height<2)return null;const cs=getComputedStyle(el);return cs.visibility==='hidden'||cs.display==='none'?null:r;}
+function cardBox(){const c=$('card');let r=boxOf(c);if(!r||getComputedStyle(c).overflowY!=='visible')return r;let {left,top,right,bottom}=r;   /* a card with a name tag sticking out (Zac, people talking): the tag counts too */
+  for(const k of c.children){const q=boxOf(k);if(q){left=Math.min(left,q.left);top=Math.min(top,q.top);right=Math.max(right,q.right);bottom=Math.max(bottom,q.bottom);}}return {left,top,right,bottom,width:right-left,height:bottom-top};}
 function keepClear(me){const K=[],add=(el,w)=>{if(el&&el!==me){const r=boxOf(el);if(r)K.push([r,w]);}};
-  if(!$('panel').hidden)add($('card'),10);add(document.querySelector('#awayBox .awc'),10);for(const id of['knockCard','zzCard','tutCard','dtCard','tchBar'])add($(id),8);add($('note'),6);if($('toast').classList.contains('show'))add($('toast'),2);
-  if(!$('hud').hidden){const u=$('panel').hidden?1:.25,tap=me===$('note')?8:1;for(const id of['stats','busTip','tnHud','fbHud','topbtns'])add($(id),4*u);add($('actWrap'),3*u);add($('bar'),3*u);for(const id of['nav','tasks','job','pad','dcard'])add($(id),u);add($('moveBtns'),tap*u);add($('joy'),tap*u);}   /* under an open card the HUD matters less; the message card (it takes taps) must not sit on the joystick or jump */
+  if(!$('panel').hidden){const r=cardBox();if(r)K.push([r,10]);}add(document.querySelector('#awayBox .awc'),10);for(const id of['knockCard','zzCard','tutCard','dtCard','tchBar'])add($(id),8);add($('note'),6);if($('toast').classList.contains('show'))add($('toast'),2);
+  if(!$('hud').hidden){const u=$('panel').hidden?1:.25,tap=me===$('note')?8:1;for(const id of['stats','busTip','tnHud','fbHud','topbtns'])add($(id),4*u);add($('actWrap'),3*u);add($('bar'),3*u);add($('nav'),3*u);for(const id of['tasks','job','pad','dcard'])add($(id),u);add($('moveBtns'),tap*u);add($('joy'),tap*u);}   /* under an open card the HUD matters less; the message card (it takes taps) must not sit on the joystick or jump */
   return K;}
 function hudLow(){let b=0;for(const id of['stats','busTip','tnHud','fbHud','topbtns']){const r=boxOf($(id));if(r)b=Math.max(b,r.bottom);}return b;}   /* the bottom of the top HUD row */
 function leftBox(){let r0=null;for(const el of $('left').children){const r=boxOf(el);if(r)r0=r0?{right:Math.max(r0.right,r.right),bottom:Math.max(r0.bottom,r.bottom)}:{right:r.right,bottom:r.bottom};}return r0||{right:0,bottom:0};}
-function spotFor(w,h,wish,K){const W=innerWidth,H=innerHeight;let best=null,bc=Infinity;
+function visH(){const v=window.visualViewport;return v&&v.height>50?Math.min(innerHeight,Math.round(v.offsetTop+v.height)):innerHeight;}   /* the screen height you can see: above the on-screen keyboard while typing */
+function spotFor(w,h,wish,K){const W=innerWidth,H=visH();let best=null,bc=Infinity;
   for(const c of wish){if(!c||!isFinite(c[0])||!isFinite(c[1]))continue;const x=clamp(c[0]-w/2,6,Math.max(6,W-w-6)),y=clamp(c[1],6,Math.max(6,H-h-6));let s=0;
     for(const [r,k] of K){const ox=Math.min(x+w,r.right)-Math.max(x,r.left),oy=Math.min(y+h,r.bottom)-Math.max(y,r.top);if(ox>0&&oy>0)s+=ox*oy*k;}
     if(s<bc-.5){bc=s;best=[x+w/2,y];if(s<=0){best.free=1;break;}}}
   return best;}
-function toastPlace(){const t=$('toast');if(!t.classList.contains('show'))return;t.style.maxWidth='';t.classList.remove('side');const W=innerWidth,H=innerHeight,w=t.offsetWidth,h=t.offsetHeight,cs=getComputedStyle(document.documentElement),sT=parseFloat(cs.paddingTop)||0,sB=parseFloat(cs.paddingBottom)||0;
-  const K=keepClear(t),hb=hudLow()+10,lc=leftBox(),mid=(lc.right+W)/2,c=UI.open?boxOf($('card')):null,a=boxOf($('actWrap')),usual=H-sB-200-h,tch=document.body.classList.contains('tch');
+function toastPlace(m){const t=$('toast');if(!t.classList.contains('show'))return true;m=m||TQ.cur;t.style.maxWidth='';t.classList.remove('side');const W=innerWidth,H=visH(),w=t.offsetWidth,h=t.offsetHeight,cs=getComputedStyle(document.documentElement),sT=parseFloat(cs.paddingTop)||0,sB=parseFloat(cs.paddingBottom)||0;
+  const K=keepClear(t),hb=hudLow()+10,lc=leftBox(),mid=(lc.right+W)/2,c=UI.open?cardBox():null,a=boxOf($('actWrap')),usual=H-sB-200-h,tch=document.body.classList.contains('tch');
   let s=spotFor(w,h,[tch?null:[W/2,usual],a?[W/2,a.top-h-10]:null,[W/2,hb],tch?null:[mid,usual],[mid,hb],c?[W/2,c.top-h-10]:null,c?[W/2,c.bottom+10]:null,[W/2,sT+8],[W/2,H-sB-h-8]],K);
-  if(c&&s&&!s.free)for(const [x0,x1] of[[c.right+8,W-8],[8,c.left-8]]){if(x1-x0<150)continue;t.style.maxWidth=(x1-x0)+'px';t.classList.add('side');const w2=t.offsetWidth,h2=t.offsetHeight,s2=spotFor(w2,h2,[[(x0+x1)/2,(H-h2)/2],[(x0+x1)/2,hb]],K);
-    if(s2&&s2.free){s=s2;break;}t.style.maxWidth='';t.classList.remove('side');}   /* a big card: beside it, in a narrower box */
-  if(s){t.style.left=s[0]+'px';t.style.top=s[1]+'px';t.style.bottom='auto';}}
+  const narrow=(x0,x1,wish)=>{if(x1-x0<150)return null;t.style.maxWidth=(x1-x0)+'px';t.classList.add('side');const w2=t.offsetWidth,h2=t.offsetHeight,s2=spotFor(w2,h2,wish(h2),K);
+    if(s2&&s2.free)return s2;t.style.maxWidth='';t.classList.remove('side');return null;};   /* the same message in a narrower box (2-4 short lines) */
+  if(c&&s&&!s.free){for(const [x0,x1] of[[c.right+8,W-8],[8,c.left-8]]){const s2=narrow(x0,x1,h2=>[[(x0+x1)/2,(H-h2)/2],[(x0+x1)/2,hb]]);if(s2){s=s2;break;}}}   /* a big card: beside it */
+  else if(s&&!s.free&&!$('hud').hidden){let x0=8;for(const k of $('left').children){const r=boxOf(k);if(r&&r.bottom>hb-8)x0=Math.max(x0,r.right+8);}   /* (the left column under the top row) */
+    for(const x1 of[W-8,a?a.left-8:0]){const s2=narrow(x0,x1,()=>[[(x0+x1)/2,hb]]);if(s2){s=s2;break;}}}   /* a phone: in the free middle under the top row, between the left column (arrow bar, map) and the use button */
+  const e=c&&s&&!s.free&&m&&!m.news&&m.ev&&/^(click|dblclick|pointer|mouse)/.test(m.ev.type)?m.ev:null,t0=e&&e.target instanceof Element?e.target.closest('[data-a],button,[role=button]')||e.target:null,el=t0&&$('card').contains(t0)?t0:null,
+    fx=e?e.clientX:-1,fy=e?e.clientY:-1,fin=e&&fx>c.left&&fx<c.right&&fy>c.top&&fy<c.bottom;
+  if(el||fin){   /* the answer to a tap on a card that fills the screen: right above what you tapped (or under it), not on the card's title, buttons or info line */
+    let r=el?el.getBoundingClientRect():null;const B=r&&(r.width>240||r.height>160)?r:c;   /* (a big thing like the map: over it, where the finger was) */
+    if(!r||B===r)r={left:fx-24,right:fx+24,top:fy-24,bottom:fy+24};const x0=Math.max(c.left,B.left)+10,x1=Math.min(c.right,B.right)-10;t.style.maxWidth=Math.min(400,x1-x0)+'px';t.classList.add('side');const w2=t.offsetWidth,h2=t.offsetHeight,cx=clamp((r.left+r.right)/2,x0+w2/2,Math.max(x0+w2/2,x1-w2/2));
+    const hd=$('card').querySelector('.hd'),ctl=hd?[...hd.children].filter(x=>x.tagName!=='H2').map(x=>x.getBoundingClientRect()):[];
+    const bad=(x,y)=>y<Math.max(c.top,0)+4||y+h2>Math.min(c.bottom,H)-4||ctl.some(q=>x-w2/2<q.right&&x+w2/2>q.left&&y<q.bottom&&y+h2>q.top),up=r.top-8-h2,dn=r.bottom+8,
+      cx2=Math.max(x0+w2/2,Math.min(cx,Math.min(1e9,...ctl.map(q=>q.left))-6-w2/2));   /* (up there: left of the card's own buttons) */
+    if(!bad(cx,up))s=[cx,up];else if(!bad(cx2,up))s=[cx2,up];else if(!bad(cx,dn))s=[cx,dn];else{t.style.maxWidth='';t.classList.remove('side');}}
+  if(s){t.style.left=s[0]+'px';t.style.top=s[1]+'px';t.style.bottom='auto';}
+  if(!c||!s)return true;const w2=t.offsetWidth,h2=t.offsetHeight,x=s[0]-w2/2;return x+w2<=c.left+2||x>=c.right-2||s[1]+h2<=c.top+2||s[1]>=c.bottom-2;}   /* false = it had to sit on the open card */
 /* 📩 the message card sits under the top HUD row (on a phone held upright: under the map and notepad), never on the clock or the buttons */
 function notePlace(){const n=$('note');if(n.hidden)return;n.style.left='';n.style.top='';const W=innerWidth,H=innerHeight,w=n.offsetWidth,h=n.offsetHeight,t0=n.offsetTop,K=keepClear(n),hb=hudLow()+10,lc=leftBox();
   const s=spotFor(w,h,[[W/2,t0],[W/2,hb],[(lc.right+W)/2,hb],[(lc.right+W)/2,t0],[W/2,lc.bottom+10],[W/2,(H-h)/2]],K);
   if(s&&(Math.abs(s[1]-t0)>1||Math.abs(s[0]-W/2)>1)){n.style.left=s[0]+'px';n.style.top=s[1]+'px';}}
-addEventListener('resize',()=>setTimeout(()=>{toastPlace();notePlace();},80));
+addEventListener('resize',()=>setTimeout(()=>{toastFit();notePlace();try{cardMore();}catch(e){}},80));
 /* 🧹 glitch fixes, pass 1 (screens): the styles of the fixes below (the page's first 498 lines stay as they are) */
 {const st=document.createElement('style');st.textContent='.pop{white-space:normal;width:max-content;max-width:92vw;text-align:center;line-height:1.1;font-size:clamp(26px,min(10vw,11vh),60px)}.pop.slam{font-size:clamp(34px,min(14vw,15vh),80px)}'
-  +'#card.more::after{content:"⬇️";position:sticky;bottom:6px;z-index:3;display:block;width:44px;height:44px;margin:-44px 0 0 auto;border-radius:50%;background:var(--paper);border:3px solid var(--line);box-shadow:0 3px 0 var(--soft);font-size:19px;line-height:38px;text-align:center;pointer-events:none;animation:moreBob .9s ease-in-out infinite alternate}@keyframes moreBob{to{transform:translateY(-6px)}}'
+  +'#moreHint{position:absolute;z-index:3;width:38px;height:38px;border-radius:50%;background:var(--paper);border:3px solid var(--line);box-shadow:0 3px 0 var(--soft);font-size:17px;line-height:32px;text-align:center;pointer-events:none;animation:moreBob .9s ease-in-out infinite alternate}@keyframes moreBob{to{transform:translateY(-6px)}}'
   +'.crsave.more::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:30px;background:linear-gradient(to bottom,transparent,var(--paper));pointer-events:none}.crsave.more::after{content:"⬇️";position:absolute;right:14px;bottom:calc(100% + 4px);width:34px;height:34px;border-radius:50%;background:var(--paper);border:3px solid var(--line);font-size:15px;line-height:28px;text-align:center;pointer-events:none;animation:moreBob .9s ease-in-out infinite alternate}'
   +'.psj div{color:#3d2c5e;font-size:15px;line-height:1.2}.psrow.me,.psrow.cur{color:#3d2c5e}.ph-row .hearts .off{color:#3d2c5e}'
   +'#knockCard{width:min(400px,92vw)}#knockCard .kc-b{flex-wrap:wrap}#knockCard .kc-b .btn{white-space:nowrap}'
@@ -1288,6 +1345,8 @@ function fireTruck(g,x,z,ry){const p=new THREE.Group();p.position.set(x,0,z);p.r
   for(const sx of[-.95,.95])for(const sz of[-1.7,1.6])cyl(p,.42,.42,.3,'#3d3550',sx,.42,sz,{rz:Math.PI/2,center:true,seg:14});
   sph(p,.14,'#7cc8ff',-.5,2.45,1.6,{ws:8,hs:6,ol:.012});sph(p,.14,'#ff4d4d',.5,2.45,1.6,{ws:8,hs:6,ol:.012});box(p,1.7,.25,.05,'#ffffff',0,.75,2.62,{ol:false});}
 function hedge(g,x1,z1,x2,z2,L){box(g,Math.abs(x2-x1),1.05,Math.abs(z2-z1),'#5fbf74',(x1+x2)/2,0,(z1+z2)/2,{ol:.04});if(L)col(L,x1,z1,x2,z2);}
+/* a block standing on the grass whose ink shell (t thick) starts 1.5 cm above the ground: the shell's underside can't flicker through the grass */
+function hbox(g,w,h,d,c,x,z,t){const m=box(g,w,h,d,c,x,0,z,{ol:false}),k=h+t-.015,o=new THREE.Mesh(new THREE.BoxGeometry(w+2*t,k,d+2*t),OL);o.position.set(x,.015+k/2,z);g.add(o);return m;}
 function fence(g,x1,z1,x2,z2,L,c='#ffffff'){const len=Math.hypot(x2-x1,z2-z1),n=Math.max(1,Math.round(len/.9)),ang=Math.atan2(x2-x1,z2-z1);
   for(let i=0;i<=n;i++){const t=i/n;box(g,.1,.85,.1,c,x1+(x2-x1)*t,0,z1+(z2-z1)*t,{ol:.02});}
   for(const y of[.32,.62]){const p=new THREE.Group();p.position.set((x1+x2)/2,y,(z1+z2)/2);p.rotation.y=ang;g.add(p);box(p,.05,.1,len,c,0,0,0,{ol:.02});}
@@ -1378,6 +1437,8 @@ function lakeOut(x,z,r,c){const dx=x-c.cx,dz=z-c.cz,m=r+c.cr;if(Math.abs(dx)>m||
   return best;}
 function pushOut(x,z,r,c){
   if(c.lk)return lakeOut(x,z,r,c);
+  if(c.ob){const dx=x-c.cx,dz=z-c.cz,t=dx*c.ux+dz*c.uz,s=dz*c.ux-dx*c.uz;if(Math.abs(t)>c.hl+r||Math.abs(s)>c.hw+r)return null;   /* a turned box (the bus): pushed out in its own frame */
+    const p=pushOut(t,s,r,{x1:-c.hl,z1:-c.hw,x2:c.hl,z2:c.hw});return p&&[c.cx+p[0]*c.ux-p[1]*c.uz,c.cz+p[0]*c.uz+p[1]*c.ux];}
   if(c.cr!==undefined){const dx=x-c.cx,dz=z-c.cz,m=r+c.cr;if(Math.abs(dx)>m||Math.abs(dz)>m)return null;const d=Math.hypot(dx,dz);if(d>=m)return null;if(d<1e-6)return[x+m,z];const k=(m-d)/d;return[x+dx*k,z+dz*k];}
   if(x<c.x1-r||x>c.x2+r||z<c.z1-r||z>c.z2+r)return null;
   const px=clamp(x,c.x1,c.x2),pz=clamp(z,c.z1,c.z2),dx=x-px,dz=z-pz,d2=dx*dx+dz*dz;
@@ -1716,18 +1777,18 @@ function buildBeach(){
   const foam=new THREE.Mesh(new THREE.PlaneGeometry(1.1,400),new THREE.MeshBasicMaterial({color:'#ffffff',transparent:true,opacity:.5,depthWrite:false}));foam.rotation.x=-Math.PI/2;foam.position.set(11.4,.1,0);foam.userData.keep=1;L.g.add(foam);BEACH.foam=foam;
   flat(st,2.4,400,'#e9c88f',10.6,.006,0);
   /* land behind the dunes, far hills, clouds */
-  flat(st,170,1400,'#8fd47a',-116,.008,0);flat(st,3.2,90,'#efd6a0',-46,.012,0);
+  flat(st,163.6,1400,'#8fd47a',-119.2,.008,0);for(const s of[-1,1])flat(st,2.6,697.7,'#8fd47a',-32.3,.008,s*351.15);flat(st,3.2,90,'#efd6a0',-46,.012,0);   /* (never under the bus road or the sandy step: they lie right on the sand, so they can't swap places) */
   for(const s of[-1,1])box(st,.9,1.0,19.4,'#5fbf74',-31.1,0,s*12.3,{ol:.03});
   const hl=new THREE.Group();L.g.add(hl);for(let i=0;i<9;i++)sph(hl,rand(30,46),pick(['#86d37c','#79c973','#93dc85']),-130-rand(0,40),-rand(6,12),-200+i*50,{ol:.9,ws:16,hs:9,s:[1,.5,1]});
   for(const [x,z,s] of [[-40,-14,1.3],[-44,9,1.4],[-52,-30,1.5],[-49,26,1.3],[-60,-2,1.6]])palm(hl,x,z,s,.2,rand(0,TAU));bake(hl,false);
   for(let i=0;i<6;i++){const c=new THREE.Group();const n=3+(i%3);for(let k=0;k<n;k++)sph(c,rand(5,8),null,k*6.5-n*3.2,rand(-1.5,1.5),rand(-3,3),{mat:CLOUD,olMat:OLC,ol:.55,ws:12,hs:8,s:[1,.68,1]});
     c.position.set(rand(50,300),rand(52,76),rand(-200,200));c.userData.sp=rand(.6,1.4);bake(c,false);L.g.add(c);BEACH.clouds.push(c);}
   /* the boardwalk from the gate, and the gate back to town */
-  box(st,11,.06,2,'#e2bd8f',-24.5,0,0,{ol:.012});for(let x=-29.6;x<-19;x+=.55)box(st,.03,.01,2,'#b98a5e',x,.06,0,{ol:false});
+  for(let i=0;i<5;i++)box(st,2.2,.06,2,'#e2bd8f',-28.9+i*2.2,.015,0,{ol:.012});for(let x=-29.6;x<-19;x+=.55)box(st,.03,.01,2,'#b98a5e',x,.075,0,{ol:false});   /* (in 5 short pieces, lifted off the sand: no flicker at night) */
   for(const s of[-1,1]){box(st,.3,3.4,.3,'#ffffff',-29.2,0,s*2.2,{ol:.03});sph(st,.26,'#ff7aa8',-29.2,3.62,s*2.2,{ws:10,hs:8});colC(L,-29.2,s*2.2,.25);}
   box(st,.22,.8,4.9,'#ff7aa8',-29.2,2.75,0,{ol:.03});
   {const sg=signPlane('🏘️ To town',4.4,.66,'#ff7aa8','#ffffff');sg.position.set(-29.07,3.15,0);sg.rotation.y=Math.PI/2;L.g.add(sg);}
-  for(const s of[-1,1]){cyl(st,.05,.06,1.25,'#5a5f8c',-20.6,0,s*1.5,{seg:6,ol:.012});sph(st,.15,null,-20.6,1.36,s*1.5,{mat:LAMP,ol:.015,ws:10,hs:8});colC(L,-20.6,s*1.5,.12);}
+  for(const s of[-1,1]){cyl(st,.05,.06,2.05,'#5a5f8c',-20.6,0,s*1.5,{seg:6,ol:.012});sph(st,.15,null,-20.6,2.16,s*1.5,{mat:LAMP,ol:.015,ws:10,hs:8});colC(L,-20.6,s*1.5,.12);}   /* (globes above your eyes: never a big white blob right in your face) */
   inter(L,{x:-27.8,z:0,r:2.4,icon:'🚌',label:()=>busReady('beach')?'The bus is here!':'When does the bus come?',act:()=>busInfo('beach')});
   /* palm trees, umbrellas and towels */
   for(const [x,z,s,ry] of [[-26,-8,1.1,.4],[-24.5,9,1.2,2.6],[-27,17,1,1.5],[-25.5,-18,1.15,-.6],[-12,-20.5,1.05,1.2],[1,20.5,1.1,-1.9],[-17,20,.95,2],[-19,-13,1,3]]){palm(st,x,z,s,.28,ry);colC(L,x,z,.3);}
@@ -2002,14 +2063,14 @@ function busShelter(L,st,x,z,ry){const g=new THREE.Group();g.position.set(x,0,z)
    const P2=[],U=[],I=[],quad=(x,y,z,w,h,v0,v1,u1)=>{const n=P2.length/3;P2.push(x+w/2,y-h/2,z,x-w/2,y-h/2,z,x-w/2,y+h/2,z,x+w/2,y+h/2,z);U.push(0,v0,u1,v0,u1,v1,0,v1);I.push(n,n+1,n+2,n,n+2,n+3);};   /* (they face the front) */
    quad(0,1.5,.465,1.56,.92,1-300/512,1,1);quad(0,2.82,-.035,2.4,.42,1-400/512,1-310/512,1);quad(2.2,2.86,-.705,.4,.4,0,100/512,100/512);
    const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(P2,3));geo.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));geo.setIndex(I);geo.computeBoundingSphere();
-   const m=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({map:tx}));m.userData.keep=1;g.add(m);BUS.boards.push({c:cv,t:tx,k:''});
+   const m=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({map:tx}));m.userData.keep=1;g.add(m);BUS.boards.push({c:cv,t:tx,k:'',bch:L.id==='beach'});
    const [tx2,tz2]=W(0,-1.05);inter(L,{x:tx2,z:tz2,r:2.1,icon:'📋',label:'Read the bus timetable',act:openBusTable,obj:m});}
   {const a=W(-1.9,.48),b=W(1.9,.62);col(L,a[0],a[1],b[0],b[1]);for(const sd of[-1,1]){const p=W(sd*1.8-.06,-.62),q=W(sd*1.8+.06,.62);col(L,p[0],p[1],q[0],q[1]);}const pl=W(2.2,-.66);colC(L,pl[0],pl[1],.1);}}
 function busDoorT(L,p){const [x,z]=busW(2.2,1.9,busXZ(p,0));BUS.tk.push(inter(L,{x:x-L.ox,z:z-L.oz,r:2.4,icon:'🚌',label:()=>busLabel(p),act:()=>busBoard(p),when:()=>busReady(p)}));}
 function busStopCity(L,st){busShelter(L,st,-16.2,7.6,0);busDoorT(L,'park');}   /* by the park, east of its north gate */
 function busStopBeach(L,st){const bg=new THREE.Group();L.g.add(bg);
-  flat(bg,3.8,240,'#d9d2e6',-35.5,.016,0);for(let z=-118;z<=118;z+=4)box(bg,.14,.012,1.7,'#ffffff',-35.5,.03,z,{ol:false});   /* a little road behind the dunes */
-  flat(bg,4.4,4.6,'#f6dfa9',-32.3,.02,0);col(L,-34.6,-23,-30.5,-1.95);col(L,-34.6,1.95,-30.5,47);   /* a sandy step out through the gate to the bus */
+  for(let z=-110;z<=110;z+=20)flat(bg,3.8,20,'#d9d2e6',-35.5,.016,z);for(let z=-118;z<=118;z+=4)box(bg,.14,.012,1.7,'#ffffff',-35.5,.03,z,{ol:false});   /* a little road behind the dunes (in short pieces: no flicker) */
+  flat(bg,3.5,4.6,'#f6dfa9',-31.85,.02,0);col(L,-34.6,-23,-30.5,-1.95);col(L,-34.6,1.95,-30.5,47);   /* a sandy step out through the gate to the bus (up to the road's edge, not on it) */
   busShelter(L,bg,-26.2,-4.25,Math.PI);bake(bg,true);busDoorT(L,'beach');
   /* ⛺ the camp spot next to the bus stop: a ring of stones; a tent and a campfire appear when you camp */
   for(let k=0;k<9;k++){const a=k/9*TAU;sph(st,.16,['#b8b4c4','#a7a3b5','#c8c4d6'][k%3],CAMP.fx+Math.cos(a)*.62,.06,CAMP.fz+Math.sin(a)*.62,{s:[1.2,.7,1],ws:8,hs:6,ol:.015});}colC(L,CAMP.fx,CAMP.fz,.75);
@@ -2022,15 +2083,17 @@ function busStopBeach(L,st){const bg=new THREE.Group();L.g.add(bg);
    bake(g,true);
    const f=new THREE.Group();f.position.set(fx,.1,fz);for(const [x,z,r,hh,c] of [[0,0,.16,.66,'#ff7a2e'],[.14,.05,.11,.46,'#ff9d3c'],[-.13,.07,.11,.42,'#ff8a3c'],[.03,-.13,.1,.4,'#ffb347'],[0,.02,.085,.36,'#ffe27a']])cone(f,r,hh,c,x,0,z,{seg:7,ol:false});
    bake(f,false);for(const m of f.children)m.material=new THREE.MeshBasicMaterial({vertexColors:true});g.add(f);BUS.fl=f;
-   g.add(glowMesh(glowGeo([[fx,.6,fz,1.2,[.95,.6,.25]],[fx,.05,fz,6,6,[.5,.3,.12]]])));}
+   g.add(glowMesh(glowGeo([[fx,.64,fz,.62,[.95,.6,.25]],[fx,.05,fz,7,7,[.6,.36,.15]]])));}   /* a soft round glow: the halo stays above the sand (a bigger one was cut by the ground into a hard-edged box) */
   inter(L,{x:CAMP.x+1.9,z:CAMP.z,r:2.0,icon:()=>campOn()?'😴':'⛺',label:()=>campOn()?'Sleep in the tent':'Build a campsite',act:campTap});
   inter(L,{x:CAMP.fx+.2,z:CAMP.fz-1.3,r:1.7,icon:'🍡',label:'Toast a marshmallow',act:campFire,when:()=>campOn()});}
 function busBoardDraw(B){const day=S?S.day:1,x=B.c.getContext('2d'),Wd=512,Ht=300;B.k=S?day+'':'';
   x.fillStyle='#ffffff';x.fillRect(0,310,Wd,90);x.fillStyle='#5fd4b0';x.fillRect(0,412,100,100);x.textAlign='center';x.textBaseline='middle';x.font=`800 64px ${FONT}`;x.fillStyle='#ff7a59';x.fillText('🚌 Beach Bus',Wd/2,358);x.font=`64px ${FONT}`;x.fillText('🚌',50,466);
   x.fillStyle='#fffaf0';x.fillRect(0,0,Wd,Ht);x.fillStyle='#5fd4b0';x.fillRect(0,0,Wd,64);x.textBaseline='middle';x.textAlign='center';x.font=`800 40px ${FONT}`;x.fillStyle='#ffffff';x.fillText('🚌 Beach Bus',Wd/2,34);
   busDays(day,3).forEach((d,k)=>{const y=96+k*56,today=!!S&&d===day;if(today){x.fillStyle='#ffe08a';x.fillRect(14,y-25,Wd-28,50);}   /* the next 3 bus days */
-    x.fillStyle='#3d2c5e';x.font=`800 32px ${FONT}`;x.textAlign='left';x.fillText((today?'⭐ ':'')+wdName(d),28,y);x.textAlign='right';x.fillText(d===1?'🎉 8:00–12:00':busHM(busArr(d)),Wd-28,y);});
-  x.fillStyle='#3d2c5e';x.font=`700 25px ${FONT}`;x.textAlign='center';x.fillText(`🏖️ Bus home 21:00 · a ride is ${BUS_FARE} 🪙`,Wd/2,Ht-26);B.t.needsUpdate=true;}
+    const L=(today?'⭐ ':'')+wdName(d),R=B.bch?(d===1?'🎉 until 12:00':busHM(busArr(d)+2*BUS_W))+' · 21:00':d===1?'🎉 8:00–12:00':busHM(busArr(d));   /* 🏖️ the board at the beach: when the buses home leave (the same times as its card and the pill) */
+    x.fillStyle='#3d2c5e';x.font=`800 32px ${FONT}`;const lw=x.measureText(L).width;x.textAlign='left';x.fillText(L,28,y);x.textAlign='right';
+    x.font=`800 ${Math.max(20,Math.min(32,Math.floor(32*(Wd-80-lw)/x.measureText(R).width)))}px ${FONT}`;x.fillText(R,Wd-28,y);});
+  x.fillStyle='#3d2c5e';x.font=`700 25px ${FONT}`;x.textAlign='center';x.fillText(B.bch?`🏘️ Bus to town · a ride is ${BUS_FARE} 🪙`:`🏖️ Bus home 21:00 · a ride is ${BUS_FARE} 🪙`,Wd/2,Ht-26);B.t.needsUpdate=true;}
 /* ---- the timetable card ---- */
 function busDays(from,n){const out=[];for(let d=from;out.length<n&&d<from+15;d++)if(busArr(d)!==undefined)out.push(d);return out;}
 function openBusTable(){const beach=CUR.id==='beach',w=Math.floor((S.day-1)/7);SFX.tap();
@@ -2041,7 +2104,7 @@ function openBusTable(){const beach=CUR.id==='beach',w=Math.floor((S.day-1)/7);S
   const c=busCur(beach?'beach':'park'),here=c&&c.u===0&&c.s.go?`🚌 The bus is here! It leaves at ${busHM(c.s.l)}.`:beach?'🏘️ Next bus home: '+busWhen(busNext('beach','town'),1)+'.':'🏖️ Next bus to the beach: '+busWhen(busNext('park','beach'))+'.';
   openPanel(`<div class="hd"><h2>🚌 Beach Bus</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div><p class="line" style="margin-top:2px">${here}</p>
     <div class="sec">This week</div>${wk(w).map(row).join('')}${left<2?`<div class="sec">Next week</div>${wk(w+1).map(row).join('')}`:''}
-    <p class="note" style="margin-top:12px">🚏 The bus waits about a minute at each stop, so be on time!<br>🪙 A ride is ${BUS_FARE} coins.<br>🏖️ On bus days the bus home leaves the beach at 21:00.<br>⛺ Missed it? Camp at the beach. The next bus takes you home!</p>`);}
+    <p class="note" style="margin-top:12px">🚏 The bus waits about a minute at each stop, so be on time!<br>🪙 A ride is ${BUS_FARE} coins.<br>🏖️ On bus days the bus home leaves the beach at 21:00.<br>⛺ Missed it? Camp at the beach. The next bus takes you home!</p>`,{cls:'bustab'});}   /* (bustab: its ⬇️ "more below" sits in the middle, between the days and the times) */
 /* ---- riding ---- */
 function busInfo(p){const c=busCur(p);SFX.pop();
   if(c&&c.u===0&&c.s.go&&busThere(p)&&!BUS.ride){toast('🚌 The bus is here! Walk to its door to get on 🚪 It leaves at '+busHM(c.s.l)+'.',4);return;}
@@ -2050,19 +2113,23 @@ function busInfo(p){const c=busCur(p);SFX.pop();
   if(p==='park')toast('🚌 The beach bus comes '+busWhen(busNext('park','beach'))+'. A ride is '+BUS_FARE+' 🪙',4);
   else toast('🚌 The bus stops right outside this gate! The bus home leaves '+busWhen(busNext('beach','town'),1)+'.',4.2);}
 function busSeat(){let h=0;const s=String(S.pid||S.name||''),n=BSEAT.length;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;h=Math.abs(h)%n;   /* your own seat, or the next free one */
-  for(let i=0;i<n;i++){const k=(h+i)%n,[x,z]=busW(BSEAT[k][0],BSEAT[k][1],BUS.pos);let free=true;for(const a of MP.peers.values())if(a.loc===CUR.id&&Math.hypot(a.x-x,a.z-z)<.4)free=false;if(free)return k;}return h;}
+  const busy=BSEAT.map(([lx,lz])=>{const [x,z]=busW(lx,lz,BUS.pos);for(const a of MP.peers.values())if(a.loc===CUR.id&&Math.hypot(a.x-x,a.z-z)<.4)return true;return false;}),
+    nose=k=>BSEAT.some((q,o)=>busy[o]&&q[1]===BSEAT[k][1]&&Math.abs(q[0]-BSEAT[k][0])<1.2);   /* 💺 not right behind (or in front of) a friend: their head would fill the view. Beside them is nicer */
+  for(const ok of[k=>!busy[k]&&!nose(k),k=>!busy[k]])for(let i=0;i<n;i++){const k=(h+i)%n;if(ok(k))return k;}return h;}
 function busBoard(p){if(BUS.ride||fading||!PLAYING)return;if(!busReady(p)){busInfo(p);return;}
   const s=busCur(p).s,home=s.go==='town',free=!!s.wb||(home&&S.coins<BUS_FARE);
   if(!free&&S.coins<BUS_FARE){SFX.no();BUS.dot.wave=1.2;toast(`🚌 Driver Dot: “A ride is ${BUS_FARE} 🪙. Save up a little more and hop on next time! 💛”`,4.4);return;}
   if(DECO.on)decoEnd();if(P.ride)stopRide();if(P.sit)standUp();
   const fare=free?0:BUS_FARE,b=BUS.pos,k=busSeat(),[sx,sz]=busW(BSEAT[k][0],BSEAT[k][1],b),nm=S.name||'friend';
-  if(fare){S.coins-=fare;SFX.coin();floatText('-'+fare+' 🪙',P.x-Math.sin(P.yaw)*1.2,1.8,P.z-Math.cos(P.yaw)*1.2,{h:.4});}else SFX.pop();
+  if(fare){S.coins-=fare;SFX.coin();const [fx,fz]=busW(BSEAT[k][0]+1.9,BSEAT[k][1],b);floatText('-'+fare+' 🪙',fx,1.75,fz,{h:.3,top:1});BUS.ff=FLOATS[FLOATS.length-1];}else SFX.pop();   /* (in front of your seat, inside the bus) */
   P.sit={x:sx,z:sz,yaw:Math.atan2(-Math.cos(b[2]),Math.sin(b[2])),h:1.6,bus:1,bk:[P.x,P.z,P.yaw]};P.x=sx;P.z=sz;P.yaw=P.sit.yaw;P.pitch=-.04;
+  if(Math.min(innerWidth,innerHeight)<500){P.yaw-=(BSEAT[k][1]>0?1:-1)*1.18;P.pitch=innerWidth<innerHeight?-.08:-.04;}   /* 📱 a phone's narrow view: you look out of your window (the bus stop, the park, the street), not at the ceiling or the door pole */
   BUS.ride={p,s,to:s.go,fare,d:S.day,t0:performance.now()};document.body.classList.add('bus');BUS.dot.wave=1.4;
   toast(s.wb?`🚌 Driver Dot: “Welcome to Cozy Town, ${nm}! 🎉 Your first ride is free. Off we go!”`:home&&!fare?'🚌 Driver Dot: “No coins? This one\'s on me! 💛 Find a seat!”':`🚌 Driver Dot: “Hello, ${nm}! Find a seat 😊 We leave at ${busHM(s.l)}!”`,s.wb?2.6:4);
   change();}
 function busOff(){const R=BUS.ride;if(!R||R.go)return;const b=P.sit&&P.sit.bk;P.sit=null;BUS.ride=null;document.body.classList.remove('bus');   /* off again before it leaves: your coins back */
   if(b){[P.x,P.z]=collideXZ(b[0],b[1],.3,CUR);P.yaw=b[2];}P.pitch=0;bringFollowers(true);
+  {const f=BUS.ff;BUS.ff=null;if(f&&FLOATS.includes(f))f.t=f.life;if(R.fare)floatText('+'+R.fare+' 🪙',P.x-Math.sin(P.yaw)*2.4,1.9,P.z-Math.cos(P.yaw)*2.4,{h:.3});}   /* the fare goes away, your coins come back: +20 */
   if(R.fare){S.coins+=R.fare;SFX.coin();toast(`🚌 Driver Dot: “Bye for now! Here are your ${R.fare} 🪙 back 💛”`,3.2);}else{SFX.pop();toast('🚌 Driver Dot: “Bye for now! 👋”',2.6);}change();}
 function busGo(){const R=BUS.ride;if(!R||R.go)return;R.go=1;BUS.hold=1;tone(1319,.12,'triangle',.12);tone(1319,.14,'triangle',.12,.2);tone(98,.6,'sawtooth',.03,.2,150);   /* ding ding, off we go */
   busRideFx(R.to,()=>busArrive(R));}
@@ -2075,7 +2142,8 @@ function busArrive(R){BUS.ride=null;BUS.hold=0;document.body.classList.remove('b
   if(R.to==='beach'){setLoc('beach');const L=LOC.beach,d=DOORS.beach.inside;P.x=L.ox+d[0];P.z=L.oz+d[1];P.yaw=d[2];}
   else{if(S.beach)delete S.beach.camp;setLoc('city');const b=busXZ('park',0),[x,z]=busW(3.2,3.6,b),[fx,fz]=busW(1.2,0,b);P.x=x;P.z=z;P.yaw=Math.atan2(-(fx-x),-(fz-z));}   /* on the pavement, waving the bus goodbye */
   P.pitch=0;BUS.loc=null;BUS.arr={d:S.day,t:S.time};bringFollowers();saveLocal();
-  if(R.to==='beach'){beachIn();setTimeout(()=>{if(CUR.id==='beach')toast(R.s.wb?'🚌 Driver Dot: “You can ride back to town until 12:00, and the bus home leaves at 21:00. Have fun! 👋”':'🚌 Driver Dot: “The bus home leaves at 21:00. See you then! 👋”',4.4);},3400);}
+  if(R.to==='beach'){beachIn();setTimeout(()=>{if(CUR.id!=='beach')return;const n=busNext('beach','town'),mid=!!n&&n.d===S.day&&n.s.l<21;   /* the same times as the pill and the board: this bus goes back at midday, the last one at 21:00 */
+    toast(R.s.wb?'🚌 Driver Dot: “You can ride back to town until 12:00, and the bus home leaves at 21:00. Have fun! 👋”':mid?`🚌 Driver Dot: “I go back to town at ${busHM(n.s.l)}. The last bus home leaves at 21:00. Have fun! 👋”`:'🚌 Driver Dot: “The bus home leaves at 21:00. See you then! 👋”',4.4);},3400);}
   else{SFX.yay();const nh=R.s.l>=21&&(!NAV||NAV.id==='home');if(nh&&!NAV)setNav('home',true);   /* the evening bus: bedtime, the pink arrow shows the way to your house on 🏡 Friends Lane */
     toast(nh?'🏘️ Home again! 🚌 Driver Dot: “Bye bye! Sleep tight!” 🏡 Follow the pink arrow home.':'🏘️ Home again! 🚌 Driver Dot: “Bye bye! See you soon!” 👋',nh?4.4:3.4);}}
 /* a friend's 🚀 Go (or any jump) can't skip the bus: a kind message instead */
@@ -2107,9 +2175,20 @@ function busBlocked(p){const b=BUS.pos;if(!b)return null;const fx=Math.cos(b[2])
 function busBlock(x,z,fx,fz){const b=BUS.pos;if(!b||BUS.loc!=='city'||!BUS.g.visible)return false;const bx=Math.cos(b[2]),bz=-Math.sin(b[2]);   /* cars wait for the bus (but a car already in a crossing drives on; the bus waits for it) */
   for(const X of XS)if(Math.abs(x-X.x)<6.3&&Math.abs(z-X.z)<6.3)return false;
   for(const k of[-1.7,1.1,3.9]){const dx=b[0]+bx*k-x,dz=b[1]+bz*k-z,f=dx*fx+dz*fz;if(f>0&&f<4.6&&Math.abs(dx*fz-dz*fx)<2.1)return true;}return false;}
-function busSolids(s){const b=BUS.pos;if(!b||!BUS.g||!BUS.g.visible||BUS.loc!==CUR.id)return;const bx=Math.cos(b[2]),bz=-Math.sin(b[2]);for(const k of[-.62,.54,1.69,2.85])s.push({cx:b[0]+bx*k,cz:b[1]+bz*k,cr:1.3});}
+function busSolids(s){const b=BUS.pos;if(!b||!BUS.g||!BUS.g.visible||BUS.loc!==CUR.id)return;const ux=Math.cos(b[2]),uz=-Math.sin(b[2]);   /* one box round the whole bus (bumpers, mirrors, the open door):
+  your eyes stay at least 30 cm from it, even at the round corners, so the camera never sees inside through a wall */
+  s.push({ob:1,cx:b[0]+ux*1.08,cz:b[1]+uz*1.08,ux,uz,hl:2.97,hw:1.33});}
 function campPeers(){const L=LOC.beach;if(CUR.id!=='beach')return;   /* a friend asleep in the tent lies down like in a bed: on the sleeping bag, along the tent, head at the back (blanket narrower, inside the tent) */
-  for(const a of MP.peers.values())if(a.av&&a.lie&&a.loc==='beach'&&Math.hypot(a.rx-L.ox-CAMP.x,a.rz-L.oz-CAMP.z)<2.6){const p=a.av,r=p.root;r.position.y=.26;r.position.z=L.oz+CAMP.z+(a.rz<L.oz+CAMP.z?-.35:.35);r.rotation.y=Math.PI/2;if(p.duv)p.duv.scale.set(.58,1,.92);}}
+  for(const a of MP.peers.values())if(a.av&&a.lie&&a.loc==='beach'&&Math.hypot(a.rx-L.ox-CAMP.x,a.rz-L.oz-CAMP.z)<2.6){const p=a.av,r=p.root;r.position.y=.26;r.position.z=L.oz+CAMP.z+(a.rz<L.oz+CAMP.z?-.35:.35);r.rotation.y=Math.PI/2;if(p.duv)p.duv.scale.set(.58,1,.92);
+    if(p.tag)p.tag.position.y=1.62;if(a.zzs)a.zzs.position.y=2.15+Math.sin((a.zzT||0)*2.4)*.07;}}   /* their name and 💤 float above the tent roof, not cut by its cloth */
+const busPill=()=>{const e=$('busTip');return!!e&&!e.hidden&&/\d:\d\d/.test(e.textContent);};   /* the HUD pill counts down to the bus right now */
+/* 🚗 the bus pops up at its stop (you just came out, or loaded the game): a car standing where the bus is, or right behind it, rolls back
+   to wait with a gap (or, past the bus's middle, rolls ahead of it) */
+function busCarGap(b){const ux=Math.cos(b[2]),uz=-Math.sin(b[2]),L=[];let lim=-1.72-4.3;
+  for(const c of CARS){if(c.away)continue;const dx=c.x-b[0],dz=c.z-b[1],t=dx*ux+dz*uz,s=dz*ux-dx*uz;
+    if(Math.abs(s)<2.2&&Math.sin(c.yaw)*ux+Math.cos(c.yaw)*uz>.5&&t>-9.5&&t<5.7)L.push({c,t});}
+  L.sort((a,b)=>b.t-a.t);
+  for(const o of L){const c=o.c;if(o.t>1){c.d+=6.2-o.t;}else if(o.t>lim){c.d-=o.t-lim;o.t=lim;}else{lim=o.t-5.2;continue;}carPlace(c);c.yaw=c.ty;c.v=0;if(o.t<=lim)lim=o.t-5.2;}}
 function busHide(){if(BUS.g.visible){BUS.g.visible=false;busTag('');}BUS.loc=null;BUS.s=null;BUS.pos=null;BUS.stop=false;for(const X of XS){const i=X.occ.indexOf(BUSX);if(i>=0)X.occ.splice(i,1);}}
 function updBus(dt){if(!BUS.g)return;const p=S&&CUR?(CUR.id==='city'?'park':CUR.id==='beach'?'beach':null):null;
   if(S&&PLAYING){busTick(dt,p);campPeers();}
@@ -2124,13 +2203,14 @@ function updBus(dt){if(!BUS.g)return;const p=S&&CUR?(CUR.id==='city'?'park':CUR.
     else if(u-BUS.ui>30&&!inView(BUS.pos[0],BUS.pos[1],5))BUS.ui=u;else{BUS.v=Math.min(12,BUS.v+6*dt);BUS.ui=Math.min(u,BUS.ui+BUS.v*dt);}}
   else BUS.ui=u;
   const b=busXZ(p,BUS.ui);BUS.pos=b;BUS.g.position.set(b[0],0,b[1]);BUS.g.rotation.y=b[2];BUS.g.visible=true;BUS.loc=T.loc;BUS.s=c.s;BUS.orm.emissiveIntensity=.25*(1-nightF(S.time));
+  if(fresh&&p==='park'&&Math.abs(BUS.ui)<.5)busCarGap(b);
   const stop=u===0&&Math.abs(BUS.ui)<.05;if(stop&&!BUS.stop){BUS.dot.wave=1.6;if(Math.hypot(P.x-b[0],P.z-b[1])<30&&!BUS.ride)SFX.honk();}BUS.stop=stop;
   BUS.dk=clamp(BUS.dk+(stop&&!BUS.hold?dt:-dt)*1.7,0,1);BUS.door.position.x=2.2-1.02*BUS.dk*BUS.dk*(3-2*BUS.dk);busSurf(dt,p==='beach'&&stop,fresh);
   const d=BUS.dot;if(d.wave>0){d.wave-=dt;d.arms[1].rotation.z=2.5+Math.sin(d.wave*14)*.35;}else d.arms[1].rotation.z*=.85;
   BUS.sign[0].visible=c.s.go==='beach';BUS.sign[1].visible=c.s.go!=='beach';BUS.ins.visible=!(P.sit&&P.sit.bus);
-  busTag(stop&&c.s.go&&!BUS.hold?(c.s.wb?'🎉 Free ride!':(c.s.go==='beach'?'🏖️ ':'🏘️ ')+busMMSS(c.s)):'');
+  busTag(stop&&c.s.go&&!BUS.hold&&!busPill()?(c.s.wb?'🎉 Free ride!':(c.s.go==='beach'?'🏖️ ':'🏘️ ')+busMMSS(c.s)):'');   /* (near the stop the pill shows the same countdown, easier to read than a label under the buttons) */
   if(p==='park')for(const X of XS){const near=Math.abs(b[1]-X.z)<6.3&&b[0]+3.9>X.x-18&&b[0]-1.7<X.x+6.3,i=X.occ.indexOf(BUSX);if(near&&i<0)X.occ.push(BUSX);else if(!near&&i>=0)X.occ.splice(i,1);}   /* cars let the bus cross first */
-  if(stop){const cs=Math.cos(b[2]),sn=Math.sin(b[2]);for(const a of MP.peers.values())if(a.av&&a.loc===CUR.id){const dx=a.x-b[0],dz=a.z-b[1],lx=dx*cs-dz*sn,lz=dx*sn+dz*cs;if(lx>-1.7&&lx<3.2&&Math.abs(lz)<1.05){a.av.root.position.y=.3;sitPose(a.av);}}}}   /* friends riding with you sit down */
+  if(stop){const cs=Math.cos(b[2]),sn=Math.sin(b[2]);for(const a of MP.peers.values())if(a.av&&a.loc===CUR.id){const dx=a.x-b[0],dz=a.z-b[1],lx=dx*cs-dz*sn,lz=dx*sn+dz*cs;if(lx>-1.7&&lx<3.2&&Math.abs(lz)<1.05){a.av.root.position.y=.3;sitPose(a.av);if(a.pets)for(const q of a.pets)q.g.visible=false;}}}}   /* friends riding with you sit down (their pets ride along unseen, like yours) */
 function busTick(dt,p){const R=BUS.ride,t=S.time;
   if(R&&!R.go){if(!(P.sit&&P.sit.bus)){BUS.ride=null;document.body.classList.remove('bus');if(R.fare)S.coins+=R.fare;bringFollowers(true);change();}   /* stood up some other way: off the bus (coins back) */
     else if(S.day!==R.d||t>=R.s.l||(R.s.wb&&performance.now()-R.t0>650))busGo();}
@@ -2154,12 +2234,13 @@ function busNews(p,t,busy){const d=S.day,say=(k,txt,w,snd)=>{const key=d+':'+k;i
   if(p!=='beach'||busArr(d)===undefined)return;
   if(t>=20.5&&t<20.6)say('ev1','🚌 The bus home leaves at 21:00!',20.55);
   if(t>=20+50/60&&t<20.95)say('ev2','🚌 Last call! The bus leaves in 10 minutes!',20.9,()=>SFX.ding());
-  if(t>=21&&t<21.5&&!(S.beach&&S.beach.camp)&&!zzIn())say('miss','🚌 Oh no, the bus left! ⛺ Build a campsite and sleep at the beach. The next bus takes you home!',21.25,()=>SFX.aww());}
+  if(t>=21&&t<22&&!(S.beach&&S.beach.camp)&&!zzIn()&&!(busThere('beach')&&BUS.ui<8))   /* only once the bus really drove off (8 m away, or gone), not while it still stands at the stop */
+    say('miss','🚌 Oh no, the bus left! ⛺ Build a campsite and sleep at the beach. The next bus takes you home!',21.4,()=>SFX.aww());}
 function busNearStop(p){if(p==='park')return Math.hypot(P.x+14.3,P.z-4.5)<16;const L=LOC.beach;return P.x-L.ox<-21&&Math.abs(P.z-L.oz)<9;}
 function busTipUpd(p){let el=$('busTip'),t='',hot=false;const R=BUS.ride;
   if(R&&!R.go){t=R.s.wb?'🚌 Off we go!':(R.to==='beach'?'🚌 Off to the beach in ':'🚌 Off home in ')+busMMSS(R.s);hot=!R.s.wb&&busSecs(R.s)<12;}
   else if(p&&!R&&!zzIn()&&S.intro){const c=busCur(p),near=busNearStop(p);
-    if(c&&c.s.go&&c.u===0&&(near||p==='beach')){t=c.s.wb?'🎉 Free bus! Hop on!':(p==='park'?'🚌 Bus to the beach: ':'🚌 Bus to town: ')+busMMSS(c.s);hot=!c.s.wb&&busSecs(c.s)<15;}
+    if(c&&c.s.go&&c.u===0&&(near||p==='beach')){t=c.s.wb?(p==='park'?'🎉 Free bus! Hop on!':'🚌 Free bus to town until '+busHM(c.s.l)):(p==='park'?'🚌 Bus to the beach: ':'🚌 Bus to town: ')+busMMSS(c.s);hot=!c.s.wb&&busSecs(c.s)<15;}   /* (at the beach you just came on the Welcome Bus: not "hop on!" but until when it goes back, like Driver Dot says) */
     else if(near){if(c&&c.u<0&&c.s.go)t='🚌 The bus is coming!';else{const n=p==='park'?busNext('park','beach'):busNext('beach','town');t=(p==='park'?'🚌 Next bus: ':'🚌 Bus home: ')+(n?(n.d===S.day?'':WDAYS[wdIdx(n.d)].slice(0,3)+' ')+busHM(p==='park'?n.s.a:n.s.l):'soon');}}}
   if(!el){if(!t)return;el=document.createElement('div');el.id='busTip';el.setAttribute('role','status');el.hidden=true;$('stats').after(el);}
   if(el.textContent!==t)el.textContent=t;el.classList.toggle('hot',hot);if(el.hidden!==!t)el.hidden=!t;}
@@ -2476,7 +2557,7 @@ function laneLot(L,g,p){const j=p.j,P2=(x,z)=>lotPt(j,x,z),ry=p.s<0?0:Math.PI;
   F(-21.6,-8.2,-17.9,-8.2);F(-16.1,-8.2,-12.4,-8.2);F(-21.6,-8.2,-21.6,-11.3);F(-12.4,-8.2,-12.4,-11.3);
   for(let i=0;i<4;i++){const [x,z]=P2(-17,-8.8-i*.72);disc(g,.42,'#e9e0f7',x,.03,z,{seg:16});}
   {const [x,z]=P2(-15.4,-7.6);mailbox(g,x,z,ry);colC(L,x,z,.25);}
-  const [sx,sz]=P2(-20.4,-7.6);box(g,.14,1.25,.14,'#9a6a43',sx,0,sz,{ol:.02});box(g,2.35,.95,.12,'#ffffff',sx,1.1,sz,{ol:.03});colC(L,sx,sz,.15);
+  const [sx,sz]=P2(-20.4,-7.6);box(g,.14,1.06,.14,'#9a6a43',sx,0,sz,{ol:.02});box(g,2.35,.95,.12,'#ffffff',sx,1.1,sz,{ol:.03});colC(L,sx,sz,.15);   /* (the post stops under the board: it can't poke through the name) */
   const lg=new THREE.Group();L.g.add(lg);const [hx,hz]=P2(-17,-15),A=P2(-21.6,-18.6),B=P2(-12.4,-11.4),[ix,iz]=P2(-17,-10.5),[ox,oz]=P2(-17,-9.4);
   L.lane.push({j,X:p.X,s:p.s,g:lg,hx,hz,ry,sx,sz:sz+(p.s<0?.085:-.085),col:{x1:Math.min(A[0],B[0]),z1:Math.min(A[1],B[1]),x2:Math.max(A[0],B[0]),z2:Math.max(A[1],B[1])},
     door:[ox,oz,p.s<0?Math.PI:0],sign:null,key:null});
@@ -2491,7 +2572,9 @@ function laneGrow(mine){const L=LOC.city;if(LANE_PLOTS.length>=LANE_MAX+(mine?2:
 /* 🌸 the Flower Corner: where your house stood in town before it moved to Friends Lane. A garden to look at over a low fence */
 function flowerCorner(L,st){const x1=-23.4,x2=-10.6,z1=-24.5,z2=-7.0,HG='#5fbf74',r=seeded(31);
   flat(st,x2-x1,z2-z1,'#a2e48a',(x1+x2)/2,.012,(z1+z2)/2);
-  fence(st,x1,z2,x2,z2);for(const x of[x1,x2])box(st,.7,.8,z2-z1+.35,HG,x,0,(z1+z2-.35)/2,{ol:.03});box(st,x2-x1,.8,.7,HG,(x1+x2)/2,0,z1,{ol:.03});
+  /* the hedges: the back one runs the whole width and is a little taller, so the side hedges' ink can't cross on its top; their ink shells
+     start just above the grass, so no dark line flickers along their feet */
+  fence(st,x1,z2,x2,z2);for(const x of[x1,x2])hbox(st,.7,.8,z2-z1-.35,HG,x,(z1+.35+z2)/2,.03);hbox(st,x2-x1+.7,.86,.7,HG,(x1+x2)/2,z1,.03);
   tree(st,-20.2,-18.6,1.1);bench(st,-17.4,-15.6,0);
   for(const [x,z] of [[-17,-7.9],[-17.35,-9.25],[-16.95,-10.6],[-17.3,-11.95],[-17.05,-13.3],[-17.35,-14.6]])disc(st,.36,'#e9e0f7',x,.03,z,{seg:14});
   {const x=-13.4,z=-16.4;cyl(st,.1,.14,.75,'#e9e0f7',x,0,z,{seg:10,ol:.015});cyl(st,.46,.3,.15,'#e9e0f7',x,.75,z,{seg:16,ol:.015});disc(st,.38,'#9fd8f2',x,.905,z,{seg:16});}
@@ -2514,15 +2597,16 @@ function buildYard(L){const g=new THREE.Group(),gin=new THREE.Group(),st=new THR
   for(let k=0;k<8;k++)disc(st,.36,'#e9e0f7',-11.45,.03,-7.6-k*1.4,{seg:14});
   doorAt(st,-14,-18.52,Math.PI,'#5fd4b0');
   L.plots=[];for(const [i,x,z] of [[0,-21,-20.9],[1,-18.3,-20.9],[2,-15.6,-20.9],[3,-21,-23.0],[4,-18.3,-23.0],[5,-15.6,-23.0]]){box(st,1.8,.16,1.2,'#b07a52',x,0,z,{ol:.02});col(FL,x-.92,z-.62,x+.92,z+.62);L.plots.push({i,x,z});}
-  box(st,1.6,2.0,1.4,'#ffd6e0',-11.9,0,-23.3);prism(st,1.9,1.8,.75,'#ff7aa8',-11.9,2.0,-23.3,{ry:Math.PI/2});box(st,.06,1.6,.8,'#5fd4b0',-12.73,0,-23.3,{ol:.015});col(FL,-12.8,-24.05,-11.0,-22.55);
-  box(st,.8,.45,.5,'#c98f5e',-13.4,0,-23.95);for(let k=0;k<4;k++)box(st,.14,.2,.04,['#ff7aa8','#ffd45c','#5fd4b0','#ff8a6b'][k],-13.7+k*.2,.45,-23.95,{rx:-.2,ol:.01});col(FL,-13.85,-24.25,-12.95,-23.65);
-  const ss=signPlane('🌱 Seeds',1.0,.34,'#ffffff','#3d2c5e');ss.position.set(-12.77,1.75,-23.3);ss.rotation.y=-Math.PI/2;gin.add(ss);
+  /* the shed stands beside the arch's way (not right behind it): its door, the seed box and the 🌱 Seeds sign face the arch */
+  box(st,1.6,2.0,1.4,'#ffd6e0',-13.4,0,-23.3);prism(st,1.9,1.8,.75,'#ff7aa8',-13.4,2.0,-23.3,{ry:Math.PI/2});box(st,.7,1.6,.06,'#5fd4b0',-13.75,0,-22.58,{ol:.015});col(FL,-14.3,-24.05,-12.5,-22.55);
+  box(st,.8,.45,.5,'#c98f5e',-12.95,0,-22.35);for(let k=0;k<4;k++)box(st,.14,.2,.04,['#ff7aa8','#ffd45c','#5fd4b0','#ff8a6b'][k],-13.25+k*.2,.45,-22.35,{rx:-.2,ol:.01});col(FL,-13.4,-22.65,-12.5,-22.05);
+  const ss=signPlane('🌱 Seeds',.8,.3,'#ffffff','#3d2c5e');ss.position.set(-13,1.75,-22.57);gin.add(ss);
   cyl(st,.14,.16,.28,'#7cc8ff',-22.4,0,-19.3,{seg:12,ol:.015});cone(st,.04,.3,'#7cc8ff',-22.25,.25,-19.3,{rz:-1.0,seg:6,ol:.012});
   const pq=signPlane('Bigger house!',1.4,.36,'#ff7aa8','#ffffff');pq.position.set(-20.4,.8,-7.44);gin.add(pq);YARD.plaque=pq;   /* under your name sign, until you buy the big house */
   bake(st,true);
   const yi=(x,z,o)=>yardInt(inter(L,Object.assign({x,z},o)));
   yi(-14,-19.3,{r:1.9,icon:'🏠',label:'Go inside your house',act:()=>enter('home','back')});
-  yi(-13.4,-23.15,{r:1.8,icon:'🌱',label:'Buy seeds',act:()=>openShop('seeds')});
+  yi(-12.95,-21.4,{r:1.8,icon:'🌱',label:'Buy seeds',act:()=>openShop('seeds')});
   yi(-15.4,-7.1,{r:1.8,icon:'📬',label:'Check your mail',act:checkMail});
   yi(-20.4,-6.8,{r:1.7,icon:'🏡',label:()=>S.bighouse?'Your big house!':'Bigger house',act:()=>openBigHouse()});}
 /* a spot to use in your yard (given at the old town-yard spot): it moves with the yard. b = a flower bed that moves along */
@@ -3008,7 +3092,7 @@ async function cloudInit(){
   CSAVE.pending=false;
 }
 async function cloudFlush(){
-  if(!CSAVE.ref||CSAVE.writing||!CSAVE.dirty||!S)return;
+  if(!CSAVE.ref||CSAVE.writing||!CSAVE.dirty||!S||SAVEOFF)return;
   CSAVE.dirty=false;CSAVE.writing=true;snap();
   try{await CSAVE.ref.set({json:JSON.stringify(S),t:S.t});}
   catch(e){const c=e&&e.code;if(c==='unavailable'){CSAVE.dirty=true;setTimeout(cloudFlush,2500+Math.random()*2000);}else if(c!=='resource_exhausted')CSAVE.ref=null;else{CSAVE.dirty=true;setTimeout(cloudFlush,8000);}}
@@ -3679,7 +3763,7 @@ function ballFx(b,dt){const F=b.fx,A=$('act');if(KC.on){KC.t+=dt;const far=Math.
    players: the other side lets you dribble, your team-mate passes to you a lot, Zac sometimes misses or gets tired.
    They live in your own game only: when a friend online comes near the field they sit down and cheer, so they never fight a real player
    for the ball, and the shared score (S.match) is never touched by their goals ---- */
-const FB_ON=14,FB_OFF=19,FBB=[-27.5,-25.7],FBZ=78.4,FBG=[[-31,59],[-19,59]];
+const FB_ON=14,FB_OFF=19,FBB=[-28.4,-25.4],FBZ=78.4,FBG=[[-31,59],[-19,59]];   /* (two benches 3 m apart, two kids on each with room between them) */
 const FB_SPOT={play:[[-28.5,66.5],[-33,71],[-21.5,70.5],[-17,66]],team:[[-28,64.5],0,[-21,70.5],[-17.5,66.5]],duel:[[-20.5,68.5],0,0,0]};
 const FBK=[{nm:'Zoomy Zac',star:1,home:'hS2',seat:3,sp:3.9,jc:'#ffd45c',lk:{skin:'#f1c9a5',hair:'#5a3a24',style:'short',swoop:1,top:'#3f7be0',sleeve:'#ffd45c',bottom:'#ffffff',shoes:'#ffd45c',eyes:'sparkle',mouth:'grin',scale:.93}},
   {nm:'Tilly',home:'hS1',seat:0,sp:3.3,jc:'#7fdcb5',lk:{skin:'#f6d3bb',hair:'#e8734a',style:'ponytail',top:'#7cc8ff',bottom:'#3f4c86',shoes:'#ffffff',eyes:'happy',scale:.88}},
@@ -3693,7 +3777,7 @@ const fbIn=(x,z,m)=>x>-39-m&&x<-11+m&&z>59.6-m&&z<77.4+m;   /* on the field (+ m
 const fbNear=(x,z,r)=>CUR.id==='city'&&Math.hypot(x-P.x,z-P.z)<r;
 function fbSeen(x,z){return CUR.id==='city'&&PLAYING&&Math.hypot(x-camera.position.x,z-camera.position.z)<55&&inView(x,z,1.5);}
 function fbFriend(){if(!MP.grp)return null;for(const a of MP.peers.values())if(a.loc==='city'&&Math.hypot(Math.max(0,-39-a.rx,a.rx+11),Math.max(0,59.6-a.rz,a.rz-77.4))<10)return a;return null;}
-const fbSeat=k=>[FBB[k.d.seat>>1]+(k.d.seat&1?.4:-.4),FBZ+.06];
+const fbSeat=k=>[FBB[k.d.seat>>1]+(k.d.seat&1?.5:-.5),FBZ+.06];
 /* the gold 10 on Zac's back (reads right from behind) and his white sweatband */
 function fbTen(p){const c='#ffd45c',o={ol:false};box(p.b,.04,.2,.012,c,.075,.74,-.138,o);
   for(const [w,h,x,y] of [[.035,.2,-.02,.74],[.035,.2,-.12,.74],[.135,.035,-.07,.74],[.135,.035,-.07,.905]])box(p.b,w,h,.012,c,x,y,-.138,o);
@@ -3705,7 +3789,7 @@ function fbBuild(){const C=LOC.city;for(const bx of FBB)col(C,bx-.85,FBZ-.25,bx+
     j.position.set(0,-.52,.1);j.visible=false;p.arms[0].add(j);p.root.visible=false;scene.add(p.root);   /* 🧃 a tiny juice box in the right hand */
     const k={i,d,p,tag,j,x:0,z:0,face:0,st:'off',path:[],next:'',tm:0,cd:0,plan:null,stuck:0,slow:0,slowT:rand(6,11),cheer:0,dance:0,sip:rand(1,4),bub:null,bubT:0,mv:false,spd:0};
     k.tg={x:0,z:0,r:2.2,icon:()=>fbIcon(k),label:()=>fbLabel(k),act:()=>fbTap(k),obj:p.root};FB.k.push(k);});
-  const mk=label('🎯 Score here!',.55);mk.position.set(-10.5,3.05,68.5);mk.visible=false;scene.add(mk);FB.mk=mk;}
+  const mk=label('🎯 Score here!',.55);mk.position.set(-10.5,3.05,68.5);mk.visible=false;mk.material.depthTest=false;mk.renderOrder=5;scene.add(mk);FB.mk=mk;}   /* (drawn over the kids' name tags: never covered) */
 /* the way home and back: along the town's sidewalks (the walkers' paths) to the field gate between the scoreboard and a bench */
 function fbRoute(h){const F=WPN.field,out=[];let n=WPN[h];for(let g=0;g<60&&n!==F&&n!==undefined;g++){out.push(WP[n]);n=NEXT[n][F];}return out;}
 function fbArrive(k){const r=fbRoute(k.d.home),g=FBG[(r[r.length-1]||[-30])[0]<-25?0:1];
@@ -3784,17 +3868,17 @@ function fbGoal(blue){if(!fbBoard()){fbCheer();return false;}
   if(near){if(me&&FB.me===tm){const z=FB.mode==='team'?K[0]:K[1];const t=pick(['What a shot! 🌟','Super goal! ⭐','Wow, you did it! 🎉','High five! 🙌']);fbSay(z,t);toast('⚽ GOAL! '+t+' '+sc,3);}
     else if(me&&FB.me)toast('😅 Oops, the wrong goal! That\'s okay! '+sc,3);
     else if(me){fbSay(K[0],'Wow, what a kick! Play with us? 😄');toast('⚽ What a kick! '+sc,3);}
-    else if(w>=0&&K[w].tm===tm&&K[w].d.star){K[0].dance=1.8;fbSay(K[0],'Zoom zoom, GOAL! ⚡');floatText('🕺',K[0].x,2.3,K[0].z,{h:.6,life:1.8});toast('⚡ Zoomy Zac: “Zoom zoom, GOAL!” '+sc,3);}
+    else if(w>=0&&K[w].tm===tm&&K[w].d.star){K[0].dance=1.8;fbSay(K[0],'Zoom zoom, GOAL! ⚡');floatText('🕺',K[0].x,2.75,K[0].z,{h:.6,life:1.8,top:1});toast('⚡ Zoomy Zac: “Zoom zoom, GOAL!” '+sc,3);}
     else if(w>=0&&K[w].tm===tm)toast('⚽ '+K[w].d.nm+' scored! '+sc,2.6);
     else toast('⚽ Goal! '+sc,2.6);
     if(FB.me&&tm!==FB.me&&FB.mode==='team')setTimeout(()=>{if(FB.mode==='team')fbSay(K[0],pick(['Nice try! We\'ll get the next one! 💪','Don\'t worry, let\'s go again! ⚡']));},1300);}
   for(const k of K)if(k.st==='play'&&k.tm===tm&&!k.dance)k.cheer=1.3;fbCheer();
   if(Math.max(FB.sc[0],FB.sc[1])>=3&&!FB.af){FB.at=2.6;FB.af=FB.mode==='play'?fbRest:()=>fbEnd('done');}
   return true;}
-function fbCheer(){let any=0;for(const k of FB.k)if(k.st==='sit'){k.cheer=1.4;any=1;}if(any&&fbNear(-26.6,FBZ,30))floatText(pick(['🎉','📣','👏']),-26.6,2,FBZ,{h:.5});}
+function fbCheer(){let any=0;for(const k of FB.k)if(k.st==='sit'){k.cheer=1.4;any=1;}if(any&&fbNear(-26.9,FBZ,30))floatText(pick(['🎉','📣','👏']),-26.9,2,FBZ,{h:.5});}
 /* ---- talking: the card, the bench, saying bye ---- */
 function fbTgOn(k){return k.st!=='off'&&k.p.root.visible&&!((FB.mode==='team'||FB.mode==='duel')&&k.st==='play');}
-function fbLabel(k){const m=FB.mode,bn=k.st==='sit'||k.next==='sit';if(m==='home')return'Say bye to '+k.d.nm;if(bn&&k.d.star&&m==='juice')return'Invite Zoomy Zac to a 1 vs 1';
+function fbLabel(k){const m=FB.mode,bn=k.st==='sit'||k.next==='sit';if(m==='home')return'Say bye to '+k.d.nm;if(bn&&k.d.star&&m==='juice')return'Invite Zoomy Zac to a 1\u00a0vs\u00a01';
   if(bn&&m!=='rest')return'Say hi to '+k.d.nm;return'Talk to the team';}
 function fbIcon(k){const c=fbLabel(k)[0];return c==='I'?'🥇':c==='T'?'⚽':'👋';}
 function fbTap(k){const m=FB.mode,bn=k.st==='sit'||k.next==='sit';k.p.wave=1.2;SFX.talk();
@@ -3808,9 +3892,9 @@ function fbCard(){const Z=FB.k[0],s=S.fb||{},f=fbFriend();FB.hold=1;Z.p.wave=1.2
   const who='<div class="who" style="--c:#ffd45c">⚡ Zoomy Zac</div>',o={bottom:true,onClose:()=>{FB.hold=0;}};
   if(f||FB.mode==='watch'){openPanel(who+`<p class="line">${f?'Your friend '+esc(f.nm)+' is here! Play together! ':''}We'll watch and cheer for you! 📣</p><div class="row"><button class="btn mint" data-a="close">OK! ⚽</button></div>`,o);return;}
   const first=!s.m;if(first){fbS().m=1;change();}
-  openPanel(who+`<p class="line">${first?'Hi! I\'m Zoomy Zac! ⚡ These are my football friends: Tilly, Omar and Bea. ':'Hi '+esc(S.name||'friend')+'! '}Do you want to take the field, or a 1 vs 1?</p>
+  openPanel(who+`<p class="line">${first?'Hi! I\'m Zoomy Zac! ⚡ These are my football friends: Tilly, Omar and Bea. ':'Hi '+esc(S.name||'friend')+'! '}Do you want to take the field, or a 1&nbsp;vs&nbsp;1?</p>
     ${s.w?`<p class="note" style="text-align:center">🏆 Your wins: <b>${s.w}</b></p>`:''}
-    <div class="row"><button class="btn mint" data-a="fbTeam">⚽ Take the field</button><button class="btn butter" data-a="fbDuel">🥇 1 vs 1 with Zac</button><button class="btn sky" data-a="fbJuice">🧃 Can I practice?</button><button class="btn white" data-a="close">Maybe later</button></div>`,o);}
+    <div class="row"><button class="btn mint" data-a="fbTeam">⚽ Take the field</button><button class="btn butter" data-a="fbDuel">🥇 1&nbsp;vs&nbsp;1 with Zac</button><button class="btn sky" data-a="fbJuice">🧃 Can I practice?</button><button class="btn white" data-a="close">Maybe later</button></div>`,o);}
 function fbJuice(){closePanel();FB.hold=0;const why=fbWhyNot();if(why){toast(why,3.2);return;}
   FB.mode='juice';FB.away=0;FB.at=0;FB.af=null;drawScore();FB.k.forEach(fbBench);SFX.pop();
   toast('⚡ Zoomy Zac: “Sure! We need a juice break! 🧃” The field and the ball are all yours!',3.6);fbSay(FB.k[0],'Juice break! 🧃');}
@@ -3863,7 +3947,7 @@ function fbTick(dt){if(!FB.k.length||!S)return;const m0=FB.mode,b=LOC.city.ball;
   else if(!FB.seen&&(m==='play'||m==='rest')&&fbIn(P.x,P.z,1.5)&&PLAYING&&S.intro&&!UI.open&&!CUT&&!CR&&!DECO.on&&!TUT&&!DTUT&&!CLIMB&&!fading&&!P.ride&&!P.sit&&!dlCarrying()&&FB.k[0].st!=='walk'&&FB.k[0].st!=='off'){FB.seen=1;fbCard();}
   /* far away nobody sees them: they wait (no ball kicks, so the shared ball stays still online) */
   const run=Math.hypot(P.x+25,P.z-68.5)<75;
-  for(const k of FB.k)fbKid(k,dt,b,run);fbSep();}
+  for(const k of FB.k)fbKid(k,dt,b,run);fbSep();fbTags();}
 function fbKid(k,dt,b,run){if(k.st==='off'){k.p.root.visible=false;return;}if(k.cd>0)k.cd-=dt;if(k.bubT>0&&(k.bubT-=dt)<=0)fbBubOff(k);
   const mt=FB.mode==='team'||FB.mode==='duel',stop=FB.hold||!run||(mt&&(UI.open||fading));k.mv=false;
   if(k.st==='walk')fbWalk(k,dt);else if(k.st==='play'&&!stop){const t=fbAI(k,dt,b);fbMove(k,t[0],t[1],t[2],dt);fbKeep(k);}
@@ -3881,7 +3965,20 @@ function fbKid(k,dt,b,run){if(k.st==='off'){k.p.root.visible=false;return;}if(k.
 function fbSep(){const K=FB.k,on=k=>k.st==='play'||k.st==='walk';
   for(let i=0;i<K.length;i++){const a=K[i];if(!on(a))continue;
     for(let j=i+1;j<K.length;j++){const c=K[j];if(!on(c))continue;const dx=c.x-a.x,dz=c.z-a.z,d=Math.hypot(dx,dz);if(d<.7&&d>1e-4){const s=(.7-d)/2/d;a.x-=dx*s;a.z-=dz*s;c.x+=dx*s;c.z+=dz*s;}}
-    const dx=a.x-P.x,dz=a.z-P.z,d=Math.hypot(dx,dz);if(d<.65&&d>1e-4){a.x=P.x+dx/d*.65;a.z=P.z+dz/d*.65;}}}
+    /* you: a kid playing keeps 90 cm away; a kid walking by keeps 1.3 m and steps round you (never through you: its head never fills your view) */
+    const dx=a.x-P.x,dz=a.z-P.z,d=Math.hypot(dx,dz),m=a.st==='walk'?1.3:.9;if(d<m&&d>1e-4){a.x=P.x+dx/d*m;a.z=P.z+dz/d*m;if(a.st==='walk'){a.x-=dz/d*.04;a.z+=dx/d*.04;}}}
+  for(const k of K)if(on(k))k.p.root.position.set(k.x,k.p.root.position.y,k.z);}
+/* 🏷️ the kids' name tags and speech bubbles never pile up: the nearest kid's tag stays put, the others step up (on screen) until they are free */
+const _fv=new THREE.Vector3(),_fw=new THREE.Vector3();
+function fbTags(){camera.updateMatrixWorld();const R=[],L=[],W=innerWidth,H=innerHeight,f=H/(2*Math.tan(camera.fov*Math.PI/360));
+  const scr=o=>{o.getWorldPosition(_fv);const z=-_fw.copy(_fv).applyMatrix4(camera.matrixWorldInverse).z;if(z<.2)return null;_fv.project(camera);return{x:(_fv.x+1)/2*W,y:(1-_fv.y)/2*H,h:o.scale.y*f/z,w:o.scale.x*f/z,d:z};};
+  if(FB.mk&&FB.mk.visible){const m=scr(FB.mk);if(m)R.push(m);}   /* (the 🎯 Score here! sign keeps its place too: tags step up over it) */
+  for(const k of FB.k){k.tag.center.y=.5;if(k.bub)k.bub.center.y=.5;if(k.st==='off'||!k.p.root.visible)continue;const s=scr(k.tag);if(s){s.k=k;L.push(s);}}
+  L.sort((a,b)=>a.d-b.d);
+  for(const s of L){let up=0;
+    for(let n=0;n<6;n++){const y=s.y-up,hit=R.find(r=>Math.abs(r.x-s.x)<(r.w+s.w)/2&&Math.abs(r.y-y)<(r.h+s.h)/2);if(!hit)break;up=Math.max(up+1,s.y-(hit.y-(hit.h+s.h)/2-2));}
+    if(up>s.h*5)up=0;s.k.tag.center.y=.5-up/s.h;R.push({x:s.x,y:s.y-up,w:s.w,h:s.h});
+    const b=s.k.bub,q=b&&scr(b);if(q){b.center.y=.5-up/q.h;R.push({x:q.x,y:q.y-up,w:q.w,h:q.h});}}}
 /* ---- one big world: everyone who opens Cozy Town plays together ---- */
 const WORLD='cozy-world',EARLY={room:null,db:null,user:null};
 const MP={me:'',room:null,grp:null,peers:new Map(),list:[],t:0,lastKey:'',ready:false,unsub:null,said:0,state:'idle',tries:0,help:false,rt:0};
@@ -3905,10 +4002,12 @@ async function mpConnect(){if(MP.grp||MP.state==='connecting')return;MP.state='c
   toast('🟢 You are online! Friends who play will show up here.',3);mpUI();change();}
 function mpRetryLater(){clearTimeout(MP.rt);MP.rt=setTimeout(()=>{if(!MP.grp&&PLAYING)mpConnect();},[4,10,20,40,60][Math.min(MP.tries-1,4)]*1000);}
 function mpLost(){ballOwnerGone();if(MP.unsub){try{MP.unsub();}catch(e){}MP.unsub=null;}MP.grp=null;for(const a of MP.peers.values())mpDropAv(a);MP.peers.clear();$('bChat').hidden=true;MP.state='off';mpUI();mpRetryLater();}
-function mpPeers(ch){for(const p of ch.left){const a=MP.peers.get(p.peer);if(HOST.cur&&HOST.cur.peer===p.peer)hostAnswer(false,true);if(a){if(BS.own===p.peer)ballOwnerGone();mpDropAv(a);MP.peers.delete(p.peer);if(MP.ready)toast('👋 '+a.nm+' left.',2.6);}}
+function mpPeers(ch){for(const p of ch.left){const a=MP.peers.get(p.peer);if(HOST.cur&&HOST.cur.peer===p.peer)hostAnswer(false,true);if(a){if(BS.own===p.peer)ballOwnerGone();mpDropAv(a);MP.peers.delete(p.peer);if(MP.ready)toast(a.twin?'📱 Your other iPad or phone closed the game.':'👋 '+a.nm+' left.',2.6);}}
   for(const p of ch.peers){if(p.isMe){if(p.sameTab)MP.me=p.peer;continue;}mpUpsert(p);}mpUI();}
+function mpTwin(pr){try{return!!S&&cleanName(pr.nm)===cleanName(S.name)&&JSON.stringify(cleanLook(pr.lk))===JSON.stringify(cleanLook(packLook()));}catch(e){return false;}}   /* my own name and look: my own game (moved), open on another iPad or phone */
 function mpUpsert(p){const pr=p.presence||{};if(!pr.nm)return;let a=MP.peers.get(p.peer);const nm=cleanName(pr.nm),fresh=!a;
-  if(!a){a={peer:p.peer,nm,lk:'',x:0,z:0,tx:0,tz:0,ry:0,rx:0,rz:0,rry:0,mv:false,loc:'city',av:null,bub:null,bubT:0,sayId:pr.say&&pr.say.id};MP.peers.set(p.peer,a);if(MP.ready){SFX.yay();toast('👋 '+nm+' is here! Open 👫 Friends to go to them.',3.4);}}
+  if(!a){a={peer:p.peer,nm,lk:'',x:0,z:0,tx:0,tz:0,ry:0,rx:0,rz:0,rry:0,mv:false,loc:'city',av:null,bub:null,bubT:0,sayId:pr.say&&pr.say.id,twin:mpTwin(pr)};MP.peers.set(p.peer,a);
+    if(MP.ready){SFX.yay();toast(a.twin?'📱 Your game is open on your other iPad or phone too!':'👋 '+nm+' is here! Open 👫 Friends to go to them.',3.4);}}
   a.loc=(typeof pr.loc==='string'&&LOC[pr.loc])?pr.loc:'city';const ok=v=>Number.isFinite(v)&&Math.abs(v)<2000;if(ok(pr.x))a.rx=pr.x;if(ok(pr.z))a.rz=pr.z;if(ok(pr.ry))a.rry=pr.ry;a.mv=!!pr.mv;laneFields(a,pr,fresh);
   const lk=JSON.stringify(pr.lk||{});if(lk!==a.lk||nm!==a.nm||!a.av){a.lk=lk;a.nm=nm;mpBuildAv(a,cleanLook(pr.lk));if(fresh){const sp=peerSpot(a)||[a.rx,a.rz,a.rry];a.x=a.tx=sp[0];a.z=a.tz=sp[1];a.ry=sp[2];}}
   const s=pr.say;if(s&&typeof s==='object'&&s.id!==a.sayId){a.sayId=s.id;const txt=Number.isInteger(s.m)&&QUICK[s.m]?QUICK[s.m]:Number.isInteger(s.e)&&EMOS[s.e]?EMOS[s.e]:null;if(txt&&!fresh)mpBubble(a,txt);}
@@ -3975,7 +4074,7 @@ function laneHouse(lp,o){const C=LOC.city;for(const c of [...lp.g.children])lp.g
   if(!o)return;
   const big=!!o.big,hg=new THREE.Group(),opt={x:lp.hx,z:lp.hz,w:9,d:7,h:big?7.0:3.8,wall:pal[0],trim:'#ffffff',roof:pal[1],face:lp.s<0?1:-1,gable:true,rh:big?2.8:2.6,chimney:true,door:{x:lp.hx,c:'#5fd4b0'}};
   if(big)opt.floors=2;building(hg,opt);for(const bx of[-19.8,-14.2]){const [x,z]=lotPt(lp.j,bx,-10.6);flowerBed(hg,x,z,3,.9);}bake(hg,true);lp.g.add(hg);C.cols.push(lp.col);
-  const tg=label('🏠 '+o.nm,.9);tg.position.set(lp.hx,big?10.9:7.9,lp.hz);lp.g.add(tg);}
+  const tg=label('🏠 '+o.nm,.9);tg.position.set(lp.hx,big?10.9:7.9,lp.hz);tg.onBeforeRender=laneTagR;lp.g.add(tg);}
 function laneTick(dt){LANE.t+=dt;if(LANE.t>=1){LANE.t=0;laneRefresh();}visTick(dt);}
 function laneIcon(j){const o=LANE.own[j];return o&&o.k===laneMe()?'🏠':'🔔';}
 function laneLabel(j){const o=LANE.own[j];if(!o)return'';if(o.k===laneMe())return'Go inside your house';
@@ -4067,7 +4166,7 @@ function hostAnswer(ok,quiet){const q=HOST.cur;if(!q)return;HOST.cur=null;const 
   else if(!quiet)toast('💛 Okay! '+q.nm+' can try again later.',2.4);
   setTimeout(hostCard,700);}
 function mpTick(dt){if(!MP.grp)return;const loc=CUR?CUR.id:'city';
-  MP.t+=dt;if(MP.t>=.15){MP.t=0;const st={nm:S.name||'Friend',lk:packLook(),loc,x:Math.round(P.x*100)/100,z:Math.round(P.z*100)/100,ry:Math.round(P.yaw*100)/100,mv:P.moving?1:0,ck:mpClock()};
+  MP.t+=dt;if(MP.t>=.15){MP.t=0;const st={nm:S.name||'Friend',lk:packLook(),loc,x:Math.round(P.x*100)/100,z:Math.round(P.z*100)/100,ry:Math.round((P.sit&&P.sit.bus?P.sit.yaw:P.yaw)*100)/100,mv:P.moving?1:0,ck:mpClock()};   /* (on the bus your body faces forward on the seat, wherever you look) */
     {const b=LOC.city.ball,m=S.match||{l:0,r:0,v:0},r2=v=>Math.round(v*100)/100;st.sc=[m.l|0,m.r|0,m.v|0];st.bl=BS.mine&&b?[r2(b.x),r2(b.z),r2(b.vx),r2(b.vz),BS.k,Math.round((b.reset||0)*10)/10]:null;}
     st.zz=zzIn()?1:null;st.aw=AW.on?1:null;st.rg=ZZ.rg&&Date.now()-ZZ.rgT<12000?ZZ.rg:null;   /* 😴 in bed / 🔔 a ring (optional; null clears them: presence merges) */
     mpStamp(st);   /* 🦘 jumps, 🐾 pets with me (optional) */
@@ -4132,7 +4231,7 @@ function mpPetsTick(a,dt,vis){const L=a.pets;if(!L)return;
     else{const dx=gx-q.x,dz=gz-q.z,dd=Math.hypot(dx,dz);
       if(dd>.06){const sp=Math.min(7,1+dd*3.2),s=Math.min(dd,sp*dt);let nx=q.x+dx/dd*s,nz=q.z+dz/dd*s;if(near)[nx,nz]=collideXZ(nx,nz,.3,CUR);q.x=nx;q.z=nz;q.face=Math.atan2(dx,dz);q.mv=dd>.15;q.spd=clamp(sp/3,.6,1.8);}
       else{q.mv=false;q.face=angLerp(q.face,Math.atan2(a.x-q.x,a.z-q.z),Math.min(1,dt*3));}}
-    q.g.visible=true;q.g.position.set(q.x,hopY(q,dt)+brAt(CUR.id,q.x,q.z),q.z);q.g.rotation.y=angLerp(q.g.rotation.y,q.face,Math.min(1,dt*8));animPet(q.m,dt,q.mv,q.spd);q.tag.visible=Math.hypot(P.x-q.x,P.z-q.z)>1.3;}}
+    q.g.visible=true;q.g.position.set(q.x,hopY(q,dt)+brAt(CUR.id,q.x,q.z),q.z);q.g.rotation.y=angLerp(q.g.rotation.y,q.face,Math.min(1,dt*8));animPet(q.m,dt,q.mv,q.spd);q.tag.visible=!a.lie&&Math.hypot(P.x-q.x,P.z-q.z)>1.3;}}   /* (their owner asleep in bed or in the tent: no pet names floating on the pillow) */
 /* jump right next to a friend, even into the shop they are in */
 function warpTo(loc,fx,fz,nm){if(!LOC[loc]||busWarp(loc,nm))return;if(DECO.on)decoEnd();if(P.ride)stopRide();if(P.sit)standUp();closePanel();SFX.door();
   fade(()=>{setLoc(loc);let x=fx+2.4,z=fz;const fr=[...MP.peers.values()].find(a=>a.nm===nm),ry=fr?fr.ry:0;
@@ -4749,11 +4848,16 @@ $('bar').addEventListener('click',e=>{const b=e.target.closest('[data-d]');if(!b
 
 /* ================= panels ================= */
 function openPanel(html,o={}){const p=$('panel'),fresh=p.hidden;p.classList.toggle('bottom',!!o.bottom);p.classList.toggle('side',!!o.side);$('card').className='card'+(o.cls?' '+o.cls:'');$('card').innerHTML=html;p.hidden=false;if(fresh)$('card').scrollTop=0;   /* a card opened anew starts at its top (it used to keep the last card's scroll) */UI.open=true;UI.onClose=o.onClose||null;UI.lock=!!o.lock;
-  IN.joy.id=null;IN.joy.x=IN.joy.y=0;IN.look.id=null;$('joy').classList.remove('on');$('knob').style.transform='';$('actWrap').hidden=true;try{toastPlace();cardMore();}catch(e){}setTimeout(()=>{try{cardMore();}catch(e){}},350);}
-/* ⬇️ a card taller than the screen shows a little bouncing arrow at its bottom until you scroll to the end (the clothes maker: a soft fade over its "That's me!" bar) */
+  IN.joy.id=null;IN.joy.x=IN.joy.y=0;IN.look.id=null;$('joy').classList.remove('on');$('knob').style.transform='';$('actWrap').hidden=true;TQ.card=performance.now();TQ.cev=toastEv();try{toastFit(1);cardMore();}catch(e){}setTimeout(()=>{try{cardMore();}catch(e){}},350);}
+/* ⬇️ a card taller than the screen shows a little bouncing arrow at its bottom until you scroll to the end (the clothes maker: a soft fade over its "That's me!" bar).
+   The arrow sits on the card's edge, half outside (the right edge, or the bottom edge on a narrow screen), next to the buttons and words instead
+   of on them (it used to cover a button's corner) */
 function cardMore(){const c=$('card');if($('panel').hidden)return;const m=!c.classList.contains('phonecard')&&/auto|scroll/.test(getComputedStyle(c).overflowY)&&c.scrollHeight-c.clientHeight-c.scrollTop>30,f=c.querySelector('.crsave');
-  if(f){f.classList.toggle('more',m);c.classList.remove('more');}else c.classList.toggle('more',m);}
-$('card').addEventListener('scroll',cardMore,{passive:true});
+  if(f){f.classList.toggle('more',m);c.classList.remove('more');}else c.classList.toggle('more',m);
+  let a=$('moreHint');if(!a){a=document.createElement('div');a.id='moreHint';a.setAttribute('aria-hidden','true');a.textContent='⬇️';$('panel').appendChild(a);}
+  a.hidden=!m||!!f;if(a.hidden)return;const r=c.getBoundingClientRect(),p=$('panel').getBoundingClientRect(),side=innerWidth-r.right>=20;   /* no room on the right (a phone held upright): on the bottom edge */
+  a.style.left=Math.round((side?r.right-20:(r.left+r.right)/2-19)-p.left)+'px';a.style.top=Math.round(Math.min(side?r.bottom-60:r.bottom-19,visH()-42)-p.top)+'px';}
+$('card').addEventListener('scroll',cardMore,{passive:true});if(window.ResizeObserver)new ResizeObserver(()=>{try{cardMore();}catch(e){}}).observe($('card'));
 function closePanel(){const p=$('panel');if(p.hidden)return;p.hidden=true;UI.open=false;UI.lock=false;const f=UI.onClose;UI.onClose=null;if(f)f();}
 $('panel').addEventListener('pointerdown',e=>{if(e.target===$('panel')&&!UI.lock)closePanel();});
 /* ⌨️ typing on an iPad or phone: the keyboard covers the bottom of the screen (iOS only shrinks the "visual viewport"). While a text box in a card
@@ -4769,6 +4873,10 @@ function kbFit(){const vv=window.visualViewport,p=$('panel'),H=document.document
   const el=document.activeElement,c=el.closest('.card');if(c){const r=el.getBoundingClientRect(),cr=c.getBoundingClientRect(),f=c.querySelector('.crsave'),B=Math.min(cr.bottom,f&&f.offsetParent?f.getBoundingClientRect().top:1e9);   /* (not under the creator's sticky "That's me!" bar) */
     let d=r.bottom>B-8?r.bottom-B+8:0;if(r.top-d<cr.top+8)d=r.top-cr.top-8;if(Math.abs(d)>1)c.scrollTop+=d;}}   /* its top always shows */
 document.addEventListener('focusin',()=>setTimeout(kbFit,0));document.addEventListener('focusout',()=>setTimeout(kbFit,60));kbFit();
+/* 👀 a line that just changed in a card (an answer under a text box) scrolls into view: above the keyboard, and on a short screen too,
+   without pushing the top of the text box (keep) out of sight */
+function cardShow(el,keep){const c=$('card');if(!el||$('panel').hidden||!c.contains(el))return;const cr=c.getBoundingClientRect(),r=el.getBoundingClientRect();
+  let d=r.bottom-(Math.min(cr.bottom,visH())-8);if(d<=1)return;if(keep)d=Math.min(d,keep.getBoundingClientRect().top-Math.max(cr.top,0)-8);if(d>1)c.scrollTop+=d;}
 const ACT={};
 $('card').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||b.disabled)return;const [k,...r]=b.dataset.a.split(':');if(k!=='buy')SFX.tap();if(ACT[k])ACT[k](r.join(':'),b);});
 ACT.close=()=>closePanel();
@@ -5061,7 +5169,7 @@ function mapPaint(x,ox,oz,k,w,h,o){const P=o.dark?MAP_PAL.dark:MAP_PAL.light,u=o
       if(lp.j===mine){const g=PLACES.find(q=>q.id==='garden'),q=(a,b)=>lotPt(lp.j,a,b);   /* 🌱 your garden: the beds, the shed and the stepping stones */
         if(g){R(g.x-6.15,g.z-3,g.x+6.15,g.z+3,.8);x.fillStyle=o.dark?'#4f7a4a':'#a2e48a';x.fill();stroke(P.fence,Math.max(u,.14*k));
           x.fillStyle=P.bed;for(const [a,b] of [[-21,-20.9],[-18.3,-20.9],[-15.6,-20.9],[-21,-23],[-18.3,-23],[-15.6,-23]]){const [cx,cz]=q(a,b);R(cx-.9,cz-.6,cx+.9,cz+.6,.25);x.fill();}
-          const [sx2,sz2]=q(-11.9,-23.3);R(sx2-.8,sz2-.7,sx2+.8,sz2+.7,.3);x.fillStyle=bc('#ffd6e0');x.fill();stroke(P.ink,u);
+          const [sx2,sz2]=q(-13.4,-23.3);R(sx2-.8,sz2-.7,sx2+.8,sz2+.7,.3);x.fillStyle=bc('#ffd6e0');x.fill();stroke(P.ink,u);
           if(k>3*u){x.fillStyle=P.pave;for(let i=0;i<8;i++){const [a,b]=q(-11.45,-7.6-i*1.4);C(a,b,.36);x.fill();}}}}
       if(o2){const pal=LANE_PAL[hashStr(o2.nm.toLowerCase())%LANE_PAL.length],z1=Math.min(s*11.5,s*18.5),sh=Math.max(1.5*u,.5*k);
         x.fillStyle=P.shade;rr(x,X(X0-4.5)+sh,Z(z1)+sh,9*k,7*k,1.4*k);x.fill();R(X0-4.5,z1,X0+4.5,z1+7,1.4);x.fillStyle=bc(pal[0]);x.fill();stroke(P.ink,1.6*u);
@@ -5075,15 +5183,15 @@ function drawMapBase(x,W){mapPaint(x,-88,-88,W/176,W,W,{mini:1,u:W/176});}
 /* the badges and names: what can be tapped, by importance (0 = always shown) */
 function mapItems(){const it=[],C=LOC.city,nav=NAV&&!NAV.actor?NAV.id:'';
   for(const p of PLACES){if(!mapShown(p))continue;const a=MAP_AT[p.id]||[p.x,p.z],sel=p.id===nav;
-    it.push({k:p.id,pl:p,i:p.i,n:p.id==='beach'?'Beach →':p.n,x:a[0],z:a[1],pri:sel||p.id==='home'?0:p.flat&&p.id!=='bus'&&p.id!=='beach'?2:1,me:p.id==='home',sel});}
+    it.push({k:p.id,pl:p,i:p.i,n:p.id==='beach'?'Beach →':p.n,x:a[0],z:a[1],pri:sel||p.id==='home'||p.id==='beach'?0:p.flat&&p.id!=='bus'?2:1,me:p.id==='home',sel,ls:p.id==='beach'?[0,1,3]:null});}   /* (the 🏖️ beach sign at the east edge always shows: you go there by bus; its name never goes left, into the town) */
   if(C&&C.lane)for(const lp of C.lane){const o=LANE.own[lp.j];if(!o||o.k===laneMe())continue;const k='lot'+lp.j;it.push({k,lot:lp.j,i:'🏠',n:o.nm,x:lp.hx,z:lp.hz,pri:k===nav?0:2,sel:k===nav});}
   it.push({k:'lane',deco:'lane',i:'🏡',n:'Friends Lane',x:-92,z:0,pri:1},{k:'fc',deco:'fc',i:'🌸',n:'Flower Corner',x:-17,z:-15.6,pri:3});
   return it;}
-function mapLayout(x){const s=MAPV.s,placed=[],out=[],hit=r=>placed.some(q=>r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1]);
+function mapLayout(x){const s=MAPV.s,B=mapB(),placed=[],out=[],hit=r=>placed.some(q=>r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1]),edge=r=>r[0]<B.x1*s||r[2]>B.x2*s||r[1]<B.z1*s||r[3]>B.z2*s;
   for(const it of mapItems().sort((a,b)=>a.pri-b.pri)){const px=it.x*s,py=it.z*s,R=it.sel?18:it.pri<2?16:it.pri<3?14:12,br=[px-R-2,py-R-2,px+R+2,py+R+2];
     if(it.pri>0&&hit(br))continue;   /* crowded: the less important ones hide (they come back when you zoom in) */
     it.R=R;it.lab=null;const fs=it.pri<3?15:13;x.font=`800 ${fs}px ${FONT}`;const tw=x.measureText(it.n).width,th=fs*1.15;   /* the name: below, right, left or above its badge */
-    for(const [lx,ly] of [[px-tw/2,py+R+2],[px+R+5,py-th/2],[px-R-5-tw,py-th/2],[px-tw/2,py-R-3-th]]){const r=[lx-4,ly-1,lx+tw+4,ly+th+1];if(!hit(r)){placed.push(r);it.lab=[lx-px,ly-py,tw,th,fs];break;}}
+    for(const [k,[lx,ly]] of [[px-tw/2,py+R+2],[px+R+5,py-th/2],[px-R-5-tw,py-th/2],[px-tw/2,py-R-3-th]].entries()){const r=[lx-4,ly-1,lx+tw+4,ly+th+1];if((!it.ls||it.ls.includes(k))&&!hit(r)&&!edge(r)){placed.push(r);it.lab=[lx-px,ly-py,tw,th,fs];break;}}   /* (never poking out of the map's edge: it would be cut there) */
     placed.push(br);out.push(it);}
   return out;}
 function mapKey(){const C=LOC.city;return(C&&C.lane?C.lane.map(l=>l.key||'').join(','):'')+'|'+LANE.mine+'|'+LANE_PLOTS.length+'|'+PLACES.length;}   /* the cache picture changes with these */
@@ -5128,7 +5236,7 @@ function mapComfy(){return clamp(Math.min(MAPV.W,MAPV.H)/85,mapSmin(),MAP_SMAX);
 function mapClampV(){const B=mapB(),s=MAPV.s=clamp(MAPV.s,mapSmin(),MAP_SMAX),hw=MAPV.W/2/s,hh=MAPV.H/2/s;   /* you can't lose the town */
   MAPV.cx=B.x2-B.x1<=2*hw?(B.x1+B.x2)/2:clamp(MAPV.cx,B.x1+hw,B.x2-hw);MAPV.cz=B.z2-B.z1<=2*hh?(B.z1+B.z2)/2:clamp(MAPV.cz,B.z1+hh,B.z2-hh);}
 function mapHome(z){const me=mapMe();if(z||MAPV.s<mapComfy())MAPV.s=mapComfy();MAPV.cx=me.x;MAPV.cz=me.z;mapClampV();}
-function mapShow(fit){if(!NAV||!MAPV.W)return;const me=mapMe(),G=NAV.goal||NAV.door,[gx,gy]=mapSP(G[0],G[1]),pad=clamp(MAPV.W*.15,40,70),bot=80;   /* the place is off the screen (or picked from the list): show you and the place */
+function mapShow(fit){if(!NAV||!MAPV.W)return;const me=mapMe(),G=NAV.goal||NAV.door,[gx,gy]=mapSP(G[0],G[1]),pad=clamp(MAPV.W*.15,40,70),bot=Math.max(80,(($('mpCard')||{}).offsetHeight||0)+26);   /* the place is off the screen (or picked from the list): show you and the place */
   if(!fit&&gx>pad&&gx<MAPV.W-pad&&gy>pad&&gy<MAPV.H-bot)return;
   const B=NAV.actor||!Number.isFinite(NAV.x)?G:(MAP_AT[NAV.id]||[NAV.x,NAV.z]),x1=Math.min(me.x,G[0],B[0]),x2=Math.max(me.x,G[0],B[0]),z1=Math.min(me.z,G[1],B[1]),z2=Math.max(me.z,G[1],B[1]),   /* you, the door and the badge */
     sf=Math.min((MAPV.W-2*pad)/Math.max(1,x2-x1),(MAPV.H-pad-bot)/Math.max(1,z2-z1));
@@ -5159,35 +5267,51 @@ function mapDraw(force){const cv=$('mapc');if(!MAPV.on)return;if(!cv){mapOff();r
   {const T=jobTarget();if(T){const col=(S.dl&&S.dl.dot)||'#ff3b3b',[tx,ty]=S2(T.x,T.z);x.beginPath();x.arc(tx,ty,9*dpr,0,TAU);x.fillStyle=col;x.fill();x.lineWidth=3*dpr;x.strokeStyle=col==='#ffffff'?'#1d1622':'#ffffff';x.stroke();
     if(S.job==='delivery'&&S.dl&&S.dl.o&&S.dl.o.r){x.beginPath();x.arc(tx,ty,14*dpr,0,TAU);x.lineWidth=4*dpr;x.strokeStyle='#ffc400';x.stroke();}}}
   x.textAlign='center';x.textBaseline='middle';
-  const items=MAPV.lay.items.slice(),taken=[];if(NAV&&NAV.actor)items.push({i:NAV.i,n:NAV.n,x:NAV.door[0],z:NAV.door[1],R:18,sel:1,lab:null});
-  for(const it of items){const [bx,by]=S2(it.x,it.z),R=it.R*dpr;if(bx<-120*dpr||bx>W+120*dpr||by<-60*dpr||by>H+60*dpr)continue;
-    taken.push([bx-R,by-R,bx+R,by+R]);if(it.lab){const [lx,ly,tw,th]=it.lab;taken.push([bx+lx*dpr,by+ly*dpr,bx+(lx+tw)*dpr,by+(ly+th)*dpr]);}
+  const items=MAPV.lay.items.slice();if(NAV&&NAV.actor)items.push({i:NAV.i,n:NAV.n,x:NAV.door[0],z:NAV.door[1],R:18,sel:1,lab:null});
+  /* 🧹 nothing hides under you (glitch fixes, pass 2): a place's name under your arrow moves to another side of its badge (with no room there,
+     a small place's name hides and a big one is drawn over the arrow); your "You!" and friends' names go to a side where they cover nothing */
+  const me=mapMe(),[mx,my]=S2(me.x,me.z),ph=(t%1.6)/1.6,big=t-MAPV.you<2.2,A=21*dpr,meB=[mx-A,my-A,mx+A,my+A],vis=[],
+    hit=(r,L)=>L.some(o=>o!==r&&r[0]<o[2]&&r[2]>o[0]&&r[1]<o[3]&&r[3]>o[1]),inC=r=>r[0]>=0&&r[1]>=0&&r[2]<=W&&r[3]<=H,rects=()=>vis.flatMap(o=>o.l?[o.b,o.l]:[o.b]);
+  for(const it of items){const [bx,by]=S2(it.x,it.z),R=it.R*dpr;if(bx<-120*dpr||bx>W+120*dpr||by<-60*dpr||by>H+60*dpr)continue;const o={it,bx,by,R,b:[bx-R,by-R,bx+R,by+R],l:null,top:0};
+    if(it.lab){const [lx,ly,tw,th]=it.lab;o.l=[bx+lx*dpr,by+ly*dpr,bx+(lx+tw)*dpr,by+(ly+th)*dpr];}vis.push(o);}
+  const fl=[];for(const f of mapFriends()){const [fx,fy]=S2(f.x,f.z),r=(f.on?8:6.5)*dpr;if(fx>=-50&&fx<=W+50&&fy>=-50&&fy<=H+50)fl.push([f,fx,fy,r,[fx-r,fy-r,fx+r,fy+r]]);}
+  for(const o of vis){if(!o.l||!hit(o.l,[meB]))continue;const [,,tw,th]=o.it.lab,R=o.it.R,L=[...rects().filter(q=>q!==o.l),...fl.map(q=>q[4])];o.top=1;   /* (the same 4 sides as mapLayout) */
+    for(const [lx,ly] of[[-tw/2,R+2],[R+5,-th/2],[-R-5-tw,-th/2],[-tw/2,-R-3-th]]){const r=[o.bx+lx*dpr,o.by+ly*dpr,o.bx+(lx+tw)*dpr,o.by+(ly+th)*dpr];if(inC(r)&&!hit(r,[meB])&&!hit(r,L)){o.l=r;o.top=0;break;}}if(o.top&&o.it.pri>1)o.l=null;}   /* (no room: a small place's name hides, like when it is crowded) */
+  for(const o of vis)if(o.it.lab)o.it.sl=o.l?[(o.l[0]-o.bx)/dpr,(o.l[1]-o.by)/dpr,(o.l[2]-o.bx)/dpr,(o.l[3]-o.by)/dpr]:0;   /* where the name is drawn now (mapTap: tap the name where you see it) */
+  const name=o=>{const it=o.it,Y=(o.l[1]+o.l[3])/2;x.font=`800 ${it.lab[4]*dpr}px ${FONT}`;x.textAlign='left';x.lineWidth=4.5*dpr;x.strokeStyle=P2.halo;x.strokeText(it.n,o.l[0],Y);x.fillStyle=it.sel?(dark?'#ffb3cf':'#d6286a'):P2.txt;x.fillText(it.n,o.l[0],Y);x.textAlign='center';};
+  for(const o of vis){const {it,bx,by,R}=o;
     if(it.sel||it.me){x.beginPath();x.arc(bx,by,R+5*dpr,0,TAU);x.fillStyle=it.sel?'rgba(255,77,141,.35)':'rgba(255,122,168,.25)';x.fill();}
     x.beginPath();x.arc(bx,by+1.5*dpr,R,0,TAU);x.fillStyle=P2.shade;x.fill();x.beginPath();x.arc(bx,by,R,0,TAU);x.fillStyle=P2.badge;x.fill();x.lineWidth=(it.sel||it.me?3.5:2.2)*dpr;x.strokeStyle=it.sel||it.me?'#ff4d8d':P2.badgeE;x.stroke();
     x.font=`${Math.round(R*1.1)}px ${FONT}`;x.fillStyle='#3d2c5e';x.fillText(it.i,bx,by+R*.07);
-    if(it.lab){const [lx,ly,tw,th,fs]=it.lab;x.font=`800 ${fs*dpr}px ${FONT}`;x.textAlign='left';const X1=bx+lx*dpr,Y1=by+(ly+th/2)*dpr;x.lineWidth=4.5*dpr;x.strokeStyle=P2.halo;x.strokeText(it.n,X1,Y1);x.fillStyle=it.sel?(dark?'#ffb3cf':'#d6286a'):P2.txt;x.fillText(it.n,X1,Y1);x.textAlign='center';}}
-  for(const f of mapFriends()){const [fx,fy]=S2(f.x,f.z),r=(f.on?8:6.5)*dpr;if(fx<-50||fx>W+50||fy<-50||fy>H+50)continue;x.beginPath();x.arc(fx,fy,r,0,TAU);x.fillStyle=f.c;x.fill();x.lineWidth=2.5*dpr;x.strokeStyle='#ffffff';x.stroke();   /* online friends: a bigger dot */
-    x.lineWidth=1.2*dpr;x.strokeStyle=P2.ink;x.beginPath();x.arc(fx,fy,r+1.6*dpr,0,TAU);x.stroke();x.font=`800 ${13*dpr}px ${FONT}`;
-    const tw=x.measureText(f.n).width/2,q=[fx-tw,fy-26*dpr,fx+tw,fy-8*dpr];if(taken.some(o=>q[0]<o[2]&&q[2]>o[0]&&q[1]<o[3]&&q[3]>o[1]))continue;taken.push(q);   /* a friend's name only where it doesn't cover a place's name */
-    x.lineWidth=4*dpr;x.strokeStyle=P2.halo;x.strokeText(f.n,fx,fy-17*dpr);x.fillStyle=P2.txt;x.fillText(f.n,fx,fy-17*dpr);}
-  const me=mapMe(),[mx,my]=S2(me.x,me.z),ph=(t%1.6)/1.6,big=t-MAPV.you<2.2;   /* you: a pink arrow with a white outline and a soft pulse */
+    if(o.l&&!o.top)name(o);}
+  /* you: a pink arrow with a white outline and a soft pulse */
   x.beginPath();x.arc(mx,my,(big?22+26*ph:15+15*ph)*dpr,0,TAU);x.fillStyle=`rgba(255,77,141,${(big?.45:.3)*(1-ph)})`;x.fill();
   x.save();x.translate(mx,my);x.rotate(-me.yaw);const a=1.25*dpr;x.beginPath();x.moveTo(0,-15*a);x.lineTo(11*a,11*a);x.lineTo(0,5*a);x.lineTo(-11*a,11*a);x.closePath();
   x.lineWidth=7*dpr;x.strokeStyle='#3d2c5e';x.stroke();x.lineWidth=3.5*dpr;x.strokeStyle='#ffffff';x.stroke();x.fillStyle='#ff4d8d';x.fill();x.restore();
-  if(big){x.font=`800 ${15*dpr}px ${FONT}`;const tw=x.measureText('You!').width+18*dpr,ty=my-34*dpr;rr(x,mx-tw/2,ty-13*dpr,tw,26*dpr,13*dpr);x.fillStyle='#ff4d8d';x.fill();x.lineWidth=2.5*dpr;x.strokeStyle='#ffffff';x.stroke();x.fillStyle='#ffffff';x.fillText('You!',mx,ty+dpr);}}
+  for(const o of vis)if(o.l&&o.top)name(o);
+  const taken=[...rects(),meB,...fl.map(q=>q[4])];
+  for(const [f,fx,fy,r] of fl){x.beginPath();x.arc(fx,fy,r,0,TAU);x.fillStyle=f.c;x.fill();x.lineWidth=2.5*dpr;x.strokeStyle='#ffffff';x.stroke();   /* online friends: a bigger dot (over your arrow, so it never hides them) */
+    x.lineWidth=1.2*dpr;x.strokeStyle=P2.ink;x.beginPath();x.arc(fx,fy,r+1.6*dpr,0,TAU);x.stroke();}
+  if(big){x.font=`800 ${15*dpr}px ${FONT}`;const tw=x.measureText('You!').width+18*dpr,ov=q=>taken.reduce((a,o)=>a+Math.max(0,Math.min(q[2],o[2])-Math.max(q[0],o[0]))*Math.max(0,Math.min(q[3],o[3])-Math.max(q[1],o[1])),0);let cx=mx,cy=my-34*dpr,bo=Infinity;   /* "You!" above you, or below, right or left: the side that covers the least */
+    for(const [qx,qy] of[[mx,my-34*dpr],[mx,my+34*dpr],[mx+A+6*dpr+tw/2,my],[mx-A-6*dpr-tw/2,my]]){const q=[qx-tw/2,qy-13*dpr,qx+tw/2,qy+13*dpr],v=inC(q)?ov(q):Infinity;if(v<bo){bo=v;cx=qx;cy=qy;if(!v)break;}}
+    taken.push([cx-tw/2,cy-13*dpr,cx+tw/2,cy+13*dpr]);rr(x,cx-tw/2,cy-13*dpr,tw,26*dpr,13*dpr);x.fillStyle='#ff4d8d';x.fill();x.lineWidth=2.5*dpr;x.strokeStyle='#ffffff';x.stroke();x.fillStyle='#ffffff';x.fillText('You!',cx,cy+dpr);}
+  x.font=`800 ${13*dpr}px ${FONT}`;
+  for(const [f,fx,fy,r] of fl){const tw=x.measureText(f.n).width/2;   /* a friend's name above the dot, or below, right or left: where it covers nothing (else no name) */
+    for(const [qx,qy] of[[fx,fy-17*dpr],[fx,fy+17*dpr],[fx+r+5*dpr+tw,fy],[fx-r-5*dpr-tw,fy]]){const q=[qx-tw,qy-9*dpr,qx+tw,qy+9*dpr];if(hit(q,taken))continue;taken.push(q);
+      x.lineWidth=4*dpr;x.strokeStyle=P2.halo;x.strokeText(f.n,qx,qy);x.fillStyle=P2.txt;x.fillText(f.n,qx,qy);break;}}}
 /* the card at the bottom: the place you picked (how far, 🚶 Let's go!, ✕), or a tip */
 function mapCard(){const el=$('mpCard');if(!el)return;let h;
   if(NAV){const me=mapMe(),G=NAV.goal||NAV.door,d=Math.round(Math.hypot(G[0]-me.x,G[1]-me.z)),
       sub=CUR.id==='beach'?'Take the bus home first 🚌':MAPV.beach&&NAV.id==='bus'?d+' m away · the Beach Bus leaves from here 🏖️':NAV.actor?d+' m away · walking around':(CUR.id!=='city'?'Go outside first · ':'')+d+' m away';
     h=`<span class="mpc-i">${NAV.i}</span><span class="mpc-t"><b>${esc(NAV.n)}</b><span>${sub}</span></span><button class="btn mint mpgo" data-a="mapgo">🚶 Let's go!</button><button class="btn x" data-a="mapclr" aria-label="Stop showing the way">✕</button>`;}
   else h=MAPV.hint==='me'?`<span class="mpc-i">📍</span><span class="mpc-t"><span>That's you! The pink arrow points where you look.</span></span>`:`<span class="mpc-i">👆</span><span class="mpc-t"><span>Tap a place to see the way there!</span></span>`;
-  if(h!==MAPV.ch){MAPV.ch=h;el.innerHTML=h;}
+  if(h!==MAPV.ch){MAPV.ch=h;el.innerHTML=h;el.classList.toggle('go',!!NAV);}
   for(const b of document.querySelectorAll('#card .place')){const on=!!NAV&&b.dataset.a==='mapsel:'+(MAPV.beach&&NAV.id==='bus'?'beach':NAV.id);if(b.classList.contains('on')!==on){b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);}}}
 function mapBounce(sel){const b=document.querySelector(sel);if(!b)return;MAPV.hop^=1;b.classList.remove('hop','hop2');b.classList.add(MAPV.hop?'hop':'hop2');}
 /* tap on the map: your arrow, a badge or a name, a building, a lot on Friends Lane */
 function mapTap(px,py){const me=mapMe(),[mx,my]=mapSP(me.x,me.z);
   let best=null,bd=1e9;for(const it of (MAPV.lay&&MAPV.lay.items)||[]){const [bx,by]=mapSP(it.x,it.z),d=Math.hypot(bx-px,by-py);if(d<it.R+10&&d<bd){bd=d;best=it;}
-    else if(it.lab&&!best){const [lx,ly,tw,th]=it.lab;if(px>=bx+lx-6&&px<=bx+lx+tw+6&&py>=by+ly-6&&py<=by+ly+th+6)best=it;}}
+    else if(it.lab&&it.sl!==0&&!best){const [lx,ly,tw,th]=it.lab,[x1,y1,x2,y2]=it.sl||[lx,ly,lx+tw,ly+th];if(px>=bx+x1-6&&px<=bx+x2+6&&py>=by+y1-6&&py<=by+y2+6)best=it;}}
   if(Math.hypot(mx-px,my-py)<24&&(!best||bd>12)){ACT.mapme();return true;}
   if(!best){const [wx,wz]=mapWP(px,py);let ba=1e9;
     for(const p of PLACES){if(!mapShown(p))continue;const r=p.r,inside=r?Math.hypot(wx-p.x,wz-p.z)<=r+1:Math.abs(wx-p.x)<=p.w/2+1&&Math.abs(wz-p.z)<=p.d/2+1,ar=r?r*r*3:p.w*p.d;if(inside&&ar<ba){ba=ar;best={pl:p};}}
@@ -5199,8 +5323,8 @@ function mapPick(it,fit){
   let id,go;
   if(it.lot!=null){const o=LANE.own[it.lot],lp=LOC.city.lane[it.lot];if(!o||!lp)return;id='lot'+it.lot;go=()=>setNavTo({id,n:o.nm+"'s house",i:'🏠',nt:1,x:lp.hx,z:lp.hz,door:lotPt(it.lot,-17,-6.9)},true);}
   else{const pl=it.pl;if(!pl)return;id=pl.id;go=()=>{MAPV.beach=pl.id==='beach'&&CUR.id!=='beach';if(MAPV.beach)setNav('beach',true);else setNavTo(pl,true);};}
-  const same=NAV&&!NAV.actor&&(NAV.id===id||(id==='beach'&&MAPV.beach&&NAV.id==='bus'));
-  if(same){SFX.tap();mapShow(fit);mapBounce('#mpCard');}else{go();SFX.pop();MAPV.hint='';mapShow(fit);}
+  const same=NAV&&!NAV.actor&&(NAV.id===id||(id==='beach'&&MAPV.beach&&NAV.id==='bus'));if(same&&id==='bus')MAPV.beach=false;   /* the bus stop itself now (not "the way to the beach"): its own row in the list and its own card */
+  if(same){SFX.tap();mapCard();mapShow(fit);mapBounce('#mpCard');}else{go();SFX.pop();MAPV.hint='';mapCard();mapShow(fit);}   /* (the card first: the map makes room for it) */
   mapCard();mapZui();mapDraw();}
 /* one finger drags, two fingers pinch; a short touch without moving is a tap */
 function mapEv(cv){const at=e=>{const r=cv.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top];};
@@ -5229,9 +5353,16 @@ function openMap(){const narrow=window.matchMedia&&matchMedia(MAP_NARROW).matche
     <div class="mp-body"><div class="mp-list"><div class="places">${list}</div></div><div class="mp-wrap"><canvas id="mapc" aria-label="Map of Cozy Town"></canvas>
     <div class="mp-ctl"><button class="btn mpb me" data-a="mapme" aria-label="Show me where I am">📍 Me</button><button class="btn mpb" data-a="mapz:1" aria-label="Zoom in">+</button><button class="btn mpb" data-a="mapz:-1" aria-label="Zoom out">−</button></div>
     <div class="mp-card" id="mpCard" role="status"></div></div></div></div>`,{cls:'mapcard',onClose:()=>{mapOff();PH.app=null;PH.chat=null;PH.jobs=false;}});
-  mapEv($('mapc'));mapCard();mapDraw();setTimeout(()=>{if(MAPV.on)mapDraw(true);},0);}
+  mapEv($('mapc'));mapCard();mapDraw();setTimeout(()=>{if(MAPV.on)mapDraw(true);},0);const ml=document.querySelector('#card .mp-list');if(ml)ml.addEventListener('scroll',mapListMore,{passive:true});}
 function mapOff(){MAPV.on=false;MAPV.ptr.clear();MAPV.g=null;MAPV.bv=null;MAPV.lay=null;if(MAPV.base){MAPV.base.width=MAPV.base.height=0;MAPV.base=null;}}
-function mapTick(){if(!$('mapc')){mapOff();return;}mapCard();mapDraw();}
+function mapTick(){if(!$('mapc')){mapOff();return;}mapCard();mapDraw();mapListMore();}
+/* 🧹 glitch fixes, pass 2 (the map on small phones): held upright, the card's buttons go under its words (the words had ~150 px: 5 lines);
+   held sideways, the list of places has 5 narrower columns, so every place fits; a list that still scrolls shows a little bouncing ⬇️ */
+{const st=document.createElement('style');st.textContent='@media (max-width:440px){.mp-card.go{flex-wrap:wrap;row-gap:6px}.mp-card.go .mpc-t{flex:1 1 calc(100% - 40px)}.mp-card.go .mpgo{flex:1 1 auto}}'
+  +'@media (max-height:500px){.mp-list .places{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:5px}.mp-list .place{min-height:44px;padding:3px 6px;gap:4px;font-size:13px;line-height:1.1}.mp-list .place .pi{font-size:18px}}'
+  +'.mp-list.more::after{content:"⬇️";position:sticky;bottom:4px;z-index:3;display:block;width:40px;height:40px;margin:-40px auto 0;border-radius:50%;background:var(--paper);border:3px solid var(--line);box-shadow:0 3px 0 var(--soft);font-size:17px;line-height:34px;text-align:center;pointer-events:none;animation:moreBob .9s ease-in-out infinite alternate}';
+ document.head.appendChild(st);}
+function mapListMore(){const l=document.querySelector('#card .mp-list');if(l)l.classList.toggle('more',!!MAPV.list&&l.scrollHeight-l.clientHeight-l.scrollTop>12);}
 ACT.mapsel=id=>{const pl=PLACES.find(p=>p.id===id);if(!pl)return;if(MAPV.list&&window.matchMedia&&matchMedia(MAP_NARROW).matches)ACT.maplist();mapPick({pl},true);};   /* from the list: show you and the place */
 ACT.mapgo=()=>{const n=NAV;closePanel();if(!n)return;SFX.pop();toast(CUR.id==='beach'?'🚌 Take the bus home first, then follow the arrow to '+theN(n)+'!':MAPV.beach&&n.id==='bus'?'🏖️ The beach bus leaves from the 🚌 bus stop at the park. Follow the arrow!':'📍 Follow the arrow to '+theN(n)+'!',3);};
 ACT.mapclr=()=>{clearNav();MAPV.beach=false;MAPV.hint='';mapCard();mapDraw();};
@@ -5254,13 +5385,18 @@ function setNavTo(pl,quiet){NAV=pl.actor?pl:Object.assign({},pl,{goal:pl.door,do
 function clearNav(){NAV=null;$('nav').hidden=true;if(BEACON)BEACON.visible=false;}
 function updNav(){if(!NAV)return;if(NAV.actor){const f=NAV.actor;if(f.mode==='away'){toast('😴 '+NAV.n+' went home to sleep.',3);clearNav();return;}if(f.loc===CUR.id&&CUR.id!=='city'){toast('📍 You found '+NAV.n+'! 🎉',2.8);SFX.yay();clearNav();return;}
     if(f.loc==='city'){NAV.door[0]=f.x;NAV.door[1]=f.z;if(BEACON)BEACON.position.set(f.x,0,f.z);}}
-  if(CUR.id!=='city'){if(INSIDE_AT[CUR.id]===NAV.id){qEvent('find:'+NAV.id);toast('📍 You found '+theN(NAV)+'! 🎉',2.8);SFX.yay();clearNav();return;}$('navTxt').textContent=NAV.i+' '+NAV.n+(CUR.id==='beach'?': take the bus home first 🚌':': go outside first');$('navArrow').style.transform='none';return;}
+  if(CUR.id!=='city'){if(INSIDE_AT[CUR.id]===NAV.id){qEvent('find:'+NAV.id);toast('📍 You found '+theN(NAV)+'! 🎉',2.8);SFX.yay();clearNav();return;}if(CUR.id==='beach'){navBeach();return;}navSet(NAV.i+' '+NAV.n+': go outside first','none');return;}
   const G=NAV.goal;if(G){const a=P.x>-84,b=G[0]>-84;let w=a===b?G:[a?Math.max(P.x-12,-88):Math.min(P.x+12,-80),0];   /* 🏡 between town and Friends Lane: along the middle of the big road */
     if(!a&&Math.abs(P.z)>6.8){const r=laneOut(P.x,P.z);if(r.length>2)w=r.find(q=>Math.hypot(q[0]-P.x,q[1]-P.z)>1)||w;}   /* in a yard or garden on Friends Lane: out by the gate first */
     NAV.door[0]=w[0];NAV.door[1]=w[1];}
   const dx=NAV.door[0]-P.x,dz=NAV.door[1]-P.z,d=G?Math.hypot(G[0]-P.x,G[1]-P.z):Math.hypot(dx,dz);if(d<3.2){if(NAV.id==='beach'){toast('🏖️ This gate is just for looking! 🚌 The beach bus leaves from the park.',3.4);SFX.pop();clearNav();return;}qEvent('find:'+NAV.id);toast('📍 You found '+theN(NAV)+'! 🎉'+(NAV.actor?' Talk to her!':''),2.8);SFX.yay();clearNav();return;}
   const fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw),rx=Math.cos(P.yaw),rz=-Math.sin(P.yaw),rel=Math.atan2(dx*rx+dz*rz,dx*fx+dz*fz);
-  $('navArrow').style.transform=`rotate(${rel}rad)`;$('navTxt').textContent=NAV.i+' '+NAV.n+' '+Math.round(d)+' m';}
+  navSet(NAV.i+' '+NAV.n+' '+Math.round(d)+' m',`rotate(${rel}rad)`);}
+/* the pink arrow bar: its words change only when they really change (a new text reflows the HUD column) */
+function navSet(t,tf){const a=$('navArrow'),b=$('navTxt');if(b.textContent!==t)b.textContent=t;if(a.style.transform!==tf)a.style.transform=tf;}
+/* 🏖️ at the beach the arrow shows the way to the beach bus stop: the bus takes you to town first (then it points to your place again) */
+function navBeach(){const [x,z]=busW(2.2,1.9,busXZ('beach',0)),dx=x-P.x,dz=z-P.z,fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw),rx=Math.cos(P.yaw),rz=-Math.sin(P.yaw);
+  navSet(NAV.id==='home'?'🚌 Take the bus home':'🚌 Take the bus to town',Math.hypot(dx,dz)<2.5?'none':`rotate(${Math.atan2(dx*rx+dz*rz,dx*fx+dz*fz)}rad)`);}
 $('navX').addEventListener('click',()=>{SFX.tap();clearNav();});
 function qCard(Q,st,k,hard){let foot;const p=hard?'h':'q',steps=Q.steps;
   const total=steps?steps.length:Q.n,done=steps?(st?steps.filter((sp,i)=>((st.c||[])[i]||0)>=sp.n).length:0):Math.floor(st&&st.n||0);
@@ -5342,9 +5478,10 @@ function openSettings(){const fromTitle=!PLAYING;
     <div class="opt"><span>✏️ Notepad</span><button class="btn ${PAD.del?'butter':'white'}" data-a="padrest"${PAD.del?'':' disabled'}>↩️ Last page</button></div>
     ${PLAYING&&S&&S.pets.length?`<div class="opt"><span>🐾 Pets</span><button class="btn mint" data-a="fetchpets">🐾 Bring my pets to me</button></div>`:''}
     ${PLAYING?'<div class="opt"><span>Stuck somewhere?</span><button class="btn mint" data-a="gohome">🏠 Take me home</button></div>':''}
-    ${MV.on?'<div class="opt"><span>📱 Other device</span><button class="btn sky" data-a="mvopen">📦 Move my game</button></div>':''}
+    ${MV.on?'<div class="opt"><span>📱 Another iPad or phone</span><button class="btn sky" data-a="mvopen">📦 Move my game</button></div>':''}
+    ${mvBefore()?'<div class="opt"><span>↩️ Your old game</span><button class="btn white" data-a="mvundo">↩️ Bring it back</button></div>':''}
     <p class="note">${TOUCHY?'Walk: drag on the left side. Look: drag on the right side. Jump: ⬆️. Run: 🏃. Tap things to use them.':'Walk: WASD. Look: drag with the mouse. Jump: Space. Run: hold Shift. Use things: E or click. Bag: B.'}<br>✏️ Notepad: draw on it! Tap it 2× for a new page, 3× to go back, 4× to delete.</p>
-    <div class="row"><button class="btn coral" data-a="wipe">${WIPE?'Tap again to start over':'🗑️ Start a new game'}</button></div>`,{cls:'setcard',onClose:()=>{WIPE=false;}});}
+    <div class="row"><button class="btn coral" data-a="wipe">🗑️ Start a new game</button></div>`,{cls:'setcard',onClose:()=>{WIPE=false;}});}
 ACT.fetchpets=()=>{if(!S||!S.pets.length){toast('You don\'t have any pets yet! Adopt one at the Pet Shop. 🐾',3);return;}
   let n=0;for(const p of PET_ACTORS)p.loc=null;for(const p of PET_ACTORS){const d=p.d;d.stay=false;nearMe(p,++n,1);
     d.loc=p.loc;p.tx=p.x;p.tz=p.z;[d.x,d.z]=toSave(p.loc,p.x,p.z);p.g.visible=true;p.g.position.set(p.x,p.g.position.y,p.z);}
@@ -5361,14 +5498,29 @@ ACT.padrest=()=>{if(!PAD.del){toast('No deleted page to bring back',2);return;}S
   const c=$('padPrev');padPaint(c.getContext('2d'),c.width,c.height,PAD.del,2,false);};
 ACT.padyes=()=>{if(!PAD.del)return;const L=PAD.pages.length-1;if(!PAD.pages[L].length)PAD.pages[L]=PAD.del;else PAD.pages.push(PAD.del);PAD.del=null;PAD.i=PAD.pages.length-1;padSave();padFlip();closePanel();SFX.yay();toast('📄 Your page is back!',2.4);};
 ACT.padno=()=>openSettings();
-ACT.wipe=()=>{if(!WIPE){WIPE=true;openSettings();return;}WIPE=false;SAVEOFF=true;clearTimeout(CSAVE.tm);CSAVE.dirty=false;try{localStorage.removeItem(LS);}catch(e){}CSAVE.remote=null;if(CSAVE.ref){CSAVE.ref.delete().catch(()=>{});CSAVE.ref=null;}location.reload();};   /* (SAVEOFF: leaving the page used to save the old game right back) */
+/* 🗑️ Start a new game: a card of its own asks first ("No, keep my game" / "Yes, start over", in other places than the Settings button, and a
+   second tap within 0.8 s doesn't count), and the game is kept: ⚙️ Settings → ↩️ Bring it back (the same place Move my game keeps a game) */
+ACT.wipe=()=>{const h=mvHere(),pets=h&&Array.isArray(h.pets)?h.pets.length:0;WIPE=performance.now()||1;
+  openPanel(`<div class="hd"><h2>🗑️ Start a new game?</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
+    ${h?`<div class="mvgame"><b>${mvNm(h)}</b><span>🪙 ${Math.round(+h.coins||0)} · 📅 Day ${Math.max(1,h.day|0)}${pets?' · 🐾 '+pets+(pets>1?' pets':' pet'):''}</span></div>`:''}
+    <p class="line">${h?'Your game goes away and a brand-new game starts. You can bring it back later in ⚙️ Settings.':'A brand-new game starts.'}</p>
+    <div class="row"><button class="btn mint" data-a="close">💗 No, keep my game</button><button class="btn coral" data-a="wipeyes">🗑️ Yes, start over</button></div>`,{cls:'wipeask',onClose:()=>{WIPE=false;}});};
+ACT.wipeyes=()=>{if(!WIPE||!mvOn('wipeask')){toast('💗 Your game is still here!',2.4);return;}   /* (only right after "Start a new game") */
+  if(performance.now()-WIPE<800)return;   /* the second tap of a quick double tap: it doesn't count */
+  WIPE=false;try{if(PLAYING&&DECO.on)decoEnd();}catch(e){}if(PLAYING&&S)saveLocal();let old=null;try{old=localStorage.getItem(LS);}catch(e){}   /* (furniture in your hands goes back to storage first) */
+  if(mvGame(old)){try{localStorage.setItem(MV.OLD,old);}catch(e){closePanel();toast('😢 Oops, that did not work. Your game is still here!',3.4);return;}   /* kept: ↩️ Bring it back */
+    try{sessionStorage.setItem('cozytown-new','1');}catch(e){}}   /* (the title says where it is) */
+  SAVEOFF=true;clearTimeout(CSAVE.tm);CSAVE.dirty=false;   /* (SAVEOFF: leaving the page used to save the old game right back) */
+  try{localStorage.removeItem(LS);}catch(e){}CSAVE.remote=null;if(CSAVE.ref){CSAVE.ref.delete().catch(()=>{});CSAVE.ref=null;}location.reload();};
 /* 📦 Move my game (GitHub version only). Device 1 sends its save under a 6-letter code that works for 10 minutes
    (worlds/cozy-town/move/<CODE>); device 2 types the code and gets the very same save: it replaces the game there and the page
    starts again, the same way as opening the game. The code is taken down when it is used, runs out, or its card closes.
    The database says no (or inside Claude, whose saves already follow your claude.ai account) = no button in Settings. */
 const MV={on:false,dead:false,ref:null,off:0,code:'',exp:0,iv:0,lis:null,tries:[],got:null,mk:false,go:false,
   PATH:'worlds/cozy-town/move',K:'cozytown-move',OLD:'cozytown-save-old',AB:'BCDFGHJKLMNPRSTVWXZ',MAX:60000,LIFE:600000,   /* code letters: no vowels (no words by accident), no I, O or Q */
-  TC:['#ffd45c','#5fd4b0','#7cc8ff','#b79cff','#ff9ec4','#ff8a6b'],TR:[-3,2,-2,3,-2,2]};   /* the letter tiles: the logo's colours and tilt */
+  TC:['#ffd45c','#5fd4b0','#7cc8ff','#b79cff','#ff9ec4','#ff8a6b'],TR:[-3,2,-2,3,-2,2],   /* the letter tiles: the logo's colours and tilt */
+  BAD:"Hmm, that code doesn't work. Check the letters and try again! 🔍"};
+const mvDev=()=>!TOUCHY?'computer':Math.min(innerWidth,innerHeight)<500?'phone':'iPad';   /* what this one is called in the words on the cards */
 {const st=document.createElement('style');st.textContent='.mvbig{display:flex;flex-direction:column;gap:12px;margin-top:16px}.mvb{width:100%;font-size:22px;min-height:62px;line-height:1.15}'
   +'.mvt{display:flex;justify-content:center;gap:8px;margin:16px 0 6px}.mvt b{flex:0 1 58px;min-width:0;height:70px;display:flex;align-items:center;justify-content:center;color:#3d2c5e;border:3px solid #3d2c5e;border-radius:14px;box-shadow:0 4px 0 #3d2c5e;font-size:44px;font-weight:800;line-height:1}'
   +'.mvclock{font-size:22px;font-weight:800;text-align:center;margin:10px 0 0}.mverr{font-size:19px;font-weight:800;text-align:center;margin:10px 0 0}'
@@ -5420,25 +5572,25 @@ function mvTick(){if(!MV.code){clearInterval(MV.iv);MV.iv=0;return;}
   const el=$('mvClock');if(el)el.textContent=mvLeft(left);}
 function mvSendCard(k){const c=MV.code;let b;
   if(k==='make')b='<p class="line">📦 Making your code…</p>';
-  else if(k==='code')b=`<p class="line">On your other device, type this code:</p><div class="mvt" role="img" aria-label="Code: ${[...c].join(' ')}">${[...c].map((x,i)=>`<b style="background:${MV.TC[i]};transform:rotate(${MV.TR[i]}deg)">${x}</b>`).join('')}</div>
-    <p class="mvclock" id="mvClock">${mvLeft(MV.exp-mvNow())}</p><p class="note">There: ⚙️ Settings → 📦 Move my game → 📥 Get my game. Keep this card open until your game has moved.</p>
+  else if(k==='code')b=`<p class="line">On your other iPad or phone, type this code:</p><div class="mvt" role="img" aria-label="Code: ${[...c].join(' ')}">${[...c].map((x,i)=>`<b style="background:${MV.TC[i]};transform:rotate(${MV.TR[i]}deg)">${x}</b>`).join('')}</div>
+    <p class="mvclock" id="mvClock">${mvLeft(MV.exp-mvNow())}</p><p class="note">On the other one: ⚙️ Settings → 📦 Move my game → 📥 Get my game. Keep this card open until your game has moved.</p>
     <div class="row"><button class="btn white" data-a="mvstop">✋ Stop sending</button></div>`;
   else if(k==='time')b='<p class="line">⏰ The code ran out of time.</p><div class="row"><button class="btn butter" data-a="mvsend">🔄 Make a new code</button><button class="btn white" data-a="mvopen">⬅️ Back</button></div>';
-  else b='<p class="line">Your other device has your game now. Have fun! 💗</p><p class="note">Coins you earn on one device stay on that device. You can move your game again any time. 📦</p><div class="row"><button class="btn mint" data-a="close">👍 OK</button></div>';
+  else b='<p class="line">Your other iPad or phone has your game now. Have fun! 💗</p><p class="note">Coins you earn on one of them stay on that one. You can move your game again any time. 📦</p><div class="row"><button class="btn mint" data-a="close">👍 OK</button></div>';
   mvCard(mvHd(k==='moved'?'🎉 Your game moved!':'📤 Send my game')+b,{cls:k==='moved'?'mvdone':'mvsc',onClose:k==='code'||k==='make'?mvStop:null});}
 ACT.mvopen=()=>{WIPE=false;mvStop();MV.got=null;if(!MV.on){closePanel();toast('📦 Moving games is resting right now. Try again later!',3.4);return;}const bk=mvBefore();
   mvCard(mvHd('📦 Move my game')+`<p class="line">Take your game to another iPad or phone! 📱</p>
-    <div class="mvbig"><button class="btn butter mvb" data-a="mvsend">📤 Send my game from this device</button><button class="btn sky mvb" data-a="mvget">📥 Get my game on this device</button></div>
-    <p class="note">Open Cozy Town on both devices. Tap 📤 on the one that has your game, then 📥 on the other one.</p>
-    ${bk?`<p class="line mvbk">↩️ Before the last move, this device had <b>${mvNm(bk.o)}</b> (🪙 ${Math.round(bk.o.coins)}).</p>`:''}
+    <div class="mvbig"><button class="btn butter mvb" data-a="mvsend">📤 Send my game from this ${mvDev()}</button><button class="btn sky mvb" data-a="mvget">📥 Get my game on this ${mvDev()}</button></div>
+    <p class="note">Open Cozy Town on both. Tap 📤 on the one that has your game, then 📥 on the other one.</p>
+    ${bk?`<p class="line mvbk">↩️ Your old game <b>${mvNm(bk.o)}</b> (🪙 ${Math.round(bk.o.coins)}) is still on this ${mvDev()}.</p>`:''}
     <div class="row">${bk?'<button class="btn white mvub" data-a="mvundo">↩️ Bring it back</button>':''}<button class="btn white" data-a="mvback">⬅️ Back</button></div>`,{cls:'mvcard'});};
-ACT.mvundo=()=>{const b=mvBefore();if(!b){ACT.mvopen();return;}MV.got={c:'',s:b.s,o:b.o,back:1};mvAsk();};
+ACT.mvundo=()=>{const b=mvBefore();if(!b){openSettings();return;}MV.got={c:'',s:b.s,o:b.o,back:1};mvAsk();};   /* (from Move my game, or from ⚙️ Settings in every version) */
 ACT.mvback=()=>openSettings();
 ACT.mvstop=()=>{mvStop();ACT.mvopen();};
 ACT.mvsend=async()=>{if(!MV.on)return;if(MV.mk){mvSendCard('make');return;}   /* still making one (slow internet): it shows when ready */
   try{if(PLAYING&&DECO.on)decoEnd();}catch(e){}   /* furniture in your hands goes back to storage first */
   let s=null;if(PLAYING&&S){saveLocal();s=JSON.stringify(S);}else try{s=localStorage.getItem(LS);}catch(e){}   /* the game right now (on the title: the saved one) */
-  if(!mvGame(s)){SFX.no();toast(s&&s.length>MV.MAX?'📦 Oh no, this game is too big to move right now.':'🌱 There is no game on this device yet! Play first, then you can send it.',3.6);return;}
+  if(!mvGame(s)){SFX.no();toast(s&&s.length>MV.MAX?'📦 Oh no, this game is too big to move right now.':'🌱 There is no game on this '+mvDev()+' yet! Play first, then you can send it.',3.6);return;}
   if(!mvTry()){SFX.no();toast("⏳ Let's take a little break. Try again in a minute!",3.4);return;}
   mvStop();MV.mk=true;mvSendCard('make');let c=null,err=null;
   try{for(let i=0;i<4&&!c&&!err;i++){const k=mvCode(),v=await mvRead(k);if(v==='slow')err='slow';else if(!v||!(+v.exp>mvNow()))c=k;}}catch(e){err=e||'no';}   /* a code nobody is using */
@@ -5453,47 +5605,51 @@ ACT.mvsend=async()=>{if(!MV.on)return;if(MV.mk){mvSendCard('make');return;}   /*
   const r=MV.ref.child(c),lis=x=>{if(MV.code!==c||!x||x.val()!=null)return;   /* gone = the other device took it (and took it down) */
     const late=MV.exp-mvNow()<5000;MV.code='';clearInterval(MV.iv);MV.iv=0;try{r.off('value',lis);}catch(e){}MV.lis=null;try{localStorage.removeItem(MV.K);}catch(e){}
     if(late){if(mvOn('mvsc'))mvSendCard('time');return;}   /* at the very end it was tidied away as too old, not taken */
-    SFX.yay();if(mvOn('mvsc'))mvSendCard('moved');else toast('🎉 Your game moved to your other device!',3.6);};
+    SFX.yay();if(mvOn('mvsc'))mvSendCard('moved');else toast('🎉 Your game moved to your other iPad or phone!',3.6);};
   MV.lis=lis;r.on('value',lis);SFX.pop();mvSendCard('code');clearInterval(MV.iv);MV.iv=setInterval(mvTick,1000);};
 ACT.mvget=()=>{if(!MV.on)return;MV.got=null;
-  mvCard(mvHd('📥 Get my game')+`<p class="line">Type the code from your other device:</p>
+  mvCard(mvHd('📥 Get my game')+`<p class="line">Type the code from your other iPad or phone:</p>
     <input class="inp mvin" id="mvIn" placeholder="6 letters" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="The 6-letter code">
     <p class="mverr" id="mvErr" role="status" hidden></p>
     <div class="row" style="justify-content:center"><button class="btn mint" data-a="mvgo" id="mvGo">📥 Get it!</button><button class="btn white" data-a="mvopen">⬅️ Back</button></div>
-    <p class="note">No code yet? On the device that has your game: ⚙️ Settings → 📦 Move my game → 📤 Send.</p>`,{cls:'mvgc'});
+    <p class="note">No code yet? On the one that has your game: ⚙️ Settings → 📦 Move my game → 📤 Send.</p>`,{cls:'mvgc'});
   const i=$('mvIn');i.addEventListener('input',()=>{const v=i.value.toUpperCase().replace(/[^A-Z]/g,'').slice(0,6);if(v!==i.value)i.value=v;$('mvErr').hidden=true;});
   i.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();ACT.mvgo();}else if(e.key==='Escape'){i.blur();closePanel();}});i.focus({preventScroll:true});};
-ACT.mvgo=async()=>{const i=$('mvIn'),er=$('mvErr'),b=$('mvGo');if(!i||!MV.on||b.disabled)return;
-  const no=m=>{SFX.no();er.textContent=m;er.hidden=false;},c=i.value.toUpperCase().replace(/[^A-Z]/g,'');
+ACT.mvgo=async()=>{const i=$('mvIn'),b=$('mvGo');if(!i||!b||!MV.on||b.dataset.busy)return;   /* (still looking: the button keeps its colour, extra taps wait) */
+  const no=m=>{SFX.no();mvSay(m);},c=i.value.toUpperCase().replace(/[^A-Z]/g,'');
   if(c.length!==6)return no('Type all 6 letters 🔤');
-  if(c===MV.code)return no('That is the code of this device! Type it on your other one. 😊');
-  if([...c].some(x=>!MV.AB.includes(x)))return no("Hmm, that code doesn't work. Check the letters! 🔍");
+  if(c===MV.code)return no('That is the code of this '+mvDev()+'! Type it on your other one. 😊');
+  if([...c].some(x=>!MV.AB.includes(x)))return no(MV.BAD);
   if(!mvTry())return no("⏳ Let's take a little break. Try again in a minute!");
-  b.disabled=true;b.textContent='⏳ Looking…';let v=null,err=null;
+  b.dataset.busy=1;b.textContent='⏳ Looking…';mvSay('⏳ Looking for your game…');let v=null,err=null;
   try{v=await mvRead(c);}catch(e){err=e||'no';}
-  if(!mvOn('mvgc')||$('mvGo')!==b)return;   /* the card was closed meanwhile */
-  b.disabled=false;b.textContent='📥 Get it!';
+  delete b.dataset.busy;if(!mvOn('mvgc')||$('mvGo')!==b)return;   /* the card was closed meanwhile */
+  b.textContent='📥 Get it!';
   if(err){mvFail();return;}
   if(v==='slow')return no('📡 The internet is slow right now. Try again in a moment!');
-  if(!v)return no("Hmm, that code doesn't work. Check the letters and try again! 🔍");
-  if(!(+v.exp>mvNow())){try{MV.ref.child(c).remove().catch(()=>{});}catch(e){}return no('⏰ That code ran out of time. Make a new one on your other device!');}
+  if(!v)return no(MV.BAD);
+  if(!(+v.exp>mvNow())){try{MV.ref.child(c).remove().catch(()=>{});}catch(e){}return no('⏰ That code ran out of time. Make a new one on your other iPad or phone!');}
   const o=mvGame(v.s),s=o&&JSON.stringify(mvClean(o,0)),oc=mvGame(s);if(!oc)return no("Hmm, that game didn't come through. Make a new code and try again!");
   MV.got={c,s,o:oc};SFX.pop();mvAsk();};
+/* the line under the code box: always where you can see it, above the keyboard too (a phone held sideways only shows the top of the card) */
+function mvSay(m){const er=$('mvErr');if(!er)return;er.textContent=m;er.hidden=false;cardShow(er,$('mvIn'));}
 function mvAsk(){const g=MV.got;if(!g)return;const o=g.o,h=mvHere(),nm=mvNm,pets=Array.isArray(o.pets)?o.pets.length:0;   /* "are you sure?" */
   mvCard(mvHd(g.back?'↩️ Bring it back':'📥 Get my game')+`<div class="mvgame"><b>${nm(o)}</b><span>🪙 ${Math.round(o.coins)} · 📅 Day ${Math.max(1,o.day|0)}${pets?' · 🐾 '+pets+(pets>1?' pets':' pet'):''}</span></div>
-    <p class="line">${h?`This will replace the game on this device (${nm(h)}, 🪙 ${Math.round(+h.coins||0)}).`:'This will be the game on this device. 💗'}</p>
+    <p class="line">${h?`This will replace the game on this ${mvDev()} (${nm(h)}, 🪙 ${Math.round(+h.coins||0)}).`:`This will be the game on this ${mvDev()}. 💗`}</p>
     <div class="row"><button class="btn mint" data-a="mvyes">${g.back?'✅ Yes, bring it back':'✅ Yes, move it here'}</button><button class="btn white" data-a="close">Cancel</button></div>`,{cls:'mvok',onClose:()=>{MV.got=null;}});}
 ACT.mvyes=async()=>{const g=MV.got;if(!g||MV.go)return;MV.go=true;
-  if(PLAYING&&S)saveLocal();let old=null;try{old=localStorage.getItem(LS);}catch(e){}
-  SAVEOFF=true;   /* from now on this page saves nothing: the game that came must not be written over */
-  try{if(mvGame(old)&&old!==g.s)localStorage.setItem(MV.OLD,old);}catch(e){}   /* the game that was here is kept: ↩️ in Move my game brings it back */
-  try{localStorage.setItem(LS,g.s);}catch(e){SAVEOFF=false;MV.go=false;SFX.no();toast('😢 This device could not keep the game. Try again!',3.6);return;}
+  try{if(PLAYING&&DECO.on)decoEnd();}catch(e){}if(PLAYING&&S)saveLocal();let old=null;try{old=localStorage.getItem(LS);}catch(e){}
+  SAVEOFF=true;clearTimeout(CSAVE.tm);CSAVE.dirty=false;   /* from now on this page saves nothing: the game that came must not be written over */
+  let s=g.s;try{const o=JSON.parse(s);o.t=Date.now();s=JSON.stringify(o);}catch(e){}   /* saved "now": inside Claude it wins over the older copy in the claude.ai account */
+  try{if(mvGame(old)&&old!==g.s)localStorage.setItem(MV.OLD,old);}catch(e){}   /* the game that was here is kept: ↩️ Bring it back */
+  try{localStorage.setItem(LS,s);}catch(e){SAVEOFF=false;MV.go=false;SFX.no();toast('😢 This '+mvDev()+' could not keep the game. Try again!',3.6);return;}
   try{sessionStorage.setItem('cozytown-moved',String(g.o.name).trim().slice(0,16));}catch(e){}
   mvCard('<div class="hd"><h2>📦 Moving your game…</h2></div><p class="line">Here it comes! 💗</p>',{cls:'mvok',lock:true});SFX.yay();
   if(g.c)try{const w=MV.ref.child(g.c).remove();w.catch(()=>{});await mvWait(w,3000);}catch(e){}   /* used = taken down (the other device sees that) */
   location.reload();};   /* a clean start with the game that came, the same way as opening the game */
-{let n=null;try{n=sessionStorage.getItem('cozytown-moved');sessionStorage.removeItem('cozytown-moved');}catch(e){}   /* 📦 just moved here: say so on the title */
-  if(n!==null){const T=$('title'),m=document.createElement('p');m.id='tMsg';m.setAttribute('role','status');m.textContent='📦 Your game is here'+(n?', '+n:'')+'! Tap Play 💗';
+{let n=null,w=null;try{n=sessionStorage.getItem('cozytown-moved');w=sessionStorage.getItem('cozytown-new');sessionStorage.removeItem('cozytown-moved');sessionStorage.removeItem('cozytown-new');}catch(e){}   /* 📦 just moved here / 🌱 just started over: say so on the title */
+  if(n!==null||w!==null){const T=$('title'),m=document.createElement('p');m.id='tMsg';m.setAttribute('role','status');
+    m.textContent=n!==null?'📦 Your game is here'+(n?', '+n:'')+'! Tap Play 💗':'🌱 A brand-new game! Your old one is safe in ⚙️ Settings → ↩️ Bring it back.';
     T.classList.add('mvd');T.insertBefore(m,T.querySelector('.menu'));
     $('tPlay').addEventListener('click',()=>{if($('tMsg')===m&&!document.body.classList.contains('away')){m.remove();T.classList.remove('mvd');}});}}
 setTimeout(mvInit,600);
@@ -6642,14 +6798,18 @@ function leftFit(){const L=$('left'),pad=$('pad'),dc=$('dcard'),mm=$('mmBtn');if
   L.classList.remove(...LFC);pad.style.left=pad.style.top=dc.style.left=dc.style.top='';if($('hud').hidden)return;
   const bad=()=>{const H=innerHeight-8,j=boxOf($('joy'));for(const el of[...L.children].flatMap(e=>e.id==='job'?[...e.children]:[e])){const r=boxOf(el);if(!r)continue;if(r.bottom>H)return true;   /* off the bottom, or on the joystick */
       if(j&&r.left<j.right&&r.right>j.left&&r.bottom>j.top-6&&r.top<j.bottom)return true;}return false;},
-    side=(el,k)=>{if(!boxOf(mm)||!boxOf(el))return;L.classList.add(k);el.style.left=(mm.offsetLeft+mm.offsetWidth+8)+'px';el.style.top=mm.offsetTop+'px';},
+    side=(el,k)=>{if(!boxOf(mm)||!boxOf(el))return;const x=mm.offsetLeft+mm.offsetWidth+8;if(L.offsetLeft+x+el.offsetWidth>innerWidth*.5)return;   /* a phone held upright: not beside the map, that is the middle of the view (the ball, the kids) */
+      L.classList.add(k);el.style.left=x+'px';el.style.top=mm.offsetTop+'px';},
     steps=[()=>{if(document.body.classList.contains('cut'))L.classList.add('lfCut');},()=>side(pad,'lfPad'),()=>{if(boxOf($('tasks')))L.classList.add('lfTasks');},
       ()=>{if(boxOf(dc))L.classList.add('lfDc');},()=>side(dc,'lfDcS'),()=>{if(boxOf(pad))L.classList.add('lfNoPad');},
       ()=>{if(!boxOf(mm))return;L.classList.add('lfNoMap');L.classList.remove('lfPad','lfDcS');pad.style.left=pad.style.top=dc.style.left=dc.style.top='';}];
   for(const st of steps){if(!bad())break;st();}}
 new MutationObserver(()=>leftFit()).observe($('left'),{childList:true,subtree:true,attributes:true,attributeFilter:['hidden']});   /* a pill or box comes or goes */
 addEventListener('resize',()=>setTimeout(leftFit,60));
-{const st=document.createElement('style');st.textContent='#left.lfPad #pad,#left.lfDcS #dcard{position:absolute;margin:0}#left.lfDc #dcard .dci{display:none}#left.lfNoPad #pad,#left.lfNoMap #mmBtn,#left.lfTasks #tasks ul,.cut #left.lfCut #nav,.cut #left.lfCut #job{display:none}';document.head.appendChild(st);}
+{const st=document.createElement('style');st.textContent='#left.lfPad #pad,#left.lfDcS #dcard{position:absolute;margin:0}#left.lfDc #dcard .dci{display:none}#left.lfNoPad #pad,#left.lfNoMap #mmBtn,#left.lfTasks #tasks ul,.cut #left.lfCut #nav,.cut #left.lfCut #job{display:none}'
+  /* 🧹 glitch fixes, pass 2: on a phone held upright the column is narrow (it shares the top row with the round buttons), so the pink arrow bar
+     became a tall column of single words and the score pill ran out of its box. The bars below the clock may now be as wide as their words */
+  +'@media (max-width:600px){#left>#nav,#left>#busTip,#left>#fbHud,#left>#tnHud{width:max-content;max-width:calc(100vw - 24px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px))}}#navX{flex:0 0 auto}#card.bustab.more::after{margin:-44px auto 0}';document.head.appendChild(st);}
 function updHud(force){$('coins').textContent=S.coins;const fd=$('food');fd.style.width=Math.round(S.hunger)+'%';fd.classList.toggle('low',S.hunger<25);
   $('clock').textContent=clockStr(S.time);$('dayN').textContent=dayLabel();$('sunIc').textContent=nightF(S.time)>.5?'🌙':'☀️';phClock();if(force)renderTasks();leftFit();}
 function showAction(){$('moveBtns').hidden=!PLAYING||DECO.on||!!CUT;const w=$('actWrap');if(!PLAYING||UI.open||DECO.on||!TARGET){w.hidden=true;return;}
