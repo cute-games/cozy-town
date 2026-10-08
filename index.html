@@ -964,98 +964,98 @@ function animPet(p,dt,moving,spd=1){
 const WOOD='#c98f5e',WOOD2='#a8714a',WHITE='#fbf7ff';
 const SOFT=['#ff9ec4','#7fdcb5','#8fb7ff','#ffd45c','#b79cff','#ff8a6b'];
 const FURN={
-  bed:{n:'Bed',i:'🛏️',p:40,w:1.4,d:2.1,cols:['#ff9ec4','#8fd3ff','#b79cff','#7fdcb5','#ffd45c'],use:'sleep',b(g,c){
+  bed:{n:'Bed',i:'🛏️',p:200,w:1.4,d:2.1,cols:['#ff9ec4','#8fd3ff','#b79cff','#7fdcb5','#ffd45c'],use:'sleep',b(g,c){
     box(g,1.4,.32,2.1,WOOD,0,0,0);box(g,1.3,.2,1.95,WHITE,0,.32,.04);box(g,1.34,.14,1.25,c,0,.46,.42);
     box(g,.85,.14,.42,'#ffffff',0,.52,-.66);box(g,1.44,.95,.14,c,0,0,-1.0);box(g,1.44,.5,.12,c,0,0,1.0);}},
-  sofa:{n:'Sofa',i:'🛋️',p:45,w:2,d:.9,cols:SOFT,use:'sit',b(g,c){const L=shade(c,.08);
+  sofa:{n:'Sofa',i:'🛋️',p:250,w:2,d:.9,cols:SOFT,use:'sit',b(g,c){const L=shade(c,.08);
     box(g,2,.4,.9,c,0,.06,0);box(g,.9,.14,.6,L,-.46,.46,.1);box(g,.9,.14,.6,L,.46,.46,.1);
     box(g,2,.55,.24,c,0,.46,-.33);box(g,.22,.34,.9,c,-.89,.46,0);box(g,.22,.34,.9,c,.89,.46,0);
     for(const x of[-.85,.85])for(const z of[-.35,.35])box(g,.08,.06,.08,WOOD2,x,0,z,{ol:false});}},
-  armchair:{n:'Armchair',i:'💺',p:28,w:1,d:.9,cols:SOFT,use:'sit',b(g,c){const L=shade(c,.08);
+  armchair:{n:'Armchair',i:'💺',p:150,w:1,d:.9,cols:SOFT,use:'sit',b(g,c){const L=shade(c,.08);
     box(g,1,.4,.9,c,0,.06,0);box(g,.62,.14,.6,L,0,.46,.1);box(g,1,.55,.24,c,0,.46,-.33);box(g,.2,.34,.9,c,-.4,.46,0);box(g,.2,.34,.9,c,.4,.46,0);}},
-  chair:{n:'Chair',i:'🪑',p:12,w:.6,d:.6,cols:[WOOD,'#ffffff','#ff9ec4','#7fdcb5'],use:'sit',b(g,c){
+  chair:{n:'Chair',i:'🪑',p:60,w:.6,d:.6,cols:[WOOD,'#ffffff','#ff9ec4','#7fdcb5'],use:'sit',b(g,c){
     box(g,.52,.07,.52,c,0,.42,0);for(const x of[-.21,.21])for(const z of[-.21,.21])box(g,.06,.42,.06,c,x,0,z,{ol:.02});box(g,.52,.5,.07,c,0,.49,-.225);}},
-  table:{n:'Table',i:'🍽️',p:25,w:1.2,d:1.2,cols:[WOOD,'#ffffff','#ff9ec4','#8fd3ff'],b(g,c){
+  table:{n:'Table',i:'🍽️',p:120,w:1.2,d:1.2,cols:[WOOD,'#ffffff','#ff9ec4','#8fd3ff'],b(g,c){
     cyl(g,.6,.6,.07,c,0,.7,0,{seg:22});cyl(g,.07,.09,.7,shade(c,-.1),0,0,0,{seg:10});cyl(g,.32,.36,.05,shade(c,-.1),0,0,0,{seg:16});}},
-  desk:{n:'Desk',i:'✏️',p:30,w:1.4,d:.7,cols:[WOOD,'#ffffff','#b79cff'],b(g,c){
+  desk:{n:'Desk',i:'✏️',p:150,w:1.4,d:.7,cols:[WOOD,'#ffffff','#b79cff'],b(g,c){
     box(g,1.4,.07,.7,c,0,.72,0);box(g,.07,.72,.66,c,-.66,0,0);box(g,.45,.6,.66,c,.45,.12,0);
     box(g,.35,.05,.02,INK,.45,.5,.335,{ol:false});box(g,.35,.05,.02,INK,.45,.3,.335,{ol:false});
     box(g,.32,.03,.24,'#ffffff',-.3,.79,.05,{ol:.015});cyl(g,.045,.045,.16,'#ff7aa8',-.05,.79,-.16,{seg:8,ol:.015});}},
-  shelf:{n:'Bookshelf',i:'📚',p:30,w:1.2,d:.45,cols:[WOOD,'#ffffff','#8fd3ff'],b(g,c){
+  shelf:{n:'Bookshelf',i:'📚',p:150,w:1.2,d:.45,cols:[WOOD,'#ffffff','#8fd3ff'],b(g,c){
     box(g,1.2,1.8,.08,c,0,0,-.185);box(g,.08,1.8,.45,c,-.56,0,0);box(g,.08,1.8,.45,c,.56,0,0);
     for(const y of[0,.6,1.2,1.74])box(g,1.2,.06,.45,c,0,y,0);
     const BK=['#ff7aa8','#5fd4b0','#ffd45c','#7cc8ff','#b79cff','#ff8a6b'],r=seeded(7);
     for(const y of[.06,.66,1.26]){let x=-.48;while(x<.4){const w=.07+r()*.06,h=.3+r()*.18;box(g,w,h,.3,BK[(r()*6)|0],x+w/2,y,0,{ol:.012});x+=w+.015;}}}},
-  wardrobe:{n:'Wardrobe',i:'👗',p:35,w:1.2,d:.6,cols:['#ffffff',WOOD,'#ffc9dc','#bfe6ff'],use:'dress',b(g,c){
+  wardrobe:{n:'Wardrobe',i:'👗',p:200,w:1.2,d:.6,cols:['#ffffff',WOOD,'#ffc9dc','#bfe6ff'],use:'dress',b(g,c){
     box(g,1.2,2,.6,c,0,0,0);box(g,.025,1.8,.02,INK,0,.1,.305,{ol:false});
     sph(g,.035,'#ffd45c',-.08,1.05,.31,{ol:.012});sph(g,.035,'#ffd45c',.08,1.05,.31,{ol:.012});box(g,1.26,.08,.66,shade(c,-.08),0,2,0);}},
-  tv:{n:'TV',i:'📺',p:50,w:1.4,d:.5,use:'tv',b(g){
+  tv:{n:'TV',i:'📺',p:350,w:1.4,d:.5,use:'tv',b(g){
     box(g,1.4,.5,.5,WOOD,0,0,0);box(g,1.2,.72,.08,'#3d2c5e',0,.55,-.05);
     const cnv=document.createElement('canvas');cnv.width=432;cnv.height=240;const ctx=cnv.getContext('2d');const tex=new THREE.CanvasTexture(cnv);tex.minFilter=THREE.LinearFilter;tex.generateMipmaps=false;
     const scr=box(g,1.08,.6,.02,null,0,.61,0,{mat:new THREE.MeshBasicMaterial({map:tex,color:'#ffffff'}),ol:false});scr.userData.screen=1;scr.userData.cnv=cnv;scr.userData.ctx=ctx;scr.userData.tex=tex;drawCatTV(ctx,0,false);tex.needsUpdate=true;}},
-  lamp:{n:'Lamp',i:'💡',p:15,w:.5,d:.5,cols:['#ffd45c','#ff9ec4','#7fdcb5','#8fd3ff'],use:'lamp',b(g,c){
+  lamp:{n:'Lamp',i:'💡',p:70,w:.5,d:.5,cols:['#ffd45c','#ff9ec4','#7fdcb5','#8fd3ff'],use:'lamp',b(g,c){
     cyl(g,.2,.22,.05,'#3d2c5e',0,0,0);cyl(g,.025,.025,1.35,'#3d2c5e',0,.05,0,{seg:6,ol:.015});
     const sm=cyl(g,.16,.27,.32,null,0,1.28,0,{mat:toon({color:c,emissive:new THREE.Color('#ffcf73'),emissiveIntensity:.55})});sm.userData.shade=1;}},
-  plant:{n:'Plant',i:'🪴',p:10,w:.6,d:.6,b(g){
+  plant:{n:'Plant',i:'🪴',p:40,w:.6,d:.6,b(g){
     cyl(g,.2,.15,.36,'#e88f6a',0,0,0,{seg:12});cyl(g,.21,.21,.05,'#c96f4f',0,.34,0,{seg:12});
     for(const [x,y,z,r] of [[0,.62,0,.24],[.14,.5,.06,.16],[-.13,.52,-.05,.17],[.02,.84,.03,.14]])sph(g,r,'#6fcf7a',x,y,z,{ws:10,hs:8});}},
-  flowers:{n:'Flowers',i:'💐',p:8,w:.5,d:.5,cols:['#ff7aa8','#ffd45c','#b79cff','#ff8a6b'],b(g,c){
+  flowers:{n:'Flowers',i:'💐',p:30,w:.5,d:.5,cols:['#ff7aa8','#ffd45c','#b79cff','#ff8a6b'],b(g,c){
     cyl(g,.12,.09,.3,'#bfe6ff',0,0,0,{seg:10});
     for(let i=0;i<5;i++){const a=i/5*TAU,x=Math.cos(a)*.09,z=Math.sin(a)*.09;cyl(g,.012,.012,.3,'#4fae5c',x*.6,.28,z*.6,{seg:5,ol:false});sph(g,.07,c,x,.6,z,{ws:8,hs:6,ol:.015});}
     sph(g,.06,'#ffffff',0,.64,0,{ws:8,hs:6,ol:.015});}},
-  cactus:{n:'Cactus',i:'🌵',p:9,w:.5,d:.5,b(g){cyl(g,.18,.14,.3,'#ff9ec4',0,0,0,{seg:12});cyl(g,.1,.1,.5,'#5fbf74',0,.3,0,{seg:10});sph(g,.1,'#5fbf74',0,.8,0,{ws:10,hs:8});cyl(g,.05,.05,.2,'#5fbf74',.14,.5,0,{seg:8});sph(g,.06,'#ff7aa8',0,.92,0,{ol:.012,ws:8,hs:6});}},
-  tulips:{n:'Tulip pot',i:'🌷',p:12,w:.7,d:.5,cols:['#ff7aa8','#ffd45c','#ff8a6b','#b79cff'],b(g,c){box(g,.6,.26,.32,'#fbf7ff',0,0,0);for(let i=0;i<4;i++){const x=-.21+i*.14;cyl(g,.012,.012,.32,'#4fae5c',x,.26,0,{seg:5,ol:false});cone(g,.06,.12,c,x,.56,0,{seg:6,rx:Math.PI,ol:.012});}}},
-  sunflower:{n:'Sunflower',i:'🌻',p:12,w:.6,d:.6,b(g){cyl(g,.2,.15,.36,'#e88f6a',0,0,0,{seg:12});cyl(g,.025,.025,1.1,'#4fae5c',0,.36,0,{seg:6,ol:.012});sph(g,.12,'#5fbf74',.1,.75,0,{s:[1,.4,.6],ol:.012});
+  cactus:{n:'Cactus',i:'🌵',p:35,w:.5,d:.5,b(g){cyl(g,.18,.14,.3,'#ff9ec4',0,0,0,{seg:12});cyl(g,.1,.1,.5,'#5fbf74',0,.3,0,{seg:10});sph(g,.1,'#5fbf74',0,.8,0,{ws:10,hs:8});cyl(g,.05,.05,.2,'#5fbf74',.14,.5,0,{seg:8});sph(g,.06,'#ff7aa8',0,.92,0,{ol:.012,ws:8,hs:6});}},
+  tulips:{n:'Tulip pot',i:'🌷',p:45,w:.7,d:.5,cols:['#ff7aa8','#ffd45c','#ff8a6b','#b79cff'],b(g,c){box(g,.6,.26,.32,'#fbf7ff',0,0,0);for(let i=0;i<4;i++){const x=-.21+i*.14;cyl(g,.012,.012,.32,'#4fae5c',x,.26,0,{seg:5,ol:false});cone(g,.06,.12,c,x,.56,0,{seg:6,rx:Math.PI,ol:.012});}}},
+  sunflower:{n:'Sunflower',i:'🌻',p:50,w:.6,d:.6,b(g){cyl(g,.2,.15,.36,'#e88f6a',0,0,0,{seg:12});cyl(g,.025,.025,1.1,'#4fae5c',0,.36,0,{seg:6,ol:.012});sph(g,.12,'#5fbf74',.1,.75,0,{s:[1,.4,.6],ol:.012});
     const hd=new THREE.Group();hd.position.set(0,1.46,.04);hd.rotation.x=-.3;g.add(hd);
     for(let i=0;i<10;i++){const a=i/10*TAU;box(hd,.09,.2,.03,'#ffd45c',Math.cos(a)*.17,Math.sin(a)*.17,0,{rz:a-Math.PI/2,center:true,ol:.012});}
     cyl(hd,.12,.12,.05,'#8c6137',0,0,.02,{rx:Math.PI/2,center:true,seg:16,ol:.012});}},
-  rosebush:{n:'Rose bush',i:'🌹',p:14,w:.7,d:.7,cols:['#ff4d6d','#ff9ec4','#ffffff','#ffd45c'],b(g,c){cyl(g,.24,.18,.34,'#ffffff',0,0,0,{seg:12});sph(g,.32,'#4fae5c',0,.62,0,{ws:12,hs:9});
+  rosebush:{n:'Rose bush',i:'🌹',p:60,w:.7,d:.7,cols:['#ff4d6d','#ff9ec4','#ffffff','#ffd45c'],b(g,c){cyl(g,.24,.18,.34,'#ffffff',0,0,0,{seg:12});sph(g,.32,'#4fae5c',0,.62,0,{ws:12,hs:9});
     const r=seeded(9);for(let i=0;i<9;i++){const a=r()*TAU,e=r()*1.2;sph(g,.07,c,Math.cos(a)*Math.cos(e)*.31,.62+Math.sin(e)*.31,Math.sin(a)*Math.cos(e)*.31,{ws:8,hs:6,ol:.012});}}},
-  cattree:{n:'Cat tree',i:'🐈',p:30,w:.9,d:.9,cols:['#c98f5e','#b79cff','#7cc8ff'],b(g,c){box(g,.9,.12,.9,c,0,0,0);cyl(g,.09,.09,1.5,'#e8d6b0',-.2,.12,-.2,{seg:10});cyl(g,.09,.09,1.0,'#e8d6b0',.25,.12,.2,{seg:10});
+  cattree:{n:'Cat tree',i:'🐈',p:150,w:.9,d:.9,cols:['#c98f5e','#b79cff','#7cc8ff'],b(g,c){box(g,.9,.12,.9,c,0,0,0);cyl(g,.09,.09,1.5,'#e8d6b0',-.2,.12,-.2,{seg:10});cyl(g,.09,.09,1.0,'#e8d6b0',.25,.12,.2,{seg:10});
     box(g,.6,.08,.5,c,-.1,1.62,-.15);box(g,.55,.08,.45,c,.2,1.12,.2);cyl(g,.25,.25,.22,shade(c,.1),-.1,1.7,-.15,{seg:16});sph(g,.06,'#ff7aa8',.38,.9,.35,{ws:8,hs:6,ol:.012});cyl(g,.006,.006,.2,'#3d2c5e',.38,.96,.35,{seg:4,ol:false});}},
-  doghouse:{n:'Dog house',i:'🏠',p:35,w:1.1,d:1.1,cols:['#ff8a6b','#7cc8ff','#5fd4b0','#ffd45c'],b(g,c){box(g,1.0,.85,1.0,c,0,0,0);prism(g,1.1,1.25,.5,'#ffffff',0,.85,0,{ry:Math.PI/2});box(g,.42,.55,.02,'#2e2347',0,.05,.505,{ol:false});box(g,.4,.12,.02,'#ffffff',0,.68,.51,{ol:.01});}},
-  petbowl:{n:'Food bowl',i:'🥣',p:6,w:.5,d:.5,cols:['#ff7aa8','#7cc8ff','#ffd45c'],b(g,c){cyl(g,.18,.14,.1,c,0,0,0,{seg:14});for(let k=0;k<5;k++)sph(g,.04,'#9b6b4a',(k%3-1)*.06,.1,(k>2?.05:-.03),{ws:6,hs:5,ol:false});}},
-  rockinghorse:{n:'Rocking horse',i:'🐴',p:30,w:1.2,d:.5,cols:['#ffffff','#ffd45c','#ff9ec4'],b(g,c){for(const s of[-.15,.15]){const r=new THREE.Mesh(new THREE.TorusGeometry(.8,.03,6,20,Math.PI*.5),mat('#c98f5e'));r.rotation.z=Math.PI*1.25;r.position.set(0,.82,s);g.add(r);}
+  doghouse:{n:'Dog house',i:'🏠',p:180,w:1.1,d:1.1,cols:['#ff8a6b','#7cc8ff','#5fd4b0','#ffd45c'],b(g,c){box(g,1.0,.85,1.0,c,0,0,0);prism(g,1.1,1.25,.5,'#ffffff',0,.85,0,{ry:Math.PI/2});box(g,.42,.55,.02,'#2e2347',0,.05,.505,{ol:false});box(g,.4,.12,.02,'#ffffff',0,.68,.51,{ol:.01});}},
+  petbowl:{n:'Food bowl',i:'🥣',p:30,w:.5,d:.5,cols:['#ff7aa8','#7cc8ff','#ffd45c'],b(g,c){cyl(g,.18,.14,.1,c,0,0,0,{seg:14});for(let k=0;k<5;k++)sph(g,.04,'#9b6b4a',(k%3-1)*.06,.1,(k>2?.05:-.03),{ws:6,hs:5,ol:false});}},
+  rockinghorse:{n:'Rocking horse',i:'🐴',p:150,w:1.2,d:.5,cols:['#ffffff','#ffd45c','#ff9ec4'],b(g,c){for(const s of[-.15,.15]){const r=new THREE.Mesh(new THREE.TorusGeometry(.8,.03,6,20,Math.PI*.5),mat('#c98f5e'));r.rotation.z=Math.PI*1.25;r.position.set(0,.82,s);g.add(r);}
     for(const x of[-.3,.3])for(const s of[-.13,.13])box(g,.06,.35,.06,c,x,.08,s,{ol:.012});box(g,.75,.28,.3,c,0,.42,0);box(g,.18,.38,.18,c,.38,.6,0,{rz:-.3});box(g,.3,.18,.2,c,.5,.85,0);box(g,.08,.3,.05,'#ff7aa8',.32,.75,0,{rz:-.3,ol:.01});box(g,.12,.12,.05,'#ff7aa8',-.42,.5,0,{rz:.6,ol:.01});}},
-  dollhouse:{n:'Dollhouse',i:'🏡',p:40,w:1.0,d:.5,cols:['#ffd6e0','#c9f2e3','#fff1b8'],b(g,c){box(g,1.0,.9,.5,c,0,0,0);prism(g,1.08,.6,.4,'#ff7aa8',0,.9,0);for(const [x,y] of [[-.25,.2],[.25,.2],[-.25,.6],[.25,.6]])box(g,.22,.18,.02,'#9fd4f2',x,y,.255,{ol:.01});box(g,.16,.26,.02,'#5fd4b0',0,0,.255,{ol:.01});}},
-  robot:{n:'Toy robot',i:'🤖',p:25,w:.5,d:.5,cols:['#c8cde0','#7cc8ff','#ff8a6b'],b(g,c){box(g,.32,.36,.22,c,0,.2,0);box(g,.26,.22,.2,c,0,.58,0);box(g,.06,.06,.02,'#ffd45c',-.06,.66,.105,{ol:false});box(g,.06,.06,.02,'#ffd45c',.06,.66,.105,{ol:false});
+  dollhouse:{n:'Dollhouse',i:'🏡',p:200,w:1.0,d:.5,cols:['#ffd6e0','#c9f2e3','#fff1b8'],b(g,c){box(g,1.0,.9,.5,c,0,0,0);prism(g,1.08,.6,.4,'#ff7aa8',0,.9,0);for(const [x,y] of [[-.25,.2],[.25,.2],[-.25,.6],[.25,.6]])box(g,.22,.18,.02,'#9fd4f2',x,y,.255,{ol:.01});box(g,.16,.26,.02,'#5fd4b0',0,0,.255,{ol:.01});}},
+  robot:{n:'Toy robot',i:'🤖',p:110,w:.5,d:.5,cols:['#c8cde0','#7cc8ff','#ff8a6b'],b(g,c){box(g,.32,.36,.22,c,0,.2,0);box(g,.26,.22,.2,c,0,.58,0);box(g,.06,.06,.02,'#ffd45c',-.06,.66,.105,{ol:false});box(g,.06,.06,.02,'#ffd45c',.06,.66,.105,{ol:false});
     cyl(g,.012,.012,.12,'#3d2c5e',0,.8,0,{seg:4,ol:false});sph(g,.03,'#ff4d6d',0,.94,0,{ws:6,hs:5,ol:.008});for(const x of[-.09,.09])box(g,.09,.2,.1,'#3d2c5e',x,0,0,{ol:.01});for(const x of[-.21,.21])box(g,.08,.26,.08,c,x,.25,0,{ol:.01});}},
-  dresser:{n:'Dresser',i:'🗄️',p:30,w:1.1,d:.5,cols:[WOOD,'#ffffff','#ffc9dc','#bfe6ff'],b(g,c){box(g,1.1,.9,.5,c,0,0,0);for(let i=0;i<3;i++){box(g,1.0,.24,.02,shade(c,.06),0,.08+i*.28,.255,{ol:.01});sph(g,.03,'#ffd45c',0,.2+i*.28,.27,{ws:6,hs:5,ol:false});}sph(g,.1,'#ff9ec4',.35,1.02,0,{ws:8,hs:6,ol:.012});cyl(g,.05,.05,.12,'#ffffff',.35,.9,0,{seg:8,ol:.01});}},
-  mirror:{n:'Mirror',i:'🪞',p:25,w:.8,d:.4,cols:['#ffd45c','#ffffff','#ff9ec4','#b79cff'],use:'dress',b(g,c){box(g,.7,1.7,.08,c,0,.1,0);box(g,.56,1.5,.02,'#d8f0ff',0,.2,.045,{ol:false});box(g,.5,.06,.36,c,0,0,0);}},
-  clock:{n:'Big clock',i:'🕰️',p:35,w:.6,d:.45,use:'clock',b(g){box(g,.55,1.9,.4,'#9b6b4a',0,0,0);cyl(g,.2,.2,.03,'#ffffff',0,1.55,.21,{rx:Math.PI/2,center:true,seg:16,ol:.01});box(g,.02,.13,.01,'#3d2c5e',0,1.6,.23,{ol:false});box(g,.1,.02,.01,'#3d2c5e',.04,1.55,.23,{ol:false});box(g,.3,.7,.02,'#ffe7a3',0,.5,.205,{ol:false});cyl(g,.01,.01,.45,'#ffd45c',0,.55,.215,{seg:4,ol:false});sph(g,.06,'#ffd45c',0,.55,.22,{ws:8,hs:6,ol:false});}},
-  easel:{n:'Painting',i:'🖼️',p:20,w:.8,d:.6,b(g){box(g,.05,1.4,.05,'#c98f5e',-.3,0,.1,{rz:.12});box(g,.05,1.4,.05,'#c98f5e',.3,0,.1,{rz:-.12});box(g,.05,1.3,.05,'#c98f5e',0,0,-.2,{rx:-.25});box(g,.8,.6,.04,'#ffffff',0,.75,.14,{rx:-.1});for(const [x,y,col] of [[-.2,.95,'#7cc8ff'],[.12,1.05,'#ffd45c'],[0,.85,'#5fd4b0'],[.2,.9,'#ff7aa8']])sph(g,.08,col,x,y,.17,{s:[1,1,.2],ws:8,hs:6,ol:false});}},
-  fireplace:{n:'Fireplace',i:'🔥',p:55,w:1.5,d:.6,use:'fire',b(g){box(g,1.5,1.1,.55,'#e8d6d0',0,0,0);box(g,.8,.6,.02,'#2e2347',0,.05,.28,{ol:false});box(g,1.7,.1,.65,'#c98f5e',0,1.1,0);for(const [x,h] of [[-.15,.35],[0,.45],[.15,.3]]){cone(g,.09,h,'#ff8a2b',x,.06,.22,{seg:6,ol:false});cone(g,.05,h*.6,'#ffd45c',x,.06,.25,{seg:6,ol:false});}box(g,.5,.06,.08,'#9b6b4a',0,.06,.2,{ol:false});}},
-  sink:{n:'Sink',i:'🚰',p:25,w:.8,d:.55,cols:['#ffffff','#bfe6ff','#ffc9dc'],use:'wash',b(g,c){box(g,.8,.85,.55,c,0,0,0);box(g,.6,.06,.4,'#d8dcea',0,.85,0,{ol:.01});cyl(g,.03,.03,.3,'#c8cde0',0,.85,-.18,{seg:6,ol:.01});box(g,.04,.04,.18,'#c8cde0',0,1.12,-.1,{ol:.01});}},
-  washer:{n:'Washing machine',i:'🧺',p:40,w:.75,d:.7,use:'wash',b(g){box(g,.75,.9,.7,'#f4f6fb',0,0,0);cyl(g,.24,.24,.04,'#c8cde0',0,.42,.35,{rx:Math.PI/2,center:true,seg:18,ol:.012});cyl(g,.18,.18,.05,'#9fd4f2',0,.42,.36,{rx:Math.PI/2,center:true,seg:18,ol:false});box(g,.6,.08,.02,'#d8dcea',0,.78,.355,{ol:false});sph(g,.03,'#ff7aa8',.25,.8,.36,{ws:6,hs:5,ol:false});}},
-  computer:{n:'Computer desk',i:'💻',p:50,w:1.3,d:.7,cols:['#ffffff',WOOD,'#ffc9dc'],use:'game',b(g,c){box(g,1.3,.06,.7,c,0,.72,0);for(const [x,z] of [[-.6,-.3],[.6,-.3],[-.6,.3],[.6,.3]])box(g,.06,.72,.06,c,x,0,z,{ol:.01});box(g,.7,.45,.04,'#3d2c5e',0,.98,-.15);box(g,.62,.37,.02,'#7cc8ff',0,1.02,-.125,{ol:false});box(g,.12,.2,.08,'#3d2c5e',0,.78,-.15,{ol:.01});box(g,.5,.03,.18,'#ffffff',0,.78,.12,{ol:.01});}},
-  gaming:{n:'Game console',i:'🎮',p:55,w:1.4,d:.55,use:'game',b(g){box(g,1.4,.45,.5,'#ffffff',0,0,0);box(g,1.3,.8,.06,'#2e2347',0,.45,-.1);box(g,1.2,.7,.02,'#b79cff',0,.5,-.065,{ol:false});box(g,.3,.06,.2,'#3d2c5e',-.3,.45,.12,{ol:.01});for(const [x,col] of [[.2,'#ff6b6b'],[.45,'#5fa8ff']])box(g,.16,.04,.1,col,x,.45,.15,{ol:.01});}},
-  xmastree:{n:'Holiday tree',i:'🎄',p:45,w:1.0,d:1.0,b(g){cyl(g,.06,.06,.3,'#8c6137',0,0,0,{seg:6});for(const [y,r,h] of [[.25,.5,.7],[.65,.4,.6],[1.0,.28,.5]])cone(g,r,h,'#4fae64',0,y,0,{seg:10});cone(g,.07,.14,'#ffd45c',0,1.5,0,{seg:5});for(let i=0;i<10;i++){const a=i*2.4,y=.35+i*.1,r=.42-i*.03;sph(g,.045,['#ff6b6b','#ffd45c','#7cc8ff','#ff9ec4'][i%4],Math.cos(a)*r,y,Math.sin(a)*r,{ws:6,hs:5,ol:false});}}},
-  beanbag:{n:'Beanbag',i:'💺',p:20,w:.9,d:.9,cols:['#ff9ec4','#b79cff','#7cc8ff','#ffd45c','#5fd4b0'],use:'sit',b(g,c){sph(g,.45,c,0,.25,0,{s:[1,.6,1],ws:14,hs:10});sph(g,.3,c,0,.42,-.18,{s:[1.2,.8,.7],ws:12,hs:8});}},
-  bunkbed:{n:'Bunk bed',i:'🛏️',p:70,w:1.2,d:2.1,cols:['#ff9ec4','#8fd3ff','#b79cff','#7fdcb5'],use:'sleep',b(g,c){for(const [x,z] of [[-.55,-1],[.55,-1],[-.55,1],[.55,1]])box(g,.08,1.8,.08,'#c98f5e',x,0,z,{ol:.012});for(const y of[.25,1.15]){box(g,1.1,.12,2.0,'#c98f5e',0,y,0);box(g,1.0,.15,1.9,'#ffffff',0,y+.12,0,{ol:.01});box(g,1.02,.08,1.3,c,0,y+.27,.3,{ol:.01});box(g,.5,.1,.3,'#ffffff',0,y+.27,-.75,{ol:.01});}for(let i=0;i<4;i++)box(g,.3,.04,.04,'#c98f5e',.42,.45+i*.25,1.05,{ol:false});}},
-  bonsai:{n:'Bonsai tree',i:'🌳',p:18,w:.6,d:.6,b(g){box(g,.45,.15,.35,'#7cc8ff',0,0,0);cyl(g,.04,.06,.35,'#8c6137',0,.15,0,{rz:.3,seg:6});sph(g,.18,'#4fae64',.1,.5,0,{s:[1.3,.6,1],ws:10,hs:6});sph(g,.12,'#5fbf74',-.1,.42,.05,{s:[1.2,.6,1],ws:8,hs:6});}},
-  fern:{n:'Fern',i:'🌿',p:12,w:.6,d:.6,b(g){cyl(g,.2,.16,.32,'#ff9ec4',0,0,0,{seg:12});for(let i=0;i<8;i++){const a=i/8*TAU;box(g,.06,.02,.42,'#4fae64',Math.cos(a)*.15,.4,Math.sin(a)*.15,{ry:-a+Math.PI/2,rx:.5,ol:.008});}}},
-  lavender:{n:'Lavender',i:'💜',p:14,w:.6,d:.5,b(g){box(g,.5,.2,.3,'#ffffff',0,0,0);for(let i=0;i<7;i++){const x=-.18+i*.06;cyl(g,.01,.01,.3,'#5fae64',x,.2,0,{seg:4,ol:false});sph(g,.035,'#b79cff',x,.52,0,{s:[1,2,1],ws:6,hs:5,ol:.008});}}},
-  unicorn:{n:'Unicorn plush',i:'🦄',p:20,w:.6,d:.5,cols:['#ffffff','#ffc9dc','#e6dbff'],b(g,c){sph(g,.22,c,0,.25,0,{s:[1.3,1,1],ws:12,hs:8});for(const [x,z] of [[-.15,-.1],[.15,-.1],[-.15,.1],[.15,.1]])box(g,.07,.15,.07,c,x,0,z,{ol:.01});sph(g,.14,c,.28,.45,0,{ws:10,hs:8});cone(g,.03,.16,'#ffd45c',.33,.58,0,{rz:-.4,seg:6,ol:.008});for(let i=0;i<4;i++)sph(g,.05,['#ff7aa8','#b79cff','#7cc8ff','#ffd45c'][i],.18-i*.08,.5-i*.02,0,{ws:6,hs:5,ol:false});}},
-  castle:{n:'Toy castle',i:'🏰',p:35,w:.9,d:.7,cols:['#ffd6e0','#e6dbff','#c9f2e3'],b(g,c){box(g,.7,.5,.5,c,0,0,0);for(const [x,z] of [[-.38,-.28],[.38,-.28],[-.38,.28],[.38,.28]]){cyl(g,.1,.1,.7,c,x,0,z,{seg:10});cone(g,.13,.2,'#ff7aa8',x,.7,z,{seg:10,ol:.01});}box(g,.16,.24,.02,'#9b6b4a',0,0,.255,{ol:false});}},
-  racecar:{n:'Race car toy',i:'🏎️',p:22,w:.7,d:.4,cols:['#ff6b6b','#5fa8ff','#ffd45c','#5fd4b0'],b(g,c){box(g,.6,.12,.3,c,0,.06,0);box(g,.25,.1,.22,c,-.02,.18,0);box(g,.12,.03,.32,'#2e2347',-.3,.2,0,{ol:false});for(const [x,z] of [[-.2,-.17],[.2,-.17],[-.2,.17],[.2,.17]])cyl(g,.06,.06,.05,'#2e2347',x,.06,z,{rx:Math.PI/2,center:true,seg:10,ol:false});}},
-  rug:{n:'Round rug',i:'⭕',p:15,w:2.2,d:2.2,flat:1,cols:['#b79cff','#ff9ec4','#7fdcb5','#8fd3ff','#ffd45c'],b(g,c){cyl(g,1.1,1.1,.025,c,0,0,0,{seg:32,ol:.02});cyl(g,.72,.72,.03,shade(c,.1),0,0,0,{seg:32,ol:false});}},
-  rugsq:{n:'Big rug',i:'🟪',p:15,w:2.4,d:1.6,flat:1,cols:['#b79cff','#ff9ec4','#7fdcb5','#8fd3ff','#ffd45c'],b(g,c){box(g,2.4,.025,1.6,c,0,0,0,{ol:.02});box(g,2,.03,1.2,shade(c,.1),0,0,0,{ol:false});}},
-  fridge:{n:'Fridge',i:'🧊',p:40,w:.8,d:.7,cols:['#f4f6fb','#ffc9dc','#bfe6ff','#c9f2e3'],use:'fridge',b(g,c){
+  dresser:{n:'Dresser',i:'🗄️',p:150,w:1.1,d:.5,cols:[WOOD,'#ffffff','#ffc9dc','#bfe6ff'],b(g,c){box(g,1.1,.9,.5,c,0,0,0);for(let i=0;i<3;i++){box(g,1.0,.24,.02,shade(c,.06),0,.08+i*.28,.255,{ol:.01});sph(g,.03,'#ffd45c',0,.2+i*.28,.27,{ws:6,hs:5,ol:false});}sph(g,.1,'#ff9ec4',.35,1.02,0,{ws:8,hs:6,ol:.012});cyl(g,.05,.05,.12,'#ffffff',.35,.9,0,{seg:8,ol:.01});}},
+  mirror:{n:'Mirror',i:'🪞',p:120,w:.8,d:.4,cols:['#ffd45c','#ffffff','#ff9ec4','#b79cff'],use:'dress',b(g,c){box(g,.7,1.7,.08,c,0,.1,0);box(g,.56,1.5,.02,'#d8f0ff',0,.2,.045,{ol:false});box(g,.5,.06,.36,c,0,0,0);}},
+  clock:{n:'Big clock',i:'🕰️',p:200,w:.6,d:.45,use:'clock',b(g){box(g,.55,1.9,.4,'#9b6b4a',0,0,0);cyl(g,.2,.2,.03,'#ffffff',0,1.55,.21,{rx:Math.PI/2,center:true,seg:16,ol:.01});box(g,.02,.13,.01,'#3d2c5e',0,1.6,.23,{ol:false});box(g,.1,.02,.01,'#3d2c5e',.04,1.55,.23,{ol:false});box(g,.3,.7,.02,'#ffe7a3',0,.5,.205,{ol:false});cyl(g,.01,.01,.45,'#ffd45c',0,.55,.215,{seg:4,ol:false});sph(g,.06,'#ffd45c',0,.55,.22,{ws:8,hs:6,ol:false});}},
+  easel:{n:'Painting',i:'🖼️',p:100,w:.8,d:.6,b(g){box(g,.05,1.4,.05,'#c98f5e',-.3,0,.1,{rz:.12});box(g,.05,1.4,.05,'#c98f5e',.3,0,.1,{rz:-.12});box(g,.05,1.3,.05,'#c98f5e',0,0,-.2,{rx:-.25});box(g,.8,.6,.04,'#ffffff',0,.75,.14,{rx:-.1});for(const [x,y,col] of [[-.2,.95,'#7cc8ff'],[.12,1.05,'#ffd45c'],[0,.85,'#5fd4b0'],[.2,.9,'#ff7aa8']])sph(g,.08,col,x,y,.17,{s:[1,1,.2],ws:8,hs:6,ol:false});}},
+  fireplace:{n:'Fireplace',i:'🔥',p:500,w:1.5,d:.6,use:'fire',b(g){box(g,1.5,1.1,.55,'#e8d6d0',0,0,0);box(g,.8,.6,.02,'#2e2347',0,.05,.28,{ol:false});box(g,1.7,.1,.65,'#c98f5e',0,1.1,0);for(const [x,h] of [[-.15,.35],[0,.45],[.15,.3]]){cone(g,.09,h,'#ff8a2b',x,.06,.22,{seg:6,ol:false});cone(g,.05,h*.6,'#ffd45c',x,.06,.25,{seg:6,ol:false});}box(g,.5,.06,.08,'#9b6b4a',0,.06,.2,{ol:false});}},
+  sink:{n:'Sink',i:'🚰',p:150,w:.8,d:.55,cols:['#ffffff','#bfe6ff','#ffc9dc'],use:'wash',b(g,c){box(g,.8,.85,.55,c,0,0,0);box(g,.6,.06,.4,'#d8dcea',0,.85,0,{ol:.01});cyl(g,.03,.03,.3,'#c8cde0',0,.85,-.18,{seg:6,ol:.01});box(g,.04,.04,.18,'#c8cde0',0,1.12,-.1,{ol:.01});}},
+  washer:{n:'Washing machine',i:'🧺',p:250,w:.75,d:.7,use:'wash',b(g){box(g,.75,.9,.7,'#f4f6fb',0,0,0);cyl(g,.24,.24,.04,'#c8cde0',0,.42,.35,{rx:Math.PI/2,center:true,seg:18,ol:.012});cyl(g,.18,.18,.05,'#9fd4f2',0,.42,.36,{rx:Math.PI/2,center:true,seg:18,ol:false});box(g,.6,.08,.02,'#d8dcea',0,.78,.355,{ol:false});sph(g,.03,'#ff7aa8',.25,.8,.36,{ws:6,hs:5,ol:false});}},
+  computer:{n:'Computer desk',i:'💻',p:450,w:1.3,d:.7,cols:['#ffffff',WOOD,'#ffc9dc'],use:'game',b(g,c){box(g,1.3,.06,.7,c,0,.72,0);for(const [x,z] of [[-.6,-.3],[.6,-.3],[-.6,.3],[.6,.3]])box(g,.06,.72,.06,c,x,0,z,{ol:.01});box(g,.7,.45,.04,'#3d2c5e',0,.98,-.15);box(g,.62,.37,.02,'#7cc8ff',0,1.02,-.125,{ol:false});box(g,.12,.2,.08,'#3d2c5e',0,.78,-.15,{ol:.01});box(g,.5,.03,.18,'#ffffff',0,.78,.12,{ol:.01});}},
+  gaming:{n:'Game console',i:'🎮',p:600,w:1.4,d:.55,use:'game',b(g){box(g,1.4,.45,.5,'#ffffff',0,0,0);box(g,1.3,.8,.06,'#2e2347',0,.45,-.1);box(g,1.2,.7,.02,'#b79cff',0,.5,-.065,{ol:false});box(g,.3,.06,.2,'#3d2c5e',-.3,.45,.12,{ol:.01});for(const [x,col] of [[.2,'#ff6b6b'],[.45,'#5fa8ff']])box(g,.16,.04,.1,col,x,.45,.15,{ol:.01});}},
+  xmastree:{n:'Holiday tree',i:'🎄',p:300,w:1.0,d:1.0,b(g){cyl(g,.06,.06,.3,'#8c6137',0,0,0,{seg:6});for(const [y,r,h] of [[.25,.5,.7],[.65,.4,.6],[1.0,.28,.5]])cone(g,r,h,'#4fae64',0,y,0,{seg:10});cone(g,.07,.14,'#ffd45c',0,1.5,0,{seg:5});for(let i=0;i<10;i++){const a=i*2.4,y=.35+i*.1,r=.42-i*.03;sph(g,.045,['#ff6b6b','#ffd45c','#7cc8ff','#ff9ec4'][i%4],Math.cos(a)*r,y,Math.sin(a)*r,{ws:6,hs:5,ol:false});}}},
+  beanbag:{n:'Beanbag',i:'💺',p:100,w:.9,d:.9,cols:['#ff9ec4','#b79cff','#7cc8ff','#ffd45c','#5fd4b0'],use:'sit',b(g,c){sph(g,.45,c,0,.25,0,{s:[1,.6,1],ws:14,hs:10});sph(g,.3,c,0,.42,-.18,{s:[1.2,.8,.7],ws:12,hs:8});}},
+  bunkbed:{n:'Bunk bed',i:'🛏️',p:450,w:1.2,d:2.1,cols:['#ff9ec4','#8fd3ff','#b79cff','#7fdcb5'],use:'sleep',b(g,c){for(const [x,z] of [[-.55,-1],[.55,-1],[-.55,1],[.55,1]])box(g,.08,1.8,.08,'#c98f5e',x,0,z,{ol:.012});for(const y of[.25,1.15]){box(g,1.1,.12,2.0,'#c98f5e',0,y,0);box(g,1.0,.15,1.9,'#ffffff',0,y+.12,0,{ol:.01});box(g,1.02,.08,1.3,c,0,y+.27,.3,{ol:.01});box(g,.5,.1,.3,'#ffffff',0,y+.27,-.75,{ol:.01});}for(let i=0;i<4;i++)box(g,.3,.04,.04,'#c98f5e',.42,.45+i*.25,1.05,{ol:false});}},
+  bonsai:{n:'Bonsai tree',i:'🌳',p:90,w:.6,d:.6,b(g){box(g,.45,.15,.35,'#7cc8ff',0,0,0);cyl(g,.04,.06,.35,'#8c6137',0,.15,0,{rz:.3,seg:6});sph(g,.18,'#4fae64',.1,.5,0,{s:[1.3,.6,1],ws:10,hs:6});sph(g,.12,'#5fbf74',-.1,.42,.05,{s:[1.2,.6,1],ws:8,hs:6});}},
+  fern:{n:'Fern',i:'🌿',p:45,w:.6,d:.6,b(g){cyl(g,.2,.16,.32,'#ff9ec4',0,0,0,{seg:12});for(let i=0;i<8;i++){const a=i/8*TAU;box(g,.06,.02,.42,'#4fae64',Math.cos(a)*.15,.4,Math.sin(a)*.15,{ry:-a+Math.PI/2,rx:.5,ol:.008});}}},
+  lavender:{n:'Lavender',i:'💜',p:60,w:.6,d:.5,b(g){box(g,.5,.2,.3,'#ffffff',0,0,0);for(let i=0;i<7;i++){const x=-.18+i*.06;cyl(g,.01,.01,.3,'#5fae64',x,.2,0,{seg:4,ol:false});sph(g,.035,'#b79cff',x,.52,0,{s:[1,2,1],ws:6,hs:5,ol:.008});}}},
+  unicorn:{n:'Unicorn plush',i:'🦄',p:90,w:.6,d:.5,cols:['#ffffff','#ffc9dc','#e6dbff'],b(g,c){sph(g,.22,c,0,.25,0,{s:[1.3,1,1],ws:12,hs:8});for(const [x,z] of [[-.15,-.1],[.15,-.1],[-.15,.1],[.15,.1]])box(g,.07,.15,.07,c,x,0,z,{ol:.01});sph(g,.14,c,.28,.45,0,{ws:10,hs:8});cone(g,.03,.16,'#ffd45c',.33,.58,0,{rz:-.4,seg:6,ol:.008});for(let i=0;i<4;i++)sph(g,.05,['#ff7aa8','#b79cff','#7cc8ff','#ffd45c'][i],.18-i*.08,.5-i*.02,0,{ws:6,hs:5,ol:false});}},
+  castle:{n:'Toy castle',i:'🏰',p:160,w:.9,d:.7,cols:['#ffd6e0','#e6dbff','#c9f2e3'],b(g,c){box(g,.7,.5,.5,c,0,0,0);for(const [x,z] of [[-.38,-.28],[.38,-.28],[-.38,.28],[.38,.28]]){cyl(g,.1,.1,.7,c,x,0,z,{seg:10});cone(g,.13,.2,'#ff7aa8',x,.7,z,{seg:10,ol:.01});}box(g,.16,.24,.02,'#9b6b4a',0,0,.255,{ol:false});}},
+  racecar:{n:'Race car toy',i:'🏎️',p:100,w:.7,d:.4,cols:['#ff6b6b','#5fa8ff','#ffd45c','#5fd4b0'],b(g,c){box(g,.6,.12,.3,c,0,.06,0);box(g,.25,.1,.22,c,-.02,.18,0);box(g,.12,.03,.32,'#2e2347',-.3,.2,0,{ol:false});for(const [x,z] of [[-.2,-.17],[.2,-.17],[-.2,.17],[.2,.17]])cyl(g,.06,.06,.05,'#2e2347',x,.06,z,{rx:Math.PI/2,center:true,seg:10,ol:false});}},
+  rug:{n:'Round rug',i:'⭕',p:80,w:2.2,d:2.2,flat:1,cols:['#b79cff','#ff9ec4','#7fdcb5','#8fd3ff','#ffd45c'],b(g,c){cyl(g,1.1,1.1,.025,c,0,0,0,{seg:32,ol:.02});cyl(g,.72,.72,.03,shade(c,.1),0,0,0,{seg:32,ol:false});}},
+  rugsq:{n:'Big rug',i:'🟪',p:100,w:2.4,d:1.6,flat:1,cols:['#b79cff','#ff9ec4','#7fdcb5','#8fd3ff','#ffd45c'],b(g,c){box(g,2.4,.025,1.6,c,0,0,0,{ol:.02});box(g,2,.03,1.2,shade(c,.1),0,0,0,{ol:false});}},
+  fridge:{n:'Fridge',i:'🧊',p:250,w:.8,d:.7,cols:['#f4f6fb','#ffc9dc','#bfe6ff','#c9f2e3'],use:'fridge',b(g,c){
     box(g,.8,1.8,.7,c,0,0,0);box(g,.76,.02,.02,INK,0,1.15,.355,{ol:false});box(g,.04,.3,.05,'#c8c8d8',.3,1.3,.37,{ol:.012});box(g,.04,.3,.05,'#c8c8d8',.3,.75,.37,{ol:.012});}},
-  stove:{n:'Stove',i:'🍳',p:35,w:.8,d:.7,use:'cook',b(g){
+  stove:{n:'Stove',i:'🍳',p:100,w:.8,d:.7,use:'cook',b(g){
     box(g,.8,.9,.7,'#ffffff',0,0,0);box(g,.8,.04,.7,'#3d2c5e',0,.9,0,{ol:false});
     for(const x of[-.18,.18])for(const z of[-.15,.15])cyl(g,.11,.11,.02,'#6b6f8e',x,.94,z,{seg:12,ol:false});
     box(g,.6,.4,.02,'#3d2c5e',0,.25,.355,{ol:false});box(g,.5,.04,.05,'#c8c8d8',0,.72,.37,{ol:.012});}},
-  bath:{n:'Bathtub',i:'🛁',p:45,w:1.8,d:.9,use:'bath',b(g){
+  bath:{n:'Bathtub',i:'🛁',p:300,w:1.8,d:.9,use:'bath',b(g){
     box(g,1.8,.55,.9,'#ffffff',0,.08,0);box(g,1.6,.04,.7,'#8fe0ff',0,.6,0,{ol:false});
     for(const x of[-.75,.75])for(const z of[-.32,.32])sph(g,.07,'#ffd45c',x,.07,z,{ol:.015});
     const r=seeded(3);for(let i=0;i<7;i++)sph(g,.08+r()*.06,'#ffffff',-.6+r()*1.2,.66,-.25+r()*.5,{ol:.012,ws:8,hs:6});
     cyl(g,.03,.03,.3,'#c8c8d8',-.82,.55,0,{seg:8,ol:.012});}},
-  piano:{n:'Piano',i:'🎹',p:60,w:1.5,d:.6,cols:['#3d2c5e','#ffffff','#ff9ec4'],use:'piano',b(g,c){
+  piano:{n:'Piano',i:'🎹',p:500,w:1.5,d:.6,cols:['#3d2c5e','#ffffff','#ff9ec4'],use:'piano',b(g,c){
     box(g,1.5,1.25,.45,c,0,0,-.075);box(g,1.5,.08,.3,c,0,.72,.18);box(g,1.36,.04,.18,'#ffffff',0,.8,.2,{ol:.012});
     for(let i=0;i<9;i++){if(i===2||i===6)continue;box(g,.05,.03,.1,INK,-.6+i*.15+.075,.84,.16,{ol:false});}
     box(g,.08,.72,.08,c,-.68,0,.25);box(g,.08,.72,.08,c,.68,0,.25);}},
-  teddy:{n:'Teddy bear',i:'🧸',p:10,w:1.0,d:1.05,b(g){const C='#c98f5e',L='#f1d2a8';const t=new THREE.Group();t.scale.setScalar(1.7);g.add(t);
+  teddy:{n:'Teddy bear',i:'🧸',p:50,w:1.0,d:1.05,b(g){const C='#c98f5e',L='#f1d2a8';const t=new THREE.Group();t.scale.setScalar(1.7);g.add(t);
     // body (sitting, leaning back a touch)
     sph(t,.24,C,0,.3,0,{s:[1,1.05,1]});sph(t,.12,L,0,.26,.2,{ol:false});
     // head
@@ -1067,11 +1067,11 @@ const FURN={
     for(const sx of[-.13,.13]){sph(t,.1,C,sx,.1,.24,{s:[1,.9,1.6]});sph(t,.08,L,sx,.1,.42,{ol:false});}
     // arms resting forward/down
     for(const sx of[-.26,.26]){sph(t,.085,C,sx,.3,.1,{s:[1,1.5,1]});}}},
-  toybox:{n:'Toy box',i:'🎁',p:15,w:.9,d:.6,cols:['#ff7aa8','#7cc8ff','#ffd45c','#5fd4b0'],b(g,c){
+  toybox:{n:'Toy box',i:'🎁',p:80,w:.9,d:.6,cols:['#ff7aa8','#7cc8ff','#ffd45c','#5fd4b0'],b(g,c){
     box(g,.9,.5,.6,c,0,0,0);box(g,.94,.08,.64,shade(c,-.08),0,.5,0);box(g,.1,.5,.62,'#ffffff',0,0,0,{ol:false});
     sph(g,.13,'#5fd4b0',.2,.71,0);box(g,.16,.16,.16,'#ffd45c',-.22,.58,.05,{ry:.4});}},
-  petbed:{n:'Pet bed',i:'🐾',p:15,w:.9,d:.9,cols:['#ff9ec4','#8fd3ff','#ffd45c','#b79cff'],b(g,c){cyl(g,.45,.45,.2,c,0,0,0,{seg:20});cyl(g,.36,.36,.06,'#ffffff',0,.18,0,{seg:20,ol:false});}},
-  tank:{n:'Fish tank',i:'🐠',p:40,w:1.2,d:.5,b(g){
+  petbed:{n:'Pet bed',i:'🐾',p:80,w:.9,d:.9,cols:['#ff9ec4','#8fd3ff','#ffd45c','#b79cff'],b(g,c){cyl(g,.45,.45,.2,c,0,0,0,{seg:20});cyl(g,.36,.36,.06,'#ffffff',0,.18,0,{seg:20,ol:false});}},
+  tank:{n:'Fish tank',i:'🐠',p:1000,w:1.2,d:.5,b(g){
     box(g,1.2,.75,.5,WOOD,0,0,0);box(g,1.1,.6,.4,null,0,.75,0,{mat:WATER});box(g,1.14,.05,.44,'#3d2c5e',0,1.35,0,{ol:false});
     for(const [x,y,c] of [[-.25,.98,'#ff8a6b'],[.2,1.12,'#ffd45c'],[.05,.88,'#7cc8ff']])box(g,.14,.08,.05,c,x,y,0,{ol:.012});
     for(const x of[-.4,.35])cyl(g,.03,.03,.3,'#4fae5c',x,.78,0,{seg:5,ol:false});}},
@@ -1184,19 +1184,19 @@ function buildFurn(t,c){const g=new THREE.Group();const F=FURN[t];F.b(g,c||(F.co
 
 /* ---- food ---- */
 const FOODS={
-  apple:{n:'Apple',i:'🍎',p:3,f:10},banana:{n:'Banana',i:'🍌',p:3,f:10},bread:{n:'Bread',i:'🍞',p:5,f:20},
-  milk:{n:'Milk',i:'🥛',p:4,f:12},cheese:{n:'Cheese',i:'🧀',p:6,f:16},pizza:{n:'Pizza',i:'🍕',p:12,f:40},slice:{n:'Pizza slice',i:'🍕',p:5,f:16},garlic:{n:'Garlic bread',i:'🥖',p:4,f:14},
-  cake:{n:'Cake',i:'🍰',p:10,f:30},icecream:{n:'Ice cream',i:'🍦',p:8,f:20},
-  cocoa:{n:'Hot cocoa',i:'☕',p:4,f:12},cookie:{n:'Cookie',i:'🍪',p:2,f:8},muffin:{n:'Muffin',i:'🧁',p:5,f:15},donut:{n:'Donut',i:'🍩',p:5,f:15},
+  apple:{n:'Apple',i:'🍎',p:5,f:10},banana:{n:'Banana',i:'🍌',p:5,f:10},bread:{n:'Bread',i:'🍞',p:8,f:20},
+  milk:{n:'Milk',i:'🥛',p:6,f:12},cheese:{n:'Cheese',i:'🧀',p:9,f:16},pizza:{n:'Pizza',i:'🍕',p:18,f:40},slice:{n:'Pizza slice',i:'🍕',p:8,f:16},garlic:{n:'Garlic bread',i:'🥖',p:6,f:14},
+  cake:{n:'Cake',i:'🍰',p:15,f:30},icecream:{n:'Ice cream',i:'🍦',p:12,f:20},
+  cocoa:{n:'Hot cocoa',i:'☕',p:6,f:12},cookie:{n:'Cookie',i:'🍪',p:3,f:8},muffin:{n:'Muffin',i:'🧁',p:8,f:15},donut:{n:'Donut',i:'🍩',p:8,f:15},
   carrot:{n:'Carrot',i:'🥕',p:0,f:12},tomato:{n:'Tomato',i:'🍅',p:0,f:12},strawberry:{n:'Strawberry',i:'🍓',p:0,f:10},pumpkin:{n:'Pumpkin',i:'🎃',p:0,f:30},
-  grapes:{n:'Grapes',i:'🍇',p:3,f:6},watermelon:{n:'Watermelon',i:'🍉',p:6,f:18},cherries:{n:'Cherries',i:'🍒',p:4,f:8},orange:{n:'Orange',i:'🍊',p:3,f:6},corn:{n:'Corn',i:'🌽',p:3,f:10},
-  honey:{n:'Honey',i:'🍯',p:5,f:8},popcorn:{n:'Popcorn',i:'🍿',p:4,f:10},candy:{n:'Candy',i:'🍬',p:2,f:5},tea:{n:'Tea',i:'🍵',p:3,f:8},waffle:{n:'Waffle',i:'🧇',p:6,f:20},
-  bagel:{n:'Bagel',i:'🥯',p:4,f:14},pretzel:{n:'Pretzel',i:'🥨',p:4,f:14},icecake:{n:'Ice cream cake',i:'🍰',p:12,f:35},
-  flour:{n:'Flour',i:'🌾',p:3,f:2},eggs:{n:'Eggs',i:'🥚',p:4,f:8},chocolate:{n:'Chocolate',i:'🍫',p:4,f:10},lemon:{n:'Lemon',i:'🍋',p:3,f:4},
-  croissant:{n:'Croissant',i:'🥐',p:4,f:15},pie:{n:'Apple pie',i:'🥧',p:9,f:30},sundae:{n:'Sundae',i:'🍨',p:9,f:25},popsicle:{n:'Ice pop',i:'🍧',p:4,f:12},
+  grapes:{n:'Grapes',i:'🍇',p:5,f:6},watermelon:{n:'Watermelon',i:'🍉',p:9,f:18},cherries:{n:'Cherries',i:'🍒',p:6,f:8},orange:{n:'Orange',i:'🍊',p:5,f:6},corn:{n:'Corn',i:'🌽',p:5,f:10},
+  honey:{n:'Honey',i:'🍯',p:8,f:8},popcorn:{n:'Popcorn',i:'🍿',p:6,f:10},candy:{n:'Candy',i:'🍬',p:3,f:5},tea:{n:'Tea',i:'🍵',p:5,f:8},waffle:{n:'Waffle',i:'🧇',p:9,f:20},
+  bagel:{n:'Bagel',i:'🥯',p:6,f:14},pretzel:{n:'Pretzel',i:'🥨',p:6,f:14},icecake:{n:'Ice cream cake',i:'🍰',p:18,f:35},
+  flour:{n:'Flour',i:'🌾',p:5,f:2},eggs:{n:'Eggs',i:'🥚',p:6,f:8},chocolate:{n:'Chocolate',i:'🍫',p:6,f:10},lemon:{n:'Lemon',i:'🍋',p:5,f:4},
+  croissant:{n:'Croissant',i:'🥐',p:6,f:15},pie:{n:'Apple pie',i:'🥧',p:14,f:30},sundae:{n:'Sundae',i:'🍨',p:14,f:25},popsicle:{n:'Ice pop',i:'🍧',p:6,f:12},
   sandwich:{n:'Cheese sandwich',i:'🥪',p:0,f:45},salad:{n:'Garden salad',i:'🥗',p:0,f:35},fruitsalad:{n:'Fruit salad',i:'🥣',p:0,f:40},soup:{n:'Pumpkin soup',i:'🍲',p:0,f:60},
-  pancakes:{n:'Pancakes',i:'🥞',p:0,f:50},carrotcake:{n:'Carrot cake',i:'🎂',p:0,f:45},milkshake:{n:'Strawberry milkshake',i:'🥤',p:7,f:35},lemonade:{n:'Lemonade',i:'🧃',p:0,f:20},friedegg:{n:'Fried egg',i:'🍳',p:0,f:25},
-  coconut:{n:'Coconut drink',i:'🥥',p:5,f:14},
+  pancakes:{n:'Pancakes',i:'🥞',p:0,f:50},carrotcake:{n:'Carrot cake',i:'🎂',p:0,f:45},milkshake:{n:'Strawberry milkshake',i:'🥤',p:11,f:35},lemonade:{n:'Lemonade',i:'🧃',p:0,f:20},friedegg:{n:'Fried egg',i:'🍳',p:0,f:25},
+  coconut:{n:'Coconut drink',i:'🥥',p:8,f:14},
 };
 const RECIPES=[
   {id:'sandwich',need:{bread:1,cheese:1}},{id:'friedegg',need:{eggs:1}},{id:'salad',need:{tomato:1,carrot:1}},{id:'fruitsalad',need:{apple:1,banana:1,strawberry:1}},
@@ -1204,9 +1204,9 @@ const RECIPES=[
   {id:'pizza',n:'Homemade pizza',i:'🍕',need:{bread:1,cheese:1,tomato:1},makes:['pizza',1]},{id:'soup',need:{pumpkin:1,milk:1}},
   {id:'carrotcake',need:{flour:1,eggs:1,carrot:1}},{id:'milkshake',need:{strawberry:1,milk:1,icecream:1}},{id:'lemonade',need:{lemon:2}},
   {id:'hotchoc',n:'Hot chocolate',i:'☕',need:{chocolate:1,milk:1},makes:['cocoa',2]}];
-const SEEDS={carrot:{n:'Carrot',i:'🥕',p:3,h:3,yield:['carrot',2],pl:'carrots',rd:'carrots are'},tomato:{n:'Tomato',i:'🍅',p:4,h:4,yield:['tomato',3],pl:'tomatoes',rd:'tomatoes are'},
-  strawberry:{n:'Strawberry',i:'🍓',p:5,h:4,yield:['strawberry',3],pl:'strawberries',rd:'strawberries are'},pumpkin:{n:'Pumpkin',i:'🎃',p:8,h:6,yield:['pumpkin',1],pl:'pumpkin',rd:'pumpkin is'},
-  sunflower:{n:'Sunflower',i:'🌻',p:5,h:5,furn:'sunflower',pl:'sunflowers',rd:'sunflowers are'},tulip:{n:'Tulip',i:'🌷',p:4,h:3,furn:'tulips',pl:'tulips',rd:'tulips are'}};
+const SEEDS={carrot:{n:'Carrot',i:'🥕',p:5,h:3,yield:['carrot',2],pl:'carrots',rd:'carrots are'},tomato:{n:'Tomato',i:'🍅',p:6,h:4,yield:['tomato',3],pl:'tomatoes',rd:'tomatoes are'},
+  strawberry:{n:'Strawberry',i:'🍓',p:8,h:4,yield:['strawberry',3],pl:'strawberries',rd:'strawberries are'},pumpkin:{n:'Pumpkin',i:'🎃',p:12,h:6,yield:['pumpkin',1],pl:'pumpkin',rd:'pumpkin is'},
+  sunflower:{n:'Sunflower',i:'🌻',p:8,h:5,furn:'sunflower',pl:'sunflowers',rd:'sunflowers are'},tulip:{n:'Tulip',i:'🌷',p:6,h:3,furn:'tulips',pl:'tulips',rd:'tulips are'}};
 const SHOPS={
   market:{title:'Market',items:['apple','banana','orange','grapes','cherries','watermelon','corn','bread','milk','cheese','eggs','flour','chocolate','lemon','honey','popcorn','candy','pizza','cake','icecream']},
   pizza:{title:'Pizzeria',items:['pizza','slice','garlic']},
@@ -1219,10 +1219,10 @@ const SHOPS={
   seeds:{title:'Seed box',items:Object.keys(SEEDS).map(k=>'seed_'+k)},
   beach:{title:'Beach kiosk',items:['popsicle','icecream','coconut','watermelon']},
 };
-const PET_ITEMS={petfood:{n:'Pet food',i:'🦴',p:4},catfood:{n:'Cat food',i:'🐟',p:4},bunnyfood:{n:'Bunny & hamster food',i:'🥕',p:4},ball:{n:'Ball',i:'🎾',p:6},yarn:{n:'Yarn ball',i:'🧶',p:5},squeaky:{n:'Squeaky toy',i:'🐤',p:5},
-  bow:{n:'Pink bow',i:'🎀',p:8},hat:{n:'Party hat',i:'🥳',p:10},collar:{n:'Bell collar',i:'🔔',p:6},scarf:{n:'Cozy scarf',i:'🧣',p:8},
-  treat:{n:'Pet treats',i:'🍖',p:3},frisbee:{n:'Frisbee',i:'🥏',p:6},mouse:{n:'Toy mouse',i:'🐭',p:5},pcrown:{n:'Pet crown',i:'👑',p:12},shades:{n:'Pet sunglasses',i:'🕶️',p:9},
-  tophat:{n:'Tiny top hat',i:'🎩',p:14},flowerc:{n:'Flower crown',i:'🌸',p:12},pflower:{n:'Big flower',i:'🌺',p:9},bowtie:{n:'Fancy bow tie',i:'🤵',p:10},hglasses:{n:'Heart glasses',i:'💖',p:11},monocle:{n:'Fancy monocle',i:'🧐',p:13},cape:{n:'Super cape',i:'🦸',p:16},wings:{n:'Fairy wings',i:'🧚',p:18},bpack:{n:'Tiny backpack',i:'🎒',p:12}};
+const PET_ITEMS={petfood:{n:'Pet food',i:'🦴',p:6},catfood:{n:'Cat food',i:'🐟',p:6},bunnyfood:{n:'Bunny & hamster food',i:'🥕',p:6},ball:{n:'Ball',i:'🎾',p:10},yarn:{n:'Yarn ball',i:'🧶',p:8},squeaky:{n:'Squeaky toy',i:'🐤',p:8},
+  bow:{n:'Pink bow',i:'🎀',p:30},hat:{n:'Party hat',i:'🥳',p:35},collar:{n:'Bell collar',i:'🔔',p:25},scarf:{n:'Cozy scarf',i:'🧣',p:30},
+  treat:{n:'Pet treats',i:'🍖',p:5},frisbee:{n:'Frisbee',i:'🥏',p:10},mouse:{n:'Toy mouse',i:'🐭',p:8},pcrown:{n:'Pet crown',i:'👑',p:50},shades:{n:'Pet sunglasses',i:'🕶️',p:35},
+  tophat:{n:'Tiny top hat',i:'🎩',p:55},flowerc:{n:'Flower crown',i:'🌸',p:45},pflower:{n:'Big flower',i:'🌺',p:35},bowtie:{n:'Fancy bow tie',i:'🤵',p:40},hglasses:{n:'Heart glasses',i:'💖',p:40},monocle:{n:'Fancy monocle',i:'🧐',p:50},cape:{n:'Super cape',i:'🦸',p:60},wings:{n:'Fairy wings',i:'🧚',p:70},bpack:{n:'Tiny backpack',i:'🎒',p:45}};
 const PET_FOOD={dog:['petfood','treat'],cat:['catfood','petfood','treat'],bunny:['bunnyfood','petfood','treat'],hamster:['bunnyfood','petfood','treat']};
 const PET_TOY={dog:'ball',cat:'yarn',bunny:'squeaky',hamster:'squeaky'};
 function itemInfo(id){if(id&&id.startsWith('seed_')){const K=SEEDS[id.slice(5)];return K&&{n:K.n+' seeds',i:K.i,p:K.p};}return FOODS[id]||PET_ITEMS[id];}
@@ -1790,7 +1790,7 @@ function updBeach(dt){updBus(dt);if(!S||!PLAYING||!LOC.beach)return;
    On bus days the bus home waits at the beach from 19:30 and leaves at 21:00. Day 1 (a brand-new player's first day) has a free
    Welcome Bus at both stops from 8:00 to 12:00 that goes as soon as you hop on. You sit inside the waiting bus (Driver Dot says
    hello); when it leaves, a little ride picture plays and you get off at the other stop. Missed it? Camp at the beach. */
-const BUS_FARE=15,BUS_W=1.5,BUS_D=.25,BUS_EV=19.5,BV=8,BA=2.5,BB=2,BUS_WK={},BUS_DAY={};
+const BUS_FARE=20,BUS_W=1.5,BUS_D=.25,BUS_EV=19.5,BV=8,BA=2.5,BB=2,BUS_WK={},BUS_DAY={};
 const BUSP={park:{loc:'city',x:-16.5,z:2.1,ry:0,get pre(){return Math.max(110,-28-laneEnd());},post:225},   /* in town it comes from the far end of 🏡 Friends Lane */
   beach:{loc:'beach',x:BEACH_X-35.5,z:2.25,ry:Math.PI/2,pre:110,post:95}};
 const BSEAT=[[.95,.68],[-.15,.68],[-1.25,.68],[.95,-.68],[-.15,-.68],[-1.25,-.68]],CAMP={x:-25.4,z:6,fx:-21.6,fz:5.4};
@@ -2704,9 +2704,9 @@ function buildClaw(L,sh,pr,mx,mz){
   for(let i=0;i<7;i++)sph(pr,.032,null,mx+.55,2.13,mz-.5+i*.1667,{mat:GLOW,ws:6,hs:5,ol:false});
   for(const s of[-1,1])box(pr,.03,.03,1.0,'#c8cde0',mx+s*.45,1.98,mz,{ol:false});
   const sg=signPlane('🕹️ CLAW',.95,.24,'#ffd45c','#ff4d8d');sg.position.set(mx+.553,2.3,mz);sg.rotation.y=Math.PI/2;L.g.add(sg);
-  const ps=signPlane('5 🪙 a go!',.5,.13,'#ffffff','#3d2c5e');ps.position.set(mx+.796,.66,mz-.2);ps.rotation.y=Math.PI/2;L.g.add(ps);
+  const ps=signPlane('10 🪙 a go!',.5,.13,'#ffffff','#3d2c5e');ps.position.set(mx+.796,.66,mz-.2);ps.rotation.y=Math.PI/2;L.g.add(ps);
   col(L,mx-.55,mz-.62,mx+.82,mz+.62);
-  inter(L,{x:mx+1.35,z:mz,r:1.6,icon:'🕹️',label:'Play the claw machine · 5 🪙',act:()=>clawOpen()});
+  inter(L,{x:mx+1.35,z:mz,r:1.6,icon:'🕹️',label:'Play the claw machine · 10 🪙',act:()=>clawOpen()});
   const g=new THREE.Group();L.dyn.add(g);
   const gan=new THREE.Group();g.add(gan);box(gan,.92,.04,.05,'#c8cde0',0,-.02,0,{ol:.008});
   const car=new THREE.Group();g.add(car);box(car,.1,.06,.1,'#ffd45c',0,-.05,0,{ol:.008});
@@ -2919,16 +2919,16 @@ const P={x:-17,z:-4.8,yaw:0,pitch:0,bobT:0,bobA:0,moving:false,sit:null,jy:0,vy:
 let S=null,PLAYING=false,PET_ACTORS=[],FRIEND_ACTORS=[],PEN=[],KEEPERS=[],LITTER=[],HOME_ITEMS=new Map(),TARGET=null;
 const UI={open:false,onClose:null,lock:false};
 const DEFAULT_LOOK={skin:'#fdc991',hair:'#8d6238',style:'long',eyes:'round',mouth:'smile',top:'#fdc1fa',bottom:'#37a4fc',shoes:'#8c6137',outfit:'sweater',hat:'none',glasses:'none'};
-const CLOTHES={dress:{n:'Dresses',i:'👗',p:25},sweaters:{n:'6 new sweater colors',i:'👚',p:20,slot:'top',cols:['#ffd45c','#5fd4b0','#b79cff','#ff6b6b','#ffffff','#2e2347']},
-  pants:{n:'6 new pants colors',i:'👖',p:15,slot:'bottom',cols:['#ff9ec4','#b79cff','#ffffff','#2e2347','#ffd45c','#5fd4b0']},shoes:{n:'5 new shoe colors',i:'👟',p:12,slot:'shoes',cols:['#ffffff','#ff7aa8','#ff4d4d','#ffd45c','#7cc8ff']},
-  cap:{n:'Cap',i:'🧢',p:15,hat:1,cols:['#ff6b6b','#5fa8ff','#ffd45c','#5fd4b0','#ff9ec4','#2e2347']},beanie:{n:'Beanie',i:'⛄',p:15,hat:1,cols:['#7cc8ff','#ff9ec4','#ffd45c','#b79cff','#ff8a6b']},
-  bow:{n:'Big bow',i:'🎀',p:12,hat:1,cols:['#ff4d8d','#ff6b6b','#7cc8ff','#ffd45c','#b79cff','#ffffff']},flowers:{n:'Flower crown',i:'🌸',p:18,hat:1,cols:['#ff7aa8','#b79cff','#ff8a6b','#7cc8ff']},
-  bunny:{n:'Bunny ears',i:'🐰',p:16,hat:1,cols:['#ffffff','#ff9ec4','#b79cff','#c49a74']},cat:{n:'Cat ears',i:'🐱',p:16,hat:1,cols:['#2e2347','#ffffff','#ff9ec4','#ff8a6b']},
-  cowboy:{n:'Cowboy hat',i:'🤠',p:20,hat:1,cols:['#9a6a43','#ff7aa8','#ffffff','#2e2347']},witch:{n:'Witch hat',i:'🧙',p:20,hat:1,cols:['#2e2347','#b79cff','#5fd4b0']},
-  headphones:{n:'Headphones',i:'🎧',p:25,hat:1,cols:['#ff7aa8','#7cc8ff','#5fd4b0','#ffd45c','#2e2347']},tiara:{n:'Tiara',i:'💎',p:35,hat:1,cols:['#ff7aa8','#7cc8ff','#b79cff']},
-  flower:{n:'Hair flower',i:'🌺',p:14,hat:1,cols:['#ff7aa8','#ff6b6b','#ffffff','#ffd45c','#b79cff']},halo:{n:'Angel halo',i:'😇',p:22,hat:1,cols:['#ffd45c','#ffffff','#ff9ec4']},
-  unicorn:{n:'Unicorn headband',i:'🦄',p:24,hat:1,cols:['#ffffff','#ff9ec4','#b79cff','#7cc8ff']},beret:{n:'Beret',i:'🎨',p:16,hat:1,cols:['#ff6b6b','#2e2347','#ff9ec4','#5fd4b0']},crown:{n:'Crown',i:'👑',p:60,hat:1,cols:['#ffd45c','#d8dcea','#ff9ec4']},
-  glasses:{n:'Glasses',i:'👓',p:15,gl:1,cols:['#3d2c5e','#ff7aa8','#7cc8ff','#ffd45c']},sunglasses:{n:'Sunglasses',i:'🕶️',p:18,gl:1,cols:['#2e2347','#ff7aa8','#5fa8ff','#ffd45c']},hearts:{n:'Heart glasses',i:'💖',p:16,gl:1,cols:['#ff4d8d','#ff7aa8','#b79cff']}};
+const CLOTHES={dress:{n:'Dresses',i:'👗',p:120},sweaters:{n:'6 new sweater colors',i:'👚',p:100,slot:'top',cols:['#ffd45c','#5fd4b0','#b79cff','#ff6b6b','#ffffff','#2e2347']},
+  pants:{n:'6 new pants colors',i:'👖',p:80,slot:'bottom',cols:['#ff9ec4','#b79cff','#ffffff','#2e2347','#ffd45c','#5fd4b0']},shoes:{n:'5 new shoe colors',i:'👟',p:60,slot:'shoes',cols:['#ffffff','#ff7aa8','#ff4d4d','#ffd45c','#7cc8ff']},
+  cap:{n:'Cap',i:'🧢',p:60,hat:1,cols:['#ff6b6b','#5fa8ff','#ffd45c','#5fd4b0','#ff9ec4','#2e2347']},beanie:{n:'Beanie',i:'⛄',p:60,hat:1,cols:['#7cc8ff','#ff9ec4','#ffd45c','#b79cff','#ff8a6b']},
+  bow:{n:'Big bow',i:'🎀',p:50,hat:1,cols:['#ff4d8d','#ff6b6b','#7cc8ff','#ffd45c','#b79cff','#ffffff']},flowers:{n:'Flower crown',i:'🌸',p:80,hat:1,cols:['#ff7aa8','#b79cff','#ff8a6b','#7cc8ff']},
+  bunny:{n:'Bunny ears',i:'🐰',p:70,hat:1,cols:['#ffffff','#ff9ec4','#b79cff','#c49a74']},cat:{n:'Cat ears',i:'🐱',p:70,hat:1,cols:['#2e2347','#ffffff','#ff9ec4','#ff8a6b']},
+  cowboy:{n:'Cowboy hat',i:'🤠',p:90,hat:1,cols:['#9a6a43','#ff7aa8','#ffffff','#2e2347']},witch:{n:'Witch hat',i:'🧙',p:90,hat:1,cols:['#2e2347','#b79cff','#5fd4b0']},
+  headphones:{n:'Headphones',i:'🎧',p:120,hat:1,cols:['#ff7aa8','#7cc8ff','#5fd4b0','#ffd45c','#2e2347']},tiara:{n:'Tiara',i:'💎',p:180,hat:1,cols:['#ff7aa8','#7cc8ff','#b79cff']},
+  flower:{n:'Hair flower',i:'🌺',p:60,hat:1,cols:['#ff7aa8','#ff6b6b','#ffffff','#ffd45c','#b79cff']},halo:{n:'Angel halo',i:'😇',p:100,hat:1,cols:['#ffd45c','#ffffff','#ff9ec4']},
+  unicorn:{n:'Unicorn headband',i:'🦄',p:110,hat:1,cols:['#ffffff','#ff9ec4','#b79cff','#7cc8ff']},beret:{n:'Beret',i:'🎨',p:70,hat:1,cols:['#ff6b6b','#2e2347','#ff9ec4','#5fd4b0']},crown:{n:'Crown',i:'👑',p:400,hat:1,cols:['#ffd45c','#d8dcea','#ff9ec4']},
+  glasses:{n:'Glasses',i:'👓',p:60,gl:1,cols:['#3d2c5e','#ff7aa8','#7cc8ff','#ffd45c']},sunglasses:{n:'Sunglasses',i:'🕶️',p:80,gl:1,cols:['#2e2347','#ff7aa8','#5fa8ff','#ffd45c']},hearts:{n:'Heart glasses',i:'💖',p:70,gl:1,cols:['#ff4d8d','#ff7aa8','#b79cff']}};
 function variants(k){return(S.outfits||[]).filter(v=>v.k===k);}
 function owns(k){const C=CLOTHES[k];if(C&&(C.hat||C.gl))return variants(k).length>0;return !!(S.wardrobe&&S.wardrobe[k]);}
 function lookOpts(k){let base=LOOK_OPTS[k];if(k==='top'&&owns('sweaters'))base=base.concat(CLOTHES.sweaters.cols);if(k==='bottom'&&owns('pants'))base=base.concat(CLOTHES.pants.cols);if(k==='shoes'&&owns('shoes'))base=base.concat(CLOTHES.shoes.cols);const x=S&&S.xcol&&S.xcol[k];return x&&x.length?base.concat(x.filter(c=>!base.includes(c))):base;}
@@ -3067,7 +3067,7 @@ function sk(k){S.skills=S.skills||{};return S.skills[k]||(S.skills[k]={lv:1,xp:0
 function addXP(k,n){if(!S||!SKILLS[k])return;const s=sk(k);if(s.lv>=MAXLV)return;s.xp+=n;let up=false;
   while(s.lv<MAXLV&&s.xp>=xpNeed(s.lv)){s.xp-=xpNeed(s.lv);s.lv++;up=true;}if(s.lv>=MAXLV)s.xp=0;
   if(up){const r=10*s.lv;S.coins+=r;SFX.yay();setTimeout(()=>toast(SKILLS[k].i+' '+SKILLS[k].n+' level '+s.lv+'! +'+r+' 🪙',3.6),300);floatText('⭐',P.x-Math.sin(P.yaw)*1.4,1.9,P.z-Math.cos(P.yaw)*1.4,{h:.6});change();}}
-function bumpLevel(k,n=1){if(!S||!SKILLS[k])return;const s=sk(k);for(let i=0;i<n&&s.lv<MAXLV;i++){s.lv++;const r=10*s.lv;S.coins+=r;}
+function bumpLevel(k,n=1,noPay){if(!S||!SKILLS[k])return;const s=sk(k);for(let i=0;i<n&&s.lv<MAXLV;i++){s.lv++;const r=10*s.lv;if(!noPay)S.coins+=r;}
   s.xp=0;if(s.lv>=MAXLV)s.xp=0;SFX.yay();setTimeout(()=>toast(SKILLS[k].i+' '+SKILLS[k].n+' is now level '+s.lv+'! ⭐',3.6),300);
   floatText('⭐',P.x-Math.sin(P.yaw)*1.4,1.9,P.z-Math.cos(P.yaw)*1.4,{h:.6});change();}
 const CD={};function cool(k,s){const t=performance.now();if(CD[k]&&t-CD[k]<s*1000)return false;CD[k]=t;return true;}
@@ -3207,14 +3207,14 @@ const onePl=K=>K.pl==='pumpkin'?'a pumpkin':K.pl;
 function shopOf(id){for(const k in SHOPS){const s=SHOPS[k];if((s.items||[]).includes(id)||(s.furn||[]).includes(id))return s.title;}return'shop';}
 function getQ(k){return QUESTS[k]||(k in QCACHE?QCACHE[k]:(QCACHE[k]=genQuest(k)));}
 function genQuest(k){try{const p=k.split(':'),kind=p[0],a=p[1];
-  if(kind==='buy'){const it=itemInfo(a)||FURN[a];return it?{i:it.i,t:'Shopping trip',d:'Buy '+aAn(it.n)+' at the '+shopOf(a),n:1,r:8+Math.round((it.p||4)/3),ev:k}:null;}
+  if(kind==='buy'){const it=itemInfo(a)||FURN[a];return it?{i:it.i,t:'Shopping trip',d:'Buy '+aAn(it.n)+' at the '+shopOf(a),n:1,r:8+Math.min(14,Math.round((it.p||4)/3)),ev:k}:null;}
   if(kind==='eat'){const it=FOODS[a];return it?{i:it.i,t:'Snack time',d:'Eat '+aAn(it.n),n:1,r:10,ev:k}:null;}
   if(kind==='cook'){const R=RECIPES.find(x=>x.id===a);if(!R)return null;const I=recipeInfo(R);return{i:I.i,t:'Chef time',d:'Cook '+I.n.toLowerCase()+' on your stove',n:1,r:22,ev:k};}
   if(kind==='chat'){const f=FRIENDS.find(x=>x.id===a);return f?{i:'💬',t:'Say hello',d:'Chat with '+f.name,n:1,r:10,ev:k}:null;}
   if(kind==='gift'){const f=FRIENDS.find(x=>x.id===a);return f?{i:'🎁',t:'Surprise!',d:'Give '+f.name+' a present',n:1,r:20,ev:k}:null;}
   if(kind==='find'){const pl=PLACES.find(x=>x.id===a);return pl?{i:pl.i,t:'Explorer',d:'Find '+theN(pl)+' with your 🗺️ map',n:1,r:12,ev:k}:null;}
   if(kind==='enter'){const n={market:'Market',cafe:'Café',pets:'Pet Shop',flowers:'Flower shop',clothes:'Clothing store',toys:'Toy Store',bakery:'Bakery',icecream:'Ice Cream shop',library:'Library',school:'School',fire:'Fire Station'}[a];return n?{i:'🚪',t:'Pop in',d:'Go into the '+n,n:1,r:8,ev:k}:null;}
-  if(kind==='place'){const F=FURN[a];return F?{i:F.i,t:'Decorator',d:'Put '+aAn(F.n)+' in your house',n:1,r:Math.round(F.p*.5)+10,ev:k}:null;}
+  if(kind==='place'){const F=FURN[a];return F?{i:F.i,t:'Decorator',d:'Put '+aAn(F.n)+' in your house',n:1,r:10+Math.min(30,Math.round(F.p/20)),ev:k}:null;}
   if(kind==='plant'){const K=SEEDS[a];return K?{i:'🌱',t:'Seed time',d:'Plant '+K.n.toLowerCase()+' seeds in your garden',n:1,r:12,ev:k}:null;}
   if(kind==='harvest'){const K=SEEDS[a];return K?{i:K.i,t:'Harvest',d:'Pick '+onePl(K)+' from your garden',n:1,r:25,ev:k}:null;}
   if(kind==='wear'){const C=CLOTHES[a];return C?{i:C.i,t:'Fashion show',d:'Wear your '+C.n.toLowerCase(),n:1,r:12,ev:k,need:()=>owns(a)}:null;}
@@ -4201,8 +4201,8 @@ function addHomeItem(it){
 function removeHomeItem(u){const L=LOC.home,rec=HOME_ITEMS.get(u);if(!rec)return;L.items.remove(rec.g);if(rec.col)L.dcols.splice(L.dcols.indexOf(rec.col),1);if(rec.inter)L.inter.splice(L.inter.indexOf(rec.inter),1);HOME_ITEMS.delete(u);}
 function setLamp(rec){rec.g.traverse(o=>{if(o.userData.shade)o.material.emissiveIntensity=rec.it.on?.6:0;});}
 function rebuildHome(){for(const u of [...HOME_ITEMS.keys()])removeHomeItem(u);for(const it of S.home.items)addHomeItem(it);WALL_M.color.set(S.home.wall);setFloor(S.home.floor);}
-/* ---- the big house: Decorating level 10 + 500 coins ---- */
-const BIG_PRICE=800;
+/* ---- the big house: Decorating level 10 + BIG_PRICE coins (a big dream: about a week of work) ---- */
+const BIG_PRICE=2500;
 function applyHouse(){const big=!!S.bighouse;homeShell(LOC.home,big);if(YARD.plaque)YARD.plaque.visible=!big;}   /* your house on Friends Lane grows by itself (laneRefresh) */
 function growFurniture(){for(const it of S.home.items){const F=FURN[it.t];if(!F)continue;const sw=(it.r%2?F.d:F.w)/2,sd=(it.r%2?F.w:F.d)/2;
   it.x=clamp(it.x*1.5,-HOMEW+sw+.02,HOMEW-sw-.02);it.z=clamp(it.z*1.4,-HOMED+sd+.02,HOMED-sd-.02);}}
@@ -4758,14 +4758,16 @@ ACT.pback=()=>renderPet();
 ACT.pstay=()=>{const p=PT,d=p.d;d.stay=!d.stay;p.far=0;if(d.stay){[d.sx,d.sz]=toSave(p.loc,p.x,p.z);renderPet(d.name+' will stay here and wait for you.');}else renderPet(d.name+' will follow you!');change();};
 
 /* adopting */
-let AD=null;const ADOPT_COST=100;
+let AD=null;const ADOPT_COST=200;
+/* 🪙 not enough coins? jobs pay the most, quests a little extra */
+const earnTip=()=>S&&S.job?'Go to work and do your 📱 quests to earn more! 💼':'Get a job from Rosie to earn coins! 💼';
 function openAdopt(type,col){if(S.pets.length>=3){toast('You have 3 pets already. That\'s a full house! 🏠');return;}
   const T=PET_TYPES[type];AD={type,col,name:pick(T.names)};SFX[T.snd]();renderAdopt();}
 function renderAdopt(){const T=PET_TYPES[AD.type];
   openPanel(`<div class="hd"><h2>${T.icon} Adopt a ${T.name}</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>${shutNote('pets')}
     <p class="note">Pick a color</p><div class="swrow">${T.cols.map(c=>`<button class="sw ${c===AD.col?'on':''}" style="background:${c}" data-a="acol:${c}" aria-label="Color"></button>`).join('')}</div>
     <p class="note">Give your ${T.name} a name</p><input class="inp" id="petName" maxlength="14" value="${esc(AD.name)}" autocomplete="off">
-    <div class="row"><button class="btn mint" data-a="adopt" ${S.coins<ADOPT_COST?'disabled':''}>💗 Adopt for ${ADOPT_COST} 🪙</button></div>${S.coins<ADOPT_COST?`<p class="note">You need ${ADOPT_COST} 🪙. Pick up litter or check your mail to get more!</p>`:''}`);}
+    <div class="row"><button class="btn mint" data-a="adopt" ${S.coins<ADOPT_COST?'disabled':''}>💗 Adopt for ${ADOPT_COST} 🪙</button></div>${S.coins<ADOPT_COST?`<p class="note">You need ${ADOPT_COST} 🪙. ${earnTip()}</p>`:''}`);}
 ACT.acol=c=>{AD.name=($('petName').value||AD.name);AD.col=c;renderAdopt();};
 /* 🐾 a spot in front of you, a little to the side, with room for a pet (not inside a pen or a shelf) */
 function petSpot(){for(const d of [1.7,1.4,1.1])for(const a of [.35,-.35,.7,-.7]){const x=P.x-Math.sin(P.yaw+a)*d,z=P.z-Math.cos(P.yaw+a)*d,q=collideXZ(x,z,.3,CUR);if(Math.hypot(q[0]-x,q[1]-z)<.02)return q;}
@@ -4783,7 +4785,7 @@ function openShop(k){SHOP=k;const sh=SHOPS[k];SFX.talk();
     ${shutNote(k)}${sh.furn?'<p class="note">Furniture and decorations go to 📦 My stuff. Place them at home with 🛋️ Decorate.</p>':''}${newInHTML(k)}
     <div class="grid" style="margin-top:10px">${list.map(it=>`<button class="it" data-a="buy:${it.id}"><span class="em">${it.i}</span><span>${it.n}</span><span class="pr">${it.p} 🪙</span><span class="have" id="hv-${it.id}">${it.f?'':(S.bag[it.id]?'You have '+S.bag[it.id]:'')}</span></button>`).join('')}</div>`);}
 ACT.buy=(id,b)=>{if(shutBuy(SHOP))return;const sh=SHOPS[SHOP],F=(sh.furn&&sh.furn.includes(id))?FURN[id]:null,info=F||itemInfo(id);
-  if(S.coins<info.p){SFX.no();toast('Not enough coins. Pick up litter or check your mail! 🪙');return;}
+  if(S.coins<info.p){SFX.no();toast('Not enough coins yet! 🪙 '+earnTip(),3.6);return;}
   S.coins-=info.p;SFX.coin();
   if(F){S.home.store.push({u:uid(),t:id,c:F.cols?pick(F.cols):null,x:0,z:0,r:0});toast(F.i+' '+F.n+' is waiting in 📦 My stuff at home!');}
   else{S.bag[id]=(S.bag[id]||0)+1;const hv=$('hv-'+id);if(hv)hv.textContent='You have '+S.bag[id];if(FOODS[id])doneTask('buy');}
@@ -4795,13 +4797,15 @@ const NEWCOLS=[['#ff8fab','Bubblegum'],['#ff6f61','Coral'],['#ffa45c','Mango'],[
   ['#ffc4a8','Peach'],['#fde68a','Butter'],['#9ff0d0','Seafoam'],['#e8ecf3','Cloud'],['#334155','Midnight'],['#c2843a','Caramel'],['#ff3d9a','Hot pink'],['#8b5cf6','Violet'],['#22c55e','Leaf'],['#ef4444','Cherry'],['#fbbf24','Sunny'],['#94a3b8','Silver']];
 const colName=c=>{const f=NEWCOLS.find(x=>x[0]===c);return f?f[1]:'Special';};
 const NEWIN_SHOPS={clothes:1,toys:1,flowers:1,pets:1,home:1};let NEWPOP=null;
+/* a "New in!" thing costs today's price (one saved before the coins balance keeps its old number in the save, but costs the same as in the shop) */
+const NI_COLP={top:40,bottom:35,shoes:30},niP=it=>(it.kind==='furn'?FURN[it.k]&&FURN[it.k].p:it.kind==='hat'?CLOTHES[it.k]&&CLOTHES[it.k].p:NI_COLP[it.k])||it.p;
 function niFurnPool(sh){return(sh==='home'?BUY_FURN:(SHOPS[sh]&&SHOPS[sh].furn)||[]).filter(t=>FURN[t]&&FURN[t].cols&&!FURN[t].gold);}
 function niMake(sh,avoid){
   for(let k=0;k<80;k++){let it=null;
     if(sh==='clothes'){
       if(Math.random()<.75){const key=pick(Object.keys(CLOTHES).filter(x=>CLOTHES[x].hat||CLOTHES[x].gl)),C=CLOTHES[key],c=pick(NEWCOLS.map(x=>x[0]).concat(C.cols));
         if(!variants(key).some(v=>v.c===c))it={kind:'hat',k:key,c,n:colName(c)+' '+C.n.toLowerCase(),i:C.i,p:C.p};}
-      else{const sl=pick(['top','bottom','shoes']),c=pick(NEWCOLS)[0];if(!lookOpts(sl).includes(c))it={kind:'col',k:sl,c,n:colName(c)+' '+{top:'sweater',bottom:'pants',shoes:'shoes'}[sl],i:{top:'👚',bottom:'👖',shoes:'👟'}[sl],p:{top:10,bottom:8,shoes:6}[sl]};}}
+      else{const sl=pick(['top','bottom','shoes']),c=pick(NEWCOLS)[0];if(!lookOpts(sl).includes(c))it={kind:'col',k:sl,c,n:colName(c)+' '+{top:'sweater',bottom:'pants',shoes:'shoes'}[sl],i:{top:'👚',bottom:'👖',shoes:'👟'}[sl],p:NI_COLP[sl]};}}
     else{const pool=niFurnPool(sh);if(!pool.length)return null;const t=pick(pool),F=FURN[t],c=pick(NEWCOLS)[0];if(!F.cols.includes(c))it={kind:'furn',k:t,c,n:colName(c)+' '+F.n.toLowerCase(),i:F.i,p:F.p};}
     if(it&&!(avoid||[]).some(a=>a&&a.k===it.k&&a.c===it.c))return it;}
   return null;}
@@ -4810,9 +4814,9 @@ function newIn(sh){S.newin=S.newin||{};let L=S.newin[sh];if(!Array.isArray(L))L=
   return L;}
 function newInHTML(sh){if(!S||!NEWIN_SHOPS[sh])return'';const L=newIn(sh);if(!L.some(Boolean))return'';
   return`<div class="sec">✨ New in! <small class="nisub">Buy one and something new pops up!</small></div><div class="grid newin">${L.map((it,i)=>{if(!it)return'';const img=it.kind==='furn'?thumb(it.k,it.c):'';
-    return`<button class="it ni${NEWPOP===sh+i?' nipop':''}" data-a="nbuy:${sh}:${i}"><span class="nbadge">NEW</span>${img?`<img class="nimg" src="${img}" alt="">`:`<span class="em">${it.i}</span>`}<span>${esc(it.n)} <i class="dot" style="background:${it.c}"></i></span><span class="pr">${it.p} 🪙</span></button>`;}).join('')}</div>`;}
-ACT.nbuy=(sh,i)=>{if(typeof sh==='string'&&sh.includes(':')){const p=sh.split(':');sh=p[0];i=p[1];}if(shutBuy(sh))return;const L=newIn(sh),it=L[+i];if(!it)return;if(S.coins<it.p){SFX.no();toast('Not enough coins yet! 🪙');return;}
-  S.coins-=it.p;SFX.coin();SFX.yay();
+    return`<button class="it ni${NEWPOP===sh+i?' nipop':''}" data-a="nbuy:${sh}:${i}"><span class="nbadge">NEW</span>${img?`<img class="nimg" src="${img}" alt="">`:`<span class="em">${it.i}</span>`}<span>${esc(it.n)} <i class="dot" style="background:${it.c}"></i></span><span class="pr">${niP(it)} 🪙</span></button>`;}).join('')}</div>`;}
+ACT.nbuy=(sh,i)=>{if(typeof sh==='string'&&sh.includes(':')){const p=sh.split(':');sh=p[0];i=p[1];}if(shutBuy(sh))return;const L=newIn(sh),it=L[+i];if(!it)return;const ip=niP(it);if(S.coins<ip){SFX.no();toast('Not enough coins yet! 🪙');return;}
+  S.coins-=ip;SFX.coin();SFX.yay();
   if(it.kind==='hat'){S.outfits=S.outfits||[];S.outfits.push({k:it.k,c:it.c});toast(it.i+' '+it.n+'! Try it on at the 🪞 mirror.',3.2);qEvent('clothes');}
   else if(it.kind==='col'){S.xcol=S.xcol||{};(S.xcol[it.k]=S.xcol[it.k]||[]).push(it.c);toast(it.i+' '+it.n+'! Try it on at the 🪞 mirror.',3.2);qEvent('clothes');}
   else{S.home.store.push({u:uid(),t:it.k,c:it.c,x:0,z:0,r:0});toast(it.i+' '+it.n+' is waiting in 📦 My stuff at home!',3.2);}
@@ -5102,8 +5106,9 @@ const resList=id=>[WHO[id],...(MORE[id]||[])];
 function oWho(o){return o.v!=null&&VIPS[o.v]?VIPS[o.v]:(resList(o.h)[o.w|0]||WHO[o.h]);}
 const dlStars=()=>clamp(S.dlStars|0,0,5);
 /* 🍕 pizza day: 3 pizzas, then the chef says stop. Insist and he bakes 3 more (6 at most). Pay per pizza grows with your Pizza stars:
-   3 pizzas at 0 ⭐ earn less than a teacher's day (2 classes, 90–150 🪙), at 5 ⭐ a little more than a designer's best day (3 rooms × 200 🪙) */
-const dlMax=()=>dl().more?DLV_DAY*2:DLV_DAY,PZ_PAY=[25,60,100,135,175,210],dlPay=s=>PZ_PAY[clamp(s==null?dlStars():s|0,0,5)];
+   3 pizzas at 0 ⭐ (120 🪙) earn less than a weak day in the other jobs (~150 🪙), at 5 ⭐ (390 🪙 + RARE bonus) a little more than their best day (~390 🪙).
+   The 3 extra pizzas pay half, so a 5 ⭐ "maniac" day of 6 pizzas is about 600 🪙 (it was 1260) */
+const dlMax=()=>dl().more?DLV_DAY*2:DLV_DAY,PZ_PAY=[40,60,75,95,110,130],PZ_RARE=40,dlPay=s=>PZ_PAY[clamp(s==null?dlStars():s|0,0,5)],dlHalf=s=>Math.ceil(dlPay(s)/2);
 const dlOff=()=>{const d=dl();return!!d.end||d.done>=dlMax();};   /* no more orders today */
 const dlAsk=()=>{const d=dl();return d.done>=DLV_DAY&&d.done<DLV_DAY*2&&!d.more&&!d.end;};   /* 3 done: the chef asks "enough?" */
 const starsH=n=>`<span class="stars">${'★'.repeat(n)}<i>${'★'.repeat(5-n)}</i></span>`;
@@ -5215,13 +5220,13 @@ function dlAfter(bad,n=0){if(!S||S.job!=='delivery')return;if(UI.open||CUT||TUT|
   else toast(bad?'😟 Bad review… it will be quiet for a while. Be FAST next time! 💪':d.on&&pizzaOpen()&&!dlOff()?'🍕 Nice delivery! A new order will come soon.':'🍕 Nice delivery!',3.4);}
 
 /* a new order comes in */
-function newOrder(){const d=dl();let H=pick(HOUSES.filter(h=>h.id!==d.last));const pz=pick(PIZZAS);
+function newOrder(){const d=dl();let H=pick(HOUSES.filter(h=>h.id!==d.last));const pz=pick(PIZZAS),ex=d.done>=DLV_DAY,bp=ex?dlHalf():dlPay();   /* ex: one of the 3 extra pizzas (half pay) */
   const rare=(S.dlTotal||0)>=2&&!d.lr&&(d.rares||0)<3&&Math.random()<RARE_P;let o,far=false;
   if(rare){const L=HOUSES.filter(h=>h.id!==d.last).sort((a,b)=>doorLen(b)-doorLen(a));far=Math.random()<.6;H=pick(far?L.slice(0,4):L.slice(-4));}
   const flat=isApt(H.id)?(1+Math.floor(Math.random()*3))*10+1+Math.floor(Math.random()*5):0;
-  if(rare){let v=Math.floor(Math.random()*VIPS.length);if(v===d.lv)v=(v+1)%VIPS.length;d.lv=v;d.rares=(d.rares||0)+1;const lim=rareLim(H,flat);o={h:H.id,pz,lim,pay:dlPay()+50,st:'wait',left:lim,r:1,v};}
-  else{const lim=pick(DLV_TIMES);o={h:H.id,pz,lim,pay:dlPay(),st:'wait',left:lim,w:Math.floor(Math.random()*resList(H.id).length)};}
-  if(flat)o.flat=flat;d.o=o;d.lr=rare;d.last=H.id;if(d.quiet>0)d.quiet--;change();
+  if(rare){let v=Math.floor(Math.random()*VIPS.length);if(v===d.lv)v=(v+1)%VIPS.length;d.lv=v;d.rares=(d.rares||0)+1;const lim=rareLim(H,flat);o={h:H.id,pz,lim,pay:bp+PZ_RARE,st:'wait',left:lim,r:1,v};}
+  else{const lim=pick(DLV_TIMES);o={h:H.id,pz,lim,pay:bp,st:'wait',left:lim,w:Math.floor(Math.random()*resList(H.id).length)};}
+  if(flat)o.flat=flat;if(ex)o.x=1;d.o=o;d.lr=rare;d.last=H.id;if(d.quiet>0)d.quiet--;change();
   SFX.ding();if(rare)setTimeout(()=>SFX.rare(),650);try{if(navigator.vibrate)navigator.vibrate(rare?[120,80,120,80,320]:[120,80,120]);}catch(e){}
   const W=oWho(o);
   const at=`the ${H.n}${o.flat?', flat '+o.flat:''}`,sh=W.she?'She':'He';let t,x;
@@ -5369,9 +5374,9 @@ function cutUpdate(dt){const C=CUT;if(!C)return;if(C.rev){revUpdate(dt);return;}
     if(u>1.5){const fl=C.H.flat;endCut();toast(fl?'😅 Wrong door! Check the flat number in 📱 Messages':'😅 Wrong house! Look for the dot on your map 🗺️',3.4);}}}
 function cutCam(dt){const C=CUT;if(!C||C.shake<=0)return;C.shake-=dt;const a=C.shake*.12;camera.position.x+=rand(-a,a);camera.position.y+=rand(-a,a)*.6;camera.rotation.z=rand(-a,a)*.25;}
 function cutSay(){const C=CUT,o=dl().o,W=C.W;let line,extra='',btn='';
-  if(C.ok){const late=o.left<=0,s0=dlStars(),op=(o.pay|0)||dlPay(s0)+(o.r?50:0);let pay,rv='';C.late=late;
+  if(C.ok){const late=o.left<=0,s0=dlStars(),op=(o.pay|0)||dlPay(s0)+(o.r?PZ_RARE:0);let pay,rv='';C.late=late;
     if(o.r){if(!late){pay=op;S.dlStars=Math.min(5,s0+1);line=pick([`Hmm… I don't really like pizza… *sniff*… but WOW, that was SO fast! I'm giving you five stars! ⭐⭐⭐⭐⭐`,`Pizza? I'm not a pizza person… but you were super quick! I'm impressed. Five stars! ⭐⭐⭐⭐⭐`,`Already here?! Lightning fast! Maybe pizza isn't so bad after all… Five stars! ⭐⭐⭐⭐⭐`]);}
-      else{pay=Math.ceil(dlPay(s0)/2);S.dlStars=Math.max(0,s0-1);line=pick([`Hmph! Too slow! And it's cold. See? This is why I don't like pizza. One star. ⭐ I'm telling EVERYONE!`,`Finally! I waited and waited… One star for you. Hmph! ⭐ I'm writing a bad review!`]);}
+      else{pay=Math.ceil((o.x?dlHalf(s0):dlPay(s0))/2);S.dlStars=Math.max(0,s0-1);line=pick([`Hmph! Too slow! And it's cold. See? This is why I don't like pizza. One star. ⭐ I'm telling EVERYONE!`,`Finally! I waited and waited… One star for you. Hmph! ⭐ I'm writing a bad review!`]);}
       const s1=dlStars();rv=!late?`<p class="earn rv">🌟 Great review! Pizza stars: ${starsH(s1)}<br><small>${s0>=5?'You already have all 5 stars! 👑':s1>=5?"You're a Pizza legend! 👑":'More coins for every pizza now! 🪙'}</small></p>`:`<p class="earn rv bad">😬 BAD review! ${s1<s0?'You lost a pizza star. ':''}Pizza stars: ${starsH(s1)}<br><small>People read reviews… fewer orders will come for a while.</small></p>`;}
     else{pay=late?Math.ceil(op/2):op;
       line=late?`There you are! It's a little cold… but thank you for my ${o.pz} pizza! 🙂`:pick([`Yay, my ${o.pz} pizza! 😋 Thank you so much!`,`Mmm, it smells sooo good! Thank you! 🍕`,`My pizza! You're the best! 💗`]);}
@@ -5379,7 +5384,7 @@ function cutSay(){const C=CUT,o=dl().o,W=C.W;let line,extra='',btn='';
     if(o.r){d.fb=late?'bad':'good';if(late){d.wait=rand(32,42);d.quiet=2;}addMsg('pz','pz',late?`😬 ${W.nm} gave you a BAD review. Fewer people will order for a while…`:`🌟 ${W.nm} gave you a 5-star review! Great job!`,{q:1});}S.dlTotal=(S.dlTotal||0)+1;hardEvent('deliver',1);change();jobHud(true);SFX.coin();
     if(o.r&&late)setTimeout(()=>SFX.no(),250);else{setTimeout(()=>SFX.yay(),250);if(o.r)setTimeout(()=>SFX.rare(),700);}
     popText('+'+pay+' 🪙','coin');
-    extra=`<p class="earn">You got <b>${pay} 🪙</b>${late?(o.r?'!':' (you were late)'):o.r?'! 💰 RARE bonus!':s0?` with your ${s0} ⭐!`:'!'}</p>${rv}`;btn=`<div class="row"><button class="btn mint" data-a="cutbye">👋 Bye!</button></div>`;
+    extra=`<p class="earn">You got <b>${pay} 🪙</b>${late?(o.r?'!':' (you were late)'):o.r?'! 💰 RARE bonus!':o.x?' for an extra pizza!':s0?` with your ${s0} ⭐!`:'!'}</p>${rv}`;btn=`<div class="row"><button class="btn mint" data-a="cutbye">👋 Bye!</button></div>`;
     if(HELD){HELD.visible=true;HELD.traverse(o=>o.renderOrder=26);C.box=HELD;C.s0=HELD.scale.x;scene.attach(HELD);C.b0=HELD.position.clone();C.b1=C.g.localToWorld(new THREE.Vector3(0,1.02,.68));}}
   else{line=pick(["What are you doing here?! I didn't order any pizza! 😠","Huh? What are you doing here? I didn't order a pizza! 😤"]);
     for(const s of[-1,1]){const br=new THREE.Mesh(new THREE.BoxGeometry(.13,.03,.02),mat('#1d1622'));br.position.set(s*.11,.32,.226);br.rotation.z=s*.38;C.p.head.add(br);}
@@ -5394,7 +5399,8 @@ function endCut(){const C=CUT;if(!C)return;if(C.rev){revEnd();return;}CUT=null;i
    A client messages you → follow the dot to their house → decorate ONE room with furniture
    from the 🛋️ Furniture app (free for the job) → tap 🎉 Finished! → the client walks in,
    looks around and gives you stars: right vibe, right amount, and neat (or messy!). */
-const DS_MAX=3,CL_ITEMS=new Map();
+/* 🪙 a room pays 20 (no ⭐) / 50 (⭐) / 90 (⭐⭐) / 130 🪙 (⭐⭐⭐), 3 rooms a day; the room's Decorating level-up gives no extra coins */
+const DS_MAX=3,CL_ITEMS=new Map(),DS_PAY=st=>st>=2.5?130:st>=1.5?90:st>=.5?50:20;
 const DS_PLANTS=['plant','fern','bonsai','cactus','sunflower','lavender','flowers','tulips','rosebush'];
 const DS_TOYS=['teddy','toybox','castle','dollhouse','robot','rockinghorse','racecar','unicorn'];
 const DS_SEATS=['sofa','armchair'],DS_WALLY=['bed','bunkbed','wardrobe','shelf','dresser','mirror','tv','fireplace','fridge','stove','sink','washer','piano','desk','computer','gaming','clock','dollhouse','bath'];
@@ -5533,9 +5539,9 @@ function revShow(){const C=CUT;if(!C||!C.rev)return;const W=C.W;
   let h=`<div class="who" style="--c:${W.look.top}">${esc(W.nm)}</div>${C.lines.slice(0,C.shown).map((x,i)=>`<p class="line rvl${i===C.shown-1&&C.stage<2?' new':''}">${esc(x)}</p>`).join('')}`;
   if(C.stage>=2)h+=`<p class="earn">${starsHalf(C.s.stars)}<br>You got <b>${C.pay} 🪙</b>!</p><div class="row"><button class="btn mint" data-a="revbye">👋 Bye!</button></div>`;
   openPanel(h,{bottom:true,lock:true});}
-function revPay(){const C=CUT,d=ds(),st=C.s.stars,pay=st>=2.5?200:st>=1.5?150:st>=.5?100:30;C.pay=pay;S.coins+=pay;d.done++;d.prevH=C.o.h;d.o=null;d.wait=rand(25,40);
+function revPay(){const C=CUT,d=ds(),st=C.s.stars,pay=DS_PAY(st);C.pay=pay;S.coins+=pay;d.done++;d.prevH=C.o.h;d.o=null;d.wait=rand(25,40);
   S.dsTotal=(S.dsTotal||0)+1;hardEvent('room',1);addMsg('cl','cl',`${st>=2.5?'🌟':st>=1.5?'😊':'🙂'} ${C.W.nm} gave you ${String(st).replace('.5','½')} ⭐ for the ${C.s.T.n.toLowerCase()}. You got ${pay} 🪙!`,{q:1});
-  bumpLevel('decor',1);change();jobHud(true);dcardUpd(true);SFX.coin();if(st>=2.5)setTimeout(()=>SFX.yay(),300);popText('+'+pay+' 🪙','coin');}
+  bumpLevel('decor',1,true);change();jobHud(true);dcardUpd(true);SFX.coin();if(st>=2.5)setTimeout(()=>SFX.yay(),300);popText('+'+pay+' 🪙','coin');}
 ACT.revbye=()=>{const C=CUT;if(!C||!C.rev||C.stage!==2)return;closePanel();C.stage=3;C.t3=C.t;C.p.wave=1.3;$('rvStars').hidden=true;};
 function revEnd(){const C=CUT;if(!C||!C.rev)return;scene.remove(C.p.root);CUT=null;document.body.classList.remove('cut');$('rvStars').hidden=true;if(UI.open)closePanel();
   if(LOC.client)LOC.client.hinge.rotation.y=0;for(const u of[...CL_ITEMS.keys()])removeClItem(u);
@@ -5620,7 +5626,7 @@ function openShow(){if(!S)return;
   openPanel(`<div class="hd"><h2>🏆 Pet Show!</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
     <div class="psj">${PS_JUDGES.map(J=>`<div><span>${J.i}</span><b>${J.n}</b><i>loves ${J.love}</i></div>`).join('')}</div>
     <p class="note">Today's other pets: ${rv.map(R=>`${PET_TYPES[R.type].icon} <b>${esc(R.name)}</b> (${esc(R.owner)})`).join(', ')}. They practiced a lot! Can you beat them?</p>
-    <p class="note">🥇 <b>200 🪙</b> + 🐾 Pets +2 levels · 🥈 60 🪙 · 🥉 25 🪙</p>
+    <p class="note">🥇 <b>200 🪙</b> + 🐾 Pets +2 levels · 🥈 80 🪙 · 🥉 40 🪙</p>
     <div class="pspick">${here.map((p,i)=>{const d=p.d,o=petOutfit(d),sc=psScore(d);return`<button class="pscard" data-a="psgo:${i}"><span class="pi">${PET_TYPES[d.type].icon}</span><b>${esc(d.name)}</b>
       <span class="pso">${PSLOTS.map(([sl])=>o[sl]?ACCS[o[sl]].i:'').join('')||'no outfit yet'}</span><span>👒 ${starRow(sc.style)}</span><span>🌼 ${starRow(sc.happy)}</span><i>⭐ Pick ${esc(d.name)}!</i></button>`;}).join('')}</div>
     <p class="note">Tip: dress your pet in all 4 outfit spots, make it super happy, and hit the gold when you do tricks!</p>`,{onClose:PSX.pc});}
@@ -5757,7 +5763,7 @@ function psRow(x,med){const C=CUT,me=!!x.you,R=x.R,ic=PET_TYPES[me?C.d.type:R.ty
 function psPay(){const C=CUT,d=C.d,me=C.order[3],place=C.place,tot=me.tot;
   const lv0=sk('pets').lv;let pay=0,lvUp=0;
   if(place===1){pay=200;S.coins+=pay;bumpLevel('pets',2);lvUp=sk('pets').lv-lv0;S.showWins=(S.showWins||0)+1;}
-  else{pay=[0,0,60,25][place]||10;S.coins+=pay;addXP('pets',place===2?10:place===3?5:3);SFX.coin();}
+  else{pay=[0,0,80,40][place]||15;S.coins+=pay;addXP('pets',place===2?10:place===3?5:3);SFX.coin();}
   S.show={day:S.day,place,tot,pet:d.name};S.showLast=(['','🥇 ','🥈 ','🥉 '][place]||'4th place · ')+d.name+' — '+tot+' ⭐';qEvent('petshow');if(place===1){qEvent('petshowwin');hardEvent('showwin',1);}
   d.happy=Math.min(100,d.happy+15);change();saveLocal();
   const med=['🥇','🥈','🥉','4️⃣'],rows=C.placed.map((x,i)=>psRow(x,med[i]||'')).join('')+C.order.filter(x=>x.out).map(x=>psRow(x,'😴')).join('');
@@ -5784,14 +5790,14 @@ function psEnd(){const C=CUT;if(!C||!C.show)return;const p=C.p,o=PS.out;CUT=null
   P.x=o[0];P.z=o[1];P.pitch=0;P.cy=0;[P.x,P.z]=collideXZ(P.x,P.z,.3,CUR);change();if(PSX.dirty)psRefresh();
   if(C.place===1)setTimeout(()=>toast('🏆 '+C.d.name+' is the Pet Show champion! See you next Saturday!',4),400);}
 /* 🕹️ Claw machine in the Toy Store: stop the claw over a capsule, drop it, and win a prize! */
-const CLAW_COST=5,CLAW_FURN=['teddy','unicorn','toybox','robot','racecar','rockinghorse','dollhouse','castle','tulips','sunflower','bonsai','cactus'],GOLD_FURN=['gteddy','gunicorn','gtrophy','gstar'];
+const CLAW_COST=10,CLAW_FURN=['teddy','unicorn','toybox','robot','racecar','rockinghorse','dollhouse','castle','tulips','sunflower','bonsai','cactus'],GOLD_FURN=['gteddy','gunicorn','gtrophy','gstar'];
 const clawK=()=>LOC.toys&&LOC.toys.cl;
 const tri=v=>{const f=((v%2)+2)%2;return f<1?f:2-f;};
 function clawOpen(){const K=clawK();if(!K||CUT||!S)return;SFX.talk();
   openPanel(`<div class="hd"><h2>🕹️ Claw machine</h2><div class="chip">🪙 <b id="pc">${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
     ${shutNote('toys')}<p class="line">Catch a capsule and win a prize! 🎁 Every try is <b>${CLAW_COST} 🪙</b>.</p>
     <p class="note">First stop the claw left-right, then front-back, right above a capsule! Capsules have furniture, coins or a level-up inside. A <b>✨ gold capsule</b> has a golden treasure you can't buy anywhere, plus a level-up!</p>
-    <div class="row"><button class="btn butter" data-a="clawgo" ${S.coins<CLAW_COST?'disabled':''}>🕹️ Play! (${CLAW_COST} 🪙)</button></div>${S.coins<CLAW_COST?'<p class="note">Not enough coins yet. Pick up litter or check your mail! 🪙</p>':''}`);}
+    <div class="row"><button class="btn butter" data-a="clawgo" ${S.coins<CLAW_COST?'disabled':''}>🕹️ Play! (${CLAW_COST} 🪙)</button></div>${S.coins<CLAW_COST?'<p class="note">Not enough coins yet. '+earnTip()+'</p>':''}`);}
 function clawNew(K){K.x=K.rx;K.z=K.rz;K.y=K.ry;K.open=.1;clawPose(K);
   CUT={claw:1,t:0,st:0,shake:0,stage:'x',K,t0:performance.now(),hold:null,res:null};clawPanel();}
 ACT.clawgo=()=>{const K=clawK();if(!K||CUT||shutBuy('toys'))return;if(S.coins<CLAW_COST){SFX.no();toast('Not enough coins! 🪙');return;}
@@ -5830,11 +5836,11 @@ function clawCut(dt){const C=CUT,K=C.K,L=LOC.toys,t=(C.t+=dt),u=t-C.st,sm=k=>k*k
   clawPose(K);}
 function clawSkill(){const ks=Object.keys(SKILLS).filter(k=>sk(k).lv<MAXLV);return ks.length?pick(ks):null;}
 function clawPrize(cap){const out={};
-  if(cap.gold){const id=pick(GOLD_FURN);S.home.store.push({u:uid(),t:id,c:null,x:0,z:0,r:0});out.gold=1;out.furn=id;const k=clawSkill();if(k){bumpLevel(k,1);out.sk=k;}else{S.coins+=50;out.coins=50;}}
+  if(cap.gold){const id=pick(GOLD_FURN);S.home.store.push({u:uid(),t:id,c:null,x:0,z:0,r:0});out.gold=1;out.furn=id;const k=clawSkill();if(k){bumpLevel(k,1);out.sk=k;}else{S.coins+=100;out.coins=100;}}
   else{const r=Math.random();
     if(r<.58){const id=pick(CLAW_FURN),F=FURN[id],c=F.cols?pick(F.cols):null;S.home.store.push({u:uid(),t:id,c,x:0,z:0,r:0});out.furn=id;out.c=c;}
-    else if(r<.88){const n=pick([10,12,15,15,20,25]);S.coins+=n;out.coins=n;}
-    else{const k=clawSkill();if(k){bumpLevel(k,1);out.sk=k;}else{S.coins+=20;out.coins=20;}}}
+    else if(r<.88){const n=pick([20,25,30,30,40,50]);S.coins+=n;out.coins=n;}
+    else{const k=clawSkill();if(k){bumpLevel(k,1);out.sk=k;}else{S.coins+=40;out.coins=40;}}}
   S.clawWins=(S.clawWins||0)+1;qEvent('claw');hardEvent('claw',1);change();saveLocal();return out;}
 function clawPop(){const C=CUT,K=C.K,c=C.won,g=new THREE.Group(),r=.13;
   const top=new THREE.Mesh(new THREE.SphereGeometry(r,14,7,0,TAU,0,Math.PI/2),mat(c.col)),bot=new THREE.Mesh(new THREE.SphereGeometry(r,14,7,0,TAU,Math.PI/2,Math.PI/2),mat(c.gold?'#fff1b8':'#ffffff'));
@@ -5860,7 +5866,8 @@ function clawEnd(){const C=CUT;if(!C||!C.claw)return;const K=C.K,L=LOC.toys;claw
 /* 📚 Teacher job: Mrs. Maple, the school director, texts you which class to teach. Find the room in the school
    hallway, sit at your desk and stop kids who goof off (their names float over their heads — write them on your
    notepad!). Then the kids hand in their homework and you mark every answer ✔ or ✗. The game works out the grades. */
-const TC_MAX=2,TC_NAMES=['Alexa','Ben','Chloe','Daniel','Emma','Felix','Grace','Henry','Isla','Jack','Lucy','Mason','Nora','Oscar','Pia','Ryan','Sofia','Tom','Zara','Leo'];
+/* 🪙 job pay is even: a weak day ~150, a good day ~270, the best day ~390 🪙 in every job. A class pays 75 / 135 / 195 by ⭐ (2 a day) */
+const TC_MAX=2,TC_PAY=s=>15+60*s,TC_NAMES=['Alexa','Ben','Chloe','Daniel','Emma','Felix','Grace','Henry','Isla','Jack','Lucy','Mason','Nora','Oscar','Pia','Ryan','Sofia','Tom','Zara','Leo'];
 const GOOFS=[['talk','🗣️'],['plane','✈️'],['phone','📱'],['sleep','💤'],['dance','💃'],['silly','😜']];
 Object.assign(PLACE_OF,{cl_math:'📐 In Math class',cl_english:'📖 In English class',cl_history:'🏛️ In History class'});
 function tc(){const d=S.tc||(S.tc={});if(d.day!==S.day){d.day=S.day;d.done=0;}if(!isFinite(d.wait))d.wait=5;return d;}
@@ -6002,7 +6009,7 @@ ACT.tstopn=()=>{if(!tcOn())return;CUT.ask=false;SFX.tap();tcPaper();};
 ACT.tstopy=()=>{if(!tcOn())return;const C=CUT;C.ask=false;for(const k of C.kids){k.hw.forEach((q,i)=>{if(!k.mk[i])k.mk[i]=q.ans===q.a?'ok':'x';});k.grade=tcGrade(k);}
   for(const pp of C.pile)C.L.g.remove(pp);C.pile=[];C.stage='done';C.st=C.t;SFX.pop();tcSummary();};
 
-function tcSummary(){const C=CUT,S0=SUBJ[C.id],eps=C.caught+C.missed,ratio=eps?C.caught/eps:1,stars=clamp(1+(ratio>=.45?1:0)+(ratio>=.8&&C.oops<=2?1:0),1,3),pay=30+stars*15;
+function tcSummary(){const C=CUT,S0=SUBJ[C.id],eps=C.caught+C.missed,ratio=eps?C.caught/eps:1,stars=clamp(1+(ratio>=.45?1:0)+(ratio>=.8&&C.oops<=2?1:0),1,3),pay=TC_PAY(stars);
   S.coins+=pay;S.tcTotal=(S.tcTotal||0)+1;const d=tc();d.done++;d.o=null;d.wait=rand(25,40);hardEvent('teach',1);qEvent('teach');addXP('read',4);change();saveLocal();
   addMsg('dr','dr',`${stars>=3?'🌟':stars===2?'😊':'🙂'} Thank you for teaching the ${S0.n} class! You got ${'⭐'.repeat(stars)} and ${pay} 🪙. ${stars>=3?'The kids loved it! 🎉':stars===2?'Nice job!':'Next time, stop more kids from goofing off! 💪'}`,{q:1});
   const rows=C.kids.map(k=>`<div class="psrow on"><span class="pji">${k.warn>=3?'📕':k.warn?'⚠️':'😇'}</span><div><b>${esc(k.nm)}</b><i>${k.warn?'goofed off '+k.warn+'×':'listened nicely'}</i></div><span class="pjs tg">${k.grade}</span></div>`).join('');
@@ -6120,14 +6127,14 @@ function jobTick(dt){
 function jobPhone(){let h;
   if(!S.job)return`<p class="ph-sub">You don't have a job yet! Message <b>Rosie</b> or find her in town to pick one. 💬</p><div class="row"><button class="btn mint" data-a="phchat:ro">💬 Message Rosie</button><button class="btn white" data-a="findrosie">📍 Find Rosie</button></div>`;
   const J=JOBS[S.job];h=`<div class="qcard"><div class="qtop"><span class="qi">${J.i}</span><div><div class="qt">${J.n}</div><div class="qd">${J.d}</div></div></div></div>`;
-  if(S.job==='delivery'){const d=dl(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${dlMax()}</b> pizzas delivered<br>🕛 ${PZ_TIME} 🍕</p><div class="qcard"><div class="qtop"><span class="qi">🌟</span><div><div class="qt">Pizza stars: ${starsH(dlStars())}</div><div class="qd"><b>${STAR_T[dlStars()]}</b> · <b>${dlPay()} 🪙</b> for every pizza! Be fast for ⭐ RARE customers to win stars. More stars = more coins!</div></div></div></div>`;
+  if(S.job==='delivery'){const d=dl(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${dlMax()}</b> pizzas delivered<br>🕛 ${PZ_TIME} 🍕</p><div class="qcard"><div class="qtop"><span class="qi">🌟</span><div><div class="qt">Pizza stars: ${starsH(dlStars())}</div><div class="qd"><b>${STAR_T[dlStars()]}</b> · <b>${dlPay()} 🪙</b> for every pizza! Extra pizzas: <b>${dlHalf()} 🪙</b>. Be fast for ⭐ RARE customers to win stars. More stars = more coins!</div></div></div></div>`;
     if(o){const H=HOUSE(o.h);h+=`<div class="qcard"><div class="qtop"><span class="qi">🍕</span><div><div class="qt">${o.r?'⭐ RARE · ':''}${esc(oWho(o).nm)}: ${o.pz} pizza</div><div class="qd">${o.st==='wait'?'Pick it up at the Pizzeria first!':`Take it to the <b>${esc(H.n)}</b>${o.flat?', flat <b>'+o.flat+'</b>':''}. ${o.left>0?'⏱️ '+mmss(o.left):'⏰ Late!'}`}</div></div></div></div>`;}
     h+=`<div class="row"><button class="btn butter" data-a="nav:pizza">📍 Show me the Pizzeria</button><button class="btn sky" data-a="dotpick">🎨 Dot color</button></div>`;}
-  if(S.job==='designer'){const d=ds(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${DS_MAX}</b> rooms decorated</p>`;
+  if(S.job==='designer'){const d=ds(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${DS_MAX}</b> rooms decorated<br>💰 <b>${DS_PAY(0)}–${DS_PAY(3)} 🪙</b> a room: more ⭐ = more coins!</p>`;
     if(o){const T=dsTheme(o),H=HOUSE(o.h),W=dsWho(o);h+=`<div class="qcard"><div class="qtop"><span class="qi">${T.e}</span><div><div class="qt">${esc(W.nm)}: ${esc(T.n)}</div><div class="qd">At the <b>${esc(H.n)}</b>${o.flat?', flat <b>'+o.flat+'</b>':''}. Follow the dot on your map!</div></div></div></div>`;}
     else h+=`<p class="ph-sub">${d.done>=DS_MAX?'🌟 All done for today! More clients tomorrow.':!isDaytime()?workAt()+' Clients message you from 8:00 to 20:00.':'🎨 A client will message you soon!'}</p>`;
     h+=`<div class="row"><button class="btn sky" data-a="dotpick">🎨 Dot color</button><button class="btn white" data-a="dtutgo">📖 Tips</button></div>`;}
-  if(S.job==='teacher'){const d=tc(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${TC_MAX}</b> classes taught</p>`;
+  if(S.job==='teacher'){const d=tc(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${TC_MAX}</b> classes taught<br>💰 <b>${TC_PAY(1)}–${TC_PAY(3)} 🪙</b> a class: more ⭐ = more coins!</p>`;
     if(o){const S0=SUBJ[o.subj];h+=`<div class="qcard"><div class="qtop"><span class="qi">${S0.i}</span><div><div class="qt">Teach the ${S0.n} class</div><div class="qd">Go to <b>Cozy Town School</b>. In the hallway, it's ${tcDoor(S0)}.</div></div></div></div>`;}
     else h+=`<p class="ph-sub">${d.done>=TC_MAX?'🌟 All classes done today! More tomorrow.':!isDaytime()?workAt()+' Classes are from 8:00 to 20:00.':'📱 Mrs. Maple will message you when a class needs you.'}</p>`;
     h+=`<div class="row"><button class="btn butter" data-a="nav:school">📍 Show me the school</button><button class="btn sky" data-a="phchat:dr">💬 Messages</button></div>`;}
