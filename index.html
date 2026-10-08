@@ -2957,6 +2957,7 @@ function freshState(){return{v:1,t:0,name:'',day:1,time:8,coins:120,hunger:85,ba
 
 /* ---- saving: this device + your claude.ai account ---- */
 const LS='cozytown-save-1';
+let SAVEOFF=false;   /* 📦 true = this page writes no more saves: a moved-in game (or a new start) is on its way, the reload must not write the old game back */
 function readLocal(){try{return JSON.parse(localStorage.getItem(LS));}catch(e){return null;}}
 function snap(){let loc=CUR?CUR.id:'city',x=P.x,z=P.z,yaw=P.yaw;
   if(P.sit&&P.sit.bk)[x,z,yaw]=P.sit.bk;   /* in bed: save the spot beside the bed, not the pillow */
@@ -2968,7 +2969,7 @@ function snap(){let loc=CUR?CUR.id:'city',x=P.x,z=P.z,yaw=P.yaw;
   S.loc=loc;S.px=x;S.pz=z;S.yaw=yaw;S.t=Date.now();}
 function safeSpot(loc){const L=LOC[loc];if(!L||loc==='studio')return null;const b=L.bounds;if(!isFinite(P.x)||!isFinite(P.z)||P.x<b.x1||P.x>b.x2||P.z<b.z1||P.z>b.z2){
   if((L.type==='in'||loc==='beach')&&DOORS[loc]){const d=DOORS[loc].inside;P.x=L.ox+d[0];P.z=L.oz+d[1];P.yaw=d[2];}else{P.x=-17;P.z=-4.6;P.yaw=0;}}return loc;}
-function saveLocal(){if(!S||!PLAYING)return;snap();try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}}
+function saveLocal(){if(!S||!PLAYING||SAVEOFF)return;snap();try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}}
 const CSAVE={ref:null,pending:true,remote:null,dirty:false,writing:false,tm:0};
 async function cloudInit(){
   try{
@@ -5255,8 +5256,9 @@ function openSettings(){const fromTitle=!PLAYING;
     <div class="opt"><span>✏️ Notepad</span><button class="btn ${PAD.del?'butter':'white'}" data-a="padrest"${PAD.del?'':' disabled'}>↩️ Last page</button></div>
     ${PLAYING&&S&&S.pets.length?`<div class="opt"><span>🐾 Pets</span><button class="btn mint" data-a="fetchpets">🐾 Bring my pets to me</button></div>`:''}
     ${PLAYING?'<div class="opt"><span>Stuck somewhere?</span><button class="btn mint" data-a="gohome">🏠 Take me home</button></div>':''}
+    ${MV.on?'<div class="opt"><span>📱 Other device</span><button class="btn sky" data-a="mvopen">📦 Move my game</button></div>':''}
     <p class="note">${TOUCHY?'Walk: drag on the left side. Look: drag on the right side. Jump: ⬆️. Run: 🏃. Tap things to use them.':'Walk: WASD. Look: drag with the mouse. Jump: Space. Run: hold Shift. Use things: E or click. Bag: B.'}<br>✏️ Notepad: draw on it! Tap it 2× for a new page, 3× to go back, 4× to delete.</p>
-    <div class="row"><button class="btn coral" data-a="wipe">${WIPE?'Tap again to start over':'🗑️ Start a new game'}</button></div>`,{onClose:()=>{WIPE=false;}});}
+    <div class="row"><button class="btn coral" data-a="wipe">${WIPE?'Tap again to start over':'🗑️ Start a new game'}</button></div>`,{cls:'setcard',onClose:()=>{WIPE=false;}});}
 ACT.fetchpets=()=>{if(!S||!S.pets.length){toast('You don\'t have any pets yet! Adopt one at the Pet Shop. 🐾',3);return;}
   let n=0;for(const p of PET_ACTORS)p.loc=null;for(const p of PET_ACTORS){const d=p.d;d.stay=false;nearMe(p,++n,1);
     d.loc=p.loc;p.tx=p.x;p.tz=p.z;[d.x,d.z]=toSave(p.loc,p.x,p.z);p.g.visible=true;p.g.position.set(p.x,p.g.position.y,p.z);}
@@ -5273,7 +5275,142 @@ ACT.padrest=()=>{if(!PAD.del){toast('No deleted page to bring back',2);return;}S
   const c=$('padPrev');padPaint(c.getContext('2d'),c.width,c.height,PAD.del,2,false);};
 ACT.padyes=()=>{if(!PAD.del)return;const L=PAD.pages.length-1;if(!PAD.pages[L].length)PAD.pages[L]=PAD.del;else PAD.pages.push(PAD.del);PAD.del=null;PAD.i=PAD.pages.length-1;padSave();padFlip();closePanel();SFX.yay();toast('📄 Your page is back!',2.4);};
 ACT.padno=()=>openSettings();
-ACT.wipe=()=>{if(!WIPE){WIPE=true;openSettings();return;}WIPE=false;try{localStorage.removeItem(LS);}catch(e){}CSAVE.remote=null;if(CSAVE.ref){CSAVE.ref.delete().catch(()=>{});}location.reload();};
+ACT.wipe=()=>{if(!WIPE){WIPE=true;openSettings();return;}WIPE=false;SAVEOFF=true;clearTimeout(CSAVE.tm);CSAVE.dirty=false;try{localStorage.removeItem(LS);}catch(e){}CSAVE.remote=null;if(CSAVE.ref){CSAVE.ref.delete().catch(()=>{});CSAVE.ref=null;}location.reload();};   /* (SAVEOFF: leaving the page used to save the old game right back) */
+/* 📦 Move my game (GitHub version only). Device 1 sends its save under a 6-letter code that works for 10 minutes
+   (worlds/cozy-town/move/<CODE>); device 2 types the code and gets the very same save: it replaces the game there and the page
+   starts again, the same way as opening the game. The code is taken down when it is used, runs out, or its card closes.
+   The database says no (or inside Claude, whose saves already follow your claude.ai account) = no button in Settings. */
+const MV={on:false,dead:false,ref:null,off:0,code:'',exp:0,iv:0,lis:null,tries:[],got:null,mk:false,go:false,
+  PATH:'worlds/cozy-town/move',K:'cozytown-move',OLD:'cozytown-save-old',AB:'BCDFGHJKLMNPRSTVWXZ',MAX:60000,LIFE:600000,   /* code letters: no vowels (no words by accident), no I, O or Q */
+  TC:['#ffd45c','#5fd4b0','#7cc8ff','#b79cff','#ff9ec4','#ff8a6b'],TR:[-3,2,-2,3,-2,2]};   /* the letter tiles: the logo's colours and tilt */
+{const st=document.createElement('style');st.textContent='.mvbig{display:flex;flex-direction:column;gap:12px;margin-top:16px}.mvb{width:100%;font-size:22px;min-height:62px;line-height:1.15}'
+  +'.mvt{display:flex;justify-content:center;gap:8px;margin:16px 0 6px}.mvt b{flex:0 1 58px;min-width:0;height:70px;display:flex;align-items:center;justify-content:center;color:#3d2c5e;border:3px solid #3d2c5e;border-radius:14px;box-shadow:0 4px 0 #3d2c5e;font-size:44px;font-weight:800;line-height:1}'
+  +'.mvclock{font-size:22px;font-weight:800;text-align:center;margin:10px 0 0}.mverr{font-size:19px;font-weight:800;text-align:center;margin:10px 0 0}'
+  +'.inp.mvin{display:block;max-width:330px;margin:12px auto 0;font-size:38px;font-weight:800;text-align:center;letter-spacing:.28em;text-indent:.28em;text-transform:uppercase;padding:4px 10px}'
+  +'.inp.mvin::placeholder{letter-spacing:0;text-indent:0;font-size:22px;color:#76699a;text-transform:none}'
+  +'.mvgame{border:3px solid var(--line);border-radius:18px;padding:10px 14px;margin-top:4px;background:var(--paper2);color:var(--ink);text-align:center}.mvgame b{display:block;font-size:26px;overflow-wrap:anywhere}.mvgame span{display:block;font-size:20px;font-weight:700}'
+  +'#title.mvd .tag{display:none}.mvub{white-space:nowrap}.mvbk{font-size:18px;margin-top:16px}'
+  +'@media (max-width:420px),(max-height:500px){.mvt b{height:58px;font-size:36px}.mvb{font-size:19px;min-height:54px}.inp.mvin{font-size:32px}}'
+  +'@media (max-height:500px) and (min-width:600px){.mvbig{flex-direction:row}.mvbig .mvb{flex:1 1 0;min-width:0;width:auto}.mvbk{margin-top:10px}}';   /* a phone held sideways: the two big buttons side by side */
+  document.head.appendChild(st);}
+const mvNow=()=>Date.now()+MV.off;   /* the database's clock (this device's own clock can be off) */
+const mvHd=t=>`<div class="hd"><h2>${t}</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>`;
+const mvLeft=ms=>{const s=Math.max(0,Math.ceil(ms/1000));return'⏰ '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0')+' left';};
+const mvOn=k=>UI.open&&$('card').classList.contains(k);
+const mvCard=(h,o)=>{openPanel(h,o);$('card').scrollTop=0;};   /* each move card opens at its top */
+const mvWait=(p,ms)=>Promise.race([p,new Promise(ok=>setTimeout(()=>ok('slow'),ms))]);   /* 'slow' = no answer in time */
+function mvCode(){const a=new Uint8Array(16),n=MV.AB.length;let c='';
+  while(c.length<6){crypto.getRandomValues(a);for(const b of a){if(c.length>=6||b>=256-256%n)continue;const x=MV.AB[b%n];if(x!==c[c.length-1])c+=x;}}return c;}   /* never the same letter twice in a row */
+function mvGame(s){if(typeof s!=='string'||s.length<2||s.length>MV.MAX)return null;let o=null;try{o=JSON.parse(s);}catch(e){return null;}   /* a real Cozy Town save, or null */
+  const ob=v=>v==null||typeof v==='object'&&!Array.isArray(v);
+  return o&&typeof o==='object'&&!Array.isArray(o)&&typeof o.name==='string'&&o.name.trim()&&Number.isFinite(o.coins)&&ob(o.home)&&ob(o.bag)&&ob(o.look)&&(o.pets==null||Array.isArray(o.pets))?o:null;}
+function mvHere(){const h=PLAYING&&S?S:readLocal();return h&&typeof h.name==='string'&&h.name.trim()?h:null;}   /* the game on this device now */
+function mvClean(v,d){if(typeof v==='string')return v.replace(/[<>"`\\]/g,'').replace(/url\s*\(/gi,'');if(!v||typeof v!=='object')return v;if(d>20)return null;   /* a game from another device: nothing in it can sneak into the page as code */
+  if(Array.isArray(v))return v.map(x=>mvClean(x,d+1));const o={};for(const k of Object.keys(v)){const c=mvClean(k,0);if(c!=='__proto__')o[c]=mvClean(v[k],d+1);}return o;}
+function mvBefore(){let s=null;try{s=localStorage.getItem(MV.OLD);}catch(e){}const o=mvGame(s);return o?{s,o}:null;}   /* ↩️ the game that was here before the last move */
+const mvNm=x=>esc(String(x.name).trim().slice(0,16));
+function mvFail(){const was=MV.on;MV.dead=true;MV.on=false;MV.mk=false;mvStop();
+  if(UI.open&&/\bmv(card|sc|gc|ok)\b/.test($('card').className)){closePanel();if(was)toast('📦 Moving games is resting right now. Try again later!',3.6);}
+  else if(mvOn('setcard'))openSettings();}
+async function mvInit(){if(MV.ref||MV.dead||!(window.WEBNET&&WEBNET.on)||typeof window.WEBROOM!=='function')return;   /* inside Claude there is no shared database: no button */
+  try{await WEBROOM();const db=window.firebase.database();MV.ref=db.ref(MV.PATH);db.ref('.info/serverTimeOffset').on('value',s=>{MV.off=+(s&&s.val())||0;});
+    const r=MV.ref.child(mvCode());let rd=false,wr=false;const go=()=>{if(rd&&wr&&!MV.dead&&!MV.on){MV.on=true;mvOld();if(mvOn('setcard'))openSettings();}};
+    const f=()=>{r.off('value',f);rd=true;go();};r.on('value',f,()=>mvFail());
+    r.set(null).then(()=>{wr=true;go();},()=>mvFail());   /* writes nothing; just asks "may I read and write here?" */
+  }catch(e){mvFail();}}
+function mvOld(){let o=null;try{o=JSON.parse(localStorage.getItem(MV.K));localStorage.removeItem(MV.K);}catch(e){}   /* a code this device showed last time (the game closed meanwhile): take it down */
+  if(o&&typeof o.c==='string'&&/^[A-Z]{6}$/.test(o.c)&&o.c!==MV.code)try{MV.ref.child(o.c).remove().catch(()=>{});}catch(e){}}
+function mvRead(c){return new Promise((ok,no)=>{const r=MV.ref.child(c);let done=0,t=0;   /* what is under a code, read once: null = nothing; 'slow' = no answer */
+  const fin=(v,e)=>{if(done)return;done=1;clearTimeout(t);try{r.off('value',f);}catch(x){}if(e)no(e);else ok(v);},f=s=>fin(s?s.val():null);
+  t=setTimeout(()=>fin('slow'),9000);r.on('value',f,e=>fin(null,e||'no'));});}
+function mvStop(){const c=MV.code;clearInterval(MV.iv);MV.iv=0;if(!c)return;MV.code='';   /* take this device's code down */
+  try{const r=MV.ref.child(c);if(MV.lis)r.off('value',MV.lis);r.remove().catch(()=>{});}catch(e){}MV.lis=null;try{localStorage.removeItem(MV.K);}catch(e){}}
+addEventListener('pagehide',()=>{const c=MV.code;if(!c)return;mvStop();try{localStorage.setItem(MV.K,JSON.stringify({c}));}catch(e){}});   /* closed with a code up: taken down (and again next time, in case it didn't reach the server) */
+function mvTry(){const t=performance.now();MV.tries=MV.tries.filter(x=>t-x<60000);if(MV.tries.length>=6)return false;MV.tries.push(t);return true;}   /* at most 6 tries a minute */
+function mvTick(){if(!MV.code){clearInterval(MV.iv);MV.iv=0;return;}
+  if(!mvOn('mvsc')){mvStop();return;}   /* its card went away: so does the code */
+  if(PLAYING)AW.t=0;   /* the code stays on screen: no "Still there?" meanwhile */
+  const left=MV.exp-mvNow();if(left<=0){mvStop();mvSendCard('time');return;}
+  const el=$('mvClock');if(el)el.textContent=mvLeft(left);}
+function mvSendCard(k){const c=MV.code;let b;
+  if(k==='make')b='<p class="line">📦 Making your code…</p>';
+  else if(k==='code')b=`<p class="line">On your other device, type this code:</p><div class="mvt" role="img" aria-label="Code: ${[...c].join(' ')}">${[...c].map((x,i)=>`<b style="background:${MV.TC[i]};transform:rotate(${MV.TR[i]}deg)">${x}</b>`).join('')}</div>
+    <p class="mvclock" id="mvClock">${mvLeft(MV.exp-mvNow())}</p><p class="note">There: ⚙️ Settings → 📦 Move my game → 📥 Get my game. Keep this card open until your game has moved.</p>
+    <div class="row"><button class="btn white" data-a="mvstop">✋ Stop sending</button></div>`;
+  else if(k==='time')b='<p class="line">⏰ The code ran out of time.</p><div class="row"><button class="btn butter" data-a="mvsend">🔄 Make a new code</button><button class="btn white" data-a="mvopen">⬅️ Back</button></div>';
+  else b='<p class="line">Your other device has your game now. Have fun! 💗</p><p class="note">Coins you earn on one device stay on that device. You can move your game again any time. 📦</p><div class="row"><button class="btn mint" data-a="close">👍 OK</button></div>';
+  mvCard(mvHd(k==='moved'?'🎉 Your game moved!':'📤 Send my game')+b,{cls:k==='moved'?'mvdone':'mvsc',onClose:k==='code'||k==='make'?mvStop:null});}
+ACT.mvopen=()=>{WIPE=false;mvStop();MV.got=null;if(!MV.on){closePanel();toast('📦 Moving games is resting right now. Try again later!',3.4);return;}const bk=mvBefore();
+  mvCard(mvHd('📦 Move my game')+`<p class="line">Take your game to another iPad or phone! 📱</p>
+    <div class="mvbig"><button class="btn butter mvb" data-a="mvsend">📤 Send my game from this device</button><button class="btn sky mvb" data-a="mvget">📥 Get my game on this device</button></div>
+    <p class="note">Open Cozy Town on both devices. Tap 📤 on the one that has your game, then 📥 on the other one.</p>
+    ${bk?`<p class="line mvbk">↩️ Before the last move, this device had <b>${mvNm(bk.o)}</b> (🪙 ${Math.round(bk.o.coins)}).</p>`:''}
+    <div class="row">${bk?'<button class="btn white mvub" data-a="mvundo">↩️ Bring it back</button>':''}<button class="btn white" data-a="mvback">⬅️ Back</button></div>`,{cls:'mvcard'});};
+ACT.mvundo=()=>{const b=mvBefore();if(!b){ACT.mvopen();return;}MV.got={c:'',s:b.s,o:b.o,back:1};mvAsk();};
+ACT.mvback=()=>openSettings();
+ACT.mvstop=()=>{mvStop();ACT.mvopen();};
+ACT.mvsend=async()=>{if(!MV.on)return;if(MV.mk){mvSendCard('make');return;}   /* still making one (slow internet): it shows when ready */
+  try{if(PLAYING&&DECO.on)decoEnd();}catch(e){}   /* furniture in your hands goes back to storage first */
+  let s=null;if(PLAYING&&S){saveLocal();s=JSON.stringify(S);}else try{s=localStorage.getItem(LS);}catch(e){}   /* the game right now (on the title: the saved one) */
+  if(!mvGame(s)){SFX.no();toast(s&&s.length>MV.MAX?'📦 Oh no, this game is too big to move right now.':'🌱 There is no game on this device yet! Play first, then you can send it.',3.6);return;}
+  if(!mvTry()){SFX.no();toast("⏳ Let's take a little break. Try again in a minute!",3.4);return;}
+  mvStop();MV.mk=true;mvSendCard('make');let c=null,err=null;
+  try{for(let i=0;i<4&&!c&&!err;i++){const k=mvCode(),v=await mvRead(k);if(v==='slow')err='slow';else if(!v||!(+v.exp>mvNow()))c=k;}}catch(e){err=e||'no';}   /* a code nobody is using */
+  const exp=Math.round(mvNow()+MV.LIFE);
+  if(c&&!err){const w=MV.ref.child(c).set({s,at:window.firebase.database.ServerValue.TIMESTAMP,exp,v:1});w.catch(()=>{});
+    try{if(await mvWait(w,12000)==='slow')err='slow';}catch(e){err=e||'no';}}
+  MV.mk=false;
+  if(err&&err!=='slow'){mvFail();return;}   /* the database said no */
+  if(err||!c){if(c)try{MV.ref.child(c).remove().catch(()=>{});}catch(e){}if(mvOn('mvsc')){SFX.no();ACT.mvopen();toast('📡 The internet is slow right now. Try again in a moment!',3.4);}return;}
+  if(!mvOn('mvsc')){try{MV.ref.child(c).remove().catch(()=>{});}catch(e){}return;}   /* the card was closed meanwhile */
+  MV.code=c;MV.exp=exp;try{localStorage.setItem(MV.K,JSON.stringify({c}));}catch(e){}
+  const r=MV.ref.child(c),lis=x=>{if(MV.code!==c||!x||x.val()!=null)return;   /* gone = the other device took it (and took it down) */
+    const late=MV.exp-mvNow()<5000;MV.code='';clearInterval(MV.iv);MV.iv=0;try{r.off('value',lis);}catch(e){}MV.lis=null;try{localStorage.removeItem(MV.K);}catch(e){}
+    if(late){if(mvOn('mvsc'))mvSendCard('time');return;}   /* at the very end it was tidied away as too old, not taken */
+    SFX.yay();if(mvOn('mvsc'))mvSendCard('moved');else toast('🎉 Your game moved to your other device!',3.6);};
+  MV.lis=lis;r.on('value',lis);SFX.pop();mvSendCard('code');clearInterval(MV.iv);MV.iv=setInterval(mvTick,1000);};
+ACT.mvget=()=>{if(!MV.on)return;MV.got=null;
+  mvCard(mvHd('📥 Get my game')+`<p class="line">Type the code from your other device:</p>
+    <input class="inp mvin" id="mvIn" placeholder="6 letters" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="The 6-letter code">
+    <p class="mverr" id="mvErr" role="status" hidden></p>
+    <div class="row" style="justify-content:center"><button class="btn mint" data-a="mvgo" id="mvGo">📥 Get it!</button><button class="btn white" data-a="mvopen">⬅️ Back</button></div>
+    <p class="note">No code yet? On the device that has your game: ⚙️ Settings → 📦 Move my game → 📤 Send.</p>`,{cls:'mvgc'});
+  const i=$('mvIn');i.addEventListener('input',()=>{const v=i.value.toUpperCase().replace(/[^A-Z]/g,'').slice(0,6);if(v!==i.value)i.value=v;$('mvErr').hidden=true;});
+  i.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();ACT.mvgo();}else if(e.key==='Escape'){i.blur();closePanel();}});i.focus({preventScroll:true});};
+ACT.mvgo=async()=>{const i=$('mvIn'),er=$('mvErr'),b=$('mvGo');if(!i||!MV.on||b.disabled)return;
+  const no=m=>{SFX.no();er.textContent=m;er.hidden=false;},c=i.value.toUpperCase().replace(/[^A-Z]/g,'');
+  if(c.length!==6)return no('Type all 6 letters 🔤');
+  if(c===MV.code)return no('That is the code of this device! Type it on your other one. 😊');
+  if([...c].some(x=>!MV.AB.includes(x)))return no("Hmm, that code doesn't work. Check the letters! 🔍");
+  if(!mvTry())return no("⏳ Let's take a little break. Try again in a minute!");
+  b.disabled=true;b.textContent='⏳ Looking…';let v=null,err=null;
+  try{v=await mvRead(c);}catch(e){err=e||'no';}
+  if(!mvOn('mvgc')||$('mvGo')!==b)return;   /* the card was closed meanwhile */
+  b.disabled=false;b.textContent='📥 Get it!';
+  if(err){mvFail();return;}
+  if(v==='slow')return no('📡 The internet is slow right now. Try again in a moment!');
+  if(!v)return no("Hmm, that code doesn't work. Check the letters and try again! 🔍");
+  if(!(+v.exp>mvNow())){try{MV.ref.child(c).remove().catch(()=>{});}catch(e){}return no('⏰ That code ran out of time. Make a new one on your other device!');}
+  const o=mvGame(v.s),s=o&&JSON.stringify(mvClean(o,0)),oc=mvGame(s);if(!oc)return no("Hmm, that game didn't come through. Make a new code and try again!");
+  MV.got={c,s,o:oc};SFX.pop();mvAsk();};
+function mvAsk(){const g=MV.got;if(!g)return;const o=g.o,h=mvHere(),nm=mvNm,pets=Array.isArray(o.pets)?o.pets.length:0;   /* "are you sure?" */
+  mvCard(mvHd(g.back?'↩️ Bring it back':'📥 Get my game')+`<div class="mvgame"><b>${nm(o)}</b><span>🪙 ${Math.round(o.coins)} · 📅 Day ${Math.max(1,o.day|0)}${pets?' · 🐾 '+pets+(pets>1?' pets':' pet'):''}</span></div>
+    <p class="line">${h?`This will replace the game on this device (${nm(h)}, 🪙 ${Math.round(+h.coins||0)}).`:'This will be the game on this device. 💗'}</p>
+    <div class="row"><button class="btn mint" data-a="mvyes">${g.back?'✅ Yes, bring it back':'✅ Yes, move it here'}</button><button class="btn white" data-a="close">Cancel</button></div>`,{cls:'mvok',onClose:()=>{MV.got=null;}});}
+ACT.mvyes=async()=>{const g=MV.got;if(!g||MV.go)return;MV.go=true;
+  if(PLAYING&&S)saveLocal();let old=null;try{old=localStorage.getItem(LS);}catch(e){}
+  SAVEOFF=true;   /* from now on this page saves nothing: the game that came must not be written over */
+  try{if(mvGame(old)&&old!==g.s)localStorage.setItem(MV.OLD,old);}catch(e){}   /* the game that was here is kept: ↩️ in Move my game brings it back */
+  try{localStorage.setItem(LS,g.s);}catch(e){SAVEOFF=false;MV.go=false;SFX.no();toast('😢 This device could not keep the game. Try again!',3.6);return;}
+  try{sessionStorage.setItem('cozytown-moved',String(g.o.name).trim().slice(0,16));}catch(e){}
+  mvCard('<div class="hd"><h2>📦 Moving your game…</h2></div><p class="line">Here it comes! 💗</p>',{cls:'mvok',lock:true});SFX.yay();
+  if(g.c)try{const w=MV.ref.child(g.c).remove();w.catch(()=>{});await mvWait(w,3000);}catch(e){}   /* used = taken down (the other device sees that) */
+  location.reload();};   /* a clean start with the game that came, the same way as opening the game */
+{let n=null;try{n=sessionStorage.getItem('cozytown-moved');sessionStorage.removeItem('cozytown-moved');}catch(e){}   /* 📦 just moved here: say so on the title */
+  if(n!==null){const T=$('title'),m=document.createElement('p');m.id='tMsg';m.setAttribute('role','status');m.textContent='📦 Your game is here'+(n?', '+n:'')+'! Tap Play 💗';
+    T.classList.add('mvd');T.insertBefore(m,T.querySelector('.menu'));
+    $('tPlay').addEventListener('click',()=>{if($('tMsg')===m&&!document.body.classList.contains('away')){m.remove();T.classList.remove('mvd');}});}}
+setTimeout(mvInit,600);
 
 /* character maker (from the drawing: name on top, avatar on the left, choices on the right) */
 let CR=null;
