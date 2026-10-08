@@ -19,7 +19,8 @@ new-version player sees the same bus at the same time.
   timetable board inside (the next 3 bus days). "📋 Read the bus timetable" opens a card: the next bus, this week's bus
   days (✔ when gone; next week's too near the end of a week), the fare and how it works. At the beach the card shows
   the times of the buses home instead.
-- New: the Beach Bus. Cream on top, mint below, a peach stripe, big round windows, headlight "eyes" and a little smile,
+- New: the Beach Bus (its look was changed later to the owner's retro surf minibus: see "Follow-up" at the end). Cream on
+  top, mint below, a peach stripe, big round windows, headlight "eyes" and a little smile,
   a "🏖️ Beach" / "🏘️ Town" sign over the windshield, a sliding door, seats inside, and Driver Dot (mint cap, sky-blue
   shirt) at the wheel; she waves. At night its lights glow and the windows are warm.
 - The timetable (the same for everyone, worked out from the week number): 3 bus days a week, one picked from Mon-Tue,
@@ -226,3 +227,180 @@ The two crawl stages print no PASS lines in a quick check; from their stage file
   issues 0, errors 0.
 - crawl_ipad-landscape_hud: 145 taps tested; dead, unreachable, stuck, skipped, covered: none; issues 0, errors 0.
 - All other stages: issues 0, errors 0.
+
+# Follow-up: the bus looks like a retro surf minibus (owner's picture)
+
+Only the LOOK of the bus changed, plus a surfboard that leans on it at the beach stop. Everything else about the bus is
+the same: the timetable and times, the fare, the countdown line and the label over the bus, the door and the spot where
+you get on, Driver Dot, the "🏖️ Beach" / "🏘️ Town" signs, the campsite, the messages and the way it drives. Because the
+bus is shorter now, it has 6 seats instead of 8, and the invisible "you bump into it" shape and the "someone or a car is
+in front of the bus" checks were fitted to the new size. Nothing new is saved or sent online (old saves and old-version
+friends are not affected; old versions have no bus at all). Only `index.html` changed (the bus drawing in `buildBus` and
+the small drawing helpers next to it, `busSurf` for the surfboard, the seat list `BSEAT` and `busSeat`, and the sizes in
+`busBlocked`, `busBlock`, `busSolids` and `updBus`), plus the pictures.
+This follow-up was built, reviewed, and then fixed after the review (see "Review fixes"); these notes describe the final bus.
+
+## Changes (item: old -> new)
+- Body: a long rounded bus (7 m), cream on top and mint below with a peach stripe -> a short, chunky retro minibus like
+  the picture (5.6 m long, 5.9 m with the bumpers): cream-white roof and upper half, warm cartoon orange lower half, a
+  white belt line between them, round corners and a soft rounded roof. With the surfboards it is 2.9 m tall, so it still
+  drives under the "🏖️ To the beach" gate in town (its sign starts at 3 m).
+- Nose: a flat front -> a van face. The windscreen leans back, the orange nose sticks out a little below it with a small
+  white shelf, and a garland of green leaves with 5 flowers (pink, yellow, white, coral, lilac) hangs over it. Big round
+  headlights near the corners (they glow at dusk and at night, with a warm pool of light on the road, like the cars),
+  amber blinkers on the corners, a small smile, two little wipers and a soft grey bumper. The front wheels sit under the
+  corners of the nose, like on an old van, so the door is between the wheels.
+- Windows: small round portholes -> big rectangular windows with rounded corners: 3 on each side (one for each row of
+  seats), the driver's window, the window in the door, a big two-part windscreen and two back windows. From outside they
+  have a light see-through blue glass; from inside you look out through clear windows.
+- Wheels: dark wheels with small white middles -> dark tyres with big white rims and a grey hub, in round wheel arches.
+- Roof: a mint soft roof -> a roof rack (light grey rails and two crossbars that are higher in the middle) with two
+  surfboards, each tipped out to its own side so you can see it from the street: the wooden board with a red edge on the
+  door side (you see it from the bus stop and from the beach gate) and the yellow-green board with black squiggles and a
+  black tail on the road side. From the front you see both.
+- At the beach (new): while the bus waits at the beach stop, the yellow-green board hops off the rack, over the roof, and
+  leans against the side of the bus by the back wheel, like in the picture. It never covers the door or the spot where
+  you get on, and it stands where nobody can walk (next to the gate, behind the hedge line). When the bus drives off,
+  the board hops back onto the rack (about 1 second, with a soft "clonk" when it lands near you). If you arrive by bus,
+  or come to the gate while the bus is already waiting, the board is already leaning there.
+- Door: a peach door with a round window -> a door painted like the bus (orange below, a white line, cream on top with a
+  big window). It is in the same place and slides open the same way, now over the plain side (no wheel behind it).
+- Signs: "🏖️ Beach" / "🏘️ Town" stay over the windscreen (in a cream frame, leaning back with it). "🌴 Beach Bus" moved
+  from the side to the back (the sides are plain orange, like the picture).
+- Seats: 8 seats in 4 rows -> 6 seats in 3 rows (the bus is shorter). Everyone still gets their own window seat; if a
+  friend already sits in yours, you get the next free one.
+- Inside: the same seats, dashboard, steering wheel, ceiling light and Driver Dot; orange walls below, cream above, big
+  windows to look out of. The corners are square inside (round only outside), so they don't block the view. The yellow
+  pole moved next to the door, so it no longer stands right in front of the first seat.
+- The shady side of the bus stays a warm orange (a little warm glow in the orange paint by day only) instead of turning
+  brown in the shade.
+
+## Decisions I made
+- Kept the bus's width, the door, the spot where you get on, Driver Dot's seat, the label over the bus, the lights' jobs,
+  the times and the drive path, so getting on and off, riding and the timetable work exactly as before. The bus got
+  shorter at the back (and its nose a little longer), so the solid "you bump into it" shape, the "someone is in front of
+  the bus" check, the "cars wait for the bus" check and the "friends riding with you sit down" area were fitted to the
+  new size. I checked that you can walk all around it at both stops without walking into it, that you can still reach
+  the door spot, and that nobody can walk to the leaning board.
+- A shorter bus with 6 seats: the van in the picture is short and chunky (about twice as long as it is tall). At 7 m it
+  looked like a city bus; 5.6 m with 3 rows of seats reads as a van. A 4th row would make it a bus again.
+- The front wheels went in front of the door (under the nose, like old vans), so the open door slides over the plain
+  side, not over a wheel.
+- The boards are tipped out to the sides, because a flat board on a roof is only a thin line from the ground (you look
+  up at it). Tipped out, the wooden one shows its wood and red edge to the bus stop side and the yellow-green one its
+  pattern to the road side. Both still fit under the town's beach gate.
+- The yellow-green board is the one that leans at the beach (its black squiggles show best standing up). It rides on the
+  road side and hops over the roof to the door side, so at the beach you see both boards: the yellow-green one leaning
+  and the wooden one on the roof, facing the beach gate. I checked the hop step by step: it never touches the bus or the
+  other board.
+- The owner's picture is a watermarked stock photo: I only used it to look at shapes and colours. It is not in the
+  repository, and nothing is copied from it (the board pattern is drawn by the game).
+- Cartoon style like the rest of the game: toon colours, ink outlines, soft rounded shapes. I kept a small smile under
+  the headlights because it is cute and the bus still reads clearly as the minibus in the picture.
+- Drawing work: the bus is drawn only while it is around, and it is not part of the town or beach drawing (so the
+  check's E1 numbers do not change). It is about 11,900 triangles in 20 pieces (the first bus was about 10,300 in 15; the
+  first try of this follow-up about 18,300 in 21). Looking at it at the beach stop, the whole picture has about 3% more
+  triangles and 5 more draw calls than with the first bus.
+
+## Review fixes (after the first try of this follow-up was reviewed)
+- "It looks like a long coach or a tram with a flat front" -> 1.2 m shorter (6.8 m -> 5.6 m, 3 rows of seats), a
+  windscreen that leans back, an orange nose with a flower shelf, headlights near the corners, front wheels under the nose.
+- "You can hardly see the two roof boards from the ground" -> the boards are tipped out to the sides on a new rack (each
+  shows its top to its side of the street), and both show from the front.
+- "Ink lines poke through at the roof line and the front corners" -> the side above the door is one piece now, the
+  panels stop just short of the round corners, and the roof's soft edge covers the panel outlines. No more black ticks.
+- "The open door covers the front wheel" -> the front wheels moved in front of the door.
+- "The new bus nearly doubles its triangles" -> corners made of quarter posts, fewer segments on the wheels, lights,
+  roof, boards and flowers: about 18,300 -> 11,900 triangles; the lamps and the thin door no longer cast shadows.
+
+## Glitches found and not fixed
+- For about a second, the hopping board flies through the countdown label over the bus (the label is a flat picture
+  drawn on top; the board seems to jump past it).
+- From straight in front you see the dark front tyres in the open corners under the nose (on purpose, like an old van).
+- In the shade the cream top looks a bit grey, like everything else in the game's shade.
+- The see-through blue glass shows only from outside (from inside the windows are clear, on purpose); the door window has
+  no tint (as before).
+- Standing right at a back corner of the bus, your eyes can come within about 10 cm of it (you never see inside; the
+  same as the first bus).
+- With more than 6 friends on one bus, the 7th shares a seat with someone (the bus had 8 seats before; 6 is plenty for
+  how the game is played).
+
+## NOT VERIFIED (real devices, sound, feel)
+- Real iPad/iPhone: smoothness while the bus is on screen (about 1,600 more triangles and 5 more pieces than the first
+  bus, only while it is near).
+- The soft "clonk" when the board lands (reused sound), and whether the big hop over the roof feels fun, not wild.
+- Two real devices: each game shows its own board hop (only the times are shared, as before).
+
+## Try it for real (tick-box tasks)
+- [ ] At the park stop on a bus day: look at the bus from the front and from both sides: a short orange-and-cream van
+      with a face, round headlights, white wheels, the flower garland, and a surfboard on each side of the roof.
+- [ ] Get on and look around (windows, Driver Dot, the windscreen); get off again: your coins come back.
+- [ ] Ride to the beach and walk through the "🏘️ To town" gate: the yellow-green surfboard leans on the bus by the back
+      wheel, the wooden one is on the roof.
+- [ ] Stay and watch the bus leave (or come back for the evening bus at 19:30): the board hops over the roof onto the
+      rack / back down.
+- [ ] At dusk at the beach (the evening bus, 19:30-21:00): the round headlights glow.
+- [ ] Two friends on the bus: each sits in their own seat and sees the other one sitting.
+
+## Morning questions (each already built in a sensible way)
+- The face: built with a small smile under the round headlights (kept from the old bus); or no face at all, exactly
+  like the picture?
+- The words "🌴 Beach Bus": built on the back of the bus; or also on the sides (it hides some of the orange)?
+- The leaning board: built as the yellow-green one; or the wooden one, or both like in the picture?
+- The size: built as a short van with 6 seats; or a longer bus with 8 seats (it looks more like a city bus)?
+
+## Pictures
+- `tools/pictures-2/after-bus-retro-park.png` (the bus at the park stop, front three-quarter view from across the road),
+  `after-bus-retro-side.png` (the side, driving in), `after-bus-retro-beach-surfboard.png` (waiting at the beach with the
+  leaning surfboard and the wooden one on the roof), `after-bus-retro-night.png` (the evening bus at the beach at dusk,
+  lights on).
+- Re-taken with the new bus, same views as before: `after-bus-arrives.png`, `after-bus-park-stop.png` (on a bus day),
+  `after-bus-beach-stop.png`.
+
+## Quick check
+Tag job07b-b: files,counts,saves,players,claude,crawl_ipad-landscape_town (on top of a87d95e, like the first try)
+
+```
+new claude fd12d910e8c111afb97a933db111cbc1 · new web 18d83483e77d22761e26e235fa1b104b · WEBPART-ROUNDTRIP: identical
+[stage files: running]
+[stage files: done in 1 s]
+    PASS | A1 newest live versions read right before the check | live-claude.html read on 2026-10-08, live-web.html read on 2026-10-08
+    FAIL | A2 dated private backup of the live game | no backup given
+    PASS | F3a live GitHub version = live Claude version + web part, nothing else | 54 added lines in 2 places, no lines removed or changed
+    PASS | F1 no ZZTEST test data in the file to publish | ZZTEST appears 0 times
+    PASS | F5 no new outside addresses (same 3D library and font) | ['cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js', 'fonts.googleapis.com', 'fonts.googleapis.com/css2', 'fonts.gstatic.com']
+[stage counts: running]
+[stage counts: done in 75 s]
+    PASS | A3 everything in the live game is still in the new one, by name | 57 lists, 676 things before, 683 after; grew: {"places": "20 -> 21", "friends_lane_plots": "6 -> 12"}
+    PASS | E1 no more drawing work than before, area by area (more than 10% needs your OK) | 25 areas, 1287 pieces, 987714 triangles in total | for information, seen from 5 spots: city 147 draws; home 34 draws; market 38 draws; cafe 54 draws; school 44 draws
+[stage saves: running]
+[stage saves: done in 212 s]
+    FAIL | B1 saved games from older versions load in the new one with nothing lost | 7 saves tried: save-71f43ad.json: name 'ZZTEST-71F43A', coins 120, furniture 3, pets 0; 1 differences: pid: "umuzq4rixbw5p5" -> "umuzq559i8uyl3"; new version saves under the same key: yes | save-8a198
+    PASS | B2 the new version keeps the same save key | key cozytown-save-1
+[stage players: running]
+[stage players: done in 38 s]
+    PASS | D1 two players see each other, see each other walk, and chat (old + new version together) | A (old version, iPad) sees B: True; B (new version, PC) sees A: True; A saw B walk: True; chat tap ok, B saw: '⭐ ZZTEST-A: 👋 Hi!' + bubble
+    PASS | D2 Friends Lane: each player gets a house | Friends Lane houses taken: A sees 2, B sees 2 (need 2 each)
+    PASS | D3 visiting a friend's house works: knock, let in, go inside | B knocked from the phone (ok/ok/ok); ding-dong card on A: yes, tapped ok; B ended up in: visit
+[stage claude: running]
+[stage claude: done in 33 s]
+    PASS | C7 the Claude version starts, plays the opening and goes online (test room) | opening played: True; online: on
+[stage crawl_ipad-landscape_town: running]
+[stage crawl_ipad-landscape_town: done in 254 s]
+[partial run: some stages skipped by --only]
+WEBPART-ROUNDTRIP: identical
+```
+
+`python3 $SP/tools/b1.py $SP/runs/job07b-b`:
+
+```
+B1 FAIL | only pid differences: YES | saves: 7 | same key yes: 7
+```
+
+A2 is normal for a quick check (no backup given) and B1 is the known pid-only difference. The town crawl prints no
+PASS lines in a quick check; from its stage file (runs/job07b-b/stages): 98 taps tested, areas reached by playing:
+city, beach, clothes, school, client, apt1, toys, bakery, library, icecream, pizza, fire, home, market, pets, cafe,
+flowers (17, the beach by the Welcome Bus, as before); dead, unreachable, stuck, covered: none; skipped: the same 11
+"(no label)" as before; issues 0, errors 0. All other stages: issues 0, errors 0. E1 is the same as without this
+change (beach 119 pieces / 61,547 triangles, as in the first try): the bus is drawn on its own, not as part of the
+town or the beach.

@@ -1793,9 +1793,9 @@ function updBeach(dt){updBus(dt);if(!S||!PLAYING||!LOC.beach)return;
 const BUS_FARE=15,BUS_W=1.5,BUS_D=.25,BUS_EV=19.5,BV=8,BA=2.5,BB=2,BUS_WK={},BUS_DAY={};
 const BUSP={park:{loc:'city',x:-16.5,z:2.1,ry:0,get pre(){return Math.max(110,-28-laneEnd());},post:225},   /* in town it comes from the far end of 🏡 Friends Lane */
   beach:{loc:'beach',x:BEACH_X-35.5,z:2.25,ry:Math.PI/2,pre:110,post:95}};
-const BSEAT=[[.95,.68],[-.15,.68],[-1.25,.68],[-2.35,.68],[.95,-.68],[-.15,-.68],[-1.25,-.68],[-2.35,-.68]],CAMP={x:-25.4,z:6,fx:-21.6,fz:5.4};
+const BSEAT=[[.95,.68],[-.15,.68],[-1.25,.68],[.95,-.68],[-.15,-.68],[-1.25,-.68]],CAMP={x:-25.4,z:6,fx:-21.6,fz:5.4};
 const BUS={g:null,door:null,dot:null,tag:null,tagT:'',sign:[],ins:null,boards:[],tk:[],loc:null,s:null,pos:null,ui:0,v:0,dk:0,hk:0,bt:0,stop:false,
-  ride:null,hold:0,arr:null,told:{},nt:0,tipT:0,tip:'',tent:0,ck:0,camp:null,fl:null},BUSX={yaw:Math.PI/2};
+  ride:null,hold:0,arr:null,told:{},nt:0,tipT:0,tip:'',tent:0,ck:0,camp:null,fl:null,sf:null,sk:-1,sfP:null,orm:null},BUSX={yaw:Math.PI/2};
 const BUS_OFF={icon:'🚪',label:'Get off the bus',act:()=>standUp()};
 {const st=document.createElement('style');st.textContent='#busTip{display:inline-flex;align-items:center;min-height:36px;padding:3px 13px 3px 10px;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:999px;box-shadow:0 4px 0 var(--soft);font-weight:800;font-size:17px;line-height:1.15;pointer-events:none;max-width:100%}'
   +'#busTip.hot{background:#ffe08a;color:#3d2c5e;border-color:#3d2c5e;animation:btPulse 1s ease-in-out infinite}@keyframes btPulse{50%{transform:scale(1.05)}}'
@@ -1838,47 +1838,132 @@ const busThere=p=>!!BUS.g&&BUS.g.visible&&BUS.loc===BUSP[p].loc;
 function busReady(p){const c=busCur(p);return!!c&&c.u===0&&!!c.s.go&&busThere(p)&&Math.abs(BUS.ui)<.05&&!BUS.ride;}   /* standing at this stop, doors open */
 function busLabel(p){const c=busCur(p),s=c&&c.s;if(!s)return'Get on the bus';if(s.wb)return'Free Welcome Bus: hop on!';
   return s.go==='town'?(S.coins<BUS_FARE?'Get on the bus home (free)':`Get on the bus home (${BUS_FARE} 🪙)`):`Get on the bus (${BUS_FARE} 🪙)`;}
-/* ---- the bus: cute and round, with real round windows so you can sit inside and look out (one baked body) ---- */
-function holePanel(g,w,h,d,c,holes,x,y,z,ry){   /* a flat panel with holes; its ink hull has smaller holes, so every window gets an ink ring */
-  const geo=e=>{const s=new THREE.Shape();s.moveTo(-w/2-e,-e);s.lineTo(w/2+e,-e);s.lineTo(w/2+e,h+e);s.lineTo(-w/2-e,h+e);s.closePath();
+/* ---- the bus: a retro surf minibus (the owner's picture) in the game's cartoon style: a short, chunky "loaf" van with a round nose and a
+   windscreen that leans back, cream-white on top, warm orange below, big windows you can look out of when you sit inside, round headlights,
+   white wheels, flowers on the nose and two surfboards on a roof rack, tipped out to the sides so you see them from the street. One baked
+   body; the yellow-green surfboard is its own little piece: at the beach it hops over the roof and leans on the bus ---- */
+function holePanel(g,w,h,d,c,holes,x,y,z,ry,sl=0,nt){   /* a flat panel with holes; its ink hull has smaller holes, so every window gets an ink ring
+   (sl: its +x end leans back by sl at the top; nt: [x1,x2,top] a doorway cut up from its bottom edge) */
+  const geo=e=>{const s=new THREE.Shape();s.moveTo(-w/2-e,-e);if(nt){s.lineTo(nt[0]+e,-e);s.lineTo(nt[0]+e,nt[2]-e);s.lineTo(nt[1]-e,nt[2]-e);s.lineTo(nt[1]-e,-e);}s.lineTo(w/2+e,-e);s.lineTo(w/2-sl+e,h+e);s.lineTo(-w/2-e,h+e);s.closePath();
     for(const q of holes){const p=new THREE.Path();if(q.r)p.absarc(q.x,q.y,q.r-e,0,TAU,false);
       else{const x1=q.x1+e,y1=q.y1+e,x2=q.x2-e,y2=q.y2-e,k=q.k-e,kb=q.kb?q.kb-e:0;p.moveTo(x1+kb,y1);p.lineTo(x2-kb,y1);if(kb)p.absarc(x2-kb,y1+kb,kb,-Math.PI/2,0,false);
         p.lineTo(x2,y2-k);p.absarc(x2-k,y2-k,k,0,Math.PI/2,false);p.lineTo(x1+k,y2);p.absarc(x1+k,y2-k,k,Math.PI/2,Math.PI,false);p.lineTo(x1,y1+kb);if(kb)p.absarc(x1+kb,y1+kb,kb,Math.PI,Math.PI*1.5,false);}
       s.holes.push(p);}
-    const G=new THREE.ExtrudeGeometry(s,{depth:d+2*e,bevelEnabled:false,curveSegments:9});G.translate(0,0,-(d+2*e)/2);return G;};
-  const m=new THREE.Mesh(geo(0),mat(c));m.position.set(x,y,z);m.rotation.y=ry||0;g.add(m);const o=new THREE.Mesh(geo(OT),OL);o.position.copy(m.position);o.rotation.copy(m.rotation);g.add(o);return m;}
+    const G=new THREE.ExtrudeGeometry(s,{depth:d+2*e,bevelEnabled:false,curveSegments:2});G.translate(0,0,-(d+2*e)/2);return G;};
+  const m=new THREE.Mesh(geo(0),c.isMaterial?c:mat(c));m.position.set(x,y,z);m.rotation.y=ry||0;g.add(m);const o=new THREE.Mesh(geo(OT),OL);o.position.copy(m.position);o.rotation.copy(m.rotation);g.add(o);return m;}
+function archPanel(g,x1,x2,h,d,c,arch,y,z){   /* a side wall from x1 to x2 with round wheel arches cut out of its bottom edge ([x, radius, wheel height above the bottom] each; the last one may run past x2) */
+  const geo=e=>{const s=new THREE.Shape();s.moveTo(x1-e,-e);let cut=false;
+    for(const [ax,ar,ay] of arch){const r=ar-e,a=Math.asin(Math.min(1,(ay+e)/r));s.lineTo(ax-r*Math.cos(a),-e);
+      if(ax+r*Math.cos(a)<x2+e)s.absarc(ax,ay,r,Math.PI+a,-a,true);else{s.absarc(ax,ay,r,Math.PI+a,Math.acos(Math.min(1,(x2+e-ax)/r)),true);cut=true;}}
+    if(!cut)s.lineTo(x2+e,-e);s.lineTo(x2+e,h+e);s.lineTo(x1-e,h+e);s.closePath();
+    const G=new THREE.ExtrudeGeometry(s,{depth:d+2*e,bevelEnabled:false,curveSegments:4});G.translate(0,0,-(d+2*e)/2);return G;};
+  const m=new THREE.Mesh(geo(0),c.isMaterial?c:mat(c));m.position.set(0,y,z);g.add(m);const o=new THREE.Mesh(geo(OT),OL);o.position.copy(m.position);g.add(o);return m;}
+function rboxGeo(w,h,d,r,b,e=0,q=3){   /* a soft box: its corners rounded by r (seen from above), its top and bottom edges rounded by b; the bottom at y=0 */
+  const X=w/2-b+e,Z=d/2-b+e,R=Math.max(.01,Math.min(r-b+e,X,Z)),s=new THREE.Shape();
+  s.moveTo(-X+R,-Z);s.lineTo(X-R,-Z);s.absarc(X-R,-Z+R,R,-Math.PI/2,0,false);s.lineTo(X,Z-R);s.absarc(X-R,Z-R,R,0,Math.PI/2,false);
+  s.lineTo(-X+R,Z);s.absarc(-X+R,Z-R,R,Math.PI/2,Math.PI,false);s.lineTo(-X,-Z+R);s.absarc(-X+R,-Z+R,R,Math.PI,Math.PI*1.5,false);
+  const G=new THREE.ExtrudeGeometry(s,{depth:Math.max(.005,h-2*b),bevelEnabled:true,bevelThickness:b+e,bevelSize:b,bevelSegments:q,curveSegments:q});G.rotateX(-Math.PI/2);G.translate(0,b,0);return G;}
+function rbox(g,w,h,d,c,x,y,z,o={}){const r=o.r??Math.min(w,d)/2,b=o.b??Math.min(h/2,r,.12),q=o.q||3,m=place(g,new THREE.Mesh(rboxGeo(w,h,d,r,b,0,q),o.mat||mat(c)),o,x,y,z);
+  if(o.ol!==false)hull(g,rboxGeo(w,h,d,r,b,o.ol||OT,q),m,o);return m;}
+function rrPath(p,x1,y1,x2,y2,r){p.moveTo(x1+r,y1);p.lineTo(x2-r,y1);p.absarc(x2-r,y1+r,r,-Math.PI/2,0,false);p.lineTo(x2,y2-r);p.absarc(x2-r,y2-r,r,0,Math.PI/2,false);   /* a rounded rectangle */
+  p.lineTo(x1+r,y2);p.absarc(x1+r,y2-r,r,Math.PI/2,Math.PI,false);p.lineTo(x1,y1+r);p.absarc(x1+r,y1+r,r,Math.PI,Math.PI*1.5,false);return p;}
+function ringGeo(o,i,h,e=0){const s=rrPath(new THREE.Shape(),o[0]-e,o[1]-e,o[2]+e,o[3]+e,o[4]+e);s.holes.push(rrPath(new THREE.Path(),i[0]+e,i[1]+e,i[2]-e,i[3]-e,Math.max(.01,i[4]-e)));   /* a flat ring lying down: [x1,z1,x2,z2,round] outside and inside */
+  const G=new THREE.ExtrudeGeometry(s,{depth:h+2*e,bevelEnabled:false,curveSegments:3});G.rotateX(-Math.PI/2);G.translate(0,-e,0);return G;}
+/* 🏄 a surfboard seen from above (tail at -y, nose at +y; n = how round the nose is); lying flat it points its nose to +x, bottom at y=0.
+   Its top and bottom are mapped for a painted picture (u across the board, v from the tail to the nose) */
+function surfShape(w,l,n,e=0){const a=w/2+e,h=l/2+e,s=new THREE.Shape();s.moveTo(0,-h);s.bezierCurveTo(a*.8,-h,a,-h*.72,a,-h*.12);s.bezierCurveTo(a,h*.45,a*n,h*.97,0,h);
+  s.bezierCurveTo(-a*n,h*.97,-a,h*.45,-a,-h*.12);s.bezierCurveTo(-a,-h*.72,-a*.8,-h,0,-h);return s;}
+function surfGeo(w,l,th,n,e=0){const b=Math.min(.02,th/3),G=new THREE.ExtrudeGeometry(surfShape(w-2*b,l-2*b,n,e),{depth:th-2*b,bevelEnabled:true,bevelThickness:b+e,bevelSize:b,bevelSegments:1,curveSegments:5});
+  const P=G.attributes.position,U=G.attributes.uv;for(let i=0;i<P.count;i++)U.setXY(i,P.getX(i)/w+.5,P.getY(i)/l+.5);
+  G.rotateX(-Math.PI/2);G.rotateY(-Math.PI/2);G.translate(0,b,0);return G;}
+function surfboard(g,w,l,th,n,c,x,y,z){const m=new THREE.Mesh(surfGeo(w,l,th,n),c.isMaterial?c:mat(c));m.position.set(x,y,z);g.add(m);const o=new THREE.Mesh(surfGeo(w,l,th,n,.015),OL);o.position.copy(m.position);g.add(o);return m;}
+function surfTex(){const c=document.createElement('canvas');c.width=128;c.height=512;const x=c.getContext('2d'),r=seeded(57),K='#2f2b3d';   /* yellow-green with black squiggles and a black tail */
+  x.fillStyle='#cfe85a';x.fillRect(0,0,128,512);x.fillStyle=K;x.beginPath();x.moveTo(0,512);for(let i=0;i<=16;i++)x.lineTo(i*8,352+Math.sin(i*.9)*12);x.lineTo(128,512);x.fill();
+  x.strokeStyle=K;x.lineCap=x.lineJoin='round';
+  for(let k=0;k<9;k++){const a=r()*TAU,n=46+r()*44,ox=18+r()*92,oy=40+r()*270,w=5+r()*4,f=(1.5+r())*TAU/n;x.lineWidth=5+r()*2;x.beginPath();
+    for(let j=0;j<=30;j++){const t=j/30*n-n/2,o=Math.sin(t*f)*w;x.lineTo(ox+Math.cos(a)*t-Math.sin(a)*o,oy+Math.sin(a)*t+Math.cos(a)*o);}x.stroke();}
+  for(let k=0;k<12;k++){x.beginPath();x.arc(8+r()*112,24+r()*300,2+r()*3,0,TAU);x.fill();}
+  const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t;}
 function buildBus(){const g=new THREE.Group(),b=new THREE.Group();g.add(b);scene.add(g);g.visible=false;BUS.g=g;
-  const L=7,W=2.5,R=.42,Y0=.32,H=2.3,MINT='#8fe3c4',PEACH='#ffc4a3',CREAM='#fff6e8',hx=L/2-R,hz=W/2-R,t=.1,win=xs=>xs.map(x=>({x,y:1.4,r:.38}));
-  for(const sx of[-1,1])for(const sz of[-1,1]){cyl(b,R,R,H,CREAM,sx*hx,Y0,sz*hz,{seg:12});cyl(b,R+.025,R+.025,.8,MINT,sx*hx,Y0,sz*hz,{seg:12,ol:.02});}
-  holePanel(b,2*hx,H,t,CREAM,[...win([-2.35,-1.25,-.15,.95]),{x1:1.75,y1:.18,x2:2.65,y2:1.98,k:.3}],0,Y0,W/2-t/2);   /* door side */
-  holePanel(b,2*hx,H,t,CREAM,win([-2.35,-1.25,-.15,.95,2.05]),0,Y0,-W/2+t/2);
-  holePanel(b,2*hz,H,t,CREAM,[{x1:-.74,y1:1.05,x2:.74,y2:2.0,k:.22,kb:.22}],L/2-t/2,Y0,0,Math.PI/2);   /* the big windshield */
-  holePanel(b,2*hz,H,t,CREAM,[{x:0,y:1.42,r:.42}],-L/2+t/2,Y0,0,Math.PI/2);
-  for(const [x0,x1] of [[-hx,1.72],[2.68,hx]])box(b,x1-x0,.8,.04,MINT,(x0+x1)/2,Y0,W/2+.02,{ol:.015});box(b,2*hx,.8,.04,MINT,0,Y0,-W/2-.02,{ol:.015});   /* the mint bottom half */
-  for(const s of[-1,1])box(b,.04,.8,2*hz,MINT,s*(L/2+.02),Y0,0,{ol:.015});
-  box(b,L-.16,.12,W-.16,'#efe6fb',0,.38,0);box(b,L-.6,.22,W-.4,'#5a5f8c',0,.16,0,{ol:.02});for(const s of[-1,1])box(b,.2,.24,W-.24,'#ffffff',s*(L/2+.02),.22,0,{ol:.02});
-  box(b,2*hx,.16,W,CREAM,0,Y0+H,0);box(b,L,.16,2*hz,CREAM,0,Y0+H,0);for(const sx of[-1,1])for(const sz of[-1,1])cyl(b,R,R,.16,CREAM,sx*hx,Y0+H,sz*hz,{seg:12});
-  box(b,L-1.2,.13,W-.8,MINT,0,Y0+H+.16,0,{ol:.02});   /* a soft roof (it still fits under the beach gate) */
-  box(b,4.8,.13,.03,PEACH,-.66,1.1,W/2+.045,{ol:.01});box(b,2*hx,.13,.03,PEACH,0,1.1,-W/2-.045,{ol:.01});for(const s of[-1,1])box(b,.03,.13,2*hz,PEACH,s*(L/2+.045),1.1,0,{ol:.01});
-  for(const sx of[-2.3,1.15])for(const sz of[-1,1]){cyl(b,.42,.42,.3,'#3d3550',sx,.42,sz*(W/2-.1),{rx:Math.PI/2,center:true,seg:16});cyl(b,.17,.17,.32,'#ffffff',sx,.42,sz*(W/2-.1),{rx:Math.PI/2,center:true,seg:12,ol:.015});}
-  for(const s of[-1,1]){sph(b,.17,null,L/2+.06,.86,s*.78,{mat:LAMP,s:[.45,1,1],ol:.02,ws:12,hs:8});sph(b,.12,'#ff6b6b',-L/2-.06,.86,s*.8,{s:[.45,1,1],ol:.015,ws:10,hs:7});}
-  {const sm=new THREE.Mesh(new THREE.TorusGeometry(.2,.032,6,12,Math.PI),mat(INK));sm.position.set(L/2+.065,.72,0);sm.rotation.set(0,Math.PI/2,Math.PI);b.add(sm);}   /* a little smile */
+  /* xB back, xN nose (the orange front), xF windscreen foot; the cream top and windscreen lean back by dR; front wheels just in front of the door */
+  const xB=-1.72,xN=3.85,xF=3.7,W=2.5,R=.42,hz=W/2-R,t=.1,yB=.34,yBl=1.2,yT=2.25,hU=yT-yBl,dR=.2,aR=Math.atan2(dR,hU),hS=Math.hypot(hU,dR),
+    OR=BUS.orm=toon({color:'#ff8a3d',emissive:new THREE.Color('#ff5a00'),emissiveIntensity:.25}),CR='#fff6e8',WH='#ffffff',RK='#d8d2e4',
+    GL=toon({color:'#d4efff',transparent:true,opacity:.3,depthWrite:false}),WX=[[-1.18,-.33],[-.2,.65],[.78,1.63]],wy1=.12,wy2=.84,AR=[[-.8,.48,.07],[3.15,.48,.07]],
+    hole=(x1,x2,c)=>({x1:x1-c,y1:wy1,x2:x2-c,y2:wy2,k:.12,kb:.12}),pane=(p,w,h,x,y,z,ry)=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),GL);m.position.set(x,y,z);m.rotation.y=ry;p.add(m);},
+    fg=new THREE.Group(),   /* (the leaning windscreen and its sign) */
+    post=(x,y,sx,sz,h,c,rz=0)=>{const p=new THREE.Group(),m=c.isMaterial?c:mat(c),t0=sx>0?(sz>0?0:Math.PI/2):(sz<0?Math.PI:Math.PI*1.5);p.position.set(x,y,sz*hz);p.rotation.z=rz;b.add(p);   /* a round corner: a quarter of a post */
+      const q=(r,e,M)=>{const k=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h+2*e,4,1,!!e,t0,Math.PI/2),M);k.position.y=h/2;p.add(k);};q(R,0,m);q(R+OT,OT,OL);   /* (round outside, with its ink) */
+      for(const [px,pz,ry] of[[0,sz*R/2,-sx*Math.PI/2],[sx*R/2,0,sz>0?Math.PI:0]]){const w=new THREE.Mesh(new THREE.PlaneGeometry(R,h),m);w.position.set(px,h/2,pz);w.rotation.y=ry;p.add(w);}};   /* (square inside) */
+  fg.position.set(xF,yBl,0);fg.rotation.z=aR;b.add(fg);
+  /* the body: orange below, cream on top, a white belt line between (a little shelf on the nose), rounded corners and a soft rounded roof */
+  for(const sz of[-1,1]){post(xB+R,yB,-1,sz,yBl-yB,OR);post(xB+R,yBl,-1,sz,hU,CR);post(xN-R,.8,1,sz,yBl-.8,OR);   /* (the nose's corners stop above the front wheels) */
+    post(xF-R-dR/2+Math.sin(aR)*(hS+.05)/2,yBl+hU/2-Math.cos(aR)*(hS+.05)/2,1,sz,hS+.05,CR,aR);}
+  archPanel(b,xB+R+.02,xN-R-.02,yBl-yB,t,OR,AR,yB,-W/2+t/2);archPanel(b,xB+R+.02,1.75,yBl-yB,t,OR,AR.slice(0,1),yB,W/2-t/2);archPanel(b,2.65,xN-R-.02,yBl-yB,t,OR,AR.slice(1),yB,W/2-t/2);   /* (the door side stops at the door) */
+  box(b,.9,.16,t,null,2.2,yB,W/2-t/2,{mat:OR});for(const [x,s] of[[xN,-1],[xB,1]])box(b,t,yBl-yB,2*hz-.04,null,x+s*t/2,yB,0,{mat:OR});   /* the step under the door; the nose and the back */
+  holePanel(b,xF-xB-2*R-.04,hU,t,CR,[...WX,[1.8,2.95]].map(([a,d])=>hole(a,d,(xF+xB)/2)),(xF+xB)/2,yBl,-W/2+t/2,0,dR);   /* the road side, with the driver's window */
+  {const c=(xF+xB)/2;holePanel(b,xF-xB-2*R-.04,hU,t,CR,WX.map(([a,d])=>hole(a,d,c)),c,yBl,W/2-t/2,0,dR,[1.75-c,2.65-c,2.15-yBl]);}   /* the door side, with the doorway */
+  holePanel(fg,2*hz-.04,hS,t,CR,[{x1:-.74,y1:wy1,x2:-.05,y2:.72,k:.12,kb:.08},{x1:.05,y1:wy1,x2:.74,y2:.72,k:.12,kb:.08}],-t/2,0,0,Math.PI/2);   /* the big windscreen */
+  holePanel(b,2*hz-.04,hU,t,CR,[{x1:-.72,y1:.2,x2:-.08,y2:.78,k:.1,kb:.1},{x1:.08,y1:.2,x2:.72,y2:.78,k:.1,kb:.1}],xB+t/2,yBl,0,Math.PI/2);
+  {const O=[xB-.02,-W/2-.02,xN+.02,W/2+.02,R+.02],I=[xB+.06,-W/2+.06,xF-t-.01,W/2-.06,.3];for(const e of[0,.015]){const m=new THREE.Mesh(ringGeo(O,I,.08,e),e?OL:mat(WH));m.position.y=yBl-.04;b.add(m);}}
+  rbox(b,xF-dR-xB+.08,.24,W+.08,CR,(xF-dR+xB)/2,yT-.08,0,{r:R+.04,b:.1,q:2});   /* the soft white roof */
+  /* glass: a light see-through tint (from inside you look out through clear windows) */
+  for(const [x1,x2] of WX)for(const s of[-1,1])pane(b,x2-x1-.02,wy2-wy1-.02,(x1+x2)/2,yBl+(wy1+wy2)/2,s*(W/2-.03),s<0?Math.PI:0);
+  pane(b,1.13,wy2-wy1-.02,2.375,yBl+(wy1+wy2)/2,-W/2+.03,Math.PI);
+  for(const s of[-1,1]){pane(fg,.67,.58,-.03,.42,s*.395,Math.PI/2);pane(b,.62,.56,xB+.03,yBl+.49,s*.4,-Math.PI/2);}
+  /* underneath: the floor, the dark underside, the wheel wells; white wheels on dark tyres */
+  box(b,xF-xB-.2,.12,1.88,'#efe6fb',(xF+xB)/2,.38,0,{ol:false});for(const s of[-1,1])for(const [x1,x2] of[[xB+.1,-1.32],[-.28,2.63]])box(b,x2-x1,.12,.21,'#efe6fb',(x1+x2)/2,.38,s*1.045,{ol:false});box(b,xN-xB-.5,.22,W-.4,'#5a5f8c',(xN+xB)/2,.14,0,{ol:.02});
+  for(const [ax] of AR)for(const sz of[-1,1]){const z=sz*(W/2-.17);box(b,1,.42,.32,'#5a5f8c',ax,.48,sz*(W/2-.26),{ol:false});
+    cyl(b,.4,.4,.26,'#3d3550',ax,.41,z,{rx:Math.PI/2,center:true,seg:12});cyl(b,.24,.24,.28,WH,ax,.41,z,{rx:Math.PI/2,center:true,seg:12,ol:.015});cyl(b,.09,.09,.3,RK,ax,.41,z,{rx:Math.PI/2,center:true,seg:8,ol:.012});}
+  /* the face: big round headlights, amber blinkers on the corners, a little smile, soft bumpers, side mirrors, wipers; red tail lights at the back */
+  for(const s of[-1,1]){const z=s*.6;cyl(b,.2,.2,.06,'#f4f0fa',xN+.02,.82,z,{rz:Math.PI/2,center:true,seg:12,ol:.015});sph(b,.155,null,xN+.05,.82,z,{mat:LAMP,s:[.4,1,1],ol:false,ws:10,hs:6});
+    sph(b,.06,'#ffb347',xN-R+R*Math.cos(.6),.98,s*(hz+R*Math.sin(.6)),{ws:6,hs:4,ol:.01});sph(b,.1,'#ff6b6b',xB-.03,.86,z,{s:[.45,1,1],ol:.015,ws:8,hs:5});
+    cyl(b,.018,.018,.16,'#5a5f8c',3,1.74,s*(W/2+.02),{rx:Math.PI/2,center:true,seg:6,ol:.01});box(b,.05,.17,.11,'#cfe9ff',3,1.66,s*(W/2+.1),{ol:.012});
+    box(fg,.012,.022,.34,'#5a5f8c',.012,.15,s*.38-.03,{rx:s*.26,ol:false});}
+  rbox(b,.18,.2,W-.26,RK,xN+.05,.24,0,{r:.09,b:.06,ol:.015,q:1});rbox(b,.16,.2,W-.26,RK,xB-.04,.24,0,{r:.08,b:.06,ol:.015,q:1});
+  {const sm=new THREE.Mesh(new THREE.TorusGeometry(.12,.026,4,10,Math.PI),mat(INK));sm.position.set(xN+.02,.64,0);sm.rotation.set(0,Math.PI/2,Math.PI);b.add(sm);}
+  box(fg,.02,.28,1.36,'#fff7ea',.01,.76,0,{ol:.012});box(b,.02,.25,.92,'#fff7ea',xB-.002,.695,0,{ol:.012});   /* frames for the signs */
+  /* 🌸 a little garland of leaves and flowers on the nose, hanging down a bit in the middle */
+  {const gx=z=>Math.abs(z)<=hz?xN-.06:xN-R+Math.sqrt(Math.max(0,(R-.06)**2-(Math.abs(z)-hz)**2)),d=z=>1-(z/1.02)**2,fx=z=>gx(z)+.1*d(z),gy=z=>1.3-.11*d(z);
+   for(let k=0;k<=8;k++){const z=-1+k*.25;sph(b,.075,k%2?'#5fbf74':'#4fb86a',fx(z),gy(z),z,{s:[.55,.75,1.35],rx:k%2?.5:-.5,ws:6,hs:4,ol:false});}
+   for(const [z,c,r] of[[-.86,'#ff9ec4',.1],[-.43,'#ffd45c',.085],[0,WH,.09],[.43,'#ff7a59',.085],[.86,'#b79cff',.09]]){const x=fx(z)+.05,y=gy(z)+.02;
+     sph(b,r,c,x,y,z,{s:[.45,1,1],ws:7,hs:4,ol:.012});sph(b,r*.4,c==='#ffd45c'?'#ff9a3c':'#ffd45c',x+.045,y,z,{ws:5,hs:3,ol:false});}}
+  /* 🏄 the roof rack: rails along the roof edges and two crossbars that lift the middle, so each board lies tipped out to its side.
+     The wooden surfboard with a red edge rides on the door side (the red board in the middle of its rail makes the red edge) */
+  const aB=.59,cB=Math.cos(aB),sB=Math.sin(aB),yR=yT+.16;   /* (yR: the top of the roof) */
+  for(const s of[-1,1]){box(b,3.1,.04,.04,RK,1.45,yR+.01,s*1.17,{ol:.01});
+    for(const x of[.55,2.35])box(b,.05,.04,.7,RK,x,yR+.06+.33*sB-.03*cB,s*(1.15-.33*cB-.03*sB),{center:true,rx:s*aB,ol:.01});}
+  for(const x of[.55,2.35])box(b,.05,.04,1.24,RK,x,yR+.02+.66*sB,0,{ol:.01});
+  {const w=new THREE.Group();w.position.set(1.5,yR+.06+.164,1.15-.288);w.rotation.x=aB;b.add(w);
+   surfboard(w,.66,2.9,.05,.85,'#e8434a',0,.025,0);surfboard(w,.6,2.84,.1,.85,'#e9bd84',0,0,0);box(w,2.5,.006,.025,'#b07a48',-.05,.1,0,{ol:false});
+   for(const z of[-.15,.15])box(w,2,.004,.012,'#d9a46c',-.15,.1,z,{ol:false});}   /* (a stringer and a little wood grain) */
   /* inside: seats by the windows, the driver's seat, wheel and dashboard, a yellow pole by the door, a ceiling light */
-  for(const x of[.95,-.15,-1.25,-2.35])for(const sz of[-1,1]){const z=sz*.68;box(b,.46,.3,.56,'#f0a77f',x,.5,z,{ol:.015});box(b,.52,.12,.62,'#ffb3a0',x,.8,z,{ol:.015});box(b,.1,.44,.62,'#ffd2bd',x-.27,.92,z,{ol:.015});}
-  box(b,.52,.42,.6,'#5a5f8c',2.45,.5,-.62,{ol:.015});box(b,.1,.7,.6,'#5a5f8c',2.16,.92,-.62,{ol:.015});box(b,.34,.74,2*hz+.34,'#ffd9c2',L/2-.3,.5,0,{ol:.015});
-  {const w=new THREE.Mesh(new THREE.TorusGeometry(.19,.035,6,16),mat('#3d2c5e'));w.position.set(2.92,1.33,-.62);w.rotation.order='ZYX';w.rotation.set(0,Math.PI/2,.45);b.add(w);}
-  cyl(b,.035,.035,2.1,'#ffd45c',1.62,.5,.62,{seg:8,ol:.012});sph(b,.16,null,0,Y0+H-.02,0,{mat:LAMP,s:[2.4,.3,1.2],ol:false,ws:10,hs:6});
-  bake(b,true);
-  {const d=new THREE.Group();d.position.set(2.2,.5,W/2+.06);g.add(d);box(d,.94,1.82,.05,PEACH,0,0,0,{ol:.02});sph(d,.2,'#cfe9ff',0,1.25,.03,{s:[1,1,.15],ol:.015});box(d,.05,.5,.06,'#ffffff',-.3,.75,.04,{ol:.01});bake(d);BUS.door=d;}
-  for(const txt of['🏖️ Beach','🏘️ Town']){const sg=signPlane(txt,1.56,.3,'#fff7ea','#ff7a59');sg.position.set(L/2+.012,Y0+2.15,0);sg.rotation.y=Math.PI/2;g.add(sg);BUS.sign.push(sg);}
-  {const sg=signPlane('🌴 Beach Bus',1.9,.36,'#ffffff','#2b8fc4');sg.position.set(-.75,.78,W/2+.05);g.add(sg);}
+  for(const x of[.95,-.15,-1.25])for(const sz of[-1,1]){const z=sz*.68;box(b,.46,.3,.56,'#f0a77f',x,.5,z,{ol:.015});box(b,.52,.12,.62,'#ffb3a0',x,.8,z,{ol:.015});box(b,.1,.44,.62,'#ffd2bd',x-.27,.92,z,{ol:.015});}
+  box(b,.52,.42,.6,'#5a5f8c',2.45,.5,-.62,{ol:.015});box(b,.1,.7,.6,'#5a5f8c',2.16,.92,-.62,{ol:.015});box(b,.34,.74,2*hz+.34,'#ffd9c2',xF-.3,.5,0,{ol:.015});
+  {const w=new THREE.Mesh(new THREE.TorusGeometry(.19,.035,5,12),mat('#3d2c5e'));w.position.set(2.92,1.33,-.62);w.rotation.order='ZYX';w.rotation.set(0,Math.PI/2,.45);b.add(w);}
+  cyl(b,.035,.035,1.7,'#ffd45c',1.62,.5,.98,{seg:8,ol:.012});sph(b,.16,null,.2,yT-.08,0,{mat:LAMP,s:[2.4,.3,1.2],ol:false,ws:8,hs:5});
+  for(const txt of['🏖️ Beach','🏘️ Town']){const sg=signPlane(txt,1.3,.24,'#fff7ea','#ff7a59');sg.position.set(.022,.9,0);sg.rotation.y=Math.PI/2;fg.add(sg);BUS.sign.push(sg);}
+  for(const m of bake(b,true))if(m.material===LAMP)m.castShadow=false;   /* (the lamps need no shadow) */
+  /* the sliding door: orange below, cream on top with a window, like the bus */
+  {const d=new THREE.Group();d.position.set(2.2,.5,W/2+.06);g.add(d);box(d,.94,.7,.05,null,0,0,0,{ol:.02,mat:OR});box(d,.94,.08,.07,WH,0,.66,0,{ol:.012});
+   holePanel(d,.94,.95,.05,CR,[{x1:-.35,y1:.14,x2:.35,y2:.8,k:.1,kb:.1}],0,.7,0);box(d,.05,.3,.06,RK,-.36,.45,.04,{ol:.01});bake(d,false);BUS.door=d;}   /* (thin: the body's shadow covers it) */
+  {const sg=signPlane('🌴 Beach Bus',.86,.21,'#fff7ea','#2b8fc4');sg.position.set(xB-.02,.82,0);sg.rotation.y=-Math.PI/2;g.add(sg);}
   /* Driver Dot: a mint cap and a sky-blue shirt; she sits at the wheel and waves (only her waving arm moves) */
   {const p=makePerson({skin:'#c98d63',hair:'#3d2c5e',style:'bun',eyes:'happy',mouth:'smile',top:'#7cc8ff',sleeve:'#5fa8e0',bottom:'#4a4f7a',shoes:'#2e2347',hat:'cap',hatc:'#5fd4b0',round:true});
    sitPose(p);p.arms[1].userData.keep=1;bake(p.root,true);bake(p.arms[1],true);p.root.position.set(2.42,.3,-.62);p.root.rotation.y=Math.PI/2;g.add(p.root);BUS.dot=p;}
-  {const Wt=[1,.86,.58],Rd=[1,.16,.1];g.add(glowMesh(glowGeo([[L/2+.05,.86,.78,.45,Wt],[L/2+.05,.86,-.78,.45,Wt],[L/2+3.6,.07,0,6,3.2,[.6,.49,.3]],[-L/2-.05,.86,.8,.3,Rd],[-L/2-.05,.86,-.8,.3,Rd],[-L/2-1.3,.07,0,1.8,2,[.28,.04,.03]]])));
-   BUS.ins=glowMesh(glowGeo([[0,1.75,0,1.5,[.5,.38,.18]]]));g.add(BUS.ins);}   /* warm lit windows at night */
+  /* the yellow-green surfboard (one painted piece): on the rack's road side while the bus drives; parked at the beach it hops over the roof and
+     leans on the bus by the back wheel, where nobody walks (busSurf) */
+  {const s=new THREE.Group();g.add(s);const m=new THREE.Mesh(surfGeo(.58,2.4,.12,.55),toon({map:surfTex()}));m.castShadow=m.receiveShadow=true;s.add(m);s.add(new THREE.Mesh(surfGeo(.58,2.4,.12,.55,.015),OL));
+   const a=.12,c=Math.cos(a),sn=Math.sin(a),q=new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(new THREE.Vector3(0,c,-sn),new THREE.Vector3(0,sn,c),new THREE.Vector3(1,0,0)));
+   BUS.sf=s;BUS.sfP=[{x:1.35,y:yR+.06+.161,z:-1.15+.241,q:new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),-aB)},{x:-.45,y:1.2*c+.012,z:W/2+.04+1.2*sn,q}];busSurf(0,false,true);}
+  {const Wt=[1,.86,.58],Rd=[1,.16,.1];g.add(glowMesh(glowGeo([[xN+.09,.82,.6,.45,Wt],[xN+.09,.82,-.6,.45,Wt],[xN+3.6,.07,0,6,3.2,[.6,.49,.3]],[xB-.07,.86,.6,.3,Rd],[xB-.07,.86,-.6,.3,Rd],[xB-1.3,.07,0,1.8,2,[.28,.04,.03]]])));
+   BUS.ins=glowMesh(glowGeo([[.3,1.75,0,1.5,[.5,.38,.18]]]));g.add(BUS.ins);}   /* warm lit windows at night */
   for(const t of BUS.tk)t.obj=g;for(const B of BUS.boards)busBoardDraw(B);}   /* tap the bus itself to get on; the stops' signs are painted now (for the title screen too) */
-function busLamp(){if(P.sit&&P.sit.bus&&BUS.pos){const [x,z]=busW(-.5,0,BUS.pos);lamp.intensity=.6;lamp.position.set(x,2.3,z);}}   /* a warm light inside the bus while you ride */
+/* 🏄 the yellow-green surfboard hops off the rack, over the roof, and leans on the bus while it waits at the beach (k: 0 on the rack, 1 leaning),
+   and hops back when it leaves */
+function busSurf(dt,on,snap){const s=BUS.sf,k0=BUS.sk;if(!s)return;const k=BUS.sk=snap||!(k0>=0)?(on?1:0):clamp(k0+(on?dt:-dt)*1.1,0,1);if(k===k0)return;
+  const [A,B]=BUS.sfP,e=k*k*(3-2*k);s.position.set(A.x+(B.x-A.x)*e,A.y+(B.y-A.y)*k*k+1.3*Math.sin(Math.PI*k),A.z+(B.z-A.z)*(1-(1-k)**3));s.quaternion.copy(A.q).slerp(B.q,e);
+  if(k===1&&!snap&&k0>=0&&BUS.pos&&Math.hypot(P.x-BUS.pos[0],P.z-BUS.pos[1])<25)SFX.bounce();}   /* (a soft clonk when it lands) */
+function busLamp(){if(P.sit&&P.sit.bus&&BUS.pos){const [x,z]=busW(-.5,0,BUS.pos);lamp.intensity=.6;lamp.position.set(x,2.1,z);}}   /* a warm light inside the bus while you ride */
 function busTag(txt){if(txt===BUS.tagT)return;BUS.tagT=txt;if(BUS.tag){BUS.g.remove(BUS.tag);BUS.tag.material.map.dispose();BUS.tag.material.dispose();BUS.tag=null;}
   if(txt){const s=label(txt,.5);s.position.set(1.6,3.45,.4);BUS.g.add(s);BUS.tag=s;}}
 /* ---- the bus stops: a little round shelter with a bench, the timetable board and a 🚌 sign (baked into the place) ---- */
@@ -1939,7 +2024,8 @@ function busInfo(p){const c=busCur(p);SFX.pop();
   if(c&&c.u===0&&!c.s.go){toast('🚌 Driver Dot: “All done for now! 😴 The bus is off to the bus garage.”',3.6);return;}
   if(p==='park')toast('🚌 The beach bus comes '+busWhen(busNext('park','beach'))+'. A ride is '+BUS_FARE+' 🪙',4);
   else toast('🚌 The bus stops right outside this gate! The bus home leaves '+busWhen(busNext('beach','town'),1)+'.',4.2);}
-function busSeat(){let h=0;const s=String(S.pid||S.name||'');for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return Math.abs(h)%BSEAT.length;}
+function busSeat(){let h=0;const s=String(S.pid||S.name||''),n=BSEAT.length;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;h=Math.abs(h)%n;   /* your own seat, or the next free one */
+  for(let i=0;i<n;i++){const k=(h+i)%n,[x,z]=busW(BSEAT[k][0],BSEAT[k][1],BUS.pos);let free=true;for(const a of MP.peers.values())if(a.loc===CUR.id&&Math.hypot(a.x-x,a.z-z)<.4)free=false;if(free)return k;}return h;}
 function busBoard(p){if(BUS.ride||fading||!PLAYING)return;if(!busReady(p)){busInfo(p);return;}
   const s=busCur(p).s,home=s.go==='town',free=!!s.wb||(home&&S.coins<BUS_FARE);
   if(!free&&S.coins<BUS_FARE){SFX.no();BUS.dot.wave=1.2;toast(`🚌 Driver Dot: “A ride is ${BUS_FARE} 🪙. Save up a little more and hop on next time! 💛”`,4.4);return;}
@@ -1987,7 +2073,7 @@ function tentSleep(){if(S.time>=7&&S.time<21){toast('Not sleepy yet, beds work f
 function campFire(){if(!cool('mallow',1)){SFX.tap();return;}SFX.pop();S.hunger=Math.min(100,S.hunger+4);const L=LOC.beach;floatText('🍡',L.ox+CAMP.fx,1.2,L.oz+CAMP.fz,{h:.5});
   toast(pick(['🍡 Mmm, a golden toasty marshmallow!','🔥 Crackle crackle… so warm and cozy!','🍡 A gooey marshmallow! Yum!','✨ Little sparks dance up to the stars!']),2.8);}
 /* ---- every frame ---- */
-function busBlocked(p){const b=BUS.pos;if(!b)return null;const fx=Math.cos(b[2]),fz=-Math.sin(b[2]),hx=b[0]+fx*3.5,hz=b[1]+fz*3.5;   /* someone or a car right in front of it */
+function busBlocked(p){const b=BUS.pos;if(!b)return null;const fx=Math.cos(b[2]),fz=-Math.sin(b[2]),hx=b[0]+fx*3.9,hz=b[1]+fz*3.9;   /* someone or a car right in front of it */
   const near=(x,z,w)=>{const dx=x-hx,dz=z-hz,f=dx*fx+dz*fz;return f>-.3&&f<2.6&&Math.abs(dx*fz-dz*fx)<w;};
   if(CUR.id===BUSP[p].loc&&!(P.sit&&P.sit.bus)&&near(P.x,P.z,1.45))return'player';if(p!=='park')return null;
   for(const w of WALKERS)if(w.state!=='home'&&near(w.x,w.z,1.5))return'ped';for(const f of FRIEND_ACTORS)if(f.loc==='city'&&f.mode!=='away'&&near(f.x,f.z,1.5))return'ped';
@@ -1995,8 +2081,8 @@ function busBlocked(p){const b=BUS.pos;if(!b)return null;const fx=Math.cos(b[2])
   for(const c of CARS){if(c.away)continue;const dx=c.x-hx,dz=c.z-hz,f=dx*fx+dz*fz;if(f>0&&f<4.2&&Math.abs(dx*fz-dz*fx)<1.9)return'car';}return null;}
 function busBlock(x,z,fx,fz){const b=BUS.pos;if(!b||BUS.loc!=='city'||!BUS.g.visible)return false;const bx=Math.cos(b[2]),bz=-Math.sin(b[2]);   /* cars wait for the bus (but a car already in a crossing drives on; the bus waits for it) */
   for(const X of XS)if(Math.abs(x-X.x)<6.3&&Math.abs(z-X.z)<6.3)return false;
-  for(const k of[-3.4,0,3.4]){const dx=b[0]+bx*k-x,dz=b[1]+bz*k-z,f=dx*fx+dz*fz;if(f>0&&f<4.6&&Math.abs(dx*fz-dz*fx)<2.1)return true;}return false;}
-function busSolids(s){const b=BUS.pos;if(!b||!BUS.g||!BUS.g.visible||BUS.loc!==CUR.id)return;const bx=Math.cos(b[2]),bz=-Math.sin(b[2]);for(const k of[-2.4,-.8,.8,2.4])s.push({cx:b[0]+bx*k,cz:b[1]+bz*k,cr:1.3});}
+  for(const k of[-1.7,1.1,3.9]){const dx=b[0]+bx*k-x,dz=b[1]+bz*k-z,f=dx*fx+dz*fz;if(f>0&&f<4.6&&Math.abs(dx*fz-dz*fx)<2.1)return true;}return false;}
+function busSolids(s){const b=BUS.pos;if(!b||!BUS.g||!BUS.g.visible||BUS.loc!==CUR.id)return;const bx=Math.cos(b[2]),bz=-Math.sin(b[2]);for(const k of[-.62,.54,1.69,2.85])s.push({cx:b[0]+bx*k,cz:b[1]+bz*k,cr:1.3});}
 function campPeers(){const L=LOC.beach;if(CUR.id!=='beach')return;   /* a friend asleep in the tent lies down like in a bed: on the sleeping bag, along the tent, head at the back (blanket narrower, inside the tent) */
   for(const a of MP.peers.values())if(a.av&&a.lie&&a.loc==='beach'&&Math.hypot(a.rx-L.ox-CAMP.x,a.rz-L.oz-CAMP.z)<2.6){const p=a.av,r=p.root;r.position.y=.26;r.position.z=L.oz+CAMP.z+(a.rz<L.oz+CAMP.z?-.35:.35);r.rotation.y=Math.PI/2;if(p.duv)p.duv.scale.set(.58,1,.92);}}
 function busHide(){if(BUS.g.visible){BUS.g.visible=false;busTag('');}BUS.loc=null;BUS.s=null;BUS.pos=null;BUS.stop=false;for(const X of XS){const i=X.occ.indexOf(BUSX);if(i>=0)X.occ.splice(i,1);}}
@@ -2004,22 +2090,22 @@ function updBus(dt){if(!BUS.g)return;const p=S&&CUR?(CUR.id==='city'?'park':CUR.
   if(S&&PLAYING){busTick(dt,p);campPeers();}
   let c=p&&busCur(p);if(!c&&p&&BUS.s&&BUS.loc===BUSP[p].loc&&BUS.ui>0&&BUS.ui<BUSP[p].post)c={s:BUS.s,u:BUSP[p].post};   /* held up on its way out: it still drives off */
   if(!c){busHide();return;}
-  const T=BUSP[p],u=c.u;
-  if(BUS.loc!==T.loc||BUS.s!==c.s)BUS.ui=u;   /* you just came here, or a new trip: it is where the timetable says */
+  const T=BUSP[p],u=c.u,fresh=BUS.loc!==T.loc||BUS.s!==c.s;
+  if(fresh)BUS.ui=u;   /* you just came here, or a new trip: it is where the timetable says */
   else if(BUS.hold)BUS.ui=0;   /* you are riding: it waits for the ride picture */
   else if(u>BUS.ui){let bk=busBlocked(p);
     if(bk!=='car')BUS.bt=0;else if((BUS.bt+=dt)>6)bk=null;   /* (stuck behind a car for a long time: drive on) */
     if(bk){BUS.v=0;if(bk==='player'&&(BUS.hk-=dt)<=0){BUS.hk=3.5;SFX.honk();}}
     else if(u-BUS.ui>30&&!inView(BUS.pos[0],BUS.pos[1],5))BUS.ui=u;else{BUS.v=Math.min(12,BUS.v+6*dt);BUS.ui=Math.min(u,BUS.ui+BUS.v*dt);}}
   else BUS.ui=u;
-  const b=busXZ(p,BUS.ui);BUS.pos=b;BUS.g.position.set(b[0],0,b[1]);BUS.g.rotation.y=b[2];BUS.g.visible=true;BUS.loc=T.loc;BUS.s=c.s;
+  const b=busXZ(p,BUS.ui);BUS.pos=b;BUS.g.position.set(b[0],0,b[1]);BUS.g.rotation.y=b[2];BUS.g.visible=true;BUS.loc=T.loc;BUS.s=c.s;BUS.orm.emissiveIntensity=.25*(1-nightF(S.time));
   const stop=u===0&&Math.abs(BUS.ui)<.05;if(stop&&!BUS.stop){BUS.dot.wave=1.6;if(Math.hypot(P.x-b[0],P.z-b[1])<30&&!BUS.ride)SFX.honk();}BUS.stop=stop;
-  BUS.dk=clamp(BUS.dk+(stop&&!BUS.hold?dt:-dt)*1.7,0,1);BUS.door.position.x=2.2-1.02*BUS.dk*BUS.dk*(3-2*BUS.dk);
+  BUS.dk=clamp(BUS.dk+(stop&&!BUS.hold?dt:-dt)*1.7,0,1);BUS.door.position.x=2.2-1.02*BUS.dk*BUS.dk*(3-2*BUS.dk);busSurf(dt,p==='beach'&&stop,fresh);
   const d=BUS.dot;if(d.wave>0){d.wave-=dt;d.arms[1].rotation.z=2.5+Math.sin(d.wave*14)*.35;}else d.arms[1].rotation.z*=.85;
   BUS.sign[0].visible=c.s.go==='beach';BUS.sign[1].visible=c.s.go!=='beach';BUS.ins.visible=!(P.sit&&P.sit.bus);
   busTag(stop&&c.s.go&&!BUS.hold?(c.s.wb?'🎉 Free ride!':(c.s.go==='beach'?'🏖️ ':'🏘️ ')+busMMSS(c.s)):'');
-  if(p==='park')for(const X of XS){const near=Math.abs(b[1]-X.z)<6.3&&b[0]+3.5>X.x-18&&b[0]-3.5<X.x+6.3,i=X.occ.indexOf(BUSX);if(near&&i<0)X.occ.push(BUSX);else if(!near&&i>=0)X.occ.splice(i,1);}   /* cars let the bus cross first */
-  if(stop){const cs=Math.cos(b[2]),sn=Math.sin(b[2]);for(const a of MP.peers.values())if(a.av&&a.loc===CUR.id){const dx=a.x-b[0],dz=a.z-b[1],lx=dx*cs-dz*sn,lz=dx*sn+dz*cs;if(Math.abs(lx)<3.2&&Math.abs(lz)<1.05){a.av.root.position.y=.3;sitPose(a.av);}}}}   /* friends riding with you sit down */
+  if(p==='park')for(const X of XS){const near=Math.abs(b[1]-X.z)<6.3&&b[0]+3.9>X.x-18&&b[0]-1.7<X.x+6.3,i=X.occ.indexOf(BUSX);if(near&&i<0)X.occ.push(BUSX);else if(!near&&i>=0)X.occ.splice(i,1);}   /* cars let the bus cross first */
+  if(stop){const cs=Math.cos(b[2]),sn=Math.sin(b[2]);for(const a of MP.peers.values())if(a.av&&a.loc===CUR.id){const dx=a.x-b[0],dz=a.z-b[1],lx=dx*cs-dz*sn,lz=dx*sn+dz*cs;if(lx>-1.7&&lx<3.2&&Math.abs(lz)<1.05){a.av.root.position.y=.3;sitPose(a.av);}}}}   /* friends riding with you sit down */
 function busTick(dt,p){const R=BUS.ride,t=S.time;
   if(R&&!R.go){if(!(P.sit&&P.sit.bus)){BUS.ride=null;document.body.classList.remove('bus');if(R.fare)S.coins+=R.fare;bringFollowers(true);change();}   /* stood up some other way: off the bus (coins back) */
     else if(S.day!==R.d||t>=R.s.l||(R.s.wb&&performance.now()-R.t0>650))busGo();}
