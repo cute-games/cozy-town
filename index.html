@@ -681,6 +681,7 @@ const SFX={
   honk(){tone(420,.14,'square',.06);tone(420,.16,'square',.06,.2);},
   kick(){tone(160,.1,'triangle',.2,0,90);},
   shot(){tone(120,.16,'triangle',.28,0,60);tone(520,.22,'sine',.05,.03,1300);},
+  whistle(){tone(2300,.12,'sine',.05,0,2500);tone(2300,.32,'sine',.05,.16,2600);},sip(){tone(760,.06,'sine',.04,0,520);tone(700,.07,'sine',.04,.08,480);},
   quack(){tone(520,.08,'square',.05,0,380);tone(500,.09,'square',.05,.13,360);},
   whee(){tone(500,.6,'sine',.1,0,1100);},
   splash(){for(let i=0;i<5;i++)tone(900+Math.random()*900,.06,'sine',.05,i*.04);},
@@ -1505,8 +1506,9 @@ function buildCity(){
    {const c=document.createElement('canvas');c.width=512;c.height=224;const t=new THREE.CanvasTexture(c);t.anisotropy=4;
     const m=new THREE.Mesh(new THREE.PlaneGeometry(4.3,1.88),new THREE.MeshBasicMaterial({map:t}));m.position.set(-25,3.1,57.87);m.userData.keep=1;L.g.add(m);
     L.score={c,t};drawScore();}
-   inter(L,{x:-25,z:58.7,r:2.0,icon:'🔄',label:'Start a new match',act:newMatch});
+   inter(L,{x:-25,z:58.7,r:2.0,icon:'🔄',label:'Start a new match',act:newMatch,when:()=>!fbBoard()});
    for(const bx of[-35,-15]){bench(st,bx,58.6,Math.PI);col(L,bx-.9,58.3,bx+.9,58.95);}}
+  for(const bx of FBB)bench(st,bx,FBZ,Math.PI);   /* 🧃 the football friends' team bench, across from the scoreboard (colliders: fbBuild) */
   L.ball={x:-25,z:68.5,vx:0,vz:0,g:null,cool:0};
   [13,25,37].forEach((x,i)=>{const [w,r]=HC[i+3];building(st,{x,z:61.5,w:8,d:7,h:3.6,wall:w,roof:r,face:-1,gable:true,rh:2.4,door:{x,c:HOUSES[i+3].dc}});col(L,x-4.1,57.9,x+4.1,65.1);});
   // east: toy store, bakery, library, ice cream (they face the ring road)
@@ -2191,7 +2193,7 @@ function shell(L,g,W,D,H,wallMat,floorMat,ceil,into,gap){const T=into||L.g;
   cyl(g,.42,.3,.16,'#ffffff',0,H-.16,0,{seg:16});sph(g,.22,null,0,H-.2,0,{mat:GLOW,ol:false,ws:12,hs:8});
   col(L,-W/2-1,-D/2-1,W/2+1,-D/2);col(L,-W/2-1,D/2,W/2+1,D/2+1);col(L,-W/2-1,-D/2,-W/2,D/2);col(L,W/2,-D/2,W/2+1,D/2);
 }
-function drawScore(){const L=LOC.city;if(!L||!L.score)return;const m=(typeof S!=='undefined'&&S&&S.match)||{l:0,r:0},{c,t}=L.score,x=c.getContext('2d'),W=c.width,H=c.height;
+function drawScore(){const L=LOC.city;if(!L||!L.score)return;const m=fbBoard()?{l:FB.sc[0],r:FB.sc[1]}:(typeof S!=='undefined'&&S&&S.match)||{l:0,r:0},{c,t}=L.score,x=c.getContext('2d'),W=c.width,H=c.height;
   x.fillStyle='#1f1638';x.fillRect(0,0,W,H);x.textAlign='center';x.textBaseline='middle';
   for(const [cx,col,name,n] of[[W*.25,'#5cc8ff','BLUE',m.l],[W*.75,'#ff7aa8','PINK',m.r]]){x.fillStyle=col;x.fillRect(cx-104,14,208,46);
     x.fillStyle='#ffffff';x.font=`800 34px ${FONT}`;x.fillText(name,cx,39);x.font=`800 130px ${FONT}`;x.fillStyle=col;x.fillText(String(Math.min(n,99)),cx,140);}
@@ -3349,7 +3351,7 @@ function buildBall(){const L=LOC.city,g=new THREE.Group(),m=toon({map:ballTex(),
   ring.rotation.x=-Math.PI/2;ring.position.y=.03;fx.add(ring);
   const ag=new THREE.BufferGeometry();ag.setAttribute('position',new THREE.BufferAttribute(new Float32Array(42),3));ag.setIndex([0,1,2,0,2,3,4,5,6,7,8,9,7,9,10,11,12,13]);ag.addGroup(0,9,0);ag.addGroup(9,9,1);
   const arrow=new THREE.Mesh(ag,[new THREE.MeshBasicMaterial({color:INK,transparent:true,opacity:.55,depthWrite:false,side:THREE.DoubleSide}),new THREE.MeshBasicMaterial({color:'#fff3c4',transparent:true,opacity:.95,depthWrite:false,side:THREE.DoubleSide})]);
-  arrow.position.y=.04;arrow.frustumCulled=false;fx.add(arrow);ballArrow(arrow,.9);fx.visible=false;L.dyn.add(fx);L.ball.fx={g:fx,ring,arrow};}
+  arrow.position.y=.04;arrow.frustumCulled=false;fx.add(arrow);ballArrow(arrow,.9);fx.visible=false;L.dyn.add(fx);L.ball.fx={g:fx,ring,arrow};fbBuild();}
 /* the arrow lies on the grass in front of the ball: longer = stronger (ink edge first, then the colour on top) */
 function ballArrow(A,len){if(A.userData.len===len)return;A.userData.len=len;const p=A.geometry.attributes.position,a=p.array,s=.36,w=.07,hw=.2,o=.05,e=s+len,h=e-.34;
   [[-w-o,s-o],[w+o,s-o],[w+o,h],[-w-o,h],[-hw-o*1.7,h-o],[hw+o*1.7,h-o],[0,e+o*1.9],[-w,s],[w,s],[w,h+.01],[-w,h+.01],[-hw,h],[hw,h],[0,e]].forEach(([x,z],i)=>{a[i*3]=x;a[i*3+1]=0;a[i*3+2]=z;});p.needsUpdate=true;}
@@ -3378,7 +3380,7 @@ function ballFrom(a,bl){const b=LOC.city.ball;if(!b||!Array.isArray(bl)||bl.leng
 function scoreFrom(a,sc){if(!Array.isArray(sc)||sc.length<3)return;const [l,r,v]=sc,ok=n=>Number.isInteger(n)&&n>=0&&n<1e6;if(!ok(l)||!ok(r)||!ok(v))return;
   const m=S.match||{l:0,r:0,v:0},mv=m.v||0;if(!(v>mv||(v===mv&&(l!==m.l||r!==m.r)&&a.peer>(MP.me||''))))return;
   const goal=l+r===m.l+m.r+1,blue=l>m.l;S.match={l:Math.min(l,999),r:Math.min(r,999),v};drawScore();change();if(!MP.ready)return;
-  if(goal){SFX.yay();toast('⚽ '+a.nm+' scored for '+(blue?'Blue':'Pink')+'! Blue '+S.match.l+' – '+S.match.r+' Pink',3);}
+  if(goal){SFX.yay();toast('⚽ '+a.nm+' scored for '+(blue?'Blue':'Pink')+'! Blue '+S.match.l+' – '+S.match.r+' Pink',3);fbCheer();}
   else if(l+r===0&&m.l+m.r>0)toast('🏆 '+a.nm+' started a new match! Blue 0 – 0 Pink',2.8);}
 function updBall(dt){const b=LOC.city.ball;if(!b||!b.g)return;
   if(b.reset>0){b.reset-=dt;if(b.reset<=0){b.reset=0;b.x=-25;b.z=68.5;b.vx=b.vz=0;}}
@@ -3389,7 +3391,8 @@ function updBall(dt){const b=LOC.city.ball;if(!b||!b.g)return;
   for(let i=0;i<n;i++){b.x+=b.vx*h;b.z+=b.vz*h;ballWalls(b);}
   const fr=Math.exp(-1.0*dt);b.vx*=fr;b.vz*=fr;
   const inGoal=b.z>GZ1&&b.z<GZ2&&(b.x<-39.1||b.x>-10.9);
-  if(!b.reset&&inGoal&&ballMine()){b.reset=2.2;SFX.yay();S.match=S.match||{l:0,r:0,v:0};S.match.v=(S.match.v||0)+1;const blue=b.x>-25;if(blue)S.match.l++;else S.match.r++;drawScore();toast('⚽ GOAL for '+(blue?'Blue':'Pink')+'! Blue '+S.match.l+' – '+S.match.r+' Pink',3);for(let i=0;i<5;i++)setTimeout(()=>floatText(pick(['⭐','🎉','✨']),b.x+rand(-1,1),1.2+rand(0,1),b.z+rand(-1,1),{h:.6}),i*120);addXP('sport',5);qEvent('goal');}
+  if(!b.reset&&inGoal&&ballMine()){b.reset=2.2;SFX.yay();const blue=b.x>-25;for(let i=0;i<5;i++)setTimeout(()=>floatText(pick(['⭐','🎉','✨']),b.x+rand(-1,1),1.2+rand(0,1),b.z+rand(-1,1),{h:.6}),i*120);
+    if(!fbGoal(blue)){S.match=S.match||{l:0,r:0,v:0};S.match.v=(S.match.v||0)+1;if(blue)S.match.l++;else S.match.r++;drawScore();toast('⚽ GOAL for '+(blue?'Blue':'Pink')+'! Blue '+S.match.l+' – '+S.match.r+' Pink',3);addXP('sport',5);qEvent('goal');}}
   /* it really rolls: it turns around the flat axis across the way it moves */
   const v=Math.hypot(b.vx,b.vz);if(v>1e-3){BAX.set(b.vz/v,0,-b.vx/v);BQ.setFromAxisAngle(BAX,v*dt/BR);b.g.quaternion.premultiply(BQ);}b.g.position.set(b.x,BR,b.z);ballFx(b,dt);}
 const BQ=new THREE.Quaternion(),BAX=new THREE.Vector3(),C_IDLE=new THREE.Color('#fff3c4'),C_SOFT=new THREE.Color('#ffd45c'),C_HARD=new THREE.Color('#ff6b4a');
@@ -3422,6 +3425,216 @@ function ballFx(b,dt){const F=b.fx,A=$('act');if(KC.on){KC.t+=dt;const far=Math.
   F.g.position.set(b.x,0,b.z);F.ring.scale.setScalar(1+pu*.07);F.ring.material.opacity=.6+pu*.25;b.m.emissiveIntensity=.14+pu*.08;
   F.arrow.rotation.y=Math.atan2(ax,az);ballArrow(F.arrow,KC.on?Math.round((1+3.2*p)*20)/20:.9);if(KC.on)fm.color.copy(C_SOFT).lerp(C_HARD,p);else fm.color.copy(C_IDLE);
   if(KC.on){const dg=Math.round(p*360);if(dg!==KC.deg){KC.deg=dg;A.style.backgroundImage=dg?'conic-gradient(#ff8a5c '+dg+'deg,transparent 0)':'';}}}
+/* ---- ⚽ Football friends: four kids at the field every day 14:00–19:00. ⚡ Zoomy Zac is the star (gold 10 on his back, "Zoom zoom, GOAL!",
+   a goal dance), with Tilly, Omar and Bea. On their own they play 2 vs 2 with the town ball (Blue: Zac + Tilly, Pink: Omar + Bea) and the
+   scoreboard shows their game. Walk onto the field and Zac asks: take the field (you + Zac vs Omar + Bea), a 1 vs 1 with him, or "Can I
+   practice?" (a juice break on the team bench across from the scoreboard; from there you can invite Zac to a 1 vs 1). Kind for little
+   players: the other side lets you dribble, your team-mate passes to you a lot, Zac sometimes misses or gets tired.
+   They live in your own game only: when a friend online comes near the field they sit down and cheer, so they never fight a real player
+   for the ball, and the shared score (S.match) is never touched by their goals ---- */
+const FB_ON=14,FB_OFF=19,FBB=[-27.5,-25.7],FBZ=78.4,FBG=[[-31,59],[-19,59]];
+const FB_SPOT={play:[[-28.5,66.5],[-33,71],[-21.5,70.5],[-17,66]],team:[[-28,64.5],0,[-21,70.5],[-17.5,66.5]],duel:[[-20.5,68.5],0,0,0]};
+const FBK=[{nm:'Zoomy Zac',star:1,home:'hS2',seat:3,sp:3.9,jc:'#ffd45c',lk:{skin:'#f1c9a5',hair:'#5a3a24',style:'short',swoop:1,top:'#3f7be0',sleeve:'#ffd45c',bottom:'#ffffff',shoes:'#ffd45c',eyes:'sparkle',mouth:'grin',scale:.93}},
+  {nm:'Tilly',home:'hS1',seat:0,sp:3.3,jc:'#7fdcb5',lk:{skin:'#f6d3bb',hair:'#e8734a',style:'ponytail',top:'#7cc8ff',bottom:'#3f4c86',shoes:'#ffffff',eyes:'happy',scale:.88}},
+  {nm:'Omar',home:'hS3',seat:1,sp:3.3,jc:'#ff8a6b',lk:{skin:'#c98d63',hair:'#1f1a2e',style:'curly',top:'#ff8a6b',bottom:'#3d4a7a',shoes:'#2e2347',scale:.9}},
+  {nm:'Bea',home:'aptW',seat:2,sp:3.2,jc:'#ff7aa8',lk:{skin:'#8a5a3c',hair:'#2e2347',style:'pigtails',top:'#ff9ec4',bottom:'#ffffff',shoes:'#ff7aa8',eyes:'sparkle',scale:.86}}];
+/* mode: '' gone · play (on their own) · rest (a short sit after their own game) · team / duel (a match with you) · juice (you practice) · watch (a friend online is here) · home (going home) */
+const FB={k:[],mode:'',sc:[0,0],t0:0,go:0,me:0,meT:9,kk:0,last:-2,seen:0,away:0,wt:0,hold:0,at:0,af:null,rs:0,lastM:'team',mk:null,ini:0};
+function fbS(){return S.fb||(S.fb={w:0});}   /* saved: w = your wins, c = the day of the last win coins, m = met Zac */
+const fbBoard=()=>FB.mode==='play'||FB.mode==='team'||FB.mode==='duel';   /* the scoreboard shows the kids' game */
+const fbIn=(x,z,m)=>x>-39-m&&x<-11+m&&z>59.6-m&&z<77.4+m;   /* on the field (+ m metres around it) */
+const fbNear=(x,z,r)=>CUR.id==='city'&&Math.hypot(x-P.x,z-P.z)<r;
+function fbSeen(x,z){return CUR.id==='city'&&PLAYING&&Math.hypot(x-camera.position.x,z-camera.position.z)<55&&inView(x,z,1.5);}
+function fbFriend(){if(!MP.grp)return null;for(const a of MP.peers.values())if(a.loc==='city'&&Math.hypot(Math.max(0,-39-a.rx,a.rx+11),Math.max(0,59.6-a.rz,a.rz-77.4))<10)return a;return null;}
+const fbSeat=k=>[FBB[k.d.seat>>1]+(k.d.seat&1?.4:-.4),FBZ+.06];
+/* the gold 10 on Zac's back (reads right from behind) and his white sweatband */
+function fbTen(p){const c='#ffd45c',o={ol:false};box(p.b,.04,.2,.012,c,.075,.74,-.138,o);
+  for(const [w,h,x,y] of [[.035,.2,-.02,.74],[.035,.2,-.12,.74],[.135,.035,-.07,.74],[.135,.035,-.07,.905]])box(p.b,w,h,.012,c,x,y,-.138,o);
+  box(p.head,.62,.07,.6,'#ffffff',0,.27,0,{ol:false});}
+function fbBuild(){const C=LOC.city;for(const bx of FBB)col(C,bx-.85,FBZ-.25,bx+.85,FBZ+.3);   /* the team bench itself is drawn with the field */
+  FBK.forEach((d,i)=>{const p=makePerson(d.lk),sc=d.lk.scale;if(d.star)fbTen(p);bakePerson(p);
+    const tag=label(d.star?'⚡ '+d.nm:d.nm,.3);tag.position.y=1.62*sc+.32;p.root.add(tag);
+    const j=new THREE.Group();box(j,.1,.14,.07,d.jc,0,-.07,0,{ol:.012});box(j,.104,.04,.074,'#ffffff',0,-.01,0,{ol:false});cyl(j,.009,.009,.1,'#ffffff',.025,.07,0,{seg:5,ol:false});bake(j,false);
+    j.position.set(0,-.52,.1);j.visible=false;p.arms[0].add(j);p.root.visible=false;scene.add(p.root);   /* 🧃 a tiny juice box in the right hand */
+    const k={i,d,p,tag,j,x:0,z:0,face:0,st:'off',path:[],next:'',tm:0,cd:0,plan:null,stuck:0,slow:0,slowT:rand(6,11),cheer:0,dance:0,sip:rand(1,4),bub:null,bubT:0,mv:false,spd:0};
+    k.tg={x:0,z:0,r:2.2,icon:()=>fbIcon(k),label:()=>fbLabel(k),act:()=>fbTap(k),obj:p.root};FB.k.push(k);});
+  const mk=label('🎯 Score here!',.55);mk.position.set(-10.5,3.05,68.5);mk.visible=false;scene.add(mk);FB.mk=mk;}
+/* the way home and back: along the town's sidewalks (the walkers' paths) to the field gate between the scoreboard and a bench */
+function fbRoute(h){const F=WPN.field,out=[];let n=WPN[h];for(let g=0;g<60&&n!==F&&n!==undefined;g++){out.push(WP[n]);n=NEXT[n][F];}return out;}
+function fbArrive(k){const r=fbRoute(k.d.home),g=FBG[(r[r.length-1]||[-30])[0]<-25?0:1];
+  [k.x,k.z]=r[0]||g;k.path=[...r.slice(1),g,FB_SPOT.play[k.i]].map(q=>[q[0],q[1]]);k.next='play';k.st='walk';k.tm=k.i<2?1:-1;k.plan=null;}
+function fbStand(k){if(k.st==='sit'){k.j.visible=false;for(const l of k.p.legs)l.rotation.x=0;for(const a of k.p.arms)a.rotation.set(0,0,0);}k.cheer=k.dance=0;}
+function fbGoTo(k,pts,next){if(k.st==='off')return;const p=pts.map(q=>[q[0],q[1]]);if(k.st==='sit')p.unshift([k.x,77.4]);fbStand(k);k.path=p;k.next=next;k.st='walk';k.plan=null;}
+function fbBench(k){if(k.st==='off'||k.st==='sit'||k.next==='sit')return;const s=fbSeat(k),q=[[s[0],77.45],s];
+  if(k.st==='walk'&&k.next==='play')k.path.pop(),k.path.push(...q),k.next='sit';else fbGoTo(k,q,'sit');}
+function fbArrived(k){const n=k.next;k.path=[];k.next='';if(n==='gone'){k.st='off';fbBubOff(k);k.p.root.visible=false;return;}
+  if(n==='sit'){k.st='sit';[k.x,k.z]=fbSeat(k);k.face=Math.PI;k.j.visible=true;k.sip=rand(1,3);return;}k.st='play';}
+/* walking: nobody sees it? A walk home ends at once and a walk to the field jumps ahead to the last spot nobody sees */
+function fbWalk(k,dt){if(k.next==='gone'&&!fbSeen(k.x,k.z)){fbArrived(k);return;}
+  while(k.path.length&&!fbSeen(k.x,k.z)&&!fbSeen(k.path[0][0],k.path[0][1]))[k.x,k.z]=k.path.shift();
+  if(!k.path.length){fbArrived(k);return;}
+  if(fbMove(k,k.path[0][0],k.path[0][1],2.3,dt)<.12){k.path.shift();if(!k.path.length)fbArrived(k);}}
+function fbMove(k,tx,tz,sp,dt){const dx=tx-k.x,dz=tz-k.z,d=Math.hypot(dx,dz);k.mv=d>.06&&sp>0;k.spd=sp;
+  if(k.mv){const s=Math.min(d,sp*dt);k.x+=dx/d*s;k.z+=dz/d*s;if(d>.15)k.face=Math.atan2(dx,dz);}return d;}
+function fbKeep(k){k.x=clamp(k.x,-39.5,-10.5);k.z=clamp(k.z,59.4,77.6);if((k.x<-38.8||k.x>-11.2)&&k.z>65.7&&k.z<71.3)k.x=clamp(k.x,-38.8,-11.2);}
+/* the clock: they come at 14:00 (from their homes, or straight onto the field when nobody sees it) and go home at 19:00 */
+function fbClock(){const due=S.time>=FB_ON&&S.time<FB_OFF,m=FB.mode;
+  if(due&&!m){FB.mode='play';FB.sc=[0,0];FB.me=0;FB.go=1;FB.seen=0;drawScore();FB.k.forEach(fbArrive);
+    if(CUR.id==='city'&&S.intro&&S.time<FB_ON+.3)toast('⚽ The football friends are at the field until 19:00. Come and play!',3.4);}
+  else if(!due&&(m==='play'||m==='rest'||m==='juice'||m==='watch'))fbHome();
+  else if(m==='home'&&FB.k.every(k=>k.st==='off')){FB.mode='';drawScore();}}
+function fbHome(){FB.mode='home';FB.at=0;FB.af=null;fbHudOff();drawScore();
+  for(const k of FB.k){if(k.st==='off')continue;const r=fbRoute(k.d.home).reverse();fbGoTo(k,[FBG[(r[0]||[-30])[0]<-25?0:1],...r],'gone');}}
+function fbFree(){FB.mode='play';FB.sc=[0,0];FB.me=0;FB.go=1.5;FB.at=0;FB.af=null;FB.wt=0;fbHudOff();drawScore();
+  FB.k.forEach((k,i)=>{if(k.st==='walk'&&k.next==='play')return;k.tm=i<2?1:-1;fbGoTo(k,[FB_SPOT.play[i]],'play');});}
+function fbRest(){FB.mode='rest';drawScore();FB.k.forEach(fbBench);FB.at=rand(18,28);FB.af=fbFree;}
+function fbWatch(){FB.mode='watch';FB.wt=0;FB.at=0;FB.af=null;drawScore();FB.k.forEach(fbBench);fbSay(FB.k[0],'A friend is here! We\'ll cheer! 📣');}
+function fbAfter(){if(S.time>=FB_OFF||S.time<FB_ON)fbHome();else fbFree();}
+function fbWhyNot(){if(!FB.mode||FB.mode==='home')return'⚽ The football friends went home. Come back tomorrow from 14:00!';
+  const f=fbFriend();return f?'⚽ '+f.nm+' is at the field! Play together, and try again later. 😊':'';}
+/* ---- the game: kick-off spots, who runs to the ball, passes, shots ---- */
+function fbSpot(k){const s=FB_SPOT[FB.mode==='team'||FB.mode==='duel'?FB.mode:'play'][k.i];return s||[k.x,k.z];}
+function fbAI(k,dt,b){const dir=k.tm,own=dir>0?-39:-11,star=k.d.star,match=FB.me!==0;
+  if(star&&(k.slowT-=dt)<=0){k.slowT=rand(8,13);k.slow=2.4;if(fbNear(k.x,k.z,25))floatText('💦',k.x,2,k.z,{h:.4});}if(k.slow>0)k.slow-=dt;
+  let sp=k.d.sp*(k.slow>0?.6:1)*(match&&dir!==FB.me?.9:1);
+  if(FB.go>0||b.reset>0){const s=fbSpot(k);return[s[0],s[1],2.4];}
+  const dk=Math.hypot(b.x-k.x,b.z-k.z),meD=Math.hypot(b.x-P.x,b.z-P.z);
+  let chase=true;for(const q of FB.k)if(q!==k&&q.st==='play'&&q.tm===dir&&Math.hypot(b.x-q.x,b.z-q.z)<dk-.4){chase=false;break;}
+  if(FB.me===dir&&meD<dk-.6)chase=false;
+  /* you have the ball (touched it just now): the other side does not take it away, it stays in front of its goal */
+  if(FB.meT<1.2&&meD<2.4&&FB.me!==dir){if(!chase)return fbHelp(k,b,dir,own,sp);let ux=own-b.x,uz=68.5-b.z;const l=Math.hypot(ux,uz)||1;k.plan=null;return[b.x+ux/l*1.9,b.z+uz/l*1.9,sp*.55];}
+  if(!chase){k.stuck=0;return fbHelp(k,b,dir,own,sp);}
+  if(dk>3.2||(k.plan&&(k.plan.t-=dt)<=0))k.plan=null;
+  if(!k.plan&&dk<=3.2)k.plan=fbPlan(k,b,dir);
+  if(!k.plan)return[clamp(b.x+b.vx*.4,-39.4,-10.6),clamp(b.z+b.vz*.4,59.5,77.5),sp];
+  const pl=k.plan;let ux=pl.ax-b.x,uz=pl.az-b.z;const ul=Math.hypot(ux,uz)||1;ux/=ul;uz/=ul;
+  const rx=k.x-b.x,rz=k.z-b.z,ahead=rx*ux+rz*uz;let tx=b.x-ux*.45,tz=b.z-uz*.45;
+  if(ahead>-.1&&dk<1.6){const s=(rx*uz-rz*ux)>0?1:-1;tx+=uz*s*.75;tz-=ux*s*.75;}   /* on the wrong side of the ball: walk around it */
+  k.stuck=dk<1.2?k.stuck+dt:0;
+  if(k.cd<=0&&!b.reset&&dk<.72&&(ahead<.15||k.stuck>2.5))fbKick(k,b,k.stuck>2.5?{k:'drib',ax:-25,az:68.5,sp:5}:pl);
+  return[tx,tz,sp];}
+/* not the one at the ball: run forward for a pass when your side has it, else go back between the ball and your goal */
+function fbHelp(k,b,dir,own,sp){let best=1e9,side=0;const cnt=(x,z,t)=>{const d=Math.hypot(b.x-x,b.z-z);if(d<best){best=d;side=t;}};
+  for(const q of FB.k)if(q.st==='play')cnt(q.x,q.z,q.tm);if(FB.me)cnt(P.x,P.z,FB.me);
+  if(side===dir)return[clamp(b.x+dir*6.5,-37.5,-12.5),clamp(b.z>68.5?b.z-4.5:b.z+4.5,61,76),sp*.8];
+  return[lerp(own,b.x,.5),lerp(68.5,b.z,.6),sp*.75];}
+function fbPlan(k,b,dir){const att=dir>0?-11:-39,star=k.d.star;
+  if(Math.hypot(att-b.x,68.5-b.z)<(star?11.5:9)){let az=rand(GZ1+.5,GZ2-.5);const miss=Math.random()<(star?.25:.4);if(miss)az+=(Math.random()<.5?-1:1)*rand(2.7,4);   /* sometimes it goes wide */
+    return{k:'shot',ax:att,az,sp:rand(9.5,12.5),t:1.8,miss};}
+  if(FB.me===dir){const d=Math.hypot(P.x-b.x,P.z-b.z);if(d>2.5&&d<17&&Math.random()<(FB.mode==='team'?.75:.5))return{k:'pass',me:1,ax:P.x-Math.sin(P.yaw)*.7,az:P.z-Math.cos(P.yaw)*.7,sp:clamp(d*1.1+1.6,4,11),t:1.8};}
+  for(const q of FB.k)if(q!==k&&q.st==='play'&&q.tm===dir){const d=Math.hypot(q.x-b.x,q.z-b.z);if(d>3&&d<15&&(q.x-b.x)*dir>-1&&Math.random()<.35)return{k:'pass',ax:q.x+dir*.8,az:q.z,sp:clamp(d*1.1+1.6,4,11),t:1.8};}
+  return{k:'drib',ax:b.x+dir*4,az:clamp(b.z+(68.5-b.z)*.3+rand(-1.6,1.6),60.5,76.5),sp:k.d.sp+1.5,t:1};}
+function fbKick(k,b,pl){let ux=pl.ax-b.x,uz=pl.az-b.z;const l=Math.hypot(ux,uz)||1;b.vx=ux/l*pl.sp;b.vz=uz/l*pl.sp;b.cool=.25;
+  ballKick();FB.kk=BS.k;FB.last=k.i;k.cd=pl.k==='drib'?.45:.9;k.plan=null;k.stuck=0;
+  if(fbNear(b.x,b.z,28)){SFX.kick();if(pl.k==='shot')SFX.shot();}
+  if(pl.me&&cool('fbpass',5))fbSay(k,pick(['Here you go! ⚽','Your turn! 👟','Pass! Now shoot! 💥']));
+  if(pl.miss&&k.d.star)setTimeout(()=>{if(k.st==='play')fbSay(k,pick(['Oops! 😅','Whoops, too wide! 🙈']));},900);}
+/* a goal while the kids play (called by updBall): their own score, kind words, Zac's dance; false = a normal goal for the shared score */
+function fbGoal(blue){if(!fbBoard()){fbCheer();return false;}
+  const w=FB.last,tm=blue?1:-1,me=w===-1,K=FB.k,near=fbNear(-25,68.5,FB.me||me?60:30);   /* their own game only makes noise when you are close by */FB.sc[blue?0:1]++;drawScore();fbHudUpd();
+  const sc=FB.mode==='duel'?'You '+FB.sc[0]+' – '+FB.sc[1]+' Zac':'Blue '+FB.sc[0]+' – '+FB.sc[1]+' Pink';
+  if(me){addXP('sport',5);qEvent('goal');}
+  if(near){if(me&&FB.me===tm){const z=FB.mode==='team'?K[0]:K[1];const t=pick(['What a shot! 🌟','Super goal! ⭐','Wow, you did it! 🎉','High five! 🙌']);fbSay(z,t);toast('⚽ GOAL! '+t+' '+sc,3);}
+    else if(me&&FB.me)toast('😅 Oops, the wrong goal! That\'s okay! '+sc,3);
+    else if(me){fbSay(K[0],'Wow, what a kick! Play with us? 😄');toast('⚽ What a kick! '+sc,3);}
+    else if(w>=0&&K[w].tm===tm&&K[w].d.star){K[0].dance=1.8;fbSay(K[0],'Zoom zoom, GOAL! ⚡');floatText('🕺',K[0].x,2.3,K[0].z,{h:.6,life:1.8});toast('⚡ Zoomy Zac: “Zoom zoom, GOAL!” '+sc,3);}
+    else if(w>=0&&K[w].tm===tm)toast('⚽ '+K[w].d.nm+' scored! '+sc,2.6);
+    else toast('⚽ Goal! '+sc,2.6);
+    if(FB.me&&tm!==FB.me&&FB.mode==='team')setTimeout(()=>{if(FB.mode==='team')fbSay(K[0],pick(['Nice try! We\'ll get the next one! 💪','Don\'t worry, let\'s go again! ⚡']));},1300);}
+  for(const k of K)if(k.st==='play'&&k.tm===tm&&!k.dance)k.cheer=1.3;fbCheer();
+  if(Math.max(FB.sc[0],FB.sc[1])>=3&&!FB.af){FB.at=2.6;FB.af=FB.mode==='play'?fbRest:()=>fbEnd('done');}
+  return true;}
+function fbCheer(){let any=0;for(const k of FB.k)if(k.st==='sit'){k.cheer=1.4;any=1;}if(any&&fbNear(-26.6,FBZ,30))floatText(pick(['🎉','📣','👏']),-26.6,2,FBZ,{h:.5});}
+/* ---- talking: the card, the bench, saying bye ---- */
+function fbTgOn(k){return k.st!=='off'&&k.p.root.visible&&!((FB.mode==='team'||FB.mode==='duel')&&k.st==='play');}
+function fbLabel(k){const m=FB.mode,bn=k.st==='sit'||k.next==='sit';if(m==='home')return'Say bye to '+k.d.nm;if(bn&&k.d.star&&m==='juice')return'Invite Zoomy Zac to a 1 vs 1';
+  if(bn&&m!=='rest')return'Say hi to '+k.d.nm;return'Talk to the team';}
+function fbIcon(k){const c=fbLabel(k)[0];return c==='I'?'🥇':c==='T'?'⚽':'👋';}
+function fbTap(k){const m=FB.mode,bn=k.st==='sit'||k.next==='sit';k.p.wave=1.2;SFX.talk();
+  if(m==='home'){toast('👋 '+k.d.nm+': “'+pick(['See you tomorrow! 👋','Bye bye! Time for dinner! 🍝','Bye! Come and play tomorrow! ⚽'])+'”',3);return;}
+  if(bn&&m==='juice'&&k.d.star){fbStart('duel');return;}
+  if(bn&&m!=='rest'){const L=m==='juice'?['Mmm, apple juice! 🧃','Juice breaks are the best! 😋','Show us your best kick! ⚽','We\'re cheering for you! 📣']:m==='watch'?['Your friend plays so well! 👀','We\'re watching you two play! 📣','Go, go, go! 🎉']:['Go, go, go! 📣','You can do it! ⭐','Woohoo! ⚽'];
+    toast('🧃 '+k.d.nm+': “'+pick(L)+'”',3);return;}
+  fbCard();}
+function fbCard(){const Z=FB.k[0],s=S.fb||{},f=fbFriend();FB.hold=1;Z.p.wave=1.2;SFX.talk();
+  for(const k of FB.k)if(k.st==='play')k.face=Math.atan2(P.x-k.x,P.z-k.z);
+  const who='<div class="who" style="--c:#ffd45c">⚡ Zoomy Zac</div>',o={bottom:true,onClose:()=>{FB.hold=0;}};
+  if(f||FB.mode==='watch'){openPanel(who+`<p class="line">${f?'Your friend '+esc(f.nm)+' is here! Play together! ':''}We'll watch and cheer for you! 📣</p><div class="row"><button class="btn mint" data-a="close">OK! ⚽</button></div>`,o);return;}
+  const first=!s.m;if(first){fbS().m=1;change();}
+  openPanel(who+`<p class="line">${first?'Hi! I\'m Zoomy Zac! ⚡ These are my football friends: Tilly, Omar and Bea. ':'Hi '+esc(S.name||'friend')+'! '}Do you want to take the field, or a 1 vs 1?</p>
+    ${s.w?`<p class="note" style="text-align:center">🏆 Your wins: <b>${s.w}</b></p>`:''}
+    <div class="row"><button class="btn mint" data-a="fbTeam">⚽ Take the field</button><button class="btn butter" data-a="fbDuel">🥇 1 vs 1 with Zac</button><button class="btn sky" data-a="fbJuice">🧃 Can I practice?</button><button class="btn white" data-a="close">Maybe later</button></div>`,o);}
+function fbJuice(){closePanel();FB.hold=0;const why=fbWhyNot();if(why){toast(why,3.2);return;}
+  FB.mode='juice';FB.away=0;FB.at=0;FB.af=null;drawScore();FB.k.forEach(fbBench);SFX.pop();
+  toast('⚡ Zoomy Zac: “Sure! We need a juice break! 🧃” The field and the ball are all yours!',3.6);fbSay(FB.k[0],'Juice break! 🧃');}
+/* ---- a match with you: you are always BLUE and shoot into the goal with the 🎯 (east); first to 3 goals, or 3 game hours ---- */
+function fbStart(m){closePanel();FB.hold=0;const why=fbWhyNot();if(why){toast(why,3.2);return;}
+  fade(()=>{if(CUR.id!=='city'||fbWhyNot())return;const b=LOC.city.ball;
+    FB.mode=m;FB.lastM=m;FB.sc=[0,0];FB.t0=S.day*24+S.time;FB.go=2.2;FB.me=1;FB.meT=9;FB.at=0;FB.af=null;
+    if(DECO.on)decoEnd();if(P.ride)stopRide();P.sit=null;P.x=-30.5;P.z=68.5;P.yaw=-Math.PI/2;P.pitch=-.12;
+    ballKick();FB.kk=BS.k;b.x=-25;b.z=68.5;b.vx=b.vz=0;b.reset=0;b.cool=0;
+    FB.k.forEach((k,i)=>{const s=FB_SPOT[m][i];fbStand(k);fbBubOff(k);k.plan=null;k.path=[];k.next='';k.p.root.visible=true;
+      if(s){k.tm=m==='duel'?-1:i<2?1:-1;k.st='play';[k.x,k.z]=s;k.face=k.tm>0?Math.PI/2:-Math.PI/2;}
+      else{k.tm=0;k.st='sit';[k.x,k.z]=fbSeat(k);k.face=Math.PI;k.j.visible=true;}});
+    fbHud().hidden=false;document.body.classList.add('fbOn');fbHudUpd();FB.mk.visible=true;drawScore();SFX.whistle();
+    toast(m==='team'?'⚽ You and Zac are BLUE! Kick the ball into the goal with the 🎯. First to 3 goals wins!':'🥇 You vs Zoomy Zac! Kick the ball into the goal with the 🎯. First to 3 goals wins!',4);});}
+function fbEnd(why){const m=FB.mode;if(m!=='team'&&m!=='duel')return;const [a,c]=FB.sc;FB.me=0;FB.at=0;FB.af=null;fbHudOff();
+  if(why==='done'){const s=fbS(),won=a>c,draw=a===c,duel=m==='duel';let coin=false;addXP('sport',6);
+    if(won){s.w=(s.w||0)+1;if(s.c!==S.day){s.c=S.day;S.coins+=10;coin=true;SFX.coin();}SFX.yay();}change();
+    const line=won?(duel?`You beat me ${a} – ${c}! 🏆 Wow, you're super fast!`:`Hooray! We won ${a} – ${c}! 🏆 You're a real football star!`):draw?`A draw, ${a} – ${c}! Everybody wins today! 🤝`
+      :duel?`Zoom zoom! I won ${c} – ${a} this time. You played great! 💪`:`Aww, Pink won ${c} – ${a}. What a match! We'll win next time! 💪`;
+    const late=S.time>=FB_OFF||S.time<FB_ON;   /* after 19:00 they go home: no "play again" */
+    if(!UI.open)openPanel(`<div class="who" style="--c:#ffd45c">⚡ Zoomy Zac</div><p class="line">${line}${late?' Now it\'s time to go home. See you tomorrow! 👋':''}</p>${coin?'<p class="note" style="text-align:center">+10 🪙 for your first win today!</p>':''}
+      <div class="row">${late?'':'<button class="btn mint" data-a="fbAgain">⚽ Play again</button>'}<button class="btn white" data-a="close">Bye bye!</button></div>`,{bottom:true});
+    else toast('⚡ Zoomy Zac: “'+line+'”',4);}
+  else toast(why==='stop'?'⚽ Thanks for playing! See you on the field! 👋':why==='friend'?'👋 A friend came to the field! Play together! 😊':'⚽ You left the field, so the match is over. Come back soon! 👋',3.4);
+  fbAfter();}
+function fbHud(){let h=$('fbHud');if(h)return h;
+  const st=document.createElement('style');st.textContent='#fbHud{pointer-events:auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:24px;box-shadow:0 4px 0 var(--soft);padding:4px 5px 4px 12px;font-weight:800;font-size:19px;max-width:100%}#fbHud[hidden]{display:none}#fbTxt{white-space:nowrap}#fbStop{min-height:44px;padding:4px 14px;font-size:17px}@media (max-height:500px){body.fbOn #pad{display:none}}';   /* short phone screens: no notepad during a match, so the column fits */document.head.appendChild(st);
+  h=document.createElement('div');h.id='fbHud';h.hidden=true;h.innerHTML='<b id="fbTxt"></b><button class="btn white" id="fbStop" aria-label="Stop the match">✋ Stop</button>';$('left').insertBefore(h,$('tasks'));
+  $('fbStop').addEventListener('click',()=>{audioInit();SFX.tap();fbEnd('stop');});return h;}
+function fbHudUpd(){const t=$('fbTxt');if(t)t.textContent=FB.mode==='duel'?'🥇 You '+FB.sc[0]+' – '+FB.sc[1]+' Zac':'⚽ Blue '+FB.sc[0]+' – '+FB.sc[1]+' Pink';}
+function fbHudOff(){const h=$('fbHud');if(h)h.hidden=true;document.body.classList.remove('fbOn');if(FB.mk)FB.mk.visible=false;}
+function fbSay(k,txt,t){if(!fbNear(k.x,k.z,32))return;fbBubOff(k);const b=label(txt,.3);b.position.y=k.tag.position.y+.42;k.p.root.add(b);k.bub=b;k.bubT=3;
+  if(t)toast((k.d.star?'⚡ ':'')+k.d.nm+': “'+txt+'”',3.2);}
+function fbBubOff(k){if(!k.bub)return;k.p.root.remove(k.bub);k.bub.material.map.dispose();k.bub.material.dispose();k.bub=null;}
+/* ---- every frame ---- */
+function fbTick(dt){if(!FB.k.length||!S)return;const m0=FB.mode,b=LOC.city.ball;fbClock();
+  if(CUR.id!=='city'){for(const k of FB.k){if(k.st==='walk')fbWalk(k,dt);k.p.root.visible=false;}if(m0==='team'||m0==='duel')fbEnd('left');return;}
+  if(!FB.ini){FB.ini=1;if(fbIn(P.x,P.z,1.5))FB.seen=1;}   /* a game loaded right on the field: no card until you come again */
+  if(BS.k!==FB.kk){FB.kk=BS.k;if(BS.mine){FB.last=-1;FB.meT=0;}}FB.meT+=dt;   /* your own kicks (the kids note theirs in fbKick) */
+  if(b.reset>0)FB.rs=1;else if(FB.rs){FB.rs=0;FB.go=Math.max(FB.go,1.1);}if(FB.go>0&&!b.reset)FB.go-=dt;
+  if(FB.hold&&!UI.open)FB.hold=0;
+  if(FB.at>0&&(FB.at-=dt)<=0&&FB.af){const f=FB.af;FB.af=null;f();}
+  const m=FB.mode,fr=fbFriend();
+  if((m==='play'||m==='rest')&&fr)fbWatch();
+  else if(m==='watch'){if(fr)FB.wt=0;else if((FB.wt+=dt)>3)fbFree();}
+  else if(m==='juice'){if(fbIn(P.x,P.z,8))FB.away=0;else if((FB.away+=dt)>12)fbFree();}
+  else if(m==='team'||m==='duel'){if(!FB.af){if(S.day*24+S.time-FB.t0>=3||S.time>=20)fbEnd('done');else if(!fbIn(P.x,P.z,9))fbEnd('left');else if(fr)fbEnd('friend');}}
+  /* walk onto the field while they play: Zac asks you to join */
+  if(!fbIn(P.x,P.z,14))FB.seen=0;
+  else if(!FB.seen&&(m==='play'||m==='rest')&&fbIn(P.x,P.z,1.5)&&PLAYING&&S.intro&&!UI.open&&!CUT&&!CR&&!DECO.on&&!TUT&&!DTUT&&!CLIMB&&!fading&&!P.ride&&!P.sit&&!dlCarrying()&&FB.k[0].st!=='walk'&&FB.k[0].st!=='off'){FB.seen=1;fbCard();}
+  /* far away nobody sees them: they wait (no ball kicks, so the shared ball stays still online) */
+  const run=Math.hypot(P.x+25,P.z-68.5)<75;
+  for(const k of FB.k)fbKid(k,dt,b,run);fbSep();}
+function fbKid(k,dt,b,run){if(k.st==='off'){k.p.root.visible=false;return;}if(k.cd>0)k.cd-=dt;if(k.bubT>0&&(k.bubT-=dt)<=0)fbBubOff(k);
+  const mt=FB.mode==='team'||FB.mode==='duel',stop=FB.hold||!run||(mt&&(UI.open||fading));k.mv=false;
+  if(k.st==='walk')fbWalk(k,dt);else if(k.st==='play'&&!stop){const t=fbAI(k,dt,b);fbMove(k,t[0],t[1],t[2],dt);fbKeep(k);}
+  if(k.st==='off')return;
+  const p=k.p,a=p.arms,sc=k.d.lk.scale,far=Math.hypot(k.x-camera.position.x,k.z-camera.position.z)>55;p.root.visible=!far;
+  k.tg.x=k.x;k.tg.z=k.st==='sit'?k.z-.75:k.z;if(far)return;let y=0;
+  if(k.st==='sit'){y=.55-.62*sc;for(const l of p.legs)l.rotation.x=-1.45;k.face=Math.PI;
+    if(k.cheer>0){k.cheer-=dt;a[0].rotation.set(0,0,-2.5);a[1].rotation.set(0,0,2.5);y+=Math.abs(Math.sin(k.cheer*10))*.06;}
+    else{const s0=k.sip;k.sip-=dt;let up=0;if(s0>=0&&k.sip<0&&fbNear(k.x,k.z,6))SFX.sip();if(k.sip<0){up=Math.sin(Math.min(1,-k.sip/1.4)*Math.PI);if(k.sip<-1.4)k.sip=rand(3,7);}
+      a[0].rotation.set(-.55-1.6*up,0,.4*up);if(p.wave>0){p.wave-=dt;a[1].rotation.set(0,0,2.5+Math.sin(p.wave*14)*.35);}else a[1].rotation.set(-.55,0,0);}}
+  else{animPerson(p,dt,k.mv,k.mv?k.spd/2.4:1);
+    if(k.dance>0||k.cheer>0){const d=k.dance>0;if(d)k.dance-=dt;else k.cheer-=dt;a[0].rotation.set(0,0,-2.6);a[1].rotation.set(0,0,2.6);y=Math.abs(Math.sin((d?k.dance:k.cheer)*(d?7:9)))*(d?.22:.15);if(d)p.root.rotation.y+=dt*9;}
+    else{a[0].rotation.z*=.8;if(!k.mv)k.face=FB.hold||k.st==='walk'||!b?Math.atan2(P.x-k.x,P.z-k.z):Math.atan2(b.x-k.x,b.z-k.z);}}
+  p.root.position.set(k.x,y,k.z);if(!(k.dance>0))p.root.rotation.y=angLerp(p.root.rotation.y,k.face,Math.min(1,dt*10));}
+function fbSep(){const K=FB.k,on=k=>k.st==='play'||k.st==='walk';
+  for(let i=0;i<K.length;i++){const a=K[i];if(!on(a))continue;
+    for(let j=i+1;j<K.length;j++){const c=K[j];if(!on(c))continue;const dx=c.x-a.x,dz=c.z-a.z,d=Math.hypot(dx,dz);if(d<.7&&d>1e-4){const s=(.7-d)/2/d;a.x-=dx*s;a.z-=dz*s;c.x+=dx*s;c.z+=dz*s;}}
+    const dx=a.x-P.x,dz=a.z-P.z,d=Math.hypot(dx,dz);if(d<.65&&d>1e-4){a.x=P.x+dx/d*.65;a.z=P.z+dz/d*.65;}}}
 /* ---- one big world: everyone who opens Cozy Town plays together ---- */
 const WORLD='cozy-world',EARLY={room:null,db:null,user:null};
 const MP={me:'',room:null,grp:null,peers:new Map(),list:[],t:0,lastKey:'',ready:false,unsub:null,said:0,state:'idle',tries:0,help:false,rt:0};
@@ -4110,7 +4323,7 @@ function targets(){const out=CUR.inter.slice();
   for(const p of PET_ACTORS)if(p.loc===CUR.id)out.push(p.target);
   if(CUR.id==='pets')for(const a of PEN)out.push(a.target);
   if(S.time>=8&&S.time<20)for(const s of SHOPPERS)if(s.L===CUR)out.push(s.target);
-  if(CUR.id==='city'){for(const l of LITTER)out.push(l.target);for(const w of WALKERS)if(w.state!=='home')out.push(w.target);if(sittersOut())for(const s of SITTERS)out.push(s.target);if(PSX.on)for(const j of PSX.judges)out.push(j.target);out.push(BALLT);}
+  if(CUR.id==='city'){for(const l of LITTER)out.push(l.target);for(const w of WALKERS)if(w.state!=='home')out.push(w.target);if(sittersOut())for(const s of SITTERS)out.push(s.target);if(PSX.on)for(const j of PSX.judges)out.push(j.target);for(const k of FB.k)if(fbTgOn(k))out.push(k.tg);out.push(BALLT);}
   return out;}
 function findTarget(){if(TN.on)return TN.tg;if(P.ride)return P.ride.kind==='swing'?{icon:'🧍',label:'Get off the swing',act:stopRide}:null;if(P.sit)return P.sit.bus?(BUS.ride&&BUS.ride.go?null:BUS_OFF):{icon:'🧍',label:P.sit.bed?'Get up':'Stand up',act:standUp};
   if(KC.on){if(ballNear())return BALLT;KC.on=false;kcClr();}
@@ -4270,6 +4483,7 @@ const ACT={};
 $('card').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||b.disabled)return;const [k,...r]=b.dataset.a.split(':');if(k!=='buy')SFX.tap();if(ACT[k])ACT[k](r.join(':'),b);});
 ACT.close=()=>closePanel();
 ACT.tnGo=()=>{closePanel();tnStart();};
+ACT.fbTeam=()=>fbStart('team');ACT.fbDuel=()=>fbStart('duel');ACT.fbJuice=()=>fbJuice();ACT.fbAgain=()=>fbStart(FB.lastM);
 ACT.cloth=k=>{const c=CLOTHES[k];if(!c)return;SFX.tap();
   if(c.hat||c.gl){CLO.sel=k;CLO.col=c.cols.find(x=>!variants(k).some(v=>v.c===x))||c.cols[0];openClothes();return;}
   if(owns(k)){toast(c.i+' You have these already! Try them on at the 🪞 mirror.',3);return;}if(shutBuy('clothes'))return;
@@ -5873,6 +6087,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     for(const w of WALKERS)w.update(dt);
     updateCars(dt);mpTick(dt);laneTick(dt);zzTick(dt);for(const s of SHOPPERS)s.update(dt);
     updGarden(dt);bdTick(dt);
+    fbTick(dt);   /* ⚽ the football friends */
     {const vis=CUR.id==='city'&&sittersOut();for(const s of SITTERS){s.p.root.visible=vis;if(vis){s.t+=dt;s.p.head.rotation.y=Math.sin(s.t*.5)*.35;if(s.p.wave>0){s.p.wave-=dt;s.p.arms[1].rotation.z=2.5+Math.sin(s.p.wave*14)*.35;}else s.p.arms[1].rotation.z*=.85;}}}
     psUpdate(dt);dayTick();
     for(const k of KEEPERS)if(k.L===CUR){k.p.root.rotation.y=angLerp(k.p.root.rotation.y,Math.atan2(P.x-k.x,P.z-k.z),.05);animPerson(k.p,dt,false);}
