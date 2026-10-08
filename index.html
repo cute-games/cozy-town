@@ -1218,9 +1218,15 @@ function trafficLight(g,x,z,ry){const p=new THREE.Group();p.position.set(x,0,z);
 function mailbox(g,x,z,ry){const p=new THREE.Group();p.position.set(x,0,z);p.rotation.y=ry;g.add(p);box(p,.1,1,.1,'#9b6b4a',0,0,0);box(p,.34,.3,.5,'#7cc8ff',0,1,0);cyl(p,.17,.17,.5,'#7cc8ff',0,1.3,0,{rx:Math.PI/2,center:true,seg:14});box(p,.04,.3,.1,'#ff6b6b',.2,1.15,.1,{ol:.015});}
 
 /* ---- building parts ---- */
-function windowAt(g,x,y,z,ry,fc='#ffffff',w=1,h=1.25){const p=new THREE.Group();p.position.set(x,y,z);p.rotation.y=ry;g.add(p);
+function windowAt(g,x,y,z,ry,fc='#ffffff',w=1,h=1.25,dc){const p=new THREE.Group();p.position.set(x,y,z);p.rotation.y=ry;g.add(p);
   box(p,w+.18,h+.18,.14,fc,0,-.09,0);box(p,w,h,.04,null,0,0,.085,{mat:WIN,ol:false});
-  box(p,.06,h,.03,fc,0,0,.11,{ol:false});box(p,w,.06,.03,fc,0,h/2-.03,.11,{ol:false});box(p,w+.34,.09,.22,fc,0,-.18,.09,{ol:.02});}
+  box(p,.06,h,.03,fc,0,0,.11,{ol:false});box(p,w,.06,.03,fc,0,h/2-.03,.11,{ol:false});box(p,w+.34,.09,.22,fc,0,-.18,.09,{ol:.02});
+  /* 🏡 cozy extras (town buildings): shutters, a little lintel on top, a flower box under the sill */
+  if(dc){if(dc.sh)for(const s of[-1,1])if(s!==dc.ns)box(p,.32,h+.12,.06,dc.sh,s*(w/2+.27),-.06,.04,{ol:.015});
+    if(dc.top)box(p,w+.4,.15,.2,dc.top,0,h+.09,.05,{ol:false});
+    if(dc.fb!=null){box(p,w+.2,.24,.14,'#c98f5e',0,-.44,.08,{ol:.015});box(p,w+.08,.08,.1,'#5fbf74',0,-.2,.08,{ol:false});
+      const n=Math.max(2,Math.round(w/.4));for(let i=0;i<n;i++)sph(p,.09,FLOWER_COLS[(dc.fb+i)%5],-w/2+(i+.5)*w/n,-.1,.1,{ws:6,hs:4,ol:.012});}}}
+const FLOWER_COLS=['#ff7aa8','#ffd45c','#ffffff','#b79cff','#ff8a6b'],SHOP_FLOWERS=['#ff9cc4','#ffe680','#ffffff','#d2c0ff','#ffb092'];
 function doorAt(g,x,z,ry,c,glass,noStep){const p=new THREE.Group();p.position.set(x,0,z);p.rotation.y=ry;g.add(p);
   box(p,1.5,2.5,.12,'#ffffff',0,0,0);
   if(glass){box(p,1.24,2.26,.16,null,0,.02,0,{mat:WIN,ol:false});box(p,.06,2.26,.18,'#ffffff',0,.02,0,{ol:false});box(p,.05,.4,.05,'#c8c8d8',-.15,1.0,.12,{ol:.012});box(p,.05,.4,.05,'#c8c8d8',.15,1.0,.12,{ol:.012});}
@@ -1232,15 +1238,29 @@ function building(g,o){
   if(o.gable){const a=d/2+.5,H=o.rh||2.2,th=Math.atan2(H,a),Ls=Math.hypot(a,H)+.12;
     for(const s of[1,-1])box(g,w+.8,.2,Ls,o.roof,x,h+H/2-.06,z+s*a/2,{rx:s*th,center:true,ol:.04});
     prism(g,w-.04,d-.04,H*.96,o.wall,x,h,z,{ol:false});
-    if(o.chimney)box(g,.7,1.8,.7,trim,x+w*.27,h+.5,z-d*.18);}
-  else{box(g,w+.3,.5,d+.3,trim,x,h,z,{ol:.04});box(g,w-.2,.06,d-.2,o.roof||'#a7a9cf',x,h+.3,z,{ol:false});}
+    if(o.chimney!==false){box(g,.7,1.8,.7,trim,x+w*.27,h+.5,z-d*.18);box(g,.9,.18,.9,shade(trim,-.1),x+w*.27,h+2.3,z-d*.18,{ol:.02});}
+    /* 🏡 roof ridge, a trim band under the eaves, a little round-top attic window in each side gable */
+    box(g,w+.9,.16,.32,shade(o.roof,-.1),x,h+H-.1,z,{ol:.03});box(g,w+.1,.22,d+.1,trim,x,h-.22,z,{ol:.015});
+    for(const s of[-1,1])windowAt(g,x+s*(w/2+.02),h+.3,z,s*Math.PI/2,'#ffffff',.62,.62);}
+  else{box(g,w+.3,.5,d+.3,trim,x,h,z,{ol:.04});box(g,w-.2,.06,d-.2,o.roof||'#a7a9cf',x,h+.3,z,{ol:false});
+    /* 🏢 a white line under the roof edge and corner posts at the front */
+    box(g,w+.18,.14,d+.18,'#ffffff',x,h-.14,z,{ol:.015});for(const s of[-1,1])box(g,.34,h-.14,.34,trim,x+s*(w/2-.1),0,fz-f*.1,{ol:.02});}
   const fl=o.floors||Math.max(1,Math.round((h-.4)/3.1)),nW=Math.max(1,Math.floor((w-.8)/2.3));
-  for(let i=0;i<fl;i++){const wy=1.0+i*3.1;for(let k=0;k<nW;k++){const wx=x-w/2+(k+.5)*(w/nW);if(i===0&&o.door&&Math.abs(wx-o.door.x)<1.6)continue;if(i===0&&o.shop)continue;if(o.skip&&o.skip(wx-x,i))continue;windowAt(g,wx,wy,fz+f*.02,ry,o.wf||'#ffffff');}
-    const nS=Math.max(1,Math.floor((d-1)/2.6));for(let k=0;k<nS;k++){const wz=z-d/2+(k+.5)*(d/nS);windowAt(g,x-w/2-.02,wy,wz,-Math.PI/2,o.wf);windowAt(g,x+w/2+.02,wy,wz,Math.PI/2,o.wf);}}
+  /* window extras: houses get shutters (roof colour) and flower boxes downstairs; the others a lintel, flats flower boxes upstairs */
+  const dec=(i,k,fr,wx)=>o.gable?{sh:o.bare&&fr&&o.bare(wx-x,i)?null:o.roof,ns:fr&&i===0&&o.door&&Math.abs(wx-o.door.x)<2.6?f*Math.sign(o.door.x-wx):0,fb:fr&&i===0?k:null}:{top:trim,fb:fr&&o.boxes&&i>0&&(k+i)%2===0?k+i:null};
+  for(let i=1;i<fl;i++)box(g,w+.1,.16,d+.1,trim,x,i*3.1-.12,z,{ol:.015});
+  for(let i=0;i<fl;i++){const wy=1.0+i*3.1;for(let k=0;k<nW;k++){const wx=x-w/2+(k+.5)*(w/nW);if(i===0&&o.door&&Math.abs(wx-o.door.x)<1.6)continue;if(i===0&&o.shop)continue;if(o.skip&&o.skip(wx-x,i))continue;windowAt(g,wx,wy,fz+f*.02,ry,o.wf||'#ffffff',1,1.25,dec(i,k,true,wx));}
+    const nS=Math.max(1,Math.floor((d-1)/2.6));for(let k=0;k<nS;k++){const wz=z-d/2+(k+.5)*(d/nS);windowAt(g,x-w/2-.02,wy,wz,-Math.PI/2,o.wf,1,1.25,dec(i,k));windowAt(g,x+w/2+.02,wy,wz,Math.PI/2,o.wf,1,1.25,dec(i,k));}}
   if(o.door)doorAt(g,o.door.x,fz+f*.02,ry,o.door.c||'#ff7aa8',o.door.glass);
+  /* 🚪 a little roof over the front door (shops have their awning) */
+  if(o.door&&!o.shop){const p=new THREE.Group();p.position.set(o.door.x,0,fz+f*.02);p.rotation.y=ry;g.add(p);
+    if(o.gable)prism(p,.95,2.1,.5,o.roof,0,2.62,.47,{ry:Math.PI/2,ol:.03});else box(p,2.3,.16,1.0,o.door.glass?trim:o.door.c,0,2.62,.5,{ol:.03});
+    for(const s of[-1,1])box(p,.1,.36,.42,'#ffffff',s*.9,2.26,.21,{ol:.012});}
   if(o.shop){const p=new THREE.Group();p.position.set(x,0,fz);p.rotation.y=ry;g.add(p);
     const ww=(w-2.2)/2-.45;
-    for(const s of[-1,1]){const cx=s*(1.1+.25+ww/2);box(p,ww+.2,2.0,.14,'#ffffff',cx,.55,.02);box(p,ww,1.8,.08,null,cx,.65,.09,{mat:WIN,ol:false});box(p,ww+.3,.12,.35,'#ffffff',cx,.45,.12,{ol:.02});}
+    for(const s of[-1,1]){const cx=s*(1.1+.25+ww/2);box(p,ww+.2,2.0,.14,'#ffffff',cx,.55,.02);box(p,ww,1.8,.08,null,cx,.65,.09,{mat:WIN,ol:false});box(p,ww+.3,.12,.35,'#ffffff',cx,.45,.12,{ol:.02});
+      /* 🌼 a flower box on each shop window sill */
+      box(p,ww-.1,.2,.22,'#e3a96f',cx,.57,.2,{ol:.015});box(p,ww-.2,.07,.16,'#6fd884',cx,.77,.2,{ol:false});const n=Math.max(3,Math.round(ww/.5));for(let i=0;i<n;i++)sph(p,.14,SHOP_FLOWERS[(i+(s>0?2:0))%5],cx-ww/2+(i+.5)*ww/n,.95,.22,{ws:6,hs:4,ol:.012});}
     const n=Math.round((w+.4)/.6),sw=(w+.4)/n;
     for(let i=0;i<n;i++)box(p,sw,.08,1.5,i%2?'#ffffff':o.awning,-(w+.4)/2+sw*(i+.5),2.86,.7,{rx:.32,ol:.012,center:true});
     for(let i=0;i<n;i++)box(p,sw,.26,.04,i%2?'#ffffff':o.awning,-(w+.4)/2+sw*(i+.5),2.36,1.42,{ol:.012});
@@ -1394,7 +1414,7 @@ function buildCity(){
   // NW block: your house, the neighbour, apartments
   {const hs=new THREE.Group(),hb=new THREE.Group();L.g.add(hs,hb);
    building(hs,{x:-17,z:-15,w:9,d:7,h:3.8,wall:'#d9c8ff',trim:'#b9a3f2',roof:'#ff7aa8',face:1,gable:true,rh:2.6,chimney:true,door:{x:-17,c:'#5fd4b0'}});
-   building(hb,{x:-17,z:-15,w:9,d:7,h:7.0,floors:2,wall:'#d9c8ff',trim:'#b9a3f2',roof:'#ff7aa8',face:1,gable:true,rh:2.8,chimney:true,door:{x:-17,c:'#5fd4b0'}});
+   building(hb,{x:-17,z:-15,w:9,d:7,h:7.0,floors:2,wall:'#d9c8ff',trim:'#b9a3f2',roof:'#ff7aa8',face:1,gable:true,rh:2.8,chimney:true,door:{x:-17,c:'#5fd4b0'},bare:(dx,i)=>i>0&&Math.abs(dx)<1});
    box(hb,3.6,.2,1.25,'#ffffff',-17,3.85,-10.9,{ol:.02});box(hb,3.6,.1,.1,'#ffffff',-17,4.8,-10.32,{ol:.015});
    for(let i=0;i<9;i++)box(hb,.07,.75,.07,'#ffffff',-18.75+i*.4375,4.05,-10.32,{ol:.01});
    for(const sx of[-18.75,-15.25])box(hb,.1,.1,1.2,'#ffffff',sx,4.8,-10.9,{ol:.015});
@@ -1407,7 +1427,7 @@ function buildCity(){
    for(const m of[sale,sold]){m.position.set(-20.4,1.575,-7.53);sg.add(m);}sold.visible=false;L.houseSign={sale,sold};colC(L,-20.4,-7.6,.15);
    inter(L,{x:-20.4,z:-6.8,r:1.7,icon:'🏡',label:()=>S.bighouse?'Your big house!':'Bigger house',act:()=>openBigHouse()});}
   building(st,{x:-31,z:-15,w:7,d:7,h:3.6,wall:'#bff0dc',roof:'#6aa9ff',face:1,gable:true,door:{x:-31,c:'#ffd45c'}});col(L,-34.6,-18.6,-27.4,-11.4);
-  building(st,{x:-22,z:-31,w:18,d:8,h:9.6,wall:'#ffd0b5',face:1,door:{x:-22,c:'#7cc8ff'}});col(L,-31.1,-35.1,-12.9,-26.9);
+  building(st,{x:-22,z:-31,w:18,d:8,h:9.6,wall:'#ffd0b5',face:1,boxes:true,door:{x:-22,c:'#7cc8ff'}});col(L,-31.1,-35.1,-12.9,-26.9);
   fence(st,-21.6,-8.2,-17.9,-8.2,L);fence(st,-16.1,-8.2,-12.4,-8.2,L);fence(st,-21.6,-8.2,-21.6,-11.3,L);fence(st,-12.4,-8.2,-12.4,-11.3,L);
   for(let i=0;i<4;i++)disc(st,.42,'#e9e0f7',-17,.03,-8.8-i*.72,{seg:16});
   // your backyard garden
@@ -1432,7 +1452,7 @@ function buildCity(){
   // SE block: pet shop, flower shop, apartments
   building(st,{x:18,z:15,w:11,d:8,h:4.6,wall:'#c9f2e3',face:-1,shop:true,awning:'#ffd45c',sign:'🐾 Pet Shop',door:{x:18,glass:true}});col(L,12.4,10.6,23.6,19.1);
   building(st,{x:31.5,z:14,w:7,d:6,h:4.2,wall:'#e6dbff',face:-1,shop:true,awning:'#b79cff',sign:'🌷 Flower Shop',door:{x:31.5,glass:true}});col(L,27.9,10.6,35.1,17.1);
-  building(st,{x:24,z:31,w:18,d:8,h:9.6,wall:'#ffe0c4',face:-1,door:{x:24,c:'#ff8a6b'}});col(L,14.9,26.9,33.1,35.1);
+  building(st,{x:24,z:31,w:18,d:8,h:9.6,wall:'#ffe0c4',face:-1,boxes:true,door:{x:24,c:'#ff8a6b'}});col(L,14.9,26.9,33.1,35.1);
   hydrant(st,10.5,6.6);colC(L,10.5,6.6,.2);bench(st,-27,-6.6,0);col(L,-27.9,-6.95,-26.1,-6.25);
   // SW block: the park
   ironFence(st,-38.0,8.4,-24.2,8.4,L);ironFence(st,-19.8,8.4,-8.3,8.4,L);ironFence(st,-8.3,8.4,-8.3,19.4,L);ironFence(st,-8.3,24.6,-8.3,37.8,L);
@@ -1532,7 +1552,7 @@ function buildCity(){
   {const p=new THREE.Group();p.position.set(-59.9,0,-25);p.rotation.y=Math.PI/2;st.add(p);for(const gx of[-3.2,.2])box(p,2.8,3.1,.12,'#ffffff',gx,0,0,{ol:.02});for(const gx of[-3.2,.2])for(let k=1;k<5;k++)box(p,2.8,.05,.14,'#d8dcea',gx,k*.62,0,{ol:false});
    const s1=signPlane('🚒 Fire Station',4.6,.8,'#ffffff','#d94b4b');s1.position.set(0,4.2,.09);p.add(s1);}
   fireTruck(st,-58.4,-34,0);col(L,-59.5,-36.7,-57.3,-31.3);
-  bldAt(st,-66,25,Math.PI/2,{w:20,d:10,h:9.6,wall:'#ffd0b5',door:{x:0,c:'#7cc8ff'}});col(L,-71.1,14.9,-60.6,35.1);
+  bldAt(st,-66,25,Math.PI/2,{w:20,d:10,h:9.6,wall:'#ffd0b5',boxes:true,door:{x:0,c:'#7cc8ff'}});col(L,-71.1,14.9,-60.6,35.1);
   bldAt(st,-63.5,-12.5,Math.PI/2,{w:8,d:7,h:4.4,wall:'#ffe3ef',shop:true,awning:'#b79cff',sign:'👗 Clothes Shop',door:{x:0,glass:true}});col(L,-67.1,-16.6,-59.6,-8.4);
   inter(L,{x:-59.2,z:-12.5,r:2.3,icon:'👗',label:'Go into the Clothes Shop',act:()=>enter('clothes')});
   // south-east corner: a lake with a wooden pier you can walk out on (it points from the south-west shore to the middle)
