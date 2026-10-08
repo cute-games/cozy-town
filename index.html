@@ -1472,6 +1472,7 @@ function buildCity(){
     for(const z of[21.05,22,22.95]){box(st,.44,.44,.44,'#9a6a43',-32.02,0,z);box(st,.48,.07,.48,'#ff9ec4',-32.02,.44,z,{ol:.012});box(st,.07,.62,.48,'#9a6a43',-31.76,.5,z);}
     col(L,-38.05,19.7,-34.5,24.3);col(L,-33.15,20.3,-31.7,23.7);
     inter(L,{x:-34.25,z:SZ,r:2.7,icon:'🏆',label:()=>psTargetLabel(),act:()=>openShow(),pri:()=>isShowDay()&&!showDone()});}
+  buildBoard(L,st);   /* 📌 the ideas board and a big old oak, just inside the park's north gate */
   /* ===== paved paths to every shop and front door ===== */
   {const PAV='#f6e9df',EDGE='#e2cfc4',pave=(x1,z1,x2,z2)=>{const w=Math.abs(x2-x1),d=Math.abs(z2-z1),cx=(x1+x2)/2,cz=(z1+z2)/2;flat(st,w,d,PAV,cx,.026,cz);
       for(let i=1;i<Math.floor(w/1.5);i++)box(st,.04,.004,d,EDGE,Math.min(x1,x2)+i*1.5,.026,cz,{ol:false});for(let i=1;i<Math.floor(d/1.5);i++)box(st,w,.004,.04,EDGE,cx,.026,Math.min(z1,z2)+i*1.5,{ol:false});};
@@ -3694,14 +3695,14 @@ const fill=(s,f)=>String(s).replace(/\{name\}/g,S.name||'friend').replace(/\{foo
 /* friends */
 let FR=null;
 function openFriend(f,line){FR=f;if(f.mode!=='talk'){f.prev=f.mode;f.mode='talk';}f.face=Math.atan2(P.x-f.x,P.z-f.z);f.g.rotation.y=f.face;f.p.wave=1;SFX.talk();const st=frSt(f.d.id);
-  if(!line){if(!st.met){st.met=1;line=f.d.hello;addPts(f,3);}else line=f.d.greet||pick(["Hi {name}! Nice to see you!","Hey {name}! What are you up to?","Oh, {name}! Hi hi!"]);}
+  if(!line){if(!st.met){st.met=1;line=f.d.hello;addPts(f,3);}else line=bdRosie(f)||f.d.greet||pick(["Hi {name}! Nice to see you!","Hey {name}! What are you up to?","Oh, {name}! Hi hi!"]);}
   renderFriend(line);}
 function renderFriend(line,sub){const f=FR,st=frSt(f.d.id),h=heartsOf(f.d.id),fol=f.prev==='follow';
   openPanel(`<div class="who" style="--c:${f.d.look.top}">${esc(f.d.name)}</div><div class="hearts" aria-label="${h} of 5 hearts">${hearts(h)}</div>
     <p class="line">${esc(fill(line))}</p>${sub||`<div class="row"><button class="btn mint" data-a="fchat">💬 Chat</button><button class="btn butter" data-a="fgift">🎁 Give a present</button>
     ${f.d.id==='rosie'?'<button class="btn lilac" data-a="fjob">💼 Jobs</button>':''}${fol?'<button class="btn sky" data-a="fstop">👋 See you later</button>':`<button class="btn sky" data-a="fhang" ${h<1?'disabled':''}>🤝 Hang out${h<1?' (needs 1 ♥)':''}</button>`}
     <button class="btn white" data-a="close">Bye!</button></div>`}`,{bottom:true,onClose:()=>{if(f.mode==='talk')f.mode=f.prev==='follow'?'follow':'walk';FR=null;}});}
-ACT.fchat=()=>{const f=FR,st=frSt(f.d.id);SFX.talk();qEvent('chat',1,f.d.id);qEvent('chat:'+f.d.id);const pk=a=>{const L=a.length>1?a.filter(x=>x!==f.d._last):a,r=pick(L.length?L:a);f.d._last=r;return r;};if(st.chat!==S.day){st.chat=S.day;addPts(f,4);addXP('friends',4);renderFriend(pk(f.d.lines));}else renderFriend(pk(f.d.only?f.d.lines:f.d.lines.concat(["We talked so much today! Let's hang out.","Hehe, you're fun to talk to!"])));};
+ACT.fchat=()=>{const f=FR,st=frSt(f.d.id);SFX.talk();qEvent('chat',1,f.d.id);qEvent('chat:'+f.d.id);const pk=a=>{const b=Math.random()<.75&&bdRosie(f);if(b&&b!==f.d._last)return f.d._last=b;const L=a.length>1?a.filter(x=>x!==f.d._last):a,r=pick(L.length?L:a);f.d._last=r;return r;};if(st.chat!==S.day){st.chat=S.day;addPts(f,4);addXP('friends',4);renderFriend(pk(f.d.lines));}else renderFriend(pk(f.d.only?f.d.lines:f.d.lines.concat(["We talked so much today! Let's hang out.","Hehe, you're fun to talk to!"])));};
 ACT.fgift=()=>{const foods=Object.keys(S.bag).filter(k=>FOODS[k]&&S.bag[k]>0);
   if(!foods.length){renderFriend("You don't have any food in your bag. The market has yummy stuff!");return;}
   renderFriend(FR.d.giftAsk||'Ooh, a present? For me?',`<div class="grid" style="margin-top:12px">${foods.map(k=>`<button class="it" data-a="give:${k}"><span class="em">${FOODS[k].i}</span><span>${FOODS[k].n}</span><span class="have">×${S.bag[k]}</span></button>`).join('')}</div><div class="row"><button class="btn white" data-a="fback">Back</button></div>`);};
@@ -5106,7 +5107,7 @@ function startGame(){
   for(const f of FRIEND_ACTORS)f.wake();
   spawnLitter();gardenInit();for(const w of WALKERS)w.init();
   S.outfits=S.outfits||[];if(S.wardrobe)for(const k of Object.keys(S.wardrobe)){const C=CLOTHES[k];if(C&&(C.hat||C.gl)){if(!S.outfits.some(v=>v.k===k))S.outfits.push({k,c:C.cols[0]});delete S.wardrobe[k];}}
-  delete S.mpcode;drawScore();mpConnect();
+  delete S.mpcode;drawScore();mpConnect();bdInit();
   psRefresh();S.hard=S.hard||{};hardMigrate();if(!S.q||S.q.day!==S.day)qNewDay();else{if(!S.q.used)S.q.used=S.q.list.slice();S.q.list=S.q.list.filter(k=>getQ(k));updPhoneBadge();}
   $('title').hidden=true;$('hud').hidden=false;PLAYING=true;if(innerWidth<600)$('tasks').classList.add('min');
   if(!S.intro){setLoc('city');startIntro();}
@@ -5118,6 +5119,100 @@ function startGame(){
   heldInit();askT=0;jobHud(true);dcardUpd(true);
   updHud(true);if(CSAVE.ref){CSAVE.dirty=true;cloudFlush();}
 }
+
+/* 📌 Ideas board in the park: everyone pins ideas for the town and gives hearts (3 each; move them any time, all 3 on one note is fine).
+   Notes live in Firebase (GitHub version only). If reading or writing is refused, the board stays hidden. On Sundays Rosie reads them. */
+const BD={on:false,dead:false,ref:null,notes:{},tab:'new',g:null,cols:[],bub:null,bubT:0,cool:6,PATH:'worlds/cozy-town/board/notes',
+  COLS:['#fff3a8','#ffd1e3','#c9f2e3','#d9ccff','#cfe9ff','#ffe0c4']};
+{const st=document.createElement('style');st.textContent='.bdn{position:relative;color:#3d2c5e;border:3px solid #3d2c5e;border-radius:16px;padding:12px;margin-top:18px;box-shadow:0 4px 0 var(--soft)}'
+  +'.bdn:before{content:"";position:absolute;top:-10px;left:50%;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ff4d6d;border:2px solid #3d2c5e}'
+  +'.bdt{font-size:21px;font-weight:700;line-height:1.3;margin:0 0 6px;overflow-wrap:anywhere}.bdm{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;font-size:16px;font-weight:700}'
+  +'.bdr{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.bdme{font-size:19px;font-weight:800;margin:10px 0 0}.bdhs{color:#ff4d8d;letter-spacing:2px;font-size:22px}.bdhs .off{color:var(--ink);opacity:.25}';
+  document.head.appendChild(st);}
+function buildBoard(L,st){const X=-17.3,Z=10.6,ry=Math.atan2(-22-X,22-Z),W='#b77a4c',g=new THREE.Group();g.position.set(X,0,Z);g.rotation.y=ry;   /* faces the fountain */
+  for(const s of[-1,1])box(g,.15,2.3,.15,'#9b6b4a',s*1.06,0,0);
+  box(g,2.3,1.25,.1,W,0,.8,0);box(g,2.08,1.03,.03,'#d9a066',0,.91,.065,{ol:false});box(g,2.3,.36,.1,W,0,2.05,0);prism(g,2.7,.66,.36,'#ff8a6b',0,2.41,0);
+  for(const [x,y,w,h,c,r] of [[-.72,1.43,.42,.36,0,.08],[-.18,1.5,.36,.34,1,-.06],[.36,1.41,.44,.38,2,.05],[.8,1.53,.3,.3,3,-.1],[-.6,.99,.4,.34,4,-.05],[.04,1.0,.36,.32,5,.07],[.6,.97,.42,.36,0,-.04]]){
+    box(g,w,h,.012,BD.COLS[c],x,y,.087,{ol:false,rz:r});for(const k of[.58,.36])box(g,w*(k>.5?.66:.48),.025,.006,'#8a7fa8',x,y+h*k,.095,{ol:false,rz:r});sph(g,.032,'#ff4d6d',x,y+h-.05,.1,{ws:6,hs:4,ol:false});}
+  bake(g);const sg=signPlane('💡 Ideas Board',2.05,.3,'#fff7fb','#3d2c5e');sg.position.set(0,2.23,.052);g.add(sg);g.visible=false;L.g.add(g);BD.g=g;
+  const c=Math.cos(ry),s=Math.sin(ry);for(const k of[-.85,0,.85])BD.cols.push({cx:X+c*k,cz:Z-s*k,cr:.32});   /* only solid while the board is shown */
+  inter(L,{x:X+s*1.1,z:Z+c*1.1,r:2.6,icon:'📌',label:'Read the ideas board',act:()=>openBoard(),when:()=>BD.on,obj:g});   /* tap the board itself too (hidden = not tappable) */
+  /* 🌳 a big old oak next to the board (always there) */
+  const ox=-14.2,oz=10.4;cyl(st,.26,.36,2.5,'#8a5a3c',ox,0,oz,{seg:9});
+  for(const [dx,dy,dz,r,cc] of [[0,3.5,0,1.55,'#5fae5a'],[1.05,3.05,.3,1.1,'#6cbb62'],[-1,3.15,-.35,1.05,'#5fae5a'],[.2,4.3,.45,.95,'#72c468'],[-.3,3.25,1,.9,'#64b45e']])sph(st,r,cc,ox+dx,dy,oz+dz,{ws:12,hs:9});colC(L,ox,oz,.42);}
+/* 🧼 kind and safe notes only: no rude words, links, emails, phone numbers or home addresses */
+const BD_ROOT=/\b(fuck|shit|bitch|bastard|cunt|dick|pussy|asshole|slut|whore|fag|nigg|retard|wank|twat|bollock|douche|porn|sex|nude|naked|boob|penis|vagina|suicide|stupid|idiot|kurva|nahui|nachui|pizd|bybis|debil|sikn)/,
+  BD_WORD=/\b(ass|asses|arse|cock|cocks|prick|tit|tits|piss|crap|damn|dumb|loser|kys|blyat|blet|huj|chuj|die)\b|\bkill (you|yourself|u)\b|\bhate (you|u)\b|\bshut ?up\b/;
+function bdBad(s){s=String(s||'');
+  if(/@|https?:|www\.|:\/\/|\.(com|net|org|io|co|uk|lt|de|ru|app|ly|gg|tv|xyz|info|biz)\b|\bdot ?com\b/i.test(s))return true;   /* links and emails */
+  if(/(\d[\s\-().+\/]*){6,}/.test(s.replace(/\b[1-9]0{2,}\b/g,' ')))return true;   /* phone numbers: long digit runs, also with spaces or dashes ("100000 flowers" is fine) */
+  if(/\b\d+[a-z]?\s+((?!(more|big|bigger|new|small|little|long|tiny|giant|huge|cool|fun|nice|extra|other|tennis|basketball|football|soccer|race|racing|wheel|bike|slide|swim|bowling|play|kids?|dogs?|cats?|car|toy|food|lane|of|the|and|for|with|in|on|to|at)\b)[a-zà-ž]+\s+){1,2}(street|road|avenue|lane|drive|boulevard|court|crescent|terrace|highway|blvd|ave)\b|\b(street|road|avenue|boulevard|apt|apartment)\.?\s*(no\.?|nr\.?|#)?\s*\d+\b(?!\s+(the|to|a|an|my|more|and|or|of|for|with)\b)|(gatv[eė]|stra(ss|ß)e)\s*\d+|\b(g|pr|al|str|st|rd)\.\s*\d+|\b(i|we)\s+live\s+(at|on|in)\b|\baddress\b|\blt-?\d{5}\b/i.test(s))return true;   /* home addresses */
+  let t=s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[0134578@$!|]/g,c=>({0:'o',1:'i',3:'e',4:'a',5:'s',7:'t',8:'b','@':'a','$':'s','!':'i','|':'i'}[c]));
+  t=t.replace(/\b([a-z])[\s.\-_*+]+(?=[a-z]\b)/g,'$1').replace(/\b((hickory )?dickory|dickens|pussycats?|pussy willows?|(blue|great|coal) tits?|tit birds?)\b/g,' ');   /* "f u c k" -> "fuck"; nursery rhymes, books and birds are fine */
+  return [t.replace(/([a-z])\1\1+/g,'$1'),t.replace(/([a-z])\1\1+/g,'$1$1')].some(x=>BD_ROOT.test(x)||BD_WORD.test(x));}
+const bdHash=s=>{let h=0;for(const c of String(s))h=(h*31+c.charCodeAt(0))|0;return Math.abs(h);};
+function bdMe(){if(!S.pid)S.pid='u'+uid();return S.pid;}   /* a stable player id for hearts (not the name) */
+function bdList(o){const me=S&&S.pid,out=[];
+  for(const id in BD.notes){const n=BD.notes[id];if(!n||typeof n.t!=='string'||!/^[\w-]{1,40}$/.test(id)||bdBad(n.t))continue;let h=0,mine=0;
+    if(n.h&&typeof n.h==='object')for(const k in n.h){const v=clamp(n.h[k]|0,0,3);h+=v;if(k===me)mine=v;}
+    out.push({id,t:n.t.slice(0,90),n:typeof n.n==='string'&&n.n.trim()&&!bdBad(n.n)?n.n.slice(0,16):'A friend',at:+n.at||0,h,mine});}
+  return out.sort(o==='top'?(a,b)=>b.h-a.h||b.at-a.at:(a,b)=>b.at-a.at||(a.id<b.id?1:-1));}
+const bdLeft=L=>Math.max(0,3-L.reduce((s,n)=>s+n.mine,0));
+function bdShow(v){BD.on=v;if(BD.g)BD.g.visible=v;const D=LOC.city.dcols;for(const c of BD.cols){const i=D.indexOf(c);if(v&&i<0)D.push(c);else if(!v&&i>=0)D.splice(i,1);}}
+function bdFail(quiet){const was=BD.on;BD.dead=true;bdShow(false);if(UI.open&&/\bbd(card|wr)\b/.test($('card').className))closePanel();
+  if(was&&quiet!==1)toast('📌 The ideas board is resting right now. Try again later!',3.6);}
+async function bdInit(){if(BD.ref||!(window.WEBNET&&WEBNET.on)||typeof window.WEBROOM!=='function')return;   /* inside Claude there is no shared notes storage: no board */
+  try{await WEBROOM();BD.ref=window.firebase.database().ref(BD.PATH);const me=bdMe();let rd=false,wr=false;const go=()=>{if(rd&&wr&&!BD.dead&&!BD.on)bdShow(true);};
+    (BD.ref.limitToLast?BD.ref.limitToLast(80):BD.ref).on('value',s=>{BD.notes=(s&&s.val())||{};rd=true;go();if(BD.on&&UI.open&&$('card').classList.contains('bdcard'))bdRender();},()=>bdFail(1));
+    BD.ref.child('probe/h/'+me).set(null).then(()=>{wr=true;go();},()=>bdFail(1));   /* writes nothing; just asks "may I write here?" */
+  }catch(e){bdFail(1);}}
+function openBoard(){if(!BD.on)return;SFX.talk();const u=BD.pu;BD.gh=u&&u[3]&&performance.now()-u[0]<150?u:null;bdRender();}
+/* 👆 tapping the 3D board itself: that same finger's click must not land on a button of the card that just opened */
+document.addEventListener('pointerup',e=>{const t=e.target;BD.pu=[performance.now(),e.clientX,e.clientY,!(t&&t.closest&&t.closest('button,#panel'))];},true);
+document.addEventListener('click',e=>{const u=BD.gh;if(!u)return;BD.gh=null;
+  if(performance.now()-u[0]<500&&Math.abs(e.clientX-u[1])<24&&Math.abs(e.clientY-u[2])<24&&e.target&&e.target.closest&&e.target.closest('#card')){e.stopPropagation();e.preventDefault();}},true);
+function bdRender(){if(!BD.on||!S)return;const card=$('card'),keep=UI.open&&card.classList.contains('bdcard')?card.scrollTop:0,L=bdList(BD.tab),left=bdLeft(L),
+    tab=(k,t)=>`<button class="btn ${BD.tab===k?'on':'off'}" data-a="bdtab:${k}">${t}</button>`;
+  openPanel(`<div class="hd"><h2>📌 Ideas Board</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
+    <p class="note">What should Cozy Town build next? Pin your idea! Every Sunday, Mayor Rosie reads the notes. 💭</p>
+    <p class="bdme">Your hearts to give: <span class="bdhs" aria-label="${left} of 3 hearts left">${'♥'.repeat(left)}<span class="off">${'♥'.repeat(3-left)}</span></span></p>
+    <div class="row"><button class="btn butter" data-a="bdwrite">✏️ Write an idea</button></div>
+    <div class="tabs" style="margin:16px 0 0">${tab('new','🆕 Newest')}${tab('top','💗 Most hearts')}</div>
+    ${L.slice(0,40).map(n=>`<div class="bdn" style="background:${BD.COLS[bdHash(n.id)%6]}"><p class="bdt">${esc(n.t)}</p><div class="bdm"><span>✍️ ${esc(n.n)}</span><span>💗 ${n.h}${n.mine?` (${n.mine} from you)`:''}</span></div>
+      <div class="bdr"><button class="btn pink" data-a="bdh:${n.id}">💗 Give a heart</button>${n.mine?`<button class="btn white" data-a="bdu:${n.id}">↩️ Take one back</button>`:''}</div></div>`).join('')||'<p class="line">No ideas yet. Be the first to write one! ✏️</p>'}`,{cls:'bdcard'});
+  card.scrollTop=keep;}
+ACT.bdtab=k=>{BD.tab=k==='top'?'top':'new';bdRender();$('card').scrollTop=0;};
+function bdHeart(id,v){const me=bdMe(),n=BD.notes[id];n.h=Object.assign({},n.h);if(v>0)n.h[me]=v;else delete n.h[me];bdRender();
+  try{BD.ref.child(id+'/h/'+me).set(v>0?v:null).catch(bdFail);}catch(e){bdFail();}}
+ACT.bdh=id=>{const n=BD.notes[id];if(!n||!BD.on)return;if(bdLeft(bdList('new'))<=0){SFX.no();toast('You gave all 3 hearts! Take one back from a note to give it again. 💗',3.6);return;}
+  bdHeart(id,Math.min(3,((n.h&&n.h[bdMe()])|0)+1));SFX.pop();};
+ACT.bdu=id=>{const n=BD.notes[id];if(!n||!BD.on)return;bdHeart(id,Math.max(0,((n.h&&n.h[bdMe()])|0)-1));};
+ACT.bdwrite=()=>{if(!BD.on)return;const me=bdMe(),day=Date.now()-864e5;let k=0;for(const id in BD.notes){const x=BD.notes[id];if(x&&x.p===me&&(+x.at||0)>day)k++;}
+  if(k>=3){SFX.no();toast('You pinned 3 ideas today! Come back tomorrow for more. 📌',3.6);return;}
+  openPanel(`<div class="hd"><h2>✏️ Write an idea</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
+    <p class="note">What would make Cozy Town even cozier? Keep it short and kind. 💛</p>
+    <input class="inp" id="bdIn" maxlength="80" placeholder="My idea…" autocomplete="off" enterkeyhint="done" style="margin-top:12px">
+    <p class="bdme" id="bdErr" hidden></p>
+    <div class="row"><button class="btn mint" data-a="bdpin">📌 Pin it!</button><button class="btn white" data-a="bdback">⬅️ Back</button></div>`,{cls:'bdwr'});
+  const i=$('bdIn');i.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();ACT.bdpin();}});i.focus({preventScroll:true});};
+ACT.bdback=()=>bdRender();
+ACT.bdpin=()=>{const i=$('bdIn'),er=$('bdErr');if(!i||!BD.on)return;const t=i.value.replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]/g,' ').replace(/\s+/g,' ').trim().slice(0,80);
+  const no=m=>{SFX.no();er.textContent=m;er.hidden=false;};
+  if(t.length<3)return no('Write a little more! ✏️');if(bdBad(t))return no("Let's keep notes friendly and safe 💛");
+  const me=bdMe(),id=uid(),n={t,n:(S.name&&!bdBad(S.name)?S.name:'A friend').slice(0,16),at:window.firebase.database.ServerValue.TIMESTAMP,p:me};
+  BD.notes[id]=Object.assign({},n,{at:Date.now()});BD.tab='new';SFX.yay();toast('📌 Your idea is on the board! 💛',3);bdRender();$('card').scrollTop=0;change();
+  try{BD.ref.child(id).set(n).catch(bdFail);}catch(e){bdFail();}};
+/* 🤔 Sundays: Rosie reads the notes and thinks all day about what to build. The most-hearted idea comes up most (about 6 times in 10). Never a promise. */
+function bdIdea(){const L=BD.on?bdList('top'):[];if(!L.length)return null;const top=L.length<2||Math.random()<.6;return{top,hh:top&&L[0].h>0,t:(top?L[0]:pick(L.slice(1,10))).t};}   /* hh: it really has hearts */
+function bdRosie(f){if(!f||f.d.id!=='rosie'||!S||wdIdx()!==6)return null;const o=bdIdea();if(!o)return null;const t=o.t;
+  return o.top?pick((o.hh?[`It's Sunday, my thinking day! 🤔 So many hearts for “${t}”…`,`I read the ideas board today. 📌 “${t}” has the most hearts! Hmm…`]:[`It's Sunday, my thinking day! 🤔 I read “${t}” on the ideas board…`]).concat([`“${t}”… what a cozy idea! I keep thinking about it. 💭`,`Hmm, “${t}”… I wonder where that could go. 🤔`]))
+    :pick([`Someone wrote “${t}” on the ideas board. Fun! 😊`,`“${t}”? Hehe, I like that one too! 💭`,`I'm reading every note on the board today. Like “${t}”! 📌`]);}
+function bdBubOff(){const b=BD.bub;if(!b)return;BD.bub=null;if(b.parent)b.parent.remove(b);b.material.map.dispose();b.material.dispose();}
+function bdTick(dt){const f=FRIEND_ACTORS[0],ok=f&&f.d.id==='rosie'&&f.mode!=='away'&&f.mode!=='talk'&&f.loc===CUR.id&&f.g.visible;
+  if(BD.bub){BD.bubT-=dt;if(BD.bubT<=0||!ok)bdBubOff();}
+  if((BD.cool-=dt)>0||!ok||!BD.on||wdIdx()!==6||Math.hypot(P.x-f.x,P.z-f.z)>7)return;
+  const o=bdIdea();BD.cool=o?24:60;if(!o)return;const s=o.t.length>22?o.t.slice(0,21)+'…':o.t;   /* 💭 a thought bubble when you pass by */
+  const b=label(o.top?`💭 “${s}” 🤔`:`💭 “${s}”? Hmm…`,.3);b.position.y=2.4;f.g.add(b);BD.bub=b;BD.bubT=6;}
 
 /* ================= main loop ================= */
 function applyGfx(){const nice=SET.gfx!=='fast';renderer.setPixelRatio(Math.min(devicePixelRatio||1,nice?2:1));renderer.shadowMap.enabled=nice;sun.castShadow=nice;
@@ -5134,7 +5229,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     if(CUR.id==='toys'&&CUR.train){const T=CUR.train;T.userData.t=(T.userData.t||0)+dt*.9;T.children.forEach((c,i)=>{const a=T.userData.t-i*.32;c.position.set(Math.cos(a)*.88,0,Math.sin(a)*.55);c.rotation.y=Math.atan2(-Math.sin(a)*.88,Math.cos(a)*.55);});}
     for(const w of WALKERS)w.update(dt);
     updateCars(dt);mpTick(dt);laneTick(dt);zzTick(dt);for(const s of SHOPPERS)s.update(dt);
-    updGarden(dt);
+    updGarden(dt);bdTick(dt);
     {const vis=CUR.id==='city'&&sittersOut();for(const s of SITTERS){s.p.root.visible=vis;if(vis){s.t+=dt;s.p.head.rotation.y=Math.sin(s.t*.5)*.35;if(s.p.wave>0){s.p.wave-=dt;s.p.arms[1].rotation.z=2.5+Math.sin(s.p.wave*14)*.35;}else s.p.arms[1].rotation.z*=.85;}}}
     psUpdate(dt);
     for(const k of KEEPERS)if(k.L===CUR){k.p.root.rotation.y=angLerp(k.p.root.rotation.y,Math.atan2(P.x-k.x,P.z-k.z),.05);animPerson(k.p,dt,false);}
