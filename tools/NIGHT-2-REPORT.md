@@ -5,7 +5,7 @@ Night of 8 → 9 October 2026 · branch `claude/affectionate-ride-6p18y9` · sta
 ## Good morning! The short version
 
 - **All 13 jobs are done**, in the plan's order of importance (job 13 "if time allows" too). Each job is one commit. There are three small extra commits: your **retro surf-minibus look for the beach bus** (you sent the picture during the night), **review fixes for job 10** (the riskiest job got an independent reviewer), and **integration fixes** (things that only went wrong once the jobs were put together, found by a reviewer who played the whole game). Plus the start commit (backup) and a ready-made rollback file. No job had to be undone.
-- **Final full check:** `RESULT: (final check not finished)` (the full printout is in section 2). 
+- **Final full check:** `RESULT: 1 FAIL, 8 not run or not verified · 26 min of testing` (the full printout is in section 2). The one FAIL is **B1**, and its only difference is the random player id (`pid`) that the unchanged starting game produces too (`b1.py`: `only pid differences: YES`; the dry run of the starting game shows the same B1 line, plus a C2b FAIL that tonight fixed: the new player now reaches all 24 areas, the beach by bus). Everything else passes, including A2 (the dated backup) and F3 (the GitHub file is byte-for-byte the tested file). The 8 "not run / not verified" lines are the ones the check always leaves to people: real devices, the published Claude file, and the device groups dropped on 7 Oct.
 - **Old saves:** all 7 test saves load with nothing lost (B1's only "difference" is a random player id that night 1's ideas board gives an old save on every load, also on the unchanged game: see "How the checks were run"). And the other way round: saves written by tonight's game still start in the old game (`ROLLBACK ALL PASS`).
 - **Three things need you:**
   1. **Firebase rules** (section 8): one complete block to paste. Without it, "Move my game" (job 11) and the ideas board (night 1) simply stay hidden; nothing breaks.
@@ -2561,7 +2561,64 @@ And the rollback file: the final game's updater sees `tools/prenight2-rollback.h
 ### Final full check (the final file, every stage, exactly as printed)
 
 ```
-(no final block)
+===== COZY TOWN FINAL CHECK =====
+2026-10-08 · check version 1 · update
+live Claude 413cc5f4d3bbd561ab274c7d74d67bce · new Claude 8cde7266dfa3a6014de26767cb536712 · live GitHub f2cdd530076cce1ad198bd90d9e0e2a7 · new GitHub d8749e6bafae98f2b46ea70b68b12d16
+PASS | A1 newest live versions read right before the check | live-claude.html read on 2026-10-08, live-web.html read on 2026-10-08
+PASS | A2 dated private backup of the live game | backup 413cc5f4d3bbd561ab274c7d74d67bce vs live 413cc5f4d3bbd561ab274c7d74d67bce; title "Cozy Town live game (night 1 final) backup 2026-10-08, copy of tools/prenight2-index.html without the web part"
+PASS | F3a live GitHub version = live Claude version + web part, nothing else | 54 added lines in 2 places, no lines removed or changed
+PASS | F1 no ZZTEST test data in the file to publish | ZZTEST appears 0 times
+PASS | F5 no new outside addresses (same 3D library and font) | ['cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js', 'fonts.googleapis.com', 'fonts.googleapis.com/css2', 'fonts.gstatic.com']
+PASS | A3 everything in the live game is still in the new one, by name | 57 lists, 676 things before, 685 after; grew: {"places": "20 -> 21", "furniture": "54 -> 55", "furniture_for_sale": "32 -> 33", "friends_lane_plots": "6 -> 12"}
+PASS | E1 no more drawing work than before, area by area (more than 10% needs your OK) | 25 areas, 1307 pieces, 994630 triangles in total | for information, seen from 5 spots: city 127 draws; home 34 draws; market 39 draws; cafe 50 draws; school 44 draws
+FAIL | B1 saved games from older versions load in the new one with nothing lost | 7 saves tried: save-71f43ad.json: name 'ZZTEST-71F43A', coins 120, furniture 3, pets 0; 1 differences: pid: "umv04qeyislhep" -> "umv04qogtrf4li"; new version saves under the same key: yes | save-8a1982a.json: name 'ZZTEST-8A1982', coins 120, furniture 3, pets 0; 1 differences: pid: "umv04qz6oe7jcs" -> "umv04r6dbljatx"; new version saves under the same key: yes | save-a0c3ae3.json: name 'ZZTEST-A0C3AE', coins 120, furniture 3, pets 0; 1 differences: pid: "umv04rfqkavbul" -> "umv04rm0y75j0b"; new version saves under the same key: yes | save-ea70306.json: name 'ZZTEST-EA7030', coins 120, furniture 3, pets 0; 1 differences: pid: "umv04rvxb4h3eb" -> "umv04s3jizhvpn"; new version saves under the same key: yes | save-f2cdd53-rich.json: name 'ZZTEST-F2CDD5', coins 2345, furniture 7, pets 3; 0 differences; new version saves under the same key: yes | save-live-web-rich.json: name 'ZZTEST-LIVE-W', coins 3900, furniture 5, pets 3; 1 differences: pid: "umv04sn7m2dh2j" -> "umv04ssmpu8ork"; new version saves under the same key: yes | fresh save made by the live version today: name 'ZZTEST-S', coins 120, furniture 3, pets 0; 0 differences; new version saves under the same key: yes
+PASS | B2 the new version keeps the same save key | key cozytown-save-1
+PASS | D1 two players see each other, see each other walk, and chat (old + new version together) | A (old version, iPad) sees B: True; B (new version, PC) sees A: True; A saw B walk: True; chat tap ok, B saw: '⭐ ZZTEST-A: 👋 Hi!' + bubble
+PASS | D2 Friends Lane: each player gets a house | Friends Lane houses taken: A sees 2, B sees 2 (need 2 each)
+PASS | D3 visiting a friend's house works: knock, let in, go inside | B knocked from the phone (ok/ok/ok); ding-dong card on A: yes, tapped ok; B ended up in: visit
+PASS | C7 the Claude version starts, plays the opening and goes online (test room) | opening played: True; online: on
+PASS | K1 PC keyboard: walk with keys, P phone, B bag, M map, Escape closes, E uses | W key: moved 2.0 m in 1.5 s; phone: opens True, Escape closes True; bag: opens True, Escape closes True; map: opens True, Escape closes True; E on the market door goes in: True
+PASS | C2 every spot and button does something (iPad, finger taps) | 595 taps tested in 23 areas, 306 screens
+PASS | C2b every area is reached by playing | 24 of 24 areas
+PASS | C3 walking works (ipad-landscape) | joystick drag: moved 2.0 m in 1.5 s
+PASS | T1 teacher job plays from the school message to the end of class (ipad-landscape) | 3 classes: English ended, History ended, Math ended
+PASS | T2 every goofing kid can be stopped, left and right (ipad-landscape) | left side 15 of 15 taps worked, right side 21 of 21
+PASS | T3 homework right and wrong buttons: at least 44 px, at least 12 px apart, never covered (ipad-landscape) | 14 papers; button size 58x52 px; smallest gap 16 px; covered taps: 0
+PASS | T4 homework questions are easy to read: dark text, at least 16 px (ipad-landscape) | 51 questions read
+PASS | T1 teacher job plays from the school message to the end of class (iphone-landscape) | 3 classes: English ended, History ended, Math ended
+PASS | T2 every goofing kid can be stopped, left and right (iphone-landscape) | left side 8 of 8 taps worked, right side 27 of 27
+PASS | T3 homework right and wrong buttons: at least 44 px, at least 12 px apart, never covered (iphone-landscape) | 14 papers; button size 52x44 px; smallest gap 16 px; covered taps: 0
+PASS | T4 homework questions are easy to read: dark text, at least 16 px (iphone-landscape) | 51 questions read
+PASS | T1 teacher job plays from the school message to the end of class (pc-1920) | 3 classes: Math ended, History ended, English ended
+PASS | T2 every goofing kid can be stopped, left and right (pc-1920) | left side 16 of 16 taps worked, right side 18 of 18
+PASS | T3 homework right and wrong buttons: at least 44 px, at least 12 px apart, never covered (pc-1920) | 14 papers; button size 58x52 px; smallest gap 16 px; covered taps: 0
+PASS | T4 homework questions are easy to read: dark text, at least 16 px (pc-1920) | 51 questions read
+PASS | C3 walking works (pc-1920) | W key: moved 2.0 m in 1.5 s
+NOT RUN | C1 every screen opens (android-phone-portrait) | NOT RUN: dropped for now (decision 7 Oct); the full sweep is for big updates
+NOT RUN | C1 every screen opens (android-phone-landscape) | NOT RUN: dropped for now (decision 7 Oct); the full sweep is for big updates
+NOT RUN | C1 every screen opens (android-tablet-portrait) | NOT RUN: dropped for now (decision 7 Oct); the full sweep is for big updates
+NOT RUN | C1 every screen opens (android-tablet-landscape) | NOT RUN: dropped for now (decision 7 Oct); the full sweep is for big updates
+NOT RUN | C1 every screen opens (pc-1366) | NOT RUN: dropped for now (decision 7 Oct); the full sweep is for big updates
+PASS | C1 every screen opens (iphone-portrait, light and dark) | 34 of 34 screens, each in light and dark
+PASS | C3 walking works (iphone-portrait) | joystick drag: moved 2.0 m in 1.5 s
+PASS | C1 every screen opens (iphone-landscape, light and dark) | 34 of 34 screens, each in light and dark
+PASS | C3 walking works (iphone-landscape) | joystick drag: moved 2.0 m in 1.5 s
+PASS | C4 nothing is cut off the screen | 0 problems
+PASS | C4 no buttons overlap | 0 problems
+PASS | C4 all text fits its box | 0 problems
+PASS | C4 every button is at least 44 px for a finger | 0 problems
+PASS | C4 text is readable in light and dark | 0 problems
+PASS | C5 the same kind of button looks the same everywhere | 28 kinds of button
+PASS | C6 zero errors in the browser log | 0 errors
+PASS | C8 test copies never reached the real internet | 0 outside requests stopped
+NOT RUN | C1-WK every screen in Safari's engine (iPhone, iPad) | NOT RUN: dropped for now (decision 7 Oct)
+PASS | F6 every test action is logged and undone | 34 test actions, 34 undone
+PASS | F2a the tests used exactly the files to publish | files tested: ['8cde7266dfa3a6014de26767cb536712', 'd8749e6bafae98f2b46ea70b68b12d16', 'f2cdd530076cce1ad198bd90d9e0e2a7']; to publish: ['8cde7266dfa3a6014de26767cb536712', 'd8749e6bafae98f2b46ea70b68b12d16']
+NOT RUN | F2 published Claude version = tested file | NOT RUN: not published yet
+PASS | F3 GitHub file after upload = new Claude version + same web part, same address | d8749e6bafae98f2b46ea70b68b12d16 vs d8749e6bafae98f2b46ea70b68b12d16
+NOT VERIFIED | G real devices, sound, smoothness, two real players online | NOT VERIFIED: in the "Try it for real" notebook until ticked
+RESULT: 1 FAIL, 8 not run or not verified · 26 min of testing
+WEBPART-ROUNDTRIP: identical
 ```
 
 
