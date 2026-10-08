@@ -3232,23 +3232,38 @@ const SIT_LINES=['I love watching the fountain.','Shh, my book is getting exciti
 const WALKERS=[];
 class Walker{
   constructor(look,node,owl){this.p=bakePerson(makePerson(look));this.g=this.p.root;scene.add(this.g);this.home=node;this.node=node;this.x=WP[node][0];this.z=WP[node][1];this.prev=-1;this.wait=rand(0,4);this.face=0;this.moving=false;this.loc='city';this.r=.3;this.state='home';
+    this.nt=0;this.nk=0;this.ld=99;this.wv=0;   /* 👀 noticing you: time left, how much (0…1, eased), your last distance, wave cooldown */
     /* 🦉 night owls stroll all night and sleep in late in the morning; everyone else is home by about 21:00 */
     this.wakeT=owl?rand(9.6,11.4):rand(6.6,8.9);this.sleepT=owl?rand(5.4,6.6):rand(18.4,21.0);
-    this.target={x:0,z:0,r:2.2,icon:'👋',label:'Say hi',obj:this.g,act:()=>{this.p.wave=1.2;this.face=Math.atan2(P.x-this.x,P.z-this.z);this.g.rotation.y=this.face;this.wait=Math.max(this.wait,3);SFX.talk();if(cool('hi'+this.home+this.wakeT,6))qEvent('hi');toast('“'+pick(HELLO)+'”',2.6);}};}
+    this.target={x:0,z:0,r:2.2,icon:'👋',label:'Say hi',obj:this.g,act:()=>{this.p.wave=1.2;this.face=Math.atan2(P.x-this.x,P.z-this.z);this.wait=Math.max(this.wait,3);SFX.talk();if(cool('hi'+this.home+this.wakeT,6))qEvent('hi');toast('“'+pick(HELLO)+'”',2.6);}};}
   awake(){const h=S?S.time:13;return this.wakeT<this.sleepT?h>=this.wakeT&&h<this.sleepT:h>=this.wakeT||h<this.sleepT;}
+  /* 👀 you walk towards me (I am within 8 m, within about 35° of where you walk, and you get closer): I notice you, wave once, slow down
+     (never to a stop), turn to you, and my "Say hi" shows from 3.5 m. You stop: I wait a moment (time to tap "Say hi"), then ease back to
+     normal; you walk away: I ease back sooner. Gives 0…1 (smooth). Only numbers, nothing new is made each frame */
+  notice(dt){const dx=this.x-P.x,dz=this.z-P.z,d=Math.hypot(dx,dz),walk=PLAYING&&CUR.id==='city'&&P.moving,c=walk&&d>.01?(dx*Math.sin(P.hd)+dz*Math.cos(P.hd))/d:1;
+    if(walk&&(this.nt>0?d<9&&(c>.6||d<2.5):d<8&&c>.82&&d<this.ld)){if(this.nt<=0&&this.wv<=0&&this.p.wave<=0){this.p.wave=1.2;this.wv=12;}this.nt=1.6;}
+    else this.nt=Math.max(0,this.nt-dt*(walk&&c<0?3:1));
+    this.ld=d;this.wv=Math.max(0,this.wv-dt);this.nk=this.nt>0?Math.min(1,this.nk+dt*2.5):Math.max(0,this.nk-dt*1.25);return this.nk*this.nk*(3-2*this.nk);}
   init(){if(this.awake()){this.state='out';const n=Math.floor(Math.random()*WP.length);this.node=n;this.x=WP[n][0];this.z=WP[n][1];this.prev=-1;this.wait=rand(0,3);}else{this.state='home';this.node=this.home;this.x=WP[this.home][0];this.z=WP[this.home][1];}}
   update(dt){const aw=this.awake();
-    if(this.state==='home'){if(!aw){this.g.visible=false;return;}this.state='out';this.node=this.home;this.x=WP[this.home][0];this.z=WP[this.home][1];this.prev=-1;this.wait=rand(0,2);}
+    if(this.state==='home'){if(!aw){this.g.visible=false;return;}this.state='out';this.node=this.home;this.x=WP[this.home][0];this.z=WP[this.home][1];this.prev=-1;this.wait=rand(0,2);this.nt=this.nk=0;}
     if(!aw&&this.state==='out')this.state='going';
     /* bedtime: out of sight (far away, off the screen, or you are indoors) a walker is home at once, so the night gets quiet; in sight they walk home */
     if(this.state==='going'&&(CUR.id!=='city'||Math.hypot(this.x-camera.position.x,this.z-camera.position.z)>52||!inView(this.x,this.z,5))){this.state='home';this.node=this.home;this.x=WP[this.home][0];this.z=WP[this.home][1];this.g.visible=false;return;}
+    const e=this.notice(dt);
     if(this.wait>0){this.wait-=dt;this.moving=false;}
     else{const n=WP[this.node],dx=n[0]-this.x,dz=n[1]-this.z,d=Math.hypot(dx,dz);
       if(d<.15){if(this.state==='going'){if(this.node===this.home){this.state='home';this.g.visible=false;return;}this.prev=this.node;this.node=NEXT[this.node][this.home];}
         else{const nb=NEIGH[this.node].filter(k=>k!==this.prev);this.prev=this.node;this.node=nb.length?pick(nb):pick(NEIGH[this.node]);if(Math.random()<(PAUSE.has(this.prev)?.55:.15))this.wait=rand(2,7);}}
       else if(CUR.id==='city'&&Math.hypot(P.x-this.x,P.z-this.z)<.95)this.moving=false;
-      else{const s=Math.min(d,(this.state==='going'?1.5:1.25)*dt);this.x+=dx/d*s;this.z+=dz/d*s;this.face=Math.atan2(dx,dz);this.moving=true;}}
-    const far=Math.hypot(this.x-camera.position.x,this.z-camera.position.z)>48;this.g.visible=CUR.id==='city'&&!far;this.g.position.set(this.x,0,this.z);this.g.rotation.y=angLerp(this.g.rotation.y,this.face,Math.min(1,dt*8));if(!far)animPerson(this.p,dt,this.moving);this.target.x=this.x;this.target.z=this.z;}
+      else{const s=Math.min(d,(this.state==='going'?1.5:1.25)*(1-.58*e)*dt);this.x+=dx/d*s;this.z+=dz/d*s;this.face=Math.atan2(dx,dz);this.moving=true;}}   /* noticing you: 42% speed */
+    const far=Math.hypot(this.x-camera.position.x,this.z-camera.position.z)>48;this.g.visible=CUR.id==='city'&&!far;this.g.position.set(this.x,0,this.z);
+    /* 👀 turning to you: walking, the body turns a little (it still walks along its path); standing, all the way. The head turns the rest
+       (angLerp(x,a,1)-x = the smallest turn from x to a) */
+    const a=e>0?Math.atan2(P.x-this.x,P.z-this.z):0,fy=e<=0?this.face:this.moving?this.face+clamp(angLerp(this.face,a,1)-this.face,-.6,.6)*e:angLerp(this.face,a,e);
+    this.g.rotation.y=angLerp(this.g.rotation.y,fy,Math.min(1,dt*(e>0?5:8)));
+    if(!far){animPerson(this.p,dt,this.moving,1-.5*e);const h=this.p.head;h.rotation.y=lerp(h.rotation.y,e>0?clamp(angLerp(this.g.rotation.y,a,1)-this.g.rotation.y,-1,1)*e:0,Math.min(1,dt*6));}
+    this.target.x=this.x;this.target.z=this.z;this.target.r=2.2+1.3*e;}   /* "Say hi" reach: 2.2 m, 3.5 m when they notice you */
 }
 /* ---- 🌙 night glows: soft light sprites in one shared additive material (no real lights, no shadows). The sky fades
    them in at dusk and out at dawn; by day the material is switched off, so they cost nothing ---- */
