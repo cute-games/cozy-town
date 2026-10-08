@@ -1183,7 +1183,7 @@ function foodModel(g,k,x,y,z){
 /* ---- street props ---- */
 function tree(g,x,z,s=1){const c=pick(['#7ed37a','#6cc97c','#93dc76']);cyl(g,.15*s,.2*s,2.3*s,'#9b6b4a',x,0,z,{seg:8});sph(g,1.15*s,c,x,3.05*s,z,{ws:12,hs:9});sph(g,.75*s,c,x+.7*s,2.75*s,z+.15*s,{ws:10,hs:8});sph(g,.72*s,c,x-.62*s,2.8*s,z-.3*s,{ws:10,hs:8});sph(g,.62*s,c,x+.1*s,3.6*s,z+.4*s,{ws:10,hs:8});}
 function pine(g,x,z,s=1){cyl(g,.14*s,.18*s,.8*s,'#9b6b4a',x,0,z,{seg:8});const c=pick(['#4fb37a','#5bbf7e']);cone(g,1.2*s,1.6*s,c,x,.7*s,z,{seg:9});cone(g,.92*s,1.4*s,c,x,1.55*s,z,{seg:9});cone(g,.62*s,1.2*s,c,x,2.35*s,z,{seg:9});}
-function lampPost(g,x,z){cyl(g,.07,.1,3,'#5a5f8c',x,0,z,{seg:8});cyl(g,.16,.16,.08,'#5a5f8c',x,2.95,z,{seg:10});sph(g,.19,null,x,3.21,z,{mat:LAMP,ol:.02,ws:12,hs:8});cone(g,.27,.24,'#5a5f8c',x,3.33,z,{seg:10});}
+function lampPost(g,x,z){LAMPXZ.push([x,z]);cyl(g,.07,.1,3,'#5a5f8c',x,0,z,{seg:8});cyl(g,.16,.16,.08,'#5a5f8c',x,2.95,z,{seg:10});sph(g,.19,null,x,3.21,z,{mat:LAMP,ol:.02,ws:12,hs:8});cone(g,.27,.24,'#5a5f8c',x,3.33,z,{seg:10});}
 function bench(g,x,z,ry=0){const p=new THREE.Group();p.position.set(x,0,z);p.rotation.y=ry;g.add(p);box(p,1.6,.08,.5,'#e0905e',0,.42,0);box(p,1.6,.36,.07,'#e0905e',0,.58,-.22);for(const sx of[-.7,.7]){box(p,.08,.42,.08,'#5a5f8c',sx,0,.15);box(p,.08,.95,.08,'#5a5f8c',sx,0,-.2);}}
 function bin(g,x,z){cyl(g,.25,.22,.75,'#5fd4b0',x,0,z,{seg:12});cyl(g,.28,.28,.07,'#3fb08f',x,.75,z,{seg:12});}
 function hydrant(g,x,z){cyl(g,.13,.15,.5,'#ff6b6b',x,0,z,{seg:10});sph(g,.13,'#ff6b6b',x,.52,z,{ws:10,hs:6});box(g,.36,.08,.08,'#ff6b6b',x,.3,z);}
@@ -1590,6 +1590,7 @@ function buildCity(){
       placed++;}}
   buildLane(L,st);
   bake(st,true,32);
+  L.g.add(glowMesh(glowGeo(LAMPXZ.flatMap(([x,z])=>[[x,3.21,z,.8,[.5,.38,.18]],[x,.1,z,4.4,4.4,[.3,.23,.11]]]))));
   // doors and things to use
   inter(L,{x:-14,z:-19.3,r:1.9,icon:'🏠',label:'Go inside your house',act:()=>enter('home','back')});
   inter(L,{x:-13.4,z:-23.15,r:1.8,icon:'🌱',label:'Buy seeds',act:()=>openShop('seeds')});
@@ -2351,6 +2352,7 @@ function updSky(){
   const nf=nightF(h),out=!CUR||CUR.type==='out';
   if(CURTAIN){CURTAIN.color.set(nf>.5?'#7d86d6':'#d6f2ff');JET.color.copy(CURTAIN.color);}
   WIN.emissive.set(nf>.5?'#ffc66b':'#5ab4e8');WIN.emissiveIntensity=nf>.5?nf*.9:.22*(1-nf);LAMP.emissiveIntensity=nf*1.2;
+  if(NGLOW){NGLOW.uniforms.op.value=nf;NGLOW.visible=out&&nf>.01;}
   stars.material.opacity=nf;stars.visible=out&&nf>0;
   PANE.color.copy(skyU.bot.value).lerp(_c2.set('#ffffff'),.25);
   if(out){
@@ -2372,7 +2374,7 @@ function isShowDay(d){return wdIdx(d)===5;}
 function showDone(){return!!(S&&S.show&&S.show.day===S.day);}
 function daysToShow(){return(5-wdIdx()+7)%7||7;}
 function dayLabel(){return(isShowDay()&&!showDone()?'🏆 ':'')+wdName().slice(0,3)+' · Day '+S.day;}
-function newDay(){spawnLitter();for(const f of FRIEND_ACTORS)f.wake();for(const w of WALKERS)if(w.state!=='going')w.init();qNewDay();for(const r of PLOTS)plotRefresh(r);psDay();}
+function newDay(){spawnLitter();for(const f of FRIEND_ACTORS)f.wake();for(const w of WALKERS)if(w.state==='home')w.init();qNewDay();for(const r of PLOTS)plotRefresh(r);psDay();}
 
 /* ---- Skills: do things to level up ---- */
 const SKILLS={garden:{i:'🌱',n:'Gardening',how:'Water flower beds and put plants in your house.'},cook:{i:'🍳',n:'Cooking',how:'Cook sandwiches on your stove.'},
@@ -2711,13 +2713,16 @@ const SIT_LINES=['I love watching the fountain.','Shh, my book is getting exciti
 const WALKERS=[];
 class Walker{
   constructor(look,node,owl){this.p=bakePerson(makePerson(look));this.g=this.p.root;scene.add(this.g);this.home=node;this.node=node;this.x=WP[node][0];this.z=WP[node][1];this.prev=-1;this.wait=rand(0,4);this.face=0;this.moving=false;this.loc='city';this.r=.3;this.state='home';
-    this.wakeT=rand(6.6,8.9);this.sleepT=owl?rand(22.3,23.4):rand(18.4,21.0);
+    /* 🦉 night owls stroll all night and sleep in late in the morning; everyone else is home by about 21:00 */
+    this.wakeT=owl?rand(9.6,11.4):rand(6.6,8.9);this.sleepT=owl?rand(5.4,6.6):rand(18.4,21.0);
     this.target={x:0,z:0,r:2.2,icon:'👋',label:'Say hi',obj:this.g,act:()=>{this.p.wave=1.2;this.face=Math.atan2(P.x-this.x,P.z-this.z);this.g.rotation.y=this.face;this.wait=Math.max(this.wait,3);SFX.talk();if(cool('hi'+this.home+this.wakeT,6))qEvent('hi');toast('“'+pick(HELLO)+'”',2.6);}};}
-  awake(){const h=S?S.time:13;return h>=this.wakeT&&h<this.sleepT;}
+  awake(){const h=S?S.time:13;return this.wakeT<this.sleepT?h>=this.wakeT&&h<this.sleepT:h>=this.wakeT||h<this.sleepT;}
   init(){if(this.awake()){this.state='out';const n=Math.floor(Math.random()*WP.length);this.node=n;this.x=WP[n][0];this.z=WP[n][1];this.prev=-1;this.wait=rand(0,3);}else{this.state='home';this.node=this.home;this.x=WP[this.home][0];this.z=WP[this.home][1];}}
   update(dt){const aw=this.awake();
     if(this.state==='home'){if(!aw){this.g.visible=false;return;}this.state='out';this.node=this.home;this.x=WP[this.home][0];this.z=WP[this.home][1];this.prev=-1;this.wait=rand(0,2);}
     if(!aw&&this.state==='out')this.state='going';
+    /* bedtime: out of sight (far away, off the screen, or you are indoors) a walker is home at once, so the night gets quiet; in sight they walk home */
+    if(this.state==='going'&&(CUR.id!=='city'||Math.hypot(this.x-camera.position.x,this.z-camera.position.z)>52||!inView(this.x,this.z,5))){this.state='home';this.node=this.home;this.x=WP[this.home][0];this.z=WP[this.home][1];this.g.visible=false;return;}
     if(this.wait>0){this.wait-=dt;this.moving=false;}
     else{const n=WP[this.node],dx=n[0]-this.x,dz=n[1]-this.z,d=Math.hypot(dx,dz);
       if(d<.15){if(this.state==='going'){if(this.node===this.home){this.state='home';this.g.visible=false;return;}this.prev=this.node;this.node=NEXT[this.node][this.home];}
@@ -2726,6 +2731,27 @@ class Walker{
       else{const s=Math.min(d,(this.state==='going'?1.5:1.25)*dt);this.x+=dx/d*s;this.z+=dz/d*s;this.face=Math.atan2(dx,dz);this.moving=true;}}
     const far=Math.hypot(this.x-camera.position.x,this.z-camera.position.z)>48;this.g.visible=CUR.id==='city'&&!far;this.g.position.set(this.x,0,this.z);this.g.rotation.y=angLerp(this.g.rotation.y,this.face,Math.min(1,dt*8));if(!far)animPerson(this.p,dt,this.moving);this.target.x=this.x;this.target.z=this.z;}
 }
+/* ---- 🌙 night glows: soft light sprites in one shared additive material (no real lights, no shadows). The sky fades
+   them in at dusk and out at dawn; by day the material is switched off, so they cost nothing ---- */
+let NGLOW=null,CARGLOW=null;const LAMPXZ=[];
+function glowMat(){if(NGLOW)return NGLOW;const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d'),gr=x.createRadialGradient(32,32,0,32,32,32);
+  gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.3,'rgba(255,255,255,.45)');gr.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gr;x.fillRect(0,0,64,64);
+  NGLOW=new THREE.ShaderMaterial({uniforms:{map:{value:new THREE.CanvasTexture(c)},op:{value:0}},transparent:true,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,
+    vertexShader:'attribute vec2 cor;attribute vec3 tint;varying vec2 vU;varying vec3 vC;void main(){vU=uv;vC=tint;vec4 p=modelViewMatrix*vec4(position,1.);p.xy+=cor;p.z+=length(cor)*.7;gl_Position=projectionMatrix*p;}',
+    fragmentShader:'uniform sampler2D map;uniform float op;varying vec2 vU;varying vec3 vC;void main(){gl_FragColor=vec4(vC*texture2D(map,vU).a*op,1.);}'});
+  NGLOW.visible=false;return NGLOW;}
+/* list of glows: [x,y,z,size,tint] always turns to the camera, [x,y,z,w,d,tint] lies flat on the ground */
+function glowGeo(list){const P=[],U=[],K=[],T=[],I=[];
+  for(const q of list){const n=P.length/3,t=q[q.length-1],fl=q.length>5;
+    for(const [u,v] of[[0,0],[1,0],[1,1],[0,1]]){if(fl)P.push(q[0]+(u-.5)*q[3],q[1],q[2]+(v-.5)*q[4]);else P.push(q[0],q[1],q[2]);
+      K.push(fl?0:(u*2-1)*q[3],fl?0:(v*2-1)*q[3]);U.push(u,v);T.push(t[0],t[1],t[2]);}
+    I.push(n,n+1,n+2,n,n+2,n+3);}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));
+  g.setAttribute('cor',new THREE.Float32BufferAttribute(K,2));g.setAttribute('tint',new THREE.Float32BufferAttribute(T,3));g.setIndex(I);g.computeBoundingSphere();g.boundingSphere.radius+=1;return g;}
+function glowMesh(geo){const m=new THREE.Mesh(geo,glowMat());m.renderOrder=2;m.userData.keep=1;return m;}
+/* car lights (one geometry for every car): two warm headlights with a soft pool on the road ahead, two red tail lights */
+function carGlowGeo(){const W=[1,.86,.58],R=[1,.16,.1];return CARGLOW||(CARGLOW=glowGeo([[-.55,.69,1.78,.42,W],[.55,.69,1.78,.42,W],[0,.07,4.6,3,6,[.6,.49,.3]],
+  [-.55,.7,-1.78,.3,R],[.55,.7,-1.78,.3,R],[0,.07,-2.45,1.9,1.4,[.28,.04,.03]]]));}
 /* ---- cars that drive around town ---- */
 const CARS=[],XS=[];
 function lanePath(pts){const n=pts.length,out=[];for(let i=0;i<n;i++){const a=pts[(i-1+n)%n],b=pts[i],c=pts[(i+1)%n];
@@ -2739,13 +2765,26 @@ function buildCars(){for(const x of[-50,0,50])for(const z of[-50,0,50])XS.push({
   const loops={A:[[-50,-50],[50,-50],[50,50],[-50,50]],B:[[-50,-50],[-50,50],[50,50],[50,-50]],C:[[0,0],[0,-50],[50,-50],[50,0]],D:[[0,0],[0,50],[-50,50],[-50,0]],E:[[0,0],[-50,0],[-50,-50],[0,-50]],F:[[0,0],[50,0],[50,50],[0,50]]};
   const counts={A:3,B:2,C:2,D:2,E:1,F:2},cols=['#ff8a6b','#7cc8ff','#ffd45c','#b79cff','#5fd4b0','#ff7aa8','#ffffff','#9fe486','#ff6b6b','#c9f2e3'];let ci=0;
   for(const k in loops){const path=lanePath(loops[k]);let total=0;for(let i=0;i<path.length;i++){const a=path[i],b=path[(i+1)%path.length];total+=Math.hypot(b[0]-a[0],b[1]-a[1]);}
-    for(let i=0;i<counts[k];i++){const g=new THREE.Group();car(g,0,0,0,cols[ci++%cols.length]);bake(g,true);scene.add(g);
-      const c={g,path,total,d:total*i/counts[k]+12,v:0,max:6+Math.random()*1.5,x:0,z:0,yaw:0,ty:0,honk:0};carPlace(c);c.yaw=c.ty;CARS.push(c);}}}
-function updateCars(dt){const inCity=CUR.id==='city',peds=[];if(inCity&&PLAYING)peds.push([P.x,P.z,1.7,1]);
+    for(let i=0;i<counts[k];i++){const g=new THREE.Group();car(g,0,0,0,cols[ci++%cols.length]);bake(g,true);g.add(glowMesh(carGlowGeo()));scene.add(g);
+      const c={g,path,total,d:total*i/counts[k]+12,v:0,max:6+Math.random()*1.5,x:0,z:0,yaw:0,ty:0,honk:0,
+        owl:CARS.length===0||CARS.length===7,offT:rand(20.3,21.8),onT:rand(5.6,6.9),away:false};carPlace(c);c.yaw=c.ty;CARS.push(c);}}}
+/* is this car (with its light pool) on the player's screen? */
+const _fr=new THREE.Frustum(),_frM=new THREE.Matrix4(),_frS=new THREE.Sphere();
+function inView(x,z,r){_frS.center.set(x,1,z);_frS.radius=r;return _fr.intersectsSphere(_frS);}   /* uses the camera view of the last frame */
+function carSeen(c){if(CUR.id!=='city'||Math.hypot(c.x-camera.position.x,c.z-camera.position.z)>92)return false;return inView(c.x,c.z,9);}
+function updateCars(dt){const inCity=CUR.id==='city',peds=[],h=S?S.time:12;if(inCity&&PLAYING)peds.push([P.x,P.z,1.7,1]);
+  /* 🌙 cozy nights: all but two cars go away for the night and come back in the morning, only where nobody sees it happen */
+  _frM.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);_fr.setFromProjectionMatrix(_frM);
+  for(const c of CARS){const off=!c.owl&&(h>=c.offT||h<c.onT);if(c.away===off)continue;
+    if(off){if(carSeen(c))continue;}
+    else{/* coming back: at the spot where it left, or else anywhere on its loop that nobody sees (not near you, no car within 9 m) */
+      const ok=()=>!carSeen(c)&&!(inCity&&Math.hypot(P.x-c.x,P.z-c.z)<10)&&!CARS.some(o=>o!==c&&!o.away&&Math.hypot(o.x-c.x,o.z-c.z)<9),d0=c.d;let k=0;
+      for(;k<6;k++){if(k){c.d=d0+c.total*k/6;carPlace(c);}if(ok())break;}if(k>=6){c.d=d0;carPlace(c);continue;}if(k)c.yaw=c.ty;}
+    c.away=off;c.v=0;c.g.visible=false;for(const X of XS){const i=X.occ.indexOf(c);if(i>=0)X.occ.splice(i,1);}}
   for(const w of WALKERS)if(w.state!=='home')peds.push([w.x,w.z,1.4,0]);for(const f of FRIEND_ACTORS)if(f.loc==='city'&&f.mode!=='away')peds.push([f.x,f.z,1.4,0]);for(const p of PET_ACTORS)if(p.loc==='city')peds.push([p.x,p.z,1.1,0]);for(const a of MP.peers.values())if(a.loc==='city')peds.push([a.x,a.z,1.4,0]);
-  for(const c of CARS){const fx=Math.sin(c.yaw),fz=Math.cos(c.yaw);let block=null;
+  for(const c of CARS){if(c.away)continue;const fx=Math.sin(c.yaw),fz=Math.cos(c.yaw);let block=null;
     for(const [px,pz,w,me] of peds){const dx=px-c.x,dz=pz-c.z,f=dx*fx+dz*fz,l=Math.abs(dx*fz-dz*fx);if(f>0&&f<6.5&&l<w){block=me?'player':'ped';break;}}
-    if(!block)for(const o of CARS){if(o===c)continue;const dx=o.x-c.x,dz=o.z-c.z,f=dx*fx+dz*fz,l=Math.abs(dx*fz-dz*fx);if(f>0&&f<7.5&&l<2.2){block='car';break;}}
+    if(!block)for(const o of CARS){if(o===c||o.away)continue;const dx=o.x-c.x,dz=o.z-c.z,f=dx*fx+dz*fz,l=Math.abs(dx*fz-dz*fx);if(f>0&&f<7.5&&l<2.2){block='car';break;}}
     const ax=c.x+fx*5,az=c.z+fz*5;
     for(const X of XS){const inside=Math.abs(c.x-X.x)<6.3&&Math.abs(c.z-X.z)<6.3,near=Math.abs(ax-X.x)<6.3&&Math.abs(az-X.z)<6.3,i=X.occ.indexOf(c);
       if(inside||near){if(i<0){const clash=X.occ.some(o=>Math.abs(Math.sin(o.yaw)*fx+Math.cos(o.yaw)*fz)<.7);if(clash&&!inside)block=block||'cross';else X.occ.push(c);}}
@@ -3396,7 +3435,7 @@ function standUp(){if(!P.sit)return;if(P.sit.bk){const b=P.sit.bk;P.sit=null;[P.
   const nx=P.x-Math.sin(P.yaw)*.55,nz=P.z-Math.cos(P.yaw)*.55;[P.x,P.z]=collideXZ(nx,nz,.3,CUR);}
 
 /* ---- player ---- */
-function solids(){const s=[];if(CUR.type==='in'&&S.time>=8&&S.time<20)for(const p of SHOPPERS)if(p.L===CUR)s.push({cx:p.x,cz:p.z,cr:.32});for(const f of FRIEND_ACTORS)if(f.loc===CUR.id&&f.mode!=='away'&&f.mode!=='follow')s.push({cx:f.x,cz:f.z,cr:.32});if(CUR.id==='city'){for(const w of WALKERS)if(w.state!=='home')s.push({cx:w.x,cz:w.z,cr:.32});for(const c of CARS){const fx=Math.sin(c.yaw),fz=Math.cos(c.yaw);s.push({cx:c.x+fx*.85,cz:c.z+fz*.85,cr:.95},{cx:c.x-fx*.85,cz:c.z-fz*.85,cr:.95});}}return s;}
+function solids(){const s=[];if(CUR.type==='in'&&S.time>=8&&S.time<20)for(const p of SHOPPERS)if(p.L===CUR)s.push({cx:p.x,cz:p.z,cr:.32});for(const f of FRIEND_ACTORS)if(f.loc===CUR.id&&f.mode!=='away'&&f.mode!=='follow')s.push({cx:f.x,cz:f.z,cr:.32});if(CUR.id==='city'){for(const w of WALKERS)if(w.state!=='home')s.push({cx:w.x,cz:w.z,cr:.32});for(const c of CARS){if(c.away)continue;const fx=Math.sin(c.yaw),fz=Math.cos(c.yaw);s.push({cx:c.x+fx*.85,cz:c.z+fz*.85,cr:.95},{cx:c.x-fx*.85,cz:c.z-fz*.85,cr:.95});}}return s;}
 const sittersOut=()=>S.time>=9&&S.time<19.5;
 /* swing pumping: tap ⬆️ (or Space) while swinging to go higher and higher */
 const SW_MAX=1.45;let swOn=false,swFull=false;
