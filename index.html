@@ -176,11 +176,11 @@ button{font-family:inherit}
 #nav{pointer-events:auto;display:flex;align-items:center;gap:8px;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:999px;box-shadow:0 4px 0 var(--soft);padding:3px 4px 3px 12px;font-weight:800;font-size:18px;max-width:100%}
 #navArrow{display:inline-block;font-size:24px;transition:transform .15s}
 #nav .x{width:44px;height:44px;font-size:16px;box-shadow:0 2px 0 #3d2c5e}
-.mapwrap{position:relative;margin-top:6px}
-#mapc{width:100%;display:block;border-radius:16px;border:3px solid #3d2c5e;background:#9fe486;touch-action:none}
+/* 🗺️ the big map (night 2, job 6): a full card; the list of places is a side column on big screens and a sheet over the map on small ones */.card.mapcard{width:min(1500px,100%);height:100%;padding:10px 12px 12px;display:flex;flex-direction:column;overflow:hidden}.mp{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px}.mp-hd{display:flex;align-items:center;gap:8px}.mp-hd h2{margin:0;font-size:28px;font-weight:800;line-height:1.1;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mpl{min-height:46px;padding:4px 14px;font-size:18px}.mpl.on{background:var(--butter)}.mp-body{flex:1;min-height:0;display:flex;gap:10px;position:relative}.mp-list{display:none;flex:0 0 300px;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:2px 2px 6px}.mp.lst .mp-list{display:block}.mp-list .places{margin-top:0}.mp-wrap{position:relative;flex:1;min-width:0;border-radius:18px;border:3px solid var(--line);overflow:hidden;background:#c6edab}
+#mapc{position:absolute;left:0;top:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}#mapc:active{cursor:grabbing}.mp-ctl{position:absolute;top:10px;right:10px;z-index:1;display:flex;gap:8px;align-items:center}.mpb{width:50px;height:50px;min-height:0;padding:0;border-radius:50%;font-size:28px;background:#fff}.mpb.me{width:auto;padding:0 14px;border-radius:999px;font-size:19px;background:var(--pink)}.mp-card{position:absolute;left:10px;right:10px;bottom:10px;z-index:1;display:flex;align-items:center;gap:10px;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:18px;box-shadow:0 4px 0 var(--soft);padding:6px 8px 6px 12px;min-height:58px}.mpc-i{font-size:28px;line-height:1;flex:0 0 auto}.mpc-t{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.15;font-size:16px;font-weight:700}.mpc-t b{font-size:19px;font-weight:800}.mpgo{min-height:48px;padding:6px 14px;font-size:18px;flex:0 0 auto}.mp-card .x{flex:0 0 auto}
 .places{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
 .place{display:flex;align-items:center;gap:6px;background:#fff;border:2.5px solid #3d2c5e;border-radius:12px;padding:5px 8px;font:800 14px var(--font);color:#3d2c5e;cursor:pointer;text-align:left;touch-action:manipulation}
-.place .pi{font-size:20px}
+.place .pi{font-size:20px}.place.on{background:var(--butter)}.mp-card.hop,.mpb.hop{animation:mpHop .45s}.mp-card.hop2,.mpb.hop2{animation:mpHop2 .45s}@keyframes mpHop{30%{transform:scale(1.07)}}@keyframes mpHop2{30%{transform:scale(1.07)}}@media (max-width:930px){.mp-list{position:absolute;inset:0;z-index:2;flex:none;background:var(--paper);border:3px solid var(--line);border-radius:18px;padding:10px}.mp-list .places{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}.mp.lst .mp-ctl,.mp.lst .mp-card{display:none}}@media (max-width:560px){.mp-hd h2{font-size:23px}.mpl{padding:4px 10px;font-size:16px}.mpc-t{font-size:14px}.mpc-t b{font-size:17px}.mpgo{padding:6px 10px;font-size:16px}.mpc-i{font-size:24px}.mp-card{gap:8px;padding:5px 6px 5px 8px}}@media (max-height:500px){.mp-card{min-height:50px;padding:3px 6px 3px 10px}.mpc-t{flex-direction:row;flex-wrap:wrap;align-items:baseline;column-gap:8px}.mpgo{min-height:44px}.card.mapcard{padding:8px 10px 10px}.mp{gap:6px}}@media (prefers-reduced-motion:reduce){.mp-card.hop,.mpb.hop,.mp-card.hop2,.mpb.hop2{animation:none}}
 .crsave{position:sticky;bottom:-18px;z-index:2;background:var(--paper);margin:10px -18px -18px;padding:12px 18px calc(14px + env(safe-area-inset-bottom));border-top:3px dashed var(--soft);justify-content:center}
 .dot{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid #3d2c5e;vertical-align:-2px;margin-left:2px}
 .codecard{background:linear-gradient(160deg,#fff6c9,#ffd6ea);border:3px solid #3d2c5e;border-radius:22px;box-shadow:0 5px 0 #3d2c5e;padding:14px 12px 16px;margin:10px 4px 14px;text-align:center;color:#3d2c5e}
@@ -4493,6 +4493,7 @@ function setupInput(){
   T.addEventListener('pointerup',up);T.addEventListener('pointercancel',up);
   addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT'||document.body.classList.contains('away'))return;IN.keys[e.code]=true;   /* away title: keys only press Play */
     if(e.code==='Escape'){if(UI.open&&!UI.lock)closePanel();else if(DECO.placing)decoCancel();return;}
+    if(MAPV.on&&UI.open&&mapKeys(e))return;   /* 🗺️ + − zoom, arrows move the map, M closes it */
     if(CUT&&CUT.show&&(e.code==='Space'||e.code==='Enter'||e.code==='KeyE')){e.preventDefault();ACT.pstap();return;}
     if(CUT&&CUT.claw&&(e.code==='Space'||e.code==='Enter'||e.code==='KeyE')){e.preventDefault();ACT.clawtap();return;}
     if(!PLAYING||UI.open)return;
@@ -4878,27 +4879,283 @@ PLACES.push({id:'bus',n:'Bus stop',i:'🚌',x:-16.2,z:7.6,w:4,d:1.5,c:'#ffd9c2',
 const theN=pl=>pl.nt?pl.n:'the '+pl.n;
 const BLDS=[[-31,-15,7,7,'#bff0dc'],[-22,-31,18,8,'#ffd0b5'],[23,-31,20,8,'#c7e6ff'],[24,31,18,8,'#ffe0c4'],[13,-61.5,8,7,'#ffd6e0'],[25,-61.5,8,7,'#c9f2e3'],[37,-61.5,8,7,'#fff1b8'],[13,61.5,8,7,'#e6dbff'],[25,61.5,8,7,'#d9e8ff'],[37,61.5,8,7,'#ffe0c4'],[-66,25,10,20,'#ffd0b5']];
 const INSIDE_AT={beach:'beach',home:'home',market:'market',pets:'pets',flowers:'flowers',cafe:'cafe',clothes:'clothes',toys:'toys',bakery:'bakery',icecream:'icecream',library:'library',school:'school',fire:'fire',pizza:'pizza'};
-function drawMapBase(x,W,o={}){const S2=W/176,X=v=>(v+88)*S2,Z=v=>(v+88)*S2,PL=PLACES.filter(p=>p.x>-88);   /* places on Friends Lane are past the west edge */
-  x.fillStyle='#9fe486';x.fillRect(0,0,W,W);x.fillStyle='#bdeea2';x.fillRect(X(-23.4),Z(-24.5),12.8*S2,17.5*S2);   /* 🌸 the Flower Corner */
-  for(const p of PL.filter(p=>p.flat)){x.fillStyle=p.c;if(p.r){x.beginPath();x.arc(X(p.x),Z(p.z),p.r*S2,0,TAU);x.fill();}else x.fillRect(X(p.x-p.w/2),Z(p.z-p.d/2),p.w*S2,p.d*S2);}
-  x.fillStyle='#b9bcd6';for(const c of[-50,0,50]){x.fillRect(X(-84),Z(c-4),168*S2,8*S2);x.fillRect(X(c-4),Z(-84),8*S2,168*S2);}
-  x.fillStyle='#ffffff';for(const c of[-50,0,50])for(let t=-82;t<82;t+=6){x.fillRect(X(t),Z(c)-1,2.4*S2,2);x.fillRect(X(c)-1,Z(t),2,2.4*S2);}
-  x.strokeStyle='#3d2c5e';x.lineWidth=2;for(const [bx,bz,w,d,c] of BLDS){x.fillStyle=c||'#d8cfe6';x.fillRect(X(bx-w/2),Z(bz-d/2),w*S2,d*S2);x.strokeRect(X(bx-w/2),Z(bz-d/2),w*S2,d*S2);}
-  for(const p of PL.filter(p=>!p.flat)){x.fillStyle=p.c;if(p.r){x.beginPath();x.arc(X(p.x),Z(p.z),p.r*S2,0,TAU);x.fill();x.stroke();}else{x.fillRect(X(p.x-p.w/2),Z(p.z-p.d/2),p.w*S2,p.d*S2);x.strokeRect(X(p.x-p.w/2),Z(p.z-p.d/2),p.w*S2,p.d*S2);}}
-  /* 🏡 Friends Lane (with your house) is down the big road, past the west edge: a pink arrow there */
-  const ez=Z(0);x.fillStyle='#ff4d8d';x.strokeStyle='#ffffff';x.lineWidth=3;x.beginPath();x.moveTo(W*.006,ez);x.lineTo(W*.036,ez-W*.024);x.lineTo(W*.036,ez+W*.024);x.closePath();x.stroke();x.fill();
+/* ===================== 🗺️ the map (📱 → 🗺️ Map, or the M key) ===================== */
+/* One big card with the town and 🏡 Friends Lane, drawn from the data: the roads, PLACES (a new place shows up by itself), the lane's lots
+   (your house is "🏠 My House", friends' houses have their names), the 🚌 bus stop, and the 🏖️ beach as a sign at the east edge (you go by bus).
+   One finger drags it, two fingers pinch-zoom (PC: drag, mouse wheel), + − zoom for little fingers, 📍 Me finds you. Tap a place (its badge,
+   its name or the building): the way there is set at once (the pink arrow and the beacon in town, as before) and shows as a pink dotted line
+   along the paths; 🚶 Let's go! closes the map. The ground, roads and buildings are painted into a cache picture a bit bigger than the screen
+   (again only after a big move or a zoom); the names (at screen size: the less important ones hide when it gets crowded), the dotted line,
+   friends and your arrow go on top, 10 times a second while the map is open. Nothing runs while it is closed */
+const MAPV={on:false,s:4,cx:0,cz:0,W:0,H:0,dpr:1,ptr:new Map(),g:null,tap:null,last:null,base:null,bv:null,lay:null,rt:null,rk:'',hint:'',ch:'',list:false,beach:false,you:0,hop:0};
+let mapT=0;
+const MAP_SMAX=16,MAP_M=120,MAP_NARROW='(max-width: 930px)';   /* most zoomed in (CSS px per metre); the cache picture's extra edge (CSS px); the list is a side column on wider screens */
+const MAP_PAL={
+  light:{out:'#a9dc90',tree:'#90cd79',treeE:'#79b866',gr:'#c6edab',pave:'#f8efe4',paveE:'#dfcfc3',road:'#b3b0d6',roadE:'#8a84b8',dash:'#ffffff',park:'#a6e18f',parkE:'#7fc76c',plaza:'#f6e5c2',
+    field:'#93d981',line:'#ffffff',water:'#8ad8fb',waterE:'#5fb9e3',sand:'#f4dca3',hedge:'#6fc06a',lot:'#d4f1bf',fence:'#ffffff',trail:'#e8d6ad',flowers:'#a9e690',ink:'#3d2c5e',
+    shade:'rgba(61,44,94,.18)',txt:'#3d2c5e',halo:'#ffffff',badge:'#ffffff',badgeE:'#3d2c5e',bed:'#b07a52'},
+  dark:{out:'#2b453f',tree:'#24403a',treeE:'#1b332d',gr:'#38584a',pave:'#5d5a78',paveE:'#47446a',road:'#4a4672',roadE:'#25213f',dash:'#8f8bbd',park:'#3e6a4e',parkE:'#2d5840',plaza:'#6d6386',
+    field:'#3d6b4b',line:'#c9d6e8',water:'#3b78a8',waterE:'#2a5d86',sand:'#8b7a62',hedge:'#2d573c',lot:'#44664d',fence:'#d9d3ee',trail:'#6a6080',flowers:'#4f7a52',ink:'#140e28',
+    shade:'rgba(0,0,0,.32)',txt:'#fff1f8',halo:'#241b42',badge:'#fff7fb',badgeE:'#140e28',bed:'#7a563d'}};
+/* paths in front of the shops and doors (the same spots as the paving in the town) */
+const MAP_PAVE=[[11.5,-11,36,-7],[12,7,35.5,11],[-35.5,-11.4,-26.5,-7],[-22.8,-26.7,-7,-25],[7,-26.7,23.8,-25],[7,25,24.8,26.7],[-39,-59,-11,-57],[57,-37.5,59.6,-24.5],[57,-18.5,59.6,-9.5],
+  [57,12.5,60,27.5],[57,32,59.1,40],[57,5.4,59.9,11.8],[-60,-33,-57,-17],[-61,22,-57,28],[-60,-16.5,-57,-8.5]];
+const MAP_AT={park:[-33.4,14.6],beach:[91,0]};   /* where a place's badge sits when not in its middle (the park's middle is the fountain) */
+const MAP_MQ=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
+function mapDark(){const t=document.documentElement.getAttribute('data-theme');return t==='dark'||(t!=='light'&&!!(MAP_MQ&&MAP_MQ.matches));}
+function mixC(a,b,t){const p=s=>[1,3,5].map(i=>parseInt(s.slice(i,i+2),16)),A=p(a),B=p(b);return'#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('');}
+const mapB=()=>({x1:laneEnd()-8,x2:110,z1:-92,z2:92});   /* how far the map moves: the town, all of Friends Lane, the beach sign */
+const mapShown=p=>!((p.id==='home'||p.id==='garden')&&p.x>-84);   /* your house and garden are on Friends Lane (not in town) */
+let MAP_TR=null;
+function mapTrees(){if(MAP_TR)return MAP_TR;const r=seeded(66),T=[];   /* soft round trees on the hills around town (not on Friends Lane or the beach path) */
+  for(let i=0;i<4000&&T.length<560;i++){const x=-330+r()*450,z=-125+r()*250,R=1.8+r()*2.6;if(x>-92&&x<93&&z>-92&&z<92)continue;if(x<-78&&Math.abs(z)<31.5)continue;if(x>78&&Math.abs(z)<11)continue;T.push([x,z,R]);}
+  return MAP_TR=T;}
+/* paint the map: world (ox,oz) is the canvas corner, k = canvas px per metre, u = canvas px per CSS px. o.mini: the little job map (no names) */
+function mapPaint(x,ox,oz,k,w,h,o){const P=o.dark?MAP_PAL.dark:MAP_PAL.light,u=o.u||1,mini=!!o.mini,le=laneEnd(),X=v=>(v-ox)*k,Z=v=>(v-oz)*k,
+    vis=(x1,z1,x2,z2)=>X(x2)>-40&&X(x1)<w+40&&Z(z2)>-40&&Z(z1)<h+40,
+    R=(x1,z1,x2,z2,r)=>rr(x,X(x1),Z(z1),(x2-x1)*k,(z2-z1)*k,Math.max(r*k,u)),
+    C=(cx,cz,r)=>{x.beginPath();x.arc(X(cx),Z(cz),Math.max(.5,r*k),0,TAU);},
+    pl=(pts)=>{pts.forEach(([a,b],i)=>i?x.lineTo(X(a),Z(b)):x.moveTo(X(a),Z(b)));},
+    bc=c=>o.dark?mixC(c,'#241b42',.38):c,stroke=(c,lw)=>{x.strokeStyle=c;x.lineWidth=lw;x.stroke();};
+  x.save();x.setTransform(1,0,0,1,0,0);x.lineJoin='round';x.lineCap='round';x.setLineDash([]);
+  x.fillStyle=P.out;x.fillRect(0,0,w,h);
+  if(!mini){x.beginPath();for(const [tx,tz,tr] of mapTrees())if(vis(tx-tr,tz-tr,tx+tr,tz+tr)){x.moveTo(X(tx)+tr*k,Z(tz));x.arc(X(tx),Z(tz),tr*k,0,TAU);}
+    stroke(P.treeE,2.4*u);x.fillStyle=P.tree;x.fill();}
+  x.fillStyle=P.gr;R(-88,-88,88,88,7);x.fill();if(!mini){R(le-4,-28.5,-80,28.5,5);x.fill();}   /* the town, and Friends Lane's valley */
+  if(!mini){x.fillStyle=P.sand;C(97,0,7.5);x.fill();x.fillStyle=P.water;C(108,0,8.5);x.fill();}   /* 🏖️ a bit of beach past the east edge */
+  /* 🌳 the park, the football field, ponds and the lake (flat PLACES, by shape) */
+  for(const p of PLACES){if(!p.flat||!mapShown(p)||p.id==='beach'||p.id==='garden'||p.id==='bus')continue;const rr0=p.r||Math.max(p.w,p.d)/2;if(!vis(p.x-rr0,p.z-rr0,p.x+rr0,p.z+rr0))continue;
+    if(p.id==='park'){R(p.x-p.w/2,p.z-p.d/2,p.x+p.w/2,p.z+p.d/2,2.6);x.fillStyle=P.park;x.fill();stroke(P.parkE,1.6*u);
+      x.beginPath();for(const [a,b] of WE)if(PARKN.has(a)||PARKN.has(b))pl([WP[a],WP[b]]);stroke(P.plaza,1.8*k);
+      const f=PLACES.find(q=>q.id==='fountain');if(f){x.fillStyle=P.plaza;C(f.x,f.z,f.r*2.1);x.fill();x.beginPath();pl([p.door,[f.x,f.z]]);stroke(P.plaza,3*k);}}
+    else if(p.id==='field'){R(p.x-p.w/2,p.z-p.d/2,p.x+p.w/2,p.z+p.d/2,1.2);x.fillStyle=P.field;x.fill();stroke(P.parkE,1.4*u);
+      if(k>1.5*u){const lw=Math.max(u,.16*k),a=p.x-p.w/2+1,b=p.x+p.w/2-1,c=p.z-p.d/2+.9,d=p.z+p.d/2-.9;x.beginPath();x.rect(X(a),Z(c),(b-a)*k,(d-c)*k);pl([[p.x,c],[p.x,d]]);
+        x.moveTo(X(p.x)+2.7*k,Z(p.z));x.arc(X(p.x),Z(p.z),2.7*k,0,TAU);x.rect(X(a),Z(p.z-5),4*k,10*k);x.rect(X(b-4),Z(p.z-5),4*k,10*k);stroke(P.line,lw);}}
+    else if(p.r){const wet=/^(lake|pond)$/.test(p.id);if(wet){x.fillStyle=P.sand;C(p.x,p.z,p.r+.55);x.fill();}C(p.x,p.z,p.r);x.fillStyle=wet?P.water:bc(p.c);x.fill();stroke(wet?P.waterE:'#ffffff',1.4*u);
+      if(p.id==='fountain'){x.fillStyle=P.water;C(p.x,p.z,p.r*.55);x.fill();}
+      if(p.id==='lake'&&k>2*u){const a=Math.SQRT1_2,s0=[p.x-a*(p.r+.5),p.z-a*(p.r+.5)];x.beginPath();pl([s0,[s0[0]+a*4.5,s0[1]+a*4.5]]);stroke('#c98f5e',1.5*k);
+        x.save();x.translate(X(s0[0]+a*5.8),Z(s0[1]+a*5.8));x.rotate(Math.PI/4);x.fillStyle='#c98f5e';x.fillRect(-1.3*k,-1.3*k,2.6*k,2.6*k);x.restore();}}
+    else{R(p.x-p.w/2,p.z-p.d/2,p.x+p.w/2,p.z+p.d/2,1);x.fillStyle=bc(p.c);x.fill();stroke(P.parkE,1.2*u);}}   /* a new flat place: a soft patch in its colour */
+  /* 🌸 the Flower Corner (where your house stood in town) */
+  if(vis(-24,-25,-10,-6)){R(-23.4,-24.5,-10.6,-7,1.2);x.fillStyle=P.flowers;x.fill();stroke(P.hedge,Math.max(1.4*u,.7*k));
+    if(k>2.5*u){const r=seeded(31);for(const [fx,fz,fr] of [[-21.2,-9.7,1.1],[-12.8,-9.7,1.1],[-12.9,-21.6,1.2],[-21.3,-22.3,1],[-15.5,-20.2,.9]]){x.fillStyle=o.dark?'#3f6e49':'#6cc97c';C(fx,fz,fr);x.fill();
+        for(let i=0;i<5;i++){const a=r()*TAU,d=r()*fr*.7;x.fillStyle=FLOWER_COLS[i];C(fx+Math.cos(a)*d,fz+Math.sin(a)*d,Math.max(.22,1.2*u/k));x.fill();}}
+      x.fillStyle=o.dark?'#2f5a3a':'#5fbf74';C(-20.2,-18.6,1.6);x.fill();}}
+  /* pavements, then the roads (rounded ends and corners, a soft outline) */
+  const RD=[[[-77,-50],[77,-50]],[[-77,50],[77,50]],[[le+7,0],[77,0]],[[-50,-77],[-50,77]],[[0,-77],[0,77]],[[50,-77],[50,77]]],
+    RW=[[[-80,-50],[80,-50]],[[-80,50],[80,50]],[[le+4,0],[75.4,0]],[[-50,-80],[-50,80]],[[0,-80],[0,80]],[[50,-80],[50,80]]];
+  x.beginPath();RD.forEach(pl);stroke(P.paveE,14*k+2*u);stroke(P.pave,14*k);
+  x.fillStyle=P.pave;for(const [a,b,c,d] of MAP_PAVE)if(vis(a,b,c,d)){R(a,b,c,d,.5);x.fill();}
+  if(!mini&&k>2.2*u){x.beginPath();for(const [a,b] of TRAIL)pl([WP[a],WP[b]]);stroke(P.trail,1.5*k);}   /* the nature trail around the old town */
+  x.beginPath();RW.forEach(pl);stroke(P.roadE,8*k+2.6*u);stroke(P.road,8*k);
+  if(!mini&&k>2.2*u){x.beginPath();const cut=(a,b,f)=>{let t=a;for(const c of[-50,0,50].filter(c=>c>a&&c<b).concat(b)){if(c-8>t+1)f(t,c===b?b:c-8);t=c+8;}};
+    for(const c of[-50,50])cut(-82,82,(a,b)=>pl([[a,c],[b,c]]));cut(le+2,82,(a,b)=>pl([[a,0],[b,0]]));for(const c of[-50,0,50])cut(-82,82,(a,b)=>pl([[c,a],[c,b]]));
+    x.setLineDash([1.4*k,1.8*k]);x.lineCap='butt';stroke(P.dash,Math.max(u,.18*k));x.setLineDash([]);x.lineCap='round';}
+  if(!mini&&k>4.5*u){x.beginPath();for(let t=-78;t<=78;t+=6){if([-50,0,50].some(c=>Math.abs(t-c)<8)||t%12===0)continue;   /* 🌳 the trees along the roads */
+      for(const c of[-50,0,50])for(const s of[-1,1])for(const [tx,tz] of [[t,c+s*4.75],[c+s*4.75,t]])if(vis(tx-2,tz-2,tx+2,tz+2)){x.moveTo(X(tx)+1.1*k,Z(tz));x.arc(X(tx),Z(tz),1.1*k,0,TAU);}}
+    stroke(P.treeE,1.6*u);x.fillStyle=P.tree;x.fill();}
+  /* 🏖️ the big road ends at the old beach gate; the sandy path goes on (the Beach Bus goes this way) */
+  x.fillStyle=P.sand;R(79.4,-3.6,100,3.6,1.6);x.fill();x.beginPath();pl([[79.4,-3.3],[79.4,3.3]]);stroke(P.ink,Math.max(2*u,.5*k)+2*u);stroke('#2b8fc4',Math.max(2*u,.5*k));
+  /* 🏠 buildings: rounded blocks in their colours, the game's ink outline and a soft shadow */
+  const blds=[...PLACES.filter(p=>!p.flat&&p.id!=='home'&&mapShown(p)).map(p=>[p.x,p.z,p.w||p.r*2,p.d||p.r*2,p.c,p.r]),...BLDS];
+  const bus=PLACES.find(p=>p.id==='bus');if(bus)blds.push([bus.x,bus.z,bus.w,bus.d,bus.c]);
+  for(const [bx,bz,bw,bd,c,round] of blds){if(!vis(bx-bw/2,bz-bd/2,bx+bw/2,bz+bd/2))continue;const r=Math.min(1.4,bw/4,bd/4),sh=Math.max(1.5*u,.5*k);
+    x.fillStyle=P.shade;if(round){x.beginPath();x.arc(X(bx)+sh,Z(bz)+sh,bw/2*k,0,TAU);}else rr(x,X(bx-bw/2)+sh,Z(bz-bd/2)+sh,bw*k,bd*k,r*k);x.fill();
+    if(round)C(bx,bz,bw/2);else R(bx-bw/2,bz-bd/2,bx+bw/2,bz+bd/2,r);x.fillStyle=bc(c||'#d8cfe6');x.fill();stroke(P.ink,(mini?1.3:1.6)*u);
+    if(!mini&&!round&&k>2.5*u&&bw>2.5&&bd>2.5){R(bx-bw/2+.7,bz-bd/2+.7,bx+bw/2-.7,bz+bd/2-.7,Math.max(.4,r-.5));x.fillStyle=o.dark?'rgba(255,255,255,.08)':'rgba(255,255,255,.4)';x.fill();}}   /* a soft roof */
+  /* 🏡 Friends Lane: the gate, hedges, every lot (a house when a friend lives there), your garden, the end of the lane */
+  x.beginPath();pl([[-84.6,-4.5],[-84.6,4.5]]);stroke(P.ink,Math.max(2*u,.55*k)+2*u);stroke('#ff7aa8',Math.max(2*u,.55*k));
+  if(!mini){x.beginPath();for(const s of[-1,1])pl([[-80.3,s*26.6],[le-.9,s*26.6]]);pl([[le-1.35,-27],[le-1.35,27]]);stroke(P.hedge,Math.max(2*u,1*k));
+    x.beginPath();pl([[le+.2,-4.2],[le+.2,4.2]]);stroke(P.ink,Math.max(2*u,.4*k)+2*u);stroke('#ff6b6b',Math.max(2*u,.4*k));
+    const C0=LOC.city,mine=LANE.mine;
+    for(const lp of (C0&&C0.lane)||[]){const X0=lp.X,s=lp.s,o2=LANE.own[lp.j];if(!vis(X0-7,-27,X0+7,27))continue;
+      R(X0-6.6,Math.min(s*7.1,s*26.1),X0+6.6,Math.max(s*7.1,s*26.1),1.2);x.fillStyle=P.lot;x.fill();
+      if(k>3*u){x.beginPath();pl([[X0-4.6,s*11.3],[X0-4.6,s*8.2],[X0-.9,s*8.2]]);pl([[X0+.9,s*8.2],[X0+4.6,s*8.2],[X0+4.6,s*11.3]]);stroke(P.ink,Math.max(u,.18*k)+1.6*u);stroke(P.fence,Math.max(u,.18*k));}   /* the front fence */
+      if(lp.j===mine){const g=PLACES.find(q=>q.id==='garden'),q=(a,b)=>lotPt(lp.j,a,b);   /* 🌱 your garden: the beds, the shed and the stepping stones */
+        if(g){R(g.x-6.15,g.z-3,g.x+6.15,g.z+3,.8);x.fillStyle=o.dark?'#4f7a4a':'#a2e48a';x.fill();stroke(P.fence,Math.max(u,.14*k));
+          x.fillStyle=P.bed;for(const [a,b] of [[-21,-20.9],[-18.3,-20.9],[-15.6,-20.9],[-21,-23],[-18.3,-23],[-15.6,-23]]){const [cx,cz]=q(a,b);R(cx-.9,cz-.6,cx+.9,cz+.6,.25);x.fill();}
+          const [sx2,sz2]=q(-11.9,-23.3);R(sx2-.8,sz2-.7,sx2+.8,sz2+.7,.3);x.fillStyle=bc('#ffd6e0');x.fill();stroke(P.ink,u);
+          if(k>3*u){x.fillStyle=P.pave;for(let i=0;i<8;i++){const [a,b]=q(-11.45,-7.6-i*1.4);C(a,b,.36);x.fill();}}}}
+      if(o2){const pal=LANE_PAL[hashStr(o2.nm.toLowerCase())%LANE_PAL.length],z1=Math.min(s*11.5,s*18.5),sh=Math.max(1.5*u,.5*k);
+        x.fillStyle=P.shade;rr(x,X(X0-4.5)+sh,Z(z1)+sh,9*k,7*k,1.4*k);x.fill();R(X0-4.5,z1,X0+4.5,z1+7,1.4);x.fillStyle=bc(pal[0]);x.fill();stroke(P.ink,1.6*u);
+        if(k>2.5*u){R(X0-3.8,z1+.7,X0+3.8,z1+6.3,1);x.fillStyle=o.dark?'rgba(255,255,255,.08)':'rgba(255,255,255,.4)';x.fill();}}
+      else if(k>5*u){x.font=`${Math.round(1.6*k)}px ${FONT}`;x.textAlign='center';x.textBaseline='middle';x.fillText('💛',X(X0-3.4),Z(s*7.6));}}}   /* an empty lot: "For a friend 💛" */
+  if(mini){x.textAlign='center';x.textBaseline='middle';x.font=`${Math.round(w/26)}px ${FONT}`;for(const p of PLACES)if(p.id!=='garden'&&p.x>-86&&mapShown(p))x.fillText(p.i,X(p.x),Z(p.z));   /* the job map: icons only */
+    const ez=Z(0);x.fillStyle='#ff4d8d';x.strokeStyle='#ffffff';x.lineWidth=3;x.beginPath();x.moveTo(w*.006,ez);x.lineTo(w*.036,ez-w*.024);x.lineTo(w*.036,ez+w*.024);x.closePath();x.stroke();x.fill();x.fillText('🏠',w*.068,ez);}   /* 🏡 Friends Lane is past the west edge */
+  x.restore();}
+/* the little job map (corner of the screen) uses the same painter: the whole town, icons only */
+function drawMapBase(x,W){mapPaint(x,-88,-88,W/176,W,W,{mini:1,u:W/176});}
+/* the badges and names: what can be tapped, by importance (0 = always shown) */
+function mapItems(){const it=[],C=LOC.city,nav=NAV&&!NAV.actor?NAV.id:'';
+  for(const p of PLACES){if(!mapShown(p))continue;const a=MAP_AT[p.id]||[p.x,p.z],sel=p.id===nav;
+    it.push({k:p.id,pl:p,i:p.i,n:p.id==='beach'?'Beach →':p.n,x:a[0],z:a[1],pri:sel||p.id==='home'?0:p.flat&&p.id!=='bus'&&p.id!=='beach'?2:1,me:p.id==='home',sel});}
+  if(C&&C.lane)for(const lp of C.lane){const o=LANE.own[lp.j];if(!o||o.k===laneMe())continue;const k='lot'+lp.j;it.push({k,lot:lp.j,i:'🏠',n:o.nm,x:lp.hx,z:lp.hz,pri:k===nav?0:2,sel:k===nav});}
+  it.push({k:'lane',deco:'lane',i:'🏡',n:'Friends Lane',x:-92,z:0,pri:1},{k:'fc',deco:'fc',i:'🌸',n:'Flower Corner',x:-17,z:-15.6,pri:3});
+  return it;}
+function mapLayout(x){const s=MAPV.s,placed=[],out=[],hit=r=>placed.some(q=>r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1]);
+  for(const it of mapItems().sort((a,b)=>a.pri-b.pri)){const px=it.x*s,py=it.z*s,R=it.sel?18:it.pri<2?16:it.pri<3?14:12,br=[px-R-2,py-R-2,px+R+2,py+R+2];
+    if(it.pri>0&&hit(br))continue;   /* crowded: the less important ones hide (they come back when you zoom in) */
+    it.R=R;it.lab=null;const fs=it.pri<3?15:13;x.font=`800 ${fs}px ${FONT}`;const tw=x.measureText(it.n).width,th=fs*1.15;   /* the name: below, right, left or above its badge */
+    for(const [lx,ly] of [[px-tw/2,py+R+2],[px+R+5,py-th/2],[px-R-5-tw,py-th/2],[px-tw/2,py-R-3-th]]){const r=[lx-4,ly-1,lx+tw+4,ly+th+1];if(!hit(r)){placed.push(r);it.lab=[lx-px,ly-py,tw,th,fs];break;}}
+    placed.push(br);out.push(it);}
+  return out;}
+function mapKey(){const C=LOC.city;return(C&&C.lane?C.lane.map(l=>l.key||'').join(','):'')+'|'+LANE.mine+'|'+LANE_PLOTS.length+'|'+PLACES.length;}   /* the cache picture changes with these */
+/* where you are on the map: in town, or at the door of the building you are in */
+function mapMe(){const id=CUR?CUR.id:'city';if(id==='city')return{x:P.x,z:P.z,yaw:P.yaw};
+  if(id==='beach')return{x:98,z:0,yaw:-Math.PI/2};   /* at the beach: on the sand past the east edge */
+  let d=null;const hd=H=>H?[H.x+Math.sin(H.ry)*1.3,H.z+Math.cos(H.ry)*1.3,H.ry+Math.PI]:null;
+  if(id==='visit')d=laneHostDoor();else if(id.startsWith('apt'))d=hd(HOUSE(APT.b));else if(id.startsWith('cl_'))d=DOORS.school.city;
+  else if(id==='client'){const r=CLRET;d=r&&r.loc&&r.loc!=='city'?hd(HOUSE(APT.b)):hd(HOUSE((r&&r.h)||(S.ds&&S.ds.o&&S.ds.o.h)||'nb'));}
+  else if(DOORS[id]&&DOORS[id].city)d=DOORS[id].city;else{const pl=PLACES.find(q=>q.id===INSIDE_AT[id]);if(pl)d=[pl.door[0],pl.door[1],0];}
+  return d?{x:d[0],z:d[1],yaw:d[2]||0}:{x:-17,z:-4.6,yaw:0};}
+/* friends on the map: friends who hang out in town, and friends online (dots in their house colour) */
+function mapPeer(a){const C=LOC.city,door=k=>{const j=LANE.slotOf.get(k);return j!=null&&C.lane&&C.lane[j]?C.lane[j].door:null;};
+  if(a.loc==='city'){const q=citySpot(a);return[q[0],q[1]];}if(a.loc==='home')return door(a.peer);
+  if(a.loc==='visit')return MP.me&&a.ho===MP.me?DOORS.home.city:door(a.ho);if(a.loc==='beach')return[98,2];
+  const pl=PLACES.find(p=>p.id===INSIDE_AT[a.loc]);return pl?pl.door:null;}
+function mapFriends(){const out=[];
+  for(const f of FRIEND_ACTORS)if(f.loc==='city'&&f.mode!=='away'&&f.mode!=='follow'&&f.g.visible)out.push({x:f.x,z:f.z,c:f.d.look.top||'#ff9ec4',n:f.d.name});
+  if(MP.peers)for(const a of MP.peers.values()){const q=mapPeer(a);if(q)out.push({x:q[0],z:q[1],c:LANE_PAL[hashStr(String(a.nm).toLowerCase())%LANE_PAL.length][1],n:a.nm,on:1});}
+  return out;}
+/* the way along the paths (the walkers' path nodes WP/WE), and along the pavement of Friends Lane */
+function mapPath(ax,az,bx,bz){if(Math.hypot(bx-ax,bz-az)<10)return[[ax,az],[bx,bz]];
+  const n=WP.length,d=new Array(n).fill(1e9),pv=new Array(n).fill(-1),dn=new Array(n).fill(false),near=(x,z)=>WP.map((p,i)=>[Math.hypot(p[0]-x,p[1]-z),i]).sort((a,b)=>a[0]-b[0]).slice(0,3);
+  for(const [dd,i] of near(ax,az))d[i]=Math.min(d[i],dd);
+  for(;;){let u=-1,bu=1e9;for(let i=0;i<n;i++)if(!dn[i]&&d[i]<bu){bu=d[i];u=i;}if(u<0)break;dn[u]=true;
+    for(const v of NEIGH[u]){const w=d[u]+Math.hypot(WP[u][0]-WP[v][0],WP[u][1]-WP[v][1]);if(w<d[v]){d[v]=w;pv[v]=u;}}}
+  let best=-1,bc=1e9;for(const [dd,i] of near(bx,bz))if(d[i]+dd<bc){bc=d[i]+dd;best=i;}
+  if(best<0)return[[ax,az],[bx,bz]];const out=[];for(let v=best;v>=0;v=pv[v])out.push(WP[v]);out.reverse();return[[ax,az],...out,[bx,bz]];}
+function mapWay(ax,az,bx,bz){const LN=-82,E=s=>WP[WPN[s<0?'E8':'E7']],sd=z=>z<0?-1:1,
+    lane=(x,z)=>{const r=Math.abs(z)>6.8?laneOut(x,z):[],e=r.length?r[r.length-1]:[x,z];return[[x,z],...r,[e[0],sd(z)*5.6]];};   /* out of a yard by its gate, onto the pavement */
+  if(ax>=LN&&bx>=LN)return mapPath(ax,az,bx,bz);
+  if(ax<LN&&bx<LN)return[...lane(ax,az),...lane(bx,bz).reverse()];
+  if(bx<LN){const e=E(sd(bz));return[...mapPath(ax,az,e[0],e[1]),...lane(bx,bz).reverse()];}
+  const e=E(sd(az));return[...lane(ax,az),...mapPath(e[0],e[1],bx,bz)];}
+function mapRoute(){if(!NAV||!CUR||CUR.id==='beach')return null;const me=mapMe(),G=NAV.goal||NAV.door,k=[Math.round(me.x),Math.round(me.z),Math.round(G[0]*2),Math.round(G[1]*2)].join(',');
+  if(k!==MAPV.rk){MAPV.rk=k;MAPV.rt=mapWay(me.x,me.z,G[0],G[1]);}return MAPV.rt;}
+/* the view: s = CSS px per metre, (cx,cz) = the middle of the map */
+const mapSP=(x,z)=>[(x-MAPV.cx)*MAPV.s+MAPV.W/2,(z-MAPV.cz)*MAPV.s+MAPV.H/2];
+const mapWP=(sx,sy)=>[MAPV.cx+(sx-MAPV.W/2)/MAPV.s,MAPV.cz+(sy-MAPV.H/2)/MAPV.s];
+function mapSmin(){const B=mapB();return Math.min(MAPV.W/(B.x2-B.x1),MAPV.H/(B.z2-B.z1));}
+function mapComfy(){return clamp(Math.min(MAPV.W,MAPV.H)/85,mapSmin(),MAP_SMAX);}   /* about 85 m across: comfy to read */
+function mapClampV(){const B=mapB(),s=MAPV.s=clamp(MAPV.s,mapSmin(),MAP_SMAX),hw=MAPV.W/2/s,hh=MAPV.H/2/s;   /* you can't lose the town */
+  MAPV.cx=B.x2-B.x1<=2*hw?(B.x1+B.x2)/2:clamp(MAPV.cx,B.x1+hw,B.x2-hw);MAPV.cz=B.z2-B.z1<=2*hh?(B.z1+B.z2)/2:clamp(MAPV.cz,B.z1+hh,B.z2-hh);}
+function mapHome(z){const me=mapMe();if(z||MAPV.s<mapComfy())MAPV.s=mapComfy();MAPV.cx=me.x;MAPV.cz=me.z;mapClampV();}
+function mapShow(fit){if(!NAV||!MAPV.W)return;const me=mapMe(),G=NAV.goal||NAV.door,[gx,gy]=mapSP(G[0],G[1]),pad=clamp(MAPV.W*.15,40,70),bot=80;   /* the place is off the screen (or picked from the list): show you and the place */
+  if(!fit&&gx>pad&&gx<MAPV.W-pad&&gy>pad&&gy<MAPV.H-bot)return;
+  const B=NAV.actor||!Number.isFinite(NAV.x)?G:(MAP_AT[NAV.id]||[NAV.x,NAV.z]),x1=Math.min(me.x,G[0],B[0]),x2=Math.max(me.x,G[0],B[0]),z1=Math.min(me.z,G[1],B[1]),z2=Math.max(me.z,G[1],B[1]),   /* you, the door and the badge */
+    sf=Math.min((MAPV.W-2*pad)/Math.max(1,x2-x1),(MAPV.H-pad-bot)/Math.max(1,z2-z1));
+  MAPV.s=fit?Math.min(mapComfy(),sf):Math.min(MAPV.s,sf);mapClampV();MAPV.cx=(x1+x2)/2;MAPV.cz=(z1+z2)/2+(bot-pad)/2/MAPV.s;mapClampV();}
+function mapZoom(f,px,py){const s0=MAPV.s;if(px==null){px=MAPV.W/2;py=MAPV.H/2;}const [wx,wz]=mapWP(px,py);MAPV.s=clamp(s0*f,mapSmin(),MAP_SMAX);
+  MAPV.cx=wx-(px-MAPV.W/2)/MAPV.s;MAPV.cz=wz-(py-MAPV.H/2)/MAPV.s;mapClampV();mapZui();mapDraw();}
+function mapZui(){const cv=$('mapc');if(!cv)return;const zi=document.querySelector('#card [data-a="mapz:1"]'),zo=document.querySelector('#card [data-a="mapz:-1"]'),mn=mapSmin(),lv=1+Math.round(Math.log(MAPV.s/mn)/Math.log(1.6));
+  if(zi)zi.disabled=MAPV.s>=MAP_SMAX-.001;if(zo)zo.disabled=MAPV.s<=mn+.001;const t='Map of Cozy Town (zoom '+lv+')';if(cv.getAttribute('aria-label')!==t)cv.setAttribute('aria-label',t);}
+/* draw: the cache picture (again when needed), then the names, the dotted way, the job's dot, friends and you */
+function mapDraw(force){const cv=$('mapc');if(!MAPV.on)return;if(!cv){mapOff();return;}
+  const cw=cv.clientWidth,ch=cv.clientHeight;if(cw<40||ch<40)return;const dpr=Math.min(2,devicePixelRatio||1),W=Math.round(cw*dpr),H=Math.round(ch*dpr);
+  if(cv.width!==W||cv.height!==H){cv.width=W;cv.height=H;}
+  if(cw!==MAPV.W||ch!==MAPV.H||dpr!==MAPV.dpr){const first=!MAPV.W;MAPV.W=cw;MAPV.H=ch;MAPV.dpr=dpr;MAPV.bv=null;if(first){mapHome(true);mapShow();}mapClampV();mapZui();}   /* opened: centred on you (and the way, if it is long) */
+  if(force)MAPV.lay=null;const x=cv.getContext('2d'),dark=mapDark(),key=dark+'|'+mapKey(),s=MAPV.s,k=s*dpr,v=[MAPV.cx-cw/2/s,MAPV.cz-ch/2/s,MAPV.cx+cw/2/s,MAPV.cz+ch/2/s];let b=MAPV.bv;
+  const pz=MAPV.g&&MAPV.g.n===2&&b&&s/b.s>.7&&s/b.s<1.45;   /* while pinching, the cache picture is stretched a little and painted again when the fingers let go */
+  if(force||!b||b.key!==key||(b.s!==s&&!pz)||v[0]<b.x1||v[1]<b.z1||v[2]>b.x2||v[3]>b.z2){const m=MAP_M/s,B=MAPV.base||(MAPV.base=document.createElement('canvas')),bw=Math.round((cw+2*MAP_M)*dpr),bh=Math.round((ch+2*MAP_M)*dpr);
+    b={x1:v[0]-m,z1:v[1]-m,x2:v[2]+m,z2:v[3]+m,s,key};if(B.width!==bw||B.height!==bh){B.width=bw;B.height=bh;}mapPaint(B.getContext('2d'),b.x1,b.z1,k,bw,bh,{dark,u:dpr});MAPV.bv=b;}
+  const lk=key+'|'+(NAV&&!NAV.actor?NAV.id:'');if(!MAPV.lay||MAPV.lay.s!==s||MAPV.lay.key!==lk)MAPV.lay={s,key:lk,items:mapLayout(x)};   /* the names: again after a zoom, or another place picked */
+  const P2=dark?MAP_PAL.dark:MAP_PAL.light,t=performance.now()/1000,S2=(wx,wz)=>[((wx-MAPV.cx)*s+cw/2)*dpr,((wz-MAPV.cz)*s+ch/2)*dpr];
+  {const bk=b.s*dpr,sw=Math.min(MAPV.base.width,(v[2]-v[0])*bk),sh=Math.min(MAPV.base.height,(v[3]-v[1])*bk);x.setTransform(1,0,0,1,0,0);
+    const r0=b.s===s?Math.round:(q=>q);x.drawImage(MAPV.base,r0(clamp((v[0]-b.x1)*bk,0,MAPV.base.width-sw)),r0(clamp((v[1]-b.z1)*bk,0,MAPV.base.height-sh)),sw,sh,0,0,W,H);}x.lineJoin='round';x.lineCap='round';
+  const rt=mapRoute();
+  if(rt&&rt.length>1){const pts=rt.map(p=>S2(p[0],p[1]));x.beginPath();pts.forEach(([a,c],i)=>i?x.lineTo(a,c):x.moveTo(a,c));x.strokeStyle='rgba(255,77,141,.24)';x.lineWidth=13*dpr;x.stroke();
+    const gap=14*dpr;let carry=gap-(t*24*dpr)%gap;x.fillStyle='#ff4d8d';x.strokeStyle='#ffffff';x.lineWidth=2*dpr;   /* the dots walk towards the place */
+    for(let i=1;i<pts.length;i++){const [a,c]=pts[i-1],[e,f]=pts[i],L=Math.hypot(e-a,f-c);let d=carry;for(;d<=L;d+=gap){x.beginPath();x.arc(a+(e-a)*d/L,c+(f-c)*d/L,3.8*dpr,0,TAU);x.fill();x.stroke();}carry=d-L;}}
+  if(NAV){const G=NAV.goal||NAV.door,[gx,gy]=S2(G[0],G[1]),ph=(t%1.4)/1.4;x.beginPath();x.arc(gx,gy,(8+12*ph)*dpr,0,TAU);x.strokeStyle=`rgba(255,77,141,${.7*(1-ph)})`;x.lineWidth=3*dpr;x.stroke();
+    x.beginPath();x.arc(gx,gy,6*dpr,0,TAU);x.fillStyle='#ff4d8d';x.fill();x.strokeStyle='#ffffff';x.lineWidth=2.5*dpr;x.stroke();}
+  {const T=jobTarget();if(T){const col=(S.dl&&S.dl.dot)||'#ff3b3b',[tx,ty]=S2(T.x,T.z);x.beginPath();x.arc(tx,ty,9*dpr,0,TAU);x.fillStyle=col;x.fill();x.lineWidth=3*dpr;x.strokeStyle=col==='#ffffff'?'#1d1622':'#ffffff';x.stroke();
+    if(S.job==='delivery'&&S.dl&&S.dl.o&&S.dl.o.r){x.beginPath();x.arc(tx,ty,14*dpr,0,TAU);x.lineWidth=4*dpr;x.strokeStyle='#ffc400';x.stroke();}}}
   x.textAlign='center';x.textBaseline='middle';
-  if(o.labels===false){x.font=`${Math.round(W/26)}px ${FONT}`;for(const p of PL)if(p.id!=='garden')x.fillText(p.i,X(p.x),Z(p.z));x.fillText('🏠',W*.068,ez);return;}
-  for(const p of PL){x.font=`${Math.round(W/22)}px ${FONT}`;x.fillText(p.i,X(p.x),Z(p.z)-W*.012);x.font=`800 ${Math.round(W/46)}px ${FONT}`;x.lineWidth=4;x.strokeStyle='#ffffff';x.strokeText(p.n,X(p.x),Z(p.z)+W*.028);x.fillStyle='#3d2c5e';x.fillText(p.n,X(p.x),Z(p.z)+W*.028);}
-  x.font=`800 ${Math.round(W/46)}px ${FONT}`;x.textAlign='left';const t1='🏡 Friends Lane',t2='🏠 My House',lw=Math.max(x.measureText(t1).width,x.measureText(t2).width)+W*.03,lh=W*.064,lx=W*.042;
-  x.fillStyle='#ffffff';x.strokeStyle='#ff4d8d';x.lineWidth=3;rr(x,lx,ez-lh/2,lw,lh,lh*.3);x.fill();x.stroke();x.fillStyle='#3d2c5e';x.fillText(t1,lx+W*.015,ez-lh*.23);x.fillText(t2,lx+W*.015,ez+lh*.25);x.textAlign='center';}
-function drawMap(cv){const x=cv.getContext('2d'),W=cv.width,S2=W/176,X=v=>(v+88)*S2,Z=v=>(v+88)*S2;drawMapBase(x,W);
-  {const T=jobTarget(),col=dl().dot;if(T){x.beginPath();x.arc(X(T.x),Z(T.z),W*.024,0,TAU);x.fillStyle=col;x.fill();x.lineWidth=4;x.strokeStyle=col==='#ffffff'?'#1d1622':'#ffffff';x.stroke();if(S.job==='delivery'&&dl().o.r){x.beginPath();x.arc(X(T.x),Z(T.z),W*.038,0,TAU);x.lineWidth=6;x.strokeStyle='#ffc400';x.stroke();}}}
-  const cl=v=>clamp(v,-85,85);   /* off the map (Friends Lane): shown at its edge */
-  if(NAV){const G=NAV.goal||NAV.door;x.strokeStyle='#ff4d8d';x.lineWidth=5;x.beginPath();x.arc(X(cl(G[0])),Z(cl(G[1])),W*.03,0,TAU);x.stroke();}
-  let px=P.x,pz=P.z,yaw=P.yaw;if(CUR&&CUR.id.startsWith('apt')){const H=HOUSE(APT.b);px=H.x+Math.sin(H.ry)*1.3;pz=H.z+Math.cos(H.ry)*1.3;}else if(CUR&&CUR.id!=='city'){const pl=PLACES.find(q=>q.id===INSIDE_AT[CUR.id]);if(pl){px=pl.door[0];pz=pl.door[1];}}
-  x.save();x.translate(X(cl(px)),Z(cl(pz)));x.rotate(-yaw);x.fillStyle='#ff4d8d';x.strokeStyle='#ffffff';x.lineWidth=3;x.beginPath();x.moveTo(0,-W*.03);x.lineTo(W*.02,W*.02);x.lineTo(0,W*.008);x.lineTo(-W*.02,W*.02);x.closePath();x.fill();x.stroke();x.restore();
-  x.font=`800 ${Math.round(W/36)}px ${FONT}`;x.fillStyle='#3d2c5e';x.textAlign='left';x.fillText('⬆ North',10,W*.035);}
+  const items=MAPV.lay.items.slice(),taken=[];if(NAV&&NAV.actor)items.push({i:NAV.i,n:NAV.n,x:NAV.door[0],z:NAV.door[1],R:18,sel:1,lab:null});
+  for(const it of items){const [bx,by]=S2(it.x,it.z),R=it.R*dpr;if(bx<-120*dpr||bx>W+120*dpr||by<-60*dpr||by>H+60*dpr)continue;
+    taken.push([bx-R,by-R,bx+R,by+R]);if(it.lab){const [lx,ly,tw,th]=it.lab;taken.push([bx+lx*dpr,by+ly*dpr,bx+(lx+tw)*dpr,by+(ly+th)*dpr]);}
+    if(it.sel||it.me){x.beginPath();x.arc(bx,by,R+5*dpr,0,TAU);x.fillStyle=it.sel?'rgba(255,77,141,.35)':'rgba(255,122,168,.25)';x.fill();}
+    x.beginPath();x.arc(bx,by+1.5*dpr,R,0,TAU);x.fillStyle=P2.shade;x.fill();x.beginPath();x.arc(bx,by,R,0,TAU);x.fillStyle=P2.badge;x.fill();x.lineWidth=(it.sel||it.me?3.5:2.2)*dpr;x.strokeStyle=it.sel||it.me?'#ff4d8d':P2.badgeE;x.stroke();
+    x.font=`${Math.round(R*1.1)}px ${FONT}`;x.fillStyle='#3d2c5e';x.fillText(it.i,bx,by+R*.07);
+    if(it.lab){const [lx,ly,tw,th,fs]=it.lab;x.font=`800 ${fs*dpr}px ${FONT}`;x.textAlign='left';const X1=bx+lx*dpr,Y1=by+(ly+th/2)*dpr;x.lineWidth=4.5*dpr;x.strokeStyle=P2.halo;x.strokeText(it.n,X1,Y1);x.fillStyle=it.sel?(dark?'#ffb3cf':'#d6286a'):P2.txt;x.fillText(it.n,X1,Y1);x.textAlign='center';}}
+  for(const f of mapFriends()){const [fx,fy]=S2(f.x,f.z),r=(f.on?8:6.5)*dpr;if(fx<-50||fx>W+50||fy<-50||fy>H+50)continue;x.beginPath();x.arc(fx,fy,r,0,TAU);x.fillStyle=f.c;x.fill();x.lineWidth=2.5*dpr;x.strokeStyle='#ffffff';x.stroke();   /* online friends: a bigger dot */
+    x.lineWidth=1.2*dpr;x.strokeStyle=P2.ink;x.beginPath();x.arc(fx,fy,r+1.6*dpr,0,TAU);x.stroke();x.font=`800 ${13*dpr}px ${FONT}`;
+    const tw=x.measureText(f.n).width/2,q=[fx-tw,fy-26*dpr,fx+tw,fy-8*dpr];if(taken.some(o=>q[0]<o[2]&&q[2]>o[0]&&q[1]<o[3]&&q[3]>o[1]))continue;taken.push(q);   /* a friend's name only where it doesn't cover a place's name */
+    x.lineWidth=4*dpr;x.strokeStyle=P2.halo;x.strokeText(f.n,fx,fy-17*dpr);x.fillStyle=P2.txt;x.fillText(f.n,fx,fy-17*dpr);}
+  const me=mapMe(),[mx,my]=S2(me.x,me.z),ph=(t%1.6)/1.6,big=t-MAPV.you<2.2;   /* you: a pink arrow with a white outline and a soft pulse */
+  x.beginPath();x.arc(mx,my,(big?22+26*ph:15+15*ph)*dpr,0,TAU);x.fillStyle=`rgba(255,77,141,${(big?.45:.3)*(1-ph)})`;x.fill();
+  x.save();x.translate(mx,my);x.rotate(-me.yaw);const a=1.25*dpr;x.beginPath();x.moveTo(0,-15*a);x.lineTo(11*a,11*a);x.lineTo(0,5*a);x.lineTo(-11*a,11*a);x.closePath();
+  x.lineWidth=7*dpr;x.strokeStyle='#3d2c5e';x.stroke();x.lineWidth=3.5*dpr;x.strokeStyle='#ffffff';x.stroke();x.fillStyle='#ff4d8d';x.fill();x.restore();
+  if(big){x.font=`800 ${15*dpr}px ${FONT}`;const tw=x.measureText('You!').width+18*dpr,ty=my-34*dpr;rr(x,mx-tw/2,ty-13*dpr,tw,26*dpr,13*dpr);x.fillStyle='#ff4d8d';x.fill();x.lineWidth=2.5*dpr;x.strokeStyle='#ffffff';x.stroke();x.fillStyle='#ffffff';x.fillText('You!',mx,ty+dpr);}}
+/* the card at the bottom: the place you picked (how far, 🚶 Let's go!, ✕), or a tip */
+function mapCard(){const el=$('mpCard');if(!el)return;let h;
+  if(NAV){const me=mapMe(),G=NAV.goal||NAV.door,d=Math.round(Math.hypot(G[0]-me.x,G[1]-me.z)),
+      sub=CUR.id==='beach'?'Take the bus home first 🚌':MAPV.beach&&NAV.id==='bus'?d+' m away · the Beach Bus leaves from here 🏖️':NAV.actor?d+' m away · walking around':(CUR.id!=='city'?'Go outside first · ':'')+d+' m away';
+    h=`<span class="mpc-i">${NAV.i}</span><span class="mpc-t"><b>${esc(NAV.n)}</b><span>${sub}</span></span><button class="btn mint mpgo" data-a="mapgo">🚶 Let's go!</button><button class="btn x" data-a="mapclr" aria-label="Stop showing the way">✕</button>`;}
+  else h=MAPV.hint==='me'?`<span class="mpc-i">📍</span><span class="mpc-t"><span>That's you! The pink arrow points where you look.</span></span>`:`<span class="mpc-i">👆</span><span class="mpc-t"><span>Tap a place to see the way there!</span></span>`;
+  if(h!==MAPV.ch){MAPV.ch=h;el.innerHTML=h;}
+  for(const b of document.querySelectorAll('#card .place')){const on=!!NAV&&b.dataset.a==='mapsel:'+(MAPV.beach&&NAV.id==='bus'?'beach':NAV.id);if(b.classList.contains('on')!==on){b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);}}}
+function mapBounce(sel){const b=document.querySelector(sel);if(!b)return;MAPV.hop^=1;b.classList.remove('hop','hop2');b.classList.add(MAPV.hop?'hop':'hop2');}
+/* tap on the map: your arrow, a badge or a name, a building, a lot on Friends Lane */
+function mapTap(px,py){const me=mapMe(),[mx,my]=mapSP(me.x,me.z);
+  let best=null,bd=1e9;for(const it of (MAPV.lay&&MAPV.lay.items)||[]){const [bx,by]=mapSP(it.x,it.z),d=Math.hypot(bx-px,by-py);if(d<it.R+10&&d<bd){bd=d;best=it;}
+    else if(it.lab&&!best){const [lx,ly,tw,th]=it.lab;if(px>=bx+lx-6&&px<=bx+lx+tw+6&&py>=by+ly-6&&py<=by+ly+th+6)best=it;}}
+  if(Math.hypot(mx-px,my-py)<24&&(!best||bd>12)){ACT.mapme();return true;}
+  if(!best){const [wx,wz]=mapWP(px,py);let ba=1e9;
+    for(const p of PLACES){if(!mapShown(p))continue;const r=p.r,inside=r?Math.hypot(wx-p.x,wz-p.z)<=r+1:Math.abs(wx-p.x)<=p.w/2+1&&Math.abs(wz-p.z)<=p.d/2+1,ar=r?r*r*3:p.w*p.d;if(inside&&ar<ba){ba=ar;best={pl:p};}}
+    const C=LOC.city;if(!best&&C&&C.lane)for(const lp of C.lane)if(Math.abs(wx-lp.X)<=6.6&&wz*lp.s>=6.5&&wz*lp.s<=26.5){const o=LANE.own[lp.j];best=o&&o.k===laneMe()?{pl:PLACES.find(q=>q.id==='home')}:o?{lot:lp.j}:{deco:'free'};break;}
+    if(!best&&wx>-23.6&&wx<-10.4&&wz>-24.8&&wz<-6.8)best={deco:'fc'};}
+  if(best)mapPick(best);return!!best;}
+function mapPick(it,fit){
+  if(it.deco){SFX.tap();toast(it.deco==='fc'?'🌸 The Flower Corner: a little garden full of flowers!':it.deco==='lane'?'🏡 Friends Lane: every friend who plays has a house here!':'💛 This spot is for a friend! When a friend plays with you, their house pops up here.',3.4);return;}
+  let id,go;
+  if(it.lot!=null){const o=LANE.own[it.lot],lp=LOC.city.lane[it.lot];if(!o||!lp)return;id='lot'+it.lot;go=()=>setNavTo({id,n:o.nm+"'s house",i:'🏠',nt:1,x:lp.hx,z:lp.hz,door:lotPt(it.lot,-17,-6.9)},true);}
+  else{const pl=it.pl;if(!pl)return;id=pl.id;go=()=>{MAPV.beach=pl.id==='beach'&&CUR.id!=='beach';if(MAPV.beach)setNav('beach',true);else setNavTo(pl,true);};}
+  const same=NAV&&!NAV.actor&&(NAV.id===id||(id==='beach'&&MAPV.beach&&NAV.id==='bus'));
+  if(same){SFX.tap();mapShow(fit);mapBounce('#mpCard');}else{go();SFX.pop();MAPV.hint='';mapShow(fit);}
+  mapCard();mapZui();mapDraw();}
+/* one finger drags, two fingers pinch; a short touch without moving is a tap */
+function mapEv(cv){const at=e=>{const r=cv.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top];};
+  const gest=()=>{const ps=[...MAPV.ptr.values()];if(ps.length===1)MAPV.g={n:1,x:ps[0].x,y:ps[0].y,cx:MAPV.cx,cz:MAPV.cz,drag:false};
+    else if(ps.length>=2){const [a,c]=ps,mx=(a.x+c.x)/2,my=(a.y+c.y)/2,[wx,wz]=mapWP(mx,my);MAPV.g={n:2,d:Math.max(20,Math.hypot(a.x-c.x,a.y-c.y)),s:MAPV.s,wx,wz};}else MAPV.g=null;};
+  cv.addEventListener('pointerdown',e=>{e.preventDefault();try{cv.setPointerCapture(e.pointerId);}catch(_){}const [px,py]=at(e);MAPV.ptr.set(e.pointerId,{x:px,y:py});
+    MAPV.tap=MAPV.ptr.size===1?{id:e.pointerId,x:px,y:py,t:performance.now()}:null;gest();});
+  cv.addEventListener('pointermove',e=>{const p=MAPV.ptr.get(e.pointerId),g=MAPV.g;if(!p||!g)return;[p.x,p.y]=at(e);const ps=[...MAPV.ptr.values()];
+    if(g.n===1&&ps.length===1){const dx=p.x-g.x,dy=p.y-g.y;if(!g.drag&&Math.hypot(dx,dy)<8)return;g.drag=true;MAPV.cx=g.cx-dx/MAPV.s;MAPV.cz=g.cz-dy/MAPV.s;}
+    else if(g.n===2&&ps.length>=2){const [a,c]=ps;MAPV.s=clamp(g.s*Math.hypot(a.x-c.x,a.y-c.y)/g.d,mapSmin(),MAP_SMAX);MAPV.cx=g.wx-((a.x+c.x)/2-MAPV.W/2)/MAPV.s;MAPV.cz=g.wz-((a.y+c.y)/2-MAPV.H/2)/MAPV.s;}
+    else return;mapClampV();mapDraw();});
+  const up=e=>{if(!MAPV.ptr.has(e.pointerId))return;const T=MAPV.tap,[px,py]=at(e);MAPV.ptr.delete(e.pointerId);
+    if(e.type==='pointerup'&&T&&T.id===e.pointerId&&Math.hypot(px-T.x,py-T.y)<10&&performance.now()-T.t<800){const L=MAPV.last,now=performance.now();
+      if(L&&now-L.t<380&&Math.hypot(px-L.x,py-L.y)<30&&!L.hit){MAPV.last=null;mapZoom(1.6,px,py);}else MAPV.last={t:now,x:px,y:py,hit:mapTap(px,py)};}   /* a double tap on the map zooms in */
+    MAPV.tap=null;gest();mapZui();mapDraw();};
+  cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);cv.addEventListener('lostpointercapture',up);
+  cv.addEventListener('wheel',e=>{e.preventDefault();const [px,py]=at(e);mapZoom(Math.exp(-clamp(e.deltaY*(e.deltaMode?30:1),-150,150)*.0028),px,py);},{passive:false});
+  cv.addEventListener('gesturestart',e=>e.preventDefault());}
+/* open the map: centred on you at a comfy zoom (the list of places is at the side on big screens, behind 📋 Places on small ones) */
+function openMap(){const narrow=window.matchMedia&&matchMedia(MAP_NARROW).matches;PH.app='map';PH.chat=null;
+  Object.assign(MAPV,{on:true,W:0,H:0,g:null,tap:null,last:null,bv:null,lay:null,rk:'',rt:null,hint:'',ch:'',list:!narrow,you:performance.now()/1000});MAPV.ptr.clear();   /* "You!" pops up for a moment */
+  if(!NAV)MAPV.beach=false;
+  const list=PLACES.filter(mapShown).map(p=>`<button class="place" data-a="mapsel:${p.id}" aria-pressed="false"><span class="pi">${p.i}</span>${esc(p.n)}</button>`).join('');
+  openPanel(`<div class="mp${MAPV.list?' lst':''}" role="dialog" aria-label="Map"><div class="mp-hd"><button class="btn x" data-a="phapp:" aria-label="Back to the phone">‹</button><h2>🗺️ Map</h2>
+    <button class="btn white mpl${MAPV.list?' on':''}" data-a="maplist" aria-pressed="${MAPV.list}">📋 Places</button><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
+    <div class="mp-body"><div class="mp-list"><div class="places">${list}</div></div><div class="mp-wrap"><canvas id="mapc" aria-label="Map of Cozy Town"></canvas>
+    <div class="mp-ctl"><button class="btn mpb me" data-a="mapme" aria-label="Show me where I am">📍 Me</button><button class="btn mpb" data-a="mapz:1" aria-label="Zoom in">+</button><button class="btn mpb" data-a="mapz:-1" aria-label="Zoom out">−</button></div>
+    <div class="mp-card" id="mpCard" role="status"></div></div></div></div>`,{cls:'mapcard',onClose:()=>{mapOff();PH.app=null;PH.chat=null;PH.jobs=false;}});
+  mapEv($('mapc'));mapCard();mapDraw();setTimeout(()=>{if(MAPV.on)mapDraw(true);},0);}
+function mapOff(){MAPV.on=false;MAPV.ptr.clear();MAPV.g=null;MAPV.bv=null;MAPV.lay=null;if(MAPV.base){MAPV.base.width=MAPV.base.height=0;MAPV.base=null;}}
+function mapTick(){if(!$('mapc')){mapOff();return;}mapCard();mapDraw();}
+ACT.mapsel=id=>{const pl=PLACES.find(p=>p.id===id);if(!pl)return;if(MAPV.list&&window.matchMedia&&matchMedia(MAP_NARROW).matches)ACT.maplist();mapPick({pl},true);};   /* from the list: show you and the place */
+ACT.mapgo=()=>{const n=NAV;closePanel();if(!n)return;SFX.pop();toast(CUR.id==='beach'?'🚌 Take the bus home first, then follow the arrow to '+theN(n)+'!':MAPV.beach&&n.id==='bus'?'🏖️ The beach bus leaves from the 🚌 bus stop at the park. Follow the arrow!':'📍 Follow the arrow to '+theN(n)+'!',3);};
+ACT.mapclr=()=>{clearNav();MAPV.beach=false;MAPV.hint='';mapCard();mapDraw();};
+ACT.mapme=()=>{mapHome(false);MAPV.you=performance.now()/1000;MAPV.hint='me';mapBounce('#card [data-a="mapme"]');mapCard();mapZui();mapDraw();};
+ACT.mapz=d=>{mapZoom(+d>0?1.6:1/1.6);};
+/* ⌨️ on a PC: + and − zoom, the arrow keys (or W A S D) move the map, M closes it */
+function mapKeys(e){const c=e.code;if(c==='KeyM'){closePanel();return true;}if(c==='Equal'||c==='NumpadAdd'){mapZoom(1.6);return true;}if(c==='Minus'||c==='NumpadSubtract'){mapZoom(1/1.6);return true;}
+  const d={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1],KeyA:[-1,0],KeyD:[1,0],KeyW:[0,-1],KeyS:[0,1]}[c];if(!d)return false;e.preventDefault();MAPV.cx+=d[0]*80/MAPV.s;MAPV.cz+=d[1]*80/MAPV.s;mapClampV();mapDraw();return true;}
+ACT.maplist=()=>{MAPV.list=!MAPV.list;const m=document.querySelector('#card .mp'),b=document.querySelector('#card [data-a="maplist"]');if(m)m.classList.toggle('lst',MAPV.list);
+  if(b){b.classList.toggle('on',MAPV.list);b.setAttribute('aria-pressed',MAPV.list);}setTimeout(()=>{if(MAPV.on)mapDraw();},0);};
+if(MAP_MQ){const f=()=>{if(MAPV.on)mapDraw(true);};if(MAP_MQ.addEventListener)MAP_MQ.addEventListener('change',f);else if(MAP_MQ.addListener)MAP_MQ.addListener(f);}
 /* showing the way to a place */
 let NAV=null,BEACON=null;
 function setNav(id,quiet){if(id==='beach'&&CUR&&CUR.id!=='beach'){setNavTo(PLACES.find(p=>p.id==='bus'),quiet);if(!quiet)toast('🏖️ The beach bus leaves from the 🚌 bus stop at the park. Follow the arrow!',3.6);return;}   /* 🚌 the bus is the way to the beach */
@@ -4931,7 +5188,7 @@ const phDate=()=>`${wdName()} · Day ${S.day}${psLeft()?' · 🏆 Pet Show today
 /* 🕐 an open phone keeps its clock right (after a clock jump to a friend's time, too): refreshed with the HUD clock */
 function phClock(){const ph=UI.open&&$('card').querySelector('.phone');if(!ph)return;const c=clockStr(S.time),set=(el,v)=>{if(el&&el.textContent!==v)el.textContent=v;};
   set(ph.querySelector('.ph-status span'),c);set(ph.querySelector('.ph-clock'),c);set(ph.querySelector('.ph-date'),phDate());}
-function renderPhone(){hardCheck();const a=PH.app,q=S.q,ready=readyCount();let body='';
+function renderPhone(){if(PH.app==='map'){openMap();return;}if(MAPV.on)mapOff();hardCheck();const a=PH.app,q=S.q,ready=readyCount();let body='';
   if(!a){body=`<div class="ph-clock">${clockStr(S.time)}</div><div class="ph-date">${phDate()}</div>
     <div class="apps"><button class="app" data-a="phapp:msg"><span class="ic" style="background:#5fd4b0">💬</span>Messages${msgUnread()?`<span class="badge">${msgUnread()}</span>`:''}</button><button class="app" data-a="phapp:quest"><span class="ic" style="background:#ffd45c">🏆</span>Quest${ready?`<span class="badge">${ready}</span>`:''}</button>
     <button class="app" data-a="phapp:skills"><span class="ic" style="background:#b79cff">⭐</span>Skills</button>
@@ -4951,12 +5208,9 @@ function renderPhone(){hardCheck();const a=PH.app,q=S.q,ready=readyCount();let b
     else if(a==='furn'){body=hd('🛋️ Furniture')+furnPhone();setTimeout(thumbFill,0);}
     else if(a==='msg'){const C=PH.chat&&CHATS[PH.chat];body=(C?`<div class="ph-hd"><button class="btn ph-back" data-a="chat:" aria-label="Back to chats">‹</button><h3 class="chh"><span class="cav hcav" style="background:${C.c}">${C.av}</span>${C.n.split(' · ')[0]}</h3><span class="ph-coins">🪙 ${S.coins}</span></div>`:hd('💬 Messages'))+msgPhone();}
     else if(a==='cal'){body=hd('📅 Calendar')+calBody();}
-    else if(a==='map'){body=hd('🗺️ Map')+'<p class="ph-sub">The pink arrow is you. Tap a place to get there!</p><div class="mapwrap"><canvas id="mapc" width="640" height="640" aria-label="Map of Cozy Town"></canvas></div>'+
-      `<div class="places">${PLACES.filter(p=>p.id!=='pond'||true).map(p=>`<button class="place" data-a="nav:${p.id}"><span class="pi">${p.i}</span>${esc(p.n)}</button>`).join('')}</div>`;}
     else if(a==='skills'){body=hd('⭐ Skills')+'<p class="ph-sub">Do things in town to level up your skills!</p>'+Object.keys(SKILLS).map(k=>{const s=sk(k),K=SKILLS[k],need=xpNeed(s.lv),pct=s.lv>=MAXLV?100:Math.round(s.xp/need*100);
       return`<div class="qcard"><div class="qtop"><span class="qi">${K.i}</span><div style="flex:1"><div class="qt">${K.n}</div><div class="qd">${K.how}</div></div><div class="sklv">Level<b>${s.lv}</b></div></div><div class="qfoot"><span class="qprog" style="max-width:none"><i style="width:${pct}%"></i></span><span class="qn">${s.lv>=MAXLV?'Max!':s.xp+'/'+need}</span></div></div>`;}).join('');}
     else{body=hd('🐾 Pets')+(S.pets.map(d=>`<div class="ph-row"><span>${PET_TYPES[d.type].icon} ${esc(d.name)}</span><span class="hearts">${hearts(clamp(Math.round(d.happy/20),0,5))}</span></div>`).join('')||'<p class="ph-sub">Visit the pet shop to adopt a pet!</p>');}}
-  setTimeout(()=>{const cv=$('mapc');if(cv)drawMap(cv);},0);
   openPanel(`<div class="phone" role="dialog" aria-label="Phone"><div class="ph-status"><span>${clockStr(S.time)}</span><span>🪙 ${S.coins}</span></div><div class="ph-screen">${body}</div><button class="ph-home" data-a="close" aria-label="Close phone"></button></div>`,{cls:'phonecard',onClose:()=>{PH.app=null;PH.chat=null;PH.jobs=false;}});
   if(PH.app==='msg'&&PH.chat){const sc=document.querySelector('#card .ph-screen');if(sc)sc.scrollTop=sc.scrollHeight;}}
 ACT.phapp=a=>{PH.app=a||null;PH.chat=null;PH.jobs=false;renderPhone();};
@@ -6349,6 +6603,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     saveT+=dt;if(saveT>10){saveT=0;saveLocal();}
     hardT+=dt;if(hardT>1){hardT=0;hardCheck();}
     navT+=dt;if(navT>.15){navT=0;updNav();}if(BEACON&&BEACON.visible&&BEACON.pin)BEACON.pin.position.y=3.4+Math.sin(performance.now()/300)*.25;
+    if(MAPV.on){mapT+=dt;if(mapT>=.1){mapT=0;mapTick();}}   /* 🗺️ the open map: your arrow, the dotted way and friends move */
     awTick(dt);netTick(dt);
   }else{titleT+=dt*.05;
     if(CUR&&CUR.id==='city'){for(const w of WALKERS)w.update(dt);updateCars(dt);}
