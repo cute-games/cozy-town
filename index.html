@@ -735,9 +735,13 @@ let toastT=0;
 const TQ={hold:false,line:false,q:[],cur:null,at:0,tm:0,card:-1e9,cev:null},T_OLD=30000,toastRead=m=>Math.min(m.s,Math.max(1.6,m.m.length*.05))*1000;
 function toastEv(){const e=window.event;return e&&/^(click|dblclick|pointer|mouse|touch|key|input|change|submit)/.test(e.type)?e:null;}   /* the tap or key this happens in */
 const toastWith=m=>m.ev?m.ev===TQ.cev:Math.abs(TQ.card-m.at)<100;   /* made together with the card that is open now */
-function toast(msg,sec=2.8){msg=String(msg);const t=$('toast'),on=t.classList.contains('show'),now=performance.now();
+/* 📍 "here" news belongs to the place where it was said (the bus is here, Driver Dot's hello at the beach): here = 1 drops it when you go
+   somewhere else (a door, a bus ride), so it never pops up at the other end of a bus ride; here = 2 ("📍 You found …") also when it could not be
+   shown within 12 s (by then you walked on) */
+const T_HERE=12000,toastGone=(m,now)=>m.here!=null&&(m.here!==(CUR&&CUR.id)||m.spot&&now-m.at>T_HERE);
+function toast(msg,sec=2.8,here){msg=String(msg);const t=$('toast'),on=t.classList.contains('show'),now=performance.now();
   if(on&&t.textContent===msg){clearTimeout(toastT);toastT=setTimeout(toastEnd,sec*1000);return;}   /* the same words again: they stay longer */
-  if(TQ.q.some(m=>m.m===msg))return;const ev=toastEv(),m={m:msg,s:sec,at:now,ev,news:!ev&&now-TQ.card>100};   /* (right with a card that opens: its answer) */
+  if(TQ.q.some(m=>m.m===msg))return;const ev=toastEv(),m={m:msg,s:sec,at:now,ev,news:!ev&&now-TQ.card>100,here:here?(CUR&&CUR.id)||'':null,spot:here===2};   /* (right with a card that opens: its answer) */
   if(!m.news&&!TQ.hold&&!TQ.line&&!(on&&ev&&TQ.cur&&TQ.cur.ev===ev)){toastShow(m);return;}   /* the answer to a new tap: at once */
   TQ.q.push(m);if(TQ.q.length>3)TQ.q.shift();toastPump();}
 function toastShow(m){const t=$('toast'),st=t.style,was=[t.textContent,t.className,st.left,st.top,st.bottom,st.maxWidth];t.textContent=m.m;t.classList.add('show');let ok=true;try{ok=toastPlace(m);}catch(e){}
@@ -751,13 +755,15 @@ function toastWatch(){if(!$('toast').classList.contains('show')){clearInterval(T
 function toastEnd(){$('toast').classList.remove('show');TQ.line=false;TQ.cur=null;if(TQ.q.length&&!TQ.hold){clearTimeout(TQ.tm);TQ.tm=setTimeout(toastPump,300);}}
 function toastPump(){clearTimeout(TQ.tm);TQ.tm=0;if(TQ.hold||!TQ.q.length)return;const now=performance.now();
   if(TQ.cur&&$('toast').classList.contains('show')){const w=(TQ.line?TQ.cur.s*1000:toastRead(TQ.cur))-(now-TQ.at);if(w>0){TQ.tm=setTimeout(toastPump,w+20);return;}}   /* the one on screen gets its turn first */
-  for(let i=0;i<TQ.q.length;i++){const m=TQ.q[i];TQ.q.splice(i,1);if(!m.keep&&now-m.at>T_OLD){i--;continue;}   /* old news: skipped */
+  for(let i=0;i<TQ.q.length;i++){const m=TQ.q[i];TQ.q.splice(i,1);if(!m.keep&&now-m.at>T_OLD||toastGone(m,now)){i--;continue;}   /* old news (or news from another place): skipped */
     if(toastShow(m))return;TQ.q.splice(i,0,m);}
   if(TQ.q.length)TQ.tm=setTimeout(toastPump,600);}   /* news waiting for a free spot: look again soon */
 /* a card opens (open) or the screen turns: a message from before that now has to sit on the card steps aside and waits until the card closes */
 function toastFit(open){const t=$('toast'),m=TQ.cur;if(!t.classList.contains('show'))return;let ok=true;try{ok=toastPlace(m);}catch(e){}
   if(!ok&&m&&!m.keep&&(open?!toastWith(m):m.news)){m.news=true;clearTimeout(toastT);t.classList.remove('show');TQ.cur=null;TQ.q.unshift(m);if(TQ.q.length>3)TQ.q.pop();toastPump();}}
 function toastOff(){clearTimeout(toastT);clearTimeout(TQ.tm);$('toast').classList.remove('show');TQ.q.length=0;TQ.line=false;TQ.cur=null;}   /* an old hint that no longer fits (a new class step) */
+function toastLeave(id){for(let i=TQ.q.length-1;i>=0;i--){const h=TQ.q[i].here;if(h!=null&&h!==id)TQ.q.splice(i,1);}   /* you went somewhere else: "here" news from the old place goes */
+  const c=TQ.cur;if(c&&c.here!=null&&c.here!==id&&$('toast').classList.contains('show')){clearTimeout(toastT);toastEnd();}}
 function toastHold(on){if(on===TQ.hold)return;TQ.hold=on;if(on){clearTimeout(toastT);clearTimeout(TQ.tm);$('toast').classList.remove('show');TQ.line=false;TQ.cur=null;}
   else if(!PLAYING)TQ.q.length=0;else{for(const m of TQ.q)m.keep=1;toastPump();}}   /* the ones that waited come one by one, each for its full time */
 /* where things on screen are (null = not shown), and what a message must keep clear: weight 10 = a card, 4 = the top HUD row, 3 = the use button and the
@@ -767,7 +773,7 @@ function cardBox(){const c=$('card');let r=boxOf(c);if(!r||getComputedStyle(c).o
   for(const k of c.children){const q=boxOf(k);if(q){left=Math.min(left,q.left);top=Math.min(top,q.top);right=Math.max(right,q.right);bottom=Math.max(bottom,q.bottom);}}return {left,top,right,bottom,width:right-left,height:bottom-top};}
 function keepClear(me){const K=[],add=(el,w)=>{if(el&&el!==me){const r=boxOf(el);if(r)K.push([r,w]);}};
   if(!$('panel').hidden){const r=cardBox();if(r)K.push([r,10]);}add(document.querySelector('#awayBox .awc'),10);for(const id of['knockCard','zzCard','tutCard','dtCard','tchBar'])add($(id),8);add($('note'),6);if($('toast').classList.contains('show'))add($('toast'),2);
-  if(!$('hud').hidden){const u=$('panel').hidden?1:.25,tap=me===$('note')?8:1;for(const id of['stats','busTip','tnHud','fbHud','topbtns'])add($(id),4*u);add($('actWrap'),3*u);add($('bar'),3*u);add($('nav'),3*u);for(const id of['tasks','job','pad','dcard'])add($(id),u);add($('moveBtns'),tap*u);add($('joy'),tap*u);}   /* under an open card the HUD matters less; the message card (it takes taps) must not sit on the joystick or jump */
+  if(!$('hud').hidden){const u=$('panel').hidden?1:.25,tap=me===$('note')?8:1;for(const id of['stats','busTip','tnHud','fbHud','topbtns','updBtn'])add($(id),4*u);add($('actWrap'),3*u);add($('bar'),3*u);add($('nav'),3*u);for(const id of['tasks','job','pad','dcard'])add($(id),u);add($('moveBtns'),tap*u);add($('joy'),tap*u);}   /* under an open card the HUD matters less; the message card (it takes taps) must not sit on the joystick or jump */
   return K;}
 function hudLow(){let b=0;for(const id of['stats','busTip','tnHud','fbHud','topbtns']){const r=boxOf($(id));if(r)b=Math.max(b,r.bottom);}return b;}   /* the bottom of the top HUD row */
 function leftBox(){let r0=null;for(const el of $('left').children){const r=boxOf(el);if(r)r0=r0?{right:Math.max(r0.right,r.right),bottom:Math.max(r0.bottom,r.bottom)}:{right:r.right,bottom:r.bottom};}return r0||{right:0,bottom:0};}
@@ -1856,10 +1862,10 @@ function shellsRefresh(){const b=bch(),L=LOC.beach;if(b.d!==S.day){b.d=S.day;b.g
   BEACH.shells.forEach((s,i)=>{const [x,z]=SHELL_SPOTS[idx[i]];s.g.position.set(x,0,z);s.g.rotation.y=r()*TAU;s.t.x=L.ox+x;s.t.z=L.oz+z;s.g.visible=!b.got.includes(i);});}
 function pickShell(i){const b=bch(),s=BEACH.shells[i];if(!s||!s.g.visible)return;b.got.push(i);b.n=(b.n||0)+1;s.g.visible=false;S.coins+=1;SFX.coin();
   for(const r of HOME_ITEMS.values())if(r.it.sh)shelfShow(r.g,b.n);   /* 🐚 your shell shelf at home shows it */
-  if(b.n===3&&![...S.home.items,...S.home.store].some(it=>it.sh))setTimeout(()=>{if(CUR&&CUR.id==='beach')toast('🐚 Tip: a Shell shelf from the 🛍️ Home shop shows your shells at home!',4);},3900);
+  if(b.n===3&&![...S.home.items,...S.home.store].some(it=>it.sh))setTimeout(()=>{if(CUR&&CUR.id==='beach')toast('🐚 Tip: a Shell shelf from the 🛍️ Home shop shows your shells at home!',4,1);},3900);
   floatText('🐚',s.t.x,1.1,s.t.z,{h:.5});const left=BEACH.shells.length-b.got.length;
   toast(left?'🐚 A pretty shell! You have '+b.n+' in your collection. +1 🪙':'🐚 You found all of today\'s shells! You have '+b.n+'. More come tomorrow! +1 🪙',3.6);change();}
-function beachIn(){bch().seen=1;toast('🏖️ Welcome to the beach! 🌊 Tennis 🎾 is past the kiosk!',3);}
+function beachIn(){bch().seen=1;toast('🏖️ Welcome to the beach! 🌊 Tennis 🎾 is past the kiosk!',3,1);}
 function updBeach(dt){updBus(dt);if(!S||!PLAYING||!LOC.beach)return;
   if(CUR.id!=='beach'){if(TN.on)tnStop('gone');return;}const b=bch();if(BEACH.day!==S.day||b.d!==S.day)shellsRefresh();if(!b.seen)b.seen=1;
   const t=BEACH.u.value+=dt;BEACH.seaM.emissiveIntensity=.28*(1-.8*nightF(S.time));BEACH.foam.position.x=11.2+Math.sin(t*.7)*.45;BEACH.foam.material.opacity=.38+Math.sin(t*.7+1)*.14;
@@ -1908,7 +1914,7 @@ function busSess(d){let o=BUS_DAY[d];if(o)return o;o=[];const a=busArr(d),W=BUS_
     o.push({p:'beach',a:BUS_EV,l:21,go:'town'},{p:'park',a:21,l:21+BUS_D,go:null});}
   return BUS_DAY[d]=o;}
 const busHM=h=>{const m=Math.round(h*60),H=Math.floor(m/60)%24,M=m%60;return H+':'+(M<10?'0':'')+M;};
-function busNext(p,go){for(let d=S.day;d<S.day+15;d++)for(const s of busSess(d))if(s.p===p&&s.go===go&&(d>S.day||s.l>S.time))return{d,s};return null;}   /* the next trip from stop p */
+function busNext(p,go,D,T){const d0=D||S.day,t0=D?T:S.time;for(let d=d0;d<d0+15;d++)for(const s of busSess(d))if(s.p===p&&s.go===go&&(d>d0||s.l>t0))return{d,s};return null;}   /* the next trip from stop p (from now, or from day D at hour T) */
 function busWhen(n,leave){if(!n)return'soon';const dd=n.d-S.day;return(dd===0?'today':dd===1?'tomorrow':'on '+wdName(n.d))+' at '+busHM(leave?n.s.l:n.s.a);}
 const busSecs=s=>Math.max(0,(s.l-S.time)*hourLen(S.time)),busMMSS=s=>{const v=Math.ceil(busSecs(s));return Math.floor(v/60)+':'+String(v%60).padStart(2,'0');};
 /* ---- where the bus is: one road per stop, u = metres past the stop (it slows down to stop, waits, then speeds off) ---- */
@@ -1922,8 +1928,9 @@ function busXZ(p,u){const T=BUSP[p];if(p==='beach')return[T.x,T.z-u,T.ry];
 function busW(lx,lz,b){const c=Math.cos(b[2]),s=Math.sin(b[2]);return[b[0]+lx*c+lz*s,b[1]-lx*s+lz*c];}   /* a spot on the bus (front = +x, door side = +z) in the world */
 const busThere=p=>!!BUS.g&&BUS.g.visible&&BUS.loc===BUSP[p].loc;
 function busReady(p){const c=busCur(p);return!!c&&c.u===0&&!!c.s.go&&busThere(p)&&Math.abs(BUS.ui)<.05&&!BUS.ride;}   /* standing at this stop, doors open */
-function busLabel(p){const c=busCur(p),s=c&&c.s;if(!s)return'Get on the bus';if(s.wb)return'Free Welcome Bus: hop on!';
-  return s.go==='town'?(S.coins<BUS_FARE?'Get on the bus home (free)':`Get on the bus home (${BUS_FARE} 🪙)`):`Get on the bus (${BUS_FARE} 🪙)`;}
+function busLabel(p){const c=busCur(p),s=c&&c.s;if(!s)return'Get on the bus';if(s.wb)return'Free Welcome Bus: hop on!';if(s.dd)return'Free bus home: hop on! 💛';
+  const fr=busR1()?'':' (free 🎟️)';   /* 🎟️ your very first ride is free */
+  return s.go==='town'?(fr||S.coins<BUS_FARE?'Get on the bus home'+(fr||' (free)'):`Get on the bus home (${BUS_FARE} 🪙)`):fr?'Get on the bus'+fr:`Get on the bus (${BUS_FARE} 🪙)`;}
 /* ---- the bus: a retro surf minibus (the owner's picture) in the game's cartoon style: a short, chunky "loaf" van with a round nose and a
    windscreen that leans back, cream-white on top, warm orange below, big windows you can look out of when you sit inside, round headlights,
    white wheels, flowers on the nose and two surfboards on a roof rack, tipped out to the sides so you see them from the street. One baked
@@ -2097,14 +2104,15 @@ function busBoardDraw(B){const day=S?S.day:1,x=B.c.getContext('2d'),Wd=512,Ht=30
 /* ---- the timetable card ---- */
 function busDays(from,n){const out=[];for(let d=from;out.length<n&&d<from+15;d++)if(busArr(d)!==undefined)out.push(d);return out;}
 function openBusTable(){const beach=CUR.id==='beach',w=Math.floor((S.day-1)/7);SFX.tap();
-  const row=d=>{const a=busArr(d),today=d===S.day,wb=d===1,gone=d<S.day||(today&&S.time>=(beach?21:wb?12:a+BUS_W));
-    const tm=beach?'🏘️ '+(wb?'until 12:00':busHM(a+2*BUS_W))+' and 21:00':wb?'🎉 8:00–12:00 (free!)':'🚌 '+busHM(a);
+  const row=d=>{const a=busArr(d),today=d===S.day,wb=d===1;let gone=d<S.day||(today&&S.time>=(wb?12:a+BUS_W)),tm=wb?'🎉 8:00–12:00 (free!)':'🚌 '+busHM(a);
+    if(beach){let L=busSess(d).filter(s=>s.p==='beach'&&s.go==='town').sort((x,y)=>x.l-y.l);const left=today?L.filter(s=>s.l>S.time):L;gone=d<S.day||!left.length;if(left.length)L=left;   /* at the beach: when the buses home leave (today only the ones still to come; 💛 Driver Dot's free bus too) */
+      tm=(L.some(s=>s.dd)?'':'🏘️ ')+L.map(s=>s.dd?'💛 '+busHM(s.l)+' (free!)':s.wb?'until '+busHM(s.l):busHM(s.l)).join(' and ');}
     return`<div class="ph-row"${today?' style="background:#fff1b8"':''}><span>${today?'⭐ Today':wdName(d)}${gone?' ✔':''}</span><span>${tm}</span></div>`;};
   const wk=k=>busDays(k*7+1,3).filter(d=>d<=k*7+7),left=wk(w).filter(d=>d>S.day||(d===S.day&&S.time<21)).length;
   const c=busCur(beach?'beach':'park'),here=c&&c.u===0&&c.s.go?`🚌 The bus is here! It leaves at ${busHM(c.s.l)}.`:beach?'🏘️ Next bus home: '+busWhen(busNext('beach','town'),1)+'.':'🏖️ Next bus to the beach: '+busWhen(busNext('park','beach'))+'.';
   openPanel(`<div class="hd"><h2>🚌 Beach Bus</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div><p class="line" style="margin-top:2px">${here}</p>
     <div class="sec">This week</div>${wk(w).map(row).join('')}${left<2?`<div class="sec">Next week</div>${wk(w+1).map(row).join('')}`:''}
-    <p class="note" style="margin-top:12px">🚏 The bus waits about a minute at each stop, so be on time!<br>🪙 A ride is ${BUS_FARE} coins.<br>🏖️ On bus days the bus home leaves the beach at 21:00.<br>⛺ Missed it? Camp at the beach. The next bus takes you home!</p>`,{cls:'bustab'});}   /* (bustab: its ⬇️ "more below" sits in the middle, between the days and the times) */
+    <p class="note" style="margin-top:12px">🚏 The bus waits about a minute at each stop, so be on time!<br>${busR1()?`🪙 A ride is ${BUS_FARE} coins.`:`🎟️ Your first ride is free! After that, a ride is ${BUS_FARE} coins.`}<br>🏖️ On bus days the bus home leaves the beach at 21:00.<br>⛺ Missed it? Camp at the beach. The next bus takes you home!</p>`,{cls:'bustab'});}   /* (bustab: its ⬇️ "more below" sits in the middle, between the days and the times) */
 /* ---- riding ---- */
 function busInfo(p){const c=busCur(p);SFX.pop();
   if(c&&c.u===0&&c.s.go&&busThere(p)&&!BUS.ride){toast('🚌 The bus is here! Walk to its door to get on 🚪 It leaves at '+busHM(c.s.l)+'.',4);return;}
@@ -2117,7 +2125,7 @@ function busSeat(){let h=0;const s=String(S.pid||S.name||''),n=BSEAT.length;for(
     nose=k=>BSEAT.some((q,o)=>busy[o]&&q[1]===BSEAT[k][1]&&Math.abs(q[0]-BSEAT[k][0])<1.2);   /* 💺 not right behind (or in front of) a friend: their head would fill the view. Beside them is nicer */
   for(const ok of[k=>!busy[k]&&!nose(k),k=>!busy[k]])for(let i=0;i<n;i++){const k=(h+i)%n;if(ok(k))return k;}return h;}
 function busBoard(p){if(BUS.ride||fading||!PLAYING)return;if(!busReady(p)){busInfo(p);return;}
-  const s=busCur(p).s,home=s.go==='town',free=!!s.wb||(home&&S.coins<BUS_FARE);
+  const s=busCur(p).s,home=s.go==='town',first=!busR1()&&!s.wb&&!s.dd,free=!!s.wb||!!s.dd||first||(home&&S.coins<BUS_FARE);   /* 🎟️ the first ride ever, the Welcome Bus and Driver Dot's extra bus home are free */
   if(!free&&S.coins<BUS_FARE){SFX.no();BUS.dot.wave=1.2;toast(`🚌 Driver Dot: “A ride is ${BUS_FARE} 🪙. Save up a little more and hop on next time! 💛”`,4.4);return;}
   if(DECO.on)decoEnd();if(P.ride)stopRide();if(P.sit)standUp();
   const fare=free?0:BUS_FARE,b=BUS.pos,k=busSeat(),[sx,sz]=busW(BSEAT[k][0],BSEAT[k][1],b),nm=S.name||'friend';
@@ -2125,13 +2133,15 @@ function busBoard(p){if(BUS.ride||fading||!PLAYING)return;if(!busReady(p)){busIn
   P.sit={x:sx,z:sz,yaw:Math.atan2(-Math.cos(b[2]),Math.sin(b[2])),h:1.6,bus:1,bk:[P.x,P.z,P.yaw]};P.x=sx;P.z=sz;P.yaw=P.sit.yaw;P.pitch=-.04;
   if(Math.min(innerWidth,innerHeight)<500){P.yaw-=(BSEAT[k][1]>0?1:-1)*1.18;P.pitch=innerWidth<innerHeight?-.08:-.04;}   /* 📱 a phone's narrow view: you look out of your window (the bus stop, the park, the street), not at the ceiling or the door pole */
   BUS.ride={p,s,to:s.go,fare,d:S.day,t0:performance.now()};document.body.classList.add('bus');BUS.dot.wave=1.4;
-  toast(s.wb?`🚌 Driver Dot: “Welcome to Cozy Town, ${nm}! 🎉 Your first ride is free. Off we go!”`:home&&!fare?'🚌 Driver Dot: “No coins? This one\'s on me! 💛 Find a seat!”':`🚌 Driver Dot: “Hello, ${nm}! Find a seat 😊 We leave at ${busHM(s.l)}!”`,s.wb?2.6:4);
+  toast(s.wb?`🚌 Driver Dot: “Welcome to Cozy Town, ${nm}! 🎉 Your first ride is free. Off we go!”`:s.dd?`🚌 Driver Dot: “There you are, ${nm}! 💛 Hop in, I'll take you home!”`:first?`🚌 Driver Dot: “Hello, ${nm}! 🎟️ Your first ride is free! Find a seat 😊 We leave at ${busHM(s.l)}!”`:home&&!fare?'🚌 Driver Dot: “No coins? This one\'s on me! 💛 Find a seat!”':`🚌 Driver Dot: “Hello, ${nm}! Find a seat 😊 We leave at ${busHM(s.l)}!”`,s.wb||s.dd?2.6:4,1);
   change();}
-function busOff(){const R=BUS.ride;if(!R||R.go)return;const b=P.sit&&P.sit.bk;P.sit=null;BUS.ride=null;document.body.classList.remove('bus');   /* off again before it leaves: your coins back */
+function busOff(why){const R=BUS.ride;if(!R||R.go)return;const b=P.sit&&P.sit.bk;P.sit=null;BUS.ride=null;document.body.classList.remove('bus');   /* off again before it leaves: your coins back */
   if(b){[P.x,P.z]=collideXZ(b[0],b[1],.3,CUR);P.yaw=b[2];}P.pitch=0;bringFollowers(true);
   {const f=BUS.ff;BUS.ff=null;if(f&&FLOATS.includes(f))f.t=f.life;if(R.fare)floatText('+'+R.fare+' 🪙',P.x-Math.sin(P.yaw)*2.4,1.9,P.z-Math.cos(P.yaw)*2.4,{h:.3});}   /* the fare goes away, your coins come back: +20 */
-  if(R.fare){S.coins+=R.fare;SFX.coin();toast(`🚌 Driver Dot: “Bye for now! Here are your ${R.fare} 🪙 back 💛”`,3.2);}else{SFX.pop();toast('🚌 Driver Dot: “Bye for now! 👋”',2.6);}change();}
-function busGo(){const R=BUS.ride;if(!R||R.go)return;R.go=1;BUS.hold=1;tone(1319,.12,'triangle',.12);tone(1319,.14,'triangle',.12,.2);tone(98,.6,'sawtooth',.03,.2,150);   /* ding ding, off we go */
+  if(R.fare){S.coins+=R.fare;SFX.coin();}else SFX.pop();
+  if(why==='jump')toast(`🚌 Driver Dot: “Oh! The clock jumped to your friends' time, so this bus can't go now.${R.fare?` Here are your ${R.fare} 🪙 back! 💛`:''} The next bus comes ${busWhen(busNext('park','beach'))}.”`,5.5,1);   /* (it would have taken you to the beach on another day, with no bus home) */
+  else toast(R.fare?`🚌 Driver Dot: “Bye for now! Here are your ${R.fare} 🪙 back 💛”`:'🚌 Driver Dot: “Bye for now! 👋”',R.fare?3.2:2.6);change();}
+function busGo(){const R=BUS.ride;if(!R||R.go)return;R.go=1;BUS.hold=1;const b=bch();if(!R.s.dd)b.r1=1;b.bus=1;tone(1319,.12,'triangle',.12);tone(1319,.14,'triangle',.12,.2);tone(98,.6,'sawtooth',.03,.2,150);   /* ding ding, off we go */
   busRideFx(R.to,()=>busArrive(R));}
 function busRideFx(to,fn){fading=true;let el=$('busRide');
   if(!el){el=document.createElement('div');el.id='busRide';el.setAttribute('aria-hidden','true');el.innerHTML='<div class="brs">☀️</div><div class="brc">☁️</div><div class="brt"></div><div class="brr"></div><div class="brd"></div><div class="brb">🚌<span>💨</span></div>';document.body.appendChild(el);}
@@ -2140,18 +2150,44 @@ function busRideFx(to,fn){fading=true;let el=$('busRide');
   setTimeout(()=>{try{fn();}catch(e){console.error(e);}setTimeout(()=>{el.classList.remove('on');setTimeout(()=>{fading=false;},300);},300);},1450);}
 function busArrive(R){BUS.ride=null;BUS.hold=0;document.body.classList.remove('bus');P.sit=null;P.ride=null;closePanel();if(DECO.on)decoEnd();
   if(R.to==='beach'){setLoc('beach');const L=LOC.beach,d=DOORS.beach.inside;P.x=L.ox+d[0];P.z=L.oz+d[1];P.yaw=d[2];}
-  else{if(S.beach)delete S.beach.camp;setLoc('city');const b=busXZ('park',0),[x,z]=busW(3.2,3.6,b),[fx,fz]=busW(1.2,0,b);P.x=x;P.z=z;P.yaw=Math.atan2(-(fx-x),-(fz-z));}   /* on the pavement, waving the bus goodbye */
+  else{if(S.beach){delete S.beach.camp;delete S.beach.dd;}setLoc('city');const b=busXZ('park',0),[x,z]=busW(3.2,3.6,b),[fx,fz]=busW(1.2,0,b);P.x=x;P.z=z;P.yaw=Math.atan2(-(fx-x),-(fz-z));   /* on the pavement, waving the bus goodbye */
+    if(!busCur('park'))busSess(S.day).push({p:'park',a:S.time,l:S.time+BUS_D,go:null});}   /* (Driver Dot's extra bus: it drops you at the park, then drives off) */
   P.pitch=0;BUS.loc=null;BUS.arr={d:S.day,t:S.time};bringFollowers();saveLocal();
-  if(R.to==='beach'){beachIn();setTimeout(()=>{if(CUR.id!=='beach')return;const n=busNext('beach','town'),mid=!!n&&n.d===S.day&&n.s.l<21;   /* the same times as the pill and the board: this bus goes back at midday, the last one at 21:00 */
-    toast(R.s.wb?'🚌 Driver Dot: “You can ride back to town until 12:00, and the bus home leaves at 21:00. Have fun! 👋”':mid?`🚌 Driver Dot: “I go back to town at ${busHM(n.s.l)}. The last bus home leaves at 21:00. Have fun! 👋”`:'🚌 Driver Dot: “The bus home leaves at 21:00. See you then! 👋”',4.4);},3400);}
+  if(R.to==='beach'){beachIn();setTimeout(()=>{if(CUR.id!=='beach'||BUS.ride)return;   /* (not if you already hopped on again: the Welcome Bus goes at once) */
+    toast(R.s.wb?'🚌 Driver Dot: “You can ride back to town until 12:00, and the bus home leaves at 21:00. Have fun! 👋”':busHomeSay(),4.4,1);},3400);}
   else{SFX.yay();const nh=R.s.l>=21&&(!NAV||NAV.id==='home');if(nh&&!NAV)setNav('home',true);   /* the evening bus: bedtime, the pink arrow shows the way to your house on 🏡 Friends Lane */
-    toast(nh?'🏘️ Home again! 🚌 Driver Dot: “Bye bye! Sleep tight!” 🏡 Follow the pink arrow home.':'🏘️ Home again! 🚌 Driver Dot: “Bye bye! See you soon!” 👋',nh?4.4:3.4);}}
+    toast(nh?'🏘️ Home again! 🚌 Driver Dot: “Bye bye! Sleep tight!” 🏡 Follow the pink arrow home.':'🏘️ Home again! 🚌 Driver Dot: “Bye bye! See you soon!” 👋',nh?4.4:3.4,1);}}
 /* a friend's 🚀 Go (or any jump) can't skip the bus: a kind message instead */
 function busWarp(to,nm){const here=!!CUR&&CUR.id==='beach';if(here===(to==='beach'))return false;SFX.pop();
   if(here)toast('🚌 You are at the beach! Take the bus home first. It leaves '+busWhen(busNext('beach','town'),1)+'.',4.4);
   else toast('🏖️ '+(nm?nm+' is at the beach! ':'')+'Take the 🚌 bus from the park to get there. It comes '+busWhen(busNext('park','beach'))+'.',4.6);
   return true;}
 function busGate(){setNav('bus');toast('🚌 The beach bus leaves from the park! It comes '+busWhen(busNext('park','beach'))+'. Follow the arrow 📍',4.4);}   /* the old town gate is just for looking now */
+/* ---- 💛 nobody stays stuck at the beach (the words always say what really happens) ---- */
+const busR1=()=>!!(S&&S.beach&&S.beach.r1);   /* 🎟️ your first ride (free) is done */
+function busHomeLeft(){const n=busNext('beach','town');return!!n&&n.d===S.day;}   /* a bus home still comes today */
+function busHomeSay(){const n=busNext('beach','town');if(!n)return'🚌 Driver Dot: “Have fun at the beach! 👋”';   /* Driver Dot's hello at the beach: when the next bus home really goes */
+  if(n.d!==S.day)return`🚌 Driver Dot: “The next bus home leaves ${busWhen(n,1)}. Have fun! 👋”`;if(n.s.l>=21)return'🚌 Driver Dot: “The bus home leaves at 21:00. See you then! 👋”';
+  const ev=busSess(S.day).some(s=>s.p==='beach'&&s.go==='town'&&s.l>=21);return`🚌 Driver Dot: “I go back to town at ${busHM(n.s.l)}.${ev?' The last bus home leaves at 21:00.':''} Have fun! 👋”`;}
+/* a friend's clock jumped past the bus home, or a game from before the bus loads at the beach with no bus home today: Driver Dot comes back for
+   you. Her free bus home comes now, waits 2 game hours and goes as soon as you hop on (like the Welcome Bus). Late at night you camp: the bus comes in the morning */
+function busDD(d,a){const s={p:'beach',a,l:Math.min(23.95,a+2),go:'town',dd:1};busSess(d).unshift(s);BUS.told[d+':a'+s.p+s.a]=1;BUS.told[d+':miss']=1;return s;}
+function busStranded(why){if(!S||!CUR||CUR.id!=='beach')return;if(busHomeLeft()){if(why==='jump')toast('🚌 The bus home leaves '+busWhen(busNext('beach','town'),1)+' from the “To town” gate 🏘️',4.6,1);return;}   /* (a bus home still comes today: just say when) */
+  const d=S.day,t=S.time,nw=why==='old'?'🚌 New: the Beach Bus! ':'';BUS.told[d+':miss']=1;
+  if(t>=22.5){toast(nw+'🌙 It\'s late! ⛺ Build a campsite and sleep at the beach. The bus home comes '+busWhen(busNext('beach','town'),1)+' 💛',5.5,1);return;}
+  const s=busDD(d,Math.ceil((t+.12)*6)/6);bch().dd=[d,s.a];if(!NAV)setNav('home',true);   /* (saved: it still comes after a reload) */
+  toast(why==='old'?nw+'💛 Driver Dot came to take you home for free! Her bus waits at the “To town” gate until '+busHM(s.l)+'. Hop on!':'🚌 Driver Dot came back for you! 💛 A free bus home waits at the “To town” gate until '+busHM(s.l)+'. Hop on!',5.5,1);change();}
+/* 🕰️ a friend's clock moved mine ahead (d0,t0 = my clock before; big = a jump of an hour or more). Sitting in the bus to the beach when the jump
+   goes past its time: you get off with your coins back (it would drop you at the beach on another day). At the beach: a jump past the bus home brings Driver Dot */
+function busClock(d0,t0,big){if(!S||!CUR)return;const R=BUS.ride;
+  if(R){if(!R.go&&big&&R.to==='beach'&&(S.day!==R.d||S.time>=R.s.l))busOff('jump');return;}   /* (on the bus home it just goes: home is where you want to be) */
+  if(CUR.id!=='beach')return;const n=busNext('beach','town',d0,t0);if(n&&(n.d<S.day||n.d===S.day&&n.s.l<=S.time))busStranded('jump');}
+/* a game loads: a promised free bus home comes back; at the beach Driver Dot says when the bus home goes (a game from before the bus:
+   what the bus is, and with no bus home today any more she comes to take you home) */
+function busLoad(){const b=S.beach;if(b&&Array.isArray(b.dd)){const [d,a]=b.dd;if(d===S.day&&S.time<Math.min(23.95,a+2))busDD(d,a);else delete b.dd;}
+  if(CUR.id!=='beach')return;const first=!(b&&b.bus);bch().bus=1;
+  setTimeout(()=>{if(!PLAYING||CUR.id!=='beach'||BUS.ride)return;if(first&&!busHomeLeft()){busStranded('old');return;}const n=busNext('beach','town');
+    toast(n&&n.s.dd?'🚌 Driver Dot is waiting for you! 💛 Her free bus home leaves the “To town” gate at '+busHM(n.s.l)+'.':(first?'🚌 New: a Beach Bus takes you home! It leaves ':'🚌 The bus home leaves ')+busWhen(n,1)+' from the “To town” gate 🏘️',5,1);},3800);}
 /* ---- ⛺ the campsite ---- */
 function campOn(){if(!S||!CUR||CUR.id!=='beach')return false;if(S.beach&&S.beach.camp)return true;const L=LOC.beach;   /* yours, or a friend's who is asleep in it */
   for(const a of MP.peers.values())if(a.loc==='beach'&&a.zz&&Math.hypot(a.rx-L.ox-CAMP.x,a.rz-L.oz-CAMP.z)<2.6)return true;return false;}
@@ -2181,7 +2217,7 @@ function busSolids(s){const b=BUS.pos;if(!b||!BUS.g||!BUS.g.visible||BUS.loc!==C
 function campPeers(){const L=LOC.beach;if(CUR.id!=='beach')return;   /* a friend asleep in the tent lies down like in a bed: on the sleeping bag, along the tent, head at the back (blanket narrower, inside the tent) */
   for(const a of MP.peers.values())if(a.av&&a.lie&&a.loc==='beach'&&Math.hypot(a.rx-L.ox-CAMP.x,a.rz-L.oz-CAMP.z)<2.6){const p=a.av,r=p.root;r.position.y=.26;r.position.z=L.oz+CAMP.z+(a.rz<L.oz+CAMP.z?-.35:.35);r.rotation.y=Math.PI/2;if(p.duv)p.duv.scale.set(.58,1,.92);
     if(p.tag)p.tag.position.y=1.62;if(a.zzs)a.zzs.position.y=2.15+Math.sin((a.zzT||0)*2.4)*.07;}}   /* their name and 💤 float above the tent roof, not cut by its cloth */
-const busPill=()=>{const e=$('busTip');return!!e&&!e.hidden&&/\d:\d\d/.test(e.textContent);};   /* the HUD pill counts down to the bus right now */
+const busPill=()=>{const e=$('busTip');return!!e&&!e.hidden&&/\d:\d\d|Free bus/.test(e.textContent);};   /* the HUD pill counts down to the bus right now (or says the bus is free: the big "Free ride!" label over the bus covered the clock) */
 /* 🚗 the bus pops up at its stop (you just came out, or loaded the game): a car standing where the bus is, or right behind it, rolls back
    to wait with a gap (or, past the bus's middle, rolls ahead of it) */
 function busCarGap(b){const ux=Math.cos(b[2]),uz=-Math.sin(b[2]),L=[];let lim=-1.72-4.3;
@@ -2208,12 +2244,12 @@ function updBus(dt){if(!BUS.g)return;const p=S&&CUR?(CUR.id==='city'?'park':CUR.
   BUS.dk=clamp(BUS.dk+(stop&&!BUS.hold?dt:-dt)*1.7,0,1);BUS.door.position.x=2.2-1.02*BUS.dk*BUS.dk*(3-2*BUS.dk);busSurf(dt,p==='beach'&&stop,fresh);
   const d=BUS.dot;if(d.wave>0){d.wave-=dt;d.arms[1].rotation.z=2.5+Math.sin(d.wave*14)*.35;}else d.arms[1].rotation.z*=.85;
   BUS.sign[0].visible=c.s.go==='beach';BUS.sign[1].visible=c.s.go!=='beach';BUS.ins.visible=!(P.sit&&P.sit.bus);
-  busTag(stop&&c.s.go&&!BUS.hold&&!busPill()?(c.s.wb?'🎉 Free ride!':(c.s.go==='beach'?'🏖️ ':'🏘️ ')+busMMSS(c.s)):'');   /* (near the stop the pill shows the same countdown, easier to read than a label under the buttons) */
+  busTag(stop&&c.s.go&&!BUS.hold&&!busPill()?(c.s.wb?'🎉 Free ride!':c.s.dd?'💛 Free ride!':(c.s.go==='beach'?'🏖️ ':'🏘️ ')+busMMSS(c.s)):'');   /* (near the stop the pill shows the same countdown, easier to read than a label under the buttons) */
   if(p==='park')for(const X of XS){const near=Math.abs(b[1]-X.z)<6.3&&b[0]+3.9>X.x-18&&b[0]-1.7<X.x+6.3,i=X.occ.indexOf(BUSX);if(near&&i<0)X.occ.push(BUSX);else if(!near&&i>=0)X.occ.splice(i,1);}   /* cars let the bus cross first */
   if(stop){const cs=Math.cos(b[2]),sn=Math.sin(b[2]);for(const a of MP.peers.values())if(a.av&&a.loc===CUR.id){const dx=a.x-b[0],dz=a.z-b[1],lx=dx*cs-dz*sn,lz=dx*sn+dz*cs;if(lx>-1.7&&lx<3.2&&Math.abs(lz)<1.05){a.av.root.position.y=.3;sitPose(a.av);if(a.pets)for(const q of a.pets)q.g.visible=false;}}}}   /* friends riding with you sit down (their pets ride along unseen, like yours) */
 function busTick(dt,p){const R=BUS.ride,t=S.time;
   if(R&&!R.go){if(!(P.sit&&P.sit.bus)){BUS.ride=null;document.body.classList.remove('bus');if(R.fare)S.coins+=R.fare;bringFollowers(true);change();}   /* stood up some other way: off the bus (coins back) */
-    else if(S.day!==R.d||t>=R.s.l||(R.s.wb&&performance.now()-R.t0>650))busGo();}
+    else if(S.day!==R.d||t>=R.s.l||((R.s.wb||R.s.dd)&&performance.now()-R.t0>650))busGo();}
   if(BUS.ride){for(const f of FRIEND_ACTORS)if(f.mode==='follow')f.g.visible=false;for(const q of PET_ACTORS)if(!q.d.stay)q.g.visible=false;}   /* they ride with you */
   for(const B of BUS.boards)if(B.k!==S.day+'')busBoardDraw(B);
   if(BUS.camp){const on=campOn(),L=LOC.beach,tc=BUS.tc||(BUS.tc={x1:L.ox+CAMP.x-1.25,z1:L.oz+CAMP.z-1.15,x2:L.ox+CAMP.x+1.2,z2:L.oz+CAMP.z+1.15}),i=L.dcols.indexOf(tc);   /* the tent is solid while it is there */
@@ -2221,15 +2257,17 @@ function busTick(dt,p){const R=BUS.ride,t=S.time;
     f.scale.set(1+Math.sin(tt*9)*.08,1+Math.sin(tt*13+1)*.16,1+Math.cos(tt*11)*.08);f.rotation.y=Math.sin(tt*2)*.4;
     if(SET.sound&&AC&&Math.hypot(P.x-LOC.beach.ox-CAMP.fx,P.z-LOC.beach.oz-CAMP.fz)<7&&(BUS.ck-=dt)<=0){BUS.ck=rand(.12,.7);tone(rand(1400,3200),.022,'square',.012);}}}   /* crackle */
   if(BUS.tent&&!zzIn()){BUS.tent=0;if(CUR.id==='beach'&&t>=7&&t<7.5)setTimeout(()=>{if(!PLAYING||CUR.id!=='beach')return;const n=busNext('beach','town');
-    toast(n&&n.d===S.day?'🚌 The bus to town comes today! It leaves at '+busHM(n.s.l)+' 🏘️':'🚌 No bus today. The bus home leaves '+busWhen(n,1)+'. Enjoy the beach! 🏖️',4.6);},4300);}
+    toast(n&&n.d===S.day?'🚌 The bus to town comes today! It leaves at '+busHM(n.s.l)+' 🏘️':'🚌 No bus today. The bus home leaves '+busWhen(n,1)+'. Enjoy the beach! 🏖️',4.6,1);},4300);}
   if(p==='beach'&&HOST.cur){const q=HOST.cur;hostAnswer(false,true);toast('🔔 '+q.nm+' knocked at your door, but you are at the beach! 🏖️',3.6);}
   const calm=S.intro&&!UI.open&&!fading&&!CUT&&!TUT&&!DTUT,busy=$('toast').classList.contains('show');
-  if(!(S.beach&&S.beach.bus)&&p==='park'&&calm&&!busy){BUS.nt+=dt;if(BUS.nt>5){bch().bus=1;change();SFX.pop();
-    toast(S.day===1&&t<12?'🎉 Good news! A free Welcome Bus waits at the park until 12:00. Hop on and visit the beach! 🏖️':'🚌 New! A cozy Beach Bus stops at the park 3 days a week. Find the 🚌 bus stop on your 🗺️ map!',5.5);}}else BUS.nt=0;
+  if(!(S.beach&&S.beach.bus)&&p==='park'&&calm&&!busy&&!(NAV&&NAV.id==='home')){BUS.nt+=dt;if(BUS.nt>5){bch().bus=1;change();SFX.pop();   /* (your house first: while the pink arrow shows the way home, the bus waits) */
+    toast(S.day===1&&t<11.5?'🎉 Good news! A free Welcome Bus waits at the park until 12:00. Hop on and visit the beach! 🏖️':'🚌 New! A cozy Beach Bus stops at the park 3 days a week.'+(busR1()?'':' Your first ride is free! 🎟️')+' Find the 🚌 bus stop on your 🗺️ map!',5.5,1);}}else BUS.nt=0;
+  if(p==='park'&&!busR1()&&S.beach&&S.beach.bus&&calm&&!busy&&!BUS.ride&&!BUS.told[S.day+':r1']&&busNearStop('park')){const c=busCur('park');   /* 🎟️ at the bus stop: your first ride is free (the Welcome Bus has its own words) */
+    if(!(c&&c.s.wb)){BUS.told[S.day+':r1']=1;toast('🎟️ Your first ride to the beach is free! '+(busReady('park')?'Hop on! 🚌':'The bus comes '+busWhen(busNext('park','beach'))+' 🚌'),4.6,1);}}
   if(p&&!BUS.ride&&calm)busNews(p,t,busy);
   BUS.tipT-=dt;if(BUS.tipT<=0){BUS.tipT=.25;busTipUpd(p);}}
-function busNews(p,t,busy){const d=S.day,say=(k,txt,w,snd)=>{const key=d+':'+k;if(BUS.told[key]||(busy&&t<w))return;BUS.told[key]=1;if(snd)snd();toast(txt,4.6);};
-  for(const s of busSess(d))if(s.go&&t>=s.a&&t<s.a+.2&&BUSP[s.p].loc===CUR.id&&!(BUS.arr&&BUS.arr.d===d&&Math.abs(BUS.arr.t-t)<.3))   /* the bus is here (not the one you just came on) */
+function busNews(p,t,busy){const d=S.day,say=(k,txt,w,snd)=>{const key=d+':'+k;if(BUS.told[key]||(busy&&t<w))return;BUS.told[key]=1;if(snd)snd();toast(txt,4.6,1);};
+  for(const s of busSess(d))if(s.go&&t>=s.a&&t<s.a+.2&&BUSP[s.p].loc===CUR.id&&!(BUS.arr&&BUS.arr.d===d&&Math.abs(BUS.arr.t-t)<.3)&&!(s.wb&&NAV&&NAV.id==='home'))   /* the bus is here (not the one you just came on; a new player finds the house first) */
     say('a'+s.p+s.a,s.p==='park'?(s.wb?'🎉 The Welcome Bus is at the park! Hop on for a free ride to the beach 🏖️':'🚌 Beep beep! The Beach Bus is at the park! It leaves at '+busHM(s.l)+' 🏖️'):'🚌 Beep beep! The bus to town is here! It leaves at '+busHM(s.l)+' 🏘️',s.wb?s.l:s.a+.1,()=>{SFX.honk();if(s.wb)bch().bus=1;});   /* (the Welcome Bus message is the news too) */
   if(p!=='beach'||busArr(d)===undefined)return;
   if(t>=20.5&&t<20.6)say('ev1','🚌 The bus home leaves at 21:00!',20.55);
@@ -2240,7 +2278,7 @@ function busNearStop(p){if(p==='park')return Math.hypot(P.x+14.3,P.z-4.5)<16;con
 function busTipUpd(p){let el=$('busTip'),t='',hot=false;const R=BUS.ride;
   if(R&&!R.go){t=R.s.wb?'🚌 Off we go!':(R.to==='beach'?'🚌 Off to the beach in ':'🚌 Off home in ')+busMMSS(R.s);hot=!R.s.wb&&busSecs(R.s)<12;}
   else if(p&&!R&&!zzIn()&&S.intro){const c=busCur(p),near=busNearStop(p);
-    if(c&&c.s.go&&c.u===0&&(near||p==='beach')){t=c.s.wb?(p==='park'?'🎉 Free bus! Hop on!':'🚌 Free bus to town until '+busHM(c.s.l)):(p==='park'?'🚌 Bus to the beach: ':'🚌 Bus to town: ')+busMMSS(c.s);hot=!c.s.wb&&busSecs(c.s)<15;}   /* (at the beach you just came on the Welcome Bus: not "hop on!" but until when it goes back, like Driver Dot says) */
+    if(c&&c.s.go&&c.u===0&&(near||p==='beach')){t=c.s.wb?(p==='park'?'🎉 Free bus! Hop on!':'🚌 Free bus to town until '+busHM(c.s.l)):c.s.dd?'💛 Free bus home: '+busMMSS(c.s):(p==='park'?'🚌 Bus to the beach: ':'🚌 Bus to town: ')+busMMSS(c.s);hot=!c.s.wb&&busSecs(c.s)<15;}   /* (at the beach you just came on the Welcome Bus: not "hop on!" but until when it goes back, like Driver Dot says) */
     else if(near){if(c&&c.u<0&&c.s.go)t='🚌 The bus is coming!';else{const n=p==='park'?busNext('park','beach'):busNext('beach','town');t=(p==='park'?'🚌 Next bus: ':'🚌 Bus home: ')+(n?(n.d===S.day?'':WDAYS[wdIdx(n.d)].slice(0,3)+' ')+busHM(p==='park'?n.s.a:n.s.l):'soon');}}}
   if(!el){if(!t)return;el=document.createElement('div');el.id='busTip';el.setAttribute('role','status');el.hidden=true;$('stats').after(el);}
   if(el.textContent!==t)el.textContent=t;el.classList.toggle('hot',hot);if(el.hidden!==!t)el.hidden=!t;}
@@ -3078,7 +3116,10 @@ function snap(){let loc=CUR?CUR.id:'city',x=P.x,z=P.z,yaw=P.yaw;
   S.loc=loc;S.px=x;S.pz=z;S.yaw=yaw;S.t=Date.now();}
 function safeSpot(loc){const L=LOC[loc];if(!L||loc==='studio')return null;const b=L.bounds;if(!isFinite(P.x)||!isFinite(P.z)||P.x<b.x1||P.x>b.x2||P.z<b.z1||P.z>b.z2){
   if((L.type==='in'||loc==='beach')&&DOORS[loc]){const d=DOORS[loc].inside;P.x=L.ox+d[0];P.z=L.oz+d[1];P.yaw=d[2];}else{P.x=-17;P.z=-4.6;P.yaw=0;}}return loc;}
-function saveLocal(){if(!S||!PLAYING||SAVEOFF)return;snap();try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}}
+/* 🚌 sitting in the bus before it leaves: the fare is only lent. A game saved now (closing the app, an update, 📦 Move my game) starts again
+   standing at the bus stop, so it keeps your coins as if you got off */
+function saveJSON(){snap();const R=BUS.ride,f=R&&R.fare&&P.sit&&P.sit.bus?R.fare:0;if(!f)return JSON.stringify(S);S.coins+=f;try{return JSON.stringify(S);}finally{S.coins-=f;}}
+function saveLocal(){if(!S||!PLAYING||SAVEOFF)return;try{localStorage.setItem(LS,saveJSON());}catch(e){}}
 const CSAVE={ref:null,pending:true,remote:null,dirty:false,writing:false,tm:0};
 async function cloudInit(){
   try{
@@ -3093,8 +3134,8 @@ async function cloudInit(){
 }
 async function cloudFlush(){
   if(!CSAVE.ref||CSAVE.writing||!CSAVE.dirty||!S||SAVEOFF)return;
-  CSAVE.dirty=false;CSAVE.writing=true;snap();
-  try{await CSAVE.ref.set({json:JSON.stringify(S),t:S.t});}
+  CSAVE.dirty=false;CSAVE.writing=true;const js=saveJSON();
+  try{await CSAVE.ref.set({json:js,t:S.t});}
   catch(e){const c=e&&e.code;if(c==='unavailable'){CSAVE.dirty=true;setTimeout(cloudFlush,2500+Math.random()*2000);}else if(c!=='resource_exhausted')CSAVE.ref=null;else{CSAVE.dirty=true;setTimeout(cloudFlush,8000);}}
   CSAVE.writing=false;if(CSAVE.dirty&&CSAVE.ref)setTimeout(cloudFlush,1500);
 }
@@ -3233,7 +3274,7 @@ const QUESTS={
   litter:{i:'🧹',t:'Town cleaner',d:'Pick up 5 pieces of litter',n:5,r:30},
   market:{i:'🍎',t:'Shopping trip',d:'Buy 3 things at the Market',n:3,r:20},
   cafe:{i:'☕',t:'Café time',d:'Buy something at the Café',n:1,r:15},
-  flower:{i:'🌷',t:'Flower power',d:'Buy something at the Flower shop',n:1,r:15},
+  flower:{i:'🌷',t:'Flower power',d:'Buy something at the Flower shop',n:1,r:40},
   chat:{i:'💬',t:'Chatterbox',d:'Chat with 3 different friends',n:3,r:25},
   gift:{i:'🎁',t:'Gift giver',d:'Give a present to a friend',n:1,r:20},
   pet:{i:'🐾',t:'Pet lover',d:'Pet, feed or play with your pet 3 times',n:3,r:20,need:()=>S.pets.length>0},
@@ -3247,7 +3288,7 @@ const QUESTS={
   visit:{i:'🏠',t:'Guest time',d:'Invite a friend to your house',n:1,r:25},
   feed:{i:'🦴',t:'Dinner time',d:'Feed your pet',n:1,r:10,need:()=>S.pets.length>0},
   cook:{i:'🍳',t:'Kitchen helper',d:'Cook something on your stove',n:1,r:20},
-  clothes:{i:'👗',t:'New look',d:'Buy something at the clothing store',n:1,r:15},
+  clothes:{i:'👗',t:'New look',d:'Buy something at the clothing store',n:1,r:40},
   ducks:{i:'🦆',t:'Duck friends',d:'Feed the ducks at a pond',n:1,r:12},
   mproom:{i:'👫',t:'Play together',d:'Send a message to a friend who is online',n:1,r:15,need:()=>MP.peers.size>0},
   goal:{i:'⚽',t:'Goal!',d:'Score a goal on the sports field',n:1,r:15},
@@ -3265,7 +3306,7 @@ const QUESTS={
   party:{i:'🎂',t:'Party time',d:'Throw a little party!',r:50,steps:[{d:'Buy a cake',ev:'buy:cake',n:1},{d:'Invite a friend to your house',ev:'visit',n:1},{d:'Give a present to a friend',ev:'gift',n:1}]},
   chef:{i:'🥪',t:'Little chef',d:'Make a yummy sandwich.',r:45,steps:[{d:'Buy bread at the Market',ev:'buy:bread',n:1},{d:'Buy cheese at the Market',ev:'buy:cheese',n:1},{d:'Cook a sandwich on your stove',ev:'cook',n:1}]},
   spa:{i:'🛁',t:'Pet spa day',d:'Spoil your pet!',r:45,need:()=>S.pets.length>0,steps:[{d:'Buy pet food or cat food',ev:'buy:food',n:1},{d:'Feed your pet',ev:'feed',n:1},{d:'Play ball with your pet',ev:'play',n:1}]},
-  garden:{i:'🌷',t:'Flower house',d:'Make your house bloom.',r:45,steps:[{d:'Buy 2 things at the Flower shop',ev:'flower',n:2},{d:'Put 2 flowers or plants in your house',ev:'placeflower',n:2}]},
+  garden:{i:'🌷',t:'Flower house',d:'Make your house bloom.',r:80,steps:[{d:'Buy 2 things at the Flower shop',ev:'flower',n:2},{d:'Put 2 flowers or plants in your house',ev:'placeflower',n:2}]},
   cafedate:{i:'☕',t:'Café friends',d:'Take a friend out for a treat.',r:50,steps:[{d:'Hang out with a friend',ev:'hang',n:1},{d:'Take your friend to the Café',ev:'cafevisit',n:1},{d:'Sit down at a Café table',ev:'cafesit',n:1}]},
   treat:{i:'🍩',t:'Clean & treat',d:'Work hard, then get a treat.',r:40,steps:[{d:'Pick up 5 pieces of litter',ev:'litter',n:5},{d:'Buy a donut at the Café',ev:'buy:donut',n:1},{d:'Eat the donut',ev:'eat:donut',n:1}]},
   lucky:{i:'💌',t:'Lucky day',d:'A day full of surprises.',r:35,steps:[{d:'Check your mailbox',ev:'mail',n:1},{d:'Make a wish at the fountain',ev:'wish',n:1},{d:'Buy a cookie at the Café',ev:'buy:cookie',n:1}]},
@@ -3336,7 +3377,12 @@ function genQuest(k){try{const p=k.split(':'),kind=p[0],a=p[1];
     if(sub==='tour'){const ids=arg.split('|');return{i:'🗺️',t:'Town tour',d:'Visit 3 places with your map',r:40,steps:ids.map(id=>{const pl=PLACES.find(x=>x.id===id);return{d:'Find '+theN(pl)+' '+pl.i,ev:'find:'+id,n:1};})};}
     if(sub==='spree'){const ids=arg.split('|');return{i:'🛍️',t:'Shopping spree',d:'Buy 3 different treats',r:35,steps:ids.map(id=>{const it=itemInfo(id);return{d:'Buy '+aAn(it.n)+' '+it.i+' at the '+shopOf(id),ev:'buy:'+id,n:1};})};}}
   return null;}catch(e){return null;}}
-function questCandidates(r){const ok=k=>{const Q=getQ(k);return !!Q&&(!Q.need||Q.need());};
+/* 🪙 a quest never costs much more than it pays: "Buy a …" only for everyday things (20 🪙 or less: food, pet food and toys), "Put a … in your
+   house" only for furniture already waiting in 📦 My stuff. old = the way it was before (a saved game's first day after loading keeps exactly the
+   quests the older version gave it) */
+const qCheap=k=>{const p=k.split(':'),a=p[1];if(p[0]==='buy'){const it=itemInfo(a)||FURN[a];return!!it&&(it.p||0)<=20;}
+  if(p[0]==='place')return!!S&&!!S.home&&(S.home.store||[]).some(it=>furnOf(it)===a);return true;};
+function questCandidates(r,old){const ok=k=>{const Q=getQ(k);return !!Q&&(!Q.need||Q.need())&&(old||qCheap(k));};
   const foods=[...new Set([...SHOPS.market.items,...SHOPS.cafe.items,...SHOPS.bakery.items,...SHOPS.icecream.items])];
   const simple=[...Object.keys(QUESTS).filter(k=>!QUESTS[k].steps),...foods.map(f=>'buy:'+f),...foods.map(f=>'eat:'+f),...RECIPES.map(x=>'cook:'+x.id),
     ...FRIENDS.map(f=>'chat:'+f.id),...FRIENDS.map(f=>'gift:'+f.id),...PLACES.filter(pl=>!pl.nq).map(pl=>'find:'+pl.id),...['market','cafe','pets','flowers','clothes','toys','bakery','icecream','library','school','fire'].map(x=>'enter:'+x),
@@ -3349,8 +3395,8 @@ function questCandidates(r){const ok=k=>{const Q=getQ(k);return !!Q&&(!Q.need||Q
   for(let i=0;i<6;i++){const sh=['market','cafe','bakery','icecream'].sort(()=>r()-.5).slice(0,3);tricky.push('trk:spree:'+sh.map(s=>pk(SHOPS[s].items)).join('|'));}
   return{simple,tricky:tricky.filter(ok)};}
 function qHist(keys){S.qhist=(S.qhist||[]).concat(keys).slice(-260);}
-function qNewDay(){let paid=0;if(S.q&&S.q.st)for(const k in S.q.st){const Q=getQ(k);if(S.q.st[k].s==='ready'&&Q)paid+=Q.r;}
-  const r=seeded(S.day*97+13),hist=new Set(S.qhist||[]),C=questCandidates(r);
+function qNewDay(old){let paid=0;if(S.q&&S.q.st)for(const k in S.q.st){const Q=getQ(k);if(S.q.st[k].s==='ready'&&Q)paid+=Q.r;}
+  const r=seeded(S.day*97+13),hist=new Set(S.qhist||[]),C=questCandidates(r,old);
   const sh=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
   const fresh=a=>{const f=a.filter(k=>!hist.has(k));return f.length>=3?f:a;};
   const simple=sh(fresh(C.simple)),multi=sh(fresh(C.tricky));
@@ -3583,7 +3629,7 @@ function carPlace(c){let d=((c.d%c.total)+c.total)%c.total;const p=c.path,n=p.le
       if(rem<4){const q=p[(i+2)%n];c.ty=angLerp(c.ty,Math.atan2(q[0]-b[0],q[1]-b[1]),(4-rem)/8);}return;}d-=L;}}
 /* 🌫️ far away people and cars grow in softly over their last 6 m instead of popping in (at 48 m and 80 m). Scale only: no extra drawing */
 function popFade(g,R){if(!g||!g.visible)return;const d=Math.hypot(g.position.x-camera.position.x,g.position.z-camera.position.z),k=clamp((R-d)/6,0,1);if(k<=0){g.visible=false;return;}if(g.scale.x!==k)g.scale.setScalar(k);}
-function popFades(){for(const w of WALKERS)popFade(w.g,48);for(const f of FRIEND_ACTORS)popFade(f.g,48);for(const c of CARS)popFade(c.g,80);}
+function popFades(){for(const w of WALKERS)popFade(w.g,48);for(const f of FRIEND_ACTORS)popFade(f.g,48);for(const c of CARS)popFade(c.g,80);for(const k of FB.k)popFade(k.p.root,55);}   /* (⚽ the football friends too: they are drawn up to 55 m) */
 /* 🌙 a "Closed" sign hangs on the shop and library doors in closed hours (20:00-8:00): one picture, one material, one mesh for all nine doors, drawn only then */
 let CLOSED=null;
 function buildClosedSigns(L){const D=[[18,-10.98,0],[32,-10.98,0],[18,10.98,Math.PI],[31.5,10.98,Math.PI],[59.48,-31,-Math.PI/2],[59.48,-14,-Math.PI/2],[59.98,20,-Math.PI/2],[58.98,36,-Math.PI/2],[-59.98,-12.5,Math.PI/2]];
@@ -3810,10 +3856,11 @@ function fbMove(k,tx,tz,sp,dt){const dx=tx-k.x,dz=tz-k.z,d=Math.hypot(dx,dz);k.m
 function fbKeep(k){k.x=clamp(k.x,-39.5,-10.5);k.z=clamp(k.z,59.4,77.6);if((k.x<-38.8||k.x>-11.2)&&k.z>65.7&&k.z<71.3)k.x=clamp(k.x,-38.8,-11.2);}
 /* the clock: they come at 14:00 (from their homes, or straight onto the field when nobody sees it) and go home at 19:00 */
 function fbClock(){const due=S.time>=FB_ON&&S.time<FB_OFF,m=FB.mode;
-  if(due&&!m){FB.mode='play';FB.sc=[0,0];FB.me=0;FB.go=1;FB.seen=0;drawScore();FB.k.forEach(fbArrive);
-    if(CUR.id==='city'&&S.intro&&S.time<FB_ON+.3)toast('⚽ The football friends are at the field until 19:00. Come and play!',3.4);}
+  if(due&&!m){FB.mode='play';FB.sc=[0,0];FB.me=0;FB.go=1;FB.seen=0;drawScore();FB.k.forEach(fbArrive);FB.tell=S.time<FB_ON+.3?1:0;}
   else if(!due&&(m==='play'||m==='rest'||m==='juice'||m==='watch'))fbHome();
-  else if(m==='home'&&FB.k.every(k=>k.st==='off')){FB.mode='';drawScore();}}
+  else if(m==='home'&&FB.k.every(k=>k.st==='off')){FB.mode='';drawScore();}
+  if(!FB.tell)return;if(S.time>=FB_ON+1||FB.mode==='home'||!FB.mode){FB.tell=0;return;}   /* "they are here!" waits for a free moment in town (not in the middle of the Pet Show, a card or a lesson), until 15:00 */
+  if(CUR.id==='city'&&PLAYING&&S.intro&&!CUT&&!UI.open&&!fading&&!TUT&&!DTUT){FB.tell=0;toast('⚽ The football friends are at the field until 19:00. Come and play!',3.4,1);}}
 function fbHome(){FB.mode='home';FB.at=0;FB.af=null;fbHudOff();drawScore();
   for(const k of FB.k){if(k.st==='off')continue;const r=fbRoute(k.d.home).reverse();fbGoTo(k,[FBG[(r[0]||[-30])[0]<-25?0:1],...r],'gone');}}
 function fbFree(){FB.mode='play';FB.sc=[0,0];FB.me=0;FB.go=1.5;FB.at=0;FB.af=null;FB.wt=0;fbHudOff();drawScore();
@@ -4026,15 +4073,15 @@ function clockFrom(a,ck){if(!Array.isArray(ck)||!S.intro)return;const k=ck.join(
   const d=ck[0],h=ck[1];if(!Number.isInteger(d)||d<1||d>=1e5||!Number.isFinite(h)||h<0||h>=24)return;
   a.ckd=d;if(d-S.day>CK_FAR)return;   /* more than 30 days ahead of my day: not my clock */
   const ahead=(d-S.day)*24+h-S.time;if(ahead<1/30)return;
-  if(ahead<1){const nd=d!==S.day;S.day=d;S.time=h;if(nd){newDay();change();}return;}   /* a small catch-up is quiet, like a normal midnight */
+  if(ahead<1){const nd=d!==S.day,d0=S.day,t0=S.time;S.day=d;S.time=h;if(nd){newDay();change();}busClock(d0,t0,false);return;}   /* a small catch-up is quiet, like a normal midnight */
   const T=MP.ckTo;if(!T||(d-T[0])*24+h-T[1]>0)MP.ckTo=[d,h];if(!T)setTimeout(clockJump,400);}
 /* a big jump (1 game hour or more) waits until no message, tips or class is on screen, so it never cuts a hello or a tip
    (and the new-day messages come after it), then fades like the bed and tells the time */
 function clockJump(n=0){if(!MP.ckTo||!S||!PLAYING){MP.ckTo=null;return;}
   if(n<300&&($('toast').classList.contains('show')||fading||TUT||DTUT||CUT)){setTimeout(()=>clockJump(n+1),400);return;}
   fade(()=>{const T=MP.ckTo;MP.ckTo=null;if(!T||!S)return;const ahead=(T[0]-S.day)*24+T[1]-S.time;if(ahead<1/30)return;
-    const nd=T[0]!==S.day;S.day=T[0];S.time=T[1];if(nd){newDay();change();}
-    if(ahead>=1)toast('🕰️ Same time as your friends: '+wdName()+', day '+S.day+' · '+clockStr(S.time),3.4);});}
+    const nd=T[0]!==S.day,d0=S.day,t0=S.time;S.day=T[0];S.time=T[1];if(nd){newDay();change();}
+    if(ahead>=1)toast('🕰️ Same time as your friends: '+wdName()+', day '+S.day+' · '+clockStr(S.time),3.4);busClock(d0,t0,ahead>=1);});}   /* (🚌 the bus and the beach follow the new time: busClock) */
 function mpBuildAv(a,look){mpDropAv(a);const p=makePerson(lookToPerson(look));bakePerson(p);const tg=label('⭐ '+a.nm,.3);tg.position.y=2.0;p.root.add(tg);p.tag=tg;scene.add(p.root);a.av=p;a.av.root.position.set(a.x,0,a.z);}
 function mpDropAv(a){if(a.av){scene.remove(a.av.root);a.av=null;}a.bub=null;a.lie=false;a.lieK='';if(a.zzs){a.zzs.material.map.dispose();a.zzs.material.dispose();a.zzs=null;}mpPetsDrop(a);}
 function mpBubble(a,txt){if(!a.av)return;if(a.bub&&a.bub.parent)a.bub.parent.remove(a.bub);const b=label(txt,.36);b.position.y=2.45;a.av.root.add(b);a.bub=b;a.bubT=5;SFX.talk();
@@ -4603,12 +4650,17 @@ async function updCheck(){const now=performance.now();if(!UPD.on||UPD.busy||UPD.
   const f=updRead(t);if(f&&(f.n>COZY_BUILD||f.n===COZY_BUILD&&!!updMine()&&f.id!==updMine())){UPD.newer=f;if(!UPD.iv)UPD.iv=setInterval(updAct,500);updAct();}}   /* found once = stays until tapped */
 function updAct(){if(UPD.go)return;const f=UPD.newer;if(f&&!PLAYING&&!UI.open&&navigator.onLine!==false&&performance.now()-UPD.fail>60000&&!updTried(f.id)){updGo(true);return;}updPill();}
 function updPill(){const f=UPD.newer,T=$('title');let b=$('updBtn');
-  const on=!!f&&(PLAYING?!!(S&&S.intro)&&!UI.open&&!CUT&&!CR&&!TUT&&!DTUT&&!$('hud').hidden:!T.hidden&&!UI.open);   /* waits while a card, a show or a lesson is on (and on short phone screens while the action button is up: no room) */
+  const on=!!f&&(PLAYING?!!(S&&S.intro)&&!UI.open&&!CUT&&!CR&&!TUT&&!DTUT&&!BUS.ride&&!$('hud').hidden:!T.hidden&&!UI.open);   /* waits while a card, a show, a lesson or a bus ride is on (and on short phone screens while the action button is up: no room) */
   if(!on){if(b&&!b.hidden){b.hidden=true;T.classList.toggle('upd',!!$('tUpd'));}return;}
   if(!b){b=document.createElement('button');b.id='updBtn';b.type='button';b.className='btn butter upd';b.addEventListener('click',()=>{if(UPD.go)return;audioInit();SFX.tap();updGo(false);});}
   if(b.dataset.k!=='new'){b.dataset.k='new';b.classList.remove('busy');b.innerHTML='<span class="ue">✨</span><span class="ut"><b>New Cozy Town update!</b><small>Tap to get it</small></span>';}
   if(PLAYING){if(b.parentNode!==$('hud'))$('hud').appendChild(b);}else if(b.parentNode!==T)T.insertBefore(b,T.querySelector('.menu'));
-  T.classList.toggle('upd',!PLAYING||!!$('tUpd'));if(b.hidden)b.hidden=false;}
+  T.classList.toggle('upd',!PLAYING||!!$('tUpd'));if(b.hidden)b.hidden=false;updPlace();}
+/* 📱 a phone held upright: the bus, football, tennis and arrow bars under the clock may be as wide as the screen, so the button sits below them
+   (it covered ✋ Stop, the bus countdown and the arrow bar's ✕, and a tap there reloaded the game). Placed again whenever the left column changes */
+function updPlace(){const b=$('updBtn');if(!b)return;if(b.style.top)b.style.top='';if(b.hidden||!PLAYING)return;const r0=b.getBoundingClientRect();let y=0;   /* (on the title it sits in the menu: no extra top) */
+  for(const id of['busTip','fbHud','tnHud','nav']){const r=boxOf($(id));if(r&&r.right>r0.left-8&&r.left<r0.right&&r.bottom>r0.top-8)y=Math.max(y,r.bottom);}
+  if(y)b.style.top=Math.round(y+10)+'px';}
 async function updGo(auto){const f=UPD.newer;if(UPD.go||!f)return;UPD.go=true;const b=$('updBtn'),busy=b&&!b.hidden,pb=$('tPlay');
   if(auto)pb.textContent='✨ Updating…';   /* on the title: Play waits for the new copy */
   if(busy){b.dataset.k='go';b.classList.add('busy');b.innerHTML='<span class="ue">✨</span><span class="ut"><b>Getting the update…</b><small>Your game is saved 💾</small></span>';}
@@ -4643,7 +4695,7 @@ function setLoc(id){CUR=LOC[id];P.cy=0;for(const k in LOC)LOC[k].g.visible=LOC[k
   FOG.near=out?60:900;FOG.far=out?340:1000;LOC.home.items.visible=id==='home';if(LOC.client)LOC.client.items.visible=id==='client';if(LOC.visit)LOC.visit.items.visible=id==='visit';
   for(const k of KEEPERS)k.p.root.visible=k.L===CUR;for(const a of PEN)a.m.root.visible=CUR.id==='pets';
   if(LOC.clothes&&LOC.clothes.manq)for(const m of LOC.clothes.manq)m.visible=id==='clothes';
-  $('bDeco').hidden=id!=='home';renderer.setClearColor(id==='studio'?'#fff4fa':'#000000');updSky();}
+  $('bDeco').hidden=id!=='home';renderer.setClearColor(id==='studio'?'#fff4fa':'#000000');updSky();toastLeave(id);}
 function bringFollowers(quiet){let n=0;P.hd=P.yaw+Math.PI;for(const f of FRIEND_ACTORS)if(f.mode==='follow')f.loc=null;for(const p of PET_ACTORS)if(!p.d.stay)p.loc=null;   /* placed one by one below */
   for(const f of FRIEND_ACTORS)if(f.mode==='follow'){nearMe(f,++n);
     if(CUR.id==='home'&&!quiet)homeVisit(f);}
@@ -5383,13 +5435,13 @@ function setNavTo(pl,quiet){NAV=pl.actor?pl:Object.assign({},pl,{goal:pl.door,do
   if(BEACON.pin){BEACON.remove(BEACON.pin);}const pin=label(pl.i,1.4,{bg:null,bw:0,pad:6});pin.position.y=3.4;BEACON.add(pin);BEACON.pin=pin;BEACON.position.set(pl.door[0],0,pl.door[1]);BEACON.visible=true;
   $('nav').hidden=false;if(!quiet){SFX.pop();toast('📍 Follow the arrow to '+theN(pl)+'!',2.8);}updNav();}
 function clearNav(){NAV=null;$('nav').hidden=true;if(BEACON)BEACON.visible=false;}
-function updNav(){if(!NAV)return;if(NAV.actor){const f=NAV.actor;if(f.mode==='away'){toast('😴 '+NAV.n+' went home to sleep.',3);clearNav();return;}if(f.loc===CUR.id&&CUR.id!=='city'){toast('📍 You found '+NAV.n+'! 🎉',2.8);SFX.yay();clearNav();return;}
+function updNav(){if(!NAV)return;if(NAV.actor){const f=NAV.actor;if(f.mode==='away'){toast('😴 '+NAV.n+' went home to sleep.',3);clearNav();return;}if(f.loc===CUR.id&&CUR.id!=='city'){toast('📍 You found '+NAV.n+'! 🎉',2.8,2);SFX.yay();clearNav();return;}
     if(f.loc==='city'){NAV.door[0]=f.x;NAV.door[1]=f.z;if(BEACON)BEACON.position.set(f.x,0,f.z);}}
-  if(CUR.id!=='city'){if(INSIDE_AT[CUR.id]===NAV.id){qEvent('find:'+NAV.id);toast('📍 You found '+theN(NAV)+'! 🎉',2.8);SFX.yay();clearNav();return;}if(CUR.id==='beach'){navBeach();return;}navSet(NAV.i+' '+NAV.n+': go outside first','none');return;}
+  if(CUR.id!=='city'){if(INSIDE_AT[CUR.id]===NAV.id){qEvent('find:'+NAV.id);toast('📍 You found '+theN(NAV)+'! 🎉',2.8,2);SFX.yay();clearNav();return;}if(CUR.id==='beach'){navBeach();return;}navSet(NAV.i+' '+NAV.n+': go outside first','none');return;}
   const G=NAV.goal;if(G){const a=P.x>-84,b=G[0]>-84;let w=a===b?G:[a?Math.max(P.x-12,-88):Math.min(P.x+12,-80),0];   /* 🏡 between town and Friends Lane: along the middle of the big road */
     if(!a&&Math.abs(P.z)>6.8){const r=laneOut(P.x,P.z);if(r.length>2)w=r.find(q=>Math.hypot(q[0]-P.x,q[1]-P.z)>1)||w;}   /* in a yard or garden on Friends Lane: out by the gate first */
     NAV.door[0]=w[0];NAV.door[1]=w[1];}
-  const dx=NAV.door[0]-P.x,dz=NAV.door[1]-P.z,d=G?Math.hypot(G[0]-P.x,G[1]-P.z):Math.hypot(dx,dz);if(d<3.2){if(NAV.id==='beach'){toast('🏖️ This gate is just for looking! 🚌 The beach bus leaves from the park.',3.4);SFX.pop();clearNav();return;}qEvent('find:'+NAV.id);toast('📍 You found '+theN(NAV)+'! 🎉'+(NAV.actor?' Talk to her!':''),2.8);SFX.yay();clearNav();return;}
+  const dx=NAV.door[0]-P.x,dz=NAV.door[1]-P.z,d=G?Math.hypot(G[0]-P.x,G[1]-P.z):Math.hypot(dx,dz);if(d<3.2){if(NAV.id==='beach'){toast('🏖️ This gate is just for looking! 🚌 The beach bus leaves from the park.',3.4,2);SFX.pop();clearNav();return;}qEvent('find:'+NAV.id);toast('📍 You found '+theN(NAV)+'! 🎉'+(NAV.actor?' Talk to her!':''),2.8,2);SFX.yay();clearNav();return;}
   const fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw),rx=Math.cos(P.yaw),rz=-Math.sin(P.yaw),rel=Math.atan2(dx*rx+dz*rz,dx*fx+dz*fz);
   navSet(NAV.i+' '+NAV.n+' '+Math.round(d)+' m',`rotate(${rel}rad)`);}
 /* the pink arrow bar: its words change only when they really change (a new text reflows the HUD column) */
@@ -5589,7 +5641,7 @@ ACT.mvback=()=>openSettings();
 ACT.mvstop=()=>{mvStop();ACT.mvopen();};
 ACT.mvsend=async()=>{if(!MV.on)return;if(MV.mk){mvSendCard('make');return;}   /* still making one (slow internet): it shows when ready */
   try{if(PLAYING&&DECO.on)decoEnd();}catch(e){}   /* furniture in your hands goes back to storage first */
-  let s=null;if(PLAYING&&S){saveLocal();s=JSON.stringify(S);}else try{s=localStorage.getItem(LS);}catch(e){}   /* the game right now (on the title: the saved one) */
+  let s=null;if(PLAYING&&S){saveLocal();s=saveJSON();}else try{s=localStorage.getItem(LS);}catch(e){}   /* the game right now (on the title: the saved one) */
   if(!mvGame(s)){SFX.no();toast(s&&s.length>MV.MAX?'📦 Oh no, this game is too big to move right now.':'🌱 There is no game on this '+mvDev()+' yet! Play first, then you can send it.',3.6);return;}
   if(!mvTry()){SFX.no();toast("⏳ Let's take a little break. Try again in a minute!",3.4);return;}
   mvStop();MV.mk=true;mvSendCard('make');let c=null,err=null;
@@ -5903,12 +5955,12 @@ function jobHud(force){const el=$('job'),on=!!(PLAYING&&S&&(S.job==='delivery'||
   if(o&&o.st==='carry'){const H=HOUSE(o.h),late=o.left<=0,T=dlTarget(),m=CUR.id==='city'?' <span class="nw">· '+Math.round(Math.hypot(T.x-P.x,T.z-P.z))+' m</span>':'';
     const inA=CUR.id.startsWith('apt'),where=!o.flat?`🍕 → <b>${esc(H.n)}</b>${m}`:inA&&APT.b===o.h?'🍕 Find the right door! <small class="nw">(flat number: 📱 Messages)</small>':inA?`🍕 Wrong building! → <b>${esc(H.n)}</b>`:`🍕 → <b>${esc(H.n)}</b>${m} <small class="nw">· flat number in 📱</small>`;
     h=`<div>${o.r?'<span class="rt">⭐ RARE</span> ':''}${where}</div><div class="tm">${late?'⏰ Late! Hurry!':'⏱️ '+mmss(o.left)+(o.lim>=1800?' <small>no rush 😌</small>':'')}</div>`;}
-  else if(o)h=(o.r?'<span class="rt">⭐ RARE</span> ':'')+(inPz?'📩 Pick up the pizza from <b>Chef Blaze</b>!':'📩 New order! Go to the <b>Pizzeria</b> 🍕');
+  else if(o)h=(o.r?'<span class="rt">⭐ RARE</span> ':'')+(inPz?'📩 Pick up the pizza from <b>Chef Blaze</b>!':'📩 New order! Go to the <b>Pizzeria</b> 🍕'+(CUR.id==='beach'?' <small class="nw">· 🚌 bus first</small>':''));
   else if(dlAsk())h=`🌟 ${d.done} pizzas done! Talk to <b>Chef Blaze</b>`;
   else if(dlOff())h=`😎 Done for today! <small>(${d.done} 🍕)</small>`;
   else if(!pizzaOpen())h=(wdIdx()>4?'😎 ':'🕛 ')+PZ_TIME;
   else if(d.on)h=`🍕 Waiting for an order… <small>(${d.done}/${dlMax()})</small>`;
-  else h='🍕 Go to the <b>Pizzeria</b> to start work';
+  else h='🍕 Go to the <b>Pizzeria</b> to start work'+(CUR.id==='beach'?' <small class="nw">· 🚌 bus first</small>':'');   /* (at the beach the way to work is the bus) */
   if(force||h!==jobHud.last){$('jobTxt').innerHTML=h;jobHud.last=h;}
   $('jobTxt').classList.toggle('late',!!(o&&o.st==='carry'&&o.left<=0));$('jobTxt').classList.toggle('rare',!!(o&&o.r));const mh=CUR.id!=='city';if($('mmBtn').hidden!==mh)$('mmBtn').hidden=mh;}
 function mmBase(){if(MMB)return MMB;const c=document.createElement('canvas');c.width=c.height=704;drawMapBase(c.getContext('2d'),704,{labels:false});MMB=c;return c;}
@@ -6803,7 +6855,7 @@ function leftFit(){const L=$('left'),pad=$('pad'),dc=$('dcard'),mm=$('mmBtn');if
     steps=[()=>{if(document.body.classList.contains('cut'))L.classList.add('lfCut');},()=>side(pad,'lfPad'),()=>{if(boxOf($('tasks')))L.classList.add('lfTasks');},
       ()=>{if(boxOf(dc))L.classList.add('lfDc');},()=>side(dc,'lfDcS'),()=>{if(boxOf(pad))L.classList.add('lfNoPad');},
       ()=>{if(!boxOf(mm))return;L.classList.add('lfNoMap');L.classList.remove('lfPad','lfDcS');pad.style.left=pad.style.top=dc.style.left=dc.style.top='';}];
-  for(const st of steps){if(!bad())break;st();}}
+  for(const st of steps){if(!bad())break;st();}updPlace();}
 new MutationObserver(()=>leftFit()).observe($('left'),{childList:true,subtree:true,attributes:true,attributeFilter:['hidden']});   /* a pill or box comes or goes */
 addEventListener('resize',()=>setTimeout(leftFit,60));
 {const st=document.createElement('style');st.textContent='#left.lfPad #pad,#left.lfDcS #dcard{position:absolute;margin:0}#left.lfDc #dcard .dci{display:none}#left.lfNoPad #pad,#left.lfNoMap #mmBtn,#left.lfTasks #tasks ul,.cut #left.lfCut #nav,.cut #left.lfCut #job{display:none}'
@@ -6848,7 +6900,7 @@ function startGame(){if(S){awResume();return;}   /* back from the away title: th
   spawnLitter();gardenInit();for(const w of WALKERS)w.init();
   S.outfits=S.outfits||[];if(S.wardrobe)for(const k of Object.keys(S.wardrobe)){const C=CLOTHES[k];if(C&&(C.hat||C.gl)){if(!S.outfits.some(v=>v.k===k))S.outfits.push({k,c:C.cols[0]});delete S.wardrobe[k];}}
   delete S.mpcode;drawScore();mpConnect();bdInit();
-  psRefresh();S.hard=S.hard||{};hardMigrate();if(!S.q||S.q.day!==S.day)qNewDay();else{if(!S.q.used)S.q.used=S.q.list.slice();S.q.list=S.q.list.filter(k=>getQ(k));updPhoneBadge();}
+  psRefresh();S.hard=S.hard||{};hardMigrate();if(!S.q||S.q.day!==S.day)qNewDay(!!st);else{if(!S.q.used)S.q.used=S.q.list.slice();S.q.list=S.q.list.filter(k=>getQ(k));updPhoneBadge();}
   $('title').hidden=true;$('hud').hidden=false;PLAYING=true;if(innerWidth<600)$('tasks').classList.add('min');
   if(!S.intro){setLoc('city');startIntro();}
   else{let loc=S.loc;P.x=S.px;P.z=S.pz;P.yaw=isFinite(S.yaw)?S.yaw:0;P.pitch=0;
@@ -6858,7 +6910,8 @@ function startGame(){if(S){awResume();return;}   /* back from the away title: th
     let n=0;for(const p of PET_ACTORS)if(!p.d.stay&&p.loc!==CUR.id)nearMe(p,++n);
     toast('Welcome back, '+(S.name||'friend')+'! 💗',3);
     if(moved){const far=CUR.id==='city'&&P.x>-84;if(far)setNav('home',true);   /* the first time with your house on Friends Lane: the arrow shows the way */
-      setTimeout(()=>{if(PLAYING)toast('🏡 Your house moved to Friends Lane, with your garden'+(far?'! Follow the pink arrow.':'!'),5);},3400);}}
+      setTimeout(()=>{if(PLAYING)toast('🏡 Your house moved to Friends Lane, with your garden'+(far?'! Follow the pink arrow.':'!'),5);},3400);}
+    busLoad();}   /* 🚌 at the beach: when the bus home goes (or Driver Dot comes for you) */
   heldInit();askT=0;jobHud(true);dcardUpd(true);
   updHud(true);if(CSAVE.ref){CSAVE.dirty=true;cloudFlush();}
 }
