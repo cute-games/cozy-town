@@ -562,7 +562,7 @@ function shade(c,k){const o=new THREE.Color(c);o.offsetHSL(0,0,k);return '#'+o.g
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
 
 let renderer,scene,camera,hemi,sun,lamp,skyMesh,skyU,stars,sunSprite,moonSprite,FOG,outside,clouds=[];
-let GRAD=null,OL=null,OLP=null,WIN,LAMP,WATER,PANE,GLOW,CLOUD,OLC;
+let GRAD=null,OL=null,OLP=null,WIN,LAMP,WATER,PANE,GLOW,CLOUD,OLC,SWIN,WINM;
 const MATS=new Map();
 function mat(c){c=String(c).toLowerCase();let m=MATS.get(c);if(!m){m=new THREE.MeshToonMaterial({color:c,gradientMap:GRAD});m.userData.plain=1;MATS.set(c,m);}return m;}
 let TOONVC=null;
@@ -575,7 +575,7 @@ function initMaterials(gl2){
   /* people's ink shells sit a hair behind the surfaces, so thin slivers can't poke through hair and faces (no shimmer) */
   OLP=new THREE.MeshBasicMaterial({color:INK,side:THREE.BackSide,polygonOffset:true,polygonOffsetFactor:2,polygonOffsetUnits:2});TOONVC=new THREE.MeshToonMaterial({color:'#ffffff',vertexColors:true,gradientMap:GRAD});
   OLC=new THREE.MeshBasicMaterial({color:'#6d5fa0',side:THREE.BackSide,fog:false});
-  WIN=toon({color:'#9fd4f2',emissive:new THREE.Color('#ffc66b'),emissiveIntensity:0});
+  WIN=toon({color:'#9fd4f2',emissive:new THREE.Color('#ffc66b'),emissiveIntensity:0});SWIN=toon({color:'#9fd4f2',emissive:new THREE.Color('#ffc66b'),emissiveIntensity:0});WINM=WIN;   /* SWIN: shop glass, dim at night while closed */
   LAMP=toon({color:'#fff6d6',emissive:new THREE.Color('#ffd27a'),emissiveIntensity:0});
   WATER=toon({color:'#7fd8ff',emissive:new THREE.Color('#3aa6e0'),emissiveIntensity:.3,transparent:true,opacity:.9});
   PANE=new THREE.MeshBasicMaterial({color:'#bfe6ff'});
@@ -644,17 +644,26 @@ function textCanvas(text,o={}){
   return c;
 }
 function spriteOf(c,h){const t=new THREE.CanvasTexture(c);t.minFilter=THREE.LinearFilter;t.generateMipmaps=false;const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthWrite:false,fog:false}));s.scale.set(h*c.width/c.height,h,1);s.userData.keep=1;return s;}
-function label(text,h=.3,o){return spriteOf(textCanvas(text,o),h);}
+function label(text,h=.3,o){const s=spriteOf(textCanvas(text,o),h);if(h<=.45&&!(o&&o.fit===false)){s.userData.w0=s.scale.x;s.userData.h0=h;s.onBeforeRender=tagFit;}return s;}
+/* 🏷️ name tags and bubbles: never taller on screen than a HUD button (close up they grew huge and covered the buttons),
+   and they fade away when you stand right next to someone. Worked out just before drawing: no extra drawing work */
+function tagFit(r,sc,cam){const u=this.userData,e=this.matrixWorld.elements,c=cam.matrixWorld.elements,d=Math.max(.05,Math.hypot(e[12]-c[12],e[13]-c[13],e[14]-c[14]));
+  const nat=u.h0*innerHeight/(2*d*Math.tan((cam.fov||70)*Math.PI/360)),mx=clamp(Math.min(innerWidth,innerHeight)*.065,26,48),k=nat>mx?mx/nat:1;
+  if(k!==u.k){u.k=k;this.scale.set(u.w0*k,u.h0*k,1);this.updateMatrix();if(this.parent)this.matrixWorld.multiplyMatrices(this.parent.matrixWorld,this.matrix);}
+  this.material.opacity=d<1.4?clamp((d-.95)/.45,0,1):1;}
 function signPlane(text,w,h,bg,fg){
   const H=160,W=Math.round(H*w/h),c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
-  x.fillStyle=bg;x.fillRect(0,0,W,H);let s=104;x.font=`800 ${s}px ${FONT}`;const tw=x.measureText(text).width;
-  if(tw>W-50){s=Math.floor(s*(W-50)/tw);x.font=`800 ${s}px ${FONT}`;}
-  x.textAlign='center';x.textBaseline='middle';x.fillStyle=fg;x.fillText(text,W/2,H/2+s*.07);
-  const t=new THREE.CanvasTexture(c);t.anisotropy=4;
+  const draw=()=>{x.fillStyle=bg;x.fillRect(0,0,W,H);let s=104;x.font=`800 ${s}px ${FONT}`;const tw=x.measureText(text).width;
+    if(tw>W-100){s=Math.floor(s*(W-100)/tw);x.font=`800 ${s}px ${FONT}`;}   /* a wide margin: some tablets draw emoji wider than they measure them */
+    x.textAlign='center';x.textBaseline='middle';x.fillStyle=fg;x.fillText(text,W/2,H/2+s*.07);};
+  draw();const t=new THREE.CanvasTexture(c);t.anisotropy=4;fontLate(()=>{draw();t.needsUpdate=true;});
   const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:t}));m.userData.keep=1;return m;
 }
+/* 🔤 signs drawn before the round game font arrived are drawn again once it is there (slow internet: the font may come after the town is built) */
+let FONTQ=null;
+function fontLate(fn){try{if(!document.fonts||document.fonts.check(`800 40px ${FONT}`))return;if(!FONTQ){FONTQ=[];document.fonts.load('800 40px "Baloo 2"').then(()=>{const q=FONTQ;FONTQ=null;for(const f of q)try{f();}catch(e){}}).catch(()=>{FONTQ=null;});}FONTQ.push(fn);}catch(e){}}
 const FLOATS=[];
-function floatText(text,x,y,z,o={}){const s=label(text,o.h||.4,{bg:null,bw:0,pad:14,fg:o.fg||'#3d2c5e',stroke:'#ffffff',strokeW:12,size:50});s.position.set(x,y,z);scene.add(s);FLOATS.push({s,t:0,life:o.life||1.4});}
+function floatText(text,x,y,z,o={}){const s=label(text,o.h||.4,{bg:null,bw:0,pad:14,fg:o.fg||'#3d2c5e',stroke:'#ffffff',strokeW:12,size:50,fit:false});s.position.set(x,y,z);if(o.top){s.material.depthTest=false;s.renderOrder=9;}scene.add(s);FLOATS.push({s,t:0,life:o.life||1.4});}
 function updFloats(dt){for(let i=FLOATS.length-1;i>=0;i--){const f=FLOATS[i];f.t+=dt;f.s.position.y+=dt*.55;f.s.material.opacity=1-Math.max(0,(f.t/f.life-.55)*2.2);if(f.t>=f.life){scene.remove(f.s);f.s.material.map.dispose();f.s.material.dispose();FLOATS.splice(i,1);}}}
 
 /* ---- sound ---- */
@@ -702,7 +711,57 @@ function playTune(){const s=[0,4,7,12,7,4,5,9,12,9,7,4,0];s.forEach((n,i)=>tone(
 
 /* ---- toast & fade ---- */
 let toastT=0;
-function toast(msg,sec=2.8){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),sec*1000);}
+/* 🍞 a message (toast) never sits on an open card, the top HUD buttons or the use button: it takes the first free spot from a wish list
+   (its usual spot first). While the "Still there?" or "Reconnecting…" card is up, messages wait in a little line and come one by one after it */
+const TQ={hold:false,line:false,q:[]};
+function toast(msg,sec=2.8){if(TQ.hold||TQ.line||TQ.q.length){TQ.q.push([msg,sec]);if(TQ.q.length>3)TQ.q.shift();if(!TQ.hold&&!TQ.line)toastNext();return;}toastShow(msg,sec);}
+function toastShow(msg,sec,line){const t=$('toast');t.textContent=msg;t.classList.add('show');TQ.line=!!line;try{toastPlace();popClear();}catch(e){}clearTimeout(toastT);
+  toastT=setTimeout(()=>{t.classList.remove('show');TQ.line=false;if(TQ.q.length&&!TQ.hold)toastT=setTimeout(toastNext,300);},sec*1000);}
+function toastNext(){const q=TQ.q.shift();if(q)toastShow(q[0],q[1],1);}
+function toastOff(){clearTimeout(toastT);$('toast').classList.remove('show');TQ.q.length=0;TQ.line=false;}   /* an old hint that no longer fits (a new class step) */
+function toastHold(on){if(on===TQ.hold)return;TQ.hold=on;if(on){clearTimeout(toastT);$('toast').classList.remove('show');TQ.line=false;}else if(!PLAYING)TQ.q.length=0;else toastNext();}
+/* where things on screen are (null = not shown), and what a message must keep clear: weight 10 = a card, 4 = the top HUD row, 3 = the use button, 1 = the map/notepad column */
+function boxOf(el){if(!el||el.hidden)return null;const r=el.getBoundingClientRect();if(r.width<2||r.height<2)return null;const cs=getComputedStyle(el);return cs.visibility==='hidden'||cs.display==='none'?null:r;}
+function keepClear(me){const K=[],add=(el,w)=>{if(el&&el!==me){const r=boxOf(el);if(r)K.push([r,w]);}};
+  if(!$('panel').hidden)add($('card'),10);add(document.querySelector('#awayBox .awc'),10);for(const id of['knockCard','zzCard','tutCard','dtCard','tchBar'])add($(id),8);add($('note'),6);if($('toast').classList.contains('show'))add($('toast'),2);
+  if(!$('hud').hidden){const u=$('panel').hidden?1:.25,tap=me===$('note')?8:1;for(const id of['stats','busTip','tnHud','fbHud','topbtns'])add($(id),4*u);add($('actWrap'),3*u);add($('bar'),3*u);for(const id of['nav','tasks','job','pad','dcard'])add($(id),u);add($('moveBtns'),tap*u);add($('joy'),tap*u);}   /* under an open card the HUD matters less; the message card (it takes taps) must not sit on the joystick or jump */
+  return K;}
+function hudLow(){let b=0;for(const id of['stats','busTip','tnHud','fbHud','topbtns']){const r=boxOf($(id));if(r)b=Math.max(b,r.bottom);}return b;}   /* the bottom of the top HUD row */
+function leftBox(){let r0=null;for(const el of $('left').children){const r=boxOf(el);if(r)r0=r0?{right:Math.max(r0.right,r.right),bottom:Math.max(r0.bottom,r.bottom)}:{right:r.right,bottom:r.bottom};}return r0||{right:0,bottom:0};}
+function spotFor(w,h,wish,K){const W=innerWidth,H=innerHeight;let best=null,bc=Infinity;
+  for(const c of wish){if(!c||!isFinite(c[0])||!isFinite(c[1]))continue;const x=clamp(c[0]-w/2,6,Math.max(6,W-w-6)),y=clamp(c[1],6,Math.max(6,H-h-6));let s=0;
+    for(const [r,k] of K){const ox=Math.min(x+w,r.right)-Math.max(x,r.left),oy=Math.min(y+h,r.bottom)-Math.max(y,r.top);if(ox>0&&oy>0)s+=ox*oy*k;}
+    if(s<bc-.5){bc=s;best=[x+w/2,y];if(s<=0){best.free=1;break;}}}
+  return best;}
+function toastPlace(){const t=$('toast');if(!t.classList.contains('show'))return;t.style.maxWidth='';t.classList.remove('side');const W=innerWidth,H=innerHeight,w=t.offsetWidth,h=t.offsetHeight,cs=getComputedStyle(document.documentElement),sT=parseFloat(cs.paddingTop)||0,sB=parseFloat(cs.paddingBottom)||0;
+  const K=keepClear(t),hb=hudLow()+10,lc=leftBox(),mid=(lc.right+W)/2,c=UI.open?boxOf($('card')):null,a=boxOf($('actWrap')),usual=H-sB-200-h,tch=document.body.classList.contains('tch');
+  let s=spotFor(w,h,[tch?null:[W/2,usual],a?[W/2,a.top-h-10]:null,[W/2,hb],tch?null:[mid,usual],[mid,hb],c?[W/2,c.top-h-10]:null,c?[W/2,c.bottom+10]:null,[W/2,sT+8],[W/2,H-sB-h-8]],K);
+  if(c&&s&&!s.free)for(const [x0,x1] of[[c.right+8,W-8],[8,c.left-8]]){if(x1-x0<150)continue;t.style.maxWidth=(x1-x0)+'px';t.classList.add('side');const w2=t.offsetWidth,h2=t.offsetHeight,s2=spotFor(w2,h2,[[(x0+x1)/2,(H-h2)/2],[(x0+x1)/2,hb]],K);
+    if(s2&&s2.free){s=s2;break;}t.style.maxWidth='';t.classList.remove('side');}   /* a big card: beside it, in a narrower box */
+  if(s){t.style.left=s[0]+'px';t.style.top=s[1]+'px';t.style.bottom='auto';}}
+/* 📩 the message card sits under the top HUD row (on a phone held upright: under the map and notepad), never on the clock or the buttons */
+function notePlace(){const n=$('note');if(n.hidden)return;n.style.left='';n.style.top='';const W=innerWidth,H=innerHeight,w=n.offsetWidth,h=n.offsetHeight,t0=n.offsetTop,K=keepClear(n),hb=hudLow()+10,lc=leftBox();
+  const s=spotFor(w,h,[[W/2,t0],[W/2,hb],[(lc.right+W)/2,hb],[(lc.right+W)/2,t0],[W/2,lc.bottom+10],[W/2,(H-h)/2]],K);
+  if(s&&(Math.abs(s[1]-t0)>1||Math.abs(s[0]-W/2)>1)){n.style.left=s[0]+'px';n.style.top=s[1]+'px';}}
+addEventListener('resize',()=>setTimeout(()=>{toastPlace();notePlace();},80));
+/* 🧹 glitch fixes, pass 1 (screens): the styles of the fixes below (the page's first 498 lines stay as they are) */
+{const st=document.createElement('style');st.textContent='.pop{white-space:normal;width:max-content;max-width:92vw;text-align:center;line-height:1.1;font-size:clamp(26px,min(10vw,11vh),60px)}.pop.slam{font-size:clamp(34px,min(14vw,15vh),80px)}'
+  +'#card.more::after{content:"⬇️";position:sticky;bottom:6px;z-index:3;display:block;width:44px;height:44px;margin:-44px 0 0 auto;border-radius:50%;background:var(--paper);border:3px solid var(--line);box-shadow:0 3px 0 var(--soft);font-size:19px;line-height:38px;text-align:center;pointer-events:none;animation:moreBob .9s ease-in-out infinite alternate}@keyframes moreBob{to{transform:translateY(-6px)}}'
+  +'.crsave.more::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:30px;background:linear-gradient(to bottom,transparent,var(--paper));pointer-events:none}.crsave.more::after{content:"⬇️";position:absolute;right:14px;bottom:calc(100% + 4px);width:34px;height:34px;border-radius:50%;background:var(--paper);border:3px solid var(--line);font-size:15px;line-height:28px;text-align:center;pointer-events:none;animation:moreBob .9s ease-in-out infinite alternate}'
+  +'.psj div{color:#3d2c5e;font-size:15px;line-height:1.2}.psrow.me,.psrow.cur{color:#3d2c5e}.ph-row .hearts .off{color:#3d2c5e}'
+  +'#knockCard{width:min(400px,92vw)}#knockCard .kc-b{flex-wrap:wrap}#knockCard .kc-b .btn{white-space:nowrap}'
+  +'.ph-hd h3{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}#toast.side{font-size:16px;padding:6px 10px}'
+  +'.app .ic.calic{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;background:#fff;overflow:hidden;font-size:0}.calic b{display:block;background:#e8454a;color:#fff;font-size:13px;line-height:20px;font-weight:800;letter-spacing:.5px}.calic i{display:block;font-style:normal;font-size:34px;line-height:46px;font-weight:800;color:#3d2c5e}'
+  +'body.away .logo span{animation:none}body.talk #cross,body.talk #moveBtns,body.talk #joy,body.talk #actWrap{visibility:hidden}body.kc #tut,body.kc #dtut{visibility:hidden}'
+  +'.tpaper .tqq.lp{flex-wrap:wrap}.tpaper .tpic.long{flex:1 0 100%;max-width:none;white-space:nowrap;word-break:normal;font-size:clamp(15px,4.6vw,22px)}'
+  +'.crsave{bottom:-22px;margin-bottom:-22px}.crsave .big{padding:10px 16px;white-space:nowrap}.crsave .btn{white-space:nowrap}'
+  +'@media (max-width:600px),(max-height:500px){.cr .crname{font-size:20px;padding:6px 12px}.crow{grid-template-columns:84px 1fr;gap:8px;padding:5px 0}.cl{font-size:15px}.crow .pill{font-size:15px;padding:6px 11px}.crsave .big{font-size:24px;min-height:54px}.crsave{padding-top:8px;padding-bottom:calc(10px + env(safe-area-inset-bottom))}}'
+  +'@media (max-height:500px){.crow{grid-template-columns:1fr;gap:3px;padding:4px 0}.cl{font-size:14px}.chs{gap:6px}'
+  +'#panel.bottom .card{padding:14px 16px 12px}#panel.bottom .card .line{font-size:18px;margin:10px 0 2px}#panel.bottom .card .row{margin-top:8px}'
+  +'#panel.bottom #card.psc{overflow-y:auto;padding:10px 14px 12px}.psc .hd{margin-bottom:4px}.psc .hd h2{font-size:22px}.psc .note{font-size:14px;margin:2px 0}.psc .psrow{padding:2px 4px}.psc .pji{font-size:22px;width:30px}.psc .psrow b{font-size:15px}.psc .psrow i{font-size:12px}.psc .earn{font-size:16px;margin:4px 0 0}'
+  +'#card.psc.aim{display:grid;grid-template-columns:1fr auto;column-gap:12px;align-items:center}#card.psc.aim>.hd,#card.psc.aim>.note{grid-column:1/-1}.psc .psbar{height:44px;margin:6px 4px}#card.psc.aim .row{margin:0}.psc .psnow{font-size:22px;padding:8px 26px}'
+  +'.phone{width:min(440px,94vw);padding:8px 10px 6px;gap:4px}.ph-screen{padding:8px 12px 10px}.ph-clock{font-size:32px;margin-top:0}.ph-date{font-size:14px;margin-bottom:0}.apps{grid-template-columns:repeat(5,1fr);gap:6px 4px;margin-top:6px}.app{font-size:13px;gap:2px}.app .ic{width:54px;height:54px;font-size:28px;border-radius:17px}.calic b{font-size:10px;line-height:15px}.calic i{font-size:24px;line-height:33px}}';
+  document.head.appendChild(st);}
 let fading=false;
 function fade(fn){if(fading){setTimeout(()=>fade(fn),320);return;}fading=true;const f=$('fade');f.classList.add('on');setTimeout(()=>{try{fn();}catch(e){console.error(e);}setTimeout(()=>{f.classList.remove('on');fading=false;},80);},270);}
 
@@ -907,7 +966,7 @@ const SOFT=['#ff9ec4','#7fdcb5','#8fb7ff','#ffd45c','#b79cff','#ff8a6b'];
 const FURN={
   bed:{n:'Bed',i:'🛏️',p:40,w:1.4,d:2.1,cols:['#ff9ec4','#8fd3ff','#b79cff','#7fdcb5','#ffd45c'],use:'sleep',b(g,c){
     box(g,1.4,.32,2.1,WOOD,0,0,0);box(g,1.3,.2,1.95,WHITE,0,.32,.04);box(g,1.34,.14,1.25,c,0,.46,.42);
-    box(g,.85,.14,.42,'#ffffff',0,.52,-.66);box(g,1.4,.95,.14,c,0,0,-1.0);box(g,1.4,.5,.12,c,0,0,1.0);}},
+    box(g,.85,.14,.42,'#ffffff',0,.52,-.66);box(g,1.44,.95,.14,c,0,0,-1.0);box(g,1.44,.5,.12,c,0,0,1.0);}},
   sofa:{n:'Sofa',i:'🛋️',p:45,w:2,d:.9,cols:SOFT,use:'sit',b(g,c){const L=shade(c,.08);
     box(g,2,.4,.9,c,0,.06,0);box(g,.9,.14,.6,L,-.46,.46,.1);box(g,.9,.14,.6,L,.46,.46,.1);
     box(g,2,.55,.24,c,0,.46,-.33);box(g,.22,.34,.9,c,-.89,.46,0);box(g,.22,.34,.9,c,.89,.46,0);
@@ -956,7 +1015,7 @@ const FURN={
     box(g,.6,.08,.5,c,-.1,1.62,-.15);box(g,.55,.08,.45,c,.2,1.12,.2);cyl(g,.25,.25,.22,shade(c,.1),-.1,1.7,-.15,{seg:16});sph(g,.06,'#ff7aa8',.38,.9,.35,{ws:8,hs:6,ol:.012});cyl(g,.006,.006,.2,'#3d2c5e',.38,.96,.35,{seg:4,ol:false});}},
   doghouse:{n:'Dog house',i:'🏠',p:35,w:1.1,d:1.1,cols:['#ff8a6b','#7cc8ff','#5fd4b0','#ffd45c'],b(g,c){box(g,1.0,.85,1.0,c,0,0,0);prism(g,1.1,1.25,.5,'#ffffff',0,.85,0,{ry:Math.PI/2});box(g,.42,.55,.02,'#2e2347',0,.05,.505,{ol:false});box(g,.4,.12,.02,'#ffffff',0,.68,.51,{ol:.01});}},
   petbowl:{n:'Food bowl',i:'🥣',p:6,w:.5,d:.5,cols:['#ff7aa8','#7cc8ff','#ffd45c'],b(g,c){cyl(g,.18,.14,.1,c,0,0,0,{seg:14});for(let k=0;k<5;k++)sph(g,.04,'#9b6b4a',(k%3-1)*.06,.1,(k>2?.05:-.03),{ws:6,hs:5,ol:false});}},
-  rockinghorse:{n:'Rocking horse',i:'🐴',p:30,w:1.2,d:.5,cols:['#ffffff','#ffd45c','#ff9ec4'],b(g,c){for(const s of[-.15,.15]){const r=new THREE.Mesh(new THREE.TorusGeometry(.8,.03,6,20,Math.PI*.5),mat('#c98f5e'));r.rotation.z=Math.PI*.75;r.position.set(0,.82,s);g.add(r);}
+  rockinghorse:{n:'Rocking horse',i:'🐴',p:30,w:1.2,d:.5,cols:['#ffffff','#ffd45c','#ff9ec4'],b(g,c){for(const s of[-.15,.15]){const r=new THREE.Mesh(new THREE.TorusGeometry(.8,.03,6,20,Math.PI*.5),mat('#c98f5e'));r.rotation.z=Math.PI*1.25;r.position.set(0,.82,s);g.add(r);}
     for(const x of[-.3,.3])for(const s of[-.13,.13])box(g,.06,.35,.06,c,x,.08,s,{ol:.012});box(g,.75,.28,.3,c,0,.42,0);box(g,.18,.38,.18,c,.38,.6,0,{rz:-.3});box(g,.3,.18,.2,c,.5,.85,0);box(g,.08,.3,.05,'#ff7aa8',.32,.75,0,{rz:-.3,ol:.01});box(g,.12,.12,.05,'#ff7aa8',-.42,.5,0,{rz:.6,ol:.01});}},
   dollhouse:{n:'Dollhouse',i:'🏡',p:40,w:1.0,d:.5,cols:['#ffd6e0','#c9f2e3','#fff1b8'],b(g,c){box(g,1.0,.9,.5,c,0,0,0);prism(g,1.08,.6,.4,'#ff7aa8',0,.9,0);for(const [x,y] of [[-.25,.2],[.25,.2],[-.25,.6],[.25,.6]])box(g,.22,.18,.02,'#9fd4f2',x,y,.255,{ol:.01});box(g,.16,.26,.02,'#5fd4b0',0,0,.255,{ol:.01});}},
   robot:{n:'Toy robot',i:'🤖',p:25,w:.5,d:.5,cols:['#c8cde0','#7cc8ff','#ff8a6b'],b(g,c){box(g,.32,.36,.22,c,0,.2,0);box(g,.26,.22,.2,c,0,.58,0);box(g,.06,.06,.02,'#ffd45c',-.06,.66,.105,{ol:false});box(g,.06,.06,.02,'#ffd45c',.06,.66,.105,{ol:false});
@@ -1221,7 +1280,7 @@ function mailbox(g,x,z,ry){const p=new THREE.Group();p.position.set(x,0,z);p.rot
 
 /* ---- building parts ---- */
 function windowAt(g,x,y,z,ry,fc='#ffffff',w=1,h=1.25,dc){const p=new THREE.Group();p.position.set(x,y,z);p.rotation.y=ry;g.add(p);
-  box(p,w+.18,h+.18,.14,fc,0,-.09,0);box(p,w,h,.04,null,0,0,.085,{mat:WIN,ol:false});
+  box(p,w+.18,h+.18,.14,fc,0,-.09,0);box(p,w,h,.04,null,0,0,.085,{mat:WINM,ol:false});
   box(p,.06,h,.03,fc,0,0,.11,{ol:false});box(p,w,.06,.03,fc,0,h/2-.03,.11,{ol:false});box(p,w+.34,.09,.22,fc,0,-.18,.09,{ol:.02});
   /* 🏡 cozy extras (town buildings): shutters, a little lintel on top, a flower box under the sill */
   if(dc){if(dc.sh)for(const s of[-1,1])if(s!==dc.ns)box(p,.32,h+.12,.06,dc.sh,s*(w/2+.27),-.06,.04,{ol:.015});
@@ -1231,10 +1290,11 @@ function windowAt(g,x,y,z,ry,fc='#ffffff',w=1,h=1.25,dc){const p=new THREE.Group
 const FLOWER_COLS=['#ff7aa8','#ffd45c','#ffffff','#b79cff','#ff8a6b'],SHOP_FLOWERS=['#ff9cc4','#ffe680','#ffffff','#d2c0ff','#ffb092'];
 function doorAt(g,x,z,ry,c,glass,noStep){const p=new THREE.Group();p.position.set(x,0,z);p.rotation.y=ry;g.add(p);
   box(p,1.5,2.5,.12,'#ffffff',0,0,0);
-  if(glass){box(p,1.24,2.26,.16,null,0,.02,0,{mat:WIN,ol:false});box(p,.06,2.26,.18,'#ffffff',0,.02,0,{ol:false});box(p,.05,.4,.05,'#c8c8d8',-.15,1.0,.12,{ol:.012});box(p,.05,.4,.05,'#c8c8d8',.15,1.0,.12,{ol:.012});}
+  if(glass){box(p,1.24,2.26,.16,null,0,.02,0,{mat:WINM,ol:false});box(p,.06,2.26,.18,'#ffffff',0,.02,0,{ol:false});box(p,.05,.4,.05,'#c8c8d8',-.15,1.0,.12,{ol:.012});box(p,.05,.4,.05,'#c8c8d8',.15,1.0,.12,{ol:.012});}
   else{box(p,1.2,2.24,.16,c,0,.02,0);sph(p,.07,'#ffd45c',.42,1.1,.1,{ol:.015});box(p,.8,.55,.02,shade(c,.12),0,1.45,.085,{ol:false});box(p,.8,.55,.02,shade(c,.12),0,.45,.085,{ol:false});}
   if(!noStep)box(p,1.9,.15,.9,'#e9e0f7',0,0,.45,{ol:.02});}
-function building(g,o){
+function building(g,o){WINM=o.win||WIN;try{buildingIn(g,o);}finally{WINM=WIN;}}   /* o.win: the window glass to use (shops: SWIN) */
+function buildingIn(g,o){
   const {x,z,w,d,h}=o,f=o.face||1,fz=z+f*d/2,ry=f>0?0:Math.PI,trim=o.trim||shade(o.wall,-.12);
   box(g,w,h,d,o.wall,x,0,z);box(g,w+.14,.4,d+.14,trim,x,0,z,{ol:.02});
   if(o.gable){const a=d/2+.5,H=o.rh||2.2,th=Math.atan2(H,a),Ls=Math.hypot(a,H)+.12;
@@ -1260,7 +1320,7 @@ function building(g,o){
     for(const s of[-1,1])box(p,.1,.36,.42,'#ffffff',s*.9,2.26,.21,{ol:.012});}
   if(o.shop){const p=new THREE.Group();p.position.set(x,0,fz);p.rotation.y=ry;g.add(p);
     const ww=(w-2.2)/2-.45;
-    for(const s of[-1,1]){const cx=s*(1.1+.25+ww/2);box(p,ww+.2,2.0,.14,'#ffffff',cx,.55,.02);box(p,ww,1.8,.08,null,cx,.65,.09,{mat:WIN,ol:false});box(p,ww+.3,.12,.35,'#ffffff',cx,.45,.12,{ol:.02});
+    for(const s of[-1,1]){const cx=s*(1.1+.25+ww/2);box(p,ww+.2,2.0,.14,'#ffffff',cx,.55,.02);box(p,ww,1.8,.08,null,cx,.65,.09,{mat:WINM,ol:false});box(p,ww+.3,.12,.35,'#ffffff',cx,.45,.12,{ol:.02});
       /* 🌼 a flower box on each shop window sill */
       box(p,ww-.1,.2,.22,'#e3a96f',cx,.57,.2,{ol:.015});box(p,ww-.2,.07,.16,'#6fd884',cx,.77,.2,{ol:false});const n=Math.max(3,Math.round(ww/.5));for(let i=0;i<n;i++)sph(p,.14,SHOP_FLOWERS[(i+(s>0?2:0))%5],cx-ww/2+(i+.5)*ww/n,.95,.22,{ws:6,hs:4,ol:.012});}
     const n=Math.round((w+.4)/.6),sw=(w+.4)/n;
@@ -1368,6 +1428,8 @@ function addE(a,b){WE.push([typeof a==='string'?WPN[a]:a,typeof b==='string'?WPN
     ['hS1',13,56.9,'O18','O17'],['hS2',25,56.9,'O17','O16'],['hS3',37,56.9,'O16','O15'],['toys',57.2,-31,'O9','O10'],['bakery',57.2,-14,'O10','O11'],
     ['library',57.6,20,'O12','O13'],['icecream',57.2,36,'O13','O14'],['fire',-57.6,-25,'O27','O28'],['clothes',-57.6,-12.5,'O26','O27'],['aptW',-58,25,'O24','O23'],['field',-25,59.4,'O20','O21'],['lake',60.6,60.6,'O15','O15']]){addN(n,x,z);addE(n,a);if(b!==a)addE(n,b);}
 }
+{const at=(x,z)=>WP.findIndex(p=>p[0]===x&&p[1]===z);   /* 🚸 these paths crossed the road away from a zebra crossing (the zebra one is just next to them) */
+  for(const [ax,az,bx,bz] of [[-39.2,5.6,-39.2,-5.6],[39.2,-5.6,39.2,5.6],[-5.6,-39.2,5.6,-39.2],[5.6,39.2,-5.6,39.2]]){const a=at(ax,az),b=at(bx,bz),i=WE.findIndex(w=>w[0]===a&&w[1]===b||w[0]===b&&w[1]===a);if(a>=0&&b>=0&&i>=0)WE.splice(i,1);}}
 const NEIGH=WP.map(()=>[]);for(const [a,b] of WE){NEIGH[a].push(b);NEIGH[b].push(a);}
 const PARKN=new Set([20,21,22,23,24,25,26]);
 const PAUSE=new Set([20,21,22,23,24,25,26,35,36,37,38,59,40,43,45,48,50,53,55,58,...['school','toys','bakery','library','icecream','fire','field','lake','clothes'].map(n=>WPN[n])]);
@@ -1404,29 +1466,31 @@ function buildCity(){
   const segs=(lo,hi,cuts,h)=>{let out=[[lo,hi]];for(const c of cuts){const nx=[];for(const [p,q] of out){if(c+h<=p||c-h>=q){nx.push([p,q]);continue;}if(c-h>p)nx.push([p,c-h]);if(c+h<q)nx.push([c+h,q]);}out=nx;}return out;};
   for(const z of RZ)flat(st,2*E,8,ROAD,0,.02,z);
   for(const x of RX)for(const [p,q] of segs(-E,E,RZ,4))flat(st,8,q-p,ROAD,x,.02,(p+q)/2);
-  for(const z of RZ)for(const s of[-1,1])for(const [p,q] of segs(-E,E,RX,4)){flat(st,q-p,3,SIDE,(p+q)/2,.03,z+s*5.5);box(st,q-p,.08,.14,CURB,(p+q)/2,0,z+s*4,{ol:.015});}
-  for(const x of RX)for(const s of[-1,1]){for(const [p,q] of segs(-E,E,RZ,7))flat(st,3,q-p,SIDE,x+s*5.5,.031,(p+q)/2);for(const [p,q] of segs(-E,E,RZ,4))box(st,.14,.08,q-p,CURB,x+s*4,0,(p+q)/2,{ol:.015});}
+  for(const z of RZ)for(const s of[-1,1])for(const [p,q] of segs(-E,E,RX,4)){flat(st,q-p,3,SIDE,(p+q)/2,.03,z+s*5.5);box(st,q-p,.16,.14,CURB,(p+q)/2,-.08,z+s*4,{ol:.015});}   /* kerbs reach into the ground: their outline's bottom showed through the pavement (a flickering line) */
+  for(const x of RX)for(const s of[-1,1]){for(const [p,q] of segs(-E,E,RZ,7))flat(st,3,q-p,SIDE,x+s*5.5,.031,(p+q)/2);for(const [p,q] of segs(-E,E,RZ,4))box(st,.14,.16,q-p,CURB,x+s*4,-.08,(p+q)/2,{ol:.015});}
   for(let t=-E+1;t<=E-1;t+=3.2){for(const z of RZ)if(RX.every(x=>Math.abs(t-x)>8))box(st,1.4,.012,.16,'#ffffff',t,.03,z,{ol:false});for(const x of RX)if(RZ.every(z=>Math.abs(t-z)>8))box(st,.16,.012,1.4,'#ffffff',x,.03,t,{ol:false});}
   for(const xc of RX)for(const zc of RZ){for(let i=-3;i<=3;i++){const t=i*1.05;for(const s of[-1,1]){box(st,3,.012,.5,'#ffffff',xc+s*5.5,.033,zc+t,{ol:false});box(st,.5,.012,3,'#ffffff',xc+t,.035,zc+s*5.5,{ol:false});}}
     trafficLight(st,xc-4.6,zc-4.6,Math.PI/4);trafficLight(st,xc+4.6,zc+4.6,-Math.PI*3/4);colC(L,xc-4.6,zc-4.6,.12);colC(L,xc+4.6,zc+4.6,.12);}
   for(const s of[-1,1]){for(const z of RZ){if(z===0)continue;box(st,.4,.9,8.4,'#ffffff',s*(E-.2),0,z,{ol:.03});for(let k=-3;k<=3;k+=2)box(st,.42,.3,.9,'#ff6b6b',s*(E-.2),.45,z+k,{ol:false});}
     for(const x of RX){box(st,8.4,.9,.4,'#ffffff',x,0,s*(E-.2),{ol:.03});for(let k=-3;k<=3;k+=2)box(st,.9,.3,.42,'#ff6b6b',x+k,.45,s*(E-.2),{ol:false});}}
   const nearX=(t,arr)=>arr.some(c=>Math.abs(t-c)<8);
+  /* 🌳 a few street trees and lamps stood right in front of a sign: moved a little (null = that tree is left out) */
+  const NUDGE={'5475,1800':null,'-2400,-5455':[-20.5,-54.55],'-5455,-2400':[-54.55,-27],'-4545,-2400':[-45.45,-27]};
   for(let t=-78;t<=78;t+=6){if(nearX(t,[-50,0,50])||Math.abs(t)>79)continue;const lampHere=Math.abs(t%12)===0;
     for(const c of[-50,0,50])for(const s of[-1,1]){const pts=[[t,c+s*(lampHere?4.55:4.75)],[c+s*(lampHere?4.55:4.75),t]];
-      for(const [px,pz] of pts){if(!lampHere&&px>63&&px<69&&pz>3.5&&pz<6)continue;if(lampHere){lampPost(st,px,pz);colC(L,px,pz,.16);}else{tree(st,px,pz,1);colC(L,px,pz,.26);}}}}
+      for(let [px,pz] of pts){if(!lampHere&&px>63&&px<69&&pz>3.5&&pz<6)continue;const nu=NUDGE[Math.round(px*100)+','+Math.round(pz*100)];if(nu===null)continue;if(nu)[px,pz]=nu;if(lampHere){lampPost(st,px,pz);colC(L,px,pz,.16);}else{tree(st,px,pz,1);colC(L,px,pz,.26);}}}}
   // NW block: the Flower Corner (your house is on Friends Lane now), the neighbour, apartments
   flowerCorner(L,st);
   building(st,{x:-31,z:-15,w:7,d:7,h:3.6,wall:'#bff0dc',roof:'#6aa9ff',face:1,gable:true,door:{x:-31,c:'#ffd45c'}});col(L,-34.6,-18.6,-27.4,-11.4);
   building(st,{x:-22,z:-31,w:18,d:8,h:9.6,wall:'#ffd0b5',face:1,boxes:true,door:{x:-22,c:'#7cc8ff'}});col(L,-31.1,-35.1,-12.9,-26.9);
   // NE block: market, café, offices
-  building(st,{x:18,z:-15,w:12,d:8,h:4.6,wall:'#fff1b8',face:1,shop:true,awning:'#ff7aa8',sign:'🍎 Market',door:{x:18,glass:true}});col(L,11.9,-19.1,24.1,-10.6);
-  building(st,{x:32,z:-14,w:7,d:6,h:4.2,wall:'#ffd6e0',face:1,shop:true,awning:'#5fd4b0',sign:'☕ Café',door:{x:32,glass:true}});col(L,28.4,-17.1,35.6,-10.6);
+  building(st,{x:18,z:-15,w:12,d:8,h:4.6,wall:'#fff1b8',face:1,shop:true,awning:'#ff7aa8',sign:'🍎 Market',door:{x:18,glass:true},win:SWIN});col(L,11.9,-19.1,24.1,-10.6);
+  building(st,{x:32,z:-14,w:7,d:6,h:4.2,wall:'#ffd6e0',face:1,shop:true,awning:'#5fd4b0',sign:'☕ Café',door:{x:32,glass:true},win:SWIN});col(L,28.4,-17.1,35.6,-10.6);
   building(st,{x:23,z:-31,w:20,d:8,h:12.6,wall:'#c7e6ff',face:1,door:{x:23,c:'#b79cff'}});col(L,12.9,-35.1,33.1,-26.9);
   bench(st,27,-6.6,0);col(L,26.1,-6.95,27.9,-6.25);bin(st,25.5,-6.7);colC(L,25.5,-6.7,.3);
   // SE block: pet shop, flower shop, apartments
-  building(st,{x:18,z:15,w:11,d:8,h:4.6,wall:'#c9f2e3',face:-1,shop:true,awning:'#ffd45c',sign:'🐾 Pet Shop',door:{x:18,glass:true}});col(L,12.4,10.6,23.6,19.1);
-  building(st,{x:31.5,z:14,w:7,d:6,h:4.2,wall:'#e6dbff',face:-1,shop:true,awning:'#b79cff',sign:'🌷 Flower Shop',door:{x:31.5,glass:true}});col(L,27.9,10.6,35.1,17.1);
+  building(st,{x:18,z:15,w:11,d:8,h:4.6,wall:'#c9f2e3',face:-1,shop:true,awning:'#ffd45c',sign:'🐾 Pet Shop',door:{x:18,glass:true},win:SWIN});col(L,12.4,10.6,23.6,19.1);
+  building(st,{x:31.5,z:14,w:7,d:6,h:4.2,wall:'#e6dbff',face:-1,shop:true,awning:'#b79cff',sign:'🌷 Flower Shop',door:{x:31.5,glass:true},win:SWIN});col(L,27.9,10.6,35.1,17.1);
   building(st,{x:24,z:31,w:18,d:8,h:9.6,wall:'#ffe0c4',face:-1,boxes:true,door:{x:24,c:'#ff8a6b'}});col(L,14.9,26.9,33.1,35.1);
   hydrant(st,10.5,6.6);colC(L,10.5,6.6,.2);bench(st,-27,-7.4,0);col(L,-27.9,-7.75,-26.1,-7.05);
   // SW block: the park
@@ -1460,7 +1524,7 @@ function buildCity(){
     for(const z of[19.85,24.15]){cyl(st,.11,.13,3.75,'#ffd45c',-37.8,0,z,{seg:10});sph(st,.2,'#ffd45c',-37.8,3.85,z,{ws:10,hs:8});}
     for(let i=0;i<10;i++){const z=19.95+i*.47;cone(st,.13,.26,['#ff4d6d','#ffd45c','#7cc8ff','#7fdcb5','#b79cff'][i%5],-37.74,3.42,z,{rz:Math.PI,center:true,seg:3,ol:false,s:[.35,1,1]});}
     box(st,.03,.03,4.3,'#3d2c5e',-37.74,3.55,SZ,{ol:false});
-    for(const z of[19.95,24.05]){box(st,.015,1.5,.015,'#ffffff',-35.2,TOP,z,{ol:false});for(const [dx,dy,dz,c] of [[0,2.15,0,'#ff7aa8'],[.12,1.95,.14,'#ffd45c'],[-.1,1.98,-.12,'#7cc8ff']])sph(st,.17,c,-35.2+dx,dy,z+dz,{s:[1,1.18,1],ws:10,hs:8,ol:.015});}
+    for(const [bx,z] of[[-35.2,19.95],[-36.95,24.05]]){box(st,.015,1.5,.015,'#ffffff',bx,TOP,z,{ol:false});for(const [dx,dy,dz,c] of [[0,2.15,0,'#ff7aa8'],[.12,1.95,.14,'#ffd45c'],[-.1,1.98,-.12,'#7cc8ff']])sph(st,.17,c,bx+dx,dy,z+dz,{s:[1,1.18,1],ws:10,hs:8,ol:.015});}
     const sg=signPlane('🏆 Pet Show',3.0,.8,'#ffd45c','#3d2c5e');sg.position.set(-37.82,2.62,SZ);sg.rotation.y=Math.PI/2;L.g.add(sg);
     const sg2=signPlane('Every Saturday!',1.9,.38,'#ffffff','#ff4d8d');sg2.position.set(-37.82,1.98,SZ);sg2.rotation.y=Math.PI/2;L.g.add(sg2);
     box(st,.7,.74,3.3,'#ffffff',-32.75,0,SZ);box(st,.05,.62,3.34,'#ff4d6d',-33.12,.1,SZ,{ol:.015});box(st,.06,.06,3.36,'#ffd45c',-33.12,.7,SZ,{ol:false});
@@ -1512,11 +1576,11 @@ function buildCity(){
   L.ball={x:-25,z:68.5,vx:0,vz:0,g:null,cool:0};
   [13,25,37].forEach((x,i)=>{const [w,r]=HC[i+3];building(st,{x,z:61.5,w:8,d:7,h:3.6,wall:w,roof:r,face:-1,gable:true,rh:2.4,door:{x,c:HOUSES[i+3].dc}});col(L,x-4.1,57.9,x+4.1,65.1);});
   // east: toy store, bakery, library, ice cream (they face the ring road)
-  bldAt(st,64,-31,-Math.PI/2,{w:12,d:9,h:4.6,wall:'#ffd6e0',shop:true,awning:'#7cc8ff',sign:'🧸 Toy Store',door:{x:0,glass:true}});col(L,59.1,-37.1,68.6,-24.9);
-  bldAt(st,63,-14,-Math.PI/2,{w:8,d:7,h:4.4,wall:'#fff1b8',shop:true,awning:'#ffd45c',sign:'🥐 Bakery',door:{x:0,glass:true}});col(L,59.1,-18.1,66.6,-9.9);
-  bldAt(st,65,20,-Math.PI/2,{w:14,d:10,h:6.6,wall:'#c7e6ff',door:{x:0,glass:true}});col(L,59.6,12.9,70.1,27.1);
+  bldAt(st,64,-31,-Math.PI/2,{w:12,d:9,h:4.6,wall:'#ffd6e0',shop:true,awning:'#7cc8ff',sign:'🧸 Toy Store',door:{x:0,glass:true},win:SWIN});col(L,59.1,-37.1,68.6,-24.9);
+  bldAt(st,63,-14,-Math.PI/2,{w:8,d:7,h:4.4,wall:'#fff1b8',shop:true,awning:'#ffd45c',sign:'🥐 Bakery',door:{x:0,glass:true},win:SWIN});col(L,59.1,-18.1,66.6,-9.9);
+  bldAt(st,65,20,-Math.PI/2,{w:14,d:10,h:6.6,wall:'#c7e6ff',door:{x:0,glass:true},win:SWIN});col(L,59.6,12.9,70.1,27.1);
   {const s1=signPlane('📚 Library',4,.8,'#5fa8ff','#ffffff');s1.position.set(59.9,3.4,20);s1.rotation.y=-Math.PI/2;L.g.add(s1);}
-  bldAt(st,62,36,-Math.PI/2,{w:7,d:6,h:4.2,wall:'#e6dbff',shop:true,awning:'#ff9ec4',sign:'🍦 Ice Cream Shop',door:{x:0,glass:true}});col(L,58.6,32.4,65.1,39.6);
+  bldAt(st,62,36,-Math.PI/2,{w:7,d:6,h:4.2,wall:'#e6dbff',shop:true,awning:'#ff9ec4',sign:'🍦 Ice Cream Shop',door:{x:0,glass:true},win:SWIN});col(L,58.6,32.4,65.1,39.6);
   {const p=bldAt(st,63,8.6,-Math.PI/2,{w:7,d:6,h:4.4,wall:'#ffe3cc',trim:'#f2b98f',shop:true,awning:'#ff6b6b',sign:'🍕 Pizzeria',door:{x:0,glass:true}});col(L,59.9,5.0,66.1,12.2);
    for(const sx of[-.55,.55])box(p,.12,1.1,.12,'#9a6a43',sx,4.85,1.3,{ol:.015});
    const pz=new THREE.Group();pz.position.set(0,6.55,1.36);pz.rotation.x=Math.PI/2;p.add(pz);
@@ -1530,7 +1594,7 @@ function buildCity(){
    const s1=signPlane('🚒 Fire Station',4.6,.8,'#ffffff','#d94b4b');s1.position.set(0,4.2,.09);p.add(s1);}
   fireTruck(st,-58.4,-34,0);col(L,-59.5,-36.7,-57.3,-31.3);
   bldAt(st,-66,25,Math.PI/2,{w:20,d:10,h:9.6,wall:'#ffd0b5',boxes:true,door:{x:0,c:'#7cc8ff'}});col(L,-71.1,14.9,-60.6,35.1);
-  bldAt(st,-63.5,-12.5,Math.PI/2,{w:8,d:7,h:4.4,wall:'#ffe3ef',shop:true,awning:'#b79cff',sign:'👗 Clothes Shop',door:{x:0,glass:true}});col(L,-67.1,-16.6,-59.6,-8.4);
+  bldAt(st,-63.5,-12.5,Math.PI/2,{w:8,d:7,h:4.4,wall:'#ffe3ef',shop:true,awning:'#b79cff',sign:'👗 Clothes Shop',door:{x:0,glass:true},win:SWIN});col(L,-67.1,-16.6,-59.6,-8.4);
   inter(L,{x:-59.2,z:-12.5,r:2.3,icon:'👗',label:'Go into the Clothes Shop',act:()=>enter('clothes')});
   // south-east corner: a lake with a wooden pier you can walk out on (it points from the south-west shore to the middle)
   {const lx=69,lz=69,ux=Math.SQRT1_2,uz=Math.SQRT1_2,R0=8.1,S0=[lx-ux*R0,lz-uz*R0],at=(t,s)=>[S0[0]+ux*t+uz*s,S0[1]+uz*t-ux*s],RY=Math.PI/4,WD='#c98f5e',WD2='#9a6a43';
@@ -1544,7 +1608,7 @@ function buildCity(){
     for(const s of[-.8,.8])rail(2.35,s,4.2);for(const s of[-1.35,1.35])rail(5.8,s,2.6);rail(7.1,0,2.76,true);for(const s of[-1.075,1.075])rail(4.5,s,.55,true);
     [x,z]=at(7.0,1.2);cyl(st,.045,.05,1.55,'#3d2c5e',x,.1,z,{seg:8,ol:.01});box(st,.24,.06,.24,'#3d2c5e',x,1.62,z,{ol:.01});sph(st,.11,null,x,1.55,z,{mat:GLOW,ol:false,ws:10,hs:8});
     [x,z]=at(7.19,0);const lr=new THREE.Mesh(new THREE.TorusGeometry(.22,.06,8,20),mat('#ff4d4d'));lr.position.set(x,.52,z);lr.rotation.y=RY;st.add(lr);for(let i=0;i<4;i++){const a=i/4*TAU+.4,[x2,z2]=at(7.2,Math.cos(a)*.22);box(st,.07,.07,.13,'#ffffff',x2,.49+Math.sin(a)*.22,z2,{ry:RY,ol:false});}
-    [x,z]=at(-.5,1.15);cyl(st,.05,.05,1.3,WD2,x,0,z,{seg:8,ol:.01});const sg=signPlane('🦆 Duck Dock',1.25,.38,'#ffffff','#3d2c5e');sg.position.set(x,1.25,z);sg.rotation.y=Math.PI*1.25;L.g.add(sg);}
+    [x,z]=at(-.5,1.15);cyl(st,.05,.05,1.3,WD2,x,0,z,{seg:8,ol:.01});const sg=signPlane('🦆 Duck Dock',1.25,.38,'#ffffff','#3d2c5e');sg.position.set(x-.0566,1.25,z-.0566);sg.rotation.y=Math.PI*1.25;L.g.add(sg);}   /* 8 cm in front of the post */
    for(const [dx,dz] of [[-1.5,2],[2,-1],[1,3],[3,1.5]]){disc(st,.4,'#5fbf74',lx+dx,.045,lz+dz,{seg:12});sph(st,.08,'#ff9ec4',lx+dx+.1,.1,lz+dz,{ws:8,hs:6,ol:.01});}
    LAKEW.length=0;for(const [t0,t1,hw] of [[-1.2,4.5,.76],[4.5,7.1,1.3]]){const a=at(t0,0);LAKEW.push({ax:L.ox+a[0],az:L.oz+a[1],ux,uz,len:t1-t0,hw});}
    L.cols.push({lk:1,cx:L.ox+lx,cz:L.oz+lz,cr:7.9,walk:LAKEW});
@@ -1567,7 +1631,7 @@ function buildCity(){
   for(const [a,b] of TRAIL){const A=WP[a],B=WP[b],len=Math.hypot(B[0]-A[0],B[1]-A[1]);flat(st,1.5,len+1.5,'#e6d2a8',(A[0]+B[0])/2,.012,(A[1]+B[1])/2,{ry:Math.atan2(B[0]-A[0],B[1]-A[1])});}
   const px=36.2,pz=-36.2;disc(st,2.25,'#b9a98f',px,.013,pz,{seg:32});disc(st,1.95,null,px,.035,pz,{mat:WATER,seg:32});
   {const r=seeded(4);for(let k=0;k<14;k++){const a=k/14*TAU+r()*.2;sph(st,.16+r()*.1,pick(['#b8b4c4','#a7a3b5','#c8c4d6']),px+Math.cos(a)*2.05,.05,pz+Math.sin(a)*2.05,{s:[1.2,.6,1],ws:8,hs:6,ol:.015});}
-    for(let k=0;k<9;k++){const a=1.9+k*.12+r()*.05,d=1.55+r()*.3;cyl(st,.018,.018,.7+r()*.4,'#5fae64',px+Math.cos(a)*d,0,pz+Math.sin(a)*d,{seg:5,ol:false});sph(st,.04,'#9b6b4a',px+Math.cos(a)*d,.8+r()*.3,pz+Math.sin(a)*d,{s:[1,2.2,1],ws:6,hs:5,ol:false});}
+    for(let k=0;k<9;k++){const a=1.9+k*.12+r()*.05,d=1.55+r()*.3;const h=.7+r()*.4;r();cyl(st,.018,.018,h,'#5fae64',px+Math.cos(a)*d,0,pz+Math.sin(a)*d,{seg:5,ol:false});sph(st,.04,'#9b6b4a',px+Math.cos(a)*d,h+.05,pz+Math.sin(a)*d,{s:[1,2.2,1],ws:6,hs:5,ol:false});}
     for(const [dx,dz] of [[-.8,.3],[.4,.9],[.7,-.6]]){disc(st,.26,'#5fbf74',px+dx,.045,pz+dz,{seg:12});sph(st,.06,'#ff9ec4',px+dx+.05,.08,pz+dz,{ws:8,hs:6,ol:.01});}}
   colC(L,px,pz,2.2);inter(L,{x:33.9,z:-38.3,r:2.3,icon:'🦆',label:'Feed the ducks',act:()=>feedDucks(0)});bench(st,32.6,-36.4,Math.PI/2+.4);colC(L,32.6,-36.4,.7);
   for(let k=0;k<2;k++){const d=new THREE.Group();L.dyn.add(d);sph(d,.17,k?'#f7f2ec':'#ffe27a',0,.15,0,{s:[1,.75,1.35],ws:12,hs:8,ol:.02});sph(d,.1,k?'#f7f2ec':'#ffe27a',0,.33,.17,{ws:10,hs:8,ol:.02});
@@ -1590,7 +1654,7 @@ function buildCity(){
       else if(kind<.78){if(!free(x,z,.3))continue;for(let k=0;k<3;k++){const mx=x+r()*.6-.3,mz=z+r()*.6-.3,h=.12+r()*.12;cyl(st,.035,.045,h,'#fff4e0',mx,0,mz,{seg:6,ol:.01});sph(st,.1,'#ff5d6c',mx,h,mz,{s:[1,.6,1],ws:8,hs:6,ol:.012});}}
       else{if(!free(x,z,1.3))continue;tree(st,x,z,1+r()*.3);colC(L,x,z,.3);}
       placed++;}}
-  buildLane(L,st);
+  buildLane(L,st);buildClosedSigns(L);
   bake(st,true,32);
   L.g.add(glowMesh(glowGeo(LAMPXZ.flatMap(([x,z])=>[[x,3.21,z,.8,[.5,.38,.18]],[x,.1,z,4.4,4.4,[.3,.23,.11]]]))));
   // doors and things to use
@@ -1716,7 +1780,7 @@ function updBeach(dt){updBus(dt);if(!S||!PLAYING||!LOC.beach)return;
   for(let i=0;i<BEACH.shells.length;i++){const k=1+Math.sin(t*3+i*1.3)*.07;BEACH.shells[i].g.scale.set(k,k,k);}
   for(const c of BEACH.crabs){c.ph+=dt;const z=c.z0+Math.sin(c.ph*.35)*6;c.c.position.set(c.x0+Math.sin(c.ph*.9)*.3,Math.abs(Math.sin(c.ph*9))*.03,z);c.c.rotation.y=-Math.PI/2;}
   for(const g of BEACH.gulls){g.a+=g.sp*dt;g.g.position.set(g.cx+Math.cos(g.a)*g.r,g.y+Math.sin(t*.8+g.r)*.4,g.cz+Math.sin(g.a)*g.r);g.g.rotation.y=-g.a;const f=Math.sin(t*5+g.r)*.35;g.w[0].rotation.z=-f;g.w[1].rotation.z=f;}
-  for(const c of BEACH.clouds){c.position.x+=c.userData.sp*dt;if(c.position.x>320)c.position.x=40;}
+  for(const c of BEACH.clouds){c.position.x+=c.userData.sp*dt;if(c.position.x>320)c.position.x=40;c.scale.setScalar(clamp(Math.min(320-c.position.x,c.position.x-40)/40,.01,1));}   /* ☁️ like the town's clouds: shrink away before the wrap */
   updTennis(dt);}
 
 /* ===================== 🚌 the Beach Bus: the way to the beach and back (there is no level lock any more) ===================== */
@@ -2021,14 +2085,14 @@ function buildCourt(L,st){const X=TCX,Z=TCZ,FX=12.5,FZ=6.5,GX1=X-11.3,GX2=X-8.7;
    for(const [x1,z1,x2,z2] of [[X-FX,Z-FZ,GX1,Z-FZ],[GX2,Z-FZ,X+FX,Z-FZ],[X+FX,Z-FZ,X+FX,Z+FZ],[X+FX,Z+FZ,X-FX,Z+FZ],[X-FX,Z+FZ,X-FX,Z-FZ]]){
      const l=Math.hypot(x2-x1,z2-z1),r=l*2.2,q=H*2.2,n=Math.max(1,Math.round(l/3.2));P.push(x1,0,z1,x2,0,z2,x2,H,z2,x1,0,z1,x2,H,z2,x1,H,z1);U.push(0,0,r,0,r,q,0,0,r,q,0,q);
      for(let i=0;i<=n;i++)cyl(st,.05,.05,H+.1,'#4f6b8a',x1+(x2-x1)*i/n,0,z1+(z2-z1)*i/n,{seg:6,ol:.012});
-     box(st,Math.abs(x2-x1)+.06,.06,Math.abs(z2-z1)+.06,'#4f6b8a',(x1+x2)/2,H,(z1+z2)/2,{ol:.01});col(L,Math.min(x1,x2)-.1,Math.min(z1,z2)-.1,Math.max(x1,x2)+.1,Math.max(z1,z2)+.1);}
+     box(st,Math.abs(x2-x1)+.06,.06,Math.abs(z2-z1)+.06,'#4f6b8a',(x1+x2)/2,H,(z1+z2)/2,{ol:.01});col(L,Math.min(x1,x2)-.5,Math.min(z1,z2)-.5,Math.max(x1,x2)+.5,Math.max(z1,z2)+.5);}   /* 🎾 some room in front of the wire (the camera pressed into it) */
    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));
    const m=new THREE.Mesh(g,new THREE.MeshBasicMaterial({color:'#5f7f92',map:t,transparent:true,side:THREE.DoubleSide,depthWrite:false}));m.userData.keep=1;L.g.add(m);}
   for(const gx of[GX1,GX2]){cyl(st,.08,.08,2.75,'#ffd45c',gx,0,Z-FZ,{seg:8,ol:.015});colC(L,gx,Z-FZ,.12);}
   box(st,GX2-GX1+.2,.14,.14,'#ffd45c',(GX1+GX2)/2,2.62,Z-FZ,{ol:.015});
   {const sg=signPlane('🎾 Tennis',2.3,.6,'#5ab0e8','#ffffff');sg.position.set((GX1+GX2)/2,3.0,Z-FZ-.06);sg.rotation.y=Math.PI;L.g.add(sg);}
   /* a signpost at the end of the boardwalk, so you find the court */
-  {cyl(st,.07,.08,2.3,'#4f6b8a',-18.6,0,1.7,{seg:6,ol:.012});box(st,.06,.58,2.08,'#ffffff',-18.6,1.71,1.7,{ol:.015});colC(L,-18.6,1.7,.14);const sg=signPlane('🎾 Tennis ➡️',2,.5,'#5ab0e8','#ffffff');sg.position.set(-18.66,2,1.7);sg.rotation.y=-Math.PI/2;L.g.add(sg);}
+  {cyl(st,.07,.08,2.3,'#4f6b8a',-18.5,0,1.7,{seg:6,ol:.012});box(st,.06,.58,2.08,'#ffffff',-18.6,1.71,1.7,{ol:.015});colC(L,-18.53,1.7,.16);const sg=signPlane('🎾 Tennis ➡️',2,.5,'#5ab0e8','#ffffff');sg.position.set(-18.66,2,1.7);sg.rotation.y=-Math.PI/2;L.g.add(sg);}
   /* benches, a basket full of balls and two lamps for the evening */
   for(const s of[-1,1]){bench(st,X+s*3.2,Z-FZ+.55,0);col(L,X+s*3.2-.85,Z-FZ+.2,X+s*3.2+.85,Z-FZ+.85);}
   {const bx=X+10.7,bz=Z-5.3;for(const [dx,dz] of [[-.2,-.2],[.2,-.2],[-.2,.2],[.2,.2]])cyl(st,.018,.018,.5,'#3d4a7a',bx+dx,0,bz+dz,{seg:5,ol:false});
@@ -2183,6 +2247,13 @@ function floorTex(kind){const c=document.createElement('canvas');c.width=c.heigh
   else if(kind==='carpet'){x.fillStyle='#a9c8ff';x.fillRect(0,0,256,256);x.fillStyle='rgba(255,255,255,.4)';const r=seeded(5);for(let i=0;i<140;i++){x.beginPath();x.arc(r()*256,r()*256,2.2,0,TAU);x.fill();}}
   else{const [a,b]=kind==='pink'?['#ffd1e0','#ffeaf2']:kind==='mint'?['#c4f0df','#e8fbf3']:kind==='pizza'?['#fff7ee','#ffcdbf']:['#ffffff','#d9cbff'];for(let i=0;i<4;i++)for(let j=0;j<4;j++){x.fillStyle=(i+j)%2?a:b;x.fillRect(i*64,j*64,64,64);}x.strokeStyle='rgba(61,44,94,.22)';x.lineWidth=3;for(let i=0;i<=4;i++){x.beginPath();x.moveTo(i*64,0);x.lineTo(i*64,256);x.stroke();x.beginPath();x.moveTo(0,i*64);x.lineTo(256,i*64);x.stroke();}}
   const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(3,2.5);t.anisotropy=4;return t;}
+/* 🪜 an open stairwell: 4 walls seen from inside (sharing the colour of the room's wall paint) and a ceiling on top (top=1) or a floor at the bottom */
+function shaftAt(g,w,h,d,x,y,z,wallM,capC,top){const b=new THREE.BoxGeometry(w,h,d),ix=b.index.array,keep=[];
+  for(const gr of b.groups)if(gr.materialIndex!==2&&gr.materialIndex!==3)for(let i=gr.start;i<gr.start+gr.count;i++)keep.push(ix[i]);
+  b.setIndex(keep);b.clearGroups();const ps=b.attributes.position,C=new Float32Array(ps.count*3);   /* a soft shade: a pit gets darker going down, a shaft a little darker going up */
+  for(let i=0;i<ps.count;i++){const t=ps.getY(i)/h+.5,k=top?1-.2*t:.55+.45*t;C[i*3]=C[i*3+1]=C[i*3+2]=k;}b.setAttribute('color',new THREE.BufferAttribute(C,3));
+  const sm=toon({side:THREE.BackSide,vertexColors:true});sm.color=wallM.color;const m=new THREE.Mesh(b,sm);m.position.set(x,y,z);m.userData.keep=1;g.add(m);
+  const c=new THREE.Mesh(new THREE.PlaneGeometry(w,d),new THREE.MeshBasicMaterial({color:capC}));c.rotation.x=top?Math.PI/2:-Math.PI/2;c.position.set(x,y+(top?h/2:-h/2),z);c.userData.keep=1;g.add(c);return m;}
 function shell(L,g,W,D,H,wallMat,floorMat,ceil,into,gap){const T=into||L.g;
   const fl=new THREE.Mesh(new THREE.PlaneGeometry(W,D),floorMat);fl.rotation.x=-Math.PI/2;fl.receiveShadow=true;fl.userData.keep=1;T.add(fl);
   const ce=new THREE.Mesh(new THREE.PlaneGeometry(W,D),new THREE.MeshBasicMaterial({color:ceil}));ce.rotation.x=Math.PI/2;ce.position.y=H;ce.userData.keep=1;T.add(ce);
@@ -2235,11 +2306,11 @@ function upFloor(L,sh,W,D,H,wm,fm){const ug=new THREE.Group();ug.position.x=UPX;
   shell({ox:L.ox+UPX,oz:L.oz,cols:L.cols},ug,W,D,H,wm,fm,'#f7eef2',ug,UPG);
   for(const x of[-6.5,-3,1.5,6.6])windowIn(ug,x,1.0,-D/2+.02,0);for(const x of[-5,0,5])windowIn(ug,x,1.0,D/2-.02,Math.PI);
   for(const z of[-3.2,2.6]){windowIn(ug,W/2-.02,1.0,z,-Math.PI/2,'#7fdcb5');windowIn(ug,-W/2+.02,1.0,z,Math.PI/2,'#7fdcb5');}
-  const dk=new THREE.MeshBasicMaterial({color:'#3b3157',side:THREE.BackSide}),n=12,sd=4.2/n,sr=H/n,x0=-W/2,t=.3,a=Math.atan2(H,4.2);
+  const n=12,sd=4.2/n,sr=H/n,x0=-W/2,t=.3,a=Math.atan2(H,4.2);
   for(const [g,up] of[[sh,1],[ug,0]]){
     for(const k of[-1,1])box(g,4.2,H,t,null,x0-2.1,0,k*(UPG+t/2),{mat:wm,ol:false});box(g,t,H,2*UPG+2*t,null,x0-4.2-t/2,0,0,{mat:wm,ol:false});
     for(let i=0;i<n-1+up;i++)box(g,sd,up?(i+1)*sr:H-(i+1)*sr,2*UPG,'#d9a46c',x0-(i+.5)*sd,up?0:-H,0,{ol:.012});
-    const hole=new THREE.Mesh(new THREE.BoxGeometry(4.2,up?3.2:H,2*UPG),dk);hole.position.set(x0-2.1,up?H+1.6:-H/2,0);g.add(hole);
+    shaftAt(g,4.2,up?3.2:H,2*UPG,x0-2.1,up?H+1.6:-H/2,0,wm,up?'#f7eef2':'#8f6b4c',up);   /* 🪜 walls in the room's paint (repainting changes them too) */
     if(!up)box(g,4.2,.1,2*UPG,'#f7eef2',x0-2.1,H,0,{ol:false});
     for(const k of[-1,1])box(g,.1,2.7,.1,'#ffffff',x0+.04,0,k*(UPG+.05),{ol:.015});box(g,.1,.1,2*UPG+.2,'#ffffff',x0+.04,2.6,0,{ol:.015});
     box(g,Math.hypot(4.2,H),.07,.08,'#ffffff',x0-2.1,(up?H:-H)/2+.95,-UPG+.07,{rz:up?-a:a,center:true,ol:.01});
@@ -2285,7 +2356,7 @@ function laneEndSet(L){const x=laneEnd(),[a,b,c,d]=L.laneC;L.laneE.position.x=x;
 /* a piece of the lane from xa to xb (xb is further west): road, pavements, hedges and street lamps */
 function laneRoad(L,g,xa,xb,lamps){const ROAD='#8c90b4',SIDE='#f3e7df',CURB='#ddcdd0',cx=(xa+xb)/2,len=xa-xb,hx=xa>-85?-80.3:xa-.9;
   flat(g,len,8,ROAD,cx,.02,0);
-  for(const s of[-1,1]){flat(g,len,3,SIDE,cx,.03,s*5.5);box(g,len,.08,.14,CURB,cx,0,s*4,{ol:.015});box(g,hx-xb+.9,1.1,.9,'#5fbf74',(hx+xb-.9)/2,0,s*26.6,{ol:.03});}
+  for(const s of[-1,1]){flat(g,len,3,SIDE,cx,.03,s*5.5);box(g,len,.16,.14,CURB,cx,-.08,s*4,{ol:.015});box(g,hx-xb+.9,1.1,.9,'#5fbf74',(hx+xb-.9)/2,0,s*26.6,{ol:.03});}
   for(let t=xb+2;t<=xa-1;t+=3.2)box(g,1.4,.012,.16,'#ffffff',t,.03,0,{ol:false});
   for(const x of lamps)for(const s of[-1,1]){lampPost(g,x,s*4.55);colC(L,x,s*4.55,.16);}}
 /* what every lot has: a front fence, a little path, a mailbox and a sign. A house, flower beds and a name come with an owner */
@@ -2296,7 +2367,7 @@ function laneLot(L,g,p){const j=p.j,P2=(x,z)=>lotPt(j,x,z),ry=p.s<0?0:Math.PI;
   {const [x,z]=P2(-15.4,-7.6);mailbox(g,x,z,ry);colC(L,x,z,.25);}
   const [sx,sz]=P2(-20.4,-7.6);box(g,.14,1.25,.14,'#9a6a43',sx,0,sz,{ol:.02});box(g,2.35,.95,.12,'#ffffff',sx,1.1,sz,{ol:.03});colC(L,sx,sz,.15);
   const lg=new THREE.Group();L.g.add(lg);const [hx,hz]=P2(-17,-15),A=P2(-21.6,-18.6),B=P2(-12.4,-11.4),[ix,iz]=P2(-17,-10.5),[ox,oz]=P2(-17,-9.4);
-  L.lane.push({j,X:p.X,s:p.s,g:lg,hx,hz,ry,sx,sz:sz+(p.s<0?.07:-.07),col:{x1:Math.min(A[0],B[0]),z1:Math.min(A[1],B[1]),x2:Math.max(A[0],B[0]),z2:Math.max(A[1],B[1])},
+  L.lane.push({j,X:p.X,s:p.s,g:lg,hx,hz,ry,sx,sz:sz+(p.s<0?.085:-.085),col:{x1:Math.min(A[0],B[0]),z1:Math.min(A[1],B[1]),x2:Math.max(A[0],B[0]),z2:Math.max(A[1],B[1])},
     door:[ox,oz,p.s<0?Math.PI:0],sign:null,key:null});
   inter(L,{x:ix,z:iz,r:3.0,icon:()=>laneIcon(j),label:()=>laneLabel(j),act:()=>laneDoor(j),when:()=>!!LANE.own[j]});}
 /* more friends than lots: two more lots appear at the end of the lane (with road, hedges and a street lamp). You always get one */
@@ -2467,7 +2538,7 @@ function buildCafe(){
   for(let i=0;i<4;i++){cyl(pr,.07,.06,.05,'#c98f5e',-1.6+i*.22,1.08,-3.1,{seg:10,ol:.01});}
   box(pr,3,.9,.6,'#c98f5e',-2.4,0,-4.15);box(pr,.6,.62,.45,'#c8cde0',-1.6,.9,-4.15);box(pr,.2,.1,.2,'#3d2c5e',-1.6,1.05,-3.95,{ol:.01});
   for(let i=0;i<3;i++)cyl(pr,.05,.045,.1,'#ffffff',-3.2+i*.25,.9,-4.1,{seg:10,ol:.01});
-  col(L,-5.05,-4.5,1.05,-2.75);
+  col(L,-6,-4.5,1.05,-2.75);
   const mb=menuBoard(2.6,1.6,'Café menu',[['☕ Hot cocoa','4'],['🍪 Cookie','2'],['🧁 Muffin','5'],['🍩 Donut','5'],['🍰 Cake','10']]);mb.position.set(-2,2.3,-4.44);L.g.add(mb);
   // tables and chairs you can sit on
   const seat=(x,z,rot,c)=>{const ch=buildFurn('chair',c);ch.position.set(x,0,z);ch.rotation.y=rot;pr.add(ch);colC(L,x,z,.3);
@@ -2568,7 +2639,7 @@ function buildToyStore(){const {L,sh,pr}=room('toys',1000,'#dff1ff','mint');
   for(let i=0;i<3;i++){const car=new THREE.Group();train.add(car);box(car,.16,.12,.24,i?['#ffd45c','#5fd4b0'][i-1]:'#ff4d4d',0,.03,0,{ol:.01});if(!i){cyl(car,.03,.03,.1,'#3d2c5e',0,.15,.07,{seg:6,ol:false});box(car,.14,.1,.08,'#ff4d4d',0,.15,-.06,{ol:.01});}car.userData.i=i;}
   L.train=train;buildClaw(L,sh,pr,-5.2,-1.75);bake(sh,false);bake(pr,true);return L;}
 function buildBakery(){const {L,sh,pr}=room('bakery',1100,'#fff1d6','wood');
-  glassCase(pr,0,-3.4,5,'#fff1d6');col(L,-2.6,-3.85,2.6,-2.95);
+  glassCase(pr,0,-3.4,5,'#fff1d6');box(pr,1.1,.2,.6,'#c98f5e',2.0,0,-4.2);col(L,-2.6,-4.5,2.6,-2.95);   /* the case reaches the wall: no walking round behind it */
   for(let i=0;i<13;i++){const bx=-2.25+i*.375,k=i%4;
     if(k===0){const t=new THREE.Mesh(new THREE.TorusGeometry(.07,.035,6,12),mat(['#ff9ec4','#c98f5e','#ffffff'][i%3]));t.rotation.x=Math.PI/2;t.position.set(bx,.92,-3.4);pr.add(t);}
     else if(k===1){cyl(pr,.11,.11,.12,'#ffe7a3',bx,.86,-3.4,{seg:12,ol:.01});cyl(pr,.112,.112,.03,'#ff9ec4',bx,.98,-3.4,{seg:12,ol:false});sph(pr,.025,'#ff4d6d',bx,1.03,-3.4,{ws:6,hs:5,ol:false});}
@@ -2580,9 +2651,9 @@ function buildBakery(){const {L,sh,pr}=room('bakery',1100,'#fff1d6','wood');
   for(const [tx,tz,c] of [[3.4,1.3,'#ffffff'],[-3.2,1.6,'#ff9ec4']]){const t=buildFurn('table',c);t.position.set(tx,0,tz);pr.add(t);colC(L,tx,tz,.62);seatAt(L,pr,tx-1.05,tz,Math.PI/2,WOOD);seatAt(L,pr,tx+1.05,tz,-Math.PI/2,WOOD);}
   bake(sh,false);bake(pr,true);return L;}
 function buildIceCream(){const {L,sh,pr}=room('icecream',1200,'#ffe8f6','pink');
-  glassCase(pr,0,-3.4,5,'#ffffff');col(L,-2.6,-3.85,2.6,-2.95);
+  glassCase(pr,0,-3.4,5,'#ffffff');box(pr,1.1,.2,.6,'#e6e6ef',2.1,0,-4.2);col(L,-2.6,-4.5,2.6,-2.95);
   ['#ff9ec4','#8c5a3c','#ffe27a','#9fe8c8','#c7a6ff','#ffffff','#ffb36b','#a9dcff'].forEach((c,i)=>{const bx=-2.1+i*.6;cyl(pr,.14,.14,.12,'#e6e6ef',bx,.8,-3.4,{seg:12,ol:false});sph(pr,.13,c,bx,.92,-3.4,{s:[1,.5,1],ws:10,hs:6,ol:false});});
-  cone(pr,.42,1.3,'#d99a52',-5.0,1.3,-3.6,{rx:Math.PI,seg:14});sph(pr,.42,'#ff9ec4',-5.0,1.62,-3.6,{ws:14,hs:10});sph(pr,.36,'#9fe8c8',-5.0,2.1,-3.6,{ws:14,hs:10});sph(pr,.3,'#ffe27a',-5.0,2.5,-3.6,{ws:14,hs:10});sph(pr,.08,'#ff4d4d',-5.0,2.84,-3.6,{ws:8,hs:6});colC(L,-5.0,-3.6,.55);
+  cyl(pr,.3,.36,.12,'#ffffff',-5.0,0,-3.6,{seg:16});cone(pr,.42,1.3,'#d99a52',-5.0,.1,-3.6,{rx:Math.PI,seg:14});sph(pr,.42,'#ff9ec4',-5.0,1.72,-3.6,{ws:14,hs:10});sph(pr,.36,'#9fe8c8',-5.0,2.2,-3.6,{ws:14,hs:10});sph(pr,.3,'#ffe27a',-5.0,2.6,-3.6,{ws:14,hs:10});sph(pr,.08,'#ff4d4d',-5.0,2.94,-3.6,{ws:8,hs:6});   /* 🍦 the big cone stands on its tip in a little stand (it used to float upside down) */colC(L,-5.0,-3.6,.55);
   const mb=menuBoard(2.6,1.4,'Scoops!',[['🍦 Ice cream','8'],['🍨 Sundae','9'],['🍧 Ice pop','4'],['🥤 Milkshake','7'],['🍰 Ice cream cake','12']]);mb.position.set(0,2.3,-4.44);L.g.add(mb);
   for(const [tx,tz,c] of [[3.4,1.2,'#ffffff'],[-3.2,1.5,'#9fe8c8']]){const t=buildFurn('table',c);t.position.set(tx,0,tz);pr.add(t);colC(L,tx,tz,.62);seatAt(L,pr,tx-1.05,tz,Math.PI/2,'#ff9ec4');seatAt(L,pr,tx+1.05,tz,-Math.PI/2,'#ff9ec4');}
   bake(sh,false);bake(pr,true);return L;}
@@ -2603,7 +2674,7 @@ const SUBJ={math:{n:'Math',i:'📐',ox:2200,wall:'#e6f3ff',c:'#5fa8ff',x:-3.8,po
 const SEATS=[[-1.3,-.55],[0,-.55],[1.3,-.55],[-1.3,1.0],[0,1.0],[1.3,1.0]];
 function buildSchool(){const {L,sh,pr}=room('school',1400,'#fff6dc','wood');
   for(const id in SUBJ){const S0=SUBJ[id],x=S0.x;doorAt(sh,x,-4.5+.02,0,S0.c,false,true);
-    const sg=signPlane(S0.i+' '+S0.n,1.5,.4,S0.c,'#ffffff');sg.position.set(x,2.62,-4.42);L.g.add(sg);
+    const sg=signPlane(S0.i+' '+S0.n,1.5,.4,S0.c,'#ffffff');sg.position.set(x,2.78,-4.42);L.g.add(sg);   /* clear above the door frame and its outline (no stripes, no cut letters) */
     inter(L,{x,z:-3.7,r:1.7,icon:()=>tcGoing(id)?'📚':'🚪',label:()=>tcGoing(id)?'Teach the '+S0.n+' class! 📚':'Go into the '+S0.n+' room',pri:()=>tcGoing(id),act:()=>enterClass(id)});}
   for(const [x,em,c] of [[-1.9,'🌈','#ffffff'],[1.9,'🚀','#fff6c8']]){const d=signPlane(em,.6,.6,c,'#3d2c5e');d.position.set(x,1.7,-4.43);L.g.add(d);}
   for(const s of[-1,1])for(let i=0;i<7;i++){const z=-1.9+i*.62,c=['#7cc8ff','#ff9ec4','#ffd45c','#7fdcb5'][(i+(s>0?2:0))%4];
@@ -2621,7 +2692,7 @@ function buildClassrooms(){const glass=toon({color:'#9fd4f2',emissive:new THREE.
   windowIn(sh,6-.02,1.0,-1.6,-Math.PI/2,S0.c);windowIn(sh,6-.02,1.0,1.8,-Math.PI/2,S0.c);
   box(pr,5.2,1.8,.08,'#a8714a',0,.9,-4.44);const bd=signPlane(S0.board,4.8,1.45,'#2f6b4f','#ffffff');bd.position.set(0,1.82,-4.39);L.g.add(bd);
   box(pr,1.2,.04,.12,'#a8714a',1.4,.88,-4.36,{ol:false});box(pr,.12,.04,.04,'#ffffff',1.1,.92,-4.36,{ol:false});box(pr,.18,.06,.08,'#ff9ec4',1.5,.92,-4.36,{ol:false});
-  const sg=signPlane(S0.i+' '+S0.n+' class',2.4,.42,S0.c,'#ffffff');sg.position.set(0,2.92,-4.42);L.g.add(sg);
+  const sg=signPlane(S0.i+' '+S0.n+' class',2.4,.42,S0.c,'#ffffff');sg.position.set(0,2.97,-4.42);L.g.add(sg);
   box(pr,1.7,.76,.8,'#c98f5e',0,0,-2.85);box(pr,1.78,.05,.88,'#ffffff',0,.76,-2.85,{ol:.01});sph(pr,.07,'#ff4d4d',.6,.88,-2.75,{ws:10,hs:8,ol:.01});cyl(pr,.008,.008,.06,'#5a3a24',.6,.94,-2.75,{seg:4,ol:false});
   for(let i=0;i<3;i++)box(pr,.32,.05,.24,['#ff7aa8','#7cc8ff','#ffd45c'][i],-.55,.81+i*.05,-2.95,{ry:i*.15,ol:.006});
   {const ch=buildFurn('chair','#7cc8ff');ch.position.set(0,0,-3.65);pr.add(ch);}
@@ -2632,12 +2703,12 @@ function buildClassrooms(){const glass=toon({color:'#9fd4f2',emissive:new THREE.
     const b=signPlane('△  □  ○  ☆',1.9,.55,'#fff6c8','#ff4d8d');b.position.set(-5.95,1.4,-2.4);b.rotation.y=Math.PI/2;L.g.add(b);
     box(pr,.05,.08,3.2,'#ffd45c',-5.95,1.0,1.4,{ol:.01});for(let k=0;k<17;k++)box(pr,.06,.04,.012,'#3d2c5e',-5.93,1.04,-.2+k*.2,{ol:false});
     box(pr,.7,.6,.12,'#c98f5e',-5.2,0,3.5);for(let r=0;r<4;r++){cyl(pr,.008,.008,.6,'#3d2c5e',-5.2,.12+r*.12,3.5,{rz:Math.PI/2,center:true,seg:4,ol:false});for(let k=0;k<5;k++)sph(pr,.03,['#ff4d6d','#ffd45c','#5fa8ff','#7fdcb5'][r],-5.45+k*.1+(r%2)*.08,.12+r*.12,3.5,{ws:6,hs:5,ol:false});}}
-  else if(id==='english'){const a=signPlane('A B C D E F G H I J K L M N O P',5.6,.38,'#ffffff','#ff4d8d');a.position.set(-5.95,2.3,0);a.rotation.y=Math.PI/2;L.g.add(a);
+  else if(id==='english'){const a=signPlane('A B C D E F G H I J K L M N O P Q R S T U V W X Y Z',7.4,.4,'#ffffff','#ff4d8d');a.position.set(-5.95,2.66,0);a.rotation.y=Math.PI/2;L.g.add(a);   /* 🔤 all 26 letters, up above the bookcase */
     bookcase(pr,-5.75,1.4,Math.PI/2);col(L,-6,.1,-5.45,2.7);const b=signPlane('📚 Read every day!',1.9,.5,'#fff6c8','#3d2c5e');b.position.set(-5.95,1.5,-2.5);b.rotation.y=Math.PI/2;L.g.add(b);}
   else{box(pr,.04,1.4,2.4,'#5fa8ff',-5.96,1.0,0,{ol:.012});for(const [y,z,s] of [[1.85,-.6,1],[1.45,.5,1.3],[1.25,-.3,.7],[1.75,.8,.6]])sph(pr,.2*s,'#7fdcb5',-5.93,y,z,{s:[.2,.8,1.4],ws:8,hs:6,ol:false});
-    const m=signPlane('🗺️ The world',1.3,.3,'#ffffff','#3d2c5e');m.position.set(-5.93,2.55,0);m.rotation.y=Math.PI/2;L.g.add(m);
-    box(pr,.6,.7,.6,'#c98f5e',-5.2,0,-3.5);cone(pr,.42,.5,'#e8c98f',-5.2,.7,-3.5,{seg:4,ol:.012});colC(L,-5.2,-3.5,.45);
-    cyl(pr,.12,.14,.8,'#c8cde0',-5.2,0,3.6,{seg:10,ol:.012});cyl(pr,.22,.18,.55,'#d8dcea',-5.2,.8,3.6,{seg:10,ol:.012});sph(pr,.16,'#c8cde0',-5.2,1.55,3.6,{ws:10,hs:8,ol:.012});box(pr,.2,.04,.06,'#3d2c5e',-5.07,1.56,3.6,{ol:false});
+    const m=signPlane('🗺️ The world',1.9,.34,'#ffffff','#3d2c5e');m.position.set(-5.93,2.64,0);m.rotation.y=Math.PI/2;L.g.add(m);
+    box(pr,.6,.7,.6,'#c98f5e',-5.2,0,-3.5);cone(pr,.42,.5,'#e8c98f',-5.2,.7,-3.5,{seg:4,ry:Math.PI/4,ol:.012});colC(L,-5.2,-3.5,.45);
+    cyl(pr,.12,.14,.8,'#c8cde0',-5.2,0,3.6,{seg:10,ol:.012});cyl(pr,.22,.18,.55,'#d8dcea',-5.2,.8,3.6,{seg:10,ol:.012});sph(pr,.16,'#c8cde0',-5.2,1.55,3.6,{ws:10,hs:8,ol:.012});box(pr,.04,.04,.2,'#3d2c5e',-5.05,1.56,3.6,{ol:false});
     cone(pr,.05,.25,'#ff4d6d',-5.2,1.7,3.6,{seg:6,ol:.008});colC(L,-5.2,3.6,.35);
     const b=signPlane('🏰 Knights & castles',2.0,.5,'#fff6c8','#3d2c5e');b.position.set(-5.95,1.5,-2.5);b.rotation.y=Math.PI/2;L.g.add(b);}
   inter(L,{x:0,z:3.8,r:1.9,icon:'🚪',label:'Back to the hallway',act:()=>leaveClass(id)});
@@ -2684,19 +2755,19 @@ function buildAptFloor(f){const W=19,D=4.4,H=3,hx=W/2,hz=D/2,C=FLOOR_C[f],L=make
   plate(sh,`Floor ${f} · flats ${f}1–${f}5`,C.r,'#ffffff',2.4,.42,1.4,2.45,0,Math.PI/2,true);
   box(sh,.04,.5,.04,'#ffffff',1.4,2.66,-1.0,{ol:false});box(sh,.04,.5,.04,'#ffffff',1.4,2.66,1.0,{ol:false});
   /* stairs going up (north side) */
-  const wood='#d9a46c',dark=new THREE.MeshBasicMaterial({color:'#3b3157',side:THREE.BackSide});
+  const wood='#d9a46c',swm={color:new THREE.Color(C.w)};   /* 🪜 the stairwells: hallway walls and a ceiling (they were a dark void with a floating lamp) */
   if(f<3){for(let i=0;i<12;i++)box(sh,.325,(i+1)*.25,1.45,wood,5.6+i*.325+.1625,0,-1.475,{ol:.012});
-    const sh1=new THREE.Mesh(new THREE.BoxGeometry(3.9,3.2,1.45),dark);sh1.position.set(7.55,H+1.6,-1.475);sh.add(sh1);sph(sh,.25,null,9.1,H+2.4,-1.475,{mat:GLOW,ol:false});
+    shaftAt(sh,3.9,3.2,1.45,7.55,H+1.6,-1.475,swm,'#fffaf2',1);cyl(sh,.3,.22,.12,'#ffffff',9.1,H+3.08,-1.475,{seg:14});sph(sh,.16,null,9.1,H+3.04,-1.475,{mat:GLOW,ol:false,ws:12,hs:8});
     for(let i=0;i<12;i+=2)box(sh,.05,.9,.05,'#ffffff',5.6+i*.325+.16,(i+1)*.25,-.78,{ol:false});
     box(sh,4.92,.07,.08,'#ffffff',7.55,.95+1.5,-.78,{rz:Math.atan2(3,3.9),center:true,ol:.01});
-    plate(sh,`⬆️ Floor ${f+1}`,'#ffffff','#3d2c5e',1.0,.38,5.25,2.5,-1.475,-Math.PI/2,true);
+    plate(sh,`⬆️ Floor ${f+1}`,'#ffffff','#3d2c5e',1.0,.38,5.25,2.25,-1.475,-Math.PI/2,true);   /* low enough to show under the ceiling sign from the door */
     inter(L,{x:5.0,z:-1.4,r:1.5,icon:'⬆️',label:'Go up to floor '+(f+1),act:()=>climb(f,1)});}
   else{windowAt(sh,hx-.02,1.0,-1.475,-Math.PI/2);const pl=buildFurn('plant');pl.position.set(8.8,0,-1.6);sh.add(pl);const bn=buildFurn('sofa','#b79cff');bn.position.set(7.2,0,-1.75);bn.scale.setScalar(.8);sh.add(bn);}
   /* stairs going down (south side) */
-  if(f>1){const sh2=new THREE.Mesh(new THREE.BoxGeometry(3.9,3.2,1.45),dark);sh2.position.set(7.55,-1.6,1.475);sh.add(sh2);
+  if(f>1){shaftAt(sh,3.9,3.2,1.45,7.55,-1.6,1.475,swm,'#8f6b4c',0);
     for(let i=0;i<12;i++)box(sh,.325,3-(i+1)*.25,1.45,wood,5.6+i*.325+.1625,-3,1.475,{ol:.012});
     for(let i=0;i<5;i++)box(sh,.06,1.0,.06,'#ffffff',5.65+i*.95,0,.78,{ol:false});box(sh,3.9,.08,.1,'#ffffff',7.55,1.0,.78,{ol:.01});
-    plate(sh,`⬇️ Floor ${f-1}`,'#ffffff','#3d2c5e',1.0,.38,5.25,2.5,1.475,-Math.PI/2,true);
+    plate(sh,`⬇️ Floor ${f-1}`,'#ffffff','#3d2c5e',1.0,.38,5.25,2.25,1.475,-Math.PI/2,true);
     inter(L,{x:5.0,z:1.4,r:1.5,icon:'⬇️',label:'Go down to floor '+(f-1),act:()=>climb(f,-1)});}
   else{for(let r=0;r<2;r++)for(let c=0;c<5;c++)box(sh,.42,.34,.3,'#c9ced8',6.6+c*.46,1.0+r*.4,2.02,{ol:.01});
     const pl=buildFurn('plant');pl.position.set(9,0,1.7);sh.add(pl);}
@@ -2712,7 +2783,8 @@ function buildPizzeria(){const {L,sh,pr}=room('pizza',1600,'#fff0e0','pizza');
   pizzaModel(pr,-1.6,1.1,-3.0,0);pizzaModel(pr,-.55,1.1,-3.0,1);pizzaBox(pr,.6,1.1,-3.0);pizzaBox(pr,.6,1.19,-3.0);pizzaBox(pr,1.7,1.1,-3.0);
   // the pizza oven
   box(pr,2.0,.9,1.6,'#c96b4f',4.6,0,-3.6);sph(pr,.95,'#d9805f',4.6,.9,-3.6,{s:[1,.8,1],ws:16,hs:10});cyl(pr,.16,.16,1.6,'#a8714a',4.6,1.5,-4.0,{seg:10});
-  box(pr,.8,.55,.06,'#2e2347',4.6,.95,-2.8,{ol:false});box(pr,.62,.22,.04,'#ff8a2b',4.6,1.0,-2.76,{ol:false});box(pr,.4,.1,.03,'#ffd45c',4.6,1.02,-2.74,{ol:false});col(L,3.55,-4.5,5.65,-2.75);
+  {const ov=new THREE.Group();ov.position.set(4.6,1.17,-2.7);ov.rotation.x=-.45;pr.add(ov);   /* 🔥 the oven mouth sits on the dome's front, tilted like it */
+    box(ov,.8,.5,.06,'#2e2347',0,0,0,{center:true,ol:false});box(ov,.62,.22,.04,'#ff8a2b',0,-.06,.045,{center:true,ol:false});box(ov,.4,.1,.03,'#ffd45c',0,-.05,.075,{center:true,ol:false});}col(L,3.55,-4.5,5.65,-2.75);
   // pizza boxes waiting to be delivered
   box(pr,1.4,.8,1.0,'#c98f5e',-4.8,0,-3.6);for(let i=0;i<7;i++)pizzaBox(pr,-4.8+(i%2?.04:-.03),.8+i*.095,-3.6);col(L,-5.55,-4.15,-4.05,-3.05);
   const ds=signPlane('🛵 Delivery',1.6,.42,'#ff6b6b','#ffffff');ds.position.set(-4.8,2.2,-4.44);L.g.add(ds);
@@ -2836,7 +2908,7 @@ window.addEventListener('pagehide',()=>{saveLocal();});
 
 /* ---- time ---- */
 const KF=[[0,'#0f1538','#2a2c66',.26,.4,'#8b94ff','#3a3560','#a9b8ff'],[5,'#0f1538','#2a2c66',.26,.4,'#8b94ff','#3a3560','#a9b8ff'],[6.5,'#6f8fe0','#ffb38a',.42,.44,'#ffd0b0','#8a7a9a','#ffcf9e'],
-  [8,'#4fb4ff','#c4ecff',.6,.5,'#ffffff','#b5c8a8','#fff4e0'],[17,'#4fb4ff','#c4ecff',.6,.5,'#ffffff','#b5c8a8','#fff4e0'],[19,'#7a6fe0','#ffa07a',.45,.44,'#ffc0a0','#8a7a9a','#ffb98a'],
+  [8,'#4fb4ff','#c4ecff',.56,.58,'#ffffff','#c6d4bb','#fff4e0'],[17,'#4fb4ff','#c4ecff',.56,.58,'#ffffff','#c6d4bb','#fff4e0'],[19,'#7a6fe0','#ffa07a',.45,.44,'#ffc0a0','#8a7a9a','#ffb98a'],
   [20.5,'#1d2356','#463c7d',.28,.4,'#9a98ff','#3a3560','#b0b8ff'],[24,'#0f1538','#2a2c66',.26,.4,'#8b94ff','#3a3560','#a9b8ff']];
 const _c1=new THREE.Color(),_c2=new THREE.Color(),SUND=new THREE.Vector3();
 function nightF(h){if(h<5||h>=20.5)return 1;if(h<7)return 1-(h-5)/2;if(h>18.5)return(h-18.5)/2;return 0;}
@@ -2849,7 +2921,7 @@ function updSky(){
   skyU.top.value.copy(C(1));skyU.bot.value.copy(C(2));FOG.color.copy(skyU.bot.value);
   const nf=nightF(h),out=!CUR||CUR.type==='out';
   if(CURTAIN){CURTAIN.color.set(nf>.5?'#7d86d6':'#d6f2ff');JET.color.copy(CURTAIN.color);}
-  WIN.emissive.set(nf>.5?'#ffc66b':'#5ab4e8');WIN.emissiveIntensity=nf>.5?nf*.9:.22*(1-nf);LAMP.emissiveIntensity=nf*1.2;
+  WIN.emissive.set(nf>.5?'#ffc66b':'#5ab4e8');WIN.emissiveIntensity=nf>.5?nf*.9:.22*(1-nf);const shut=!!S&&!isDaytime();SWIN.emissive.copy(WIN.emissive);SWIN.emissiveIntensity=WIN.emissiveIntensity*(shut&&nf>.5?.4:1);if(CLOSED)CLOSED.visible=shut;LAMP.emissiveIntensity=nf*1.2;
   if(NGLOW){NGLOW.uniforms.op.value=nf;NGLOW.visible=out&&nf>.01;}
   stars.material.opacity=nf;stars.visible=out&&nf>0;
   PANE.color.copy(skyU.bot.value).lerp(_c2.set('#ffffff'),.25);
@@ -3201,12 +3273,12 @@ function nearMe(e,n,front){const sd=n%2?-1:1,b=P.yaw+Math.PI,f=fOff(front?n-1:n)
 class Pet{
   constructor(d){this.d=d;this.m=makePet(d.type,d.col);addOutfit(this.m,d);this.g=this.m.root;scene.add(this.g);
     const tg=label(d.name,.24);tg.position.y={bunny:1.0,hamster:.55}[d.type]||.82;this.g.add(tg);this.tag=tg;
-    [this.x,this.z]=fromSave(d.loc,d.x,d.z);this.loc=d.loc;this.face=0;this.moving=false;this.r=.25;this.wt=0;this.tx=this.x;this.tz=this.z;   /* waiting in your yard: in your yard on Friends Lane */
+    [this.x,this.z]=fromSave(d.loc,d.x,d.z);this.loc=d.loc;this.face=0;this.moving=false;this.r=.3;this.wt=0;this.tx=this.x;this.tz=this.z;   /* waiting in your yard: in your yard on Friends Lane */
     this.target={x:0,z:0,r:2.1,icon:PET_TYPES[d.type].icon,label:()=>'Play with '+d.name,act:()=>openPet(this),obj:this.g};}
   update(dt,idx){const d=this.d;if(this.ps)return;
     if(!d.stay){if(this.loc!==CUR.id)nearMe(this,idx);followStep(this,dt,idx);}
-    else if(this.loc===CUR.id){this.wt-=dt;if(this.wt<=0){this.wt=rand(2,6);const a=rand(0,TAU),r=rand(0,1.6),c=fromSave(this.loc,d.sx,d.sz);this.tx=c[0]+Math.cos(a)*r;this.tz=c[1]+Math.sin(a)*r;}
-      const dx=this.tx-this.x,dz=this.tz-this.z,dd=Math.hypot(dx,dz);if(dd>.1){const s=Math.min(dd,1.1*dt);[this.x,this.z]=collideXZ(this.x+dx/dd*s,this.z+dz/dd*s,this.r,CUR);this.face=Math.atan2(dx,dz);this.moving=true;}else this.moving=false;}
+    else if(this.loc===CUR.id){this.wt-=dt;if(this.wt<=0){this.wt=rand(2,6);const a=rand(0,TAU),r=rand(0,1.6),c=fromSave(this.loc,d.sx,d.sz);[this.tx,this.tz]=collideXZ(c[0]+Math.cos(a)*r,c[1]+Math.sin(a)*r,.6,CUR);[this.x,this.z]=collideXZ(this.x,this.z,this.r,CUR);}   /* 🛋️ never a wander spot inside the furniture */
+      const dx=this.tx-this.x,dz=this.tz-this.z,dd=Math.hypot(dx,dz);if(dd>.1){const s=Math.min(dd,1.1*dt),ox=this.x,oz=this.z;[this.x,this.z]=collideXZ(this.x+dx/dd*s,this.z+dz/dd*s,this.r,CUR);this.face=Math.atan2(dx,dz);this.moving=true;if(Math.hypot(this.x-ox,this.z-oz)<s*.3)this.wt=Math.min(this.wt,.4);}else this.moving=false;}
     d.happy=Math.max(0,d.happy-dt/HOUR*2);d.loc=this.loc;[d.x,d.z]=toSave(this.loc,this.x,this.z);
     this.g.visible=this.loc===CUR.id;this.g.position.set(this.x,hopY(this,dt),this.z);this.g.rotation.y=angLerp(this.g.rotation.y,this.face,Math.min(1,dt*8));
     animPet(this.m,dt,this.moving,d.stay?1:this.spd);this.target.x=this.x;this.target.z=this.z;this.tag.visible=Math.hypot(P.x-this.x,P.z-this.z)>1.3;}
@@ -3295,6 +3367,17 @@ function carPlace(c){let d=((c.d%c.total)+c.total)%c.total;const p=c.path,n=p.le
   for(let i=0;i<n;i++){const a=p[i],b=p[(i+1)%n],L=Math.hypot(b[0]-a[0],b[1]-a[1]);
     if(d<=L){const t=d/L;c.x=a[0]+(b[0]-a[0])*t;c.z=a[1]+(b[1]-a[1])*t;c.ty=Math.atan2(b[0]-a[0],b[1]-a[1]);const rem=L-d;
       if(rem<4){const q=p[(i+2)%n];c.ty=angLerp(c.ty,Math.atan2(q[0]-b[0],q[1]-b[1]),(4-rem)/8);}return;}d-=L;}}
+/* 🌫️ far away people and cars grow in softly over their last 6 m instead of popping in (at 48 m and 80 m). Scale only: no extra drawing */
+function popFade(g,R){if(!g||!g.visible)return;const d=Math.hypot(g.position.x-camera.position.x,g.position.z-camera.position.z),k=clamp((R-d)/6,0,1);if(k<=0){g.visible=false;return;}if(g.scale.x!==k)g.scale.setScalar(k);}
+function popFades(){for(const w of WALKERS)popFade(w.g,48);for(const f of FRIEND_ACTORS)popFade(f.g,48);for(const c of CARS)popFade(c.g,80);}
+/* 🌙 a "Closed" sign hangs on the shop and library doors in closed hours (20:00-8:00): one picture, one material, one mesh for all nine doors, drawn only then */
+let CLOSED=null;
+function buildClosedSigns(L){const D=[[18,-10.98,0],[32,-10.98,0],[18,10.98,Math.PI],[31.5,10.98,Math.PI],[59.48,-31,-Math.PI/2],[59.48,-14,-Math.PI/2],[59.98,20,-Math.PI/2],[58.98,36,-Math.PI/2],[-59.98,-12.5,Math.PI/2]];
+  const P=[],U=[],I=[],m=new THREE.Matrix4();
+  D.forEach(([x,z,ry],k)=>{const g=new THREE.PlaneGeometry(.92,.34);m.makeRotationY(ry).setPosition(x+Math.sin(ry)*.11,1.78,z+Math.cos(ry)*.11);g.applyMatrix4(m);
+    const p=g.attributes.position,u=g.attributes.uv;for(let i=0;i<p.count;i++){P.push(p.getX(i),p.getY(i),p.getZ(i));U.push(u.getX(i),u.getY(i));}for(const i of g.index.array)I.push(i+k*4);g.dispose();});
+  const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(P,3));geo.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));geo.setIndex(I);geo.computeBoundingSphere();
+  const sp=signPlane('🌙 Closed',.92,.34,'#3d2c5e','#fff3c4');sp.geometry.dispose();CLOSED=new THREE.Mesh(geo,sp.material);CLOSED.visible=false;CLOSED.userData.keep=1;L.g.add(CLOSED);}
 function buildCars(){for(const x of[-50,0,50])for(const z of[-50,0,50])XS.push({x,z,occ:[]});
   const loops={A:[[-50,-50],[50,-50],[50,50],[-50,50]],B:[[-50,-50],[-50,50],[50,50],[50,-50]],C:[[0,0],[0,-50],[50,-50],[50,0]],D:[[0,0],[0,50],[-50,50],[-50,0]],E:[[0,0],[-50,0],[-50,-50],[0,-50]],F:[[0,0],[50,0],[50,50],[0,50]]};
   const counts={A:3,B:2,C:2,D:2,E:1,F:2},cols=['#ff8a6b','#7cc8ff','#ffd45c','#b79cff','#5fd4b0','#ff7aa8','#ffffff','#9fe486','#ff6b6b','#c9f2e3'];let ci=0;
@@ -3747,7 +3830,7 @@ function laneHouse(lp,o){const C=LOC.city;for(const c of [...lp.g.children])lp.g
 function laneTick(dt){LANE.t+=dt;if(LANE.t>=1){LANE.t=0;laneRefresh();}visTick(dt);}
 function laneIcon(j){const o=LANE.own[j];return o&&o.k===laneMe()?'🏠':'🔔';}
 function laneLabel(j){const o=LANE.own[j];if(!o)return'';if(o.k===laneMe())return'Go inside your house';
-  return VIS.st==='knock'&&VIS.host===o.k?'Waiting for '+o.nm+'…':'Knock on '+o.nm+"'s door";}
+  return VIS.st==='knock'&&VIS.host===o.k?'⏳ Waiting at the door…':'Knock on '+o.nm+"'s door";}
 function laneDoor(j){const o=LANE.own[j];if(!o)return;if(o.k===laneMe()){enter('home');return;}laneKnock(o.k);}
 function laneHostDoor(){const j=LANE.slotOf.get(VIS.host),C=LOC.city;return j!=null&&C&&C.lane&&C.lane[j]?C.lane[j].door:[-17,-4.6,0];}
 /* a friend (old version) standing in THEIR own yard in town shows up at their house on Friends Lane */
@@ -3798,7 +3881,13 @@ function visTick(dt){if(!VIS.st)return;const now=performance.now(),a=MP.peers.ge
 function visEnter(a){if(fading||CUT){VIS.t=performance.now();return;}
   VIS.st='in';VIS.hm=JSON.stringify(a.hm);VIS.seenHome=a.loc==='home';VIS.away=0;
   if(DECO.on)decoEnd();if(P.ride)stopRide();if(P.sit)standUp();closePanel();SFX.door();
-  fade(()=>{visFill(a.hm);setLoc('visit');const L=LOC.visit;P.x=L.ox;P.z=L.oz+L.D-1.3;P.yaw=0;P.pitch=0;P.sit=null;bringFollowers();SFX.yay();toast('🏠 Welcome to '+a.nm+"'s house!",3);});}
+  fade(()=>{visFill(a.hm);setLoc('visit');const L=LOC.visit;[P.x,P.z]=visSpot(L,a);P.yaw=0;P.pitch=0;P.sit=null;bringFollowers();SFX.yay();toast('🏠 Welcome to '+a.nm+"'s house!",3);});}
+/* 🚪 where a guest steps in: by the door, but not inside the host (who lands on the door spot too) and not right against a sofa */
+function visSpot(L,a){const hx=a&&a.loc==='home'&&Number.isFinite(a.rx)&&Number.isFinite(a.rz)?a.rx+VOX-LOC.home.ox:null,hz=hx!==null?a.rz:0,z0=L.oz+L.D-1.3;let best=null,bs=-9;
+  for(const [dx,dz] of [[1.3,-.5],[-1.3,-.5],[0,-1.5],[1.6,-1.6],[-1.6,-1.6],[2.6,-.4],[-2.6,-.4],[0,-2.6]]){const x=L.ox+dx,z=z0+dz;let m=Math.hypot(x-L.ox,z-z0)-.3;   /* the door spot is where the host lands */
+    for(const r of L.dcols)m=Math.min(m,Math.hypot(Math.max(r.x1-x,0,x-r.x2),Math.max(r.z1-z,0,z-r.z2)));
+    if(hx!==null)m=Math.min(m,Math.hypot(hx-x,hz-z)-.3);if(m>=1.0){bs=m;best=[x,z];break;}if(m>bs){bs=m;best=[x,z];}}
+  return collideXZ(best[0],best[1],.3,L);}
 function visLeave(msg){const d=laneHostDoor();visReset();if(msg)toast(msg,3.2);SFX.door();
   fade(()=>{setLoc('city');P.x=d[0];P.z=d[1];P.yaw=d[2];P.pitch=0;P.sit=null;bringFollowers();saveLocal();});}
 function visFill(hm){const L=LOC.visit;if(!L||!hm||typeof hm!=='object')return;visitShell(L,!!hm.b,typeof hm.u==='string');
@@ -3820,9 +3909,9 @@ function hostCard(){if(HOST.cur||!HOST.queue.length)return;const q=HOST.queue.sh
   let el=$('knockCard');if(!el){el=document.createElement('div');el.id='knockCard';document.body.appendChild(el);}
   const home=CUR.id==='home';
   el.innerHTML=`<div class="kc-t">🔔 Ding-dong!</div><div class="kc-m"><b>${esc(q.nm)}</b> is at your door${home?'':' on Friends Lane'}.<br>Let them in?</div><div class="kc-b"><button class="btn mint" id="kcYes">${home?'✅ Come in!':'🏠 Go home &amp; let in'}</button><button class="btn" id="kcNo">🙅 Not now</button></div>`;
-  el.hidden=false;$('kcYes').onclick=()=>hostAnswer(true);$('kcNo').onclick=()=>hostAnswer(false);
+  el.hidden=false;document.body.classList.add('kc');$('kcYes').onclick=()=>hostAnswer(true);$('kcNo').onclick=()=>hostAnswer(false);
   clearTimeout(HOST.ct);HOST.ct=setTimeout(()=>{if(HOST.cur===q)hostAnswer(false,true);},40000);}
-function hostAnswer(ok,quiet){const q=HOST.cur;if(!q)return;HOST.cur=null;const el=$('knockCard');if(el)el.hidden=true;clearTimeout(HOST.ct);
+function hostAnswer(ok,quiet){const q=HOST.cur;if(!q)return;HOST.cur=null;const el=$('knockCard');if(el)el.hidden=true;document.body.classList.remove('kc');clearTimeout(HOST.ct);
   HOST.an={to:q.peer,id:q.id,ok:ok?1:0};
   if(ok){HOST.until=performance.now()+25000;SFX.yay();if(CUR.id!=='home'&&!CUT&&!fading)ACT.gohome();toast('🏠 '+q.nm+' is coming in!',2.6);}
   else if(!quiet)toast('💛 Okay! '+q.nm+' can try again later.',2.4);
@@ -3835,7 +3924,7 @@ function mpTick(dt){if(!MP.grp)return;const loc=CUR?CUR.id:'city';
     laneStamp(st);const key=JSON.stringify(st);if(key!==MP.lastKey){MP.lastKey=key;MP.grp.presence(st).catch(()=>{});}}
   for(const a of MP.peers.values()){if(!a.av)continue;let sp=peerSpot(a);const vis=!!sp,lie=vis&&!!a.zz;a.av.root.visible=vis;if(lie)sp=mpBedSpot(a,sp);if(sp){a.tx=sp[0];a.tz=sp[1];a.ry=sp[2];}
     const d=Math.hypot(a.tx-a.x,a.tz-a.z);if(d>8||lie!==!!a.lie){a.x=a.tx;a.z=a.tz;}else{const k=Math.min(1,dt*8);a.x+=(a.tx-a.x)*k;a.z+=(a.tz-a.z)*k;}
-    mpPose(a,dt,vis,lie,d);
+    mpPose(a,dt,vis,lie,d);if(vis&&!lie&&Math.hypot(a.x-camera.position.x,a.z-camera.position.z)<.6)a.av.root.visible=false;
     if(a.bub){a.bubT-=dt;if(a.bubT<=0){a.av.root.remove(a.bub);a.bub=null;}}}}
 /* 🦘🐾🛏️💤 more of a friend shows up (optional presence fields: old versions ignore them, and friends on old versions just don't send them):
    jp = how many times they jumped (a new number = a hop), pt = the pets walking with them (at most 3: [kind, colour, name, outfit]).
@@ -3889,9 +3978,9 @@ function mpPetsTick(a,dt,vis){const L=a.pets;if(!L)return;
   if(n&&m>8)T.length=0;if(!T.length||m>=.35){T.push([a.x,a.z]);if(T.length>40)T.shift();}   /* popped somewhere else: a new trail */
   const near=Math.hypot(a.x-P.x,a.z-P.z)<24;
   for(let i=0;i<L.length;i++){const q=L[i],[gx,gz]=mpTrail(a,1.4+i*.75,i===1?-.35:i===2?.35:0);
-    if(fresh||Math.hypot(gx-q.x,gz-q.z)>9){[q.x,q.z]=collideXZ(gx,gz,.25,CUR);q.mv=false;q.face=Math.atan2(a.x-q.x,a.z-q.z);q.g.rotation.y=q.face;}
+    if(fresh||Math.hypot(gx-q.x,gz-q.z)>9){[q.x,q.z]=collideXZ(gx,gz,.3,CUR);q.mv=false;q.face=Math.atan2(a.x-q.x,a.z-q.z);q.g.rotation.y=q.face;}
     else{const dx=gx-q.x,dz=gz-q.z,dd=Math.hypot(dx,dz);
-      if(dd>.06){const sp=Math.min(7,1+dd*3.2),s=Math.min(dd,sp*dt);let nx=q.x+dx/dd*s,nz=q.z+dz/dd*s;if(near)[nx,nz]=collideXZ(nx,nz,.22,CUR);q.x=nx;q.z=nz;q.face=Math.atan2(dx,dz);q.mv=dd>.15;q.spd=clamp(sp/3,.6,1.8);}
+      if(dd>.06){const sp=Math.min(7,1+dd*3.2),s=Math.min(dd,sp*dt);let nx=q.x+dx/dd*s,nz=q.z+dz/dd*s;if(near)[nx,nz]=collideXZ(nx,nz,.3,CUR);q.x=nx;q.z=nz;q.face=Math.atan2(dx,dz);q.mv=dd>.15;q.spd=clamp(sp/3,.6,1.8);}
       else{q.mv=false;q.face=angLerp(q.face,Math.atan2(a.x-q.x,a.z-q.z),Math.min(1,dt*3));}}
     q.g.visible=true;q.g.position.set(q.x,hopY(q,dt),q.z);q.g.rotation.y=angLerp(q.g.rotation.y,q.face,Math.min(1,dt*8));animPet(q.m,dt,q.mv,q.spd);q.tag.visible=Math.hypot(P.x-q.x,P.z-q.z)>1.3;}}
 /* jump right next to a friend, even into the shop they are in */
@@ -3920,8 +4009,8 @@ const SHOP_SPOTS={
   flowers:{n:2,buy:5,spots:[[-3.6,-2.65,Math.PI],[0,-2.65,Math.PI],[3.6,-2.65,Math.PI],[-2,1,0],[1,.8,0],[4.1,3.05,Math.PI],[2.0,3.1,0]]},
   cafe:{n:2,buy:0,spots:[[-.6,-2.15,Math.PI],[-3.3,-2.15,Math.PI],[0,.6,0],[-1.0,2.7,0],[1.2,2.9,0],[4.6,-.4,Math.PI/2]]},
   toys:{n:3,buy:6,spots:[[-3.6,-3.3,Math.PI],[0,-3.3,Math.PI],[3.6,-3.3,Math.PI],[-1.4,-.4,Math.PI],[1.0,-.4,Math.PI],[3.6,.9,0],[-4.6,1.95,Math.PI],[0,1.6,0]]},
-  bakery:{n:2,buy:0,spots:[[0,-2.5,Math.PI],[-1.6,-2.5,Math.PI],[1.6,-2.5,Math.PI],[-4.9,-1.0,-Math.PI/2],[0,1.2,0],[1.6,2.8,0]]},
-  icecream:{n:2,buy:0,spots:[[0,-2.5,Math.PI],[-1.6,-2.5,Math.PI],[1.6,-2.5,Math.PI],[-4.0,-2.6,Math.PI],[0,1.0,0],[1.6,2.8,0]]},
+  bakery:{n:2,buy:2,spots:[[0,-2.5,Math.PI],[-1.6,-2.5,Math.PI],[1.6,-2.5,Math.PI],[-4.9,-1.0,-Math.PI/2],[0,1.2,0],[1.6,2.8,0]]},
+  icecream:{n:2,buy:2,spots:[[0,-2.5,Math.PI],[-1.6,-2.5,Math.PI],[1.6,-2.5,Math.PI],[-4.0,-2.6,Math.PI],[0,1.0,0],[1.6,2.8,0]]},
   library:{n:2,buy:-1,spots:[[-3.7,-3.15,Math.PI],[-1.2,-3.15,Math.PI],[1.3,-3.15,Math.PI],[3.8,-3.15,Math.PI],[-4.8,-1.5,-Math.PI/2],[4.8,-1.5,Math.PI/2],[0,1.8,0],[4.4,2.9,Math.PI]]},
   clothes:{n:2,buy:4,spots:[[-3.6,-2.85,Math.PI],[0,-2.85,Math.PI],[3.6,-2.85,Math.PI],[4.9,-1.2,Math.PI/2],[3.6,3.15,Math.PI],[-5.4,-.85,Math.PI],[0,1.2,0],[-1.8,.4,0],[1.5,3.2,0]]}};
 function segFree(L,a,b){const len=Math.hypot(b[0]-a[0],b[1]-a[1]),n=Math.max(1,Math.ceil(len/.3));for(let i=0;i<=n;i++){const t=i/n,x=L.ox+a[0]+(b[0]-a[0])*t,z=L.oz+a[1]+(b[1]-a[1])*t;for(const c of L.cols)if(pushOut(x,z,.3,c))return false;}return true;}
@@ -3936,7 +4025,9 @@ class Shopper{
       if(d<.1){this.i=this.next;this.next=-1;this.wait=rand(2,6);this.face=t[2]||this.face;
         if(this.i===this.cfg.buy){this.wait=4;if(here){floatText(pick(['🛍️','🪙','💕']),this.x,2.2,this.z,{h:.5});const k=KEEPERS.find(q=>q.L===this.L);if(k)k.p.wave=1.2;}}}
       else if(here&&Math.hypot(P.x-this.x,P.z-this.z)<.9)this.moving=false;
-      else{const sp=Math.min(d,1.1*dt);this.x+=dx/d*sp;this.z+=dz/d*sp;this.face=Math.atan2(dx,dz);this.moving=true;}}
+      else{const sp=Math.min(d,1.1*dt),nx=this.x+dx/d*sp,nz=this.z+dz/d*sp,bl=SHOPPERS.some(o=>o!==this&&o.L===this.L&&Math.hypot(o.x-nx,o.z-nz)<.7&&Math.hypot(o.x-nx,o.z-nz)<Math.hypot(o.x-this.x,o.z-this.z));
+        if(bl){this.moving=false;this.wait=rand(.5,1.2);this.blk=(this.blk||0)+1;if(this.blk>=3){this.blk=0;this.next=this.i;}}   /* 🛍️ someone in the way: wait, then go back */
+        else{this.blk=0;this.x=nx;this.z=nz;this.face=Math.atan2(dx,dz);this.moving=true;}}}
     if(!here)return;this.g.position.set(this.x,0,this.z);this.g.rotation.y=angLerp(this.g.rotation.y,this.face,Math.min(1,dt*7));animPerson(this.p,dt,this.moving);this.target.x=this.x;this.target.z=this.z;}}
 function buildShoppers(){for(const id in SHOP_SPOTS){const cfg=SHOP_SPOTS[id],L=LOC[id];if(!L)continue;
     cfg.spots=cfg.spots.filter(s=>!L.cols.some(c=>pushOut(L.ox+s[0],L.oz+s[1],.3,c)));
@@ -3969,23 +4060,27 @@ function buildActors(){
   const k12=makePerson({skin:'#f2d3b3',hair:'#f2c14e',style:'short',top:'#ffffff',bottom:'#2e2347',shoes:'#2e2347',apron:'#ff7a1f',hat:'chef',eyes:'sparkle'});
   const k13=makePerson({skin:'#f2d3b3',hair:'#9a6a43',style:'bun',top:'#7fdcb5',bottom:'#3f4c86',shoes:'#3d2c5e',dress:true,glasses:'glasses'});
   const chat=lines=>()=>toast('“'+pick(lines)+'”',3.4);
-  for(const [p,L,x,z,name,shop] of [[k1,LOC.market,4.9,.95,'Mr. Bun','market'],[k2,LOC.pets,-4.9,.95,'Ms. Paws','pets'],[k3,LOC.flowers,4.1,.95,'Ms. Petal','flowers'],[k4,LOC.cafe,.3,-4.0,'Mr. Mocha','cafe'],[k5,LOC.clothes,3.6,1.25,'Ms. Stitch','clothes'],[k6,LOC.toys,-4.6,.2,'Mr. Toby','toys'],[k7,LOC.bakery,0,-4.2,'Mrs. Crumb','bakery'],[k8,LOC.icecream,0,-4.2,'Mr. Sprinkles','icecream'],
+  for(const [p,L,x,z,name,shop] of [[k1,LOC.market,4.9,.95,'Mr. Bun','market'],[k2,LOC.pets,-4.9,.95,'Ms. Paws','pets'],[k3,LOC.flowers,4.1,.95,'Ms. Petal','flowers'],[k4,LOC.cafe,.3,-4.0,'Mr. Mocha','cafe'],[k5,LOC.clothes,3.6,1.25,'Ms. Stitch','clothes'],[k6,LOC.toys,-4.6,.2,'Mr. Toby','toys'],[k7,LOC.bakery,2.0,-4.2,'Mrs. Crumb','bakery'],[k8,LOC.icecream,2.1,-4.2,'Mr. Sprinkles','icecream'],
     [k9,LOC.library,4.4,1.2,'Ms. Page',(c=>()=>shopOpen('library')?c():toast(`“Shh… the library is closed now. 🌙 Come back at ${DAY_ON}:00 ☀️”`,3.4))(chat(['Shh! Find a book you like. 📚','Books are like magic doors! ✨','Try the shelves. Every book has a fun fact!']))],
-    [k10,LOC.school,-4.6,-2.6,'Mr. Owl',chat(['Welcome to school! Tap the fun facts board to learn something. ✏️','The classrooms are down the hall: Math, English and History! 📚','Did you do your homework? Just kidding! 😄'])],
-    [k13,LOC.school,4.6,-2.6,'Mrs. Maple',()=>tcTalk()],
+    [k10,LOC.school,-5.25,-3.5,'Mr. Owl',chat(['Welcome to school! Tap the fun facts board to learn something. ✏️','The classrooms are down the hall: Math, English and History! 📚','Did you do your homework? Just kidding! 😄'])],
+    [k13,LOC.school,5.25,-3.5,'Mrs. Maple',()=>tcTalk()],
     [k11,LOC.fire,1.4,1.0,'Chief Sparky',chat(['Hi! Want to slide down the fire pole? 🚒','Remember: never play with matches! 🔥','If you see smoke, tell a grown-up right away!'])],
-    [k12,LOC.pizza,0,-3.95,'Chef Blaze',()=>chefTalk()]]){
-    bakePerson(p);p.root.position.set(L.ox+x,0,L.oz+z);L.g.parent.add(p.root);const tg=label(name,.3);tg.position.y=(p===k7||p===k12)?2.42:1.95;p.root.add(tg);
-    const k={p,L,x:L.ox+x,z:L.oz+z,name};KEEPERS.push(k);colC(L,x,z,.35);
+    [k12,LOC.pizza,2.0,-3.95,'Chef Blaze',()=>chefTalk()]]){
+    bakePerson(p);p.root.position.set(L.ox+x,(p===k7||p===k8)?.2:0,L.oz+z);L.g.parent.add(p.root);const tg=label(name,.3);tg.position.y=(p===k7||p===k12)?2.42:1.95;p.root.add(tg);   /* 🧁 behind the high cases the keepers stand on a little step */
+    const k={p,L,x:L.ox+x,z:L.oz+z,name};KEEPERS.push(k);colC(L,x,z,(p===k10||p===k13)?.8:.5);   /* a bit of room round people, so you don't press your nose into them (the two teachers fill their corners: nobody squeezes in behind them) */
     inter(L,{x,z:z+1.1,r:2.2,icon:typeof shop==='function'?'💬':'🛒',label:'Talk to '+name,act:()=>{p.wave=1.2;SFX.talk();if(typeof shop==='function')shop();else if(shop==='clothes')openClothes();else openShop(shop);},obj:p.root});}
   {const ct=LOC.pizza.inter.find(t=>t.label==='Talk to Chef Blaze');if(ct){ct.icon=()=>dlWaiting()?'🍕':'💬';ct.label=()=>dlWaiting()?'Pick up the pizza':'Talk to Chef Blaze';}}
   const L=LOC.pets;
   L.pens.forEach((pen,i)=>{const t=pen.type;for(let k=0;k<2;k++){const col2=PET_TYPES[t].cols[k];const m=makePet(t,col2);scene.add(m.root);
-    const a={m,t,col:col2,x:L.ox+rand(pen.x0,pen.x1),z:L.oz+rand(pen.z0,pen.z1),tx:0,tz:0,wt:0,pen,face:0,moving:false};a.tx=a.x;a.tz=a.z;
+    const a={m,t,col:col2,x:L.ox+rand(pen.x0,pen.x1),z:L.oz+rand(pen.z0,pen.z1-(pen.y?0:.45)),tx:0,tz:0,wt:0,pen,face:0,moving:false};
+    const o=PEN.find(b=>b.pen===pen);for(let n=0;n<8&&o&&Math.hypot(o.x-a.x,o.z-a.z)<1;n++){a.x=L.ox+rand(pen.x0,pen.x1);a.z=L.oz+rand(pen.z0,pen.z1-(pen.y?0:.45));}a.tx=a.x;a.tz=a.z;   /* the two start apart */
     a.target={x:0,z:0,r:3.9,icon:'💗',label:()=>'Adopt a '+PET_TYPES[t].name,act:()=>openAdopt(t,col2),obj:m.root};PEN.push(a);}});
 }
-function updatePen(dt){for(const a of PEN){a.wt-=dt;if(a.wt<=0){a.wt=rand(1.5,5);const L=LOC.pets;a.tx=L.ox+rand(a.pen.x0,a.pen.x1);a.tz=L.oz+rand(a.pen.z0,a.pen.z1);}
-  const dx=a.tx-a.x,dz=a.tz-a.z,d=Math.hypot(dx,dz);if(d>.08){const s=Math.min(d,.9*dt);a.x+=dx/d*s;a.z+=dz/d*s;a.face=Math.atan2(dx,dz);a.moving=true;}else a.moving=false;
+function updatePen(dt){for(const a of PEN){a.wt-=dt;const o=PEN.find(b=>b!==a&&b.pen===a.pen),fr=a.pen.y?0:.45;   /* 🐶 not nose-first at the front fence, and never inside the other one */
+  if(a.wt<=0){a.wt=rand(1.5,5);const L=LOC.pets,sm=a.pen.y?0:.25;for(let k=0;k<6;k++){a.tx=L.ox+rand(a.pen.x0+sm,a.pen.x1-sm);a.tz=L.oz+rand(a.pen.z0,a.pen.z1-fr);if(!o||Math.hypot(a.tx-o.tx,a.tz-o.tz)>.9)break;}}
+  const dx=a.tx-a.x,dz=a.tz-a.z,d=Math.hypot(dx,dz);if(d>.08){const s=Math.min(d,.9*dt),nx=a.x+dx/d*s,nz=a.z+dz/d*s;
+    if(o&&!a.pen.y&&Math.hypot(nx-o.x,nz-o.z)<.7&&Math.hypot(nx-o.x,nz-o.z)<Math.hypot(a.x-o.x,a.z-o.z)){a.moving=false;a.wt=Math.min(a.wt,.3);}
+    else{a.x=nx;a.z=nz;a.face=Math.atan2(dx,dz);a.moving=true;}}else a.moving=false;
   a.m.root.position.set(a.x,a.pen.y||0,a.z);a.m.root.rotation.y=angLerp(a.m.root.rotation.y,a.face,.12);animPet(a.m,dt,a.moving);a.target.x=a.x;a.target.z=a.z;}}
 function spawnLitter(){
   for(const l of LITTER)LOC.city.dyn.remove(l.g);LITTER=[];
@@ -4150,8 +4245,9 @@ function isActivePeer(a){return !!a&&!a.aw&&!ckFar(a);}   /* every online player
 function sleep(rec,fx,fz){
   if(S.time>=7&&S.time<21){toast('Not sleepy yet, beds work from 21:00 🌙',3);return;}
   const g=rec.g.position,f=FURN[rec.it.t].d/2+.35;P.sit={x:g.x-fx*.55,z:g.z-fz*.55,yaw:rec.it.r*Math.PI/2+Math.PI,h:.92,bed:1,bk:[P.x,P.z,P.yaw]};   /* head on the pillow */
-  P.x=P.sit.x;P.z=P.sit.z;P.yaw=P.sit.yaw;P.pitch=-.12;ZZ.t=0;SFX.pop();floatText('💤',g.x+fx*f,1.0,g.z+fz*f,{h:.4});toast('💤 Good night!',2);}
-function zzTick(dt){if(zzIn()&&S.time>=7&&S.time<21)zzMorning();   /* morning came (a friend's clock, or the night ran out) */
+  P.x=P.sit.x;P.z=P.sit.z;P.yaw=P.sit.yaw;P.pitch=-.12;ZZ.t=0;SFX.pop();floatText('💤',g.x+fx*(f+.6),.72,g.z+fz*(f+.6),{h:.4});toast('💤 Good night!',2);}   /* the 💤 floats up in the middle of the view (not onto the clock) */
+function zzTick(dt){const dh=CUR.id!=='home'||zzIn();if($('bDeco').hidden!==dh)$('bDeco').hidden=dh;   /* 🛋️ no decorating from bed */
+  if(zzIn()&&S.time>=7&&S.time<21)zzMorning();   /* morning came (a friend's clock, or the night ran out) */
   if(!zzIn()){ZZ.t=0;zzCard(false);return;}
   let n=1,all=1;for(const a of MP.peers.values())if(isActivePeer(a)){all++;if(a.zz)n++;}zzCard(all>1,n,all);
   if(n===all){ZZ.t+=dt;if(ZZ.t>=1.2&&!ZZ.go)zzSkip();}else ZZ.t=0;}
@@ -4197,7 +4293,7 @@ function netTick(dt){
   if(!NET.lost){NET.lost=1;NET.t=0;awBox();}
   const t0=NET.t;NET.t+=dt;if(NET.t>=NET.WAIT){awayExit('Your internet connection was lost 😢');return;}
   if(Math.floor(NET.t/3)>Math.floor(t0/3)&&!MP.grp&&MP.state!=='connecting'&&navigator.onLine!==false){clearTimeout(MP.rt);mpConnect();}}   /* while the card is up, look for the room every 3 s */
-function awBox(){let el=$('awayBox');const k=NET.lost?'net':AW.on?'aw':'';
+function awBox(){let el=$('awayBox');const k=NET.lost?'net':AW.on?'aw':'';toastHold(!!k);
   if(!k){if(el&&!el.hidden)el.hidden=true;return;}
   if(!el){el=document.createElement('div');el.id='awayBox';el.hidden=true;document.body.appendChild(el);el.addEventListener('click',()=>{if(AW.on){SFX.tap();awBack();}});}
   if(el.dataset.k!==k){el.dataset.k=k;el.innerHTML=k==='net'?'<div class="awc" role="alert"><div class="awt">📡 Reconnecting…</div><div class="aws">The internet went away. Hold on, we are looking for it!</div></div>'
@@ -4430,7 +4526,8 @@ const HOMEX={id:'home',L:()=>homeFl()?LOC.home.up:LOC.home,list:()=>S.home.items
 const CLX={id:'client',L:()=>LOC.client,list:()=>dsItems(),W:()=>CLW,D:()=>CLD,map:()=>CL_ITEMS,add:it=>addClItem(it),rm:u=>removeClItem(u),blocked:R=>R.x1<1.25&&R.x2>-1.25&&R.z2>CLD-1.75};
 const DX=()=>DECO.X||HOMEX;
 function decoStart(){const X=CUR.id==='home'&&!CLIMB?HOMEX:CUR.id==='client'&&dsHere()?CLX:null;if(!X)return;if(zzIn())standUp();DECO.X=X;DECO.on=true;P.sit=null;X.L().grid.visible=true;$('cross').classList.add('big');$('actWrap').hidden=true;renderBar();
-  if(X===HOMEX)toast('Look at something to move it, or open the shop 🛍️',3.4);}
+  if(X===HOMEX)toast(DECO_HINT,3.4);}
+const DECO_HINT='Look at something to move it, or open the shop 🛍️';
 function decoEnd(){if(DECO.placing)decoCancel();DECO.on=false;DX().L().grid.visible=false;if(DX()===HOMEX&&LOC.home.up)LOC.home.grid.visible=LOC.home.up.grid.visible=false;$('cross').classList.remove('big');$('bar').hidden=true;selMark(null);change();}
 function renderBar(){const b=$('bar');b.hidden=!DECO.on;if(!DECO.on)return;
   if(DECO.placing)b.innerHTML=`<button class="btn sky" data-d="turn">🔄 Turn</button><button class="btn mint" data-d="place" ${DECO.valid?'':'disabled'}>✅ Put it here</button><button class="btn white" data-d="cancel">✖ Cancel</button>`;
@@ -4477,8 +4574,12 @@ $('bar').addEventListener('click',e=>{const b=e.target.closest('[data-d]');if(!b
   ({turn:decoTurn,place:decoPlace,cancel:decoCancel,shop:()=>openCatalog('buy'),move:decoMove,away:decoAway,done:decoEnd,furn:()=>openPhone('furn'),finish:dsFinishAsk,leave:()=>exitClient()})[b.dataset.d]();});
 
 /* ================= panels ================= */
-function openPanel(html,o={}){const p=$('panel');p.classList.toggle('bottom',!!o.bottom);p.classList.toggle('side',!!o.side);$('card').className='card'+(o.cls?' '+o.cls:'');$('card').innerHTML=html;p.hidden=false;UI.open=true;UI.onClose=o.onClose||null;UI.lock=!!o.lock;
-  IN.joy.id=null;IN.joy.x=IN.joy.y=0;IN.look.id=null;$('joy').classList.remove('on');$('knob').style.transform='';$('actWrap').hidden=true;}
+function openPanel(html,o={}){const p=$('panel'),fresh=p.hidden;p.classList.toggle('bottom',!!o.bottom);p.classList.toggle('side',!!o.side);$('card').className='card'+(o.cls?' '+o.cls:'');$('card').innerHTML=html;p.hidden=false;if(fresh)$('card').scrollTop=0;   /* a card opened anew starts at its top (it used to keep the last card's scroll) */UI.open=true;UI.onClose=o.onClose||null;UI.lock=!!o.lock;
+  IN.joy.id=null;IN.joy.x=IN.joy.y=0;IN.look.id=null;$('joy').classList.remove('on');$('knob').style.transform='';$('actWrap').hidden=true;try{toastPlace();cardMore();}catch(e){}setTimeout(()=>{try{cardMore();}catch(e){}},350);}
+/* ⬇️ a card taller than the screen shows a little bouncing arrow at its bottom until you scroll to the end (the clothes maker: a soft fade over its "That's me!" bar) */
+function cardMore(){const c=$('card');if($('panel').hidden)return;const m=!c.classList.contains('phonecard')&&/auto|scroll/.test(getComputedStyle(c).overflowY)&&c.scrollHeight-c.clientHeight-c.scrollTop>30,f=c.querySelector('.crsave');
+  if(f){f.classList.toggle('more',m);c.classList.remove('more');}else c.classList.toggle('more',m);}
+$('card').addEventListener('scroll',cardMore,{passive:true});
 function closePanel(){const p=$('panel');if(p.hidden)return;p.hidden=true;UI.open=false;UI.lock=false;const f=UI.onClose;UI.onClose=null;if(f)f();}
 $('panel').addEventListener('pointerdown',e=>{if(e.target===$('panel')&&!UI.lock)closePanel();});
 /* ⌨️ typing on an iPad or phone: the keyboard covers the bottom of the screen (iOS only shrinks the "visual viewport"). While a text box in a card
@@ -4534,12 +4635,18 @@ ACT.fstop=()=>{const f=FR;f.prev='walk';if(f.loc!=='city'){f.loc='city';f.node=f
 
 /* pets */
 let PT=null;
-function openPet(p){PT=p;p.face=Math.atan2(P.x-p.x,P.z-p.z);p.g.rotation.y=p.face;SFX[PET_TYPES[p.d.type].snd]();renderPet();}
+function openPet(p){PT=p;p.face=Math.atan2(P.x-p.x,P.z-p.z);p.g.rotation.y=p.face;SFX[PET_TYPES[p.d.type].snd]();renderPet();petLook(p);}
+/* 👀 a pet card opened while the pet is out of sight (or behind the card) turns the camera to the pet; the old up/down look comes back after */
+function petLook(p){const c=boxOf($('card'));if(!c||P.sit||P.ride||CUT)return;const v=new THREE.Vector3(p.x,.35,p.z).project(camera),W=innerWidth,H=innerHeight,sx=(v.x+1)/2*W,sy=(1-v.y)/2*H;
+  if(v.z<1&&sx>W*.1&&sx<W*.9&&sy>H*.12&&sy<c.top-20)return;
+  const dx=p.x-P.x,dz=p.z-P.z,d=Math.hypot(dx,dz);if(d<.25)return;const f=Math.tan(camera.fov*Math.PI/360),yT=Math.max(H*.22,c.top*.55),a=Math.atan((1-2*yT/H)*f);
+  p.lk0=P.pitch;P.yaw=Math.atan2(-dx,-dz);P.pitch=clamp(Math.atan2(.35-1.5,d)-a,-1.2,.3);}
+function petBye(){if(PT&&PT.lk0!=null){if(!CUT&&!P.sit)P.pitch=PT.lk0;PT.lk0=null;}PT=null;}
 function renderPet(msg){const p=PT,d=p.d,h=Math.round(d.happy/20);
   openPanel(`<div class="who" style="--c:${d.col}">${PET_TYPES[d.type].icon} ${esc(d.name)}</div><div class="hearts">${hearts(clamp(h,0,5))}</div>
     <p class="line">${esc(msg||(d.happy>70?d.name+' is super happy!':d.happy>35?d.name+' wags happily at you.':d.name+' looks a little lonely. Some love would help!'))}</p>
     <div class="row"><button class="btn mint" data-a="ppet">💗 Pet</button>${(()=>{const n=PET_FOOD[d.type].reduce((s,k)=>s+(S.bag[k]||0),0);return`<button class="btn butter" data-a="pfeed">${PET_ITEMS[PET_FOOD[d.type][0]].i} Feed${n?' ('+n+')':''}</button>`;})()}
-    <button class="btn sky" data-a="pplay">${PET_ITEMS[PET_TOY[d.type]].i} Play</button><button class="btn coral" data-a="pdress">🎀 Dress up</button><button class="btn lilac" data-a="pstay">${d.stay?'🐾 Follow me':'🏠 Stay here'}</button><button class="btn white" data-a="close">Bye!</button></div>`,{bottom:true,onClose:()=>{PT=null;}});}
+    <button class="btn sky" data-a="pplay">${PET_ITEMS[PET_TOY[d.type]].i} Play</button><button class="btn coral" data-a="pdress">🎀 Dress up</button><button class="btn lilac" data-a="pstay">${d.stay?'🐾 Follow me':'🏠 Stay here'}</button><button class="btn white" data-a="close">Bye!</button></div>`,{bottom:true,onClose:petBye});}
 ACT.ppet=()=>{const d=PT.d;d.happy=Math.min(100,d.happy+10);qEvent('pet');if(cool('pet'+d.id,3))addXP('pets',2);SFX.pet();floatText('💗',PT.x,1.1,PT.z,{h:.55});renderPet(pick([d.name+' loves that!',d.name+' wiggles happily!','So soft!']));change();};
 ACT.pfeed=()=>{const d=PT.d,list=PET_FOOD[d.type],k=list.find(f=>S.bag[f]>0);
   if(!k){SFX.no();renderPet('No food for '+d.name+' in your bag. The pet shop sells '+list.map(f=>PET_ITEMS[f].i+' '+PET_ITEMS[f].n.toLowerCase()).join(' and ')+'!');return;}
@@ -4556,7 +4663,7 @@ ACT.pdress=msg=>{const p=PT;if(!p)return;const d=p.d,o=petOutfit(d),own=Object.k
     <p class="line">${typeof msg==='string'&&msg?esc(msg):st>=5?esc(d.name)+' looks AMAZING! ✨':'What should '+esc(d.name)+' wear? Fill all 4 spots!'}</p>
     <div class="slots">${slots}</div><p class="pstyle">Style ${starRow(st)}</p>
     ${own.length?`<div class="row">${own.map(k=>`<button class="btn lilac" data-a="pwear:${k}">${ACCS[k].i} ${ACCS[k].n}${S.bag[k]>1?' ×'+S.bag[k]:''}</button>`).join('')}</div>`:'<p class="note">The 🐾 Pet Shop sells hats, crowns, bow ties, glasses, capes and wings!</p>'}
-    <div class="row"><button class="btn white" data-a="pback">Back</button></div>`,{bottom:true,onClose:()=>{PT=null;}});};
+    <div class="row"><button class="btn white" data-a="pback">Back</button></div>`,{bottom:true,onClose:petBye});};
 ACT.pwear=k=>{const p=PT;if(!p||!S.bag[k]||!ACCS[k])return;const d=p.d,o=petOutfit(d),sl=ACCS[k].s;if(o[sl])S.bag[o[sl]]=(S.bag[o[sl]]||0)+1;S.bag[k]--;o[sl]=k;rebuildPet(p);SFX.pet();floatText('✨',p.x,1.1,p.z,{h:.55});qEvent('dress');
   change();ACT.pdress(d.name+' looks so cute in the '+ACCS[k].n.toLowerCase()+'!');};
 ACT.poff=sl=>{const p=PT;if(!p)return;const d=p.d,o=petOutfit(d);const list=sl?[sl]:PSLOTS.map(x=>x[0]);let any=false;for(const x of list)if(o[x]){S.bag[o[x]]=(S.bag[o[x]]||0)+1;delete o[x];any=true;}
@@ -4574,8 +4681,12 @@ function renderAdopt(){const T=PET_TYPES[AD.type];
     <p class="note">Give your ${T.name} a name</p><input class="inp" id="petName" maxlength="14" value="${esc(AD.name)}" autocomplete="off">
     <div class="row"><button class="btn mint" data-a="adopt" ${S.coins<ADOPT_COST?'disabled':''}>💗 Adopt for ${ADOPT_COST} 🪙</button></div>${S.coins<ADOPT_COST?`<p class="note">You need ${ADOPT_COST} 🪙. Pick up litter or check your mail to get more!</p>`:''}`);}
 ACT.acol=c=>{AD.name=($('petName').value||AD.name);AD.col=c;renderAdopt();};
+/* 🐾 a spot in front of you, a little to the side, with room for a pet (not inside a pen or a shelf) */
+function petSpot(){for(const d of [1.7,1.4,1.1])for(const a of [.35,-.35,.7,-.7]){const x=P.x-Math.sin(P.yaw+a)*d,z=P.z-Math.cos(P.yaw+a)*d,q=collideXZ(x,z,.3,CUR);if(Math.hypot(q[0]-x,q[1]-z)<.02)return q;}
+  for(const a of [1.2,-1.2,1.6,-1.6,2.2,-2.2]){const x=P.x-Math.sin(P.yaw+a)*1.2,z=P.z-Math.cos(P.yaw+a)*1.2,q=collideXZ(x,z,.3,CUR);if(Math.hypot(q[0]-x,q[1]-z)<.02)return q;}   /* no room in front (right at a pen): beside you */
+  return collideXZ(P.x+Math.sin(P.yaw)*1.2,P.z+Math.cos(P.yaw)*1.2,.3,CUR);}
 ACT.adopt=()=>{if(shutBuy('pets'))return;const nm=($('petName').value||'').trim().slice(0,14)||AD.name;if(S.coins<ADOPT_COST)return;S.coins-=ADOPT_COST;
-  const d={id:uid(),type:AD.type,col:AD.col,name:nm,happy:80,stay:false,loc:CUR.id,x:P.x+.6,z:P.z+.8,sx:0,sz:0};S.pets.push(d);addPetActor(d);
+  const [nx,nz]=petSpot(),d={id:uid(),type:AD.type,col:AD.col,name:nm,happy:80,stay:false,loc:CUR.id,x:nx,z:nz,sx:0,sz:0};S.pets.push(d);addPetActor(d);
   closePanel();SFX.yay();toast(`Welcome home, ${nm}! ${PET_TYPES[AD.type].icon} Look at ${nm} to play.`,4);doneTask('pet');change();};
 
 /* shops */
@@ -4633,7 +4744,7 @@ ACT.eat=k=>{const it=itemInfo(k);if(!FOODS[k]){toast(k==='petfood'?'That\'s for 
 
 /* decorate catalog */
 let CAT={tab:'buy',sel:null,col:null};
-function openCatalog(tab){CAT.tab=tab||CAT.tab;renderCatalog();}
+function openCatalog(tab){CAT.tab=tab||CAT.tab;if($('toast').textContent===DECO_HINT)toastOff();renderCatalog();}
 function renderCatalog(){const t=CAT.tab;let body='';
   if(t==='buy'){if(CAT.sel){const F=FURN[CAT.sel];body=`<div class="it" style="cursor:default;max-width:220px;margin:0 auto"><span class="em">${F.i}</span><span>${F.n}</span><span class="pr">${F.p} 🪙</span></div>
       ${F.cols?`<p class="note">Pick a color</p><div class="swrow">${F.cols.map(c=>`<button class="sw ${c===CAT.col?'on':''}" style="background:${c}" data-a="ccol:${c}" aria-label="Color"></button>`).join('')}</div>`:''}
@@ -4726,8 +4837,12 @@ function qCard(Q,st,k,hard){let foot;const p=hard?'h':'q',steps=Q.steps;
   else foot=`<span class="qdone">✔ Done</span>`;
   return`<div class="qcard${hard?' hard':''}"><div class="qtop"><span class="qi">${Q.i}</span><div><div class="qt">${esc(Q.t)}${hard?'<span class="qtag">🔥 Hard</span>':''}${steps?'<span class="qtag tricky">🧩 Tricky</span>':''}</div><div class="qd">${esc(Q.d)}</div></div></div>${list}<div class="qfoot"><span class="qr">${Q.r} 🪙</span>${foot}</div></div>`;}
 function openPhone(app,chat){PH.app=app||null;PH.chat=chat||null;PH.jobs=false;if(chat){msgs().u[chat]=0;updPhoneBadge();}SFX.tap();renderPhone();}
+const phDate=()=>`${wdName()} · Day ${S.day}${psLeft()?' · 🏆 Pet Show today!':''}`;
+/* 🕐 an open phone keeps its clock right (after a clock jump to a friend's time, too): refreshed with the HUD clock */
+function phClock(){const ph=UI.open&&$('card').querySelector('.phone');if(!ph)return;const c=clockStr(S.time),set=(el,v)=>{if(el&&el.textContent!==v)el.textContent=v;};
+  set(ph.querySelector('.ph-status span'),c);set(ph.querySelector('.ph-clock'),c);set(ph.querySelector('.ph-date'),phDate());}
 function renderPhone(){hardCheck();const a=PH.app,q=S.q,ready=readyCount();let body='';
-  if(!a){body=`<div class="ph-clock">${clockStr(S.time)}</div><div class="ph-date">${wdName()} · Day ${S.day}${psLeft()?' · 🏆 Pet Show today!':''}</div>
+  if(!a){body=`<div class="ph-clock">${clockStr(S.time)}</div><div class="ph-date">${phDate()}</div>
     <div class="apps"><button class="app" data-a="phapp:msg"><span class="ic" style="background:#5fd4b0">💬</span>Messages${msgUnread()?`<span class="badge">${msgUnread()}</span>`:''}</button><button class="app" data-a="phapp:quest"><span class="ic" style="background:#ffd45c">🏆</span>Quest${ready?`<span class="badge">${ready}</span>`:''}</button>
     <button class="app" data-a="phapp:skills"><span class="ic" style="background:#b79cff">⭐</span>Skills</button>
     <button class="app" data-a="phapp:pets"><span class="ic" style="background:#7fdcb5">🐾</span>Pets</button>
@@ -4735,13 +4850,13 @@ function renderPhone(){hardCheck();const a=PH.app,q=S.q,ready=readyCount();let b
     <button class="app" data-a="phapp:mp"><span class="ic" style="background:#ff9ec4">👫</span>Friends</button>
     <button class="app" data-a="phapp:job"><span class="ic" style="background:#ffb36b">💼</span>Job${hasDlOrder()||(S.job==='designer'&&S.ds&&S.ds.o)||(S.job==='teacher'&&S.tc&&S.tc.o)?'<span class="badge">!</span>':''}</button>
     <button class="app" data-a="phapp:furn"><span class="ic" style="background:#ff9ec4">🛋️</span>Furniture</button>
-    <button class="app" data-a="phapp:cal"><span class="ic" style="background:#ff8a6b">📅</span>Calendar${psLeft()?'<span class="badge">!</span>':''}</button></div>`;}
+    <button class="app" data-a="phapp:cal"><span class="ic calic" aria-hidden="true"><b>${wdName().slice(0,3).toUpperCase()}</b><i${S.day>999?' style="font-size:22px"':''}>${S.day}</i></span>Calendar${psLeft()?'<span class="badge">!</span>':''}</button></div>`;}
   else{const hd=(t)=>`<div class="ph-hd"><button class="btn ph-back" data-a="phapp:" aria-label="Back to home screen">‹</button><h3>${t}</h3><span class="ph-coins">🪙 ${S.coins}</span></div>`;
     if(a==='quest'){const tab=PH.tab,dr=Object.values(q.st).filter(s=>s.s==='ready').length,hr=Object.values(S.hard).filter(s=>s.s==='ready').length;
       body=hd('🏆 Quest')+`<div class="ph-tabs"><button class="pill ${tab==='daily'?'on':''}" data-a="qtab:daily">📅 Daily${dr?' ('+dr+')':''}</button><button class="pill ${tab==='hard'?'on':''}" data-a="qtab:hard">🔥 Hard${hr?' ('+hr+')':''}</button></div>`;
       if(tab==='daily')body+=`<p class="ph-sub">Sign up for a quest, do it, and get money!</p>`+q.list.filter(k=>getQ(k)).map(k=>qCard(getQ(k),q.st[k],k,false)).join('')+`<p class="ph-sub" style="margin-top:14px;text-align:center">Finish a quest and a brand new one shows up!</p>`;
       else{const ord=k=>{const st=S.hard[k];return !st?2:st.s==='ready'?0:st.s==='on'?1:3;};body+=`<p class="ph-sub">Big challenges with big rewards! Finish one and a harder one pops up. 🔥</p>`+Object.keys(HARD).sort((a,b)=>ord(a)-ord(b)).map(k=>qCard(hq(k)||HARD[k],S.hard[k],k,true)).join('');}}
-    else if(a==='mp'){body=hd('👫 Play with friends')+mpPhone();}
+    else if(a==='mp'){body=hd('👫 Friends')+mpPhone();}
     else if(a==='job'){body=hd('💼 Job')+jobPhone();}
     else if(a==='furn'){body=hd('🛋️ Furniture')+furnPhone();setTimeout(thumbFill,0);}
     else if(a==='msg'){const C=PH.chat&&CHATS[PH.chat];body=(C?`<div class="ph-hd"><button class="btn ph-back" data-a="chat:" aria-label="Back to chats">‹</button><h3 class="chh"><span class="cav hcav" style="background:${C.c}">${C.av}</span>${C.n.split(' · ')[0]}</h3><span class="ph-coins">🪙 ${S.coins}</span></div>`:hd('💬 Messages'))+msgPhone();}
@@ -4827,7 +4942,7 @@ function crAvatar(){const old=CR.av;const p=makePerson(lookToPerson(CR.look));p.
   if(CR.tag){if(CR.tag.parent)CR.tag.parent.remove(CR.tag);p.root.add(CR.tag);}
   if(old)scene.remove(old.root);}
 function crTag(){if(CR.tag){if(CR.tag.parent)CR.tag.parent.remove(CR.tag);CR.tag.material.map.dispose();CR.tag.material.dispose();}
-  const t=label(CR.name||'Your name',.34,CR.name?{}:{fg:'#a08bb5'});t.position.y=1.95;CR.tag=t;if(CR.av)CR.av.root.add(t);}
+  const t=label(CR.name||'Your name',.34,CR.name?{fit:false}:{fg:'#a08bb5',fit:false});t.position.y=1.95;CR.tag=t;if(CR.av)CR.av.root.add(t);}
 function renderCreator(){const L=CR.look;
   const sw=k=>lookOpts(k).map(c=>`<button class="sw ${L[k]===c?'on':''}" style="background:${c}" data-a="lk:${k}:${c}" aria-label="Color"></button>`).join('');
   const own=f=>[['none','None']].concat((S.outfits||[]).filter(v=>CLOTHES[v.k]&&CLOTHES[v.k][f]).map(v=>[v.k+'|'+v.c,`${CLOTHES[v.k].i} ${CLOTHES[v.k].n} <i class="dot" style="background:${v.c}"></i>`]));
@@ -4974,8 +5089,8 @@ ACT.fjob=()=>{JOBCTX='talk';renderFriend(S.job?`Right now your job is ${JOBS[S.j
 ACT.findrosie=()=>{const f=FRIEND_ACTORS.find(a=>a.d.id==='rosie');if(!f||f.mode==='away'){SFX.no();toast('😴 Rosie is sleeping now. Find her in the morning!',3.2);return;}setNavTo({id:'rosie',n:'Rosie',i:'👧',nt:1,door:[f.x,f.z],actor:f});};
 
 /* the chef at the pizzeria */
-function chefSay(line,btns,lock){const K=KEEPERS.find(k=>k.name==='Chef Blaze');if(K)K.p.wave=1.2;SFX.talk();
-  openPanel(`<div class="who" style="--c:#ff7a1f">${CUR.id==='pizza'?'🔥':'📱'} Chef Blaze</div><p class="line">${esc(line)}</p><div class="row">${(btns||[['🛒 Buy food','pzshop'],['OK!','close']]).map(([t,a],i)=>`<button class="btn ${i?'white':'mint'}" data-a="${a}">${t}</button>`).join('')}</div>`,{bottom:true,lock:!!lock});}
+function chefSay(line,btns,lock,wait){const K=KEEPERS.find(k=>k.name==='Chef Blaze');if(K)K.p.wave=1.2;SFX.talk();
+  openPanel(`<div class="who" style="--c:#ff7a1f">${CUR.id==='pizza'?'🔥':'📱'} Chef Blaze</div><p class="line">${esc(line)}</p><div class="row">${(btns||[['🛒 Buy food','pzshop'],['OK!','close']]).map(([t,a],i)=>`<button class="btn ${i?'white':'mint'}" data-a="${a}">${t}</button>`).join('')}</div>`,{bottom:true,lock:!!lock,cls:wait?'chefw':''});}
 ACT.pzshop=()=>openShop('pizza');
 function chefTalk(){if(S.job!=='delivery'){chefSay("WELCOME to my kitchen! 🔥 I'm Chef Blaze. The BEST pizza in town — I promise! Hungry?",[['🛒 Buy food','pzshop'],['Bye!','close']]);return;}
   const d=dl(),o=d.o;
@@ -4987,7 +5102,7 @@ function chefTalk(){if(S.job!=='delivery'){chefSay("WELCOME to my kitchen! 🔥 
   if(d.end==='rest'){chefSay(`You again?! 😄 No more pizzas today: go and CHILL! See you ${pzNext()}!`);return;}
   if(!pizzaOpen()){chefSay(pzShutLine());return;}
   if(!d.on){d.on=true;d.wait=Math.min(d.wait,5);change();}
-  chefSay(d.quiet>0?"It's very quiet… 😟 People read that bad review. Wait here — an order will come soon!":"No orders yet! Patience… wait right here, they'll come! 📩");}
+  chefSay(d.quiet>0?"It's very quiet… 😟 People read that bad review. Wait here — an order will come soon!":"No orders yet! Patience… wait right here, they'll come! 📩",null,0,1);}
 function pickUp(){const d=dl(),o=d.o;if(!o||o.st!=='wait')return;o.st='carry';o.left=o.lim;change();SFX.pop();jobHud(true);
   const H=HOUSE(o.h),W=oWho(o);const at=`the ${H.n}${o.flat?', flat '+o.flat:''}`;
   if(o.r)chefSay(`Listen up! ⭐ This ${o.pz} pizza is for ${W.nm}, ${W.t}! ${W.she?'She':'He'} doesn't even LIKE pizza… so you must be FAST. Lightning fast! Take it to ${at}. Your timer starts when you close this. GO!`,[["🔥 Yes, Chef!",'close']]);
@@ -4998,7 +5113,7 @@ function pizzaIn(){if(S.job!=='delivery')return;const d=dl();
   if(dlAsk()){setTimeout(()=>{if(CUR.id==='pizza'&&!UI.open&&!CUT)chefTalk();},700);return;}
   if(dlOff())return;
   if(!pizzaOpen()){setTimeout(()=>{if(CUR.id==='pizza'&&!UI.open)toast('🕛 '+PZ_TIME+' 🍕',3.4);},600);return;}
-  if(!d.on){d.on=true;d.wait=Math.min(d.wait,6);change();setTimeout(()=>{if(CUR.id==='pizza'&&!UI.open)chefSay('Welcome to work! 🍕 Wait here, an order will come soon!',[['OK!','close']]);},700);}}
+  if(!d.on){d.on=true;d.wait=Math.min(d.wait,6);change();setTimeout(()=>{if(CUR.id==='pizza'&&!UI.open)chefSay('Welcome to work! 🍕 Wait here, an order will come soon!',[['OK!','close']],0,1);},700);}}
 
 /* after the 3rd pizza: "enough?" — the kid decides. After the 6th or at 21:00 the chef says bye */
 function chefAsk(){if(!pizzaOpen()){dlShut();return;}chefSay("Right! That's enough. Chill for today!",[['Yay! Chef, bye!','pzrest'],['PIZZAS MUST BE DELIVERED','pzmore']],1);}
@@ -5025,13 +5140,14 @@ function newOrder(){const d=dl();let H=pick(HOUSES.filter(h=>h.id!==d.last));con
   const W=oWho(o);
   const at=`the ${H.n}${o.flat?', flat '+o.flat:''}`,sh=W.she?'She':'He';let t,x;
   if(rare){t='⭐ RARE customer! Be careful!';x=far?`${W.nm} ${W.e} wants a ${pz} pizza at ${at}. That's FAR away! ${sh} doesn't like pizza much… ⏱️ Only ${o.lim} seconds! RUN! 💰 Big reward!`:`${W.nm} ${W.e} wants a ${pz} pizza at ${at}. It's close… but ${sh.toLowerCase()} is SO impatient! ⏱️ Only ${o.lim} seconds! 💰 Big reward!`;}
-  else{t=o.lim>=1800?'📩 Common order — no rush 😌':'📩 Common order — hurry!';x=`${W.nm} wants a ${pz} pizza at ${at}. ⏱️ ${o.lim>=1800?'30 minutes':Math.round(o.lim/60)+' minutes!'} ${CUR.id==='pizza'?'Pick it up from Chef Blaze!':'Come to the Pizzeria to pick it up!'}`;}
+  else{t=o.lim>=1800?'📩 Common order — no rush 😌':'📩 Common order — hurry!';x=`${W.nm} wants a ${pz} pizza at ${at}. ⏱️ ${o.lim>=1800?'30 minutes.':Math.round(o.lim/60)+' minutes!'} ${CUR.id==='pizza'?'Pick it up from Chef Blaze!':'Come to the Pizzeria to pick it up!'}`;}
+  if(UI.open&&$('card').classList.contains('chefw'))closePanel();   /* the order came: the Chef's "wait here" card is done */
   showNote(t,x,rare);addMsg('pz','pz',x,{r:rare?1:0,t2:t});
   jobHud(true);}
 let noteTm=0;
 let NOTE_CHAT=null;
 function showNote(t,x,rare,icon,chat){const n=$('note');$('noteT').textContent=t;$('noteX').textContent=x;n.querySelector('.ni').textContent=icon||(rare?'🌟':'🍕');NOTE_CHAT=chat||null;
-  n.querySelector('small').textContent=chat?'Tap to read it':'Tap to close · saved in 📱 Messages';n.classList.toggle('rare',!!rare);n.hidden=false;n.classList.remove('in');void n.offsetWidth;n.classList.add('in');clearTimeout(noteTm);noteTm=setTimeout(()=>{n.hidden=true;},rare||chat?12000:9000);}
+  n.querySelector('small').textContent=chat?'Tap to read it':'Tap to close · saved in 📱 Messages';n.classList.toggle('rare',!!rare);n.hidden=false;try{notePlace();toastPlace();}catch(e){}setTimeout(()=>{try{notePlace();toastPlace();}catch(e){}},30);n.classList.remove('in');void n.offsetWidth;n.classList.add('in');clearTimeout(noteTm);noteTm=setTimeout(()=>{n.hidden=true;},rare||chat?12000:9000);}
 $('note').addEventListener('click',()=>{SFX.tap();$('note').hidden=true;if(NOTE_CHAT&&!CUT&&!UI.open)openPhone('msg',NOTE_CHAT);});
 
 /* the job box and the little map in the top left corner */
@@ -5105,7 +5221,12 @@ function heldInit(){if(HELD)return;HELD=new THREE.Group();box(HELD,.48,.07,.48,'
 function heldHome(){camera.add(HELD);HELD.position.set(...HELD_AT);HELD.rotation.set(.5,-.18,0);HELD.scale.setScalar(1);HELD.visible=false;}
 function heldFit(){if(!HELD||HELD.parent!==camera)return;const k=clamp(camera.aspect/1.25,.5,1);if(Math.abs(HELD.scale.x-k)>.01){HELD.scale.setScalar(k);HELD.position.set(HELD_AT[0]*k,HELD_AT[1],HELD_AT[2]);}}
 /* big words that pop up on the screen (always fit, even on a phone) */
-function popText(t,cls){const e=document.createElement('div');e.className='pop '+(cls||'');e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),1600);}
+/* 💬 one big text at a time: a new one waits until the last one was readable for 0.8 s, then takes its place (no more texts on top of each other) */
+const POPQ={el:null,at:0};
+function popText(t,cls){const now=performance.now(),at=Math.max(now,POPQ.at);POPQ.at=at+800;
+  setTimeout(()=>{if(POPQ.el)POPQ.el.remove();const e=document.createElement('div');e.className='pop '+(cls||'');e.textContent=t;document.body.appendChild(e);POPQ.el=e;popClear();setTimeout(()=>{e.remove();if(POPQ.el===e)POPQ.el=null;},1600);},at-now);}
+function popClear(){const e=POPQ.el,t=$('toast');if(!e||!t.classList.contains('show'))return;const a=t.offsetTop,b=a+t.offsetHeight,h=e.offsetHeight,y=e.offsetTop;   /* a big text never sits on a message: it slides below it */
+  if(y+h/2>a&&y-h/2<b)e.style.top=Math.round(b+h*.65+8)+'px';}
 
 /* knocking: the door opens, and it's the right house… or not! */
 let CUT=null;
@@ -5438,7 +5559,7 @@ function psPanel(kind){const C=CUT;let h;
   if(kind==='intro')h=`<div class="hd"><h2>🎤 Welcome to the Pet Show!</h2></div><p class="note">4 pets, 3 judges, 1 winner! The other pets go first. Watch how they do!</p>${psBoard()}`;
   else if(kind==='rival'){const R=C.order[C.ri].R;h=`<div class="hd"><h2>${PET_TYPES[R.type].icon} ${esc(R.name)}'s turn!</h2><span class="psn">Pet ${C.ri+1} of 4</span></div>${psBoard()}`;}
   else h=`<div class="hd"><h2>⭐ Your turn, ${esc(C.d.name)}!</h2><span class="psn">Pet 4 of 4</span></div><p class="note">The score to beat: <b>${Math.max(0,...C.order.filter(x=>!x.you&&!x.out).map(x=>x.tot))} ⭐</b></p>${psBoard()}`;
-  openPanel(h+(kind!=='you'&&C.ri<3?`<div class="row"><button class="btn white" data-a="psskip">⏩ Skip to my turn</button></div>`:''),{bottom:true,lock:true});}
+  openPanel(h+(kind!=='you'&&C.ri<3?`<div class="row"><button class="btn white" data-a="psskip">⏩ Skip to my turn</button></div>`:''),{bottom:true,lock:true,cls:'psc'});}
 function psNextRival(){const C=CUT;C.ri++;
   if(C.ri<3){const x=C.order[C.ri];x.r.busy=true;psGo('rin');psPanel('rival');popText(PET_TYPES[x.R.type].icon+' '+x.R.name+'!');const snd=SFX[PET_TYPES[x.R.type].snd];if(snd)snd();}
   else psToYou();}
@@ -5449,7 +5570,7 @@ ACT.psskip=()=>{const C=CUT;if(!C||!C.show||C.ri>=3||!/^(intro|r)/.test(C.stage)
 function psJudgePanel(){const C=CUT,x=C.order[C.ri],me=!!x.you,nm=me?C.d.name:x.R.name,on=/judge$/.test(C.stage);
   const rows=PS_JUDGES.map((J,i)=>{const shown=on&&i<=C.jn,v=x.out?'✖':x.sc[J.k],line=x.out?PS_FLOP[x.flop].say[i]:J.say[Math.ceil(v/2)-1];
     return`<div class="psrow${shown?' on':''}"><span class="pji">${J.i}</span><div><b>${J.n}</b><i>${shown?esc(line):'…'}</i></div><span class="pjs">${shown?(x.out?'✖':v+'/10'):''}</span></div>`;}).join('');
-  openPanel(`<div class="hd"><h2>⭐ The judges score ${esc(nm)}…</h2></div>${rows}${on&&C.jn>=2?`<p class="earn">${x.out?PS_FLOP[x.flop].e+' Out of the show!':'Total: <b>'+x.tot+' ⭐</b>'}</p>`:''}`,{bottom:true,lock:true});}
+  openPanel(`<div class="hd"><h2>⭐ The judges score ${esc(nm)}…</h2></div>${rows}${on&&C.jn>=2?`<p class="earn">${x.out?PS_FLOP[x.flop].e+' Out of the show!':'Total: <b>'+x.tot+' ⭐</b>'}</p>`:''}`,{bottom:true,lock:true,cls:'psc'});}
 const psLook=(x,y,z)=>{const dx=x-P.x,dz=z-P.z;return{yaw:Math.atan2(-dx,-dz),pitch:Math.atan2(y-1.5,Math.hypot(dx,dz))};};
 function psCamTo(x,z,ax,ay,az,dt,sp){const e=1-Math.exp(-dt*(sp||4));P.x=lerp(P.x,x,e);P.z=lerp(P.z,z,e);const a=psLook(ax,ay,az);P.yaw=angLerp(P.yaw,a.yaw,e);P.pitch=lerp(P.pitch,a.pitch,e);P.moving=false;}
 function psPose(g,m,x,y,z,ry){g.visible=true;g.position.set(x,y,z);g.rotation.set(0,ry,0);m.b.rotation.set(0,0,0);m.b.position.set(0,0,0);}
@@ -5482,8 +5603,11 @@ function psFlop(x,u,dt){const g=x.r.m.root,m=x.r.m,BY=PS.top+.03,F=Math.PI/2;
   let q;if(u<4.6)q=psBfly(Math.max(0,u-.55));else{const k=clamp((u-4.6)/1.4,0,1),e=k*k*(3-2*k),a=x.ret||(x.ret=[g.position.x,g.position.z]);q=[lerp(a[0],PS.sx,e),0,lerp(a[1],PS.sz,e)];}
   const px=g.position.x,pz=g.position.z,mv=Math.hypot(q[0]-px,q[2]-pz),gy=lerp(BY,0,clamp((q[0]+35.15)/.4,0,1));
   psPose(g,m,q[0],gy+(mv>.004?Math.abs(Math.sin(u*14))*.05:0),q[2],mv>.004?Math.atan2(q[0]-px,q[2]-pz):g.rotation.y);animPet(m,dt,mv>.004);}
-function psCut(dt){const C=CUT,p=C.p,m=p.m,t=(C.t+=dt),u=t-C.st,sm=k=>k*k*(3-2*k),BY=PS.top+.03,PY=PS.top+.08,FACE=Math.PI/2,pd3=PS.pad[3],me=C.order[3];
+function psTags(){const pr=POPQ.el&&POPQ.el.getBoundingClientRect(),v=new THREE.Vector3(),W=innerWidth,H=innerHeight;
+  for(const r of PSX.rivals){let on=true;if(pr&&r.m.root.visible){r.tg.getWorldPosition(v);v.project(camera);const x=(v.x+1)/2*W,y=(1-v.y)/2*H;on=v.z>1||x<pr.left-50||x>pr.right+50||y<pr.top-30||y>pr.bottom+30;}if(r.tg.visible!==on)r.tg.visible=on;}}
+function psCut(dt){psTags();const C=CUT,p=C.p,m=p.m,t=(C.t+=dt),u=t-C.st,sm=k=>k*k*(3-2*k),BY=PS.top+.03,PY=PS.top+.08,FACE=Math.PI/2,pd3=PS.pad[3],me=C.order[3];
   for(const w of PET_ACTORS)if(w!==p&&w.loc==='city')w.g.visible=false;for(const f of FRIEND_ACTORS)if(f.mode==='follow')f.g.visible=false;   /* 🐾 your other pets and friends watch from out of sight, so the show stays clear */
+  for(const w of [...WALKERS,...FRIEND_ACTORS])if(w.g.visible&&Math.abs(w.x-PS.sx-3)<9&&Math.abs(w.z-PS.sz)<9)w.g.visible=false;   /* 🚶 and people walking past the stage don't step into the pictures */
   const showCam=()=>psCamTo(PS.cam[0],PS.cam[1],PS.sx,.35,PS.sz,dt,3.2),judgeCam=()=>psCamTo(PS.jcam[0],PS.jcam[1],PS.jx,.95,PS.sz,dt,3.4);
   const youWait=()=>{psPetPose(p,pd3[0],PY,pd3[1],FACE+.35);animPet(m,dt,false);};
   if(C.stage==='intro'){showCam();const k=sm(clamp(u/1.7,0,1));psPetPose(p,lerp(C.px,pd3[0],k),lerp(0,PY,k)+Math.sin(Math.PI*k)*.9,lerp(C.pz,pd3[1],k),k<.85?Math.atan2(pd3[0]-C.px,pd3[1]-C.pz):FACE+.35);animPet(m,dt,k<1);
@@ -5491,10 +5615,10 @@ function psCut(dt){const C=CUT,p=C.p,m=p.m,t=(C.t+=dt),u=t-C.st,sm=k=>k*k*(3-2*k
     if(u>=3.4)psNextRival();return;}
   if(C.ri>=0&&C.ri<3){youWait();const x=C.order[C.ri],r=x.r,g=r.m.root,rm=r.m,pd=PS.pad[C.ri];
     if(C.stage==='rin'){showCam();const k=sm(clamp(u/1.5,0,1));psPose(g,rm,lerp(pd[0],PS.sx,k),lerp(PY,BY,k)+Math.abs(Math.sin(k*Math.PI*3))*.08,lerp(pd[1],PS.sz,k),k<.9?Math.atan2(PS.sx-pd[0],PS.sz-pd[1]):FACE);animPet(rm,dt,k<1);
-      if(u>=1.7){if(x.out)psGo('rflop');else{x.k=0;x.fb=0;x.hf=0;psGo('rtr');floatText(x.tr[0].join(' ')+'!',PS.sx,1.55,PS.sz,{h:.42});}}return;}
+      if(u>=1.7){if(x.out)psGo('rflop');else{x.k=0;x.fb=0;x.hf=0;psGo('rtr');floatText(x.tr[0].join(' ')+'!',PS.sx,1.55,PS.sz,{h:.42,top:1});}}return;}
     if(C.stage==='rtr'){showCam();psPose(g,rm,PS.sx,BY,PS.sz,FACE);const gr=x.g[x.k];psTrickAnim(g,rm,x.R.type,x.tr[x.k][1],gr,u,BY,FACE,x);
-      if(!x.fb&&u>.9){x.fb=1;floatText(['🙈 Oops!','⭐ Good!','🌟 PERFECT!'][gr],PS.sx,1.3,PS.sz,{h:.42});gr===2?SFX.whee():gr===1?SFX.pop():SFX.tap();}
-      if(u>=1.6){rm.legs[0].rotation.x=0;psPose(g,rm,PS.sx,BY,PS.sz,FACE);if(x.k<2){x.k++;x.fb=0;x.hf=0;psGo('rtr');floatText(x.tr[x.k].join(' ')+'!',PS.sx,1.55,PS.sz,{h:.42});}else psGo('rjin');}return;}
+      if(!x.fb&&u>.9){x.fb=1;floatText(['🙈 Oops!','⭐ Good!','🌟 PERFECT!'][gr],PS.sx,1.3,PS.sz,{h:.42,top:1});gr===2?SFX.whee():gr===1?SFX.pop():SFX.tap();}
+      if(u>=1.6){rm.legs[0].rotation.x=0;psPose(g,rm,PS.sx,BY,PS.sz,FACE);if(x.k<2){x.k++;x.fb=0;x.hf=0;psGo('rtr');floatText(x.tr[x.k].join(' ')+'!',PS.sx,1.55,PS.sz,{h:.42,top:1});}else psGo('rjin');}return;}
     if(C.stage==='rflop'){showCam();psFlop(x,u,dt);if(u>=(x.flop==='sleep'?4.4:6.3))psGo('rjin');return;}
     if(C.stage==='rjin'){judgeCam();if(x.flop!=='sleep')psPose(g,rm,PS.sx,BY,PS.sz,FACE);if(u>1.1){psGo('rjudge');C.jn=-1;psJudgePanel();}return;}
     if(C.stage==='rjudge'){judgeCam();const n=Math.floor(u/1.15);
@@ -5534,7 +5658,7 @@ function psCut(dt){const C=CUT,p=C.p,m=p.m,t=(C.t+=dt),u=t-C.st,sm=k=>k*k*(3-2*k
     if(u>=1.3)psEnd();}}
 function psResults(){const C=CUT,placed=C.order.filter(x=>!x.out).sort((a,b)=>b.tot-a.tot||b.sc.trick-a.sc.trick||(b.you?1:0)-(a.you?1:0));
   C.placed=placed;C.place=placed.indexOf(C.order[3])+1;C.pod=true;C.ann=placed.slice(0,3).map((x,i)=>({x,i})).reverse();
-  PSX.pod.scale.y=.01;closePanel();psGo('res');SFX.ding();popText('🏆 And the results are…');}
+  PSX.pod.scale.y=.01;closePanel();psGo('res');P.x=PS.rcam[0];P.z=PS.rcam[1];{const a=psLook(PS.sx,1.0,PS.sz);P.yaw=a.yaw;P.pitch=a.pitch;}SFX.ding();popText('🏆 And the results are…');}
 function psReveal(a){const C=CUT,x=a.x,nm=x.you?C.d.name:x.R.name,med=['🥇','🥈','🥉'][a.i];a.shown=1;
   popText(a.i===0?(x.you?'🥇 YOU WIN!':'🥇 '+nm+' wins!'):med+' '+['1st','2nd','3rd'][a.i]+' place: '+nm+'!');
   if(a.i===0){SFX.yay();setTimeout(()=>SFX.whee(),300);}else SFX.ding();
@@ -5554,7 +5678,7 @@ function psPay(){const C=CUT,d=C.d,me=C.order[3],place=C.place,tot=me.tot;
   const prize=place===1?`You win <b>200 🪙</b>${lvUp?` and 🐾 Pets <b>+${lvUp} level${lvUp>1?'s':''}</b>`:' (your Pets skill is already MAX! 🌟)'}!`
     :place<=3?`You got <b>${pay} 🪙</b>. So close! Next time: hit the gold for perfect tricks! 💪`:`You got <b>${pay} 🪙</b> for joining. Practice your tricks and try again next Saturday! 💪`;
   openPanel(`<div class="hd"><h2>${place===1?'🏆 '+esc(d.name)+' WINS!':place===2?'🥈 2nd place!':place===3?'🥉 3rd place!':'4th place'}</h2></div>${rows}<p class="earn">${prize}</p><p class="note">The next Pet Show is next Saturday! 📅</p>
-    <div class="row"><button class="btn ${place===1?'butter':'mint'}" data-a="psbye">${place===1?'🎉 Yay!':'👍 OK!'}</button></div>`,{bottom:true,lock:true});}
+    <div class="row"><button class="btn ${place===1?'butter':'mint'}" data-a="psbye">${place===1?'🎉 Yay!':'👍 OK!'}</button></div>`,{bottom:true,lock:true,cls:'psc'});}
 ACT.psbye=()=>{const C=CUT;if(!C||!C.show||C.stage!=='res'||!C.paid)return;closePanel();psCardsDown();C.pod=false;PSX.rivals.forEach((r,i)=>psHome(r,i));
   const g=C.p.g;C.ox=g.position.x;C.oy=g.position.y;C.oz=g.position.z;psGo('out');};
 function psPos(){const C=CUT,T=[1.8,1.5,1.25][C.round],ph=(((performance.now()-C.t0)/1000)/T+C.ph)%1;return ph<.5?ph*2:2-ph*2;}
@@ -5562,13 +5686,13 @@ function psAim(){const C=CUT,[ic,nm]=C.tr[C.round];C.t0=performance.now();C.ph=M
   openPanel(`<div class="hd"><h2>${ic} ${nm}!</h2><span class="psn">Trick ${C.round+1} of 3</span></div>
     <p class="note">🎩 Tap <b>⭐ NOW!</b> when the paw is in the <b>gold</b> spot!</p>
     <div class="psbar"><div class="psgood"></div><div class="psgold"></div><div id="psMark" class="psm">🐾</div></div>
-    <div class="row"><button class="btn butter psnow" data-a="pstap">⭐ NOW!</button></div>`,{bottom:true,lock:true});}
+    <div class="row"><button class="btn butter psnow" data-a="pstap">⭐ NOW!</button></div>`,{bottom:true,lock:true,cls:'psc aim'});}
 ACT.pstap=()=>{const C=CUT;if(!C||!C.show||C.stage!=='aim'||C.t-C.st<.25)return;const pos=psPos(),d=Math.abs(pos-.5),g=d<=.08?2:d<=.22?1:0;
   C.res[C.round]=g;C.pts+=g;C.stage='trick';C.st=C.t;const el=$('psMark');if(el){el.style.left=(pos*100).toFixed(1)+'%';el.classList.add('hit');}
   const b=document.querySelector('.psnow');if(b)b.disabled=true;
   if(g===2){SFX.whee();setTimeout(()=>SFX.yay(),250);popText('PERFECT! 🌟');for(let i=0;i<4;i++)setTimeout(()=>{if(CUT&&CUT.show)floatText('⭐',PS.sx+rand(-.6,.6),rand(1.1,1.7),PS.sz+rand(-.6,.6),{h:.42});},i*120);}
   else if(g===1){SFX.pop();popText('Good! ⭐');}else{SFX.tap();popText('Oopsie! 🙈');floatText('💦',PS.sx,1.3,PS.sz,{h:.45});}};
-function psEnd(){const C=CUT;if(!C||!C.show)return;const p=C.p,o=PS.out;CUT=null;document.body.classList.remove('cut');if(UI.open)closePanel();psCardsDown();
+function psEnd(){const C=CUT;if(!C||!C.show)return;const p=C.p,o=PS.out;CUT=null;for(const r of PSX.rivals)r.tg.visible=true;document.body.classList.remove('cut');if(UI.open)closePanel();psCardsDown();
   for(const x of C.order)if(x.bf){scene.remove(x.bf);x.bf=null;}PSX.rivals.forEach((r,i)=>psHome(r,i));if(PSX.pod){PSX.pod.visible=false;PSX.pod.scale.y=1;}
   p.ps=false;p.m.b.rotation.set(0,0,0);p.m.b.position.set(0,0,0);p.m.legs[0].rotation.x=0;p.g.rotation.set(0,p.g.rotation.y,0);p.x=o[0]-.7;p.z=o[1]-.9;p.tx=p.x;p.tz=p.z;p.loc='city';p.d.loc='city';p.d.x=p.x;p.d.z=p.z;p.tag.visible=true;
   P.x=o[0];P.z=o[1];P.pitch=0;P.cy=0;[P.x,P.z]=collideXZ(P.x,P.z,.3,CUR);change();if(PSX.dirty)psRefresh();
@@ -5687,7 +5811,7 @@ function tcBar(h){let e=$('tchBar');if(!h){if(e)e.remove();return;}if(!e){e=docu
 function tcDesk(id){if(!tcHere(id)){SFX.tap();toast(S.job==='teacher'?"This isn't your class today! Check your messages. 📱":"This is the teacher's desk. Want to be a teacher? Ask Rosie for a job! 📚",3.4);return;}
   const L=CUR;if(!L.kids)tcSpawn(id);if(P.ride)stopRide();P.sit=null;closePanel();document.body.classList.add('cut','tch');$('note').hidden=true;
   BASEFOV=tcFov();camera.fov=BASEFOV;camera.updateProjectionMatrix();
-  CUT={tch:1,t:0,st:0,shake:0,stage:'sit',id,L,kids:L.kids,next:2.5,caught:0,missed:0,oops:0,pile:[],planes:[]};
+  CUT={tch:1,t:0,st:0,shake:0,stage:'sit',id,L,kids:L.kids,next:2.5,caught:0,missed:0,oops:0,pile:[],planes:[]};toastOff();
   tcBar('📚 Get ready… the lesson is about to start!');SFX.pop();}
 function tcCut(dt){const C=CUT,L=C.L,t=(C.t+=dt),u=t-C.st;
   for(const w of FRIEND_ACTORS)if(w.loc===L.id)w.g.visible=false;for(const w of PET_ACTORS)if(w.loc===L.id)w.g.visible=false;   /* 🐾 pets and friends who came along wait out of sight in class, so nobody blocks the kids */
@@ -5698,9 +5822,9 @@ function tcCut(dt){const C=CUT,L=C.L,t=(C.t+=dt),u=t-C.st;
     C.next-=dt;if(C.next<=0&&u<C.len-5){C.next=rand(2.2,3.6);if(C.kids.filter(k=>k.goof).length<2)tcGoof();}
     for(const k of C.kids)if(k.goof&&t-k.goof.t0>k.goof.dur){C.missed++;tcStop(k);}
     tcBar(`${SUBJ[C.id].i} <b>${SUBJ[C.id].n}</b> · ⏱ ${Math.ceil(left)} s · ✋ ${C.caught} stopped${C.missed?' · 🙈 '+C.missed+' missed':''}`);
-    if(u>=C.len){for(const k of C.kids)if(k.goof)tcStop(k);C.stage='hw';C.st=t;SFX.ding();popText('🔔 Ring! The lesson is over!');tcBar('📝 Homework time! Everyone brings you their homework…');tcHwPlan();}
+    if(u>=C.len){for(const k of C.kids)if(k.goof)tcStop(k);C.stage='hw';C.st=t;toastOff();SFX.ding();popText('🔔 Ring! The lesson is over!');tcBar('📝 Homework time! Everyone brings you their homework…');tcHwPlan();}
     return;}
-  if(C.stage==='hw'){tcHwWalk(u,dt);if(u>C.hwEnd||C.kids.every(k=>k.done)&&u>3){C.stage='grade';C.st=t;tcBar(null);tcPaperStart();}}}
+  if(C.stage==='hw'){tcHwWalk(u,dt);if(u>C.hwEnd||C.kids.every(k=>k.done)&&u>3){C.stage='grade';C.st=t;toastOff();tcBar(null);tcPaperStart();}}}
 function tcGoof(){const C=CUT,free=C.kids.filter(k=>!k.goof);if(!free.length)return;const w=free.map(k=>k.bad?3:1);let r=Math.random()*w.reduce((a,b)=>a+b,0),k=free[0];
   for(let i=0;i<free.length;i++){r-=w[i];if(r<=0){k=free[i];break;}}
   const g=pick(GOOFS);k.goof={k:g[0],t0:C.t,dur:rand(4.6,6.2)};k.bub=label(g[1],.3);k.bub.position.set(.42,1.3,0);k.p.root.add(k.bub);tcTag(k,true);if(g[0]==='plane')tcPlane(k);}
@@ -5749,9 +5873,9 @@ const HW_HIST=[['🏰','Who lived in castles?','kings and queens','astronauts'],
 function hwQ(subj){
   if(subj==='math'){const t=pick(['add','sub','count','mul']);
     if(t==='add'){const a=1+hwR(5),b=1+hwR(4),e=pick(['🍎','⭐','🐟','🌸','🍪']);return{pic:e.repeat(a)+' + '+e.repeat(b),q:'How many in all?',a:String(a+b),w:[String(a+b+1),String(a+b-1)]};}
-    if(t==='sub'){const a=5+hwR(6),b=1+hwR(4);return{pic:'➖',q:`${a} − ${b} = ?`,a:String(a-b),w:[String(a-b+1),String(a+b)]};}
+    if(t==='sub'){const a=5+hwR(6),b=1+hwR(4);return{pic:'🧮',q:`${a} − ${b} = ?`,a:String(a-b),w:[String(a-b+1),String(a+b)]};}
     if(t==='count'){const n=3+hwR(6),e=pick(['🐞','🎈','🍓','🐥']);return{pic:e.repeat(n),q:'How many are there?',a:String(n),w:[String(n+1),String(n-1)]};}
-    const a=2+hwR(4),b=2+hwR(2);return{pic:'✖️',q:`${a} × ${b} = ?`,a:String(a*b),w:[String(a*b+a),String(a*b+1)]};}
+    const a=2+hwR(4),b=2+hwR(2);return{pic:'🔢',q:`${a} × ${b} = ?`,a:String(a*b),w:[String(a*b+a),String(a*b+1)]};}
   if(subj==='english'){const t=pick(['animal','spell','opp']);
     if(t==='animal'){const [p,a,w]=pick(HW_ANIM);return{pic:p,q:'What animal is this?',a,w:[w]};}
     if(t==='spell'){const [p,a,w]=pick(HW_SPELL);return{pic:p,q:'Spell it!',a,w:[w]};}
@@ -5765,7 +5889,7 @@ function tcGrade(k){const n=k.hw.filter(q=>q.ans===q.a).length;if(k.giveF)return
 function tcPaper(){const C=CUT,k=C.kids[C.pi],mk=k.mk,all=mk.every(Boolean);
   if(C.ask){openPanel(`<div class="hd"><h2>🚪 Stop grading?</h2></div><p class="line">Mrs. Maple will grade the rest of the papers for you. You still get paid for the class!</p>
     <div class="row"><button class="btn butter" data-a="tstopy">✅ Yes, stop</button><button class="btn white" data-a="tstopn">✏️ No, keep grading</button></div>`,{lock:true,cls:'tpaper'});return;}
-  const rows=k.hw.map((q,i)=>{const show=C.key||k.hint[i];return`<div class="tq${k.hint[i]&&!mk[i]?' oops':''}"><div class="tqq"><span class="tpic">${q.pic}</span><span><b>${i+1}.</b> ${esc(q.q)}${show?`<span class="tkey">🔑 ${esc(q.a)}</span>`:''}</span></div>
+  const rows=k.hw.map((q,i)=>{const show=C.key||k.hint[i],lp=[...q.pic].length>3;return`<div class="tq${k.hint[i]&&!mk[i]?' oops':''}"><div class="tqq${lp?' lp':''}"><span class="tpic${lp?' long':''}">${q.pic}</span><span><b>${i+1}.</b> ${esc(q.q)}${show?`<span class="tkey">🔑 ${esc(q.a)}</span>`:''}</span></div>
     <div class="tqa"><span class="hand">${esc(q.ans)}</span>${mk[i]?`<span class="mk ${mk[i]}">${mk[i]==='ok'?'✔':'✗'}</span>`:`<button class="btn mint tb" data-a="tmk:${i}:ok" aria-label="Right">✔</button><button class="btn pink tb" data-a="tmk:${i}:x" aria-label="Wrong">✗</button>`}</div>
     ${k.hint[i]&&!mk[i]?`<div class="thint">🤔 Look again! The right answer is <b>${esc(q.a)}</b>. Is “${esc(q.ans)}” right?</div>`:''}</div>`;}).join('');
   const last=C.pi>=C.kids.length-1,back=C.pi>0?`<button class="btn white" data-a="tback">◀ Back</button>`:'';
@@ -5853,7 +5977,7 @@ function dcardBig(){const o=S.ds&&S.ds.o;if(!o){openPhone('job');return;}const T
 /* 🛋️ the Furniture app: free ideas for your client, or shopping for your own house */
 const DS_ALL=[...new Set([...BUY_FURN.filter(k=>k!=='petbed'&&k!=='xmastree'),...DS_TOYS,...FLOWER_SHOP])];
 function furnPhone(){
-  if(dsHere()){const o=S.ds.o,T=dsTheme(o),tile=(t,c)=>`<button class="fit" data-a="fpick:${t}:${c||''}"><img data-th="${t}|${c||''}" alt=""><span class="em">${FURN[t].i}</span><span>${esc(FURN[t].n)}</span></button>`;
+  if(dsHere()){const o=S.ds.o,T=dsTheme(o),tile=(t,c)=>`<button class="fit" data-a="fpick:${t}:${c||''}"><img data-th="${t}|${c||''}" alt=""><span class="em">${FURN[t].i}</span>${c?`<i class="swc" style="background:${c}" aria-hidden="true"></i>`:''}<span>${esc(FURN[t].n)}</span></button>`;
     return`<p class="ph-sub">✨ Everything is <b>free</b> for your job! Tap something to put it in the room.</p><div class="fsec">${T.e} Ideas for ${esc(dsWho(o).nm)}</div><div class="fgrid">${dsTray(T).map(([t,c])=>tile(t,c)).join('')}</div>
       ${PH.all?`<div class="fsec">All furniture</div><div class="fgrid">${DS_ALL.flatMap(t=>FURN[t]?(FURN[t].cols||['']).map(c=>[t,c]):[]).map(([t,c])=>`<button class="fit e" data-a="fpick:${t}:${c}"><span class="em">${FURN[t].i}</span>${c?`<i class="swc" style="background:${c}"></i>`:''}<span>${esc(FURN[t].n)}</span></button>`).join('')}</div>`:`<div class="row"><button class="btn white" data-a="fall">🔎 Show all furniture</button></div>`}`;}
   return`<p class="ph-sub">Buy furniture for <b>your own house</b> here. When you decorate for a client, everything is <b>free</b>! 🎨</p><div class="row"><button class="btn butter" data-a="fhome">🛍️ Shop for my house</button></div>`;}
@@ -5882,14 +6006,14 @@ ACT.dtutgo=()=>{closePanel();setTimeout(dtutStart,250);};
 
 /* the designer job, every frame */
 function dsTick(dt){const d=ds();
-  if(!S.dsTut&&S.intro&&!DTUT&&!TUT&&!UI.open&&!CUT&&!CLIMB&&!fading&&(CUR.id==='city'||CUR.id==='client')){dtutT+=dt;if(dtutT>1.2)dtutStart();}else dtutT=0;
+  if(!S.dsTut&&S.intro&&!DTUT&&!TUT&&!UI.open&&!CUT&&!CLIMB&&!fading&&!HOST.cur&&(CUR.id==='city'||CUR.id==='client')){dtutT+=dt;if(dtutT>1.2)dtutStart();}else dtutT=0;
   if(!d.o&&d.done<DS_MAX&&!CUT&&!DTUT&&isDaytime()){d.wait-=dt;if(d.wait<=0)dsNew();}
   if(HELD&&!CUT)HELD.visible=false;
   jobT+=dt;if(jobT>.25){jobT=0;jobHud();}mmT+=dt;if(mmT>.07){mmT=0;drawMini();}}
 
 /* runs every frame */
 function jobTick(dt){
-  if(S.job==='delivery'&&!S.tutDone&&S.intro&&!TUT&&!UI.open&&!CUT&&!CLIMB&&!fading&&CUR.id==='city'){tutT+=dt;if(tutT>1.6)tutStart();}else tutT=0;
+  if(S.job==='delivery'&&!S.tutDone&&S.intro&&!TUT&&!UI.open&&!CUT&&!CLIMB&&!fading&&!HOST.cur&&CUR.id==='city'){tutT+=dt;if(tutT>1.6)tutStart();}else tutT=0;
   if(S.job==='delivery'&&S.dl&&S.dl.o&&!S.dl.o.flat&&isApt(S.dl.o.h)){const o=S.dl.o,W=oWho(o);o.flat=(1+Math.floor(Math.random()*3))*10+1+Math.floor(Math.random()*5);addMsg('pz','pz',`📩 Order update: ${W.nm} lives in flat ${o.flat} at the ${HOUSE(o.h).n}.`);change();}
   if(S.intro&&!S.jobAsk){askT+=dt;if(askT>2.5&&!UI.open&&!CUT&&!fading&&CUR.id==='city')askJob();}
   dcT+=dt;if(dcT>.3){dcT=0;dcardUpd();}
@@ -5901,7 +6025,7 @@ function jobTick(dt){
     if(o.lim<1800&&was>30&&o.left<=30){toast('⏰ 30 seconds left! Hurry!',2.6);SFX.late();}
     if(was>0&&o.left<=0){toast("⏰ Oh no, you're late! Bring it anyway, quick!",3.4);SFX.late();}}
   /* waiting inside the Pizzeria when pizza time starts: the shift starts by itself */
-  if(!o&&!d.on&&CUR.id==='pizza'&&!dlOff()&&!dlAsk()&&pizzaOpen()&&!UI.open&&!CUT&&!TUT&&!fading&&!$('toast').classList.contains('show')){d.on=true;d.wait=Math.min(d.wait,6);change();jobHud(true);chefSay("Pizza time! 🕛 Welcome to work! 🍕 Wait here, an order will come soon!",[['OK!','close']]);}
+  if(!o&&!d.on&&CUR.id==='pizza'&&!dlOff()&&!dlAsk()&&pizzaOpen()&&!UI.open&&!CUT&&!TUT&&!fading&&!$('toast').classList.contains('show')){d.on=true;d.wait=Math.min(d.wait,6);change();jobHud(true);chefSay("Pizza time! 🕛 Welcome to work! 🍕 Wait here, an order will come soon!",[['OK!','close']],0,1);}
   if(!o&&d.on&&!dlOff()&&pizzaOpen()&&!CUT){d.wait-=dt;if(d.wait<=0)newOrder();}
   if(!o&&d.on&&!d.end&&d.done<DLV_DAY*2&&!pizzaOpen()&&!UI.open&&!CUT&&!TUT&&!CLIMB&&!fading&&!DECO.on&&!CR&&!$('toast').classList.contains('show'))dlShut();
   if(HELD&&!CUT){HELD.visible=!!(o&&o.st==='carry')&&!DECO.on&&!CR&&CUR.id!=='studio';if(HELD.visible)heldFit();}
@@ -5927,20 +6051,37 @@ function jobPhone(){let h;
 let INTRO=0;const ROSIE=()=>FRIEND_ACTORS[0];
 const INTRO_LINES=["Hi! You must be new here! I'm Rosie. I live in this town.","What's your name? And what do you look like? Show me!","{name}! What a great name. And I love your look! Welcome to Cozy Town!","Oh! Everyone in Cozy Town has a job. What job do you want to do?","Your new house is on Friends Lane, just down this road! Follow the pink arrow to find it. 🏡",
   "The market and the pet shop are just down the street. Look for the signs!","I'll be at the park by the fountain. Come find me! Bye for now!"];
-function introStep(){const f=ROSIE(),i=INTRO,line=INTRO_LINES[i];f.p.wave=.8;SFX.talk();
+function introStep(){const f=ROSIE(),i=INTRO,line=INTRO_LINES[i];f.p.wave=.8;SFX.talk();document.body.classList.add('talk');   /* 👋 while Rosie talks: no aim dot on her face, no jump/run buttons on her card */
   if(i===1){openPanel(`<div class="who" style="--c:#ff9ec4">Rosie</div><p class="line">${esc(line)}</p><div class="row"><button class="btn mint" data-a="imake">✨ Make my character</button></div>`,{bottom:true,lock:true});return;}
   if(i===3){JOBCTX='intro';S.jobAsk=true;openPanel(`${rosieHd()}<p class="line">${esc(line)}</p>${jobCards()}<div class="row"><button class="btn white" data-a="jobskip">I'll pick later</button></div>`,{bottom:true,lock:true});return;}
   if(i===4)setNav('home',true);   /* the pink arrow shows up as Rosie talks about it */
   openPanel(`<div class="who" style="--c:#ff9ec4">Rosie</div><p class="line">${esc(fill(line))}</p><div class="row"><button class="btn mint" data-a="inext">${i===INTRO_LINES.length-1?'Bye, Rosie!':'Next'}</button></div>`,{bottom:true,lock:true});}
-ACT.inext=()=>{INTRO++;if(INTRO>=INTRO_LINES.length){closePanel();const f=ROSIE();f.mode='walk';f.node=1;f.prev=-1;S.intro=true;frSt('rosie').met=1;addPts(f,3);setNav('home',true);change();toast(TOUCHY?'Drag on the left to walk, and on the right to look around! Tap ⬆️ to jump and 🏃 to run.':'WASD to walk, drag the mouse to look, Space to jump, Shift to run, E to use things.',6);return;}introStep();};
+ACT.inext=()=>{INTRO++;if(INTRO>=INTRO_LINES.length){closePanel();document.body.classList.remove('talk');const f=ROSIE();f.mode='walk';f.node=1;f.prev=2;S.intro=true;frSt('rosie').met=1;addPts(f,3);setNav('home',true);change();toast(TOUCHY?'Drag on the left to walk, and on the right to look around! Tap ⬆️ to jump and 🏃 to run.':'WASD to walk, drag the mouse to look, Space to jump, Shift to run, E to use things.',6);return;}introStep();};
 ACT.imake=()=>openCreator('intro');
 ACT.iname=()=>{const n=$('nameIn'),v=(n&&n.value||'').trim().slice(0,14);if(!v){n&&n.focus();return;}n.blur();S.name=v;INTRO=2;introStep();};
-function startIntro(){const f=ROSIE();f.mode='talk';f.loc='city';f.x=-16.8;f.z=-6.4;f.face=0;P.x=-14.8;P.z=-4.6;P.yaw=.84;P.pitch=-.05;INTRO=0;setTimeout(introStep,500);}
+function startIntro(){const f=ROSIE();f.mode='talk';f.loc='city';f.x=-16.8;f.z=-6.4;f.face=0;P.x=-14.8;P.z=-4.6;P.yaw=.84;P.pitch=innerHeight<500?-.3:-.05;   /* a phone held sideways: look down a bit, so Rosie stands above her card */INTRO=0;setTimeout(introStep,500);}
 
 /* ================= HUD ================= */
 let hudT=0,hungryWarn=false;
+/* 📐 the left HUD column (coins, bus/score pills, way-finder, map, job, notepad, designer card) always fits the screen: when it runs off the
+   bottom (a phone held sideways, several pills at once) or onto the joystick, only as many steps as needed, in this order: in a cut-scene the
+   hidden boxes give their space, the notepad moves beside the map, the task list folds, the designer card drops its picture and then sits
+   beside the map, the notepad hides, the map hides */
+const LFC=['lfCut','lfPad','lfTasks','lfDc','lfDcS','lfNoPad','lfNoMap'];
+function leftFit(){const L=$('left'),pad=$('pad'),dc=$('dcard'),mm=$('mmBtn');if(!L||!pad||!dc||!mm)return;
+  L.classList.remove(...LFC);pad.style.left=pad.style.top=dc.style.left=dc.style.top='';if($('hud').hidden)return;
+  const bad=()=>{const H=innerHeight-8,j=boxOf($('joy'));for(const el of[...L.children].flatMap(e=>e.id==='job'?[...e.children]:[e])){const r=boxOf(el);if(!r)continue;if(r.bottom>H)return true;   /* off the bottom, or on the joystick */
+      if(j&&r.left<j.right&&r.right>j.left&&r.bottom>j.top-6&&r.top<j.bottom)return true;}return false;},
+    side=(el,k)=>{if(!boxOf(mm)||!boxOf(el))return;L.classList.add(k);el.style.left=(mm.offsetLeft+mm.offsetWidth+8)+'px';el.style.top=mm.offsetTop+'px';},
+    steps=[()=>{if(document.body.classList.contains('cut'))L.classList.add('lfCut');},()=>side(pad,'lfPad'),()=>{if(boxOf($('tasks')))L.classList.add('lfTasks');},
+      ()=>{if(boxOf(dc))L.classList.add('lfDc');},()=>side(dc,'lfDcS'),()=>{if(boxOf(pad))L.classList.add('lfNoPad');},
+      ()=>{if(!boxOf(mm))return;L.classList.add('lfNoMap');L.classList.remove('lfPad','lfDcS');pad.style.left=pad.style.top=dc.style.left=dc.style.top='';}];
+  for(const st of steps){if(!bad())break;st();}}
+new MutationObserver(()=>leftFit()).observe($('left'),{childList:true,subtree:true,attributes:true,attributeFilter:['hidden']});   /* a pill or box comes or goes */
+addEventListener('resize',()=>setTimeout(leftFit,60));
+{const st=document.createElement('style');st.textContent='#left.lfPad #pad,#left.lfDcS #dcard{position:absolute;margin:0}#left.lfDc #dcard .dci{display:none}#left.lfNoPad #pad,#left.lfNoMap #mmBtn,#left.lfTasks #tasks ul,.cut #left.lfCut #nav,.cut #left.lfCut #job{display:none}';document.head.appendChild(st);}
 function updHud(force){$('coins').textContent=S.coins;const fd=$('food');fd.style.width=Math.round(S.hunger)+'%';fd.classList.toggle('low',S.hunger<25);
-  $('clock').textContent=clockStr(S.time);$('dayN').textContent=dayLabel();$('sunIc').textContent=nightF(S.time)>.5?'🌙':'☀️';if(force)renderTasks();}
+  $('clock').textContent=clockStr(S.time);$('dayN').textContent=dayLabel();$('sunIc').textContent=nightF(S.time)>.5?'🌙':'☀️';phClock();if(force)renderTasks();leftFit();}
 function showAction(){$('moveBtns').hidden=!PLAYING||DECO.on||!!CUT;const w=$('actWrap');if(!PLAYING||UI.open||DECO.on||!TARGET){w.hidden=true;return;}
   w.hidden=false;const lb=TARGET.say&&TARGET.say()||(typeof TARGET.label==='function'?TARGET.label():TARGET.label),ic=typeof TARGET.icon==='function'?TARGET.icon():TARGET.icon;if($('actLbl').textContent!==lb)$('actLbl').textContent=lb;if($('act').textContent!==ic)$('act').textContent=ic;}
 $('act').addEventListener('click',()=>{audioInit();if(KC.eat){KC.eat=false;return;}useTarget();});
@@ -5958,7 +6099,7 @@ $('bRun').addEventListener('click',()=>{if(performance.now()-runPd<1000)return;a
 $('bBag').addEventListener('click',()=>{audioInit();SFX.tap();openBag();});
 $('bPhone').addEventListener('click',()=>{audioInit();openPhone();});
 $('bChat').addEventListener('click',()=>{audioInit();openChat();});
-$('bDeco').addEventListener('click',()=>{audioInit();SFX.tap();DECO.on?decoEnd():decoStart();});
+$('bDeco').addEventListener('click',()=>{if(zzIn())return;audioInit();SFX.tap();DECO.on?decoEnd():decoStart();});
 $('bMenu').addEventListener('click',()=>{audioInit();SFX.tap();openSettings();});
 $('tasks').addEventListener('click',()=>$('tasks').classList.toggle('min'));
 $('tSet').addEventListener('click',()=>{audioInit();openSettings();});
@@ -6123,9 +6264,9 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     updFountain(dt);updDucks(dt,tt);
     updBall(dt);
     L.swings.forEach((s,i)=>{if(!(P.ride&&P.ride.kind==='swing'&&P.ride.i===i))s.rotation.x=lerp(s.rotation.x,Math.sin(tt*1.3+i*1.7)*.18,.05);});
-    for(const c of clouds){c.position.x+=c.userData.sp*dt;if(c.position.x>230)c.position.x=-230;}
+    for(const c of clouds){c.position.x+=c.userData.sp*dt;if(c.position.x>230)c.position.x=-230;c.scale.setScalar(clamp(Math.min(230-c.position.x,c.position.x+230)/40,.01,1));}   /* ☁️ shrink away before the wrap, grow back after it */
     for(const l of LITTER)l.sp.position.y=.45+Math.sin(tt*3+l.k)*.06;}
-  updTVs(dt);updFloats(dt);updBeach(dt);
+  updTVs(dt);updFloats(dt);updBeach(dt);popFades();
   const tx=Math.round(camera.position.x),tz=Math.round(camera.position.z);sun.target.position.set(tx,0,tz);sun.position.set(tx+SUND.x*70,SUND.y*70,tz+SUND.z*70);
   skyMesh.position.copy(camera.position);stars.position.copy(camera.position);
   updSky();renderer.render(scene,camera);
@@ -6140,7 +6281,7 @@ async function boot(){
     scene=new THREE.Scene();FOG=new THREE.Fog('#c4ecff',55,270);scene.fog=FOG;
     camera=new THREE.PerspectiveCamera(70,1,.1,700);camera.rotation.order='YXZ';
     hemi=new THREE.HemisphereLight('#ffffff','#a8c69a',.75);scene.add(hemi);
-    sun=new THREE.DirectionalLight('#fff4e0',.9);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);const sc=sun.shadow.camera;sc.left=-30;sc.right=30;sc.top=30;sc.bottom=-30;sc.near=1;sc.far=150;sun.shadow.bias=-.0006;sun.shadow.normalBias=.03;scene.add(sun);scene.add(sun.target);
+    sun=new THREE.DirectionalLight('#fff4e0',.9);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);const sc=sun.shadow.camera;sc.left=-30;sc.right=30;sc.top=30;sc.bottom=-30;sc.near=1;sc.far=150;sun.shadow.bias=-.0006;sun.shadow.normalBias=.09;scene.add(sun);scene.add(sun.target);
     lamp=new THREE.PointLight('#ffe2b8',0,20,1.4);scene.add(lamp);
     try{await Promise.race([document.fonts.load('800 40px "Baloo 2"'),new Promise(r=>setTimeout(r,2000))]);}catch(e){}
     buildSky();buildCity();buildHome();buildMarket();buildPetShop();buildFlowerShop();buildCafe();buildClothesShop();buildToyStore();buildBakery();buildIceCream();buildLibrary();buildSchool();buildClassrooms();buildFireStation();buildPizzeria();buildApts();buildClientRoom();buildVisit();buildBeach();buildStudio();buildActors();buildTownfolk();buildPetShow();buildCars();buildBall();buildShoppers();
