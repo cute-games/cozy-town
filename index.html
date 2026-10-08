@@ -690,6 +690,10 @@ const SFX={
   step(){tone(150+Math.random()*40,.06,'triangle',.13,0,95);},
   creak(){tone(300,.5,'sawtooth',.022,0,170);},
   late(){tone(660,.12,'square',.05);tone(520,.2,'square',.05,.14);},
+  bounce(){tone(240,.06,'triangle',.12,0,150);},
+  hit(){tone(620,.06,'square',.06,0,360);tone(1300,.05,'triangle',.07);},
+  swish(){tone(1200,.13,'sine',.03,0,420);},
+  aww(){tone(587,.16,'sine',.08,0,466);tone(466,.24,'sine',.07,.15,392);},
   ring(){for(let k=0;k<2;k++)for(let i=0;i<8;i++)tone(i%2?1047:1319,.06,'triangle',.11,k*.75+i*.07);},
 };
 function playTune(){const s=[0,4,7,12,7,4,5,9,12,9,7,4,0];s.forEach((n,i)=>tone(523.25*Math.pow(2,n/12),.3,'triangle',.13,i*.2));}
@@ -1467,7 +1471,8 @@ function buildCity(){
     box(st,.7,.74,3.3,'#ffffff',-32.75,0,SZ);box(st,.05,.62,3.34,'#ff4d6d',-33.12,.1,SZ,{ol:.015});box(st,.06,.06,3.36,'#ffd45c',-33.12,.7,SZ,{ol:false});
     for(const z of[21.05,22,22.95]){box(st,.44,.44,.44,'#9a6a43',-32.02,0,z);box(st,.48,.07,.48,'#ff9ec4',-32.02,.44,z,{ol:.012});box(st,.07,.62,.48,'#9a6a43',-31.76,.5,z);}
     col(L,-38.05,19.7,-34.5,24.3);col(L,-33.15,20.3,-31.7,23.7);
-    inter(L,{x:-34.25,z:SZ,r:2.7,icon:'🏆',label:()=>psTargetLabel(),act:()=>openShow(),pri:()=>isShowDay()&&!showDone()});}
+    inter(L,{x:-34.25,z:SZ,r:2.7,icon:'🏆',label:()=>psTargetLabel(),act:()=>openShow(),pri:()=>psOpen()&&!showDone()});}
+  buildBoard(L,st);   /* 📌 the ideas board and a big old oak, just inside the park's north gate */
   /* ===== paved paths to every shop and front door ===== */
   {const PAV='#f6e9df',EDGE='#e2cfc4',pave=(x1,z1,x2,z2)=>{const w=Math.abs(x2-x1),d=Math.abs(z2-z1),cx=(x1+x2)/2,cz=(z1+z2)/2;flat(st,w,d,PAV,cx,.026,cz);
       for(let i=1;i<Math.floor(w/1.5);i++)box(st,.04,.004,d,EDGE,Math.min(x1,x2)+i*1.5,.026,cz,{ol:false});for(let i=1;i<Math.floor(d/1.5);i++)box(st,w,.004,.04,EDGE,cx,.026,Math.min(z1,z2)+i*1.5,{ol:false});};
@@ -1622,7 +1627,7 @@ function palm(g,x,z,s=1,lean=.25,ry=0){const p=new THREE.Group();p.position.set(
 function parasol(g,x,z,c){cyl(g,.04,.04,2.3,'#ffffff',x,0,z,{seg:6,ol:.01});cone(g,1.35,.55,c,x,1.95,z,{seg:10,ol:.03});cone(g,.5,.24,'#ffffff',x,2.4,z,{seg:10,ol:.015});}
 function towel(g,x,z,c){flat(g,1.0,1.9,c,x,.02,z);for(const s of[-1,1])flat(g,1.0,.2,'#ffffff',x,.024,z+s*.6);}
 function buildBeach(){
-  const L=makeLoc('beach','out',BEACH_X,0,[-30.5,-22,25,22]);const st=new THREE.Group();L.g.add(st);
+  const L=makeLoc('beach','out',BEACH_X,0,[-30.5,-22,25,44]);const st=new THREE.Group();L.g.add(st);
   const gr=new THREE.Mesh(new THREE.PlaneGeometry(1400,1400),toon({color:'#f6dfa9',polygonOffset:true,polygonOffsetFactor:4,polygonOffsetUnits:8}));gr.rotation.x=-Math.PI/2;gr.receiveShadow=true;gr.userData.keep=1;L.g.add(gr);
   /* the sea: one big flat mesh; a tiny shader adds slow ripples and sparkles */
   const seaM=toon({color:'#46c0ea',emissive:new THREE.Color('#1f86c9'),emissiveIntensity:.28});BEACH.seaM=seaM;
@@ -1674,6 +1679,7 @@ function buildBeach(){
   /* a bench facing the sea */
   bench(st,3,-7,Math.PI/2);colC(L,3,-7,.75);
   inter(L,{x:3.7,z:-7,r:1.6,icon:'🪑',label:'Sit and look at the sea',act:()=>{P.sit={x:L.ox+3.1,z:L.oz-7,yaw:-Math.PI/2};P.x=P.sit.x;P.z=P.sit.z;P.yaw=P.sit.yaw;P.pitch=-.05;SFX.pop();toast('Ahh… the sea is so calm. 🌊 Move to stand up.',3);}});
+  buildCourt(L,st);
   bake(st,true,32);
   /* the sand castle: every tap adds a part */
   {const C=new THREE.Group();C.position.set(-2,0,3);L.g.add(C);const SD='#e9c88f',SD2='#dcb878',parts=[];for(let i=0;i<6;i++){const p=new THREE.Group();C.add(p);parts.push(p);}
@@ -1716,15 +1722,158 @@ function beachLocked(){const b=bestSkill(),K=SKILLS[b.k],need=xpNeed(b.lv),left=
     <div class="qcard" style="color:#3d2c5e"><div class="qtop"><span class="qi">${K.i}</span><div style="flex:1"><div class="qt">${K.n}</div><div class="qd">${K.how}</div></div><div class="sklv">Level<b>${b.lv}</b></div></div><div class="qfoot"><span class="qprog" style="max-width:none"><i style="width:${Math.round(b.xp/need*100)}%"></i></span><span class="qn">${b.xp}/${need}</span></div></div>
     <p class="note" style="text-align:center">Only ${left} more level${left>1?'s':''} to go! 💪</p>`);}
 function goBeach(){if(!beachOpen()){beachLocked();return;}enter('beach');}
-function beachIn(){bch().seen=1;toast('🏖️ Welcome to the beach! 🌊',2.6);}
+function beachIn(){bch().seen=1;toast('🏖️ Welcome to the beach! 🌊 Tennis 🎾 is past the kiosk!',3);}
 function updBeach(dt){if(!S||!PLAYING||!LOC.beach)return;
   if(!S.beach||!S.beach.seen){if(S.intro&&beachOpen()&&!UI.open&&!fading&&!CUT&&!TUT&&!DTUT&&CUR.id!=='beach'){BEACH.openT+=dt;if(BEACH.openT>4){bch().seen=1;change();SFX.yay();toast('🏖️ The beach is open! 🌴 Tap 📱 → 🗺️ Map → 🏖️ Beach to find the way.',5.5);}}else BEACH.openT=0;}
-  if(CUR.id!=='beach')return;const b=bch();if(BEACH.day!==S.day||b.d!==S.day)shellsRefresh();if(!b.seen)b.seen=1;
+  if(CUR.id!=='beach'){if(TN.on)tnStop('gone');return;}const b=bch();if(BEACH.day!==S.day||b.d!==S.day)shellsRefresh();if(!b.seen)b.seen=1;
   const t=BEACH.u.value+=dt;BEACH.seaM.emissiveIntensity=.28*(1-.8*nightF(S.time));BEACH.foam.position.x=11.2+Math.sin(t*.7)*.45;BEACH.foam.material.opacity=.38+Math.sin(t*.7+1)*.14;
   for(let i=0;i<BEACH.shells.length;i++){const k=1+Math.sin(t*3+i*1.3)*.07;BEACH.shells[i].g.scale.set(k,k,k);}
   for(const c of BEACH.crabs){c.ph+=dt;const z=c.z0+Math.sin(c.ph*.35)*6;c.c.position.set(c.x0+Math.sin(c.ph*.9)*.3,Math.abs(Math.sin(c.ph*9))*.03,z);c.c.rotation.y=-Math.PI/2;}
   for(const g of BEACH.gulls){g.a+=g.sp*dt;g.g.position.set(g.cx+Math.cos(g.a)*g.r,g.y+Math.sin(t*.8+g.r)*.4,g.cz+Math.sin(g.a)*g.r);g.g.rotation.y=-g.a;const f=Math.sin(t*5+g.r)*.35;g.w[0].rotation.z=-f;g.w[1].rotation.z=f;}
-  for(const c of BEACH.clouds){c.position.x+=c.userData.sp*dt;if(c.position.x>320)c.position.x=40;}}
+  for(const c of BEACH.clouds){c.position.x+=c.userData.sp*dt;if(c.position.x>320)c.position.x=40;}
+  updTennis(dt);}
+
+/* ===== 🎾 the tennis court at the north end of the beach, with Coach Sunny ===== */
+/* the court runs along x (beach-local centre TCX,TCZ): you play from the west half, the coach from the east half with the sea behind her */
+const TCX=-9.5,TCZ=34,THL=9,THW=4.1,TBR=.1,TGV=6,TN_XP=40,TN_IDLE=[-5.2,-5.3];
+const TN={on:false,st:'',t:0,n:0,best0:0,newB:false,sw:0,fs:0,s:0,hot:false,b:null,ball:null,sh:null,sq:0,fb:0,C:null,cc:null,tk:null,tg:null,rk:null,cx:0,cz:0};
+let TSTR=null;
+function tnS(){return S.tennis||(S.tennis={best:0});}
+function tnW(u,v){const L=LOC.beach;return[L.ox+TCX+u,L.oz+TCZ+v];}
+function tnU(x){return x-LOC.beach.ox-TCX;}
+function tnV(z){return z-LOC.beach.oz-TCZ;}
+/* a little pattern for the net and the fence: white lines on clear, tinted by the material colour */
+function tnTex(n,draw){const c=document.createElement('canvas');c.width=c.height=n;const x=c.getContext('2d');x.strokeStyle='#ffffff';draw(x);const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;return t;}
+/* a racket standing up (handle at y=0, the round head on top, its strings face +z) */
+function racket(g,c){cyl(g,.022,.026,.28,'#3d2c5e',0,0,0,{seg:6,ol:.008});cyl(g,.014,.014,.16,c,0,.28,0,{seg:5,ol:false});
+  const f=new THREE.Mesh(new THREE.TorusGeometry(.15,.018,6,20),mat(c));f.position.y=.6;f.scale.set(1,1.25,1);g.add(f);
+  const s=new THREE.Mesh(new THREE.CircleGeometry(.15,18),TSTR||(TSTR=new THREE.MeshBasicMaterial({color:'#ffffff',transparent:true,opacity:.5,side:THREE.DoubleSide,depthWrite:false})));s.position.y=.6;s.scale.set(1,1.25,1);g.add(s);return g;}
+function buildCourt(L,st){const X=TCX,Z=TCZ,FX=12.5,FZ=6.5,GX1=X-11.3,GX2=X-8.7;
+  /* green surround, blue court, white lines */
+  flat(st,FX*2,FZ*2,'#8fd6a2',X,.02,Z);flat(st,THL*2,THW*2,'#5ab0e8',X,.03,Z);
+  const ln=(w,d,x,z)=>flat(st,w,d,'#ffffff',x,.04,z);
+  for(const s of[-1,1]){ln(.1,THW*2+.1,X+s*THL,Z);ln(THL*2+.1,.1,X,Z+s*THW);ln(THL*2,.08,X,Z+s*3.1);ln(.08,6.2,X+s*5,Z);ln(.3,.08,X+s*(THL-.15),Z);}
+  ln(10,.08,X,Z);
+  /* the net between two posts */
+  for(const s of[-1,1]){cyl(st,.06,.06,1.02,'#3d4a7a',X,0,Z+s*4.65,{seg:8,ol:.015});sph(st,.075,'#3d4a7a',X,1.04,Z+s*4.65,{ws:8,hs:6,ol:.012});colC(L,X,Z+s*4.65,.14);}
+  box(st,.05,.07,9.3,'#ffffff',X,.85,Z,{ol:.01});box(st,.05,.85,.07,'#ffffff',X,0,Z,{ol:false});
+  {const t=tnTex(32,x=>{x.lineWidth=3;x.strokeRect(0,0,32,32);});t.repeat.set(78,7);
+   const n=new THREE.Mesh(new THREE.PlaneGeometry(9.3,.82),new THREE.MeshBasicMaterial({color:'#2e2347',map:t,transparent:true,side:THREE.DoubleSide,depthWrite:false}));n.rotation.y=Math.PI/2;n.position.set(X,.46,Z);n.userData.keep=1;L.g.add(n);}
+  col(L,X-.07,Z-4.7,X+.07,Z+4.7);
+  /* a wire fence all around (open at the gate), with posts and a top rail */
+  {const t=tnTex(64,x=>{x.lineWidth=5;x.beginPath();x.moveTo(0,0);x.lineTo(64,64);x.moveTo(64,0);x.lineTo(0,64);x.stroke();}),H=2.2,P=[],U=[];
+   for(const [x1,z1,x2,z2] of [[X-FX,Z-FZ,GX1,Z-FZ],[GX2,Z-FZ,X+FX,Z-FZ],[X+FX,Z-FZ,X+FX,Z+FZ],[X+FX,Z+FZ,X-FX,Z+FZ],[X-FX,Z+FZ,X-FX,Z-FZ]]){
+     const l=Math.hypot(x2-x1,z2-z1),r=l*2.2,q=H*2.2,n=Math.max(1,Math.round(l/3.2));P.push(x1,0,z1,x2,0,z2,x2,H,z2,x1,0,z1,x2,H,z2,x1,H,z1);U.push(0,0,r,0,r,q,0,0,r,q,0,q);
+     for(let i=0;i<=n;i++)cyl(st,.05,.05,H+.1,'#4f6b8a',x1+(x2-x1)*i/n,0,z1+(z2-z1)*i/n,{seg:6,ol:.012});
+     box(st,Math.abs(x2-x1)+.06,.06,Math.abs(z2-z1)+.06,'#4f6b8a',(x1+x2)/2,H,(z1+z2)/2,{ol:.01});col(L,Math.min(x1,x2)-.1,Math.min(z1,z2)-.1,Math.max(x1,x2)+.1,Math.max(z1,z2)+.1);}
+   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));
+   const m=new THREE.Mesh(g,new THREE.MeshBasicMaterial({color:'#5f7f92',map:t,transparent:true,side:THREE.DoubleSide,depthWrite:false}));m.userData.keep=1;L.g.add(m);}
+  for(const gx of[GX1,GX2]){cyl(st,.08,.08,2.75,'#ffd45c',gx,0,Z-FZ,{seg:8,ol:.015});colC(L,gx,Z-FZ,.12);}
+  box(st,GX2-GX1+.2,.14,.14,'#ffd45c',(GX1+GX2)/2,2.62,Z-FZ,{ol:.015});
+  {const sg=signPlane('🎾 Tennis',2.3,.6,'#5ab0e8','#ffffff');sg.position.set((GX1+GX2)/2,3.0,Z-FZ-.06);sg.rotation.y=Math.PI;L.g.add(sg);}
+  /* a signpost at the end of the boardwalk, so you find the court */
+  {cyl(st,.07,.08,2.3,'#4f6b8a',-18.6,0,1.7,{seg:6,ol:.012});box(st,.06,.58,2.08,'#ffffff',-18.6,1.71,1.7,{ol:.015});colC(L,-18.6,1.7,.14);const sg=signPlane('🎾 Tennis ➡️',2,.5,'#5ab0e8','#ffffff');sg.position.set(-18.66,2,1.7);sg.rotation.y=-Math.PI/2;L.g.add(sg);}
+  /* benches, a basket full of balls and two lamps for the evening */
+  for(const s of[-1,1]){bench(st,X+s*3.2,Z-FZ+.55,0);col(L,X+s*3.2-.85,Z-FZ+.2,X+s*3.2+.85,Z-FZ+.85);}
+  {const bx=X+10.7,bz=Z-5.3;for(const [dx,dz] of [[-.2,-.2],[.2,-.2],[-.2,.2],[.2,.2]])cyl(st,.018,.018,.5,'#3d4a7a',bx+dx,0,bz+dz,{seg:5,ol:false});
+   cyl(st,.3,.26,.45,'#7cc8ff',bx,.45,bz,{seg:12,ol:.015});for(let i=0;i<7;i++){const a=i/7*TAU,k=i%2?.17:.07;sph(st,.075,'#d8f03c',bx+Math.cos(a)*k,.93,bz+Math.sin(a)*k,{ws:8,hs:6,ol:.008});}colC(L,bx,bz,.38);}
+  for(const s of[-1,1]){const lx=X+s*(FX+.6),lz=Z+FZ+.6;cyl(st,.06,.07,3.2,'#5a5f8c',lx,0,lz,{seg:6,ol:.012});sph(st,.2,null,lx,3.3,lz,{mat:LAMP,ol:.015,ws:10,hs:8});colC(L,lx,lz,.14);}
+  /* the end of the sand up here: dunes and a few palms; the sea is still too deep to walk in */
+  box(st,.9,1.0,22.6,'#5fbf74',-31.1,0,33.3,{ol:.03});box(st,42.6,.9,.9,'#5fbf74',-9.8,0,44.95,{ol:.03});col(L,11.6,22,25,46);
+  for(const [x,z,s,ry] of [[-27,27.5,1.1,.8],[6.5,29,1.2,2.2],[-26,41.5,1,1.4],[6,41,1.05,-1]]){palm(st,x,z,s,.28,ry);colC(L,x,z,.3);}
+  /* Coach Sunny: a cap, tennis whites, a pink racket and a name tag */
+  {const p=makePerson({skin:'#f1c9a5',hair:'#8a5a36',style:'ponytail',top:'#ffffff',sleeve:'#ffd45c',bottom:'#5ab0e8',shoes:'#ffffff',hat:'cap',hatc:'#ffd45c',eyes:'happy',mouth:'grin'});
+   const rg=new THREE.Group();racket(rg,'#ff7aa8');rg.position.set(0,-.56,.03);rg.rotation.x=Math.PI-.7;p.arms[0].add(rg);bakePerson(p);
+   const tg=label('Coach Sunny',.3);tg.position.y=2.02;p.root.add(tg);L.g.add(p.root);
+   const [ix,iz]=tnW(TN_IDLE[0],TN_IDLE[1]);TN.C={p,x:ix,z:iz,path:[],face:0,sw:0};TN.cc={cx:ix,cz:iz,cr:.34};L.dcols.push(TN.cc);
+   TN.tk=inter(L,{x:TCX+TN_IDLE[0],z:TCZ+TN_IDLE[1],r:2.6,icon:'🎾',label:'Talk to Coach Sunny',act:coachTalk,obj:p.root,when:()=>!TN.on});}
+  /* the ball (with a white seam) and its soft shadow */
+  {const g=new THREE.Group();sph(g,TBR,'#d8f03c',0,0,0,{ws:12,hs:8,ol:.012});const s=new THREE.Mesh(new THREE.TorusGeometry(TBR+.003,.009,4,18),mat('#ffffff'));s.rotation.x=.6;g.add(s);bake(g,false);g.visible=false;L.g.add(g);TN.ball=g;
+   const sh=new THREE.Mesh(new THREE.CircleGeometry(.13,14),new THREE.MeshBasicMaterial({color:'#2e2347',transparent:true,opacity:.28,depthWrite:false}));sh.rotation.x=-Math.PI/2;sh.visible=false;sh.userData.keep=1;L.g.add(sh);TN.sh=sh;}
+  TN.tg={icon:'🎾',label:()=>tnReach()?'Hit it now!':'Swing the racket',act:tnSwing};}
+function coachTalk(){if(TN.on)return;const C=TN.C;C.p.wave=1.2;SFX.talk();const b=(S.tennis&&S.tennis.best)||0;
+  openPanel(`<div class="who" style="--c:#ffd45c">🎾 Coach Sunny</div><p class="line">${b?pick(['Hello again, champ! ☀️ Ready for another rally?','What a sunny day for tennis! Shall we play? 🎾','Yay, you\'re back! Let\'s hit some balls! 🎾']):'Hi! I\'m Coach Sunny! ☀️ Do you want to play tennis with me? I hit the ball to you, and you hit it back!'}</p>
+    <p class="note" style="text-align:center">${b?'🏆 Your best rally: <b>'+b+'</b>':TOUCHY?'When the ball comes close, tap 🎾!':'When the ball comes close, press E or click!'}</p>
+    <div class="row"><button class="btn mint" data-a="tnGo">🎾 Let's rally!</button><button class="btn white" data-a="close">Maybe later</button></div>`,{bottom:true});}
+function tnHud(){let h=$('tnHud');if(h)return h;
+  const st=document.createElement('style');st.textContent='#tnHud{pointer-events:auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:24px;box-shadow:0 4px 0 var(--soft);padding:4px 5px 4px 12px;font-weight:800;font-size:19px;max-width:100%}#tnHud[hidden]{display:none}#tnTxt{white-space:nowrap}#tnStop{min-height:44px;padding:4px 14px;font-size:17px}#act.hot{background:#e9fa7a;box-shadow:0 5px 0 #3d2c5e,0 0 0 7px rgba(216,240,60,.75)}';document.head.appendChild(st);
+  h=document.createElement('div');h.id='tnHud';h.hidden=true;h.innerHTML='<b id="tnTxt"></b><button class="btn white" id="tnStop" aria-label="Stop playing tennis">✋ Stop</button>';$('left').insertBefore(h,$('tasks'));
+  $('tnStop').addEventListener('click',()=>{audioInit();SFX.tap();tnStop('stop');});return h;}
+function tnHudUpd(){const t=$('tnTxt');if(t)t.textContent='🎾 '+TN.n+' · 🏆 '+Math.max(tnS().best||0,TN.n);}
+/* your racket and arm in front of you (first person), only while you play */
+function tnRacket(){if(TN.rk){camera.remove(TN.rk);TN.rk.traverse(o=>{if(o.geometry)o.geometry.dispose();});}
+  const g=new THREE.Group(),r=new THREE.Group(),lk=lookToPerson(S.look);g.add(r);racket(r,'#ff7aa8');r.rotation.set(-.35,0,.35);
+  box(g,.11,.56,.11,lk.sleeve,.15,-.3,.075,{rz:.59,center:true,ol:.008});box(g,.1,.11,.1,lk.skin,0,-.03,0,{center:true,ol:.008});
+  g.traverse(o=>{o.castShadow=false;o.receiveShadow=false;});if(camera.parent!==scene)scene.add(camera);camera.add(g);g.visible=false;TN.rk=g;return g;}
+function tnShow(on){tnHud().hidden=!on;if(TN.rk)TN.rk.visible=on;TN.hot=false;if(!on){$('act').classList.remove('hot');TN.ball.visible=TN.sh.visible=false;}tnHudUpd();}
+function tnStart(){if(TN.on||CUR.id!=='beach'||!TN.C)return;
+  fade(()=>{if(CUR.id!=='beach')return;const [x,z]=tnW(-THL-.9,0);P.x=x;P.z=z;P.yaw=-Math.PI/2;P.pitch=-.06;P.sit=null;
+    const C=TN.C;[C.x,C.z]=tnW(THL+.7,0);C.path=[];C.sw=0;TN.cx=C.x;TN.cz=C.z;
+    TN.on=true;TN.st='wait';TN.t=2.2;TN.n=0;TN.b=null;TN.sw=TN.fs=TN.s=0;TN.fb=0;TN.best0=tnS().best||0;TN.newB=false;tnRacket();tnShow(true);
+    toast(TOUCHY?'🎾 Here comes the ball! Tap 🎾 when it is close to you.':'🎾 Here comes the ball! Press E (or click) when it is close to you.',2.2);});}
+function tnStop(why){if(!TN.on)return;TN.on=false;TN.st='';TN.b=null;tnShow(false);const C=TN.C,[ix,iz]=tnW(TN_IDLE[0],TN_IDLE[1]);
+  if(why==='gone'){C.x=ix;C.z=iz;C.path=[];}else C.path=[tnW(1.4,-5.7),tnW(-1.4,-5.7),[ix,iz]];
+  const b=tnS().best||0;change();
+  if(why==='stop')toast('🎾 Thanks for playing! '+(b?'Your best rally: '+b+' 🏆':'Come back soon! 👋'),3.4);
+  else if(why==='off')toast('🎾 You walked off the court. Come back and play again soon! 👋',3.4);}
+function tnSwing(){if(!TN.on||TN.sw>0)return;TN.sw=.42;TN.fs=0;SFX.swish();}
+/* a ball flight from (x0,y0,z0) that lands at (x1,z1) after flying up to height H */
+function tnLaunch(x0,y0,z0,x1,z1,H){H=Math.max(H,y0+.3);const vy=Math.sqrt(2*TGV*(H-y0)),T=vy/TGV+Math.sqrt(2*(H-TBR)/TGV);
+  TN.b={x0,y0,z0,x:x0,y:y0,z:z0,vx:(x1-x0)/T,vy,vz:(z1-z0)/T,t:0,tl:T,bn:0};}
+function tnBall(dt){const b=TN.b;if(!b)return;b.t+=dt;
+  while(b.t>=b.tl){const t=b.tl,vy=(TGV*t-b.vy)*.62;b.x0+=b.vx*t;b.z0+=b.vz*t;b.y0=TBR;b.vx*=.8;b.vz*=.8;b.t-=t;b.bn++;
+    if(vy<.4){b.vy=0;b.tl=1e9;}else{b.vy=vy;b.tl=2*vy/TGV;TN.sq=.12;if(CUR.id==='beach')SFX.bounce();}}
+  const t=b.t;b.x=b.x0+b.vx*t;b.y=Math.max(TBR,b.y0+b.vy*t-.5*TGV*t*t);b.z=b.z0+b.vz*t;}
+/* the coach hits the ball to you: it bounces a few steps in front of you (gentle, a bit wider and faster as the rally grows) */
+function tnToYou(x0,y0,z0){const r=TN.n,spr=Math.min(.35+r*.07,1.3),lu=clamp(tnU(P.x)+3,-THL+1,-1.3),lv=clamp(tnV(P.z)+rand(-spr,spr),-THW+.5,THW-.5),[x1,z1]=tnW(lu,lv);
+  tnLaunch(x0,y0,z0,x1,z1,Math.max(2.3,3.1-r*.05));TN.st='toP';TN.C.sw=.4;SFX.hit();}
+function tnReach(){const b=TN.b;if(!TN.on||!b||TN.st!=='toP')return false;const du=b.x-P.x;return tnU(b.x)<0&&du>-.9&&du<2.3&&Math.abs(b.z-P.z)<1.9&&b.y<2.6;}
+function tnHit(){const b=TN.b,du=b.x-P.x,q=clamp(1-Math.abs(du-.8)/1.6-Math.abs(b.z-P.z)/2.4,0,1),great=q>.5,x=b.x,y=b.y,z=b.z;
+  TN.n++;TN.sw=0;TN.fs=.36;SFX.hit();const [x1,z1]=tnW(rand(4.2,7.2),rand(-2.7,2.7));tnLaunch(x,Math.max(y,.8),z,x1,z1,great?2.5:3);TN.st='toC';
+  /* the coach runs to where the ball will be just after its bounce */
+  const B=TN.b;TN.cx=x1+B.vx*.8*.42+.35;TN.cz=z1+B.vz*.8*.42-.45;
+  floatText(String(TN.n),x,y+.55,z,{h:great?.62:.5});if(great||TN.n%3===0)setTimeout(()=>{if(TN.on&&TN.C)floatText(pick(['👏 Nice!','⭐ Great shot!','🌟 Super!','💪 Yes!']),TN.C.x,2.45,TN.C.z,{h:.42});},250);
+  tnReward();tnHudUpd();}
+/* Sports XP for every return (up to TN_XP a day), a bonus every 5, and coins for a new best rally (once a day) */
+function tnReward(){const t=tnS(),n=TN.n;if(t.d!==S.day){t.d=S.day;t.xp=0;}
+  const xp=k=>{k=Math.min(k,TN_XP-(t.xp||0));if(k>0){t.xp=(t.xp||0)+k;addXP('sport',k);}};
+  xp(1);if(n%5===0){xp(3);SFX.yay();floatText('🎉 '+n+'!',P.x-Math.sin(P.yaw)*2,2,P.z-Math.cos(P.yaw)*2,{h:.6});}
+  if(n>(t.best||0))t.best=n;
+  if(n>TN.best0&&n>=3&&!TN.newB){TN.newB=true;const c=t.c!==S.day;if(c){t.c=S.day;S.coins+=5;SFX.coin();}toast('🏆 New best rally: '+n+'!'+(c?' +5 🪙':'')+' Keep going!',2.2);change();}}
+function tnMiss(){const n=TN.n;TN.st='miss';TN.t=1.7;TN.n=0;tnHudUpd();SFX.aww();
+  toast(n>=3?'🎾 A rally of '+n+'! Great job! Let\'s go again! 💪':pick(['Ooh, so close! 🎾','Almost! You can do it! 💪','Oopsie! The next one is yours! 🎾']),2.2);
+  if(TN.C)floatText(pick(['💪','😊','👍']),TN.C.x,2.45,TN.C.z,{h:.45});}
+function updTennis(dt){const C=TN.C;if(!C)return;const L=LOC.beach;
+  /* Coach Sunny walks about; while you play she runs to the ball */
+  let tx=C.x,tz=C.z;if(C.path.length)[tx,tz]=C.path[0];else if(TN.on){tx=TN.cx;tz=TN.cz;}
+  const dx=tx-C.x,dz=tz-C.z,d=Math.hypot(dx,dz),mv=d>.05;
+  if(mv){const k=Math.min(d,(TN.on?4.6:2.2)*dt);C.x+=dx/d*k;C.z+=dz/d*k;}else if(C.path.length)C.path.shift();
+  C.face=(mv&&!TN.on)?Math.atan2(dx,dz):Math.atan2(P.x-C.x,P.z-C.z);
+  C.p.root.position.set(C.x-L.ox,0,C.z-L.oz);C.p.root.rotation.y=angLerp(C.p.root.rotation.y,C.face,Math.min(1,dt*8));animPerson(C.p,dt,mv,TN.on?1.4:1);
+  const arm=C.p.arms[0];if(C.sw>0){C.sw-=dt;const s=1-Math.max(0,C.sw)/.4;arm.rotation.x=-.4-Math.sin(s*Math.PI)*1.3;arm.rotation.z=.9-s*1.8;}else{arm.rotation.x=TN.on?-.55:-.25;arm.rotation.z*=.8;}
+  TN.cc.cx=C.x;TN.cc.cz=C.z;TN.tk.x=C.x;TN.tk.z=C.z;
+  if(!TN.on)return;
+  /* your racket: get ready while the swing is on, then follow through */
+  if(TN.sw>0){TN.sw-=dt;if(TN.sw<=0)TN.fs=.36;TN.s+=(.45-TN.s)*Math.min(1,dt*25);}
+  else if(TN.fs>0){TN.fs-=dt;TN.s+=((TN.fs>.22?1:0)-TN.s)*Math.min(1,dt*(TN.fs>.22?30:9));}else TN.s+=(0-TN.s)*Math.min(1,dt*9);
+  if(TN.rk){const g=TN.rk,s=TN.s,k=clamp(camera.aspect/1.25,.5,1);g.scale.setScalar(.7+.2*k);g.position.set((.6-.7*s)*k+(1-k)*.3*(1-s),-.66+.12*Math.sin(s*Math.PI)-(1-k)*.24*(1-s),-.9-.1*s);g.rotation.set(-.45*s,.5*s,.1+s);}
+  const b=TN.b,hot=tnReach();if(hot!==TN.hot){TN.hot=hot;$('act').classList.toggle('hot',hot);}
+  /* the ball (also while the coach bounces it before she hits) */
+  let bx=0,by=0,bz=0,show=!!b;if(b){bx=b.x;by=b.y;bz=b.z;}
+  else if(TN.st==='wait'&&TN.t<.55){show=true;bx=C.x-.3;bz=C.z+.35;const u=TN.t/.55;by=TBR+.9*Math.abs(Math.cos(u*Math.PI));if(u<.5&&!TN.fb){TN.fb=1;SFX.bounce();}}
+  TN.ball.visible=TN.sh.visible=show;if(show){TN.ball.position.set(bx-L.ox,by,bz-L.oz);for(const m of TN.ball.children)m.rotation.x+=dt*9;if(TN.sq>0)TN.sq-=dt;const q=Math.max(0,TN.sq)/.12;TN.ball.scale.set(1+.3*q,1-.35*q,1+.3*q);
+    TN.sh.position.set(bx-L.ox,.05,bz-L.oz);const hs=1+by*.18;TN.sh.scale.set(hs,hs,hs);TN.sh.material.opacity=Math.max(.1,.3-by*.06);}
+  if(UI.open||fading||CUT||TUT||DTUT)return;
+  const pu=tnU(P.x),pv=tnV(P.z);if(pu<-12.5||pu>.3||Math.abs(pv)>THW+1.3){tnStop('off');return;}
+  /* a gentle helper: if you stand still, you slide over to the ball and look at it */
+  const K=IN.keys,inp=(IN.joy.id!==null&&Math.hypot(IN.joy.x,IN.joy.y)>.15)||K.KeyW||K.KeyA||K.KeyS||K.KeyD||K.ArrowUp||K.ArrowDown;
+  if(TN.st==='toP'&&b&&b.vx<-.5&&!inp){const zp=b.z+b.vz*(P.x-b.x)/b.vx,e=zp-P.z;if(Math.abs(e)>.15)[P.x,P.z]=collideXZ(P.x,P.z+Math.sign(e)*Math.min(Math.abs(e),1.9*dt),.3,CUR,solids());}
+  if((TN.st==='toP'||TN.st==='wait')&&IN.look.id===null&&!K.ArrowLeft&&!K.ArrowRight){const fx=b?b.x:C.x,fz=b?b.z:C.z;if(fx-P.x>3)P.yaw=angLerp(P.yaw,Math.atan2(-(fx-P.x),-(fz-P.z)),Math.min(1,dt*1.6));if(Math.abs(P.pitch+.06)>.35)P.pitch=lerp(P.pitch,-.06,Math.min(1,dt*2));}
+  tnBall(dt);
+  if(TN.st==='wait'){TN.cx=L.ox+TCX+THL+.7;TN.cz=L.oz+TCZ+clamp(pv*.4,-2,2);TN.t-=dt;if(TN.t<=0){TN.fb=0;tnToYou(C.x-.3,1.0,C.z+.35);}}
+  else if(TN.st==='toP'){TN.cx=L.ox+TCX+THL+.7;if(TN.sw>0&&tnReach())tnHit();else if(b.bn>=2||b.x<P.x-1.1||tnU(b.x)<-THL-3.5)tnMiss();}
+  else if(TN.st==='toC'){if(b.bn>=2||(b.bn>=1&&b.t>=.42))tnToYou(b.x,Math.max(b.y,.9),b.z);}
+  else if(TN.st==='miss'){if(b&&(tnU(b.x)<-12.2||Math.abs(tnV(b.z))>6.2||b.vy===0))TN.b=null;TN.t-=dt;if(TN.t<=0){TN.st='wait';TN.t=.9;TN.b=null;}}}
 
 /* ---- the park fountain ---- */
 let CURTAIN=null,JET=null,FTN=null;
@@ -2291,7 +2440,7 @@ function openClothes(){S.wardrobe=S.wardrobe||{};S.outfits=S.outfits||[];
   else body=newInHTML('clothes')+`<div class="sec">All clothes</div><p class="note">Hats and glasses come in lots of colors. Try them on at the 🪞 mirror.</p>
     <div class="grid" style="margin-top:10px">${Object.entries(CLOTHES).map(([k,c])=>{const n=(c.hat||c.gl)?variants(k).length:0,mine=!(c.hat||c.gl)&&owns(k);
       return`<button class="it" data-a="cloth:${k}"><span class="em">${c.i}</span><span>${c.n}</span><span class="pr">${mine?'✔ Yours':c.p+' 🪙'}</span>${n?`<span class="have">You have ${n}</span>`:''}</button>`;}).join('')}</div>`;
-  openPanel(`<div class="hd"><h2>👗 Clothing store</h2><div class="chip">🪙 <b id="pc">${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>${body}`,{onClose:()=>{CLO.sel=null;}});}
+  openPanel(`<div class="hd"><h2>👗 Clothing store</h2><div class="chip">🪙 <b id="pc">${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>${shutNote('clothes')}${body}`,{onClose:()=>{CLO.sel=null;}});}
 const TASKS=[
   {id:'home',t:'Go inside your new house',r:10},{id:'buy',t:'Buy food at the market',r:10},{id:'eat',t:'Eat a snack from your bag',r:5},
   {id:'friend',t:'Make a friend',r:20},{id:'pet',t:'Adopt a pet',r:20},{id:'decor',t:'Decorate your house',r:20},
@@ -2373,7 +2522,26 @@ function wdName(d){return WDAYS[wdIdx(d)];}
 function isShowDay(d){return wdIdx(d)===5;}
 function showDone(){return!!(S&&S.show&&S.show.day===S.day);}
 function daysToShow(){return(5-wdIdx()+7)%7||7;}
-function dayLabel(){return(isShowDay()&&!showDone()?'🏆 ':'')+wdName().slice(0,3)+' · Day '+S.day;}
+function dayLabel(){return(psLeft()?'🏆 ':'')+wdName().slice(0,3)+' · Day '+S.day;}
+/* ☀️ Daytime: the shops, the library, the designer's clients and the school's classes run 8:00–20:00 (the Pizzeria keeps its own hours).
+   Your home, Friends Lane, the flats, the park, the school building and the fire station are always open. */
+const DAY_ON=8,DAY_OFF=20,PS_ON=9,PS_OFF=18;
+const SHUT={market:['Market','Mr. Bun'],pets:['Pet Shop','Ms. Paws'],flowers:['Flower Shop','Ms. Petal'],cafe:['Café','Mr. Mocha'],clothes:['Clothes Shop','Ms. Stitch'],
+  toys:['Toy Store','Mr. Toby'],bakery:['Bakery','Mrs. Crumb'],icecream:['Ice Cream Shop','Mr. Sprinkles'],library:['Library','Ms. Page']};
+function isDaytime(){return!!S&&S.time>=DAY_ON&&S.time<DAY_OFF;}
+function shopOpen(id){return!SHUT[id]||isDaytime();}
+function workAt(){return`🌙 Work starts at ${DAY_ON}:00 ☀️`;}
+/* a closed shop: the door says so and you stay outside; inside you can still look, but buying waits for the morning */
+function shutNote(id){return shopOpen(id)?'':`<p class="note">🌙 <b>Closed now.</b> You can look, but buying starts again at ${DAY_ON}:00 ☀️</p>`;}
+function shutBuy(id){if(shopOpen(id))return false;const s=SHUT[id],K=KEEPERS.find(k=>k.name===s[1]);if(K)K.p.wave=1.2;SFX.no();toast(`🌙 ${s[1]}: “Sorry, we're closed! Come back at ${DAY_ON}:00 ☀️”`,3.4);return true;}
+function shutDoors(){for(const id in SHUT){const t=LOC.city.inter.find(t=>t.label==='Go into the '+SHUT[id][0]);if(!t||t.shut)continue;const a=t.act,ic=t.icon;t.shut=1;
+  t.icon=()=>shopOpen(id)?ic:'🌙';t.say=()=>shopOpen(id)?'':`🌙 Closed · opens at ${DAY_ON}:00`;t.act=()=>{if(shopOpen(id)){a();return;}SFX.no();toast(`🌙 The ${SHUT[id][0]} is closed now. It opens at ${DAY_ON}:00 ☀️`,3.6);};}}
+let DAYW=null;
+function dayTick(){const d=isDaytime();if(DAYW===null){DAYW=d;shutDoors();return;}if(d===DAYW)return;DAYW=d;
+  if(!d&&CUR&&SHUT[CUR.id]){const s=SHUT[CUR.id],K=KEEPERS.find(k=>k.name===s[1]);if(K)K.p.wave=1.2;SFX.talk();toast(`🌙 ${s[1]}: “It's closing time! Buying stops now. See you at ${DAY_ON}:00 ☀️”`,4.2);}}
+/* 🏆 the Pet Show is on Saturdays from 9:00 to 18:00 (a show that already started always finishes) */
+function psOpen(){return isShowDay()&&!!S&&S.time>=PS_ON&&S.time<PS_OFF;}
+function psLeft(){return isShowDay()&&!showDone()&&!!S&&S.time<PS_OFF;}
 function newDay(){spawnLitter();for(const f of FRIEND_ACTORS)f.wake();for(const w of WALKERS)if(w.state==='home')w.init();qNewDay();for(const r of PLOTS)plotRefresh(r);psDay();}
 
 /* ---- Skills: do things to level up ---- */
@@ -2384,7 +2552,7 @@ const SKILLS={garden:{i:'🌱',n:'Gardening',how:'Water flower beds and put plan
 const BOOK_FACTS=['Did you know? Octopuses have three hearts! 🐙','Did you know? Bees dance to tell their friends where flowers are! 🐝','Did you know? A group of flamingos is called a flamboyance! 🦩',
   'Did you know? Sloths can hold their breath longer than dolphins! 🦥','Did you know? Bananas are berries, but strawberries are not! 🍌','Did you know? Some cats sleep 16 hours a day! 😺',
   'Did you know? Snails can sleep for 3 years! 🐌','Did you know? The Moon has moonquakes! 🌙','Did you know? Cows have best friends! 🐄','Did you know? Honey never goes bad! 🍯'];
-function readBook(){SFX.pop();toast('📖 '+pick(BOOK_FACTS),4.6);if(cool('book',3))addXP('read',4);qEvent('read');}
+function readBook(){if(CUR&&CUR.id==='library'&&shutBuy('library'))return;SFX.pop();toast('📖 '+pick(BOOK_FACTS),4.6);if(cool('book',3))addXP('read',4);qEvent('read');}
 function knock(id){if(id&&dlCarrying()){deliverKnock(id);return;}if(id&&dsGoing(id)){enterClient();return;}SFX.knock();toast(pick(["Knock knock… nobody's home right now.","Knock knock… someone's playing music inside! 🎶","Knock knock… you hear a dog bark hello. 🐶","Knock knock… “Just a minute!” Someone is baking cookies! 🍪"]));}
 const MAXLV=10,xpNeed=lv=>10*lv;
 function sk(k){S.skills=S.skills||{};return S.skills[k]||(S.skills[k]={lv:1,xp:0});}
@@ -3153,7 +3321,7 @@ function buildActors(){
   const k13=makePerson({skin:'#f2d3b3',hair:'#9a6a43',style:'bun',top:'#7fdcb5',bottom:'#3f4c86',shoes:'#3d2c5e',dress:true,glasses:'glasses'});
   const chat=lines=>()=>toast('“'+pick(lines)+'”',3.4);
   for(const [p,L,x,z,name,shop] of [[k1,LOC.market,4.9,.95,'Mr. Bun','market'],[k2,LOC.pets,-4.9,.95,'Ms. Paws','pets'],[k3,LOC.flowers,4.1,.95,'Ms. Petal','flowers'],[k4,LOC.cafe,.3,-4.0,'Mr. Mocha','cafe'],[k5,LOC.clothes,3.6,1.25,'Ms. Stitch','clothes'],[k6,LOC.toys,-4.6,.2,'Mr. Toby','toys'],[k7,LOC.bakery,0,-4.2,'Mrs. Crumb','bakery'],[k8,LOC.icecream,0,-4.2,'Mr. Sprinkles','icecream'],
-    [k9,LOC.library,4.4,1.2,'Ms. Page',chat(['Shh! Find a book you like. 📚','Books are like magic doors! ✨','Try the shelves. Every book has a fun fact!'])],
+    [k9,LOC.library,4.4,1.2,'Ms. Page',(c=>()=>shopOpen('library')?c():toast(`“Shh… the library is closed now. 🌙 Come back at ${DAY_ON}:00 ☀️”`,3.4))(chat(['Shh! Find a book you like. 📚','Books are like magic doors! ✨','Try the shelves. Every book has a fun fact!']))],
     [k10,LOC.school,-4.6,-2.6,'Mr. Owl',chat(['Welcome to school! Tap the fun facts board to learn something. ✏️','The classrooms are down the hall: Math, English and History! 📚','Did you do your homework? Just kidding! 😄'])],
     [k13,LOC.school,4.6,-2.6,'Mrs. Maple',()=>tcTalk()],
     [k11,LOC.fire,1.4,1.0,'Chief Sparky',chat(['Hi! Want to slide down the fire pole? 🚒','Remember: never play with matches! 🔥','If you see smoke, tell a grown-up right away!'])],
@@ -3448,7 +3616,7 @@ function setupInput(){
   addEventListener('blur',()=>{IN.keys={};KC.on=false;});
 }
 const RAY=new THREE.Raycaster(),NDC=new THREE.Vector2();
-function tapAt(cx,cy){if(CUT){if(CUT.tch)tcTap(cx,cy);return;}if(DECO.on){decoTap(cx,cy);return;}
+function tapAt(cx,cy){if(CUT){if(CUT.tch)tcTap(cx,cy);return;}if(DECO.on){decoTap(cx,cy);return;}if(TN.on){tnSwing();return;}
   NDC.set(cx/innerWidth*2-1,-(cy/innerHeight)*2+1);RAY.setFromCamera(NDC,camera);
   const ts=targets().filter(t=>t.obj&&t.obj.visible!==false);if(!ts.length)return;
   const hits=RAY.intersectObjects(ts.map(t=>t.obj),true);
@@ -3461,7 +3629,7 @@ function targets(){const out=CUR.inter.slice();
   if(S.time>=8&&S.time<20)for(const s of SHOPPERS)if(s.L===CUR)out.push(s.target);
   if(CUR.id==='city'){for(const l of LITTER)out.push(l.target);for(const w of WALKERS)if(w.state!=='home')out.push(w.target);if(sittersOut())for(const s of SITTERS)out.push(s.target);if(PSX.on)for(const j of PSX.judges)out.push(j.target);out.push(BALLT);}
   return out;}
-function findTarget(){if(P.ride)return P.ride.kind==='swing'?{icon:'🧍',label:'Get off the swing',act:stopRide}:null;if(P.sit)return{icon:'🧍',label:P.sit.bed?'Get up':'Stand up',act:standUp};
+function findTarget(){if(TN.on)return TN.tg;if(P.ride)return P.ride.kind==='swing'?{icon:'🧍',label:'Get off the swing',act:stopRide}:null;if(P.sit)return{icon:'🧍',label:P.sit.bed?'Get up':'Stand up',act:standUp};
   if(KC.on){if(ballNear())return BALLT;KC.on=false;kcClr();}
   const fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw);let best=null,bs=1e9;
   for(const t of targets()){if(t.when&&!t.when())continue;let tx=t.x,tz=t.z;if(t.rect){tx=clamp(P.x,t.rect.x1,t.rect.x2);tz=clamp(P.z,t.rect.z1,t.rect.z2);}const dx=tx-P.x,dz=tz-P.z,d=Math.hypot(dx,dz);if(d>t.r)continue;const c=d<.01?1:(dx*fx+dz*fz)/d;if(c<.25&&d>1)continue;let s=d*(1.7-c);if(t.pri&&t.pri())s*=.25;if(s<bs){bs=s;best=t;}}
@@ -3605,13 +3773,14 @@ $('panel').addEventListener('pointerdown',e=>{if(e.target===$('panel')&&!UI.lock
 const ACT={};
 $('card').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||b.disabled)return;const [k,...r]=b.dataset.a.split(':');if(k!=='buy')SFX.tap();if(ACT[k])ACT[k](r.join(':'),b);});
 ACT.close=()=>closePanel();
+ACT.tnGo=()=>{closePanel();tnStart();};
 ACT.cloth=k=>{const c=CLOTHES[k];if(!c)return;SFX.tap();
   if(c.hat||c.gl){CLO.sel=k;CLO.col=c.cols.find(x=>!variants(k).some(v=>v.c===x))||c.cols[0];openClothes();return;}
-  if(owns(k)){toast(c.i+' You have these already! Try them on at the 🪞 mirror.',3);return;}
+  if(owns(k)){toast(c.i+' You have these already! Try them on at the 🪞 mirror.',3);return;}if(shutBuy('clothes'))return;
   if(S.coins<c.p){SFX.no();toast('Not enough coins yet! 🪙');return;}S.coins-=c.p;S.wardrobe[k]=1;SFX.coin();SFX.yay();toast(c.i+' '+c.n+': it\'s yours! Try it on at the mirror. 🪞',3.2);qEvent('clothes');qEvent('buy:'+k);change();openClothes();};
 ACT.clocol=c=>{CLO.col=c;openClothes();};
 ACT.cloback=()=>{CLO.sel=null;openClothes();};
-ACT.clobuy=()=>{const k=CLO.sel,C=CLOTHES[k];if(!C)return;if(S.coins<C.p){SFX.no();toast('Not enough coins yet! 🪙');return;}S.coins-=C.p;S.outfits.push({k,c:CLO.col});SFX.coin();SFX.yay();
+ACT.clobuy=()=>{const k=CLO.sel,C=CLOTHES[k];if(!C||shutBuy('clothes'))return;if(S.coins<C.p){SFX.no();toast('Not enough coins yet! 🪙');return;}S.coins-=C.p;S.outfits.push({k,c:CLO.col});SFX.coin();SFX.yay();
   toast(C.i+' New '+C.n.toLowerCase()+'! Try it on at the 🪞 mirror.',3.2);qEvent('clothes');qEvent('buy:'+k);CLO.sel=null;change();openClothes();};
 ACT.plant=k=>plantSeed(k);
 const hearts=n=>'♥'.repeat(n)+'<span class="off">'+'♥'.repeat(5-n)+'</span>';
@@ -3620,14 +3789,14 @@ const fill=(s,f)=>String(s).replace(/\{name\}/g,S.name||'friend').replace(/\{foo
 /* friends */
 let FR=null;
 function openFriend(f,line){FR=f;if(f.mode!=='talk'){f.prev=f.mode;f.mode='talk';}f.face=Math.atan2(P.x-f.x,P.z-f.z);f.g.rotation.y=f.face;f.p.wave=1;SFX.talk();const st=frSt(f.d.id);
-  if(!line){if(!st.met){st.met=1;line=f.d.hello;addPts(f,3);}else line=f.d.greet||pick(["Hi {name}! Nice to see you!","Hey {name}! What are you up to?","Oh, {name}! Hi hi!"]);}
+  if(!line){if(!st.met){st.met=1;line=f.d.hello;addPts(f,3);}else line=bdRosie(f)||f.d.greet||pick(["Hi {name}! Nice to see you!","Hey {name}! What are you up to?","Oh, {name}! Hi hi!"]);}
   renderFriend(line);}
 function renderFriend(line,sub){const f=FR,st=frSt(f.d.id),h=heartsOf(f.d.id),fol=f.prev==='follow';
   openPanel(`<div class="who" style="--c:${f.d.look.top}">${esc(f.d.name)}</div><div class="hearts" aria-label="${h} of 5 hearts">${hearts(h)}</div>
     <p class="line">${esc(fill(line))}</p>${sub||`<div class="row"><button class="btn mint" data-a="fchat">💬 Chat</button><button class="btn butter" data-a="fgift">🎁 Give a present</button>
     ${f.d.id==='rosie'?'<button class="btn lilac" data-a="fjob">💼 Jobs</button>':''}${fol?'<button class="btn sky" data-a="fstop">👋 See you later</button>':`<button class="btn sky" data-a="fhang" ${h<1?'disabled':''}>🤝 Hang out${h<1?' (needs 1 ♥)':''}</button>`}
     <button class="btn white" data-a="close">Bye!</button></div>`}`,{bottom:true,onClose:()=>{if(f.mode==='talk')f.mode=f.prev==='follow'?'follow':'walk';FR=null;}});}
-ACT.fchat=()=>{const f=FR,st=frSt(f.d.id);SFX.talk();qEvent('chat',1,f.d.id);qEvent('chat:'+f.d.id);const pk=a=>{const L=a.length>1?a.filter(x=>x!==f.d._last):a,r=pick(L.length?L:a);f.d._last=r;return r;};if(st.chat!==S.day){st.chat=S.day;addPts(f,4);addXP('friends',4);renderFriend(pk(f.d.lines));}else renderFriend(pk(f.d.only?f.d.lines:f.d.lines.concat(["We talked so much today! Let's hang out.","Hehe, you're fun to talk to!"])));};
+ACT.fchat=()=>{const f=FR,st=frSt(f.d.id);SFX.talk();qEvent('chat',1,f.d.id);qEvent('chat:'+f.d.id);const pk=a=>{const b=Math.random()<.75&&bdRosie(f);if(b&&b!==f.d._last)return f.d._last=b;const L=a.length>1?a.filter(x=>x!==f.d._last):a,r=pick(L.length?L:a);f.d._last=r;return r;};if(st.chat!==S.day){st.chat=S.day;addPts(f,4);addXP('friends',4);renderFriend(pk(f.d.lines));}else renderFriend(pk(f.d.only?f.d.lines:f.d.lines.concat(["We talked so much today! Let's hang out.","Hehe, you're fun to talk to!"])));};
 ACT.fgift=()=>{const foods=Object.keys(S.bag).filter(k=>FOODS[k]&&S.bag[k]>0);
   if(!foods.length){renderFriend("You don't have any food in your bag. The market has yummy stuff!");return;}
   renderFriend(FR.d.giftAsk||'Ooh, a present? For me?',`<div class="grid" style="margin-top:12px">${foods.map(k=>`<button class="it" data-a="give:${k}"><span class="em">${FOODS[k].i}</span><span>${FOODS[k].n}</span><span class="have">×${S.bag[k]}</span></button>`).join('')}</div><div class="row"><button class="btn white" data-a="fback">Back</button></div>`);};
@@ -3675,12 +3844,12 @@ let AD=null;const ADOPT_COST=100;
 function openAdopt(type,col){if(S.pets.length>=3){toast('You have 3 pets already. That\'s a full house! 🏠');return;}
   const T=PET_TYPES[type];AD={type,col,name:pick(T.names)};SFX[T.snd]();renderAdopt();}
 function renderAdopt(){const T=PET_TYPES[AD.type];
-  openPanel(`<div class="hd"><h2>${T.icon} Adopt a ${T.name}</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
+  openPanel(`<div class="hd"><h2>${T.icon} Adopt a ${T.name}</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>${shutNote('pets')}
     <p class="note">Pick a color</p><div class="swrow">${T.cols.map(c=>`<button class="sw ${c===AD.col?'on':''}" style="background:${c}" data-a="acol:${c}" aria-label="Color"></button>`).join('')}</div>
     <p class="note">Give your ${T.name} a name</p><input class="inp" id="petName" maxlength="14" value="${esc(AD.name)}" autocomplete="off">
     <div class="row"><button class="btn mint" data-a="adopt" ${S.coins<ADOPT_COST?'disabled':''}>💗 Adopt for ${ADOPT_COST} 🪙</button></div>${S.coins<ADOPT_COST?`<p class="note">You need ${ADOPT_COST} 🪙. Pick up litter or check your mail to get more!</p>`:''}`);}
 ACT.acol=c=>{AD.name=($('petName').value||AD.name);AD.col=c;renderAdopt();};
-ACT.adopt=()=>{const nm=($('petName').value||'').trim().slice(0,14)||AD.name;if(S.coins<ADOPT_COST)return;S.coins-=ADOPT_COST;
+ACT.adopt=()=>{if(shutBuy('pets'))return;const nm=($('petName').value||'').trim().slice(0,14)||AD.name;if(S.coins<ADOPT_COST)return;S.coins-=ADOPT_COST;
   const d={id:uid(),type:AD.type,col:AD.col,name:nm,happy:80,stay:false,loc:CUR.id,x:P.x+.6,z:P.z+.8,sx:0,sz:0};S.pets.push(d);addPetActor(d);
   closePanel();SFX.yay();toast(`Welcome home, ${nm}! ${PET_TYPES[AD.type].icon} Look at ${nm} to play.`,4);doneTask('pet');change();};
 
@@ -3689,9 +3858,9 @@ let SHOP=null;
 function openShop(k){SHOP=k;const sh=SHOPS[k];SFX.talk();
   const list=(sh.items||[]).map(id=>({id,...itemInfo(id)})).concat((sh.furn||[]).map(t=>({id:t,n:FURN[t].n,i:FURN[t].i,p:FURN[t].p,f:1})));
   openPanel(`<div class="hd"><h2>${sh.title}</h2><div class="chip">🪙 <b id="pc">${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
-    ${sh.furn?'<p class="note">Furniture and decorations go to 📦 My stuff. Place them at home with 🛋️ Decorate.</p>':''}${newInHTML(k)}
+    ${shutNote(k)}${sh.furn?'<p class="note">Furniture and decorations go to 📦 My stuff. Place them at home with 🛋️ Decorate.</p>':''}${newInHTML(k)}
     <div class="grid" style="margin-top:10px">${list.map(it=>`<button class="it" data-a="buy:${it.id}"><span class="em">${it.i}</span><span>${it.n}</span><span class="pr">${it.p} 🪙</span><span class="have" id="hv-${it.id}">${it.f?'':(S.bag[it.id]?'You have '+S.bag[it.id]:'')}</span></button>`).join('')}</div>`);}
-ACT.buy=(id,b)=>{const sh=SHOPS[SHOP],F=(sh.furn&&sh.furn.includes(id))?FURN[id]:null,info=F||itemInfo(id);
+ACT.buy=(id,b)=>{if(shutBuy(SHOP))return;const sh=SHOPS[SHOP],F=(sh.furn&&sh.furn.includes(id))?FURN[id]:null,info=F||itemInfo(id);
   if(S.coins<info.p){SFX.no();toast('Not enough coins. Pick up litter or check your mail! 🪙');return;}
   S.coins-=info.p;SFX.coin();
   if(F){S.home.store.push({u:uid(),t:id,c:F.cols?pick(F.cols):null,x:0,z:0,r:0});toast(F.i+' '+F.n+' is waiting in 📦 My stuff at home!');}
@@ -3720,7 +3889,7 @@ function newIn(sh){S.newin=S.newin||{};let L=S.newin[sh];if(!Array.isArray(L))L=
 function newInHTML(sh){if(!S||!NEWIN_SHOPS[sh])return'';const L=newIn(sh);if(!L.some(Boolean))return'';
   return`<div class="sec">✨ New in! <small class="nisub">Buy one and something new pops up!</small></div><div class="grid newin">${L.map((it,i)=>{if(!it)return'';const img=it.kind==='furn'?thumb(it.k,it.c):'';
     return`<button class="it ni${NEWPOP===sh+i?' nipop':''}" data-a="nbuy:${sh}:${i}"><span class="nbadge">NEW</span>${img?`<img class="nimg" src="${img}" alt="">`:`<span class="em">${it.i}</span>`}<span>${esc(it.n)} <i class="dot" style="background:${it.c}"></i></span><span class="pr">${it.p} 🪙</span></button>`;}).join('')}</div>`;}
-ACT.nbuy=(sh,i)=>{if(typeof sh==='string'&&sh.includes(':')){const p=sh.split(':');sh=p[0];i=p[1];}const L=newIn(sh),it=L[+i];if(!it)return;if(S.coins<it.p){SFX.no();toast('Not enough coins yet! 🪙');return;}
+ACT.nbuy=(sh,i)=>{if(typeof sh==='string'&&sh.includes(':')){const p=sh.split(':');sh=p[0];i=p[1];}if(shutBuy(sh))return;const L=newIn(sh),it=L[+i];if(!it)return;if(S.coins<it.p){SFX.no();toast('Not enough coins yet! 🪙');return;}
   S.coins-=it.p;SFX.coin();SFX.yay();
   if(it.kind==='hat'){S.outfits=S.outfits||[];S.outfits.push({k:it.k,c:it.c});toast(it.i+' '+it.n+'! Try it on at the 🪞 mirror.',3.2);qEvent('clothes');}
   else if(it.kind==='col'){S.xcol=S.xcol||{};(S.xcol[it.k]=S.xcol[it.k]||[]).push(it.c);toast(it.i+' '+it.n+'! Try it on at the 🪞 mirror.',3.2);qEvent('clothes');}
@@ -3823,7 +3992,7 @@ function qCard(Q,st,k,hard){let foot;const p=hard?'h':'q',steps=Q.steps;
   return`<div class="qcard${hard?' hard':''}"><div class="qtop"><span class="qi">${Q.i}</span><div><div class="qt">${esc(Q.t)}${hard?'<span class="qtag">🔥 Hard</span>':''}${steps?'<span class="qtag tricky">🧩 Tricky</span>':''}</div><div class="qd">${esc(Q.d)}</div></div></div>${list}<div class="qfoot"><span class="qr">${Q.r} 🪙</span>${foot}</div></div>`;}
 function openPhone(app,chat){PH.app=app||null;PH.chat=chat||null;PH.jobs=false;if(chat){msgs().u[chat]=0;updPhoneBadge();}SFX.tap();renderPhone();}
 function renderPhone(){hardCheck();const a=PH.app,q=S.q,ready=readyCount();let body='';
-  if(!a){body=`<div class="ph-clock">${clockStr(S.time)}</div><div class="ph-date">${wdName()} · Day ${S.day}${isShowDay()&&!showDone()?' · 🏆 Pet Show today!':''}</div>
+  if(!a){body=`<div class="ph-clock">${clockStr(S.time)}</div><div class="ph-date">${wdName()} · Day ${S.day}${psLeft()?' · 🏆 Pet Show today!':''}</div>
     <div class="apps"><button class="app" data-a="phapp:msg"><span class="ic" style="background:#5fd4b0">💬</span>Messages${msgUnread()?`<span class="badge">${msgUnread()}</span>`:''}</button><button class="app" data-a="phapp:quest"><span class="ic" style="background:#ffd45c">🏆</span>Quest${ready?`<span class="badge">${ready}</span>`:''}</button>
     <button class="app" data-a="phapp:skills"><span class="ic" style="background:#b79cff">⭐</span>Skills</button>
     <button class="app" data-a="phapp:pets"><span class="ic" style="background:#7fdcb5">🐾</span>Pets</button>
@@ -3831,7 +4000,7 @@ function renderPhone(){hardCheck();const a=PH.app,q=S.q,ready=readyCount();let b
     <button class="app" data-a="phapp:mp"><span class="ic" style="background:#ff9ec4">👫</span>Friends</button>
     <button class="app" data-a="phapp:job"><span class="ic" style="background:#ffb36b">💼</span>Job${hasDlOrder()||(S.job==='designer'&&S.ds&&S.ds.o)||(S.job==='teacher'&&S.tc&&S.tc.o)?'<span class="badge">!</span>':''}</button>
     <button class="app" data-a="phapp:furn"><span class="ic" style="background:#ff9ec4">🛋️</span>Furniture</button>
-    <button class="app" data-a="phapp:cal"><span class="ic" style="background:#ff8a6b">📅</span>Calendar${isShowDay()&&!showDone()?'<span class="badge">!</span>':''}</button></div>`;}
+    <button class="app" data-a="phapp:cal"><span class="ic" style="background:#ff8a6b">📅</span>Calendar${psLeft()?'<span class="badge">!</span>':''}</button></div>`;}
   else{const hd=(t)=>`<div class="ph-hd"><button class="btn ph-back" data-a="phapp:" aria-label="Back to home screen">‹</button><h3>${t}</h3><span class="ph-coins">🪙 ${S.coins}</span></div>`;
     if(a==='quest'){const tab=PH.tab,dr=Object.values(q.st).filter(s=>s.s==='ready').length,hr=Object.values(S.hard).filter(s=>s.s==='ready').length;
       body=hd('🏆 Quest')+`<div class="ph-tabs"><button class="pill ${tab==='daily'?'on':''}" data-a="qtab:daily">📅 Daily${dr?' ('+dr+')':''}</button><button class="pill ${tab==='hard'?'on':''}" data-a="qtab:hard">🔥 Hard${hr?' ('+hr+')':''}</button></div>`;
@@ -4140,6 +4309,7 @@ function jobHud(force){const el=$('job'),on=!!(PLAYING&&S&&(S.job==='delivery'||
       else if(id==='school')h=`📚 Find the <b>${S0.i} ${S0.n}</b> room!`;
       else{const tg=jobTarget(),m=CUR.id==='city'&&tg?' <span class="nw">· '+Math.round(Math.hypot(tg.x-P.x,tg.z-P.z))+' m</span>':'';h=`📚 → <b>School</b> · ${S0.i} ${S0.n} class${m}`;}}
     else if(d.done>=TC_MAX)h=`🌟 All ${TC_MAX} classes done today!`;
+    else if(!isDaytime())h=workAt();
     else h=`📚 Waiting for a message from school… <small>(${d.done}/${TC_MAX})</small>`;
     if(force||h!==jobHud.last){$('jobTxt').innerHTML=h;jobHud.last=h;}
     $('jobTxt').classList.remove('late','rare');const mh=CUR.id!=='city';if($('mmBtn').hidden!==mh)$('mmBtn').hidden=mh;return;}
@@ -4149,6 +4319,7 @@ function jobHud(force){const el=$('job'),on=!!(PLAYING&&S&&(S.job==='delivery'||
       else{const tg=jobTarget(),m=CUR.id==='city'&&tg?' <span class="nw">· '+Math.round(Math.hypot(tg.x-P.x,tg.z-P.z))+' m</span>':'',inA=CUR.id.startsWith('apt');
         h=inA&&APT.b===o.h?`🎨 Find flat <b>${o.flat}</b>!`:inA?`🎨 Wrong building! → <b>${esc(H.n)}</b>`:`🎨 → <b>${esc(H.n)}</b>${o.flat?' · flat '+o.flat:''}${m}`;}}
     else if(d.done>=DS_MAX)h=`🌟 All ${DS_MAX} rooms done today!`;
+    else if(!isDaytime())h=workAt();
     else h=`🎨 Waiting for a client… <small>(${d.done}/${DS_MAX})</small>`;
     if(force||h!==jobHud.last){$('jobTxt').innerHTML=h;jobHud.last=h;}
     $('jobTxt').classList.remove('late','rare');const mh=CUR.id!=='city';if($('mmBtn').hidden!==mh)$('mmBtn').hidden=mh;return;}
@@ -4447,7 +4618,7 @@ const PS_KIDS=['Mia','Leo','Ava','Noah','Lily','Max','Zoe','Finn','Ella','Sam','
 const TRICKS=[['🌀','Spin'],['⬆️','Big jump'],['🤸','Flip'],['💃','Dance'],['🔄','Roll over'],['🙌','High five']];
 const PS_FLOP={sleep:{e:'😴',say:['Oh dear, a nap on stage!','Zzz… that is not a trick!','Wake up, sleepyhead! 💤']},
   butterfly:{e:'🦋',say:['Come back, little one!','A butterfly?! Focus!','Oh my, it ran away! 🦋']}};
-function psTargetLabel(){if(!S)return'🏆 Pet Show';if(!isShowDay())return'🏆 Pet Show is on Saturday';if(showDone())return'🏆 See you next Saturday!';return'🏆 Enter the Pet Show!';}
+function psTargetLabel(){if(!S)return'🏆 Pet Show';if(!isShowDay())return'🏆 Pet Show is on Saturday';if(showDone())return'🏆 See you next Saturday!';if(S.time<PS_ON)return`🏆 Pet Show starts at ${PS_ON}:00`;if(S.time>=PS_OFF)return'🏆 Pet Show is over for today';return'🏆 Enter the Pet Show!';}
 function psScore(d){return{style:petStyle(d),happy:clamp(Math.round(d.happy/20),1,5)};}
 function psScore10(d,pts){return{style:petStyle(d)*2,trick:PS_TR[clamp(pts|0,0,6)],happy:clamp(Math.ceil(d.happy/10),1,10)};}
 
@@ -4477,8 +4648,8 @@ function psRefresh(){if(CUT&&CUT.show){PSX.dirty=true;return;}PSX.dirty=false;fo
   PSX.rv.forEach((R,i)=>{const m=makePet(R.type,R.col);addOutfit(m,{outfit:Object.assign({},R.outfit)});m.root.visible=false;scene.add(m.root);
     const tg=label(R.name,.2);tg.position.y={bunny:1.0,hamster:.55}[R.type]||.82;m.root.add(tg);const r={R,m,tg,busy:false};PSX.rivals.push(r);psHome(r,i);});}
 function psHome(r,i){const pd=PS.pad[i],m=r.m;m.root.position.set(pd[0],PS.top+.08,pd[1]);m.root.rotation.set(0,psRot(i),0);m.b.rotation.set(0,0,0);m.b.position.set(0,0,0);if(m.head)m.head.rotation.x=0;m.legs[0].rotation.x=0;r.busy=false;}
-function psDay(){psRefresh();if(S&&isShowDay())setTimeout(()=>{if(S&&PLAYING&&isShowDay()&&!showDone())toast('🏆 It\'s Pet Show day! Dress up your pet and come to the park!',4.6);},4800);}
-function psUpdate(dt){const on=!!(S&&CUR&&CUR.id==='city'&&isShowDay());PSX.on=on;
+function psDay(){psRefresh();if(S&&isShowDay())setTimeout(()=>{if(S&&PLAYING&&psLeft())toast(`🏆 It's Pet Show day! The show is in the park from ${PS_ON}:00 to ${PS_OFF}:00. Dress up your pet!`,4.6);},4800);}
+function psUpdate(dt){const on=!!(S&&CUR&&CUR.id==='city'&&(psOpen()||CUT&&CUT.show||UI.open&&PSX.pc&&UI.onClose===PSX.pc));PSX.on=on;
   for(const pl of PSX.plates)pl.visible=on;
   const judging=!!(CUT&&CUT.show&&/^r?(jin|judge)$/.test(CUT.stage));
   for(const j of PSX.judges){const p=j.p,a=p.arms[1];p.root.visible=on;if(!on)continue;j.t+=dt;j.tg.visible=!judging;
@@ -4496,18 +4667,20 @@ function psCardsDown(){for(const j of PSX.judges){j.up=0;j.card.visible=false;ps
 function openShow(){if(!S)return;
   if(!isShowDay()){const n=daysToShow();SFX.talk();toast(`🏆 The Pet Show is every Saturday! Today is ${wdName()}, so it's in ${n} day${n>1?'s':''}. Get your pet ready!`,4.8);return;}
   if(showDone()){toast(`🏆 You already did today's show! Come back next Saturday.`,4);return;}
+  if(S.time<PS_ON){SFX.talk();toast(`🏆 The Pet Show starts at ${PS_ON}:00! The judges are on their way. Dress up your pet! 🎀`,4.6);return;}
+  if(S.time>=PS_OFF){SFX.talk();toast(`🏆 Today's Pet Show is over (${PS_ON}:00 to ${PS_OFF}:00). The next one is next Saturday!`,4.6);return;}
   if(!S.pets.length){SFX.no();toast('You need a pet for the Pet Show! Adopt one at the 🐾 Pet Shop.',4);return;}
   const here=PET_ACTORS.filter(p=>p.loc==='city'&&Math.hypot(p.x-P.x,p.z-P.z)<18);
   if(!here.length){SFX.no();toast('Bring a pet to the park! Tip: ⚙️ Settings → 🐾 Bring my pets to me',4.8);return;}
   if(PSX.dirty||!PSX.rivals.length)psRefresh();
-  SFX.yay();PSX.pick=here;const rv=PSX.rv||[];
+  SFX.yay();PSX.pick=here;const rv=PSX.rv||[];if(!PSX.pc)PSX.pc=()=>{};
   openPanel(`<div class="hd"><h2>🏆 Pet Show!</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
     <div class="psj">${PS_JUDGES.map(J=>`<div><span>${J.i}</span><b>${J.n}</b><i>loves ${J.love}</i></div>`).join('')}</div>
     <p class="note">Today's other pets: ${rv.map(R=>`${PET_TYPES[R.type].icon} <b>${esc(R.name)}</b> (${esc(R.owner)})`).join(', ')}. They practiced a lot! Can you beat them?</p>
     <p class="note">🥇 <b>200 🪙</b> + 🐾 Pets +2 levels · 🥈 60 🪙 · 🥉 25 🪙</p>
     <div class="pspick">${here.map((p,i)=>{const d=p.d,o=petOutfit(d),sc=psScore(d);return`<button class="pscard" data-a="psgo:${i}"><span class="pi">${PET_TYPES[d.type].icon}</span><b>${esc(d.name)}</b>
       <span class="pso">${PSLOTS.map(([sl])=>o[sl]?ACCS[o[sl]].i:'').join('')||'no outfit yet'}</span><span>👒 ${starRow(sc.style)}</span><span>🌼 ${starRow(sc.happy)}</span><i>⭐ Pick ${esc(d.name)}!</i></button>`;}).join('')}</div>
-    <p class="note">Tip: dress your pet in all 4 outfit spots, make it super happy, and hit the gold when you do tricks!</p>`);}
+    <p class="note">Tip: dress your pet in all 4 outfit spots, make it super happy, and hit the gold when you do tricks!</p>`,{onClose:PSX.pc});}
 ACT.psgo=i=>{const p=PSX.pick&&PSX.pick[+i];if(!p||CUT)return;closePanel();psStart(p);};
 /* how each other pet will do today: great, good, medium, bad — or out of the show */
 function psPlan(r,i){let x=Math.random()*100,form='good';for(const [p,v] of [[22,'great'],[28,'good'],[24,'medium'],[16,'bad'],[10,'out']]){x-=p;if(x<=0){form=v;break;}}
@@ -4670,14 +4843,14 @@ const clawK=()=>LOC.toys&&LOC.toys.cl;
 const tri=v=>{const f=((v%2)+2)%2;return f<1?f:2-f;};
 function clawOpen(){const K=clawK();if(!K||CUT||!S)return;SFX.talk();
   openPanel(`<div class="hd"><h2>🕹️ Claw machine</h2><div class="chip">🪙 <b id="pc">${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
-    <p class="line">Catch a capsule and win a prize! 🎁 Every try is <b>${CLAW_COST} 🪙</b>.</p>
+    ${shutNote('toys')}<p class="line">Catch a capsule and win a prize! 🎁 Every try is <b>${CLAW_COST} 🪙</b>.</p>
     <p class="note">First stop the claw left-right, then front-back, right above a capsule! Capsules have furniture, coins or a level-up inside. A <b>✨ gold capsule</b> has a golden treasure you can't buy anywhere, plus a level-up!</p>
     <div class="row"><button class="btn butter" data-a="clawgo" ${S.coins<CLAW_COST?'disabled':''}>🕹️ Play! (${CLAW_COST} 🪙)</button></div>${S.coins<CLAW_COST?'<p class="note">Not enough coins yet. Pick up litter or check your mail! 🪙</p>':''}`);}
 function clawNew(K){K.x=K.rx;K.z=K.rz;K.y=K.ry;K.open=.1;clawPose(K);
   CUT={claw:1,t:0,st:0,shake:0,stage:'x',K,t0:performance.now(),hold:null,res:null};clawPanel();}
-ACT.clawgo=()=>{const K=clawK();if(!K||CUT)return;if(S.coins<CLAW_COST){SFX.no();toast('Not enough coins! 🪙');return;}
+ACT.clawgo=()=>{const K=clawK();if(!K||CUT||shutBuy('toys'))return;if(S.coins<CLAW_COST){SFX.no();toast('Not enough coins! 🪙');return;}
   S.coins-=CLAW_COST;SFX.coin();change();closePanel();if(P.ride)stopRide();P.sit=null;document.body.classList.add('cut');$('note').hidden=true;clawNew(K);};
-ACT.clawagain=()=>{const C=CUT;if(!C||!C.claw)return;if(S.coins<CLAW_COST){SFX.no();return;}clawTidy(C);S.coins-=CLAW_COST;SFX.coin();change();clawNew(C.K);};
+ACT.clawagain=()=>{const C=CUT;if(!C||!C.claw||shutBuy('toys'))return;if(S.coins<CLAW_COST){SFX.no();return;}clawTidy(C);S.coins-=CLAW_COST;SFX.coin();change();clawNew(C.K);};
 ACT.clawdone=()=>{const C=CUT;if(!C||!C.claw)return;clawEnd();};
 function clawPanel(){const C=CUT;
   if(C.stage==='x')openPanel(`<div class="hd"><h2>🕹️ Left or right?</h2><span class="psn">Step 1 of 2</span></div><p class="note">Tap <b>⏹ STOP</b> when the claw is right above a capsule!</p><div class="row"><button class="btn butter psnow" data-a="clawtap">⏹ STOP</button></div>`,{bottom:true,lock:true});
@@ -4752,10 +4925,10 @@ function tcNew(){const d=tc(),id=pick(Object.keys(SUBJ).filter(k=>k!==d.last)),S
   const x=`Good ${S.time<5||S.time>=18?'evening':S.time<12?'morning':'afternoon'}, ${S.name||'teacher'}! ${nightF(S.time)>.5?'🌙':'☀️'} Today I'd like you to teach the ${S0.n} class, if that's okay! ${S0.i} Go to the school. In the hallway, the ${S0.n} room is ${tcDoor(S0)}.`;
   addMsg('dr','dr',x,{t2:'📚 Your class today: '+S0.n});SFX.ding();try{if(navigator.vibrate)navigator.vibrate([120,80,120]);}catch(e){}
   showNote('📚 Message from the school!',x,false,'📚','dr');change();jobHud(true);}
-function tcTick(dt){const d=tc();if(!d.o&&d.done<TC_MAX&&!CUT){d.wait-=dt;if(d.wait<=0)tcNew();}jobHud();}
+function tcTick(dt){const d=tc();if(!d.o&&d.done<TC_MAX&&!CUT&&isDaytime()){d.wait-=dt;if(d.wait<=0)tcNew();}jobHud();}
 function tcTalk(){const o=S&&S.job==='teacher'&&S.tc&&S.tc.o;
   if(o){const S0=SUBJ[o.subj];toast(`“Your class today is ${S0.n}! ${S0.i} It's ${tcDoor(S0)}. Good luck!”`,3.8);return;}
-  if(S&&S.job==='teacher'){toast(tc().done>=TC_MAX?'“You taught all your classes today! Thank you! 🌟”':'“No class right now. I will message you when a class needs you! 📱”',3.6);return;}
+  if(S&&S.job==='teacher'){toast(tc().done>=TC_MAX?'“You taught all your classes today! Thank you! 🌟”':!isDaytime()?`“No classes at night! 🌙 Work starts at ${DAY_ON}:00. I will message you! ☀️”`:'“No class right now. I will message you when a class needs you! 📱”',3.6);return;}
   toast('“Welcome to Cozy Town School! Want to be a teacher? Ask Rosie for a job! 📚”',3.8);}
 function tcClear(){for(const id in SUBJ){const L=LOC['cl_'+id];if(L&&L.kids){for(const k of L.kids)L.g.remove(k.p.root);L.kids=null;}}}
 function enterClass(id){const L=LOC['cl_'+id];if(!L||fading)return;SFX.door();
@@ -4899,7 +5072,7 @@ function tcEnd(){const C=CUT;if(!C||!C.tch)return;const L=C.L;for(const k of C.k
 function calBody(){const i0=wdIdx(),start=S.day-i0;let h='<div class="cal">';
   for(let i=0;i<7;i++){h+=`<div class="cd${i===i0?' today':''}${i===5?' show':''}"><b>${WDAYS[i].slice(0,3)}</b><span>${start+i}</span><i>${i===5?'🏆':i===i0?'⭐':''}</i></div>`;}
   h+='</div>';const n=daysToShow();
-  h+=`<p class="ph-sub"><b>Today is ${wdName()}!</b> ${isShowDay()?(showDone()?'You did the 🏆 Pet Show today. The next one is next Saturday!':'🏆 It\'s Pet Show day! Bring your pet to the park!'):`🏆 Pet Show in ${n} day${n>1?'s':''}: on Saturday, in the park.`}</p>`;
+  h+=`<p class="ph-sub"><b>Today is ${wdName()}!</b> ${isShowDay()?(showDone()?'You did the 🏆 Pet Show today. The next one is next Saturday!':S.time>=PS_OFF?'Today\'s 🏆 Pet Show is over. The next one is next Saturday!':`🏆 It's Pet Show day! Bring your pet to the park from ${PS_ON}:00 to ${PS_OFF}:00!`):`🏆 Pet Show in ${n} day${n>1?'s':''}: on Saturday, ${PS_ON}:00 to ${PS_OFF}:00, in the park.`}</p>`;
   h+=`<div class="caltips">${PS_JUDGES.map(J=>`<div><span>${J.i}</span><span><b>${J.n}</b> loves ${J.love}</span></div>`).join('')}</div>`;
   if(S.showLast)h+=`<p class="ph-sub">Last show: ${esc(S.showLast)}</p>`;if(S.showWins)h+=`<p class="ph-sub">🏆 Pet Show wins: ${S.showWins}</p>`;
   return h;}
@@ -4929,8 +5102,8 @@ function dsPhoto(T){if(PHOTOS.has(T.id))return PHOTOS.get(T.id);let url='';
 let DCARD_KEY='';
 function dcardUpd(force){const el=$('dcard');if(!el)return;const on=!!(PLAYING&&S&&S.job==='designer');if(el.hidden===on)el.hidden=!on;if($('pad').hidden!==on)$('pad').hidden=on;if(!on){DCARD_KEY='';return;}
   const d=ds(),o=d.o;
-  if(!o){const key='none:'+d.done;if(!force&&key===DCARD_KEY)return;DCARD_KEY=key;el.classList.add('empty');
-    el.innerHTML=`<div class="dct">🎨 ${d.done>=DS_MAX?'All done today! 🌟':'Waiting for a client…'}</div><div class="dcr"><span>${d.done} / ${DS_MAX} rooms today</span></div>`;return;}
+  if(!o){const key='none:'+d.done+':'+isDaytime();if(!force&&key===DCARD_KEY)return;DCARD_KEY=key;el.classList.add('empty');
+    el.innerHTML=`<div class="dct">🎨 ${d.done>=DS_MAX?'All done today! 🌟':!isDaytime()?`Clients come at ${DAY_ON}:00 ☀️`:'Waiting for a client…'}</div><div class="dcr"><span>${d.done} / ${DS_MAX} rooms today</span></div>`;return;}
   const T=dsTheme(o),R=DROOM[T.room],n=o.items.length,inR=CUR&&CUR.id==='client',key=[o.h,o.th,n,inR].join(':');if(!force&&key===DCARD_KEY)return;DCARD_KEY=key;el.classList.remove('empty');
   el.innerHTML=`<div class="dct">${T.e} ${esc(T.n)}</div><img class="dci" alt="" src="${dsPhoto(T)}"><div class="dcr"><span class="dcp">${T.pal.map(f=>`<i style="background:${FAMDOT[f]}"></i>`).join('')}${T.plants?'🌿':''}</span><span class="dcn">🪑 ${R.cnt[0]}–${R.cnt[1]}${inR?` <small>(${n})</small>`:''}</span></div>`;}
 $('dcard').addEventListener('click',()=>{audioInit();SFX.tap();dcardBig();});
@@ -4974,7 +5147,7 @@ ACT.dtutgo=()=>{closePanel();setTimeout(dtutStart,250);};
 /* the designer job, every frame */
 function dsTick(dt){const d=ds();
   if(!S.dsTut&&S.intro&&!DTUT&&!TUT&&!UI.open&&!CUT&&!CLIMB&&!fading&&(CUR.id==='city'||CUR.id==='client')){dtutT+=dt;if(dtutT>1.2)dtutStart();}else dtutT=0;
-  if(!d.o&&d.done<DS_MAX&&!CUT&&!DTUT){d.wait-=dt;if(d.wait<=0)dsNew();}
+  if(!d.o&&d.done<DS_MAX&&!CUT&&!DTUT&&isDaytime()){d.wait-=dt;if(d.wait<=0)dsNew();}
   if(HELD&&!CUT)HELD.visible=false;
   jobT+=dt;if(jobT>.25){jobT=0;jobHud();}mmT+=dt;if(mmT>.07){mmT=0;drawMini();}}
 
@@ -5006,11 +5179,11 @@ function jobPhone(){let h;
     h+=`<div class="row"><button class="btn butter" data-a="nav:pizza">📍 Show me the Pizzeria</button><button class="btn sky" data-a="dotpick">🎨 Dot color</button></div>`;}
   if(S.job==='designer'){const d=ds(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${DS_MAX}</b> rooms decorated</p>`;
     if(o){const T=dsTheme(o),H=HOUSE(o.h),W=dsWho(o);h+=`<div class="qcard"><div class="qtop"><span class="qi">${T.e}</span><div><div class="qt">${esc(W.nm)}: ${esc(T.n)}</div><div class="qd">At the <b>${esc(H.n)}</b>${o.flat?', flat <b>'+o.flat+'</b>':''}. Follow the dot on your map!</div></div></div></div>`;}
-    else h+=`<p class="ph-sub">${d.done>=DS_MAX?'🌟 All done for today! More clients tomorrow.':'🎨 A client will message you soon!'}</p>`;
+    else h+=`<p class="ph-sub">${d.done>=DS_MAX?'🌟 All done for today! More clients tomorrow.':!isDaytime()?workAt()+' Clients message you from 8:00 to 20:00.':'🎨 A client will message you soon!'}</p>`;
     h+=`<div class="row"><button class="btn sky" data-a="dotpick">🎨 Dot color</button><button class="btn white" data-a="dtutgo">📖 Tips</button></div>`;}
   if(S.job==='teacher'){const d=tc(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${TC_MAX}</b> classes taught</p>`;
     if(o){const S0=SUBJ[o.subj];h+=`<div class="qcard"><div class="qtop"><span class="qi">${S0.i}</span><div><div class="qt">Teach the ${S0.n} class</div><div class="qd">Go to <b>Cozy Town School</b>. In the hallway, it's ${tcDoor(S0)}.</div></div></div></div>`;}
-    else h+=`<p class="ph-sub">${d.done>=TC_MAX?'🌟 All classes done today! More tomorrow.':'📱 Mrs. Maple will message you when a class needs you.'}</p>`;
+    else h+=`<p class="ph-sub">${d.done>=TC_MAX?'🌟 All classes done today! More tomorrow.':!isDaytime()?workAt()+' Classes are from 8:00 to 20:00.':'📱 Mrs. Maple will message you when a class needs you.'}</p>`;
     h+=`<div class="row"><button class="btn butter" data-a="nav:school">📍 Show me the school</button><button class="btn sky" data-a="phchat:dr">💬 Messages</button></div>`;}
   return h+`<p class="ph-sub" style="margin-top:14px">Want a different job? Message Rosie!</p><div class="row"><button class="btn white" data-a="phchat:ro">💬 Message Rosie</button></div>`;}
 
@@ -5032,7 +5205,7 @@ let hudT=0,hungryWarn=false;
 function updHud(force){$('coins').textContent=S.coins;const fd=$('food');fd.style.width=Math.round(S.hunger)+'%';fd.classList.toggle('low',S.hunger<25);
   $('clock').textContent=clockStr(S.time);$('dayN').textContent=dayLabel();$('sunIc').textContent=nightF(S.time)>.5?'🌙':'☀️';if(force)renderTasks();}
 function showAction(){$('moveBtns').hidden=!PLAYING||DECO.on||!!CUT;const w=$('actWrap');if(!PLAYING||UI.open||DECO.on||!TARGET){w.hidden=true;return;}
-  w.hidden=false;const lb=typeof TARGET.label==='function'?TARGET.label():TARGET.label,ic=typeof TARGET.icon==='function'?TARGET.icon():TARGET.icon;if($('actLbl').textContent!==lb)$('actLbl').textContent=lb;if($('act').textContent!==ic)$('act').textContent=ic;}
+  w.hidden=false;const lb=TARGET.say&&TARGET.say()||(typeof TARGET.label==='function'?TARGET.label():TARGET.label),ic=typeof TARGET.icon==='function'?TARGET.icon():TARGET.icon;if($('actLbl').textContent!==lb)$('actLbl').textContent=lb;if($('act').textContent!==ic)$('act').textContent=ic;}
 $('act').addEventListener('click',()=>{audioInit();if(KC.eat){KC.eat=false;return;}useTarget();});
 /* the ⚽ button can be held: press = start the power, let go = kick (only for the ball; everything else still uses a normal tap) */
 $('act').style.touchAction='none';
@@ -5060,7 +5233,7 @@ function startGame(){if(S){awResume();return;}   /* back from the away title: th
   for(const f of FRIEND_ACTORS)f.wake();
   spawnLitter();gardenInit();for(const w of WALKERS)w.init();
   S.outfits=S.outfits||[];if(S.wardrobe)for(const k of Object.keys(S.wardrobe)){const C=CLOTHES[k];if(C&&(C.hat||C.gl)){if(!S.outfits.some(v=>v.k===k))S.outfits.push({k,c:C.cols[0]});delete S.wardrobe[k];}}
-  delete S.mpcode;drawScore();mpConnect();
+  delete S.mpcode;drawScore();mpConnect();bdInit();
   psRefresh();S.hard=S.hard||{};hardMigrate();if(!S.q||S.q.day!==S.day)qNewDay();else{if(!S.q.used)S.q.used=S.q.list.slice();S.q.list=S.q.list.filter(k=>getQ(k));updPhoneBadge();}
   $('title').hidden=true;$('hud').hidden=false;PLAYING=true;if(innerWidth<600)$('tasks').classList.add('min');
   if(!S.intro){setLoc('city');startIntro();}
@@ -5072,6 +5245,100 @@ function startGame(){if(S){awResume();return;}   /* back from the away title: th
   heldInit();askT=0;jobHud(true);dcardUpd(true);
   updHud(true);if(CSAVE.ref){CSAVE.dirty=true;cloudFlush();}
 }
+
+/* 📌 Ideas board in the park: everyone pins ideas for the town and gives hearts (3 each; move them any time, all 3 on one note is fine).
+   Notes live in Firebase (GitHub version only). If reading or writing is refused, the board stays hidden. On Sundays Rosie reads them. */
+const BD={on:false,dead:false,ref:null,notes:{},tab:'new',g:null,cols:[],bub:null,bubT:0,cool:6,PATH:'worlds/cozy-town/board/notes',
+  COLS:['#fff3a8','#ffd1e3','#c9f2e3','#d9ccff','#cfe9ff','#ffe0c4']};
+{const st=document.createElement('style');st.textContent='.bdn{position:relative;color:#3d2c5e;border:3px solid #3d2c5e;border-radius:16px;padding:12px;margin-top:18px;box-shadow:0 4px 0 var(--soft)}'
+  +'.bdn:before{content:"";position:absolute;top:-10px;left:50%;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ff4d6d;border:2px solid #3d2c5e}'
+  +'.bdt{font-size:21px;font-weight:700;line-height:1.3;margin:0 0 6px;overflow-wrap:anywhere}.bdm{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;font-size:16px;font-weight:700}'
+  +'.bdr{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.bdme{font-size:19px;font-weight:800;margin:10px 0 0}.bdhs{color:#ff4d8d;letter-spacing:2px;font-size:22px}.bdhs .off{color:var(--ink);opacity:.25}';
+  document.head.appendChild(st);}
+function buildBoard(L,st){const X=-17.3,Z=10.6,ry=Math.atan2(-22-X,22-Z),W='#b77a4c',g=new THREE.Group();g.position.set(X,0,Z);g.rotation.y=ry;   /* faces the fountain */
+  for(const s of[-1,1])box(g,.15,2.3,.15,'#9b6b4a',s*1.06,0,0);
+  box(g,2.3,1.25,.1,W,0,.8,0);box(g,2.08,1.03,.03,'#d9a066',0,.91,.065,{ol:false});box(g,2.3,.36,.1,W,0,2.05,0);prism(g,2.7,.66,.36,'#ff8a6b',0,2.41,0);
+  for(const [x,y,w,h,c,r] of [[-.72,1.43,.42,.36,0,.08],[-.18,1.5,.36,.34,1,-.06],[.36,1.41,.44,.38,2,.05],[.8,1.53,.3,.3,3,-.1],[-.6,.99,.4,.34,4,-.05],[.04,1.0,.36,.32,5,.07],[.6,.97,.42,.36,0,-.04]]){
+    box(g,w,h,.012,BD.COLS[c],x,y,.087,{ol:false,rz:r});for(const k of[.58,.36])box(g,w*(k>.5?.66:.48),.025,.006,'#8a7fa8',x,y+h*k,.095,{ol:false,rz:r});sph(g,.032,'#ff4d6d',x,y+h-.05,.1,{ws:6,hs:4,ol:false});}
+  bake(g);const sg=signPlane('💡 Ideas Board',2.05,.3,'#fff7fb','#3d2c5e');sg.position.set(0,2.23,.052);g.add(sg);g.visible=false;L.g.add(g);BD.g=g;
+  const c=Math.cos(ry),s=Math.sin(ry);for(const k of[-.85,0,.85])BD.cols.push({cx:X+c*k,cz:Z-s*k,cr:.32});   /* only solid while the board is shown */
+  inter(L,{x:X+s*1.1,z:Z+c*1.1,r:2.6,icon:'📌',label:'Read the ideas board',act:()=>openBoard(),when:()=>BD.on,obj:g});   /* tap the board itself too (hidden = not tappable) */
+  /* 🌳 a big old oak next to the board (always there) */
+  const ox=-14.2,oz=10.4;cyl(st,.26,.36,2.5,'#8a5a3c',ox,0,oz,{seg:9});
+  for(const [dx,dy,dz,r,cc] of [[0,3.5,0,1.55,'#5fae5a'],[1.05,3.05,.3,1.1,'#6cbb62'],[-1,3.15,-.35,1.05,'#5fae5a'],[.2,4.3,.45,.95,'#72c468'],[-.3,3.25,1,.9,'#64b45e']])sph(st,r,cc,ox+dx,dy,oz+dz,{ws:12,hs:9});colC(L,ox,oz,.42);}
+/* 🧼 kind and safe notes only: no rude words, links, emails, phone numbers or home addresses */
+const BD_ROOT=/\b(fuck|shit|bitch|bastard|cunt|dick|pussy|asshole|slut|whore|fag|nigg|retard|wank|twat|bollock|douche|porn|sex|nude|naked|boob|penis|vagina|suicide|stupid|idiot|kurva|nahui|nachui|pizd|bybis|debil|sikn)/,
+  BD_WORD=/\b(ass|asses|arse|cock|cocks|prick|tit|tits|piss|crap|damn|dumb|loser|kys|blyat|blet|huj|chuj|die)\b|\bkill (you|yourself|u)\b|\bhate (you|u)\b|\bshut ?up\b/;
+function bdBad(s){s=String(s||'');
+  if(/@|https?:|www\.|:\/\/|\.(com|net|org|io|co|uk|lt|de|ru|app|ly|gg|tv|xyz|info|biz)\b|\bdot ?com\b/i.test(s))return true;   /* links and emails */
+  if(/(\d[\s\-().+\/]*){6,}/.test(s.replace(/\b[1-9]0{2,}\b/g,' ')))return true;   /* phone numbers: long digit runs, also with spaces or dashes ("100000 flowers" is fine) */
+  if(/\b\d+[a-z]?\s+((?!(more|big|bigger|new|small|little|long|tiny|giant|huge|cool|fun|nice|extra|other|tennis|basketball|football|soccer|race|racing|wheel|bike|slide|swim|bowling|play|kids?|dogs?|cats?|car|toy|food|lane|of|the|and|for|with|in|on|to|at)\b)[a-zà-ž]+\s+){1,2}(street|road|avenue|lane|drive|boulevard|court|crescent|terrace|highway|blvd|ave)\b|\b(street|road|avenue|boulevard|apt|apartment)\.?\s*(no\.?|nr\.?|#)?\s*\d+\b(?!\s+(the|to|a|an|my|more|and|or|of|for|with)\b)|(gatv[eė]|stra(ss|ß)e)\s*\d+|\b(g|pr|al|str|st|rd)\.\s*\d+|\b(i|we)\s+live\s+(at|on|in)\b|\baddress\b|\blt-?\d{5}\b/i.test(s))return true;   /* home addresses */
+  let t=s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[0134578@$!|]/g,c=>({0:'o',1:'i',3:'e',4:'a',5:'s',7:'t',8:'b','@':'a','$':'s','!':'i','|':'i'}[c]));
+  t=t.replace(/\b([a-z])[\s.\-_*+]+(?=[a-z]\b)/g,'$1').replace(/\b((hickory )?dickory|dickens|pussycats?|pussy willows?|(blue|great|coal) tits?|tit birds?)\b/g,' ');   /* "f u c k" -> "fuck"; nursery rhymes, books and birds are fine */
+  return [t.replace(/([a-z])\1\1+/g,'$1'),t.replace(/([a-z])\1\1+/g,'$1$1')].some(x=>BD_ROOT.test(x)||BD_WORD.test(x));}
+const bdHash=s=>{let h=0;for(const c of String(s))h=(h*31+c.charCodeAt(0))|0;return Math.abs(h);};
+function bdMe(){if(!S.pid)S.pid='u'+uid();return S.pid;}   /* a stable player id for hearts (not the name) */
+function bdList(o){const me=S&&S.pid,out=[];
+  for(const id in BD.notes){const n=BD.notes[id];if(!n||typeof n.t!=='string'||!/^[\w-]{1,40}$/.test(id)||bdBad(n.t))continue;let h=0,mine=0;
+    if(n.h&&typeof n.h==='object')for(const k in n.h){const v=clamp(n.h[k]|0,0,3);h+=v;if(k===me)mine=v;}
+    out.push({id,t:n.t.slice(0,90),n:typeof n.n==='string'&&n.n.trim()&&!bdBad(n.n)?n.n.slice(0,16):'A friend',at:+n.at||0,h,mine});}
+  return out.sort(o==='top'?(a,b)=>b.h-a.h||b.at-a.at:(a,b)=>b.at-a.at||(a.id<b.id?1:-1));}
+const bdLeft=L=>Math.max(0,3-L.reduce((s,n)=>s+n.mine,0));
+function bdShow(v){BD.on=v;if(BD.g)BD.g.visible=v;const D=LOC.city.dcols;for(const c of BD.cols){const i=D.indexOf(c);if(v&&i<0)D.push(c);else if(!v&&i>=0)D.splice(i,1);}}
+function bdFail(quiet){const was=BD.on;BD.dead=true;bdShow(false);if(UI.open&&/\bbd(card|wr)\b/.test($('card').className))closePanel();
+  if(was&&quiet!==1)toast('📌 The ideas board is resting right now. Try again later!',3.6);}
+async function bdInit(){if(BD.ref||!(window.WEBNET&&WEBNET.on)||typeof window.WEBROOM!=='function')return;   /* inside Claude there is no shared notes storage: no board */
+  try{await WEBROOM();BD.ref=window.firebase.database().ref(BD.PATH);const me=bdMe();let rd=false,wr=false;const go=()=>{if(rd&&wr&&!BD.dead&&!BD.on)bdShow(true);};
+    (BD.ref.limitToLast?BD.ref.limitToLast(80):BD.ref).on('value',s=>{BD.notes=(s&&s.val())||{};rd=true;go();if(BD.on&&UI.open&&$('card').classList.contains('bdcard'))bdRender();},()=>bdFail(1));
+    BD.ref.child('probe/h/'+me).set(null).then(()=>{wr=true;go();},()=>bdFail(1));   /* writes nothing; just asks "may I write here?" */
+  }catch(e){bdFail(1);}}
+function openBoard(){if(!BD.on)return;SFX.talk();const u=BD.pu;BD.gh=u&&u[3]&&performance.now()-u[0]<150?u:null;bdRender();}
+/* 👆 tapping the 3D board itself: that same finger's click must not land on a button of the card that just opened */
+document.addEventListener('pointerup',e=>{const t=e.target;BD.pu=[performance.now(),e.clientX,e.clientY,!(t&&t.closest&&t.closest('button,#panel'))];},true);
+document.addEventListener('click',e=>{const u=BD.gh;if(!u)return;BD.gh=null;
+  if(performance.now()-u[0]<500&&Math.abs(e.clientX-u[1])<24&&Math.abs(e.clientY-u[2])<24&&e.target&&e.target.closest&&e.target.closest('#card')){e.stopPropagation();e.preventDefault();}},true);
+function bdRender(){if(!BD.on||!S)return;const card=$('card'),keep=UI.open&&card.classList.contains('bdcard')?card.scrollTop:0,L=bdList(BD.tab),left=bdLeft(L),
+    tab=(k,t)=>`<button class="btn ${BD.tab===k?'on':'off'}" data-a="bdtab:${k}">${t}</button>`;
+  openPanel(`<div class="hd"><h2>📌 Ideas Board</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
+    <p class="note">What should Cozy Town build next? Pin your idea! Every Sunday, Mayor Rosie reads the notes. 💭</p>
+    <p class="bdme">Your hearts to give: <span class="bdhs" aria-label="${left} of 3 hearts left">${'♥'.repeat(left)}<span class="off">${'♥'.repeat(3-left)}</span></span></p>
+    <div class="row"><button class="btn butter" data-a="bdwrite">✏️ Write an idea</button></div>
+    <div class="tabs" style="margin:16px 0 0">${tab('new','🆕 Newest')}${tab('top','💗 Most hearts')}</div>
+    ${L.slice(0,40).map(n=>`<div class="bdn" style="background:${BD.COLS[bdHash(n.id)%6]}"><p class="bdt">${esc(n.t)}</p><div class="bdm"><span>✍️ ${esc(n.n)}</span><span>💗 ${n.h}${n.mine?` (${n.mine} from you)`:''}</span></div>
+      <div class="bdr"><button class="btn pink" data-a="bdh:${n.id}">💗 Give a heart</button>${n.mine?`<button class="btn white" data-a="bdu:${n.id}">↩️ Take one back</button>`:''}</div></div>`).join('')||'<p class="line">No ideas yet. Be the first to write one! ✏️</p>'}`,{cls:'bdcard'});
+  card.scrollTop=keep;}
+ACT.bdtab=k=>{BD.tab=k==='top'?'top':'new';bdRender();$('card').scrollTop=0;};
+function bdHeart(id,v){const me=bdMe(),n=BD.notes[id];n.h=Object.assign({},n.h);if(v>0)n.h[me]=v;else delete n.h[me];bdRender();
+  try{BD.ref.child(id+'/h/'+me).set(v>0?v:null).catch(bdFail);}catch(e){bdFail();}}
+ACT.bdh=id=>{const n=BD.notes[id];if(!n||!BD.on)return;if(bdLeft(bdList('new'))<=0){SFX.no();toast('You gave all 3 hearts! Take one back from a note to give it again. 💗',3.6);return;}
+  bdHeart(id,Math.min(3,((n.h&&n.h[bdMe()])|0)+1));SFX.pop();};
+ACT.bdu=id=>{const n=BD.notes[id];if(!n||!BD.on)return;bdHeart(id,Math.max(0,((n.h&&n.h[bdMe()])|0)-1));};
+ACT.bdwrite=()=>{if(!BD.on)return;const me=bdMe(),day=Date.now()-864e5;let k=0;for(const id in BD.notes){const x=BD.notes[id];if(x&&x.p===me&&(+x.at||0)>day)k++;}
+  if(k>=3){SFX.no();toast('You pinned 3 ideas today! Come back tomorrow for more. 📌',3.6);return;}
+  openPanel(`<div class="hd"><h2>✏️ Write an idea</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
+    <p class="note">What would make Cozy Town even cozier? Keep it short and kind. 💛</p>
+    <input class="inp" id="bdIn" maxlength="80" placeholder="My idea…" autocomplete="off" enterkeyhint="done" style="margin-top:12px">
+    <p class="bdme" id="bdErr" hidden></p>
+    <div class="row"><button class="btn mint" data-a="bdpin">📌 Pin it!</button><button class="btn white" data-a="bdback">⬅️ Back</button></div>`,{cls:'bdwr'});
+  const i=$('bdIn');i.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();ACT.bdpin();}});i.focus({preventScroll:true});};
+ACT.bdback=()=>bdRender();
+ACT.bdpin=()=>{const i=$('bdIn'),er=$('bdErr');if(!i||!BD.on)return;const t=i.value.replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]/g,' ').replace(/\s+/g,' ').trim().slice(0,80);
+  const no=m=>{SFX.no();er.textContent=m;er.hidden=false;};
+  if(t.length<3)return no('Write a little more! ✏️');if(bdBad(t))return no("Let's keep notes friendly and safe 💛");
+  const me=bdMe(),id=uid(),n={t,n:(S.name&&!bdBad(S.name)?S.name:'A friend').slice(0,16),at:window.firebase.database.ServerValue.TIMESTAMP,p:me};
+  BD.notes[id]=Object.assign({},n,{at:Date.now()});BD.tab='new';SFX.yay();toast('📌 Your idea is on the board! 💛',3);bdRender();$('card').scrollTop=0;change();
+  try{BD.ref.child(id).set(n).catch(bdFail);}catch(e){bdFail();}};
+/* 🤔 Sundays: Rosie reads the notes and thinks all day about what to build. The most-hearted idea comes up most (about 6 times in 10). Never a promise. */
+function bdIdea(){const L=BD.on?bdList('top'):[];if(!L.length)return null;const top=L.length<2||Math.random()<.6;return{top,hh:top&&L[0].h>0,t:(top?L[0]:pick(L.slice(1,10))).t};}   /* hh: it really has hearts */
+function bdRosie(f){if(!f||f.d.id!=='rosie'||!S||wdIdx()!==6)return null;const o=bdIdea();if(!o)return null;const t=o.t;
+  return o.top?pick((o.hh?[`It's Sunday, my thinking day! 🤔 So many hearts for “${t}”…`,`I read the ideas board today. 📌 “${t}” has the most hearts! Hmm…`]:[`It's Sunday, my thinking day! 🤔 I read “${t}” on the ideas board…`]).concat([`“${t}”… what a cozy idea! I keep thinking about it. 💭`,`Hmm, “${t}”… I wonder where that could go. 🤔`]))
+    :pick([`Someone wrote “${t}” on the ideas board. Fun! 😊`,`“${t}”? Hehe, I like that one too! 💭`,`I'm reading every note on the board today. Like “${t}”! 📌`]);}
+function bdBubOff(){const b=BD.bub;if(!b)return;BD.bub=null;if(b.parent)b.parent.remove(b);b.material.map.dispose();b.material.dispose();}
+function bdTick(dt){const f=FRIEND_ACTORS[0],ok=f&&f.d.id==='rosie'&&f.mode!=='away'&&f.mode!=='talk'&&f.loc===CUR.id&&f.g.visible;
+  if(BD.bub){BD.bubT-=dt;if(BD.bubT<=0||!ok)bdBubOff();}
+  if((BD.cool-=dt)>0||!ok||!BD.on||wdIdx()!==6||Math.hypot(P.x-f.x,P.z-f.z)>7)return;
+  const o=bdIdea();BD.cool=o?24:60;if(!o)return;const s=o.t.length>22?o.t.slice(0,21)+'…':o.t;   /* 💭 a thought bubble when you pass by */
+  const b=label(o.top?`💭 “${s}” 🤔`:`💭 “${s}”? Hmm…`,.3);b.position.y=2.4;f.g.add(b);BD.bub=b;BD.bubT=6;}
 
 /* ================= main loop ================= */
 function applyGfx(){const nice=SET.gfx!=='fast';renderer.setPixelRatio(Math.min(devicePixelRatio||1,nice?2:1));renderer.shadowMap.enabled=nice;sun.castShadow=nice;
@@ -5088,9 +5355,9 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     if(CUR.id==='toys'&&CUR.train){const T=CUR.train;T.userData.t=(T.userData.t||0)+dt*.9;T.children.forEach((c,i)=>{const a=T.userData.t-i*.32;c.position.set(Math.cos(a)*.88,0,Math.sin(a)*.55);c.rotation.y=Math.atan2(-Math.sin(a)*.88,Math.cos(a)*.55);});}
     for(const w of WALKERS)w.update(dt);
     updateCars(dt);mpTick(dt);laneTick(dt);zzTick(dt);for(const s of SHOPPERS)s.update(dt);
-    updGarden(dt);
+    updGarden(dt);bdTick(dt);
     {const vis=CUR.id==='city'&&sittersOut();for(const s of SITTERS){s.p.root.visible=vis;if(vis){s.t+=dt;s.p.head.rotation.y=Math.sin(s.t*.5)*.35;if(s.p.wave>0){s.p.wave-=dt;s.p.arms[1].rotation.z=2.5+Math.sin(s.p.wave*14)*.35;}else s.p.arms[1].rotation.z*=.85;}}}
-    psUpdate(dt);
+    psUpdate(dt);dayTick();
     for(const k of KEEPERS)if(k.L===CUR){k.p.root.rotation.y=angLerp(k.p.root.rotation.y,Math.atan2(P.x-k.x,P.z-k.z),.05);animPerson(k.p,dt,false);}
     if(CUR&&CUR.id==='studio'&&!CR&&!fading){setLoc('city');P.x=-17;P.z=-4.6;P.yaw=0;P.pitch=0;P.sit=null;P.ride=null;$('hud').hidden=false;camera.clearViewOffset();resize();saveLocal();}
     if(CUT)cutUpdate(dt);if(CLIMB)climbUpdate(dt);floorVis();
