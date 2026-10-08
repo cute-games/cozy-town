@@ -1467,6 +1467,7 @@ function buildCity(){
     col(L,-38.05,19.7,-34.5,24.3);col(L,-33.15,20.3,-31.7,23.7);
     inter(L,{x:-34.25,z:SZ,r:2.7,icon:'🏆',label:()=>psTargetLabel(),act:()=>openShow(),pri:()=>psOpen()&&!showDone()});}
   buildBoard(L,st);   /* 📌 the ideas board and a big old oak, just inside the park's north gate */
+  busStopCity(L,st);   /* 🚌 the Beach Bus stop, just east of the park's north gate */
   /* ===== paved paths to every shop and front door ===== */
   {const PAV='#f6e9df',EDGE='#e2cfc4',pave=(x1,z1,x2,z2)=>{const w=Math.abs(x2-x1),d=Math.abs(z2-z1),cx=(x1+x2)/2,cz=(z1+z2)/2;flat(st,w,d,PAV,cx,.026,cz);
       for(let i=1;i<Math.floor(w/1.5);i++)box(st,.04,.004,d,EDGE,Math.min(x1,x2)+i*1.5,.026,cz,{ol:false});for(let i=1;i<Math.floor(d/1.5);i++)box(st,w,.004,.04,EDGE,cx,.026,Math.min(z1,z2)+i*1.5,{ol:false});};
@@ -1569,12 +1570,12 @@ function buildCity(){
   colC(L,px,pz,2.2);inter(L,{x:33.9,z:-38.3,r:2.3,icon:'🦆',label:'Feed the ducks',act:()=>feedDucks(0)});bench(st,32.6,-36.4,Math.PI/2+.4);colC(L,32.6,-36.4,.7);
   for(let k=0;k<2;k++){const d=new THREE.Group();L.dyn.add(d);sph(d,.17,k?'#f7f2ec':'#ffe27a',0,.15,0,{s:[1,.75,1.35],ws:12,hs:8,ol:.02});sph(d,.1,k?'#f7f2ec':'#ffe27a',0,.33,.17,{ws:10,hs:8,ol:.02});
     cone(d,.045,.11,'#ff9a3c',0,.31,.3,{rx:Math.PI/2,center:true,seg:6,ol:.012});duckEyes(d);L.ducks.push({g:d,a:k*Math.PI,r:.9+k*.35,sp:.32+k*.1});}
-  /* 🏖️ the gate to the beach, at the east end of the big road */
+  /* 🏖️ the gate to the beach, at the east end of the big road (just to look at now: the 🚌 Beach Bus takes you there) */
   {const GX=79.4;for(const s of[-1,1]){box(st,.3,3.9,.3,'#ffffff',GX,0,s*3.3,{ol:.03});sph(st,.28,'#ffd45c',GX,4.15,s*3.3,{ws:10,hs:8});colC(L,GX,s*3.3,.25);}
    box(st,.24,.95,7.0,'#2b8fc4',GX,3.0,0,{ol:.03});flat(st,4,7.2,'#f6dfa9',81.6,.045,0);flat(st,14,4.6,'#f6dfa9',90.6,.045,0);
    for(const [x,z,ry] of [[77.6,-8.6,-.4],[77.4,8.8,2.8]]){palm(st,x,z,1.05,.3,ry);colC(L,x,z,.3);}
    const sg=signPlane('🏖️ To the beach',6.4,.8,'#2b8fc4','#ffffff');sg.position.set(GX-.14,3.475,0);sg.rotation.y=-Math.PI/2;L.g.add(sg);
-   inter(L,{x:GX-1.5,z:0,r:1.6,rect:{x1:GX-3.4,z1:-2.6,x2:GX-.2,z2:2.6},icon:'🏖️',label:()=>beachOpen()?'Go to the beach':'The beach (opens at level 10 ⭐)',act:goBeach});}
+   inter(L,{x:GX-1.5,z:0,r:1.6,rect:{x1:GX-3.4,z1:-2.6,x2:GX-.2,z2:2.6},icon:'🚌',label:'Find the beach bus',act:busGate});}
   // scatter nature along the edges of town, away from paths and buildings
   {const r=seeded(77);let placed=0;
     const free=(x,z,rad)=>{if(Math.abs(x)<8.5||Math.abs(z)<8.5||Math.abs(x)>79.3||Math.abs(z)>79.3)return false;if(Math.abs(Math.abs(x)-50)<8.5||Math.abs(Math.abs(z)-50)<8.5)return false;if(x>-41&&x<-9&&z>58&&z<79)return false;if(x>-23.5&&x<-10&&z>-25&&z<-8)return false;for(const c of L.cols)if(pushOut(x,z,rad+.4,c))return false;for(const [a,b] of WE)if(segDist(x,z,WP[a],WP[b])<rad+1.1)return false;return true;};
@@ -1602,13 +1603,11 @@ function buildCity(){
   return L;
 }
 
-/* ===== 🏖️ the beach: a new place behind the gate at the east end of the big road. It opens when any skill reaches level 10 ===== */
+/* ===== 🏖️ the beach: a new place behind the gate at the east end of the big road. The 🚌 Beach Bus takes you there ===== */
 /* it sits far east of town: an old version shows a friend who is at the beach "in town" out here, too far away to see */
-const BEACH_X=1000,BEACH={u:{value:0},foam:null,gulls:[],crabs:[],clouds:[],castle:null,stage:0,shells:[],day:-1,openT:0};
+const BEACH_X=1000,BEACH={u:{value:0},foam:null,gulls:[],crabs:[],clouds:[],castle:null,stage:0,shells:[],day:-1};
 const SHELL_SPOTS=[[-10,-17],[-1,-16.5],[6.5,-9],[9.5,-2],[7.5,4.5],[10,11],[1.5,14.5],[-6,18],[-19,4.5],[-15.5,-4],[-4,-4],[9,16.5],[-21,-19],[3.5,-20],[-9,9]];
-let SKK=null;function beachOpen(){if(!S||!S.skills)return false;const K=SKK||(SKK=Object.keys(SKILLS));for(let i=0;i<K.length;i++){const s=S.skills[K[i]];if(s&&s.lv>=MAXLV)return true;}return false;}
 function bch(){return S.beach||(S.beach={});}
-function bestSkill(){let b=null,bp=-1;for(const k of Object.keys(SKILLS)){const s=(S.skills&&S.skills[k])||{lv:1,xp:0},p=s.lv+(s.lv>=MAXLV?0:s.xp/xpNeed(s.lv));if(p>bp){bp=p;b={k,lv:s.lv,xp:s.xp};}}return b;}
 /* a palm tree: a bendy trunk and a crown of leaves (lean = how much it bends) */
 function palm(g,x,z,s=1,lean=.25,ry=0){const p=new THREE.Group();p.position.set(x,0,z);p.rotation.y=ry;g.add(p);let px=0,py=0;
   for(let i=0;i<5;i++){const h=.95*s,a=lean*(i+1)*.18;cyl(p,(.15-i*.016)*s,(.18-i*.016)*s,h,'#b98a5e',px+Math.sin(a)*h/2,py+Math.cos(a)*h/2,0,{rz:-a,center:true,seg:7,ol:.02});px+=Math.sin(a)*h;py+=Math.cos(a)*h;}
@@ -1617,7 +1616,7 @@ function palm(g,x,z,s=1,lean=.25,ry=0){const p=new THREE.Group();p.position.set(
 function parasol(g,x,z,c){cyl(g,.04,.04,2.3,'#ffffff',x,0,z,{seg:6,ol:.01});cone(g,1.35,.55,c,x,1.95,z,{seg:10,ol:.03});cone(g,.5,.24,'#ffffff',x,2.4,z,{seg:10,ol:.015});}
 function towel(g,x,z,c){flat(g,1.0,1.9,c,x,.02,z);for(const s of[-1,1])flat(g,1.0,.2,'#ffffff',x,.024,z+s*.6);}
 function buildBeach(){
-  const L=makeLoc('beach','out',BEACH_X,0,[-30.5,-22,25,44]);const st=new THREE.Group();L.g.add(st);
+  const L=makeLoc('beach','out',BEACH_X,0,[-34.3,-22,25,44]);const st=new THREE.Group();L.g.add(st);
   const gr=new THREE.Mesh(new THREE.PlaneGeometry(1400,1400),toon({color:'#f6dfa9',polygonOffset:true,polygonOffsetFactor:4,polygonOffsetUnits:8}));gr.rotation.x=-Math.PI/2;gr.receiveShadow=true;gr.userData.keep=1;L.g.add(gr);
   /* the sea: one big flat mesh; a tiny shader adds slow ripples and sparkles */
   const seaM=toon({color:'#46c0ea',emissive:new THREE.Color('#1f86c9'),emissiveIntensity:.28});BEACH.seaM=seaM;
@@ -1640,7 +1639,7 @@ function buildBeach(){
   box(st,.22,.8,4.9,'#ff7aa8',-29.2,2.75,0,{ol:.03});
   {const sg=signPlane('🏘️ To town',4.4,.66,'#ff7aa8','#ffffff');sg.position.set(-29.07,3.15,0);sg.rotation.y=Math.PI/2;L.g.add(sg);}
   for(const s of[-1,1]){cyl(st,.05,.06,1.25,'#5a5f8c',-20.6,0,s*1.5,{seg:6,ol:.012});sph(st,.15,null,-20.6,1.36,s*1.5,{mat:LAMP,ol:.015,ws:10,hs:8});colC(L,-20.6,s*1.5,.12);}
-  inter(L,{x:-27.8,z:0,r:2.4,icon:'🏘️',label:'Go back to town',act:()=>exitTo('beach')});
+  inter(L,{x:-27.8,z:0,r:2.4,icon:'🚌',label:()=>busReady('beach')?'The bus is here!':'When does the bus come?',act:()=>busInfo('beach')});
   /* palm trees, umbrellas and towels */
   for(const [x,z,s,ry] of [[-26,-8,1.1,.4],[-24.5,9,1.2,2.6],[-27,17,1,1.5],[-25.5,-18,1.15,-.6],[-12,-20.5,1.05,1.2],[1,20.5,1.1,-1.9],[-17,20,.95,2],[-19,-13,1,3]]){palm(st,x,z,s,.28,ry);colC(L,x,z,.3);}
   for(const [x,z,c,tc] of [[-7,-11,'#ff7aa8','#7cc8ff'],[5.5,9,'#7cc8ff','#ffd45c'],[-17.5,-6,'#ffd45c','#ff7aa8']]){parasol(st,x,z,c);colC(L,x,z,.15);towel(st,x+1.3,z+.4,tc);}
@@ -1669,6 +1668,7 @@ function buildBeach(){
   /* a bench facing the sea */
   bench(st,3,-7,Math.PI/2);colC(L,3,-7,.75);
   inter(L,{x:3.7,z:-7,r:1.6,icon:'🪑',label:'Sit and look at the sea',act:()=>{P.sit={x:L.ox+3.1,z:L.oz-7,yaw:-Math.PI/2};P.x=P.sit.x;P.z=P.sit.z;P.yaw=P.sit.yaw;P.pitch=-.05;SFX.pop();toast('Ahh… the sea is so calm. 🌊 Move to stand up.',3);}});
+  busStopBeach(L,st);   /* 🚌 the bus stop by the gate and a ⛺ camp spot */
   buildCourt(L,st);
   bake(st,true,32);
   /* the sand castle: every tap adds a part */
@@ -1693,6 +1693,7 @@ function buildBeach(){
     bake(c,true);BEACH.crabs.push({c,ph:i*2.4,z0:i?10:-1,x0:i?9.2:9.8});}
   for(let i=0;i<3;i++){const g=new THREE.Group();L.g.add(g);const w=[];for(const s of[-1,1]){const p=new THREE.Group();g.add(p);box(p,.55,.03,.18,'#ffffff',s*.28,0,0,{ol:.01,center:true});box(p,.12,.035,.19,'#3d2c5e',s*.5,0,0,{ol:false,center:true});w.push(p);}
     sph(g,.09,'#ffffff',0,0,0,{s:[1,1,2.2],ws:8,hs:6,ol:.01});BEACH.gulls.push({g,w,a:i*2.1,r:9+i*4,cx:30+i*6,cz:-4+i*5,y:7+i*1.4,sp:.22+i*.05});}
+  buildBus();
   return L;}
 function castleShow(){const C=BEACH.castle;if(C)C.parts.forEach((p,i)=>p.visible=i<=BEACH.stage);}
 function castleTap(){const C=BEACH.castle;if(!C)return;if(!cool('castle',.3)){SFX.tap();return;}
@@ -1706,15 +1707,8 @@ function shellsRefresh(){const b=bch(),L=LOC.beach;if(b.d!==S.day){b.d=S.day;b.g
 function pickShell(i){const b=bch(),s=BEACH.shells[i];if(!s||!s.g.visible)return;b.got.push(i);b.n=(b.n||0)+1;s.g.visible=false;S.coins+=1;SFX.coin();
   floatText('🐚',s.t.x,1.1,s.t.z,{h:.5});const left=BEACH.shells.length-b.got.length;
   toast(left?'🐚 A pretty shell! You have '+b.n+' in your collection. +1 🪙':'🐚 You found all of today\'s shells! You have '+b.n+'. More come tomorrow! +1 🪙',3.6);change();}
-function beachLocked(){const b=bestSkill(),K=SKILLS[b.k],need=xpNeed(b.lv),left=MAXLV-b.lv;
-  openPanel(`<div class="hd"><h2>🏖️ The beach</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
-    <p class="note" style="text-align:center;font-size:17px">The beach opens when one of your skills reaches level 10 ⭐</p><div class="sec">Your best skill</div>
-    <div class="qcard" style="color:#3d2c5e"><div class="qtop"><span class="qi">${K.i}</span><div style="flex:1"><div class="qt">${K.n}</div><div class="qd">${K.how}</div></div><div class="sklv">Level<b>${b.lv}</b></div></div><div class="qfoot"><span class="qprog" style="max-width:none"><i style="width:${Math.round(b.xp/need*100)}%"></i></span><span class="qn">${b.xp}/${need}</span></div></div>
-    <p class="note" style="text-align:center">Only ${left} more level${left>1?'s':''} to go! 💪</p>`);}
-function goBeach(){if(!beachOpen()){beachLocked();return;}enter('beach');}
 function beachIn(){bch().seen=1;toast('🏖️ Welcome to the beach! 🌊 Tennis 🎾 is past the kiosk!',3);}
-function updBeach(dt){if(!S||!PLAYING||!LOC.beach)return;
-  if(!S.beach||!S.beach.seen){if(S.intro&&beachOpen()&&!UI.open&&!fading&&!CUT&&!TUT&&!DTUT&&CUR.id!=='beach'){BEACH.openT+=dt;if(BEACH.openT>4){bch().seen=1;change();SFX.yay();toast('🏖️ The beach is open! 🌴 Tap 📱 → 🗺️ Map → 🏖️ Beach to find the way.',5.5);}}else BEACH.openT=0;}
+function updBeach(dt){updBus(dt);if(!S||!PLAYING||!LOC.beach)return;
   if(CUR.id!=='beach'){if(TN.on)tnStop('gone');return;}const b=bch();if(BEACH.day!==S.day||b.d!==S.day)shellsRefresh();if(!b.seen)b.seen=1;
   const t=BEACH.u.value+=dt;BEACH.seaM.emissiveIntensity=.28*(1-.8*nightF(S.time));BEACH.foam.position.x=11.2+Math.sin(t*.7)*.45;BEACH.foam.material.opacity=.38+Math.sin(t*.7+1)*.14;
   for(let i=0;i<BEACH.shells.length;i++){const k=1+Math.sin(t*3+i*1.3)*.07;BEACH.shells[i].g.scale.set(k,k,k);}
@@ -1722,6 +1716,276 @@ function updBeach(dt){if(!S||!PLAYING||!LOC.beach)return;
   for(const g of BEACH.gulls){g.a+=g.sp*dt;g.g.position.set(g.cx+Math.cos(g.a)*g.r,g.y+Math.sin(t*.8+g.r)*.4,g.cz+Math.sin(g.a)*g.r);g.g.rotation.y=-g.a;const f=Math.sin(t*5+g.r)*.35;g.w[0].rotation.z=-f;g.w[1].rotation.z=f;}
   for(const c of BEACH.clouds){c.position.x+=c.userData.sp*dt;if(c.position.x>320)c.position.x=40;}
   updTennis(dt);}
+
+/* ===================== 🚌 the Beach Bus: the way to the beach and back (there is no level lock any more) ===================== */
+/* The timetable comes from the week number, so it is the same for everyone on the shared clock: 3 bus days a week (one of Mon–Tue,
+   one of Wed–Fri, one of Sat–Sun, so never more than 4 days without a bus), coming to the park between 8:00 and 11:50. The bus waits
+   1.5 game hours (about 1 real minute) at each stop: park -> beach -> back to the park (the morning trip home, for campers too).
+   On bus days the bus home waits at the beach from 19:30 and leaves at 21:00. Day 1 (a brand-new player's first day) has a free
+   Welcome Bus at both stops from 8:00 to 12:00 that goes as soon as you hop on. You sit inside the waiting bus (Driver Dot says
+   hello); when it leaves, a little ride picture plays and you get off at the other stop. Missed it? Camp at the beach. */
+const BUS_FARE=15,BUS_W=1.5,BUS_D=.25,BUS_EV=19.5,BV=8,BA=2.5,BB=2,BUS_WK={},BUS_DAY={};
+const BUSP={park:{loc:'city',x:-16.5,z:2.1,ry:0,get pre(){return Math.max(110,-28-laneEnd());},post:225},   /* in town it comes from the far end of 🏡 Friends Lane */
+  beach:{loc:'beach',x:BEACH_X-35.5,z:2.25,ry:Math.PI/2,pre:110,post:95}};
+const BSEAT=[[.95,.68],[-.15,.68],[-1.25,.68],[-2.35,.68],[.95,-.68],[-.15,-.68],[-1.25,-.68],[-2.35,-.68]],CAMP={x:-25.4,z:6,fx:-21.6,fz:5.4};
+const BUS={g:null,door:null,dot:null,tag:null,tagT:'',sign:[],ins:null,boards:[],tk:[],loc:null,s:null,pos:null,ui:0,v:0,dk:0,hk:0,bt:0,stop:false,
+  ride:null,hold:0,arr:null,told:{},nt:0,tipT:0,tip:'',tent:0,ck:0,camp:null,fl:null},BUSX={yaw:Math.PI/2};
+const BUS_OFF={icon:'🚪',label:'Get off the bus',act:()=>standUp()};
+{const st=document.createElement('style');st.textContent='#busTip{display:inline-flex;align-items:center;min-height:36px;padding:3px 13px 3px 10px;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:999px;box-shadow:0 4px 0 var(--soft);font-weight:800;font-size:17px;line-height:1.15;pointer-events:none;max-width:100%}'
+  +'#busTip.hot{background:#ffe08a;color:#3d2c5e;border-color:#3d2c5e;animation:btPulse 1s ease-in-out infinite}@keyframes btPulse{50%{transform:scale(1.05)}}'
+  +'body.bus #joy,body.bus #moveBtns{visibility:hidden}@media (max-width:600px){#busTip{font-size:15px}}'
+  +'#busRide{position:fixed;inset:0;z-index:41;pointer-events:none;opacity:0;transition:opacity .28s;overflow:hidden;background:linear-gradient(#7cc8ff,#c4ecff 58%,#9fe486 58%,#9fe486 66%,#b9bcd6 66%,#b9bcd6 82%,#9fe486 82%)}'
+  +'#busRide.night{background:linear-gradient(#1d2356,#463c7d 58%,#4f8a5a 58%,#4f8a5a 66%,#6d6f8f 66%,#6d6f8f 82%,#4f8a5a 82%)}#busRide.on{opacity:1}'
+  +'#busRide .brr{position:absolute;left:0;right:0;top:73.6%;border-top:4px dashed rgba(255,255,255,.85)}'
+  +'#busRide .brb{position:absolute;top:calc(74% - .92em);left:0;font-size:clamp(64px,15vmin,140px);line-height:1;white-space:nowrap;animation:brGo 1.75s cubic-bezier(.35,.1,.4,1) both}#busRide .brb span{font-size:.5em}'
+  +'@keyframes brGo{from{transform:translateX(100vw)}to{transform:translateX(-35vw)}}'
+  +'#busRide .brs{position:absolute;right:9%;top:7%;font-size:clamp(46px,11vmin,100px)}#busRide .brc{position:absolute;left:10%;top:9%;font-size:clamp(46px,11vmin,100px);opacity:.9;animation:brCl 1.75s linear both}@keyframes brCl{to{transform:translateX(12vw)}}'
+  +'#busRide .brd{position:absolute;left:3%;top:calc(58% - .95em);font-size:clamp(40px,9vmin,84px);line-height:1;white-space:nowrap}'
+  +'#busRide .brt{position:absolute;left:50%;top:22%;transform:translateX(-50%);background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:22px;box-shadow:0 5px 0 var(--soft);padding:10px 20px;font-weight:800;font-size:clamp(20px,4.4vmin,30px);white-space:nowrap}';
+ document.head.appendChild(st);}
+/* ---- the timetable (the same for everyone: worked out from the day number) ---- */
+function busWeek(w){let o=BUS_WK[w];if(o)return o;const r=seeded(w*7919+211);o={};
+  for(const g of[[0,1],[2,3,4],[5,6]]){const i=g[Math.floor(r()*g.length)];o[i]=8+Math.floor(r()*24)/6;}
+  if(w===0){delete o[1];o[0]=8;}   /* the very first week starts with the Welcome Bus on day 1 */
+  return BUS_WK[w]=o;}
+function busArr(d){return busWeek(Math.floor((d-1)/7))[wdIdx(d)];}   /* when the bus comes to the park that day (undefined = no bus) */
+/* the stops of one day: p = park or beach, a = arrives, l = leaves, go = where it takes you (null: it drops people off and goes to sleep) */
+function busSess(d){let o=BUS_DAY[d];if(o)return o;o=[];const a=busArr(d),W=BUS_W;
+  if(a!==undefined){if(d===1)o.push({p:'park',a:8,l:12,go:'beach',wb:1},{p:'beach',a:8,l:12,go:'town',wb:1});
+    else o.push({p:'park',a,l:a+W,go:'beach'},{p:'beach',a:a+W,l:a+2*W,go:'town'},{p:'park',a:a+2*W,l:a+2*W+BUS_D,go:null});
+    o.push({p:'beach',a:BUS_EV,l:21,go:'town'},{p:'park',a:21,l:21+BUS_D,go:null});}
+  return BUS_DAY[d]=o;}
+const busHM=h=>{const m=Math.round(h*60),H=Math.floor(m/60)%24,M=m%60;return H+':'+(M<10?'0':'')+M;};
+function busNext(p,go){for(let d=S.day;d<S.day+15;d++)for(const s of busSess(d))if(s.p===p&&s.go===go&&(d>S.day||s.l>S.time))return{d,s};return null;}   /* the next trip from stop p */
+function busWhen(n,leave){if(!n)return'soon';const dd=n.d-S.day;return(dd===0?'today':dd===1?'tomorrow':'on '+wdName(n.d))+' at '+busHM(leave?n.s.l:n.s.a);}
+const busSecs=s=>Math.max(0,(s.l-S.time)*hourLen(S.time)),busMMSS=s=>{const v=Math.ceil(busSecs(s));return Math.floor(v/60)+':'+String(v%60).padStart(2,'0');};
+/* ---- where the bus is: one road per stop, u = metres past the stop (it slows down to stop, waits, then speeds off) ---- */
+function busU(s,t){const T=BUSP[s.p];
+  if(t<s.a){const k=(s.a-t)*hourLen(t),Ta=BV/BA,u=k<=Ta?BA*k*k/2:BA*Ta*Ta/2+BV*(k-Ta);return u>T.pre?null:-u;}
+  if(t<s.l)return 0;const k=(t-s.l)*hourLen(t),Tb=BV/BB,u=k<=Tb?BB*k*k/2:BB*Tb*Tb/2+BV*(k-Tb);return u>T.post?null:u;}
+function busCur(p){if(!S)return null;for(const s of busSess(S.day))if(s.p===p){const u=busU(s,S.time);if(u!==null)return{s,u};}return null;}
+/* in town it drives east along the big road (it moves to the middle of the road to fit through the beach gate); at the beach along the road behind the dunes */
+function busXZ(p,u){const T=BUSP[p];if(p==='beach')return[T.x,T.z-u,T.ry];
+  const x=T.x+u,zf=q=>{const k=clamp((q-58)/14,0,1);return T.z*(1-k*k*(3-2*k));};return[x,zf(x),Math.atan2(zf(x-.5)-zf(x+.5),1)];}
+function busW(lx,lz,b){const c=Math.cos(b[2]),s=Math.sin(b[2]);return[b[0]+lx*c+lz*s,b[1]-lx*s+lz*c];}   /* a spot on the bus (front = +x, door side = +z) in the world */
+const busThere=p=>!!BUS.g&&BUS.g.visible&&BUS.loc===BUSP[p].loc;
+function busReady(p){const c=busCur(p);return!!c&&c.u===0&&!!c.s.go&&busThere(p)&&Math.abs(BUS.ui)<.05&&!BUS.ride;}   /* standing at this stop, doors open */
+function busLabel(p){const c=busCur(p),s=c&&c.s;if(!s)return'Get on the bus';if(s.wb)return'Free Welcome Bus: hop on!';
+  return s.go==='town'?(S.coins<BUS_FARE?'Get on the bus home (free)':`Get on the bus home (${BUS_FARE} 🪙)`):`Get on the bus (${BUS_FARE} 🪙)`;}
+/* ---- the bus: cute and round, with real round windows so you can sit inside and look out (one baked body) ---- */
+function holePanel(g,w,h,d,c,holes,x,y,z,ry){   /* a flat panel with holes; its ink hull has smaller holes, so every window gets an ink ring */
+  const geo=e=>{const s=new THREE.Shape();s.moveTo(-w/2-e,-e);s.lineTo(w/2+e,-e);s.lineTo(w/2+e,h+e);s.lineTo(-w/2-e,h+e);s.closePath();
+    for(const q of holes){const p=new THREE.Path();if(q.r)p.absarc(q.x,q.y,q.r-e,0,TAU,false);
+      else{const x1=q.x1+e,y1=q.y1+e,x2=q.x2-e,y2=q.y2-e,k=q.k-e,kb=q.kb?q.kb-e:0;p.moveTo(x1+kb,y1);p.lineTo(x2-kb,y1);if(kb)p.absarc(x2-kb,y1+kb,kb,-Math.PI/2,0,false);
+        p.lineTo(x2,y2-k);p.absarc(x2-k,y2-k,k,0,Math.PI/2,false);p.lineTo(x1+k,y2);p.absarc(x1+k,y2-k,k,Math.PI/2,Math.PI,false);p.lineTo(x1,y1+kb);if(kb)p.absarc(x1+kb,y1+kb,kb,Math.PI,Math.PI*1.5,false);}
+      s.holes.push(p);}
+    const G=new THREE.ExtrudeGeometry(s,{depth:d+2*e,bevelEnabled:false,curveSegments:9});G.translate(0,0,-(d+2*e)/2);return G;};
+  const m=new THREE.Mesh(geo(0),mat(c));m.position.set(x,y,z);m.rotation.y=ry||0;g.add(m);const o=new THREE.Mesh(geo(OT),OL);o.position.copy(m.position);o.rotation.copy(m.rotation);g.add(o);return m;}
+function buildBus(){const g=new THREE.Group(),b=new THREE.Group();g.add(b);scene.add(g);g.visible=false;BUS.g=g;
+  const L=7,W=2.5,R=.42,Y0=.32,H=2.3,MINT='#8fe3c4',PEACH='#ffc4a3',CREAM='#fff6e8',hx=L/2-R,hz=W/2-R,t=.1,win=xs=>xs.map(x=>({x,y:1.4,r:.38}));
+  for(const sx of[-1,1])for(const sz of[-1,1]){cyl(b,R,R,H,CREAM,sx*hx,Y0,sz*hz,{seg:12});cyl(b,R+.025,R+.025,.8,MINT,sx*hx,Y0,sz*hz,{seg:12,ol:.02});}
+  holePanel(b,2*hx,H,t,CREAM,[...win([-2.35,-1.25,-.15,.95]),{x1:1.75,y1:.18,x2:2.65,y2:1.98,k:.3}],0,Y0,W/2-t/2);   /* door side */
+  holePanel(b,2*hx,H,t,CREAM,win([-2.35,-1.25,-.15,.95,2.05]),0,Y0,-W/2+t/2);
+  holePanel(b,2*hz,H,t,CREAM,[{x1:-.74,y1:1.05,x2:.74,y2:2.0,k:.22,kb:.22}],L/2-t/2,Y0,0,Math.PI/2);   /* the big windshield */
+  holePanel(b,2*hz,H,t,CREAM,[{x:0,y:1.42,r:.42}],-L/2+t/2,Y0,0,Math.PI/2);
+  for(const [x0,x1] of [[-hx,1.72],[2.68,hx]])box(b,x1-x0,.8,.04,MINT,(x0+x1)/2,Y0,W/2+.02,{ol:.015});box(b,2*hx,.8,.04,MINT,0,Y0,-W/2-.02,{ol:.015});   /* the mint bottom half */
+  for(const s of[-1,1])box(b,.04,.8,2*hz,MINT,s*(L/2+.02),Y0,0,{ol:.015});
+  box(b,L-.16,.12,W-.16,'#efe6fb',0,.38,0);box(b,L-.6,.22,W-.4,'#5a5f8c',0,.16,0,{ol:.02});for(const s of[-1,1])box(b,.2,.24,W-.24,'#ffffff',s*(L/2+.02),.22,0,{ol:.02});
+  box(b,2*hx,.16,W,CREAM,0,Y0+H,0);box(b,L,.16,2*hz,CREAM,0,Y0+H,0);for(const sx of[-1,1])for(const sz of[-1,1])cyl(b,R,R,.16,CREAM,sx*hx,Y0+H,sz*hz,{seg:12});
+  box(b,L-1.2,.13,W-.8,MINT,0,Y0+H+.16,0,{ol:.02});   /* a soft roof (it still fits under the beach gate) */
+  box(b,4.8,.13,.03,PEACH,-.66,1.1,W/2+.045,{ol:.01});box(b,2*hx,.13,.03,PEACH,0,1.1,-W/2-.045,{ol:.01});for(const s of[-1,1])box(b,.03,.13,2*hz,PEACH,s*(L/2+.045),1.1,0,{ol:.01});
+  for(const sx of[-2.3,1.15])for(const sz of[-1,1]){cyl(b,.42,.42,.3,'#3d3550',sx,.42,sz*(W/2-.1),{rx:Math.PI/2,center:true,seg:16});cyl(b,.17,.17,.32,'#ffffff',sx,.42,sz*(W/2-.1),{rx:Math.PI/2,center:true,seg:12,ol:.015});}
+  for(const s of[-1,1]){sph(b,.17,null,L/2+.06,.86,s*.78,{mat:LAMP,s:[.45,1,1],ol:.02,ws:12,hs:8});sph(b,.12,'#ff6b6b',-L/2-.06,.86,s*.8,{s:[.45,1,1],ol:.015,ws:10,hs:7});}
+  {const sm=new THREE.Mesh(new THREE.TorusGeometry(.2,.032,6,12,Math.PI),mat(INK));sm.position.set(L/2+.065,.72,0);sm.rotation.set(0,Math.PI/2,Math.PI);b.add(sm);}   /* a little smile */
+  /* inside: seats by the windows, the driver's seat, wheel and dashboard, a yellow pole by the door, a ceiling light */
+  for(const x of[.95,-.15,-1.25,-2.35])for(const sz of[-1,1]){const z=sz*.68;box(b,.46,.3,.56,'#f0a77f',x,.5,z,{ol:.015});box(b,.52,.12,.62,'#ffb3a0',x,.8,z,{ol:.015});box(b,.1,.44,.62,'#ffd2bd',x-.27,.92,z,{ol:.015});}
+  box(b,.52,.42,.6,'#5a5f8c',2.45,.5,-.62,{ol:.015});box(b,.1,.7,.6,'#5a5f8c',2.16,.92,-.62,{ol:.015});box(b,.34,.74,2*hz+.34,'#ffd9c2',L/2-.3,.5,0,{ol:.015});
+  {const w=new THREE.Mesh(new THREE.TorusGeometry(.19,.035,6,16),mat('#3d2c5e'));w.position.set(2.92,1.33,-.62);w.rotation.order='ZYX';w.rotation.set(0,Math.PI/2,.45);b.add(w);}
+  cyl(b,.035,.035,2.1,'#ffd45c',1.62,.5,.62,{seg:8,ol:.012});sph(b,.16,null,0,Y0+H-.02,0,{mat:LAMP,s:[2.4,.3,1.2],ol:false,ws:10,hs:6});
+  bake(b,true);
+  {const d=new THREE.Group();d.position.set(2.2,.5,W/2+.06);g.add(d);box(d,.94,1.82,.05,PEACH,0,0,0,{ol:.02});sph(d,.2,'#cfe9ff',0,1.25,.03,{s:[1,1,.15],ol:.015});box(d,.05,.5,.06,'#ffffff',-.3,.75,.04,{ol:.01});bake(d);BUS.door=d;}
+  for(const txt of['🏖️ Beach','🏘️ Town']){const sg=signPlane(txt,1.56,.3,'#fff7ea','#ff7a59');sg.position.set(L/2+.012,Y0+2.15,0);sg.rotation.y=Math.PI/2;g.add(sg);BUS.sign.push(sg);}
+  {const sg=signPlane('🌴 Beach Bus',1.9,.36,'#ffffff','#2b8fc4');sg.position.set(-.75,.78,W/2+.05);g.add(sg);}
+  /* Driver Dot: a mint cap and a sky-blue shirt; she sits at the wheel and waves (only her waving arm moves) */
+  {const p=makePerson({skin:'#c98d63',hair:'#3d2c5e',style:'bun',eyes:'happy',mouth:'smile',top:'#7cc8ff',sleeve:'#5fa8e0',bottom:'#4a4f7a',shoes:'#2e2347',hat:'cap',hatc:'#5fd4b0',round:true});
+   sitPose(p);p.arms[1].userData.keep=1;bake(p.root,true);bake(p.arms[1],true);p.root.position.set(2.42,.3,-.62);p.root.rotation.y=Math.PI/2;g.add(p.root);BUS.dot=p;}
+  {const Wt=[1,.86,.58],Rd=[1,.16,.1];g.add(glowMesh(glowGeo([[L/2+.05,.86,.78,.45,Wt],[L/2+.05,.86,-.78,.45,Wt],[L/2+3.6,.07,0,6,3.2,[.6,.49,.3]],[-L/2-.05,.86,.8,.3,Rd],[-L/2-.05,.86,-.8,.3,Rd],[-L/2-1.3,.07,0,1.8,2,[.28,.04,.03]]])));
+   BUS.ins=glowMesh(glowGeo([[0,1.75,0,1.5,[.5,.38,.18]]]));g.add(BUS.ins);}   /* warm lit windows at night */
+  for(const t of BUS.tk)t.obj=g;for(const B of BUS.boards)busBoardDraw(B);}   /* tap the bus itself to get on; the stops' signs are painted now (for the title screen too) */
+function busLamp(){if(P.sit&&P.sit.bus&&BUS.pos){const [x,z]=busW(-.5,0,BUS.pos);lamp.intensity=.6;lamp.position.set(x,2.3,z);}}   /* a warm light inside the bus while you ride */
+function busTag(txt){if(txt===BUS.tagT)return;BUS.tagT=txt;if(BUS.tag){BUS.g.remove(BUS.tag);BUS.tag.material.map.dispose();BUS.tag.material.dispose();BUS.tag=null;}
+  if(txt){const s=label(txt,.5);s.position.set(1.6,3.45,.4);BUS.g.add(s);BUS.tag=s;}}
+/* ---- the bus stops: a little round shelter with a bench, the timetable board and a 🚌 sign (baked into the place) ---- */
+function busShelter(L,st,x,z,ry){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=ry;st.add(g);const M='#8fe3c4',c=Math.cos(ry),s=Math.sin(ry),W=(lx,lz)=>[x+lx*c+lz*s,z-lx*s+lz*c];
+  box(g,3.7,2.2,.14,'#fff6e8',0,0,.55);box(g,3.72,.16,.16,M,0,0,.55,{ol:.015});box(g,3.72,.28,.16,'#ffc4a3',0,1.9,.55,{ol:.015});
+  for(const sd of[-1,1]){box(g,.1,1.5,1.2,'#cfe9ff',sd*1.8,.45,-.02,{ol:.02});box(g,.12,.45,1.24,M,sd*1.8,0,-.02,{ol:.015});cyl(g,.07,.07,2.25,M,sd*1.8,0,-.62,{seg:8,ol:.015});}
+  cyl(g,.85,.85,4.1,'#ffc4a3',0,2.3,-.02,{rz:Math.PI/2,center:true,s:[.34,1,1],seg:18});bench(g,0,.24,Math.PI);
+  box(g,2.5,.5,.06,'#ffffff',0,2.57,0,{ol:.02});cyl(g,.05,.06,2.95,'#5a5f8c',2.2,0,-.66,{seg:8,ol:.012});cyl(g,.3,.3,.07,M,2.2,2.86,-.66,{rx:Math.PI/2,center:true,seg:20,ol:.02});
+  box(g,1.7,1.06,.04,'#ff8a6b',0,.97,.49,{ol:.015});
+  {const cv=document.createElement('canvas');cv.width=512;cv.height=512;const tx=new THREE.CanvasTexture(cv);tx.anisotropy=4;   /* one picture for the 3 signs: the timetable, the roof sign, the round stop sign */
+   const P2=[],U=[],I=[],quad=(x,y,z,w,h,v0,v1,u1)=>{const n=P2.length/3;P2.push(x+w/2,y-h/2,z,x-w/2,y-h/2,z,x-w/2,y+h/2,z,x+w/2,y+h/2,z);U.push(0,v0,u1,v0,u1,v1,0,v1);I.push(n,n+1,n+2,n,n+2,n+3);};   /* (they face the front) */
+   quad(0,1.5,.465,1.56,.92,1-300/512,1,1);quad(0,2.82,-.035,2.4,.42,1-400/512,1-310/512,1);quad(2.2,2.86,-.705,.4,.4,0,100/512,100/512);
+   const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(P2,3));geo.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));geo.setIndex(I);geo.computeBoundingSphere();
+   const m=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({map:tx}));m.userData.keep=1;g.add(m);BUS.boards.push({c:cv,t:tx,k:''});
+   const [tx2,tz2]=W(0,-1.05);inter(L,{x:tx2,z:tz2,r:2.1,icon:'📋',label:'Read the bus timetable',act:openBusTable,obj:m});}
+  {const a=W(-1.9,.48),b=W(1.9,.62);col(L,a[0],a[1],b[0],b[1]);for(const sd of[-1,1]){const p=W(sd*1.8-.06,-.62),q=W(sd*1.8+.06,.62);col(L,p[0],p[1],q[0],q[1]);}const pl=W(2.2,-.66);colC(L,pl[0],pl[1],.1);}}
+function busDoorT(L,p){const [x,z]=busW(2.2,1.9,busXZ(p,0));BUS.tk.push(inter(L,{x:x-L.ox,z:z-L.oz,r:2.4,icon:'🚌',label:()=>busLabel(p),act:()=>busBoard(p),when:()=>busReady(p)}));}
+function busStopCity(L,st){busShelter(L,st,-16.2,7.6,0);busDoorT(L,'park');}   /* by the park, east of its north gate */
+function busStopBeach(L,st){const bg=new THREE.Group();L.g.add(bg);
+  flat(bg,3.8,240,'#d9d2e6',-35.5,.016,0);for(let z=-118;z<=118;z+=4)box(bg,.14,.012,1.7,'#ffffff',-35.5,.03,z,{ol:false});   /* a little road behind the dunes */
+  flat(bg,4.4,4.6,'#f6dfa9',-32.3,.02,0);col(L,-34.6,-23,-30.5,-1.95);col(L,-34.6,1.95,-30.5,47);   /* a sandy step out through the gate to the bus */
+  busShelter(L,bg,-26.2,-4.25,Math.PI);bake(bg,true);busDoorT(L,'beach');
+  /* ⛺ the camp spot next to the bus stop: a ring of stones; a tent and a campfire appear when you camp */
+  for(let k=0;k<9;k++){const a=k/9*TAU;sph(st,.16,['#b8b4c4','#a7a3b5','#c8c4d6'][k%3],CAMP.fx+Math.cos(a)*.62,.06,CAMP.fz+Math.sin(a)*.62,{s:[1.2,.7,1],ws:8,hs:6,ol:.015});}colC(L,CAMP.fx,CAMP.fz,.75);
+  {const g=new THREE.Group();g.position.set(CAMP.x,0,CAMP.z);L.g.add(g);g.visible=false;BUS.camp=g;const hw=1.1,h=1.45,ln=2.4,a=Math.atan2(hw,h),sl=Math.hypot(hw,h),fx=CAMP.fx-CAMP.x,fz=CAMP.fz-CAMP.z;
+   for(const s of[-1,1])box(g,ln,sl,.06,s<0?'#ffb38a':'#ff9e7a',0,h/2,s*hw/2,{rx:-s*a,center:true,ol:.025});prism(g,.06,2*hw,h,'#ffb38a',-ln/2+.03,0,0);
+   cyl(g,.045,.045,ln+.24,'#ffffff',0,h,0,{rz:Math.PI/2,center:true,seg:8,ol:.012});flat(g,ln,2*hw-.12,'#7cc8ff',0,.02,0);
+   for(const s of[-1,1]){box(g,1.7,.16,.6,s<0?'#b79cff':'#5fd4b0',-.12,0,s*.47,{ol:.015});box(g,.34,.12,.48,'#ffffff',-.86,.16,s*.47,{ol:.012});}
+   cyl(g,.022,.022,.55,'#9a6a43',ln/2-.06,h-.05,0,{seg:6,ol:.01});box(g,.34,.2,.02,'#ffd45c',ln/2+.11,h+.3,0,{ol:.01});
+   for(let k=0;k<3;k++)cyl(g,.07,.08,.84,'#9a6a43',fx,.12,fz,{rz:Math.PI/2,ry:k*Math.PI/3,center:true,seg:8,ol:.015});
+   bake(g,true);
+   const f=new THREE.Group();f.position.set(fx,.1,fz);for(const [x,z,r,hh,c] of [[0,0,.16,.66,'#ff7a2e'],[.14,.05,.11,.46,'#ff9d3c'],[-.13,.07,.11,.42,'#ff8a3c'],[.03,-.13,.1,.4,'#ffb347'],[0,.02,.085,.36,'#ffe27a']])cone(f,r,hh,c,x,0,z,{seg:7,ol:false});
+   bake(f,false);for(const m of f.children)m.material=new THREE.MeshBasicMaterial({vertexColors:true});g.add(f);BUS.fl=f;
+   g.add(glowMesh(glowGeo([[fx,.6,fz,1.2,[.95,.6,.25]],[fx,.05,fz,6,6,[.5,.3,.12]]])));}
+  inter(L,{x:CAMP.x+1.9,z:CAMP.z,r:2.0,icon:()=>campOn()?'😴':'⛺',label:()=>campOn()?'Sleep in the tent':'Build a campsite',act:campTap});
+  inter(L,{x:CAMP.fx+.2,z:CAMP.fz-1.3,r:1.7,icon:'🍡',label:'Toast a marshmallow',act:campFire,when:()=>campOn()});}
+function busBoardDraw(B){const day=S?S.day:1,x=B.c.getContext('2d'),Wd=512,Ht=300;B.k=S?day+'':'';
+  x.fillStyle='#ffffff';x.fillRect(0,310,Wd,90);x.fillStyle='#5fd4b0';x.fillRect(0,412,100,100);x.textAlign='center';x.textBaseline='middle';x.font=`800 64px ${FONT}`;x.fillStyle='#ff7a59';x.fillText('🚌 Beach Bus',Wd/2,358);x.font=`64px ${FONT}`;x.fillText('🚌',50,466);
+  x.fillStyle='#fffaf0';x.fillRect(0,0,Wd,Ht);x.fillStyle='#5fd4b0';x.fillRect(0,0,Wd,64);x.textBaseline='middle';x.textAlign='center';x.font=`800 40px ${FONT}`;x.fillStyle='#ffffff';x.fillText('🚌 Beach Bus',Wd/2,34);
+  busDays(day,3).forEach((d,k)=>{const y=96+k*56,today=!!S&&d===day;if(today){x.fillStyle='#ffe08a';x.fillRect(14,y-25,Wd-28,50);}   /* the next 3 bus days */
+    x.fillStyle='#3d2c5e';x.font=`800 32px ${FONT}`;x.textAlign='left';x.fillText((today?'⭐ ':'')+wdName(d),28,y);x.textAlign='right';x.fillText(d===1?'🎉 8:00–12:00':busHM(busArr(d)),Wd-28,y);});
+  x.fillStyle='#3d2c5e';x.font=`700 25px ${FONT}`;x.textAlign='center';x.fillText(`🏖️ Bus home 21:00 · a ride is ${BUS_FARE} 🪙`,Wd/2,Ht-26);B.t.needsUpdate=true;}
+/* ---- the timetable card ---- */
+function busDays(from,n){const out=[];for(let d=from;out.length<n&&d<from+15;d++)if(busArr(d)!==undefined)out.push(d);return out;}
+function openBusTable(){const beach=CUR.id==='beach',w=Math.floor((S.day-1)/7);SFX.tap();
+  const row=d=>{const a=busArr(d),today=d===S.day,wb=d===1,gone=d<S.day||(today&&S.time>=(beach?21:wb?12:a+BUS_W));
+    const tm=beach?'🏘️ '+(wb?'until 12:00':busHM(a+2*BUS_W))+' and 21:00':wb?'🎉 8:00–12:00 (free!)':'🚌 '+busHM(a);
+    return`<div class="ph-row"${today?' style="background:#fff1b8"':''}><span>${today?'⭐ Today':wdName(d)}${gone?' ✔':''}</span><span>${tm}</span></div>`;};
+  const wk=k=>busDays(k*7+1,3).filter(d=>d<=k*7+7),left=wk(w).filter(d=>d>S.day||(d===S.day&&S.time<21)).length;
+  const c=busCur(beach?'beach':'park'),here=c&&c.u===0&&c.s.go?`🚌 The bus is here! It leaves at ${busHM(c.s.l)}.`:beach?'🏘️ Next bus home: '+busWhen(busNext('beach','town'),1)+'.':'🏖️ Next bus to the beach: '+busWhen(busNext('park','beach'))+'.';
+  openPanel(`<div class="hd"><h2>🚌 Beach Bus</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div><p class="line" style="margin-top:2px">${here}</p>
+    <div class="sec">This week</div>${wk(w).map(row).join('')}${left<2?`<div class="sec">Next week</div>${wk(w+1).map(row).join('')}`:''}
+    <p class="note" style="margin-top:12px">🚏 The bus waits about a minute at each stop, so be on time!<br>🪙 A ride is ${BUS_FARE} coins.<br>🏖️ On bus days the bus home leaves the beach at 21:00.<br>⛺ Missed it? Camp at the beach. The next bus takes you home!</p>`);}
+/* ---- riding ---- */
+function busInfo(p){const c=busCur(p);SFX.pop();
+  if(c&&c.u===0&&c.s.go&&busThere(p)&&!BUS.ride){toast('🚌 The bus is here! Walk to its door to get on 🚪 It leaves at '+busHM(c.s.l)+'.',4);return;}
+  if(c&&c.u<0){toast('🚌 The bus is coming! Wait at the bus stop 🚏',3);return;}
+  if(c&&c.u===0&&!c.s.go){toast('🚌 Driver Dot: “All done for now! 😴 The bus is off to the bus garage.”',3.6);return;}
+  if(p==='park')toast('🚌 The beach bus comes '+busWhen(busNext('park','beach'))+'. A ride is '+BUS_FARE+' 🪙',4);
+  else toast('🚌 The bus stops right outside this gate! The bus home leaves '+busWhen(busNext('beach','town'),1)+'.',4.2);}
+function busSeat(){let h=0;const s=String(S.pid||S.name||'');for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return Math.abs(h)%BSEAT.length;}
+function busBoard(p){if(BUS.ride||fading||!PLAYING)return;if(!busReady(p)){busInfo(p);return;}
+  const s=busCur(p).s,home=s.go==='town',free=!!s.wb||(home&&S.coins<BUS_FARE);
+  if(!free&&S.coins<BUS_FARE){SFX.no();BUS.dot.wave=1.2;toast(`🚌 Driver Dot: “A ride is ${BUS_FARE} 🪙. Save up a little more and hop on next time! 💛”`,4.4);return;}
+  if(DECO.on)decoEnd();if(P.ride)stopRide();if(P.sit)standUp();
+  const fare=free?0:BUS_FARE,b=BUS.pos,k=busSeat(),[sx,sz]=busW(BSEAT[k][0],BSEAT[k][1],b),nm=S.name||'friend';
+  if(fare){S.coins-=fare;SFX.coin();floatText('-'+fare+' 🪙',P.x-Math.sin(P.yaw)*1.2,1.8,P.z-Math.cos(P.yaw)*1.2,{h:.4});}else SFX.pop();
+  P.sit={x:sx,z:sz,yaw:Math.atan2(-Math.cos(b[2]),Math.sin(b[2])),h:1.6,bus:1,bk:[P.x,P.z,P.yaw]};P.x=sx;P.z=sz;P.yaw=P.sit.yaw;P.pitch=-.04;
+  BUS.ride={p,s,to:s.go,fare,d:S.day,t0:performance.now()};document.body.classList.add('bus');BUS.dot.wave=1.4;
+  toast(s.wb?`🚌 Driver Dot: “Welcome to Cozy Town, ${nm}! 🎉 Your first ride is free. Off we go!”`:home&&!fare?'🚌 Driver Dot: “No coins? This one\'s on me! 💛 Find a seat!”':`🚌 Driver Dot: “Hello, ${nm}! Find a seat 😊 We leave at ${busHM(s.l)}!”`,s.wb?2.6:4);
+  change();}
+function busOff(){const R=BUS.ride;if(!R||R.go)return;const b=P.sit&&P.sit.bk;P.sit=null;BUS.ride=null;document.body.classList.remove('bus');   /* off again before it leaves: your coins back */
+  if(b){[P.x,P.z]=collideXZ(b[0],b[1],.3,CUR);P.yaw=b[2];}P.pitch=0;bringFollowers(true);
+  if(R.fare){S.coins+=R.fare;SFX.coin();toast(`🚌 Driver Dot: “Bye for now! Here are your ${R.fare} 🪙 back 💛”`,3.2);}else{SFX.pop();toast('🚌 Driver Dot: “Bye for now! 👋”',2.6);}change();}
+function busGo(){const R=BUS.ride;if(!R||R.go)return;R.go=1;BUS.hold=1;tone(1319,.12,'triangle',.12);tone(1319,.14,'triangle',.12,.2);tone(98,.6,'sawtooth',.03,.2,150);   /* ding ding, off we go */
+  busRideFx(R.to,()=>busArrive(R));}
+function busRideFx(to,fn){fading=true;let el=$('busRide');
+  if(!el){el=document.createElement('div');el.id='busRide';el.setAttribute('aria-hidden','true');el.innerHTML='<div class="brs">☀️</div><div class="brc">☁️</div><div class="brt"></div><div class="brr"></div><div class="brd"></div><div class="brb">🚌<span>💨</span></div>';document.body.appendChild(el);}
+  const nt=nightF(S.time)>.5;el.querySelector('.brt').textContent=to==='beach'?'🏖️ Next stop: the beach!':'🏘️ Next stop: Cozy Town!';el.querySelector('.brd').textContent=to==='beach'?'🌴🏖️🌴':'🏡🌳🏡';el.querySelector('.brs').textContent=nt?'🌙':'☀️';el.classList.toggle('night',nt);
+  const b=el.querySelector('.brb');b.style.animation='none';void b.offsetWidth;b.style.animation='';el.classList.add('on');
+  setTimeout(()=>{try{fn();}catch(e){console.error(e);}setTimeout(()=>{el.classList.remove('on');setTimeout(()=>{fading=false;},300);},300);},1450);}
+function busArrive(R){BUS.ride=null;BUS.hold=0;document.body.classList.remove('bus');P.sit=null;P.ride=null;closePanel();if(DECO.on)decoEnd();
+  if(R.to==='beach'){setLoc('beach');const L=LOC.beach,d=DOORS.beach.inside;P.x=L.ox+d[0];P.z=L.oz+d[1];P.yaw=d[2];}
+  else{if(S.beach)delete S.beach.camp;setLoc('city');const b=busXZ('park',0),[x,z]=busW(3.2,3.6,b),[fx,fz]=busW(1.2,0,b);P.x=x;P.z=z;P.yaw=Math.atan2(-(fx-x),-(fz-z));}   /* on the pavement, waving the bus goodbye */
+  P.pitch=0;BUS.loc=null;BUS.arr={d:S.day,t:S.time};bringFollowers();saveLocal();
+  if(R.to==='beach'){beachIn();setTimeout(()=>{if(CUR.id==='beach')toast(R.s.wb?'🚌 Driver Dot: “You can ride back to town until 12:00, and the bus home leaves at 21:00. Have fun! 👋”':'🚌 Driver Dot: “The bus home leaves at 21:00. See you then! 👋”',4.4);},3400);}
+  else{SFX.yay();const nh=R.s.l>=21&&(!NAV||NAV.id==='home');if(nh&&!NAV)setNav('home',true);   /* the evening bus: bedtime, the pink arrow shows the way to your house on 🏡 Friends Lane */
+    toast(nh?'🏘️ Home again! 🚌 Driver Dot: “Bye bye! Sleep tight!” 🏡 Follow the pink arrow home.':'🏘️ Home again! 🚌 Driver Dot: “Bye bye! See you soon!” 👋',nh?4.4:3.4);}}
+/* a friend's 🚀 Go (or any jump) can't skip the bus: a kind message instead */
+function busWarp(to,nm){const here=!!CUR&&CUR.id==='beach';if(here===(to==='beach'))return false;SFX.pop();
+  if(here)toast('🚌 You are at the beach! Take the bus home first. It leaves '+busWhen(busNext('beach','town'),1)+'.',4.4);
+  else toast('🏖️ '+(nm?nm+' is at the beach! ':'')+'Take the 🚌 bus from the park to get there. It comes '+busWhen(busNext('park','beach'))+'.',4.6);
+  return true;}
+function busGate(){setNav('bus');toast('🚌 The beach bus leaves from the park! It comes '+busWhen(busNext('park','beach'))+'. Follow the arrow 📍',4.4);}   /* the old town gate is just for looking now */
+/* ---- ⛺ the campsite ---- */
+function campOn(){if(!S||!CUR||CUR.id!=='beach')return false;if(S.beach&&S.beach.camp)return true;const L=LOC.beach;   /* yours, or a friend's who is asleep in it */
+  for(const a of MP.peers.values())if(a.loc==='beach'&&a.zz&&Math.hypot(a.rx-L.ox-CAMP.x,a.rz-L.oz-CAMP.z)<2.6)return true;return false;}
+function campOK(){const t=S.time;if(t>=21||t<7)return true;for(const s of busSess(S.day))if(s.p==='beach'&&s.go==='town'&&s.l>t)return false;return true;}   /* only when no bus home comes today */
+function campTap(){if(campOn()){tentSleep();return;}
+  if(!campOK()){SFX.pop();toast('⛺ A cozy camping spot! 🚌 The bus home leaves '+busWhen(busNext('beach','town'),1)+'. If you miss it, you can camp here.',4.4);return;}
+  bch().camp=1;BUS.camp.scale.setScalar(.05);SFX.yay();toast('⛺ You built a cozy campsite! 🔥 Sleep in the tent when it gets dark 🌙',4);change();}
+function tentSleep(){if(S.time>=7&&S.time<21){toast('Not sleepy yet, beds work from 21:00 🌙',3);return;}   /* the same rule as every bed */
+  const L=LOC.beach,sx=L.ox+CAMP.x-.35;let side=1;for(const a of MP.peers.values())if(a.loc==='beach'&&a.zz&&Math.hypot(a.rx-sx,a.rz-L.oz-CAMP.z-.47)<.5)side=-1;   /* a friend has that side: take the other */
+  P.sit={x:sx,z:L.oz+CAMP.z+side*.47,yaw:-Math.PI/2,h:.48,bed:1,tent:1,bk:[P.x,P.z,P.yaw]};P.x=P.sit.x;P.z=P.sit.z;P.yaw=P.sit.yaw;P.pitch=.03;ZZ.t=0;BUS.tent=1;
+  SFX.pop();floatText('💤',L.ox+CAMP.x,1.7,L.oz+CAMP.z,{h:.4});toast('💤 Good night! ⛺',2);}
+function campFire(){if(!cool('mallow',1)){SFX.tap();return;}SFX.pop();S.hunger=Math.min(100,S.hunger+4);const L=LOC.beach;floatText('🍡',L.ox+CAMP.fx,1.2,L.oz+CAMP.fz,{h:.5});
+  toast(pick(['🍡 Mmm, a golden toasty marshmallow!','🔥 Crackle crackle… so warm and cozy!','🍡 A gooey marshmallow! Yum!','✨ Little sparks dance up to the stars!']),2.8);}
+/* ---- every frame ---- */
+function busBlocked(p){const b=BUS.pos;if(!b)return null;const fx=Math.cos(b[2]),fz=-Math.sin(b[2]),hx=b[0]+fx*3.5,hz=b[1]+fz*3.5;   /* someone or a car right in front of it */
+  const near=(x,z,w)=>{const dx=x-hx,dz=z-hz,f=dx*fx+dz*fz;return f>-.3&&f<2.6&&Math.abs(dx*fz-dz*fx)<w;};
+  if(CUR.id===BUSP[p].loc&&!(P.sit&&P.sit.bus)&&near(P.x,P.z,1.45))return'player';if(p!=='park')return null;
+  for(const w of WALKERS)if(w.state!=='home'&&near(w.x,w.z,1.5))return'ped';for(const f of FRIEND_ACTORS)if(f.loc==='city'&&f.mode!=='away'&&near(f.x,f.z,1.5))return'ped';
+  for(const q of PET_ACTORS)if(q.loc==='city'&&near(q.x,q.z,1.3))return'ped';for(const a of MP.peers.values())if(a.loc==='city'&&near(a.x,a.z,1.5))return'ped';
+  for(const c of CARS){if(c.away)continue;const dx=c.x-hx,dz=c.z-hz,f=dx*fx+dz*fz;if(f>0&&f<4.2&&Math.abs(dx*fz-dz*fx)<1.9)return'car';}return null;}
+function busBlock(x,z,fx,fz){const b=BUS.pos;if(!b||BUS.loc!=='city'||!BUS.g.visible)return false;const bx=Math.cos(b[2]),bz=-Math.sin(b[2]);   /* cars wait for the bus (but a car already in a crossing drives on; the bus waits for it) */
+  for(const X of XS)if(Math.abs(x-X.x)<6.3&&Math.abs(z-X.z)<6.3)return false;
+  for(const k of[-3.4,0,3.4]){const dx=b[0]+bx*k-x,dz=b[1]+bz*k-z,f=dx*fx+dz*fz;if(f>0&&f<4.6&&Math.abs(dx*fz-dz*fx)<2.1)return true;}return false;}
+function busSolids(s){const b=BUS.pos;if(!b||!BUS.g||!BUS.g.visible||BUS.loc!==CUR.id)return;const bx=Math.cos(b[2]),bz=-Math.sin(b[2]);for(const k of[-2.4,-.8,.8,2.4])s.push({cx:b[0]+bx*k,cz:b[1]+bz*k,cr:1.3});}
+function campPeers(){const L=LOC.beach;if(CUR.id!=='beach')return;   /* a friend asleep in the tent lies down like in a bed: on the sleeping bag, along the tent, head at the back (blanket narrower, inside the tent) */
+  for(const a of MP.peers.values())if(a.av&&a.lie&&a.loc==='beach'&&Math.hypot(a.rx-L.ox-CAMP.x,a.rz-L.oz-CAMP.z)<2.6){const p=a.av,r=p.root;r.position.y=.26;r.position.z=L.oz+CAMP.z+(a.rz<L.oz+CAMP.z?-.35:.35);r.rotation.y=Math.PI/2;if(p.duv)p.duv.scale.set(.58,1,.92);}}
+function busHide(){if(BUS.g.visible){BUS.g.visible=false;busTag('');}BUS.loc=null;BUS.s=null;BUS.pos=null;BUS.stop=false;for(const X of XS){const i=X.occ.indexOf(BUSX);if(i>=0)X.occ.splice(i,1);}}
+function updBus(dt){if(!BUS.g)return;const p=S&&CUR?(CUR.id==='city'?'park':CUR.id==='beach'?'beach':null):null;
+  if(S&&PLAYING){busTick(dt,p);campPeers();}
+  let c=p&&busCur(p);if(!c&&p&&BUS.s&&BUS.loc===BUSP[p].loc&&BUS.ui>0&&BUS.ui<BUSP[p].post)c={s:BUS.s,u:BUSP[p].post};   /* held up on its way out: it still drives off */
+  if(!c){busHide();return;}
+  const T=BUSP[p],u=c.u;
+  if(BUS.loc!==T.loc||BUS.s!==c.s)BUS.ui=u;   /* you just came here, or a new trip: it is where the timetable says */
+  else if(BUS.hold)BUS.ui=0;   /* you are riding: it waits for the ride picture */
+  else if(u>BUS.ui){let bk=busBlocked(p);
+    if(bk!=='car')BUS.bt=0;else if((BUS.bt+=dt)>6)bk=null;   /* (stuck behind a car for a long time: drive on) */
+    if(bk){BUS.v=0;if(bk==='player'&&(BUS.hk-=dt)<=0){BUS.hk=3.5;SFX.honk();}}
+    else if(u-BUS.ui>30&&!inView(BUS.pos[0],BUS.pos[1],5))BUS.ui=u;else{BUS.v=Math.min(12,BUS.v+6*dt);BUS.ui=Math.min(u,BUS.ui+BUS.v*dt);}}
+  else BUS.ui=u;
+  const b=busXZ(p,BUS.ui);BUS.pos=b;BUS.g.position.set(b[0],0,b[1]);BUS.g.rotation.y=b[2];BUS.g.visible=true;BUS.loc=T.loc;BUS.s=c.s;
+  const stop=u===0&&Math.abs(BUS.ui)<.05;if(stop&&!BUS.stop){BUS.dot.wave=1.6;if(Math.hypot(P.x-b[0],P.z-b[1])<30&&!BUS.ride)SFX.honk();}BUS.stop=stop;
+  BUS.dk=clamp(BUS.dk+(stop&&!BUS.hold?dt:-dt)*1.7,0,1);BUS.door.position.x=2.2-1.02*BUS.dk*BUS.dk*(3-2*BUS.dk);
+  const d=BUS.dot;if(d.wave>0){d.wave-=dt;d.arms[1].rotation.z=2.5+Math.sin(d.wave*14)*.35;}else d.arms[1].rotation.z*=.85;
+  BUS.sign[0].visible=c.s.go==='beach';BUS.sign[1].visible=c.s.go!=='beach';BUS.ins.visible=!(P.sit&&P.sit.bus);
+  busTag(stop&&c.s.go&&!BUS.hold?(c.s.wb?'🎉 Free ride!':(c.s.go==='beach'?'🏖️ ':'🏘️ ')+busMMSS(c.s)):'');
+  if(p==='park')for(const X of XS){const near=Math.abs(b[1]-X.z)<6.3&&b[0]+3.5>X.x-18&&b[0]-3.5<X.x+6.3,i=X.occ.indexOf(BUSX);if(near&&i<0)X.occ.push(BUSX);else if(!near&&i>=0)X.occ.splice(i,1);}   /* cars let the bus cross first */
+  if(stop){const cs=Math.cos(b[2]),sn=Math.sin(b[2]);for(const a of MP.peers.values())if(a.av&&a.loc===CUR.id){const dx=a.x-b[0],dz=a.z-b[1],lx=dx*cs-dz*sn,lz=dx*sn+dz*cs;if(Math.abs(lx)<3.2&&Math.abs(lz)<1.05){a.av.root.position.y=.3;sitPose(a.av);}}}}   /* friends riding with you sit down */
+function busTick(dt,p){const R=BUS.ride,t=S.time;
+  if(R&&!R.go){if(!(P.sit&&P.sit.bus)){BUS.ride=null;document.body.classList.remove('bus');if(R.fare)S.coins+=R.fare;bringFollowers(true);change();}   /* stood up some other way: off the bus (coins back) */
+    else if(S.day!==R.d||t>=R.s.l||(R.s.wb&&performance.now()-R.t0>650))busGo();}
+  if(BUS.ride){for(const f of FRIEND_ACTORS)if(f.mode==='follow')f.g.visible=false;for(const q of PET_ACTORS)if(!q.d.stay)q.g.visible=false;}   /* they ride with you */
+  for(const B of BUS.boards)if(B.k!==S.day+'')busBoardDraw(B);
+  if(BUS.camp){const on=campOn(),L=LOC.beach,tc=BUS.tc||(BUS.tc={x1:L.ox+CAMP.x-1.25,z1:L.oz+CAMP.z-1.15,x2:L.ox+CAMP.x+1.2,z2:L.oz+CAMP.z+1.15}),i=L.dcols.indexOf(tc);   /* the tent is solid while it is there */
+    if(on&&i<0)L.dcols.push(tc);else if(!on&&i>=0)L.dcols.splice(i,1);BUS.camp.visible=on;if(on){const g=BUS.camp,k=Math.min(1,g.scale.x+dt*2.5);g.scale.setScalar(k);const tt=performance.now()/1000,f=BUS.fl;
+    f.scale.set(1+Math.sin(tt*9)*.08,1+Math.sin(tt*13+1)*.16,1+Math.cos(tt*11)*.08);f.rotation.y=Math.sin(tt*2)*.4;
+    if(SET.sound&&AC&&Math.hypot(P.x-LOC.beach.ox-CAMP.fx,P.z-LOC.beach.oz-CAMP.fz)<7&&(BUS.ck-=dt)<=0){BUS.ck=rand(.12,.7);tone(rand(1400,3200),.022,'square',.012);}}}   /* crackle */
+  if(BUS.tent&&!zzIn()){BUS.tent=0;if(CUR.id==='beach'&&t>=7&&t<7.5)setTimeout(()=>{if(!PLAYING||CUR.id!=='beach')return;const n=busNext('beach','town');
+    toast(n&&n.d===S.day?'🚌 The bus to town comes today! It leaves at '+busHM(n.s.l)+' 🏘️':'🚌 No bus today. The bus home leaves '+busWhen(n,1)+'. Enjoy the beach! 🏖️',4.6);},4300);}
+  if(p==='beach'&&HOST.cur){const q=HOST.cur;hostAnswer(false,true);toast('🔔 '+q.nm+' knocked at your door, but you are at the beach! 🏖️',3.6);}
+  const calm=S.intro&&!UI.open&&!fading&&!CUT&&!TUT&&!DTUT,busy=$('toast').classList.contains('show');
+  if(!(S.beach&&S.beach.bus)&&p==='park'&&calm&&!busy){BUS.nt+=dt;if(BUS.nt>5){bch().bus=1;change();SFX.pop();
+    toast(S.day===1&&t<12?'🎉 Good news! A free Welcome Bus waits at the park until 12:00. Hop on and visit the beach! 🏖️':'🚌 New! A cozy Beach Bus stops at the park 3 days a week. Find the 🚌 bus stop on your 🗺️ map!',5.5);}}else BUS.nt=0;
+  if(p&&!BUS.ride&&calm)busNews(p,t,busy);
+  BUS.tipT-=dt;if(BUS.tipT<=0){BUS.tipT=.25;busTipUpd(p);}}
+function busNews(p,t,busy){const d=S.day,say=(k,txt,w,snd)=>{const key=d+':'+k;if(BUS.told[key]||(busy&&t<w))return;BUS.told[key]=1;if(snd)snd();toast(txt,4.6);};
+  for(const s of busSess(d))if(s.go&&t>=s.a&&t<s.a+.2&&BUSP[s.p].loc===CUR.id&&!(BUS.arr&&BUS.arr.d===d&&Math.abs(BUS.arr.t-t)<.3))   /* the bus is here (not the one you just came on) */
+    say('a'+s.p+s.a,s.p==='park'?(s.wb?'🎉 The Welcome Bus is at the park! Hop on for a free ride to the beach 🏖️':'🚌 Beep beep! The Beach Bus is at the park! It leaves at '+busHM(s.l)+' 🏖️'):'🚌 Beep beep! The bus to town is here! It leaves at '+busHM(s.l)+' 🏘️',s.wb?s.l:s.a+.1,()=>{SFX.honk();if(s.wb)bch().bus=1;});   /* (the Welcome Bus message is the news too) */
+  if(p!=='beach'||busArr(d)===undefined)return;
+  if(t>=20.5&&t<20.6)say('ev1','🚌 The bus home leaves at 21:00!',20.55);
+  if(t>=20+50/60&&t<20.95)say('ev2','🚌 Last call! The bus leaves in 10 minutes!',20.9,()=>SFX.ding());
+  if(t>=21&&t<21.5&&!(S.beach&&S.beach.camp)&&!zzIn())say('miss','🚌 Oh no, the bus left! ⛺ Build a campsite and sleep at the beach. The next bus takes you home!',21.25,()=>SFX.aww());}
+function busNearStop(p){if(p==='park')return Math.hypot(P.x+14.3,P.z-4.5)<16;const L=LOC.beach;return P.x-L.ox<-21&&Math.abs(P.z-L.oz)<9;}
+function busTipUpd(p){let el=$('busTip'),t='',hot=false;const R=BUS.ride;
+  if(R&&!R.go){t=R.s.wb?'🚌 Off we go!':(R.to==='beach'?'🚌 Off to the beach in ':'🚌 Off home in ')+busMMSS(R.s);hot=!R.s.wb&&busSecs(R.s)<12;}
+  else if(p&&!R&&!zzIn()&&S.intro){const c=busCur(p),near=busNearStop(p);
+    if(c&&c.s.go&&c.u===0&&(near||p==='beach')){t=c.s.wb?'🎉 Free bus! Hop on!':(p==='park'?'🚌 Bus to the beach: ':'🚌 Bus to town: ')+busMMSS(c.s);hot=!c.s.wb&&busSecs(c.s)<15;}
+    else if(near){if(c&&c.u<0&&c.s.go)t='🚌 The bus is coming!';else{const n=p==='park'?busNext('park','beach'):busNext('beach','town');t=(p==='park'?'🚌 Next bus: ':'🚌 Bus home: ')+(n?(n.d===S.day?'':WDAYS[wdIdx(n.d)].slice(0,3)+' ')+busHM(p==='park'?n.s.a:n.s.l):'soon');}}}
+  if(!el){if(!t)return;el=document.createElement('div');el.id='busTip';el.setAttribute('role','status');el.hidden=true;$('stats').after(el);}
+  if(el.textContent!==t)el.textContent=t;el.classList.toggle('hot',hot);if(el.hidden!==!t)el.hidden=!t;}
 
 /* ===== 🎾 the tennis court at the north end of the beach, with Coach Sunny ===== */
 /* the court runs along x (beach-local centre TCX,TCZ): you play from the west half, the coach from the east half with the sea behind her */
@@ -2577,7 +2841,7 @@ function updSky(){
   if(out){
     hemi.intensity=lerp(a[4],b[4],t);hemi.color.copy(C(5));hemi.groundColor.copy(C(6));sun.color.copy(C(7));sun.intensity=lerp(a[3],b[3],t);
     let u,day=h>=6&&h<=18.5;u=day?(h-6)/12.5:(((h+24-18.5)%24)/11.5);const ang=Math.PI*u;
-    SUND.set(Math.cos(ang)*.85,.32+Math.sin(ang)*.9,.45).normalize();lamp.intensity=0;
+    SUND.set(Math.cos(ang)*.85,.32+Math.sin(ang)*.9,.45).normalize();lamp.intensity=0;busLamp();
     sunSprite.visible=day&&h>6.2&&h<18.3;moonSprite.visible=!day||h<6.4||h>18.2;
     const sp=day?sunSprite:moonSprite;sp.position.copy(camera.position).addScaledVector(SUND,320);
     if(day)moonSprite.position.set(camera.position.x-SUND.x*320,camera.position.y+SUND.y*320,camera.position.z-SUND.z*320);
@@ -3024,6 +3288,7 @@ function updateCars(dt){const inCity=CUR.id==='city',peds=[],h=S?S.time:12;if(in
   for(const c of CARS){if(c.away)continue;const fx=Math.sin(c.yaw),fz=Math.cos(c.yaw);let block=null;
     for(const [px,pz,w,me] of peds){const dx=px-c.x,dz=pz-c.z,f=dx*fx+dz*fz,l=Math.abs(dx*fz-dz*fx);if(f>0&&f<6.5&&l<w){block=me?'player':'ped';break;}}
     if(!block)for(const o of CARS){if(o===c||o.away)continue;const dx=o.x-c.x,dz=o.z-c.z,f=dx*fx+dz*fz,l=Math.abs(dx*fz-dz*fx);if(f>0&&f<7.5&&l<2.2){block='car';break;}}
+    if(!block&&busBlock(c.x,c.z,fx,fz))block='car';   /* 🚌 the bus at its stop or on its way */
     const ax=c.x+fx*5,az=c.z+fz*5;
     for(const X of XS){const inside=Math.abs(c.x-X.x)<6.3&&Math.abs(c.z-X.z)<6.3,near=Math.abs(ax-X.x)<6.3&&Math.abs(az-X.z)<6.3,i=X.occ.indexOf(c);
       if(inside||near){if(i<0){const clash=X.occ.some(o=>Math.abs(Math.sin(o.yaw)*fx+Math.cos(o.yaw)*fz)<.7);if(clash&&!inside)block=block||'cross';else X.occ.push(c);}}
@@ -3268,7 +3533,7 @@ const TENC=new TextEncoder();function jsonBytes(o){return TENC.encode(JSON.strin
 function homeSnap(budget){const h=S.home,r=v=>Math.round(v*10)/10;let used=0;
   const rows=fl=>{const out=[];for(const it of h.items.filter(it=>(it.f&&S.bighouse?1:0)===fl).slice(0,160)){const s=[it.t,it.c||'',r(it.x),r(it.z),it.r|0,it.on?1:0].join(',');if(budget!=null&&used+s.length+1>budget)break;out.push(s);used+=s.length+1;}return out.join(';');};
   const o={b:S.bighouse?1:0,w:h.wall,f:h.floor,i:rows(0)};if(S.bighouse)o.u=rows(1);return o;}
-function goKnock(peer){const a=MP.peers.get(peer),j=LANE.slotOf.get(peer);if(!a||j==null||!LOC.city.lane){toast('🏠 Their house is not on Friends Lane right now.',2.8);return;}
+function goKnock(peer){if(busWarp('city'))return;const a=MP.peers.get(peer),j=LANE.slotOf.get(peer);if(!a||j==null||!LOC.city.lane){toast('🏠 Their house is not on Friends Lane right now.',2.8);return;}
   const d=LOC.city.lane[j].door;if(DECO.on)decoEnd();if(P.ride)stopRide();if(P.sit)standUp();closePanel();SFX.door();
   fade(()=>{setLoc('city');P.x=d[0]+Math.sin(d[2]+Math.PI)*1.6;P.z=d[1]+Math.cos(d[2]+Math.PI)*1.6;P.yaw=d[2]+Math.PI;P.pitch=.06;P.sit=null;bringFollowers();saveLocal();setTimeout(()=>laneKnock(peer),450);});}
 function laneKnock(peer){const a=MP.peers.get(peer);if(!MP.grp||!a){toast('🏠 Nobody is home right now.',2.6);return;}
@@ -3388,7 +3653,7 @@ function mpPetsTick(a,dt,vis){const L=a.pets;if(!L)return;
       else{q.mv=false;q.face=angLerp(q.face,Math.atan2(a.x-q.x,a.z-q.z),Math.min(1,dt*3));}}
     q.g.visible=true;q.g.position.set(q.x,hopY(q,dt),q.z);q.g.rotation.y=angLerp(q.g.rotation.y,q.face,Math.min(1,dt*8));animPet(q.m,dt,q.mv,q.spd);q.tag.visible=Math.hypot(P.x-q.x,P.z-q.z)>1.3;}}
 /* jump right next to a friend, even into the shop they are in */
-function warpTo(loc,fx,fz,nm){if(!LOC[loc])return;if(DECO.on)decoEnd();if(P.ride)stopRide();if(P.sit)standUp();closePanel();SFX.door();
+function warpTo(loc,fx,fz,nm){if(!LOC[loc]||busWarp(loc,nm))return;if(DECO.on)decoEnd();if(P.ride)stopRide();if(P.sit)standUp();closePanel();SFX.door();
   fade(()=>{setLoc(loc);let x=fx+2.4,z=fz;const fr=[...MP.peers.values()].find(a=>a.nm===nm),ry=fr?fr.ry:0;
     for(let k=0;k<8;k++){const ang=ry+k*Math.PI/4,cx=fx-Math.sin(ang)*2.4,cz=fz-Math.cos(ang)*2.4,[qx,qz]=collideXZ(cx,cz,.3,CUR);if(Math.hypot(qx-cx,qz-cz)<.2){x=qx;z=qz;break;}if(k===7)[x,z]=[qx,qz];}
     P.x=x;P.z=z;P.yaw=Math.atan2(-(fx-x),-(fz-z));P.pitch=0;P.sit=null;bringFollowers();saveLocal();SFX.yay();toast('🚀 You are with '+nm+'!',2.6);});}
@@ -3833,17 +4098,17 @@ function targets(){const out=CUR.inter.slice();
   if(S.time>=8&&S.time<20)for(const s of SHOPPERS)if(s.L===CUR)out.push(s.target);
   if(CUR.id==='city'){for(const l of LITTER)out.push(l.target);for(const w of WALKERS)if(w.state!=='home')out.push(w.target);if(sittersOut())for(const s of SITTERS)out.push(s.target);if(PSX.on)for(const j of PSX.judges)out.push(j.target);out.push(BALLT);}
   return out;}
-function findTarget(){if(TN.on)return TN.tg;if(P.ride)return P.ride.kind==='swing'?{icon:'🧍',label:'Get off the swing',act:stopRide}:null;if(P.sit)return{icon:'🧍',label:P.sit.bed?'Get up':'Stand up',act:standUp};
+function findTarget(){if(TN.on)return TN.tg;if(P.ride)return P.ride.kind==='swing'?{icon:'🧍',label:'Get off the swing',act:stopRide}:null;if(P.sit)return P.sit.bus?(BUS.ride&&BUS.ride.go?null:BUS_OFF):{icon:'🧍',label:P.sit.bed?'Get up':'Stand up',act:standUp};
   if(KC.on){if(ballNear())return BALLT;KC.on=false;kcClr();}
   const fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw);let best=null,bs=1e9;
   for(const t of targets()){if(t.when&&!t.when())continue;let tx=t.x,tz=t.z;if(t.rect){tx=clamp(P.x,t.rect.x1,t.rect.x2);tz=clamp(P.z,t.rect.z1,t.rect.z2);}const dx=tx-P.x,dz=tz-P.z,d=Math.hypot(dx,dz);if(d>t.r)continue;const c=d<.01?1:(dx*fx+dz*fz)/d;if(c<.25&&d>1)continue;let s=d*(1.7-c);if(t.pri&&t.pri())s*=.25;if(s<bs){bs=s;best=t;}}
   return best;}
 function useTarget(){if(!TARGET)return;SFX.tap();try{TARGET.act();}catch(e){console.error(e);}}
-function standUp(){if(!P.sit)return;if(P.sit.bk){const b=P.sit.bk;P.sit=null;[P.x,P.z]=collideXZ(b[0],b[1],.3,CUR);P.yaw=b[2];P.pitch=0;return;}const fx=Math.sin(P.yaw+Math.PI),fz=Math.cos(P.yaw+Math.PI);P.sit=null;[P.x,P.z]=collideXZ(P.x-fx*0,P.z,.3,CUR);
+function standUp(){if(!P.sit)return;if(P.sit.bus){busOff();return;}if(P.sit.bk){const b=P.sit.bk;P.sit=null;[P.x,P.z]=collideXZ(b[0],b[1],.3,CUR);P.yaw=b[2];P.pitch=0;return;}const fx=Math.sin(P.yaw+Math.PI),fz=Math.cos(P.yaw+Math.PI);P.sit=null;[P.x,P.z]=collideXZ(P.x-fx*0,P.z,.3,CUR);
   const nx=P.x-Math.sin(P.yaw)*.55,nz=P.z-Math.cos(P.yaw)*.55;[P.x,P.z]=collideXZ(nx,nz,.3,CUR);}
 
 /* ---- player ---- */
-function solids(){const s=[];if(CUR.type==='in'&&S.time>=8&&S.time<20)for(const p of SHOPPERS)if(p.L===CUR)s.push({cx:p.x,cz:p.z,cr:.32});for(const f of FRIEND_ACTORS)if(f.loc===CUR.id&&f.mode!=='away'&&f.mode!=='follow')s.push({cx:f.x,cz:f.z,cr:.32});if(CUR.id==='city'){for(const w of WALKERS)if(w.state!=='home')s.push({cx:w.x,cz:w.z,cr:.32});for(const c of CARS){if(c.away)continue;const fx=Math.sin(c.yaw),fz=Math.cos(c.yaw);s.push({cx:c.x+fx*.85,cz:c.z+fz*.85,cr:.95},{cx:c.x-fx*.85,cz:c.z-fz*.85,cr:.95});}}return s;}
+function solids(){const s=[];if(CUR.type==='in'&&S.time>=8&&S.time<20)for(const p of SHOPPERS)if(p.L===CUR)s.push({cx:p.x,cz:p.z,cr:.32});for(const f of FRIEND_ACTORS)if(f.loc===CUR.id&&f.mode!=='away'&&f.mode!=='follow')s.push({cx:f.x,cz:f.z,cr:.32});if(CUR.id==='city'){for(const w of WALKERS)if(w.state!=='home')s.push({cx:w.x,cz:w.z,cr:.32});for(const c of CARS){if(c.away)continue;const fx=Math.sin(c.yaw),fz=Math.cos(c.yaw);s.push({cx:c.x+fx*.85,cz:c.z+fz*.85,cr:.95},{cx:c.x-fx*.85,cz:c.z-fz*.85,cr:.95});}}busSolids(s);return s;}
 const sittersOut=()=>S.time>=9&&S.time<19.5;
 /* swing pumping: tap ⬆️ (or Space) while swinging to go higher and higher */
 const SW_MAX=1.45;let swOn=false,swFull=false;
@@ -4163,8 +4428,9 @@ const PLACES=[
   {id:'clothes',n:'Clothes Shop',i:'👗',x:-63.5,z:-12.5,w:7,d:8,c:'#ffe3ef',door:[-59.2,-12.5]},{id:'field',n:'Football Field',i:'⚽',x:-25,z:68.5,w:28,d:18,c:'#6fc45f',door:[-25,59.8],flat:1},
   {id:'lake',n:'Lake',i:'🦆',x:69,z:69,r:7.6,c:'#7fd8ff',door:[61.2,61.2],flat:1},{id:'pond',n:'Duck Pond',i:'🦆',x:36.2,z:-36.2,r:2.1,c:'#7fd8ff',door:[33.6,-38.8],flat:1},
   {id:'pizza',n:'Pizzeria',i:'🍕',x:63,z:8.6,w:6,d:7,c:'#ffd2bd',door:[59.2,8.6]}];
-/* nq: not used for quests (the beach is closed for most players, and old saves must get the same quests as before) */
+/* nq: not used for quests (old saves must get the same quests as before) */
 PLACES.push({id:'beach',n:'Beach',i:'🏖️',x:80,z:0,w:8,d:14,c:'#f6dfa9',door:[77.4,0],flat:1,nq:1});
+PLACES.push({id:'bus',n:'Bus stop',i:'🚌',x:-16.2,z:7.6,w:4,d:1.5,c:'#ffd9c2',door:[-14.3,5.2],flat:1,nq:1});
 const theN=pl=>pl.nt?pl.n:'the '+pl.n;
 const BLDS=[[-31,-15,7,7,'#bff0dc'],[-22,-31,18,8,'#ffd0b5'],[23,-31,20,8,'#c7e6ff'],[24,31,18,8,'#ffe0c4'],[13,-61.5,8,7,'#ffd6e0'],[25,-61.5,8,7,'#c9f2e3'],[37,-61.5,8,7,'#fff1b8'],[13,61.5,8,7,'#e6dbff'],[25,61.5,8,7,'#d9e8ff'],[37,61.5,8,7,'#ffe0c4'],[-66,25,10,20,'#ffd0b5']];
 const INSIDE_AT={beach:'beach',home:'home',market:'market',pets:'pets',flowers:'flowers',cafe:'cafe',clothes:'clothes',toys:'toys',bakery:'bakery',icecream:'icecream',library:'library',school:'school',fire:'fire',pizza:'pizza'};
@@ -4191,7 +4457,8 @@ function drawMap(cv){const x=cv.getContext('2d'),W=cv.width,S2=W/176,X=v=>(v+88)
   x.font=`800 ${Math.round(W/36)}px ${FONT}`;x.fillStyle='#3d2c5e';x.textAlign='left';x.fillText('⬆ North',10,W*.035);}
 /* showing the way to a place */
 let NAV=null,BEACON=null;
-function setNav(id,quiet){const pl=PLACES.find(p=>p.id===id);if(pl)setNavTo(pl,quiet);}
+function setNav(id,quiet){if(id==='beach'&&CUR&&CUR.id!=='beach'){setNavTo(PLACES.find(p=>p.id==='bus'),quiet);if(!quiet)toast('🏖️ The beach bus leaves from the 🚌 bus stop at the park. Follow the arrow!',3.6);return;}   /* 🚌 the bus is the way to the beach */
+  const pl=PLACES.find(p=>p.id===id);if(pl)setNavTo(pl,quiet);}
 function setNavTo(pl,quiet){NAV=pl;if(!quiet)closePanel();
   if(!BEACON){BEACON=new THREE.Group();const m=new THREE.Mesh(new THREE.CylinderGeometry(.35,.35,16,12,1,true),new THREE.MeshBasicMaterial({color:'#ff7aa8',transparent:true,opacity:.35,depthWrite:false,side:THREE.DoubleSide}));m.position.y=8;BEACON.add(m);LOC.city.dyn.add(BEACON);}
   if(BEACON.pin){BEACON.remove(BEACON.pin);}const pin=label(pl.i,1.4,{bg:null,bw:0,pad:6});pin.position.y=3.4;BEACON.add(pin);BEACON.pin=pin;BEACON.position.set(pl.door[0],0,pl.door[1]);BEACON.visible=true;
@@ -4199,8 +4466,8 @@ function setNavTo(pl,quiet){NAV=pl;if(!quiet)closePanel();
 function clearNav(){NAV=null;$('nav').hidden=true;if(BEACON)BEACON.visible=false;}
 function updNav(){if(!NAV)return;if(NAV.actor){const f=NAV.actor;if(f.mode==='away'){toast('😴 '+NAV.n+' went home to sleep.',3);clearNav();return;}if(f.loc===CUR.id&&CUR.id!=='city'){toast('📍 You found '+NAV.n+'! 🎉',2.8);SFX.yay();clearNav();return;}
     if(f.loc==='city'){NAV.door[0]=f.x;NAV.door[1]=f.z;if(BEACON)BEACON.position.set(f.x,0,f.z);}}
-  if(CUR.id!=='city'){if(INSIDE_AT[CUR.id]===NAV.id){qEvent('find:'+NAV.id);toast('📍 You found '+theN(NAV)+'! 🎉',2.8);SFX.yay();clearNav();return;}$('navTxt').textContent=NAV.i+' '+NAV.n+(CUR.id==='beach'?': go back to town first 🏘️':': go outside first');$('navArrow').style.transform='none';return;}
-  const dx=NAV.door[0]-P.x,dz=NAV.door[1]-P.z,d=Math.hypot(dx,dz);if(d<3.2){if(NAV.id==='beach'&&!beachOpen()){toast('🏖️ Here is the gate to the Beach! It opens when one of your skills reaches level 10 ⭐',3.4);SFX.pop();clearNav();return;}qEvent('find:'+NAV.id);toast('📍 You found '+theN(NAV)+'! 🎉'+(NAV.actor?' Talk to her!':''),2.8);SFX.yay();clearNav();return;}
+  if(CUR.id!=='city'){if(INSIDE_AT[CUR.id]===NAV.id){qEvent('find:'+NAV.id);toast('📍 You found '+theN(NAV)+'! 🎉',2.8);SFX.yay();clearNav();return;}$('navTxt').textContent=NAV.i+' '+NAV.n+(CUR.id==='beach'?': take the bus home first 🚌':': go outside first');$('navArrow').style.transform='none';return;}
+  const dx=NAV.door[0]-P.x,dz=NAV.door[1]-P.z,d=Math.hypot(dx,dz);if(d<3.2){if(NAV.id==='beach'){toast('🏖️ This gate is just for looking! 🚌 The beach bus leaves from the park.',3.4);SFX.pop();clearNav();return;}qEvent('find:'+NAV.id);toast('📍 You found '+theN(NAV)+'! 🎉'+(NAV.actor?' Talk to her!':''),2.8);SFX.yay();clearNav();return;}
   const fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw),rx=Math.cos(P.yaw),rz=-Math.sin(P.yaw),rel=Math.atan2(dx*rx+dz*rz,dx*fx+dz*fz);
   $('navArrow').style.transform=`rotate(${rel}rad)`;$('navTxt').textContent=NAV.i+' '+NAV.n+' '+Math.round(d)+' m';}
 $('navX').addEventListener('click',()=>{SFX.tap();clearNav();});
@@ -4245,7 +4512,7 @@ ACT.phapp=a=>{PH.app=a||null;PH.chat=null;PH.jobs=false;renderPhone();};
 ACT.nav=id=>setNav(id);
 ACT.mpretry=()=>{MP.tries=Math.max(MP.tries,1);clearTimeout(MP.rt);mpConnect();};ACT.mphelp=()=>{MP.help=!MP.help;renderPhone();};
 ACT.mpgo=i=>{const a=MP.list[+i];if(!a)return;if(a.loc==='home'){goKnock(a.peer);return;}if(a.loc==='visit'){if(MP.me&&a.ho===MP.me)ACT.gohome();else if(a.ho&&MP.peers.has(a.ho))goKnock(a.ho);else toast('🏠 '+a.nm+' is visiting a friend. Try again soon!',3);return;}
-  if(a.loc==='beach'&&!beachOpen()){toast('🏖️ '+a.nm+' is at the beach! It opens when one of your skills reaches level 10 ⭐',4);return;}
+  if(a.loc!=='studio'&&busWarp(a.loc==='beach'?'beach':'city',a.nm))return;   /* 🚌 the beach and back: only by bus */
   if(a.loc==='studio'){toast('👗 '+a.nm+' is changing clothes. Try again soon!',3);return;}if(a.loc==='city'){const sp=citySpot(a);warpTo('city',sp[0],sp[1],a.nm);return;}warpTo(a.loc,a.rx,a.rz,a.nm);};
 ACT.mpvisit=i=>{const a=MP.list[+i];if(a)goKnock(a.peer);};
 ACT.mpsay=i=>{mpSay(+i);if(!PH.app)closePanel();};ACT.mpemo=i=>{mpSay(undefined,+i);if(!PH.app)closePanel();};
@@ -4289,7 +4556,8 @@ ACT.fetchpets=()=>{if(!S||!S.pets.length){toast('You don\'t have any pets yet! A
   let n=0;for(const p of PET_ACTORS)p.loc=null;for(const p of PET_ACTORS){const d=p.d;d.stay=false;nearMe(p,++n,1);
     d.loc=p.loc;p.tx=p.x;p.tz=p.z;[d.x,d.z]=toSave(p.loc,p.x,p.z);p.g.visible=true;p.g.position.set(p.x,p.g.position.y,p.z);}
   SFX.yay();change();saveLocal();const nm=S.pets.length===1?S.pets[0].name:S.pets.length+' pets';toast('🐾 '+nm+' '+(S.pets.length===1?'is':'are')+' right here with you!',3);closePanel();};
-ACT.gohome=()=>{closePanel();if(DECO.on)decoEnd();fade(()=>{if(CR){if(CR.av)scene.remove(CR.av.root);CR=null;camera.clearViewOffset();}setLoc('home');const L=LOC.home;P.x=L.ox;P.z=L.oz+DOORS.home.inside[1];P.yaw=0;P.pitch=0;P.sit=null;P.ride=null;
+ACT.gohome=()=>{if(CUR.id==='beach'&&!CR){closePanel();if(DECO.on)decoEnd();fade(()=>{const L=LOC.beach,d=DOORS.beach.inside;P.sit=null;P.ride=null;P.x=L.ox+d[0];P.z=L.oz+d[1];P.yaw=d[2];P.pitch=0;bringFollowers();saveLocal();busWarp('city');setNav('home',true);});return;}   /* at the beach: back to the boardwalk (home is by bus), and the pink arrow shows the way to your house */
+  closePanel();if(DECO.on)decoEnd();fade(()=>{if(CR){if(CR.av)scene.remove(CR.av.root);CR=null;camera.clearViewOffset();}setLoc('home');const L=LOC.home;P.x=L.ox;P.z=L.oz+DOORS.home.inside[1];P.yaw=0;P.pitch=0;P.sit=null;P.ride=null;
   $('hud').hidden=false;resize();bringFollowers();saveLocal();toast('Home sweet home! 🏡',2.6);});};
 let WIPE=false;
 ACT.slook=v=>{SET.look=+v;saveSet();openSettings();};
