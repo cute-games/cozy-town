@@ -1427,7 +1427,7 @@ function buildCity(){
   building(st,{x:18,z:15,w:11,d:8,h:4.6,wall:'#c9f2e3',face:-1,shop:true,awning:'#ffd45c',sign:'🐾 Pet Shop',door:{x:18,glass:true}});col(L,12.4,10.6,23.6,19.1);
   building(st,{x:31.5,z:14,w:7,d:6,h:4.2,wall:'#e6dbff',face:-1,shop:true,awning:'#b79cff',sign:'🌷 Flower Shop',door:{x:31.5,glass:true}});col(L,27.9,10.6,35.1,17.1);
   building(st,{x:24,z:31,w:18,d:8,h:9.6,wall:'#ffe0c4',face:-1,boxes:true,door:{x:24,c:'#ff8a6b'}});col(L,14.9,26.9,33.1,35.1);
-  hydrant(st,10.5,6.6);colC(L,10.5,6.6,.2);bench(st,-27,-6.6,0);col(L,-27.9,-6.95,-26.1,-6.25);
+  hydrant(st,10.5,6.6);colC(L,10.5,6.6,.2);bench(st,-27,-7.4,0);col(L,-27.9,-7.75,-26.1,-7.05);
   // SW block: the park
   ironFence(st,-38.0,8.4,-24.2,8.4,L);ironFence(st,-19.8,8.4,-8.3,8.4,L);ironFence(st,-8.3,8.4,-8.3,19.4,L);ironFence(st,-8.3,24.6,-8.3,37.8,L);
   ironFence(st,-40.4,10.0,-40.4,38.6,L);ironFence(st,-38.6,40.6,-9.4,40.6,L);
@@ -2334,7 +2334,7 @@ function buildYard(L){const g=new THREE.Group(),gin=new THREE.Group(),st=new THR
   box(st,.8,.45,.5,'#c98f5e',-13.4,0,-23.95);for(let k=0;k<4;k++)box(st,.14,.2,.04,['#ff7aa8','#ffd45c','#5fd4b0','#ff8a6b'][k],-13.7+k*.2,.45,-23.95,{rx:-.2,ol:.01});col(FL,-13.85,-24.25,-12.95,-23.65);
   const ss=signPlane('🌱 Seeds',1.0,.34,'#ffffff','#3d2c5e');ss.position.set(-12.77,1.75,-23.3);ss.rotation.y=-Math.PI/2;gin.add(ss);
   cyl(st,.14,.16,.28,'#7cc8ff',-22.4,0,-19.3,{seg:12,ol:.015});cone(st,.04,.3,'#7cc8ff',-22.25,.25,-19.3,{rz:-1.0,seg:6,ol:.012});
-  const pq=signPlane('Bigger house!',1.4,.36,'#ff7aa8','#ffffff');pq.position.set(-20.4,.8,-7.53);gin.add(pq);YARD.plaque=pq;   /* under your name sign, until you buy the big house */
+  const pq=signPlane('Bigger house!',1.4,.36,'#ff7aa8','#ffffff');pq.position.set(-20.4,.8,-7.44);gin.add(pq);YARD.plaque=pq;   /* under your name sign, until you buy the big house */
   bake(st,true);
   const yi=(x,z,o)=>yardInt(inter(L,Object.assign({x,z},o)));
   yi(-14,-19.3,{r:1.9,icon:'🏠',label:'Go inside your house',act:()=>enter('home','back')});
@@ -2352,8 +2352,8 @@ function yardPlace(){const j=LANE.mine,C=LOC.city;if(j==null||!YARD.g||j===YARD.
   YARD.wc=YARD.cols.map(c=>{if(c.cr===undefined)return lotRect(j,c);const q=lotPt(j,c.cx,c.cz);return{cx:q[0],cz:q[1],cr:c.cr};});C.cols.push(...YARD.wc);
   YARD.j=j;YARD.on=true;for(const t of YARD.ints)yardT(t,j);
   const yw=v=>p.s<0?v:v+Math.PI,d=lotPt(j,-17,-9.6),bk=lotPt(j,-14,-19.7);DOORS.home.city=[d[0],d[1],yw(Math.PI)];DOORS.homeback.city=[bk[0],bk[1],yw(0)];
-  for(const [id,x,z,dx,dz] of[['home',-17,-15,-17,-10.4],['garden',-16.75,-21.5,-11.45,-17.6]]){const pl=PLACES.find(q=>q.id===id);[pl.x,pl.z]=lotPt(j,x,z);pl.door=lotPt(j,dx,dz);
-    if(NAV===pl&&BEACON)BEACON.position.set(pl.door[0],0,pl.door[1]);}
+  for(const [id,x,z,dx,dz] of[['home',-17,-15,-17,-6.9],['garden',-16.75,-21.5,-11.45,-6.9]]){const pl=PLACES.find(q=>q.id===id);[pl.x,pl.z]=lotPt(j,x,z);pl.door=lotPt(j,dx,dz);   /* the arrow aims at the pavement in front of your gate / garden path */
+    if(NAV&&NAV.id===id&&!NAV.actor)setNavTo(pl,true);}
   if(a!=null)yardHop(a,j);}
 /* your lot changed while playing: pets waiting in your yard (and you, if you stand in it) move along to the same spot */
 function yardHop(a,b){const mv=(x,z)=>{const q=lotBack(a,x,z);return inYardR(q[0],q[1])?lotPt(b,q[0],q[1]):null;},o=LANE_PLOTS[a];
@@ -2361,6 +2361,19 @@ function yardHop(a,b){const mv=(x,z)=>{const q=lotBack(a,x,z);return inYardR(q[0
   if(!CUR||CUR.id!=='city')return;const q=mv(P.x,P.z),near=Math.hypot(P.x-o.X,P.z-o.s*15)<30;
   if(q){[P.x,P.z]=q;if(o.s!==LANE_PLOTS[b].s)P.yaw+=Math.PI;bringFollowers(true);}
   if(q||near)toast('🏡 Your house moved to a new spot on Friends Lane!',3.4);}
+/* a friend walking away from Friends Lane (going home, or no longer following you): out of the lot by a gate or a side path,
+   then along the pavement into town, never through fences or houses (spots are your-yard numbers, turned onto the lot) */
+function laneOut(x,z){const s=z<0?-1:1,out=[];let ex=x;
+  for(const p of LANE_PLOTS){const [tx,tz]=lotBack(p.j,x,z);if(tx<-23.6||tx>-10.4||tz<-27||tz>-6.8)continue;
+    const W=(a,b)=>{const q=lotPt(p.j,a,b);out.push(q);ex=q[0];};
+    if(tz>-8.2)W(tx,-6.4);   /* in front of the fence: onto the pavement (not along the mailboxes) */
+    else if(tx>-21.6&&tx<-12.4&&tz>-11.4){W(-17,-9.2);W(-17,-7.3);}   /* the front yard: out by its gate */
+    else if(tx>-23&&tx<-10.5&&tz<-18.5&&tz>-24.6){if(tx<-14.6){const a=tz>-20.28?-19.45:tz>-22.38?-21.95:-24.1;W(tx,a);W(-14.3,a);W(-14.3,-19.45);}W(-11.45,-19.45);W(-11.45,-7.3);}
+      /* the garden: between the flower beds, to its gate, and out on the stepping stones */
+    else if(tz<-24.6||tx<-23||(tx<-21.6&&tz>-18.6)){const a=tx<-17?-23.3:-10.1;if(tz<-24.6)W(a,tz);W(a,-7.3);}   /* behind the garden, or beside it: along the side */
+    else W(-11.45,-7.3);   /* beside the house: on the stepping stones */
+    break;}
+  out.push([ex,s*5.5],[-83.5,s*5.5]);return out;}
 /* a spot in your own yard is saved as the old town-yard spot (like old saves), so it stays in YOUR yard whichever lot is yours */
 function toSave(loc,x,z){if(loc==='city'&&LANE.mine!=null){const q=lotBack(LANE.mine,x,z);if(inYardR(q[0],q[1]))return q;}return[x,z];}
 function fromSave(loc,x,z){return loc==='city'&&LANE.mine!=null&&inYardR(x,z)?lotPt(LANE.mine,x,z):[x,z];}
@@ -3113,7 +3126,7 @@ class Friend{
     this.x=WP[d.home][0];this.z=WP[d.home][1];this.node=d.home;this.prev=-1;this.wait=rand(0,3);this.face=0;this.mode='walk';this.loc='city';this.moving=false;this.r=.3;
     this.target={x:0,z:0,r:2.4,icon:'💬',label:()=>'Talk to '+d.name,act:()=>openFriend(this),obj:this.g};this.wakeT=rand(7.1,8.0);this.sleepT=rand(20.2,21.2);}
   awake(){const h=S?S.time:13;return h>=this.wakeT&&h<this.sleepT;}
-  wake(){if(this.mode==='follow'||this.mode==='talk')return;if(this.awake()){this.mode='walk';this.loc='city';this.node=this.d.home;this.x=WP[this.node][0];this.z=WP[this.node][1];this.prev=-1;this.wait=rand(0,4);}else this.mode='away';}
+  wake(){if(this.mode==='follow'||this.mode==='talk')return;this.rt=null;if(this.awake()){this.mode='walk';this.loc='city';this.node=this.d.home;this.x=WP[this.node][0];this.z=WP[this.node][1];this.prev=-1;this.wait=rand(0,4);}else this.mode='away';}
   update(dt,idx){
     const aw=this.awake();
     if(!aw&&this.mode==='walk')this.mode='going';
@@ -3121,11 +3134,12 @@ class Friend{
     if(aw&&this.mode==='away')this.wake();
     if(this.mode==='away'){this.g.visible=false;return;}
     if(this.mode==='talk'){this.moving=false;this.face=Math.atan2(P.x-this.x,P.z-this.z);}
-    else if(this.mode==='follow')followStep(this,dt,idx);
+    else if(this.mode==='follow'){this.rt=null;followStep(this,dt,idx);}
     else{
+      if(!this.rt&&this.x<-84.2&&this.loc==='city'){this.rt=laneOut(this.x,this.z);const e=this.rt[this.rt.length-1];this.node=nearestNode(e[0],e[1]);this.prev=-1;}   /* 🏡 leaving Friends Lane: by the gate and the pavement */
       if(this.wait>0){this.wait-=dt;this.moving=false;}
-      else{const n=WP[this.node],dx=n[0]-this.x,dz=n[1]-this.z,d=Math.hypot(dx,dz);
-        if(d<.15){if(this.mode==='going'){if(this.node===this.d.home){this.mode='away';this.g.visible=false;return;}this.prev=this.node;this.node=NEXT[this.node][this.d.home];}
+      else{const R=this.rt,n=R?R[0]:WP[this.node],dx=n[0]-this.x,dz=n[1]-this.z,d=Math.hypot(dx,dz);
+        if(d<.15){if(R){R.shift();if(!R.length)this.rt=null;}else if(this.mode==='going'){if(this.node===this.d.home){this.mode='away';this.g.visible=false;return;}this.prev=this.node;this.node=NEXT[this.node][this.d.home];}
           else{const nb=NEIGH[this.node].filter(k=>k!==this.prev);this.prev=this.node;this.node=nb.length?pick(nb):pick(NEIGH[this.node]);if(Math.random()<(PAUSE.has(this.prev)?.6:.2))this.wait=rand(2,7);}}
         else if(this.loc===CUR.id&&Math.hypot(P.x-this.x,P.z-this.z)<.95){this.moving=false;}
         else{const s=Math.min(d,(this.mode==='going'?1.6:1.35)*dt);this.x+=dx/d*s;this.z+=dz/d*s;this.face=Math.atan2(dx,dz);this.moving=true;}}
@@ -4451,7 +4465,7 @@ function drawMapBase(x,W,o={}){const S2=W/176,X=v=>(v+88)*S2,Z=v=>(v+88)*S2,PL=P
 function drawMap(cv){const x=cv.getContext('2d'),W=cv.width,S2=W/176,X=v=>(v+88)*S2,Z=v=>(v+88)*S2;drawMapBase(x,W);
   {const T=jobTarget(),col=dl().dot;if(T){x.beginPath();x.arc(X(T.x),Z(T.z),W*.024,0,TAU);x.fillStyle=col;x.fill();x.lineWidth=4;x.strokeStyle=col==='#ffffff'?'#1d1622':'#ffffff';x.stroke();if(S.job==='delivery'&&dl().o.r){x.beginPath();x.arc(X(T.x),Z(T.z),W*.038,0,TAU);x.lineWidth=6;x.strokeStyle='#ffc400';x.stroke();}}}
   const cl=v=>clamp(v,-85,85);   /* off the map (Friends Lane): shown at its edge */
-  if(NAV){x.strokeStyle='#ff4d8d';x.lineWidth=5;x.beginPath();x.arc(X(cl(NAV.door[0])),Z(cl(NAV.door[1])),W*.03,0,TAU);x.stroke();}
+  if(NAV){const G=NAV.goal||NAV.door;x.strokeStyle='#ff4d8d';x.lineWidth=5;x.beginPath();x.arc(X(cl(G[0])),Z(cl(G[1])),W*.03,0,TAU);x.stroke();}
   let px=P.x,pz=P.z,yaw=P.yaw;if(CUR&&CUR.id.startsWith('apt')){const H=HOUSE(APT.b);px=H.x+Math.sin(H.ry)*1.3;pz=H.z+Math.cos(H.ry)*1.3;}else if(CUR&&CUR.id!=='city'){const pl=PLACES.find(q=>q.id===INSIDE_AT[CUR.id]);if(pl){px=pl.door[0];pz=pl.door[1];}}
   x.save();x.translate(X(cl(px)),Z(cl(pz)));x.rotate(-yaw);x.fillStyle='#ff4d8d';x.strokeStyle='#ffffff';x.lineWidth=3;x.beginPath();x.moveTo(0,-W*.03);x.lineTo(W*.02,W*.02);x.lineTo(0,W*.008);x.lineTo(-W*.02,W*.02);x.closePath();x.fill();x.stroke();x.restore();
   x.font=`800 ${Math.round(W/36)}px ${FONT}`;x.fillStyle='#3d2c5e';x.textAlign='left';x.fillText('⬆ North',10,W*.035);}
@@ -4459,7 +4473,7 @@ function drawMap(cv){const x=cv.getContext('2d'),W=cv.width,S2=W/176,X=v=>(v+88)
 let NAV=null,BEACON=null;
 function setNav(id,quiet){if(id==='beach'&&CUR&&CUR.id!=='beach'){setNavTo(PLACES.find(p=>p.id==='bus'),quiet);if(!quiet)toast('🏖️ The beach bus leaves from the 🚌 bus stop at the park. Follow the arrow!',3.6);return;}   /* 🚌 the bus is the way to the beach */
   const pl=PLACES.find(p=>p.id===id);if(pl)setNavTo(pl,quiet);}
-function setNavTo(pl,quiet){NAV=pl;if(!quiet)closePanel();
+function setNavTo(pl,quiet){NAV=pl.actor?pl:Object.assign({},pl,{goal:pl.door,door:pl.door.slice()});if(!quiet)closePanel();   /* NAV.door: where the arrow points now (updNav), NAV.goal: the place */
   if(!BEACON){BEACON=new THREE.Group();const m=new THREE.Mesh(new THREE.CylinderGeometry(.35,.35,16,12,1,true),new THREE.MeshBasicMaterial({color:'#ff7aa8',transparent:true,opacity:.35,depthWrite:false,side:THREE.DoubleSide}));m.position.y=8;BEACON.add(m);LOC.city.dyn.add(BEACON);}
   if(BEACON.pin){BEACON.remove(BEACON.pin);}const pin=label(pl.i,1.4,{bg:null,bw:0,pad:6});pin.position.y=3.4;BEACON.add(pin);BEACON.pin=pin;BEACON.position.set(pl.door[0],0,pl.door[1]);BEACON.visible=true;
   $('nav').hidden=false;if(!quiet){SFX.pop();toast('📍 Follow the arrow to '+theN(pl)+'!',2.8);}updNav();}
@@ -4467,7 +4481,10 @@ function clearNav(){NAV=null;$('nav').hidden=true;if(BEACON)BEACON.visible=false
 function updNav(){if(!NAV)return;if(NAV.actor){const f=NAV.actor;if(f.mode==='away'){toast('😴 '+NAV.n+' went home to sleep.',3);clearNav();return;}if(f.loc===CUR.id&&CUR.id!=='city'){toast('📍 You found '+NAV.n+'! 🎉',2.8);SFX.yay();clearNav();return;}
     if(f.loc==='city'){NAV.door[0]=f.x;NAV.door[1]=f.z;if(BEACON)BEACON.position.set(f.x,0,f.z);}}
   if(CUR.id!=='city'){if(INSIDE_AT[CUR.id]===NAV.id){qEvent('find:'+NAV.id);toast('📍 You found '+theN(NAV)+'! 🎉',2.8);SFX.yay();clearNav();return;}$('navTxt').textContent=NAV.i+' '+NAV.n+(CUR.id==='beach'?': take the bus home first 🚌':': go outside first');$('navArrow').style.transform='none';return;}
-  const dx=NAV.door[0]-P.x,dz=NAV.door[1]-P.z,d=Math.hypot(dx,dz);if(d<3.2){if(NAV.id==='beach'){toast('🏖️ This gate is just for looking! 🚌 The beach bus leaves from the park.',3.4);SFX.pop();clearNav();return;}qEvent('find:'+NAV.id);toast('📍 You found '+theN(NAV)+'! 🎉'+(NAV.actor?' Talk to her!':''),2.8);SFX.yay();clearNav();return;}
+  const G=NAV.goal;if(G){const a=P.x>-84,b=G[0]>-84;let w=a===b?G:[a?Math.max(P.x-12,-88):Math.min(P.x+12,-80),0];   /* 🏡 between town and Friends Lane: along the middle of the big road */
+    if(!a&&Math.abs(P.z)>6.8){const r=laneOut(P.x,P.z);if(r.length>2)w=r.find(q=>Math.hypot(q[0]-P.x,q[1]-P.z)>1)||w;}   /* in a yard or garden on Friends Lane: out by the gate first */
+    NAV.door[0]=w[0];NAV.door[1]=w[1];}
+  const dx=NAV.door[0]-P.x,dz=NAV.door[1]-P.z,d=G?Math.hypot(G[0]-P.x,G[1]-P.z):Math.hypot(dx,dz);if(d<3.2){if(NAV.id==='beach'){toast('🏖️ This gate is just for looking! 🚌 The beach bus leaves from the park.',3.4);SFX.pop();clearNav();return;}qEvent('find:'+NAV.id);toast('📍 You found '+theN(NAV)+'! 🎉'+(NAV.actor?' Talk to her!':''),2.8);SFX.yay();clearNav();return;}
   const fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw),rx=Math.cos(P.yaw),rz=-Math.sin(P.yaw),rel=Math.atan2(dx*rx+dz*rz,dx*fx+dz*fz);
   $('navArrow').style.transform=`rotate(${rel}rad)`;$('navTxt').textContent=NAV.i+' '+NAV.n+' '+Math.round(d)+' m';}
 $('navX').addEventListener('click',()=>{SFX.tap();clearNav();});
@@ -5684,6 +5701,7 @@ const INTRO_LINES=["Hi! You must be new here! I'm Rosie. I live in this town.","
 function introStep(){const f=ROSIE(),i=INTRO,line=INTRO_LINES[i];f.p.wave=.8;SFX.talk();
   if(i===1){openPanel(`<div class="who" style="--c:#ff9ec4">Rosie</div><p class="line">${esc(line)}</p><div class="row"><button class="btn mint" data-a="imake">✨ Make my character</button></div>`,{bottom:true,lock:true});return;}
   if(i===3){JOBCTX='intro';S.jobAsk=true;openPanel(`${rosieHd()}<p class="line">${esc(line)}</p>${jobCards()}<div class="row"><button class="btn white" data-a="jobskip">I'll pick later</button></div>`,{bottom:true,lock:true});return;}
+  if(i===4)setNav('home',true);   /* the pink arrow shows up as Rosie talks about it */
   openPanel(`<div class="who" style="--c:#ff9ec4">Rosie</div><p class="line">${esc(fill(line))}</p><div class="row"><button class="btn mint" data-a="inext">${i===INTRO_LINES.length-1?'Bye, Rosie!':'Next'}</button></div>`,{bottom:true,lock:true});}
 ACT.inext=()=>{INTRO++;if(INTRO>=INTRO_LINES.length){closePanel();const f=ROSIE();f.mode='walk';f.node=1;f.prev=-1;S.intro=true;frSt('rosie').met=1;addPts(f,3);setNav('home',true);change();toast(TOUCHY?'Drag on the left to walk, and on the right to look around! Tap ⬆️ to jump and 🏃 to run.':'WASD to walk, drag the mouse to look, Space to jump, Shift to run, E to use things.',6);return;}introStep();};
 ACT.imake=()=>openCreator('intro');
