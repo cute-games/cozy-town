@@ -2594,7 +2594,7 @@ function daysToShow(){return(5-wdIdx()+7)%7||7;}
 function dayLabel(){return(psLeft()?'🏆 ':'')+wdName().slice(0,3)+' · Day '+S.day;}
 /* ☀️ Daytime: the shops, the library, the designer's clients and the school's classes run 8:00–20:00 (the Pizzeria keeps its own hours).
    Your home, Friends Lane, the flats, the park, the school building and the fire station are always open. */
-const DAY_ON=8,DAY_OFF=20,PS_ON=9,PS_OFF=18;
+const DAY_ON=8,DAY_OFF=20,PS_ON=8,PS_OFF=20;
 const SHUT={market:['Market','Mr. Bun'],pets:['Pet Shop','Ms. Paws'],flowers:['Flower Shop','Ms. Petal'],cafe:['Café','Mr. Mocha'],clothes:['Clothes Shop','Ms. Stitch'],
   toys:['Toy Store','Mr. Toby'],bakery:['Bakery','Mrs. Crumb'],icecream:['Ice Cream Shop','Mr. Sprinkles'],library:['Library','Ms. Page']};
 function isDaytime(){return!!S&&S.time>=DAY_ON&&S.time<DAY_OFF;}
@@ -2609,7 +2609,7 @@ let DAYW=null,DAYQ=null;
 function dayTick(){const d=isDaytime();if(DAYW===null){DAYW=d;shutDoors();return;}if(d!==DAYW){DAYW=d;DAYQ=!d&&CUR&&SHUT[CUR.id]?CUR.id:null;}
   if(DAYQ&&(fading||MP.ckTo||$('toast').classList.contains('show')))return;const q=DAYQ;DAYQ=null;   /* closing time waits for a fade, a clock jump or a message on screen */
   if(q&&!d&&CUR&&CUR.id===q){const s=SHUT[CUR.id],K=KEEPERS.find(k=>k.name===s[1]);if(K)K.p.wave=1.2;SFX.talk();toast(`🌙 ${s[1]}: “It's closing time! Buying stops now. See you at ${DAY_ON}:00 ☀️”`,4.2);}}
-/* 🏆 the Pet Show is on Saturdays from 9:00 to 18:00 (a show that already started always finishes) */
+/* 🏆 the Pet Show is on Saturdays from 8:00 to 20:00, like the shops (a show that already started always finishes) */
 function psOpen(){return isShowDay()&&!!S&&S.time>=PS_ON&&S.time<PS_OFF;}
 function psLeft(){return isShowDay()&&!showDone()&&!!S&&S.time<PS_OFF;}
 function newDay(){spawnLitter();for(const f of FRIEND_ACTORS)f.wake();for(const w of WALKERS)if(w.state==='home')w.init();qNewDay();for(const r of PLOTS)plotRefresh(r);psDay();}
@@ -3177,10 +3177,15 @@ function mpUpsert(p){const pr=p.presence||{};if(!pr.nm)return;let a=MP.peers.get
   a.zz=pr.zz===1?1:0;a.aw=pr.aw===1?1:0;zzRung(a,pr.rg);clockFrom(a,pr.ck);}
 /* 🕰️ one clock for everyone: my clock rides along in presence as ck:[day,hour], refreshed only after 5 game minutes
    (or a new day), so standing still sends little. A friend ahead by 2+ game minutes pulls my clock forward, never back.
-   A brand-new player first finishes Rosie's welcome in the morning, then joins the friends' time */
+   A brand-new player first finishes Rosie's welcome in the morning, then joins the friends' time.
+   A friend whose day is more than 30 days ahead of mine doesn't pull me (one save with a huge day number can't drag the whole
+   town along): we both play on, each with our own clock (exactly 30 days ahead still counts) */
+const CK_FAR=30;
+function ckFar(a){return!!S&&Number.isInteger(a.ckd)&&Math.abs(a.ckd-S.day)>CK_FAR;}   /* a friend on their own clock (more than 30 days apart, either way) */
 function mpClock(){const c=MP.ck;if(!c||c[0]!==S.day||Math.abs(S.time-c[1])>=1/12)MP.ck=[S.day,Math.floor(S.time*100)/100];return MP.ck;}
 function clockFrom(a,ck){if(!Array.isArray(ck)||!S.intro)return;const k=ck.join(',');if(k===a.clk)return;a.clk=k;   /* old versions send no ck */
   const d=ck[0],h=ck[1];if(!Number.isInteger(d)||d<1||d>=1e5||!Number.isFinite(h)||h<0||h>=24)return;
+  a.ckd=d;if(d-S.day>CK_FAR)return;   /* more than 30 days ahead of my day: not my clock */
   const ahead=(d-S.day)*24+h-S.time;if(ahead<1/30)return;
   if(ahead<1){const nd=d!==S.day;S.day=d;S.time=h;if(nd){newDay();change();}return;}   /* a small catch-up is quiet, like a normal midnight */
   const T=MP.ckTo;if(!T||(d-T[0])*24+h-T[1]>0)MP.ckTo=[d,h];if(!T)setTimeout(clockJump,400);}
@@ -3574,7 +3579,8 @@ function padTap(){const n=padTaps;padTaps=0;const pg=PAD.pages[PAD.i];
    and can ring the others' phones (one ring a minute per friend). Presence: zz:1 while in bed, rg:{id,to:[peers]} = a ring */
 const ZZ={t:0,go:0,rx:0,bt:0,sent:new Map(),seen:new Set(),rg:null,rgT:0};
 const zzIn=()=>!!(P.sit&&P.sit.bed);
-function isActivePeer(a){return !!a&&!a.aw;}   /* every online player counts, old versions too, but not one who is away ("Still there?" card up) */
+function isActivePeer(a){return !!a&&!a.aw&&!ckFar(a);}   /* every online player counts, old versions too, but not one who is away ("Still there?" card up)
+   or one on their own clock (more than 30 days apart: their night isn't my night) */
 function sleep(rec,fx,fz){
   if(S.time>=7&&S.time<21){toast('Not sleepy yet, beds work from 21:00 🌙',3);return;}
   const g=rec.g.position,f=FURN[rec.it.t].d/2+.35;P.sit={x:g.x-fx*.55,z:g.z-fz*.55,yaw:rec.it.r*Math.PI/2+Math.PI,h:.92,bed:1,bk:[P.x,P.z,P.yaw]};   /* head on the pillow */
