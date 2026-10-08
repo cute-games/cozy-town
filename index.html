@@ -1812,7 +1812,7 @@ function buildCourt(L,st){const X=TCX,Z=TCZ,FX=12.5,FZ=6.5,GX1=X-11.3,GX2=X-8.7;
    const sh=new THREE.Mesh(new THREE.CircleGeometry(.13,14),new THREE.MeshBasicMaterial({color:'#2e2347',transparent:true,opacity:.28,depthWrite:false}));sh.rotation.x=-Math.PI/2;sh.visible=false;sh.userData.keep=1;L.g.add(sh);TN.sh=sh;}
   TN.tg={icon:'🎾',label:()=>tnReach()?'Hit it now!':'Swing the racket',act:tnSwing};}
 function coachTalk(){if(TN.on)return;const C=TN.C;C.p.wave=1.2;SFX.talk();const b=(S.tennis&&S.tennis.best)||0;
-  openPanel(`<div class="who" style="--c:#ffd45c">🎾 Coach Sunny</div><p class="line">${b?pick(['Hello again, champ! ☀️ Ready for another rally?','What a sunny day for tennis! Shall we play? 🎾','Yay, you\'re back! Let\'s hit some balls! 🎾']):'Hi! I\'m Coach Sunny! ☀️ Do you want to play tennis with me? I hit the ball to you, and you hit it back!'}</p>
+  openPanel(`<div class="who" style="--c:#ffd45c">🎾 Coach Sunny</div><p class="line">${b?(nightF(S.time)>.5?pick(['A night match under the lamps? 🌙 Let\'s rally!','The stars are out! ✨ One more rally before bed?']):pick(['Hello again, champ! ☀️ Ready for another rally?','What a sunny day for tennis! Shall we play? 🎾','Yay, you\'re back! Let\'s hit some balls! 🎾'])):'Hi! I\'m Coach Sunny! ☀️ Do you want to play tennis with me? I hit the ball to you, and you hit it back!'}</p>
     <p class="note" style="text-align:center">${b?'🏆 Your best rally: <b>'+b+'</b>':TOUCHY?'When the ball comes close, tap 🎾!':'When the ball comes close, press E or click!'}</p>
     <div class="row"><button class="btn mint" data-a="tnGo">🎾 Let's rally!</button><button class="btn white" data-a="close">Maybe later</button></div>`,{bottom:true});}
 function tnHud(){let h=$('tnHud');if(h)return h;
@@ -1883,7 +1883,7 @@ function updTennis(dt){const C=TN.C;if(!C)return;const L=LOC.beach;
   else if(TN.st==='wait'&&TN.t<.55){show=true;bx=C.x-.3;bz=C.z+.35;const u=TN.t/.55;by=TBR+.9*Math.abs(Math.cos(u*Math.PI));if(u<.5&&!TN.fb){TN.fb=1;SFX.bounce();}}
   TN.ball.visible=TN.sh.visible=show;if(show){TN.ball.position.set(bx-L.ox,by,bz-L.oz);for(const m of TN.ball.children)m.rotation.x+=dt*9;if(TN.sq>0)TN.sq-=dt;const q=Math.max(0,TN.sq)/.12;TN.ball.scale.set(1+.3*q,1-.35*q,1+.3*q);
     TN.sh.position.set(bx-L.ox,.05,bz-L.oz);const hs=1+by*.18;TN.sh.scale.set(hs,hs,hs);TN.sh.material.opacity=Math.max(.1,.3-by*.06);}
-  if(UI.open||fading||CUT||TUT||DTUT)return;
+  if(UI.open||fading||CUT||TUT||DTUT||AW.on||NET.lost)return;
   const pu=tnU(P.x),pv=tnV(P.z);if(pu<-12.5||pu>.3||Math.abs(pv)>THW+1.3){tnStop('off');return;}
   /* a gentle helper: if you stand still, you slide over to the ball and look at it */
   const K=IN.keys,inp=(IN.joy.id!==null&&Math.hypot(IN.joy.x,IN.joy.y)>.15)||K.KeyW||K.KeyA||K.KeyS||K.KeyD||K.ArrowUp||K.ArrowDown;
@@ -2556,9 +2556,10 @@ function shutNote(id){return shopOpen(id)?'':`<p class="note">🌙 <b>Closed now
 function shutBuy(id){if(shopOpen(id))return false;const s=SHUT[id],K=KEEPERS.find(k=>k.name===s[1]);if(K)K.p.wave=1.2;SFX.no();toast(`🌙 ${s[1]}: “Sorry, we're closed! Come back at ${DAY_ON}:00 ☀️”`,3.4);return true;}
 function shutDoors(){for(const id in SHUT){const t=LOC.city.inter.find(t=>t.label==='Go into the '+SHUT[id][0]);if(!t||t.shut)continue;const a=t.act,ic=t.icon;t.shut=1;
   t.icon=()=>shopOpen(id)?ic:'🌙';t.say=()=>shopOpen(id)?'':`🌙 Closed · opens at ${DAY_ON}:00`;t.act=()=>{if(shopOpen(id)){a();return;}SFX.no();toast(`🌙 The ${SHUT[id][0]} is closed now. It opens at ${DAY_ON}:00 ☀️`,3.6);};}}
-let DAYW=null;
-function dayTick(){const d=isDaytime();if(DAYW===null){DAYW=d;shutDoors();return;}if(d===DAYW)return;DAYW=d;
-  if(!d&&CUR&&SHUT[CUR.id]){const s=SHUT[CUR.id],K=KEEPERS.find(k=>k.name===s[1]);if(K)K.p.wave=1.2;SFX.talk();toast(`🌙 ${s[1]}: “It's closing time! Buying stops now. See you at ${DAY_ON}:00 ☀️”`,4.2);}}
+let DAYW=null,DAYQ=null;
+function dayTick(){const d=isDaytime();if(DAYW===null){DAYW=d;shutDoors();return;}if(d!==DAYW){DAYW=d;DAYQ=!d&&CUR&&SHUT[CUR.id]?CUR.id:null;}
+  if(DAYQ&&(fading||MP.ckTo||$('toast').classList.contains('show')))return;const q=DAYQ;DAYQ=null;   /* closing time waits for a fade, a clock jump or a message on screen */
+  if(q&&!d&&CUR&&CUR.id===q){const s=SHUT[CUR.id],K=KEEPERS.find(k=>k.name===s[1]);if(K)K.p.wave=1.2;SFX.talk();toast(`🌙 ${s[1]}: “It's closing time! Buying stops now. See you at ${DAY_ON}:00 ☀️”`,4.2);}}
 /* 🏆 the Pet Show is on Saturdays from 9:00 to 18:00 (a show that already started always finishes) */
 function psOpen(){return isShowDay()&&!!S&&S.time>=PS_ON&&S.time<PS_OFF;}
 function psLeft(){return isShowDay()&&!showDone()&&!!S&&S.time<PS_OFF;}
@@ -3577,7 +3578,7 @@ function awBox(){let el=$('awayBox');const k=NET.lost?'net':AW.on?'aw':'';
 function mpLeave(){clearTimeout(MP.rt);if(MP.grp){ballOwnerGone();if(MP.unsub){try{MP.unsub();}catch(e){}MP.unsub=null;}MP.grp=null;for(const a of MP.peers.values())mpDropAv(a);MP.peers.clear();$('bChat').hidden=true;}
   if(MP.state!=='connecting')MP.state='idle';}
 function awayExit(msg){if(!PLAYING)return;saveLocal();if(CSAVE.ref){CSAVE.dirty=true;clearTimeout(CSAVE.tm);cloudFlush();}
-  if(HOST.cur)hostAnswer(false,true);mpLeave();PLAYING=false;AW.on=0;AW.t=0;NET.lost=0;NET.on=0;awBox();
+  if(HOST.cur)hostAnswer(false,true);mpLeave();PLAYING=false;if(TN.on)tnStop('gone');if(HELD)HELD.visible=false;AW.on=0;AW.t=0;NET.lost=0;NET.on=0;awBox();
   document.body.classList.add('away');AW.hud=$('hud').hidden;$('hud').hidden=true;   /* game cards wait hidden underneath until Play (the HUD stays hidden in the clothes creator) */
   const T=$('title'),b=$('tPlay');let m=$('tMsg');if(!m){m=document.createElement('p');m.id='tMsg';m.setAttribute('role','status');T.insertBefore(m,T.querySelector('.menu'));}
   m.textContent=msg;T.hidden=false;b.disabled=false;b.textContent='Play';try{b.focus({preventScroll:true});}catch(e){}}
@@ -5181,7 +5182,7 @@ function jobTick(dt){
   if(S.job==='teacher'){tcTick(dt);return;}
   if(S.job!=='delivery'){if(!$('job').hidden)$('job').hidden=true;if(HELD&&!CUT)HELD.visible=false;return;}
   const d=dl(),o=d.o;
-  if(o&&o.st==='carry'&&!CUT&&!TUT&&!(UI.open&&CUR.id==='pizza')){const was=o.left;o.left-=dt;
+  if(o&&o.st==='carry'&&!CUT&&!TUT&&!AW.on&&!NET.lost&&!(UI.open&&CUR.id==='pizza')){const was=o.left;o.left-=dt;
     if(o.lim<1800&&was>30&&o.left<=30){toast('⏰ 30 seconds left! Hurry!',2.6);SFX.late();}
     if(was>0&&o.left<=0){toast("⏰ Oh no, you're late! Bring it anyway, quick!",3.4);SFX.late();}}
   /* waiting inside the Pizzeria when pizza time starts: the shift starts by itself */
@@ -5391,7 +5392,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     awTick(dt);netTick(dt);
   }else{titleT+=dt*.05;
     if(CUR&&CUR.id==='city'){for(const w of WALKERS)w.update(dt);updateCars(dt);}
-    if(!S||!CUR||CUR.type==='out'){const cx=FTN?FTN.fx:0,cz=FTN?FTN.fz:0;camera.position.set(cx+Math.cos(titleT)*30,14,cz+Math.sin(titleT)*30);camera.lookAt(cx,1,cz);}}
+    if(!S||!CUR||CUR.id==='city'){const cx=FTN?FTN.fx:0,cz=FTN?FTN.fz:0;camera.position.set(cx+Math.cos(titleT)*30,14,cz+Math.sin(titleT)*30);camera.lookAt(cx,1,cz);}}
   if(CUR&&CUR.type==='out'){const L=LOC.city,tt=now/1000;
     updFountain(dt);updDucks(dt,tt);
     updBall(dt);
