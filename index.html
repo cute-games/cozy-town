@@ -447,7 +447,7 @@ button{font-family:inherit}
 #knockCard .kc-t{font-size:22px;font-weight:900}
 #knockCard .kc-m{margin:6px 0 12px;font-size:16px;font-weight:700;line-height:1.35}
 #knockCard .kc-b{display:flex;gap:10px;justify-content:center}
-@keyframes kcPop{0%{transform:translateX(-50%) scale(.6);opacity:0}70%{transform:translateX(-50%) scale(1.06);opacity:1}100%{transform:translateX(-50%) scale(1)}}/* 😴 sleeping together: the bed card at the bottom, and the phone wiggles when friends ring */#zzCard{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translateX(-50%);width:min(380px,calc(100vw - 32px));background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:22px;box-shadow:0 5px 0 var(--soft);padding:8px 12px 14px;text-align:center;pointer-events:auto}#zzCard[hidden]{display:none}#zzCard .zt{font-size:22px;font-weight:900}#zzCard .zs{font-size:15px;font-weight:700;line-height:1.25;margin:2px 0 10px}#zzCard .zb{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}#zzCard .btn{font-size:18px;padding:10px 12px}body.zz #joy,body.zz #moveBtns,body.zz #actWrap{visibility:hidden}#bPhone.ring{animation:noteWiggle .4s ease-in-out 6}
+@keyframes kcPop{0%{transform:translateX(-50%) scale(.6);opacity:0}70%{transform:translateX(-50%) scale(1.06);opacity:1}100%{transform:translateX(-50%) scale(1)}}/* 😴 sleeping together: the bed card at the bottom, and the phone wiggles when friends ring */#zzCard{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translateX(-50%);width:min(380px,calc(100vw - 32px));background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:22px;box-shadow:0 5px 0 var(--soft);padding:8px 12px 14px;text-align:center;pointer-events:auto}#zzCard[hidden]{display:none}#zzCard .zt{font-size:22px;font-weight:900}#zzCard .zs{font-size:15px;font-weight:700;line-height:1.25;margin:2px 0 10px}#zzCard .zb{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}#zzCard .btn{font-size:18px;padding:10px 12px}body.zz #joy,body.zz #moveBtns,body.zz #actWrap{visibility:hidden}#bPhone.ring{animation:noteWiggle .4s ease-in-out 6}/* 👀 away or offline: the "Still there?" / "Reconnecting…" card over the game, and the message on the title */#awayBox{position:fixed;inset:0;z-index:9700;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(46,35,71,.45)}#awayBox[hidden]{display:none}#awayBox .awc{width:min(380px,100%);background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:24px;box-shadow:0 5px 0 var(--soft);padding:16px 16px 18px;text-align:center;animation:awPop .35s ease-out both}#awayBox .awt{font-size:28px;font-weight:900;line-height:1.2}#awayBox .aws{font-size:17px;font-weight:700;line-height:1.3;margin:6px 0 14px}#awayBox .awc[role=alert] .aws{margin-bottom:2px}@keyframes awPop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.06);opacity:1}100%{transform:scale(1)}}@media (prefers-reduced-motion:reduce){#awayBox .awc{animation:none}}#tMsg{margin:0;max-width:min(620px,100%);background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:20px;box-shadow:0 4px 0 var(--soft);padding:10px 18px;font-weight:800;font-size:clamp(18px,2.8vw,24px);line-height:1.3}body.away #title .tag,body.away #tSet{display:none}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #awayBox{background:rgba(8,5,20,.72)}:root:not([data-theme="light"]) #awayBox .awc{border-color:var(--brown)}}:root[data-theme="dark"] #awayBox{background:rgba(8,5,20,.72)}:root[data-theme="dark"] #awayBox .awc{border-color:var(--brown)}body.away #panel,body.away #tut,body.away #toast,body.away #knockCard,body.away #tchBar,body.away .pop{visibility:hidden}
 /* 7 Oct 2026: homework paper readable in light and dark; bigger right/wrong buttons; class messages at the top; buttons at least 44 px */.tpaper .paper{color:#3d2c5e}.tpaper .tqq{color:#3d2c5e;font-size:17px;font-weight:700}.tpaper .tb{min-width:58px;min-height:52px;font-size:22px}.tpaper .tb+.tb{margin-left:10px}@media (max-height:500px){.tpaper .tb{min-height:44px;min-width:52px;font-size:19px}.tpaper .tqq{font-size:16px}}@media (min-width:700px) and (min-height:600px){#card.tpaper{width:min(640px,92vw);max-width:min(640px,92vw)}}body.tch #toast{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto}.pill{min-height:44px}.sw{min-width:44px;min-height:44px}.ph-home{height:44px;background:none;position:relative}.ph-home::after{content:'';position:absolute;left:0;right:0;top:17px;height:10px;border-radius:99px;background:rgba(255,255,255,.6)}@media (max-height:500px){#card{max-height:calc(100vh - 16px);max-height:calc(100dvh - 16px);overflow-y:auto;overscroll-behavior:contain}#card:has(.earn) .row:last-child{position:sticky;bottom:0;background:var(--paper);padding:6px 0 2px;margin-bottom:0}}.ph-back{width:44px;height:44px}.qbtn{min-height:44px}.x{width:44px;height:44px;min-height:44px;border-width:3px}.qtag{color:#3d2c5e}</style>
 </head>
 <body>
@@ -2631,10 +2631,11 @@ async function mpConnect(){if(MP.grp||MP.state==='connecting')return;MP.state='c
   try{const use=window.claude&&typeof window.claude.use==='function'?window.claude.use.bind(window.claude):null;r=await(MP.tries===0&&EARLY.room?EARLY.room:use?use('room'):(window.WEBROOM?window.WEBROOM():null));}catch(e){r=null;}
   MP.tries++;if(!r){MP.state='off';mpUI();mpRetryLater();return;}
   MP.room=r;let g=null;try{g=await r.join(WORLD);}catch(e){if(e&&e.code==='not_permitted')g=r;else{MP.state='off';mpUI();mpRetryLater();return;}}
-  MP.grp=g;MP.jt=MP.jt||Date.now();MP.ready=false;MP.lastKey='';MP.state='on';
+  if(!PLAYING){MP.state='idle';try{g.onPeers(()=>{},()=>{})();}catch(e){}mpUI();return;}   /* went to the title meanwhile */
+  MP.grp=g;MP.jt=MP.jt||Date.now();MP.ready=false;MP.lastKey='';MP.state='on';MP.tries=1;   /* connected: the next drop retries soon again */
   MP.unsub=g.onPeers(ch=>mpPeers(ch),()=>mpLost());setTimeout(()=>{MP.ready=true;},2500);$('bChat').hidden=false;
   toast('🟢 You are online! Friends who play will show up here.',3);mpUI();change();}
-function mpRetryLater(){clearTimeout(MP.rt);MP.rt=setTimeout(()=>{if(!MP.grp)mpConnect();},[4,10,20,40,60][Math.min(MP.tries-1,4)]*1000);}
+function mpRetryLater(){clearTimeout(MP.rt);MP.rt=setTimeout(()=>{if(!MP.grp&&PLAYING)mpConnect();},[4,10,20,40,60][Math.min(MP.tries-1,4)]*1000);}
 function mpLost(){ballOwnerGone();if(MP.unsub){try{MP.unsub();}catch(e){}MP.unsub=null;}MP.grp=null;for(const a of MP.peers.values())mpDropAv(a);MP.peers.clear();$('bChat').hidden=true;MP.state='off';mpUI();mpRetryLater();}
 function mpPeers(ch){for(const p of ch.left){const a=MP.peers.get(p.peer);if(HOST.cur&&HOST.cur.peer===p.peer)hostAnswer(false,true);if(a){if(BS.own===p.peer)ballOwnerGone();mpDropAv(a);MP.peers.delete(p.peer);if(MP.ready)toast('👋 '+a.nm+' left.',2.6);}}
   for(const p of ch.peers){if(p.isMe){if(p.sameTab)MP.me=p.peer;continue;}mpUpsert(p);}mpUI();}
@@ -2645,7 +2646,7 @@ function mpUpsert(p){const pr=p.presence||{};if(!pr.nm)return;let a=MP.peers.get
   const s=pr.say;if(s&&typeof s==='object'&&s.id!==a.sayId){a.sayId=s.id;const txt=Number.isInteger(s.m)&&QUICK[s.m]?QUICK[s.m]:Number.isInteger(s.e)&&EMOS[s.e]?EMOS[s.e]:null;if(txt&&!fresh)mpBubble(a,txt);}
   const bk=JSON.stringify(pr.bl||null);if(bk!==a.bk){a.bk=bk;if(pr.bl)ballFrom(a,pr.bl);else if(!BS.mine&&BS.own===a.peer)ballOwnerGone();}
   const ck=JSON.stringify(pr.sc||null);if(ck!==a.ck){a.ck=ck;if(pr.sc)scoreFrom(a,pr.sc);}
-  a.zz=pr.zz===1?1:0;zzRung(a,pr.rg);clockFrom(a,pr.ck);}
+  a.zz=pr.zz===1?1:0;a.aw=pr.aw===1?1:0;zzRung(a,pr.rg);clockFrom(a,pr.ck);}
 /* 🕰️ one clock for everyone: my clock rides along in presence as ck:[day,hour], refreshed only after 5 game minutes
    (or a new day), so standing still sends little. A friend ahead by 2+ game minutes pulls my clock forward, never back.
    A brand-new player first finishes Rosie's welcome in the morning, then joins the friends' time */
@@ -2778,7 +2779,7 @@ function hostAnswer(ok,quiet){const q=HOST.cur;if(!q)return;HOST.cur=null;const 
 function mpTick(dt){if(!MP.grp)return;const loc=CUR?CUR.id:'city';
   MP.t+=dt;if(MP.t>=.15){MP.t=0;const st={nm:S.name||'Friend',lk:packLook(),loc,x:Math.round(P.x*100)/100,z:Math.round(P.z*100)/100,ry:Math.round(P.yaw*100)/100,mv:P.moving?1:0,ck:mpClock()};
     {const b=LOC.city.ball,m=S.match||{l:0,r:0,v:0},r2=v=>Math.round(v*100)/100;st.sc=[m.l|0,m.r|0,m.v|0];st.bl=BS.mine&&b?[r2(b.x),r2(b.z),r2(b.vx),r2(b.vz),BS.k,Math.round((b.reset||0)*10)/10]:null;}
-    st.zz=zzIn()?1:null;st.rg=ZZ.rg&&Date.now()-ZZ.rgT<12000?ZZ.rg:null;   /* 😴 in bed / 🔔 a ring (optional; null clears them: presence merges) */
+    st.zz=zzIn()?1:null;st.aw=AW.on?1:null;st.rg=ZZ.rg&&Date.now()-ZZ.rgT<12000?ZZ.rg:null;   /* 😴 in bed / 🔔 a ring (optional; null clears them: presence merges) */
     laneStamp(st);const key=JSON.stringify(st);if(key!==MP.lastKey){MP.lastKey=key;MP.grp.presence(st).catch(()=>{});}}
   for(const a of MP.peers.values()){if(!a.av)continue;const sp=peerSpot(a),vis=!!sp;a.av.root.visible=vis;if(sp){a.tx=sp[0];a.tz=sp[1];a.ry=sp[2];}
     const d=Math.hypot(a.tx-a.x,a.tz-a.z);if(d>8){a.x=a.tx;a.z=a.tz;}else{const k=Math.min(1,dt*8);a.x+=(a.tx-a.x)*k;a.z+=(a.tz-a.z)*k;}
@@ -3034,7 +3035,7 @@ function padTap(){const n=padTaps;padTaps=0;const pg=PAD.pages[PAD.i];
    and can ring the others' phones (one ring a minute per friend). Presence: zz:1 while in bed, rg:{id,to:[peers]} = a ring */
 const ZZ={t:0,go:0,rx:0,bt:0,sent:new Map(),seen:new Set(),rg:null,rgT:0};
 const zzIn=()=>!!(P.sit&&P.sit.bed);
-function isActivePeer(a){return !!a;}   /* every online player counts, old versions too (job 6: not when marked away) */
+function isActivePeer(a){return !!a&&!a.aw;}   /* every online player counts, old versions too, but not one who is away ("Still there?" card up) */
 function sleep(rec,fx,fz){
   if(S.time>=7&&S.time<21){toast('Not sleepy yet, beds work from 21:00 🌙',3);return;}
   const g=rec.g.position,f=FURN[rec.it.t].d/2+.35;P.sit={x:g.x-fx*.55,z:g.z-fz*.55,yaw:rec.it.r*Math.PI/2+Math.PI,h:.92,bed:1,bk:[P.x,P.z,P.yaw]};   /* head on the pillow */
@@ -3065,6 +3066,41 @@ function zzRung(a,rg){if(!rg||typeof rg!=='object'||typeof rg.id!=='string'||rg.
   SFX.ring();try{if(navigator.vibrate)navigator.vibrate([200,120,200]);}catch(e){}
   const b=$('bPhone');b.classList.remove('ring');void b.offsetWidth;b.classList.add('ring');clearTimeout(ZZ.bt);ZZ.bt=setTimeout(()=>b.classList.remove('ring'),2800);
   toast('Friends want to skip the night, waiting on you!',4);}
+
+/* ---- away or offline ---- */
+/* 👀 no tap, click or key for 3 minutes -> "Still there?" (presence aw:1, so I don't count for "everyone in bed");
+   30 s more -> save and go to the title. Idle time adds up the loop's own frame time, so a hidden tab never counts.
+   📡 the internet drops after being online -> "Reconnecting…"; back within 20 s = carry on, else save and go to the title.
+   The title is a pause: you leave the online world, and Play carries on right where you were */
+const AW={t:0,on:0,IDLE:180,WAIT:30},NET={on:0,lost:0,t:0,w:0,fb:null,WAIT:20};
+function awake(e){AW.t=0;const t=e&&e.target;if(AW.on&&!(t&&t.closest&&t.closest('#awayBox'))){if(e.type==='keydown')e.stopPropagation();awBack();}}   /* a key only wakes me (no bag/Escape underneath) */   /* a tap on the card itself closes it on click */
+for(const t of['pointerdown','touchstart','keydown','wheel'])addEventListener(t,awake,{capture:true,passive:true});
+function awBack(){AW.on=0;AW.t=0;awBox();}
+function awTick(dt){if(IN.joy.id!==null)AW.t=0;AW.t+=dt;   /* holding the joystick is playing too */
+  if(!AW.on&&AW.t>=AW.IDLE){AW.on=1;SFX.ding();awBox();}
+  if(AW.on&&AW.t>=AW.IDLE+AW.WAIT)awayExit('You took a break, so we saved your game.\u00a0💤');}
+function netTick(dt){
+  if(!NET.w&&MP.grp&&window.WEBNET&&window.WEBNET.on){try{window.firebase.database().ref('.info/connected').on('value',s=>{NET.fb=s.val()===true;});NET.w=1;}catch(e){NET.w=2;}}
+  if(navigator.onLine!==false&&MP.state==='on'&&(NET.w!==1||NET.fb)){NET.on=1;if(NET.lost){NET.lost=0;awBox();toast('🟢 Back online!',2);}return;}
+  if(!NET.on)return;   /* not online since Play: playing alone offline, as always */
+  if(!NET.lost){NET.lost=1;NET.t=0;awBox();}
+  const t0=NET.t;NET.t+=dt;if(NET.t>=NET.WAIT){awayExit('Your internet connection was lost 😢');return;}
+  if(Math.floor(NET.t/3)>Math.floor(t0/3)&&!MP.grp&&MP.state!=='connecting'&&navigator.onLine!==false){clearTimeout(MP.rt);mpConnect();}}   /* while the card is up, look for the room every 3 s */
+function awBox(){let el=$('awayBox');const k=NET.lost?'net':AW.on?'aw':'';
+  if(!k){if(el&&!el.hidden)el.hidden=true;return;}
+  if(!el){el=document.createElement('div');el.id='awayBox';el.hidden=true;document.body.appendChild(el);el.addEventListener('click',()=>{if(AW.on){SFX.tap();awBack();}});}
+  if(el.dataset.k!==k){el.dataset.k=k;el.innerHTML=k==='net'?'<div class="awc" role="alert"><div class="awt">📡 Reconnecting…</div><div class="aws">The internet went away. Hold on, we are looking for it!</div></div>'
+    :'<div class="awc" role="alertdialog" aria-label="Still there?"><div class="awt">Still there? 👀</div><div class="aws">Tap anywhere to keep playing</div><button class="btn mint big" id="awYes">I\'m here!</button></div>';}
+  if(el.hidden)el.hidden=false;}
+function mpLeave(){clearTimeout(MP.rt);if(MP.grp){ballOwnerGone();if(MP.unsub){try{MP.unsub();}catch(e){}MP.unsub=null;}MP.grp=null;for(const a of MP.peers.values())mpDropAv(a);MP.peers.clear();$('bChat').hidden=true;}
+  if(MP.state!=='connecting')MP.state='idle';}
+function awayExit(msg){if(!PLAYING)return;saveLocal();if(CSAVE.ref){CSAVE.dirty=true;clearTimeout(CSAVE.tm);cloudFlush();}
+  if(HOST.cur)hostAnswer(false,true);mpLeave();PLAYING=false;AW.on=0;AW.t=0;NET.lost=0;NET.on=0;awBox();
+  document.body.classList.add('away');AW.hud=$('hud').hidden;$('hud').hidden=true;   /* game cards wait hidden underneath until Play (the HUD stays hidden in the clothes creator) */
+  const T=$('title'),b=$('tPlay');let m=$('tMsg');if(!m){m=document.createElement('p');m.id='tMsg';m.setAttribute('role','status');T.insertBefore(m,T.querySelector('.menu'));}
+  m.textContent=msg;T.hidden=false;b.disabled=false;b.textContent='Play';try{b.focus({preventScroll:true});}catch(e){}}
+function awResume(){const m=$('tMsg');if(m)m.remove();document.body.classList.remove('away');$('title').hidden=true;$('hud').hidden=!!AW.hud;PLAYING=true;
+  AW.t=0;NET.t=0;mpConnect();updHud(true);jobHud(true);dcardUpd(true);toast('Welcome back, '+(S.name||'friend')+'! 💗',3);if(CSAVE.ref){CSAVE.dirty=true;cloudFlush();}}
 
 /* ---- places ---- */
 function setLoc(id){CUR=LOC[id];P.cy=0;for(const k in LOC)LOC[k].g.visible=LOC[k]===CUR;
@@ -3105,7 +3141,7 @@ function setupInput(){
   const up=e=>{if(e.pointerId===IN.joy.id){IN.joy.id=null;IN.joy.x=IN.joy.y=0;joyHome();}
     else if(e.pointerId===IN.look.id){IN.look.id=null;const cl=IN.look.cls;if(e.type==='pointerup'&&IN.look.moved<(cl?40:12)&&performance.now()-IN.look.t<(cl?700:350))tapAt(e.clientX,e.clientY);}};
   T.addEventListener('pointerup',up);T.addEventListener('pointercancel',up);
-  addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return;IN.keys[e.code]=true;
+  addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT'||document.body.classList.contains('away'))return;IN.keys[e.code]=true;   /* away title: keys only press Play */
     if(e.code==='Escape'){if(UI.open&&!UI.lock)closePanel();else if(DECO.placing)decoCancel();return;}
     if(CUT&&CUT.show&&(e.code==='Space'||e.code==='Enter'||e.code==='KeyE')){e.preventDefault();ACT.pstap();return;}
     if(CUT&&CUT.claw&&(e.code==='Space'||e.code==='Enter'||e.code==='KeyE')){e.preventDefault();ACT.clawtap();return;}
@@ -4674,7 +4710,7 @@ $('tPlay').addEventListener('click',async()=>{audioInit();const b=$('tPlay');b.d
   const t0=performance.now();while(CSAVE.pending&&performance.now()-t0<4000)await new Promise(r=>setTimeout(r,100));
   startGame();});
 
-function startGame(){
+function startGame(){if(S){awResume();return;}   /* back from the away title: the game is still here, nothing is built twice */
   const local=readLocal(),remote=CSAVE.remote;let st=local;if(remote&&(!local||(remote.t||0)>(local.t||0)))st=remote;
   S=Object.assign(freshState(),st||{});S.home=Object.assign(freshState().home,S.home||{});
   S.look=Object.assign({},DEFAULT_LOOK,S.look||{});buildPlayerBody();
@@ -4723,9 +4759,10 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     saveT+=dt;if(saveT>10){saveT=0;saveLocal();}
     hardT+=dt;if(hardT>1){hardT=0;hardCheck();}
     navT+=dt;if(navT>.15){navT=0;updNav();}if(BEACON&&BEACON.visible&&BEACON.pin)BEACON.pin.position.y=3.4+Math.sin(performance.now()/300)*.25;
+    awTick(dt);netTick(dt);
   }else{titleT+=dt*.05;
     if(CUR&&CUR.id==='city'){for(const w of WALKERS)w.update(dt);updateCars(dt);}
-    const cx=FTN?FTN.fx:0,cz=FTN?FTN.fz:0;camera.position.set(cx+Math.cos(titleT)*30,14,cz+Math.sin(titleT)*30);camera.lookAt(cx,1,cz);}
+    if(!S||!CUR||CUR.type==='out'){const cx=FTN?FTN.fx:0,cz=FTN?FTN.fz:0;camera.position.set(cx+Math.cos(titleT)*30,14,cz+Math.sin(titleT)*30);camera.lookAt(cx,1,cz);}}
   if(CUR&&CUR.type==='out'){const L=LOC.city,tt=now/1000;
     updFountain(dt);updDucks(dt,tt);
     updBall(dt);
