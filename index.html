@@ -3473,12 +3473,14 @@ const fOff=n=>(n%2?-.5:.5)*Math.ceil(n/2);   /* follower n's place: 0 right behi
 const FOLW={x:0,z:0},FA={x:0,z:0};   /* FOLW: where you stood last frame: moved without walking (a lesson, a ride, a jump to a place) = "behind" is behind your back again. FA: a follower's next spot */
 const STEPS=new Float32Array(48),STN={n:0,loc:null};   /* your last 24 footsteps (0.5 m apart): a blocked follower takes the way you walked (through a gate, round a fence) */
 const onRoad=(x,z)=>Math.abs(x)<84&&Math.abs(z)<84&&(Math.abs(z+50)<4.3||Math.abs(z)<4.3||Math.abs(z-50)<4.3||Math.abs(x+50)<4.3||Math.abs(x)<4.3||Math.abs(x-50)<4.3);   /* the town's car roads */
-function fPush(e,o,k){if(o===e||o.loc!==CUR.id||o.mode==='away')return;let qx=FA.x-o.x,qz=FA.z-o.z,q=Math.hypot(qx,qz);if(q>=.6)return;if(q<1e-3){qx=Math.sin(k)*1e-3;qz=Math.cos(k)*1e-3;q=1e-3;}FA.x+=qx/q*(.6-q);FA.z+=qz/q*(.6-q);}
+const FGAP=.8;   /* 🐾 the gap between followers: no pet (or friend) ever inside you, a friend or another pet (night 3, job 3) */
+function fPush(e,o,k){if(o===e||o.loc!==CUR.id||o.mode==='away')return;let qx=FA.x-o.x,qz=FA.z-o.z,q=Math.hypot(qx,qz);if(q>=FGAP)return;if(q<1e-3){qx=Math.sin(k)*1e-3;qz=Math.cos(k)*1e-3;q=1e-3;}FA.x+=qx/q*(FGAP-q);FA.z+=qz/q*(FGAP-q);}
 function fAvoid(e,x,z,k){FA.x=x;FA.z=z;for(const o of PET_ACTORS)fPush(e,o,k);for(const o of FRIEND_ACTORS)fPush(e,o,k);}   /* pets and friends go round each other and never stand inside each other */
 function fMove(e,x,z,k,cap){fAvoid(e,x,z,k);let mx=FA.x-e.x,mz=FA.z-e.z;const m=Math.hypot(mx,mz);if(m>cap){mx*=cap/m;mz*=cap/m;}[e.x,e.z]=collideXZ(e.x+mx,e.z+mz,e.r,CUR);}   /* small steps only: never through a thin fence */
 function followStep(e,dt,idx){
   if(!P.moving&&(P.x!==FOLW.x||P.z!==FOLW.z)){P.hd=P.yaw+Math.PI;STN.n=0;}FOLW.x=P.x;FOLW.z=P.z;
   if(STN.loc!==CUR.id){STN.loc=CUR.id;STN.n=0;}if(P.moving){const j=(STN.n+23)%24*2;if(!STN.n||Math.hypot(P.x-STEPS[j],P.z-STEPS[j+1])>.5){STEPS[STN.n%24*2]=P.x;STEPS[STN.n%24*2+1]=P.z;STN.n++;}}
+  if(e.fan&&FAN.on&&e instanceof Friend&&!P.moving){fanStep(e,dt,idx);return;}   /* 🤝 standing still: friends come round in front of you */
   const ax=e.x-P.x,az=e.z-P.z,pd=Math.hypot(ax,az),a=P.hd+Math.PI+fOff(idx);
   const tx=P.x+Math.sin(a)*2,tz=P.z+Math.cos(a)*2,dx=tx-e.x,dz=tz-e.z,d=Math.hypot(dx,dz);
   if(d>14){[e.x,e.z]=collideXZ(tx,tz,e.r,CUR);e.moving=false;e.far=e.stk=0;e.wp=-1;return;}
@@ -3512,6 +3514,36 @@ function nearMe(e,n,front){const sd=n%2?-1:1,b=P.yaw+Math.PI,f=fOff(front?n-1:n)
   C.push(b+f*.15,2.6,b+Math.PI-f*.3,2);   /* a narrow corridor: just in front, or behind you */
   const rd=CUR.id==='city'&&!onRoad(P.x,P.z);let i=0;for(;i<C.length;i+=2){const x=P.x+Math.sin(C[i])*C[i+1],z=P.z+Math.cos(C[i])*C[i+1];fAvoid(e,x,z,0);if(FA.x===x&&FA.z===z&&!(rd&&onRoad(x,z))&&fClear(x,z))break;}if(i>=C.length)i=0;
   [e.x,e.z]=collideXZ(P.x+Math.sin(C[i])*C[i+1],P.z+Math.cos(C[i])*C[i+1],e.r,CUR);e.loc=CUR.id;e.fol=0;e.far=e.stk=0;e.wp=-1;e.moving=false;e.face=Math.atan2(P.x-e.x,P.z-e.z);}
+
+/* 🤝 hanging out (night 3, job 3): when you stop, the friends who follow you walk to spots IN FRONT of you (a fan about 2.5-3 m away, at least
+   1.2 m apart, facing you), never behind your back while you stand still. Turn right round and stand still: after about 1.5 s they walk back
+   into view. While you walk they follow as before (behind you). Doors, stairs and the bus work as before. A spot is never on the road,
+   in water, in furniture or behind a wall (the straight way from you to it is free) */
+const FAN={on:false,yaw:0,turnT:0,loc:''};
+function fanHalf(){const a=innerWidth/innerHeight,hf=Math.atan(Math.tan(camera.fov*Math.PI/360)*a);return Math.min(.62,hf*.78);}   /* how far to the side the camera still shows (a phone held upright is narrow) */
+function fanSpots(n){const h=fanHalf(),out=[];for(let i=0;i<n;i++)out.push([n>1?-h+2*h*i/(n-1):0,i%2?3.1:2.6]);
+  for(let r=3.1;r<=4.3;r+=.3){let ok=true;for(let i=1;i<n;i++){const [a1,r1]=out[i-1],[a2,r2]=out[i];if(Math.hypot(Math.sin(a1)*r1-Math.sin(a2)*r2,Math.cos(a1)*r1-Math.cos(a2)*r2)<1.2)ok=false;}if(ok)break;for(let i=1;i<n;i+=2)out[i][1]=r;}
+  return out;}
+/* the spots, one friend after the other: as near as possible to its place in the fan, free (no wall, fence or furniture on the straight way
+   from you), not on the road, not in water, and at least 1.15 m from the spots already given. On a narrow pavement the fan becomes a row
+   along the pavement (left, right, further away). As a last resort: 1.8 m in front */
+function fanAssign(){const fr=FRIEND_ACTORS.filter(f=>f.mode==='follow'&&f.loc===CUR.id),n=fr.length,h=fanHalf(),base=P.yaw+Math.PI,rd=CUR.id==='city'&&!onRoad(P.x,P.z),want=fanSpots(n),got=[];
+  const ok=(x,z)=>{const q=collideXZ(x,z,.3,CUR);if(Math.hypot(q[0]-x,q[1]-z)>.05)return false;if(rd&&onRoad(x,z))return false;for(const g of got)if(Math.hypot(g[0]-x,g[1]-z)<1.5)return false;return fLine(P.x,P.z,x,z);};
+  fr.forEach((f,k)=>{const [wa,wr]=want[Math.min(k,want.length-1)];let best=null,bs=1e9;
+    for(let a=-h;a<=h+1e-6;a+=.1)for(let r=2.4;r<=5.2;r+=.4){const sc=Math.abs(a-wa)*2+Math.abs(r-wr)*.6;if(sc>=bs)continue;const x=P.x+Math.sin(base+a)*r,z=P.z+Math.cos(base+a)*r;if(ok(x,z)){best=[x,z];bs=sc;}}
+    for(let r=2.0;r>=1.2&&!best;r-=.4)for(let a=-h;a<=h+1e-6&&!best;a+=.2){const x=P.x+Math.sin(base+a)*r,z=P.z+Math.cos(base+a)*r;if(ok(x,z))best=[x,z];}
+    if(!best)best=collideXZ(P.x+Math.sin(base+wa)*1.8,P.z+Math.cos(base+wa)*1.8,.3,CUR);
+    got.push(best);f.fan=best;f.fanStk=0;});}
+function fanTick(dt){const fr=FRIEND_ACTORS.filter(f=>f.mode==='follow'&&f.loc===CUR.id);
+  if(P.moving||!fr.length||CUT||CLIMB||fading||P.sit||P.ride||CR){if(FAN.on){FAN.on=false;for(const f of FRIEND_ACTORS)f.fan=null;}FAN.turnT=0;return;}
+  if(!FAN.on||FAN.loc!==CUR.id){FAN.on=true;FAN.loc=CUR.id;FAN.yaw=P.yaw;FAN.turnT=0;fanAssign();return;}
+  if(fr.some(f=>!f.fan)){fanAssign();return;}
+  const d=Math.abs(angLerp(FAN.yaw,P.yaw,1)-FAN.yaw);if(d>Math.PI/2){FAN.turnT+=dt;if(FAN.turnT>=1.5){FAN.yaw=P.yaw;FAN.turnT=0;fanAssign();}}else FAN.turnT=0;}
+/* a friend walks to its spot in front of you, then stands there facing you */
+function fanStep(e,dt,idx){const gx=e.fan[0],gz=e.fan[1],dx=gx-e.x,dz=gz-e.z,d=Math.hypot(dx,dz);
+  if(d>.1){const sp=clamp(d*2.4,1.5,5),s=Math.min(d,sp*dt),ox=e.x,oz=e.z;fMove(e,e.x+dx/d*s,e.z+dz/d*s,idx,s+.05);const mv=Math.hypot(e.x-ox,e.z-oz);e.face=Math.atan2(dx,dz);e.moving=mv>dt*.3;e.spd=clamp(sp/3,.7,1.6);
+    if(mv<s*.3){e.fanStk=(e.fanStk||0)+dt;if(e.fanStk>.7)fanAssign();}else e.fanStk=0;}   /* stuck on the way (someone in the way): new spots for everyone */
+  else{const ox=e.x,oz=e.z;fMove(e,ox,oz,idx,3*dt);e.moving=false;e.spd=1;e.face=angLerp(e.face,Math.atan2(P.x-e.x,P.z-e.z),Math.min(1,dt*6));}}
 
 /* ---- pets ---- */
 class Pet{
@@ -4818,7 +4850,7 @@ function updatePlayer(dt){
     const ox=P.x,oz=P.z;[P.x,P.z]=collideXZ(P.x+(-sy*f+cy*s)*sp*dt,P.z+(-cy*f-sy*s)*sp*dt,.3,CUR,solids());P.moving=true;P.bobT+=dt*sp*2.3;P.hd=Math.atan2(-sy*f+cy*s,-cy*f-sy*s);
     if(run){const dd=Math.hypot(P.x-ox,P.z-oz);qEvent('run',dd);P.ra=(P.ra||0)+dd;if(P.ra>=50){P.ra-=50;addXP('sport',1);}}}
   else P.moving=false;
-  for(const e of [...FRIEND_ACTORS,...PET_ACTORS]){if(e.loc!==CUR.id||e.mode==='away')continue;const dx=e.x-P.x,dz=e.z-P.z,d=Math.hypot(dx,dz),m2=.7;if(d<m2&&d>1e-4){[e.x,e.z]=collideXZ(P.x+dx/d*m2,P.z+dz/d*m2,e.r,CUR);}}
+  for(const e of [...FRIEND_ACTORS,...PET_ACTORS]){if(e.loc!==CUR.id||e.mode==='away')continue;const dx=e.x-P.x,dz=e.z-P.z,d=Math.hypot(dx,dz),m2=FGAP;if(d<m2&&d>1e-4){[e.x,e.z]=collideXZ(P.x+dx/d*m2,P.z+dz/d*m2,e.r,CUR);}}
 }
 let PB=null;
 const SHADOW_ONLY=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false});
@@ -7169,7 +7201,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     if(!UI.open||true){HOUR=hourLen(S.time);S.time+=dt/HOUR;if(S.time>=24){S.time-=24;S.day++;newDay();change();}
       S.hunger=Math.max(0,S.hunger-dt/HOUR*4);if(S.hunger<20&&!hungryWarn){hungryWarn=true;toast('Your tummy is rumbling! Eat something from your 🎒 bag.',4);}if(S.hunger>30)hungryWarn=false;}
     updatePlayer(dt);
-    let fi=0;for(const f of FRIEND_ACTORS)f.update(dt,f.mode==='follow'?fi++:0);PET_ACTORS.forEach((p,i)=>p.update(dt,fi+i+(fi?0:1)));
+    fanTick(dt);let fi=0;for(const f of FRIEND_ACTORS)f.update(dt,f.mode==='follow'?fi++:0);PET_ACTORS.forEach((p,i)=>p.update(dt,fi+i+(fi?0:1)));
     if(CUR.id==='pets')updatePen(dt);
     if(CUR.id==='toys'&&CUR.train){const T=CUR.train;T.userData.t=(T.userData.t||0)+dt*.9;T.children.forEach((c,i)=>{const a=T.userData.t-i*.32;c.position.set(Math.cos(a)*.88,0,Math.sin(a)*.55);c.rotation.y=Math.atan2(-Math.sin(a)*.88,Math.cos(a)*.55);});}
     for(const w of WALKERS)w.update(dt);
