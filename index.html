@@ -700,6 +700,7 @@ const SFX={
   woof(){tone(380,.09,'square',.07,0,240);tone(380,.09,'square',.06,.15,220);},
   meow(){tone(700,.32,'sine',.1,0,520);},
   squeak(){tone(1400,.08,'sine',.08,0,1800);tone(1500,.08,'sine',.07,.1,1900);},
+  quack(){tone(520,.12,'square',.07,0,380);tone(480,.1,'square',.06,.14,340);},yip(){tone(900,.07,'square',.06,0,1200);tone(950,.07,'square',.05,.11,1250);},
   jump(){tone(330,.16,'triangle',.14,0,660);},
   land(){tone(160,.08,'triangle',.12,0,110);},
   honk(){tone(420,.14,'square',.06);tone(420,.16,'square',.06,.2);},
@@ -939,7 +940,18 @@ const PET_TYPES={
   cat:{name:'kitten',many:'Kittens',icon:'🐱',cols:['#f3a25b','#a7a3b5','#3f3a4f','#f7f2ec'],snd:'meow',names:['Mochi','Whiskers','Tiger','Snowy','Pumpkin','Pepper']},
   bunny:{name:'bunny',many:'Bunnies',icon:'🐰',cols:['#f8f5f0','#c49a74','#b9b4c8','#ffc9dc'],snd:'squeak',names:['Clover','Cotton','Daisy','Hopper','Bun-bun','Marshmallow']},
   hamster:{name:'hamster',many:'Hamsters',icon:'🐹',cols:['#f2c38b','#ffffff','#c49a74','#9a8f86'],snd:'squeak',names:['Nibbles','Gizmo','Honey','Pip','Toffee','Biscuit']},
+  /* 🐾 night 3, job 14: breeds of the puppy (saved as type 'dog' + kind) and three new animals (saved as the old kind they are closest to + kind), so an old
+     version shows the plain animal and never crashes. tagY: the name tag's height */
+  pomchi:{name:'pomchi',many:'Pomchis',icon:'🦊',cols:['#f2c38b','#e8b765','#f8f5f0','#9a6a43'],snd:'yip',names:['Fluffy','Pom','Teddy','Sunny','Peaches','Foxy'],base:'dog',tagY:.8},
+  pug:{name:'pug',many:'Pugs',icon:'🐶',cols:['#e8c9a0','#4a4058','#c49a74','#f8f5f0'],snd:'woof',names:['Pugsy','Doug','Bean','Olive','Momo','Wrinkles'],base:'dog',tagY:.78},
+  sausage:{name:'sausage dog',many:'Sausage dogs',icon:'🐕',cols:['#9a6a43','#4a4058','#e8b765','#c47a4a'],snd:'woof',names:['Frankie','Noodle','Slinky','Cocoa','Pretzel','Dash'],base:'dog',tagY:.72},
+  capybara:{name:'capybara',many:'Capybaras',icon:'🦫',cols:['#c49a74','#a8714a','#8a5a36','#d9b28c'],snd:'squeak',names:['Capy','Pebble','Mango','Splash','Barry','Bubbles'],base:'hamster',tagY:1.0},
+  duck:{name:'duck',many:'Ducks',icon:'🦆',cols:['#f8f5f0','#ffe08a','#c49a74','#8fd3ff'],snd:'quack',names:['Puddles','Quackers','Daisy','Waddles','Sunny','Dot'],base:'bunny',tagY:.9},
+  owl:{name:'owl',many:'Owls',icon:'🦉',cols:['#8a5a36','#c49a74','#a7a3b5','#f8f5f0'],snd:'hoot',names:['Hooty','Luna','Olive','Pip','Sage','Twig'],base:'cat',tagY:.92},
 };
+const petKind=d=>d&&d.kind&&PET_TYPES[d.kind]&&PET_TYPES[d.kind].base===d.type?d.kind:(d?d.type:'dog');   /* the kind a saved pet really is (breed or new animal), else its type */
+const petTagY=k=>(PET_TYPES[k]&&PET_TYPES[k].tagY)||{bunny:1.0,hamster:.55}[k]||.82;
+const PET_FIT={pug:'dog',sausage:'dog',capybara:'dog',pomchi:'cat',owl:'cat',duck:'bunny'};   /* whose head the outfits fit */
 const ACCS={bow:{n:'Pink bow',i:'🎀',s:'head'},hat:{n:'Party hat',i:'🥳',s:'head'},pcrown:{n:'Pet crown',i:'👑',s:'head'},tophat:{n:'Tiny top hat',i:'🎩',s:'head'},flowerc:{n:'Flower crown',i:'🌸',s:'head'},pflower:{n:'Big flower',i:'🌺',s:'head'},
   collar:{n:'Bell collar',i:'🔔',s:'neck'},scarf:{n:'Cozy scarf',i:'🧣',s:'neck'},bowtie:{n:'Fancy bow tie',i:'🤵',s:'neck'},
   shades:{n:'Pet sunglasses',i:'🕶️',s:'face'},hglasses:{n:'Heart glasses',i:'💖',s:'face'},monocle:{n:'Fancy monocle',i:'🧐',s:'face'},
@@ -947,7 +959,7 @@ const ACCS={bow:{n:'Pink bow',i:'🎀',s:'head'},hat:{n:'Party hat',i:'🥳',s:'
 const PSLOTS=[['head','🎩','Head'],['neck','🧣','Neck'],['face','👓','Face'],['back','🦸','Back']];
 function petOutfit(d){if(!d)return{};if(!d.outfit||typeof d.outfit!=='object'){d.outfit={};if(d.acc&&ACCS[d.acc])d.outfit[ACCS[d.acc].s]=d.acc;}d.acc=null;for(const k in d.outfit)if(!ACCS[d.outfit[k]])delete d.outfit[k];return d.outfit;}
 function addOutfit(m,d){const o=petOutfit(d);for(const [sl] of PSLOTS)if(o[sl])addAcc(m,o[sl]);}
-function addAcc(p,acc){if(!acc||!p.head)return;const h=p.head,t=p.type,top={dog:.25,cat:.22,bunny:.15,hamster:.1}[t]||.2;
+function addAcc(p,acc){if(!acc||!p.head)return;const h=p.head,t=PET_FIT[p.type]||p.type,top={dog:.25,cat:.22,bunny:.15,hamster:.1}[t]||.2;
   if(acc==='bow'){const g=new THREE.Group();g.position.set(.075,top+.02,.02);g.rotation.set(0,.25,-.3);h.add(g);bowShape(g,.6,'#ff7aa8',{ol:.008});bake(g,false);}
   else if(acc==='hat'){const g=new THREE.Group();g.position.set(0,top,0);g.rotation.z=.15;h.add(g);cone(g,.09,.22,'#b79cff',0,0,0,{seg:14,ol:.012});
     for(const [y,rr,c] of [[.05,.071,'#ffd45c'],[.12,.043,'#ff7aa8']]){const t2=new THREE.Mesh(new THREE.TorusGeometry(rr,.012,5,16),mat(c));t2.rotation.x=Math.PI/2;t2.position.y=y;g.add(t2);}
@@ -1003,6 +1015,53 @@ function makePet(type,col){
     sph(head,.1,C,0,0,0);sph(head,.045,Lt,-.06,-.03,.06,{ol:false});sph(head,.045,Lt,.06,-.03,.06,{ol:false});
     box(head,.03,.02,.02,'#ff8fb1',0,-.005,.098,{ol:false});eye(head,-.04,.01,.085);eye(head,.04,.01,.085);
     sph(head,.035,D,-.065,.08,-.01,{ol:.012});sph(head,.035,D,.065,.08,-.01,{ol:.012});
+  }else if(type==='pug'){   /* 🐶 a round face, a dark flat muzzle, folded ears, a curly tail */
+    box(b,.3,.24,.42,C,0,.16,0);
+    leg(-.1,.13,.17,.08);leg(.1,.13,.17,.08);leg(-.1,-.13,.17,.08);leg(.1,-.13,.17,.08);
+    head=new THREE.Group();head.position.set(0,.34,.22);b.add(head);
+    sph(head,.17,C,0,0,0,{s:[1,.92,.95]});box(head,.17,.11,.07,D,0,-.04,.14,{ol:.012});box(head,.06,.04,.03,INK,0,-.005,.175,{ol:false});
+    eye(head,-.075,.04,.135);eye(head,.075,.04,.135);
+    box(head,.07,.09,.05,D,-.14,.09,-.02,{rz:.5,ol:.015});box(head,.07,.09,.05,D,.14,.09,-.02,{rz:-.5,ol:.015});
+    tail=new THREE.Group();tail.position.set(0,.3,-.2);b.add(tail);sph(tail,.05,C,0,.02,0,{ol:.015});sph(tail,.04,C,.04,.06,-.02,{ol:.012});
+  }else if(type==='pomchi'){   /* 🦊 fluffy and foxy: a round head, pointy ears, a big fluffy tail */
+    sph(b,.16,C,0,.2,0,{s:[1,.9,1.3]});
+    leg(-.07,.1,.13,.06);leg(.07,.1,.13,.06);leg(-.07,-.1,.13,.06);leg(.07,-.1,.13,.06);
+    head=new THREE.Group();head.position.set(0,.4,.17);b.add(head);
+    sph(head,.16,C,0,0,0);sph(head,.06,Lt,0,-.04,.14,{ol:false});box(head,.04,.03,.02,INK,0,-.02,.195,{ol:false});
+    eye(head,-.06,.03,.14);eye(head,.06,.03,.14);
+    cone(head,.05,.12,D,-.09,.15,-.01,{seg:4,ol:.015});cone(head,.05,.12,D,.09,.15,-.01,{seg:4,ol:.015});
+    tail=new THREE.Group();tail.position.set(0,.36,-.2);b.add(tail);sph(tail,.09,Lt,0,.06,-.02,{s:[.8,1,1.2],ol:.015});
+  }else if(type==='sausage'){   /* 🐕 a long body on short legs, long droopy ears */
+    box(b,.26,.22,.7,C,0,.13,0);
+    leg(-.09,.24,.11,.07);leg(.09,.24,.11,.07);leg(-.09,-.24,.11,.07);leg(.09,-.24,.11,.07);
+    head=new THREE.Group();head.position.set(0,.3,.38);b.add(head);
+    box(head,.26,.24,.28,C,0,-.03,0);box(head,.15,.12,.18,Lt,0,-.07,.2);box(head,.06,.045,.03,INK,0,-.03,.29,{ol:false});
+    eye(head,-.075,.06,.142);eye(head,.075,.06,.142);
+    box(head,.08,.26,.06,D,-.16,-.1,-.03,{rz:.12,ol:.015});box(head,.08,.26,.06,D,.16,-.1,-.03,{rz:-.12,ol:.015});
+    tail=new THREE.Group();tail.position.set(0,.26,-.36);b.add(tail);box(tail,.05,.22,.05,C,0,0,0,{rx:-.9,ol:.015});
+  }else if(type==='capybara'){   /* 🦫 big and calm: a long round body, a blunt head, little round ears, no tail */
+    sph(b,.24,C,0,.38,0,{s:[1,.8,1.45]});
+    leg(-.12,.2,.22,.1);leg(.12,.2,.22,.1);leg(-.12,-.2,.22,.1);leg(.12,-.2,.22,.1);
+    head=new THREE.Group();head.position.set(0,.5,.4);b.add(head);
+    box(head,.3,.28,.32,C,0,-.02,0);box(head,.24,.17,.14,Lt,0,-.07,.2);box(head,.1,.05,.03,D,0,0,.275,{ol:false});
+    eye(head,-.1,.07,.165);eye(head,.1,.07,.165);
+    sph(head,.05,D,-.12,.14,-.08,{ol:.012});sph(head,.05,D,.12,.14,-.08,{ol:.012});
+  }else if(type==='duck'){   /* 🦆 a round body, little wings, an orange bill and orange feet */
+    sph(b,.17,C,0,.28,0,{s:[1,.9,1.4]});
+    for(const s of[-1,1])box(b,.06,.12,.26,D,s*.16,.24,-.02,{rz:s*-.2,ol:.015});
+    {const lg=x=>{const p=new THREE.Group();p.position.set(x,.14,0);b.add(p);box(p,.04,.14,.04,'#ffb347',0,-.14,0,{ol:.012});box(p,.1,.02,.14,'#ffb347',0,-.15,.04,{ol:.01});legs.push(p);};lg(-.06);lg(.06);}
+    head=new THREE.Group();head.position.set(0,.53,.14);b.add(head);
+    sph(head,.12,C,0,0,0);box(head,.17,.05,.14,'#ffb347',0,-.035,.15,{ol:.012});
+    eye(head,-.065,.03,.095);eye(head,.065,.03,.095);
+    tail=new THREE.Group();tail.position.set(0,.34,-.24);b.add(tail);box(tail,.1,.05,.12,C,0,0,0,{rx:.6,ol:.015});
+  }else if(type==='owl'){   /* 🦉 round, with big eyes, ear tufts and little wings */
+    sph(b,.2,C,0,.26,0,{s:[1,1.2,1]});sph(b,.13,Lt,0,.2,.11,{s:[1,1.1,.6],ol:false});
+    for(const s of[-1,1])box(b,.06,.28,.18,D,s*.19,.14,-.01,{rz:s*-.12,ol:.015});
+    {const lg=x=>{const p=new THREE.Group();p.position.set(x,.08,.03);b.add(p);box(p,.05,.08,.05,'#ffb347',0,-.08,0,{ol:.012});legs.push(p);};lg(-.07);lg(.07);}
+    head=new THREE.Group();head.position.set(0,.5,.03);b.add(head);
+    sph(head,.17,C,0,0,0);cone(head,.05,.12,D,-.1,.15,0,{seg:4,ol:.015});cone(head,.05,.12,D,.1,.15,0,{seg:4,ol:.015});
+    for(const s of[-1,1]){sph(head,.062,'#fff6d6',s*.07,.03,.13,{ws:10,hs:8,ol:.01});sph(head,.03,INK,s*.07,.03,.185,{ws:8,hs:6,ol:false});}
+    cone(head,.03,.07,'#ffb347',0,-.04,.17,{rx:Math.PI/2,center:true,seg:4,ol:false});
   }else{
     sph(b,.2,C,0,.24,0,{s:[1,.9,1.25]});
     leg(-.09,.13,.1,.08);leg(.09,.13,.1,.08);leg(-.1,-.12,.12,.1);leg(.1,-.12,.12,.1);
@@ -1022,6 +1081,7 @@ function animPet(p,dt,moving,spd=1){
   p.b.position.y=moving?(p.type==='bunny'?Math.abs(Math.sin(p.phase*.5))*.14:Math.abs(Math.sin(p.phase))*.02):lerp(p.b.position.y,0,.3);
   if(p.tail)p.tail.rotation.z=Math.sin(p.phase*(p.type==='dog'?2.2:.6))*(p.type==='dog'?.6:.25);
   if(p.head&&!moving)p.head.rotation.y=Math.sin(p.phase*.37)*.3;
+  if(p.type==='duck')p.b.rotation.z=moving?Math.sin(p.phase)*.15:lerp(p.b.rotation.z,0,.3);   /* 🦆 a waddle */
 }
 
 /* ---- furniture (front faces +z, origin at floor centre) ---- */
@@ -1317,8 +1377,9 @@ const PET_ITEMS={petfood:{n:'Pet food',i:'🦴',p:6},catfood:{n:'Cat food',i:'�
   bow:{n:'Pink bow',i:'🎀',p:30},hat:{n:'Party hat',i:'🥳',p:35},collar:{n:'Bell collar',i:'🔔',p:25},scarf:{n:'Cozy scarf',i:'🧣',p:30},
   treat:{n:'Pet treats',i:'🍖',p:5},frisbee:{n:'Frisbee',i:'🥏',p:10},mouse:{n:'Toy mouse',i:'🐭',p:8},pcrown:{n:'Pet crown',i:'👑',p:50},shades:{n:'Pet sunglasses',i:'🕶️',p:35},
   tophat:{n:'Tiny top hat',i:'🎩',p:55},flowerc:{n:'Flower crown',i:'🌸',p:45},pflower:{n:'Big flower',i:'🌺',p:35},bowtie:{n:'Fancy bow tie',i:'🤵',p:40},hglasses:{n:'Heart glasses',i:'💖',p:40},monocle:{n:'Fancy monocle',i:'🧐',p:50},cape:{n:'Super cape',i:'🦸',p:60},wings:{n:'Fairy wings',i:'🧚',p:70},bpack:{n:'Tiny backpack',i:'🎒',p:45}};
-const PET_FOOD={dog:['petfood','treat'],cat:['catfood','petfood','treat'],bunny:['bunnyfood','petfood','treat'],hamster:['bunnyfood','petfood','treat']};
-const PET_TOY={dog:'ball',cat:'yarn',bunny:'squeaky',hamster:'squeaky'};
+const PET_FOOD={dog:['petfood','treat'],cat:['catfood','petfood','treat'],bunny:['bunnyfood','petfood','treat'],hamster:['bunnyfood','petfood','treat'],
+  pomchi:['petfood','treat'],pug:['petfood','treat'],sausage:['petfood','treat'],capybara:['bunnyfood','petfood','treat'],duck:['bunnyfood','petfood','treat'],owl:['petfood','catfood','treat']};
+const PET_TOY={dog:'ball',cat:'yarn',bunny:'squeaky',hamster:'squeaky',pomchi:'squeaky',pug:'ball',sausage:'frisbee',capybara:'ball',duck:'squeaky',owl:'mouse'};
 function itemInfo(id){if(id&&id.startsWith('seed_')){const K=SEEDS[id.slice(5)];return K&&{n:K.n+' seeds',i:K.i,p:K.p};}return FOODS[id]||PET_ITEMS[id];}
 function foodModel(g,k,x,y,z){
   const o={ol:.012};
@@ -3179,7 +3240,7 @@ function buildPetShop(){
     for(const x of[x0,x1])box(pr,.14,.5,.14,'#ffffff',x,0,z1,{ol:.02});
     col(L,x0-.08,z0,x1+.08,z1+.08);
     const s=signPlane(PET_TYPES[types[i]].icon+' '+PET_TYPES[types[i]].many,2.6,.55,pc[i],'#3d2c5e');s.position.set((x0+x1)/2,2.5,-4.94);L.g.add(s);
-    L.pens.push({type:types[i],x0:x0+.4,x1:x1-.4,z0:z0+.4,z1:z1-.4});}
+    L.pens.push({type:types[i],kinds:[['dog','pug','pomchi','sausage'],['cat','cat','owl'],['bunny','duck','capybara']][i],x0:x0+.4,x1:x1-.4,z0:z0+.4,z1:z1-.4});}   /* 🐾 the new kinds share the pens (job 14) */
   box(pr,3,1.0,.8,'#ffd45c',-4.9,0,2.0);box(pr,3.1,.08,.9,'#ffffff',-4.9,1.0,2.0);col(L,-6.45,1.55,-3.35,2.45);
   box(pr,1.9,.8,1.1,'#c98f5e',3.6,0,1.0);box(pr,1.7,.04,.9,'#ffe7a3',3.6,.8,1.0,{ol:false});const cg=toon({color:'#cfeeff',transparent:true,opacity:.3});box(pr,1.75,.55,.95,null,3.6,.8,1.0,{mat:cg,ol:.015});
   const wh=new THREE.Mesh(new THREE.TorusGeometry(.18,.03,6,16),mat('#ff7aa8'));wh.position.set(4.25,1.02,.75);pr.add(wh);col(L,2.6,.4,4.6,1.6);
@@ -3684,10 +3745,10 @@ function fanStep(e,dt,idx){const gx=e.fan[0],gz=e.fan[1],dx=gx-e.x,dz=gz-e.z,d=M
 
 /* ---- pets ---- */
 class Pet{
-  constructor(d){this.d=d;this.m=makePet(d.type,d.col);addOutfit(this.m,d);this.g=this.m.root;scene.add(this.g);
-    const tg=label(d.name,.24);tg.position.y={bunny:1.0,hamster:.55}[d.type]||.82;this.g.add(tg);this.tag=tg;
+  constructor(d){this.d=d;this.m=makePet(petKind(d),d.col);addOutfit(this.m,d);this.g=this.m.root;scene.add(this.g);
+    const tg=label(d.name,.24);tg.position.y=petTagY(petKind(d));this.g.add(tg);this.tag=tg;
     [this.x,this.z]=fromSave(d.loc,d.x,d.z);this.loc=d.loc;this.face=0;this.moving=false;this.r=.3;this.wt=0;this.tx=this.x;this.tz=this.z;   /* waiting in your yard: in your yard on Friends Lane */
-    this.target={x:0,z:0,r:2.1,icon:PET_TYPES[d.type].icon,label:()=>'Play with '+d.name,act:()=>openPet(this),obj:this.g};}
+    this.target={x:0,z:0,r:2.1,icon:PET_TYPES[petKind(d)].icon,label:()=>'Play with '+d.name,act:()=>openPet(this),obj:this.g};}
   update(dt,idx){const d=this.d;if(this.ps)return;
     if(!d.stay){if(this.loc!==CUR.id)nearMe(this,idx);followStep(this,dt,idx);}
     else if(this.loc===CUR.id){this.wt-=dt;if(this.wt<=0){this.wt=rand(2,6);const a=rand(0,TAU),r=rand(0,1.6),c=fromSave(this.loc,d.sx,d.sz);[this.tx,this.tz]=collideXZ(c[0]+Math.cos(a)*r,c[1]+Math.sin(a)*r,.6,CUR);[this.x,this.z]=collideXZ(this.x,this.z,this.r,CUR);}   /* 🛋️ never a wander spot inside the furniture */
@@ -3697,7 +3758,7 @@ class Pet{
     animPet(this.m,dt,this.moving,d.stay?1:this.spd);this.target.x=this.x;this.target.z=this.z;this.tag.visible=Math.hypot(P.x-this.x,P.z-this.z)>1.3;}
 }
 function addPetActor(d){const p=new Pet(d);PET_ACTORS.push(p);return p;}
-function rebuildPet(p){const pos=p.g.position.clone(),rot=p.g.rotation.y;scene.remove(p.g);p.m=makePet(p.d.type,p.d.col);addOutfit(p.m,p.d);p.g=p.m.root;p.g.add(p.tag);p.g.position.copy(pos);p.g.rotation.y=rot;scene.add(p.g);p.target.obj=p.g;}
+function rebuildPet(p){const pos=p.g.position.clone(),rot=p.g.rotation.y;scene.remove(p.g);p.m=makePet(petKind(p.d),p.d.col);addOutfit(p.m,p.d);p.g=p.m.root;p.g.add(p.tag);p.g.position.copy(pos);p.g.rotation.y=rot;scene.add(p.g);p.target.obj=p.g;}
 const TOWNFOLK=[{skin:'#f5cfb0',hair:'#3d2c5e',style:'short',top:'#7cc8ff',bottom:'#4a4f7a',shoes:'#2e2347',scale:1.15},
   {skin:'#c98d63',hair:'#1f1a2e',style:'bun',top:'#ff8a6b',bottom:'#3f4c86',shoes:'#ffffff',scale:1.12,dress:true},
   {skin:'#8a5a3c',hair:'#2e2347',style:'short',top:'#ffd45c',bottom:'#5b5f8c',shoes:'#3d2c5e',scale:1.16},
@@ -4522,7 +4583,7 @@ function mpTick(dt){if(!MP.grp)return;const loc=CUR?CUR.id:'city';
    In their bed (zz) they lie down on it; away ("Still there?") or asleep, a little 💤 floats over their head */
 function mpStamp(st){if(P.jn)st.jp=P.jn;const pt=[];
   for(const d of S.pets){if(d.stay||!PET_TYPES[d.type]||pt.length>=3)continue;const o=d.outfit&&typeof d.outfit==='object'?d.outfit:{};
-    pt.push([d.type,HEX.test(d.col)?d.col:PET_TYPES[d.type].cols[0],String(d.name||'').slice(0,14),Object.values(o).filter(k=>ACCS[k]).join('.')]);}
+    const row=[d.type,HEX.test(d.col)?d.col:PET_TYPES[d.type].cols[0],String(d.name||'').slice(0,14),Object.values(o).filter(k=>ACCS[k]).join('.')];if(petKind(d)!==d.type)row.push(petKind(d));pt.push(row);}
   st.pt=pt.length?pt:null;}
 function mpExtra(a,pr,fresh){const jp=Number.isInteger(pr.jp)?pr.jp:null;if(!fresh&&jp!==null&&jp!==a.jp)mpHop(a);a.jp=jp;
   const pk=JSON.stringify(Array.isArray(pr.pt)?pr.pt.slice(0,3):null);if(pk!==a.pk){mpPetsBuild(a,pr.pt);a.pk=pk;}
@@ -4551,10 +4612,11 @@ function mpPose(a,dt,vis,lie,d){const p=a.av,R=p.root;
 const mpOwn=(o,k)=>typeof k==='string'&&Object.prototype.hasOwnProperty.call(o,k);   /* only real kinds and outfits from a friend's data (never "constructor" and such) */
 function mpPetsBuild(a,pt){mpPetsDrop(a);if(!Array.isArray(pt))return;const L=[];
   for(const x of pt.slice(0,3)){if(!Array.isArray(x)||!mpOwn(PET_TYPES,x[0]))continue;const T=PET_TYPES[x[0]];
-    const d={type:x[0],col:HEX.test(x[1])?x[1]:T.cols[0],outfit:{}};if(typeof x[3]==='string')for(const k of x[3].split('.').slice(0,4))if(mpOwn(ACCS,k))d.outfit[ACCS[k].s]=k;
-    const m=makePet(d.type,d.col);addOutfit(m,d);const keep=[...m.legs,m.tail].filter(Boolean);for(const g of keep)g.userData.keep=1;bake(m.b,false);for(const g of keep)bake(g,false);   /* few draw calls: only the legs and tail move */
+    const kind=typeof x[4]==='string'&&mpOwn(PET_TYPES,x[4])&&PET_TYPES[x[4]].base===x[0]?x[4]:x[0];   /* 🐾 a friend's breed or new animal (night 3, job 14) */
+    const d={type:x[0],kind,col:HEX.test(x[1])?x[1]:T.cols[0],outfit:{}};if(typeof x[3]==='string')for(const k of x[3].split('.').slice(0,4))if(mpOwn(ACCS,k))d.outfit[ACCS[k].s]=k;
+    const m=makePet(kind,d.col);addOutfit(m,d);const keep=[...m.legs,m.tail].filter(Boolean);for(const g of keep)g.userData.keep=1;bake(m.b,false);for(const g of keep)bake(g,false);   /* few draw calls: only the legs and tail move */
     const nm=(typeof x[2]==='string'?x[2]:'').replace(/[^\p{L}\p{N} _.'-]/gu,'').trim().slice(0,14),tg=label(nm&&!bdBad(nm)?nm:T.name,.24);   /* a name that isn't kind shows as just "puppy" */
-    tg.position.y={bunny:1.0,hamster:.55}[d.type]||.82;m.root.add(tg);m.root.visible=false;scene.add(m.root);
+    tg.position.y=petTagY(kind);m.root.add(tg);m.root.visible=false;scene.add(m.root);
     L.push({m,g:m.root,tag:tg,x:a.x,z:a.z,face:0,mv:false,spd:1});}
   a.pets=L.length?L:null;a.trl=null;}
 function mpPetsDrop(a){if(a.pets)for(const q of a.pets){scene.remove(q.g);q.g.traverse(o=>{if(o.isMesh)o.geometry.dispose();});q.tag.material.map.dispose();q.tag.material.dispose();}a.pets=null;a.pk='';}
@@ -4665,10 +4727,10 @@ function buildActors(){
     bakePerson(p);const L=LOC.city,x=L.ox+TRUCK.x+.2,z=L.oz+TRUCK.z-.35;p.root.position.set(x,.5,z);p.root.rotation.y=Math.PI/2;scene.add(p.root);const tg=label('Mr. Patty',.3);tg.position.y=1.95;p.root.add(tg);KEEPERS.push({p,L,x,z,name:'Mr. Patty'});}
   {const ct=LOC.pizza.inter.find(t=>t.label==='Talk to Chef Blaze');if(ct){ct.icon=()=>dlWaiting()?'🍕':'💬';ct.label=()=>dlWaiting()?'Pick up the pizza':'Talk to Chef Blaze';}}
   const L=LOC.pets;
-  L.pens.forEach((pen,i)=>{const t=pen.type;for(let k=0;k<2;k++){const col2=PET_TYPES[t].cols[k];const m=makePet(t,col2);scene.add(m.root);
+  L.pens.forEach((pen,i)=>{const kinds=pen.kinds||[pen.type,pen.type];kinds.forEach((t,k)=>{const col2=PET_TYPES[t].cols[t===pen.type&&k>0?1:0];const m=makePet(t,col2);scene.add(m.root);
     const a={m,t,col:col2,x:L.ox+rand(pen.x0,pen.x1),z:L.oz+rand(pen.z0,pen.z1-(pen.y?0:.45)),tx:0,tz:0,wt:0,pen,face:0,moving:false};
     const o=PEN.find(b=>b.pen===pen);for(let n=0;n<8&&o&&Math.hypot(o.x-a.x,o.z-a.z)<1;n++){a.x=L.ox+rand(pen.x0,pen.x1);a.z=L.oz+rand(pen.z0,pen.z1-(pen.y?0:.45));}a.tx=a.x;a.tz=a.z;   /* the two start apart */
-    a.target={x:0,z:0,r:3.9,icon:'💗',label:()=>'Adopt a '+PET_TYPES[t].name,act:()=>openAdopt(t,col2),obj:m.root};PEN.push(a);}});
+    a.target={x:0,z:0,r:3.9,icon:'💗',label:()=>'Adopt a '+PET_TYPES[t].name,act:()=>openAdopt(t,col2),obj:m.root};PEN.push(a);});});
 }
 function updatePen(dt){for(const a of PEN){a.wt-=dt;const o=PEN.find(b=>b!==a&&b.pen===a.pen),fr=a.pen.y?0:.45;   /* 🐶 not nose-first at the front fence, and never inside the other one */
   if(a.wt<=0){a.wt=rand(1.5,5);const L=LOC.pets,sm=a.pen.y?0:.25;for(let k=0;k<6;k++){a.tx=L.ox+rand(a.pen.x0+sm,a.pen.x1-sm);a.tz=L.oz+rand(a.pen.z0,a.pen.z1-fr);if(!o||Math.hypot(a.tx-o.tx,a.tz-o.tz)>.9)break;}}
@@ -4918,7 +4980,7 @@ const AW={t:0,on:0,IDLE:180,WAIT:30},NET={on:0,lost:0,t:0,w:0,fb:null,WAIT:20};
 function awake(e){AW.t=0;const t=e&&e.target;if(AW.on&&!(t&&t.closest&&t.closest('#awayBox'))){if(e.type==='keydown')e.stopPropagation();awBack();}}   /* a key only wakes me (no bag/Escape underneath) */   /* a tap on the card itself closes it on click */
 for(const t of['pointerdown','touchstart','keydown','wheel'])addEventListener(t,awake,{capture:true,passive:true});
 function awBack(){AW.on=0;AW.t=0;awBox();}
-function awTick(dt){if(IN.joy.id!==null)AW.t=0;AW.t+=dt;   /* holding the joystick is playing too */
+function awTick(dt){if(IN.joy.id!==null||CUT)AW.t=0;AW.t+=dt;   /* holding the joystick is playing too; a scene (the Pet Show, a client's visit) is watching, not being away (night 3) */
   if(!AW.on&&AW.t>=AW.IDLE){AW.on=1;SFX.ding();awBox();}
   if(AW.on&&AW.t>=AW.IDLE+AW.WAIT)awayExit('You took a break, so we saved your game.\u00a0💤');}
 function netTick(dt){
@@ -5317,7 +5379,7 @@ ACT.fstop=()=>{const f=FR;f.prev='walk';if(f.loc!=='city'){f.loc='city';f.node=f
 
 /* pets */
 let PT=null;
-function openPet(p){PT=p;p.face=Math.atan2(P.x-p.x,P.z-p.z);p.g.rotation.y=p.face;SFX[PET_TYPES[p.d.type].snd]();renderPet();petLook(p);}
+function openPet(p){PT=p;p.face=Math.atan2(P.x-p.x,P.z-p.z);p.g.rotation.y=p.face;SFX[PET_TYPES[petKind(p.d)].snd]();renderPet();petLook(p);}
 /* 👀 a pet card opened while the pet is out of sight (or behind the card) turns the camera to the pet; the old up/down look comes back after */
 function petLook(p){const c=boxOf($('card'));if(!c||P.sit||P.ride||CUT)return;const v=new THREE.Vector3(p.x,.35,p.z).project(camera),W=innerWidth,H=innerHeight,sx=(v.x+1)/2*W,sy=(1-v.y)/2*H;
   if(v.z<1&&sx>W*.1&&sx<W*.9&&sy>H*.12&&sy<c.top-20)return;
@@ -5325,23 +5387,23 @@ function petLook(p){const c=boxOf($('card'));if(!c||P.sit||P.ride||CUT)return;co
   p.lk0=P.pitch;P.yaw=Math.atan2(-dx,-dz);P.pitch=clamp(Math.atan2(.35-1.5,d)-a,-1.2,.3);}
 function petBye(){if(PT&&PT.lk0!=null){if(!CUT&&!P.sit)P.pitch=PT.lk0;PT.lk0=null;}PT=null;}
 function renderPet(msg){const p=PT,d=p.d,h=Math.round(d.happy/20);
-  openPanel(`<div class="who" style="--c:${d.col}">${PET_TYPES[d.type].icon} ${esc(d.name)}</div><div class="hearts">${hearts(clamp(h,0,5))}</div>
+  openPanel(`<div class="who" style="--c:${d.col}">${PET_TYPES[petKind(d)].icon} ${esc(d.name)}</div><div class="hearts">${hearts(clamp(h,0,5))}</div>
     <p class="line">${esc(msg||(d.happy>70?d.name+' is super happy!':d.happy>35?d.name+' wags happily at you.':d.name+' looks a little lonely. Some love would help!'))}</p>
-    <div class="row"><button class="btn mint" data-a="ppet">💗 Pet</button>${(()=>{const n=PET_FOOD[d.type].reduce((s,k)=>s+(S.bag[k]||0),0);return`<button class="btn butter" data-a="pfeed">${PET_ITEMS[PET_FOOD[d.type][0]].i} Feed${n?' ('+n+')':''}</button>`;})()}
-    <button class="btn sky" data-a="pplay">${PET_ITEMS[PET_TOY[d.type]].i} Play</button><button class="btn coral" data-a="pdress">🎀 Dress up</button><button class="btn lilac" data-a="pstay">${d.stay?'🐾 Follow me':'🏠 Stay here'}</button><button class="btn white" data-a="close">Bye!</button></div>`,{bottom:true,onClose:petBye});}
+    <div class="row"><button class="btn mint" data-a="ppet">💗 Pet</button>${(()=>{const n=(PET_FOOD[petKind(d)]||PET_FOOD[d.type]).reduce((s,k)=>s+(S.bag[k]||0),0);return`<button class="btn butter" data-a="pfeed">${PET_ITEMS[(PET_FOOD[petKind(d)]||PET_FOOD[d.type])[0]].i} Feed${n?' ('+n+')':''}</button>`;})()}
+    <button class="btn sky" data-a="pplay">${PET_ITEMS[(PET_TOY[petKind(d)]||PET_TOY[d.type])].i} Play</button><button class="btn coral" data-a="pdress">🎀 Dress up</button><button class="btn lilac" data-a="pstay">${d.stay?'🐾 Follow me':'🏠 Stay here'}</button><button class="btn white" data-a="close">Bye!</button></div>`,{bottom:true,onClose:petBye});}
 ACT.ppet=()=>{const d=PT.d;d.happy=Math.min(100,d.happy+10);qEvent('pet');if(cool('pet'+d.id,3))addXP('pets',2);SFX.pet();floatText('💗',PT.x,1.1,PT.z,{h:.55});renderPet(pick([d.name+' loves that!',d.name+' wiggles happily!','So soft!']));change();};
-ACT.pfeed=()=>{const d=PT.d,list=PET_FOOD[d.type],k=list.find(f=>S.bag[f]>0);
+ACT.pfeed=()=>{const d=PT.d,list=(PET_FOOD[petKind(d)]||PET_FOOD[d.type]),k=list.find(f=>S.bag[f]>0);
   if(!k){SFX.no();renderPet('No food for '+d.name+' in your bag. The pet shop sells '+list.map(f=>PET_ITEMS[f].i+' '+PET_ITEMS[f].n.toLowerCase()).join(' and ')+'!');return;}
   const fav=k===list[0]&&list.length>1;S.bag[k]--;d.happy=Math.min(100,d.happy+(fav?40:30));qEvent('pet');qEvent('feed');addXP('pets',3);SFX.eat();floatText(fav?PET_ITEMS[k].i:'😋',PT.x,1.1,PT.z,{h:.55});
   renderPet(fav?d.name+' LOVES '+PET_ITEMS[k].n.toLowerCase()+'! Yum yum!':'Munch munch! '+d.name+' loved it!');change();};
-ACT.pplay=()=>{const d=PT.d,fav=PET_TOY[d.type],toy=S.bag[fav]?fav:['ball','yarn','squeaky','frisbee','mouse'].find(k=>S.bag[k]);if(!toy){SFX.no();renderPet('You need a toy! The pet shop has '+PET_ITEMS[fav].i+' '+PET_ITEMS[fav].n.toLowerCase()+'s.');return;}
-  if(toy===fav){d.happy=Math.min(100,d.happy+30);SFX[PET_TYPES[d.type].snd]();floatText(PET_ITEMS[toy].i,PT.x,1.2,PT.z,{h:.55});qEvent('pet');qEvent('play');addXP('pets',3);renderPet(d.name+' LOVES the '+PET_ITEMS[toy].n.toLowerCase()+'! So much fun!');change();return;}
-  d.happy=Math.min(100,d.happy+20);qEvent('pet');qEvent('play');addXP('pets',3);SFX[PET_TYPES[d.type].snd]();floatText(PET_ITEMS[toy].i,PT.x,1.2,PT.z,{h:.55});renderPet(d.name+' plays with the '+PET_ITEMS[toy].n.toLowerCase()+'!');change();};
+ACT.pplay=()=>{const d=PT.d,fav=(PET_TOY[petKind(d)]||PET_TOY[d.type]),toy=S.bag[fav]?fav:['ball','yarn','squeaky','frisbee','mouse'].find(k=>S.bag[k]);if(!toy){SFX.no();renderPet('You need a toy! The pet shop has '+PET_ITEMS[fav].i+' '+PET_ITEMS[fav].n.toLowerCase()+'s.');return;}
+  if(toy===fav){d.happy=Math.min(100,d.happy+30);SFX[PET_TYPES[petKind(d)].snd]();floatText(PET_ITEMS[toy].i,PT.x,1.2,PT.z,{h:.55});qEvent('pet');qEvent('play');addXP('pets',3);renderPet(d.name+' LOVES the '+PET_ITEMS[toy].n.toLowerCase()+'! So much fun!');change();return;}
+  d.happy=Math.min(100,d.happy+20);qEvent('pet');qEvent('play');addXP('pets',3);SFX[PET_TYPES[petKind(d)].snd]();floatText(PET_ITEMS[toy].i,PT.x,1.2,PT.z,{h:.55});renderPet(d.name+' plays with the '+PET_ITEMS[toy].n.toLowerCase()+'!');change();};
 function starRow(n){n=clamp(Math.round(n),0,5);return'⭐'.repeat(n)+'<span class="st0">'+'★'.repeat(5-n)+'</span>';}
 function petStyle(d){const o=petOutfit(d);return 1+PSLOTS.filter(([sl])=>o[sl]).length;}
 ACT.pdress=msg=>{const p=PT;if(!p)return;const d=p.d,o=petOutfit(d),own=Object.keys(ACCS).filter(k=>S.bag[k]>0),st=petStyle(d);
   const slots=PSLOTS.map(([sl,ic,nm])=>o[sl]?`<button class="slot on" data-a="poff:${sl}" aria-label="Take off the ${ACCS[o[sl]].n}"><b>${nm}</b><span class="si">${ACCS[o[sl]].i}</span><i>✕ off</i></button>`:`<div class="slot"><b>${nm}</b><span class="si">${ic}</span><i>empty</i></div>`).join('');
-  openPanel(`<div class="who" style="--c:${d.col}">${PET_TYPES[d.type].icon} ${esc(d.name)}</div>
+  openPanel(`<div class="who" style="--c:${d.col}">${PET_TYPES[petKind(d)].icon} ${esc(d.name)}</div>
     <p class="line">${typeof msg==='string'&&msg?esc(msg):st>=5?esc(d.name)+' looks AMAZING! ✨':'What should '+esc(d.name)+' wear? Fill all 4 spots!'}</p>
     <div class="slots">${slots}</div><p class="pstyle">Style ${starRow(st)}</p>
     ${own.length?`<div class="row">${own.map(k=>`<button class="btn lilac" data-a="pwear:${k}">${ACCS[k].i} ${ACCS[k].n}${S.bag[k]>1?' ×'+S.bag[k]:''}</button>`).join('')}</div>`:'<p class="note">The 🐾 Pet Shop sells hats, crowns, bow ties, glasses, capes and wings!</p>'}
@@ -5370,7 +5432,7 @@ function petSpot(){for(const d of [1.7,1.4,1.1])for(const a of [.35,-.35,.7,-.7]
   for(const a of [1.2,-1.2,1.6,-1.6,2.2,-2.2]){const x=P.x-Math.sin(P.yaw+a)*1.2,z=P.z-Math.cos(P.yaw+a)*1.2,q=collideXZ(x,z,.3,CUR);if(Math.hypot(q[0]-x,q[1]-z)<.02)return q;}   /* no room in front (right at a pen): beside you */
   return collideXZ(P.x+Math.sin(P.yaw)*1.2,P.z+Math.cos(P.yaw)*1.2,.3,CUR);}
 ACT.adopt=()=>{if(shutBuy('pets'))return;const nm=($('petName').value||'').trim().slice(0,14)||AD.name;if(S.coins<ADOPT_COST)return;S.coins-=ADOPT_COST;
-  const [nx,nz]=petSpot(),d={id:uid(),type:AD.type,col:AD.col,name:nm,happy:80,stay:false,loc:CUR.id,x:nx,z:nz,sx:0,sz:0};S.pets.push(d);addPetActor(d);
+  const T=PET_TYPES[AD.type],[nx,nz]=petSpot(),d={id:uid(),type:T.base||AD.type,col:AD.col,name:nm,happy:80,stay:false,loc:CUR.id,x:nx,z:nz,sx:0,sz:0};if(T.base)d.kind=AD.type;S.pets.push(d);addPetActor(d);   /* 🐾 saved as the old kind + the real kind */
   closePanel();SFX.yay();toast(`Welcome home, ${nm}! ${PET_TYPES[AD.type].icon} Look at ${nm} to play.`,4);doneTask('pet');change();};
 
 /* shops */
@@ -5424,7 +5486,7 @@ function openBag(){const foods=Object.keys(S.bag).filter(k=>S.bag[k]>0);
     <div class="row" style="margin:0 0 12px"><button class="btn lilac" data-a="mylook">👗 Change my look</button></div>${storeWaiting()?`<p class="note">${cozierLine(storeWaiting())} Tap 🛋️ at home, then 🛍️ Shop → 📦 My stuff.</p>`:''}
     ${foods.length?`<p class="note">Tap food to eat it.</p><div class="grid" style="margin-top:8px">${foods.map(k=>{const it=itemInfo(k);return`<button class="it" data-a="eat:${k}"><span class="em">${it.i}</span><span>${it.n}</span><span class="have">×${S.bag[k]}</span></button>`;}).join('')}</div>`:'<p class="line">Your bag is empty. The market and the café have yummy food!</p>'}
     <div class="sec">Friends</div>${FRIENDS.filter(f=>frSt(f.id).met).map(f=>`<div class="opt"><span>${esc(f.name)}</span><span class="hearts" style="position:static">${hearts(heartsOf(f.id))}</span></div>`).join('')||'<p class="note">Say hi to the kids in town to make friends!</p>'}
-    <div class="sec">Pets</div>${S.pets.map(d=>`<div class="opt"><span>${PET_TYPES[d.type].icon} ${esc(d.name)}</span><span class="hearts" style="position:static">${hearts(clamp(Math.round(d.happy/20),0,5))}</span></div>`).join('')||'<p class="note">Visit the pet shop to adopt a pet!</p>'}`);}
+    <div class="sec">Pets</div>${S.pets.map(d=>`<div class="opt"><span>${PET_TYPES[petKind(d)].icon} ${esc(d.name)}</span><span class="hearts" style="position:static">${hearts(clamp(Math.round(d.happy/20),0,5))}</span></div>`).join('')||'<p class="note">Visit the pet shop to adopt a pet!</p>'}`);}
 ACT.eat=k=>{const it=itemInfo(k);if(!FOODS[k]){toast(k==='petfood'?'That\'s for your pet! Look at your pet and tap 🦴 Feed.':k==='catfood'?'That\'s for your kitten! Look at your kitten and tap 🐟 Feed.':k.startsWith('seed_')?'Plant these in your garden behind your house! 🌱':PET_ITEMS[k]?'That\'s for your pet! Look at your pet to use it. 🐾':'Look at your pet and tap 🎾 Play!');return;}
   if(S.hunger>=99){toast("You're full! Save it for later.");return;}S.bag[k]--;S.hunger=Math.min(100,S.hunger+it.f);SFX.eat();toast('Yum! '+it.i);qEvent('eat');qEvent('eat:'+k);doneTask('eat');change();openBag();};
 
@@ -5833,7 +5895,7 @@ function renderPhone(){if(PH.app==='map'){openMap();return;}if(MAPV.on)mapOff();
     else if(a==='cal'){body=hd('📅 Calendar')+calBody();}
     else if(a==='skills'){body=hd('⭐ Skills')+'<p class="ph-sub">Do things in town to level up your skills!</p>'+Object.keys(SKILLS).map(k=>{const s=sk(k),K=SKILLS[k],need=xpNeed(s.lv),pct=s.lv>=MAXLV?100:Math.round(s.xp/need*100);
       return`<div class="qcard"><div class="qtop"><span class="qi">${K.i}</span><div style="flex:1"><div class="qt">${K.n}</div><div class="qd">${K.how}</div></div><div class="sklv">Level<b>${s.lv}</b></div></div><div class="qfoot"><span class="qprog" style="max-width:none"><i style="width:${pct}%"></i></span><span class="qn">${s.lv>=MAXLV?'Max!':s.xp+'/'+need}</span></div></div>`;}).join('');}
-    else{body=hd('🐾 Pets')+(S.pets.map(d=>`<div class="ph-row"><span>${PET_TYPES[d.type].icon} ${esc(d.name)}</span><span class="hearts">${hearts(clamp(Math.round(d.happy/20),0,5))}</span></div>`).join('')||'<p class="ph-sub">Visit the pet shop to adopt a pet!</p>');}}
+    else{body=hd('🐾 Pets')+(S.pets.map(d=>`<div class="ph-row"><span>${PET_TYPES[petKind(d)].icon} ${esc(d.name)}</span><span class="hearts">${hearts(clamp(Math.round(d.happy/20),0,5))}</span></div>`).join('')||'<p class="ph-sub">Visit the pet shop to adopt a pet!</p>');}}
   openPanel(`<div class="phone" role="dialog" aria-label="Phone"><div class="ph-status"><span>${clockStr(S.time)}</span><span>🪙 ${S.coins}</span></div><div class="ph-screen">${body}</div><button class="ph-home" data-a="close" aria-label="Close phone"></button></div>`,{cls:'phonecard',onClose:()=>{PH.app=null;PH.chat=null;PH.jobs=false;}});
   if(PH.app==='msg'&&PH.chat){const sc=document.querySelector('#card .ph-screen');if(sc)sc.scrollTop=sc.scrollHeight;}}
 ACT.phapp=a=>{PH.app=a||null;PH.chat=null;PH.jobs=false;renderPhone();};
@@ -6646,7 +6708,7 @@ function psRivals(){const r=seeded(S.day*53+7),pk=a=>a[Math.floor(r()*a.length)]
 const psRot=i=>Math.PI/2+(i===0?-.35:i===2?.35:0);
 function psRefresh(){if(CUT&&CUT.show){PSX.dirty=true;return;}PSX.dirty=false;for(const r of PSX.rivals)scene.remove(r.m.root);PSX.rivals=[];if(!S)return;PSX.rv=psRivals();
   PSX.rv.forEach((R,i)=>{const m=makePet(R.type,R.col);addOutfit(m,{outfit:Object.assign({},R.outfit)});m.root.visible=false;scene.add(m.root);
-    const tg=label(R.name,.2);tg.position.y={bunny:1.0,hamster:.55}[R.type]||.82;m.root.add(tg);const r={R,m,tg,busy:false};PSX.rivals.push(r);psHome(r,i);});}
+    const tg=label(R.name,.2);tg.position.y=petTagY(R.type);m.root.add(tg);const r={R,m,tg,busy:false};PSX.rivals.push(r);psHome(r,i);});}
 function psHome(r,i){const pd=PS.pad[i],m=r.m;m.root.position.set(pd[0],PS.top+.08,pd[1]);m.root.rotation.set(0,psRot(i),0);m.b.rotation.set(0,0,0);m.b.position.set(0,0,0);if(m.head)m.head.rotation.x=0;m.legs[0].rotation.x=0;r.busy=false;}
 function psDay(){psRefresh();if(S&&isShowDay())setTimeout(()=>{if(S&&PLAYING&&psLeft())toast(`🏆 It's Pet Show day! The show is in the park from ${PS_ON}:00 to ${PS_OFF}:00. Dress up your pet!`,4.6);},4800);}
 function psUpdate(dt){const on=!!(S&&CUR&&CUR.id==='city'&&(psOpen()||CUT&&CUT.show||UI.open&&PSX.pc&&UI.onClose===PSX.pc));PSX.on=on;
@@ -6678,7 +6740,7 @@ function openShow(){if(!S)return;
     <div class="psj">${PS_JUDGES.map(J=>`<div><span>${J.i}</span><b>${J.n}</b><i>loves ${J.love}</i></div>`).join('')}</div>
     <p class="note">Today's other pets: ${rv.map(R=>`${PET_TYPES[R.type].icon} <b>${esc(R.name)}</b> (${esc(R.owner)})`).join(', ')}. They practiced a lot! Can you beat them?</p>
     <p class="note">🥇 <b>200 🪙</b> + 🐾 Pets +2 levels · 🥈 80 🪙 · 🥉 40 🪙</p>
-    <div class="pspick">${here.map((p,i)=>{const d=p.d,o=petOutfit(d),sc=psScore(d);return`<button class="pscard" data-a="psgo:${i}"><span class="pi">${PET_TYPES[d.type].icon}</span><b>${esc(d.name)}</b>
+    <div class="pspick">${here.map((p,i)=>{const d=p.d,o=petOutfit(d),sc=psScore(d);return`<button class="pscard" data-a="psgo:${i}"><span class="pi">${PET_TYPES[petKind(d)].icon}</span><b>${esc(d.name)}</b>
       <span class="pso">${PSLOTS.map(([sl])=>o[sl]?ACCS[o[sl]].i:'').join('')||'no outfit yet'}</span><span>👒 ${starRow(sc.style)}</span><span>🌼 ${starRow(sc.happy)}</span><i>⭐ Pick ${esc(d.name)}!</i></button>`;}).join('')}</div>
     <p class="note">Tip: dress your pet in all 4 outfit spots, make it super happy, and hit the gold when you do tricks!</p>`,{onClose:PSX.pc});}
 ACT.psgo=i=>{const p=PSX.pick&&PSX.pick[+i];if(!p||CUT)return;closePanel();psStart(p);};
@@ -6695,7 +6757,7 @@ function psStart(p){const d=p.d;if(P.ride)stopRide();P.sit=null;document.body.cl
   CUT={show:1,t:0,shake:0,p,d,stage:'intro',st:0,round:0,pts:0,res:[],tr:TRICKS.slice().sort(()=>Math.random()-.5).slice(0,3),from:{x:P.x,z:P.z,yaw:P.yaw,pitch:P.pitch},px:p.x,pz:p.z,jn:-1,order,ri:-1,pod:false};
   SFX.yay();popText('🏆 Pet Show!');psPanel('intro');}
 function psGo(stage){CUT.stage=stage;CUT.st=CUT.t;}
-function psBoard(){const C=CUT;return C.order.map((x,i)=>{const me=!!x.you,R=x.R,ic=PET_TYPES[me?C.d.type:R.type].icon,cur=i===C.ri&&!x.done;
+function psBoard(){const C=CUT;return C.order.map((x,i)=>{const me=!!x.you,R=x.R,ic=PET_TYPES[me?petKind(C.d):R.type].icon,cur=i===C.ri&&!x.done;
   const sc=x.done?(x.out?'😴 Out':x.tot+' ⭐'):cur?'🎤':'…';
   return`<div class="psrow on${me?' me':''}${cur?' cur':''}"><span class="pji">${ic}</span><div><b>${esc(me?C.d.name:R.name)}</b><i>${me?'Your pet!':esc(R.owner)+'\'s '+PET_TYPES[R.type].name}</i></div><span class="pjs">${sc}</span></div>`;}).join('');}
 function psPanel(kind){const C=CUT;let h;
@@ -6754,7 +6816,7 @@ function psCut(dt){psTags();const C=CUT,p=C.p,m=p.m,t=(C.t+=dt),u=t-C.st,sm=k=>k
   const showCam=()=>psCamTo(PS.cam[0],PS.cam[1],PS.sx,.35,PS.sz,dt,3.2),judgeCam=()=>psCamTo(PS.jcam[0],PS.jcam[1],PS.jx,.95,PS.sz,dt,3.4);
   const youWait=()=>{psPetPose(p,pd3[0],PY,pd3[1],FACE+.35);animPet(m,dt,false);};
   if(C.stage==='intro'){showCam();const k=sm(clamp(u/1.7,0,1));psPetPose(p,lerp(C.px,pd3[0],k),lerp(0,PY,k)+Math.sin(Math.PI*k)*.9,lerp(C.pz,pd3[1],k),k<.85?Math.atan2(pd3[0]-C.px,pd3[1]-C.pz):FACE+.35);animPet(m,dt,k<1);
-    if(u>=1.8&&!C.hi){C.hi=1;const snd=SFX[PET_TYPES[C.d.type].snd];if(snd)snd();}
+    if(u>=1.8&&!C.hi){C.hi=1;const snd=SFX[PET_TYPES[petKind(C.d)].snd];if(snd)snd();}
     if(u>=3.4)psNextRival();return;}
   if(C.ri>=0&&C.ri<3){youWait();const x=C.order[C.ri],r=x.r,g=r.m.root,rm=r.m,pd=PS.pad[C.ri];
     if(C.stage==='rin'){showCam();const k=sm(clamp(u/1.5,0,1));psPose(g,rm,lerp(pd[0],PS.sx,k),lerp(PY,BY,k)+Math.abs(Math.sin(k*Math.PI*3))*.08,lerp(pd[1],PS.sz,k),k<.9?Math.atan2(PS.sx-pd[0],PS.sz-pd[1]):FACE);animPet(rm,dt,k<1);
@@ -6774,7 +6836,7 @@ function psCut(dt){psTags();const C=CUT,p=C.p,m=p.m,t=(C.t+=dt),u=t-C.st,sm=k=>k
     if(u>=1.6){C.round=0;psGo('aim');psAim();}return;}
   if(C.stage==='aim'||C.stage==='trick'){showCam();
     if(C.stage==='aim'){psPetPose(p,PS.sx,BY,PS.sz,FACE);animPet(m,dt,false);const el=$('psMark');if(el)el.style.left=(psPos()*100).toFixed(1)+'%';return;}
-    psPetPose(p,PS.sx,BY,PS.sz,FACE);psTrickAnim(p.g,m,C.d.type,C.tr[C.round][1],C.res[C.round],u,BY,FACE,C);
+    psPetPose(p,PS.sx,BY,PS.sz,FACE);psTrickAnim(p.g,m,petKind(C.d),C.tr[C.round][1],C.res[C.round],u,BY,FACE,C);
     if(u>=1.6){C.hf=0;m.legs[0].rotation.x=0;psPetPose(p,PS.sx,BY,PS.sz,FACE);
       if(C.round<2){C.round++;psGo('aim');psAim();}else{me.sc=psScore10(C.d,C.pts);me.tot=me.sc.style+me.sc.trick+me.sc.happy;psGo('jin');C.jn=-1;psJudgePanel();}}
     return;}
@@ -6809,7 +6871,7 @@ function psReveal(a){const C=CUT,x=a.x,nm=x.you?C.d.name:x.R.name,med=['🥇','�
 function psOnPod(a,v,dt){const C=CUT,x=a.x,[bx,bz,h]=PS.pod[a.i],top=PS.top+h+.05,k=clamp(v/.9,0,1),e=k*k*(3-2*k);
   const px=lerp(a.f[0],bx,e),pz=lerp(a.f[2],bz,e),py=lerp(a.f[1],top,e)+Math.sin(Math.PI*k)*.8+(k>=1&&a.i===0?Math.abs(Math.sin(v*6))*.18:0),ry=k<1?Math.atan2(bx-a.f[0],bz-a.f[2]):Math.PI/2;
   if(x.you){psPetPose(C.p,px,py,pz,ry);animPet(C.p.m,dt,k<1);}else{psPose(x.r.m.root,x.r.m,px,py,pz,ry);animPet(x.r.m,dt,k<1);}}
-function psRow(x,med){const C=CUT,me=!!x.you,R=x.R,ic=PET_TYPES[me?C.d.type:R.type].icon;
+function psRow(x,med){const C=CUT,me=!!x.you,R=x.R,ic=PET_TYPES[me?petKind(C.d):R.type].icon;
   return`<div class="psrow on${me?' me':''}"><span class="pji">${med}</span><div><b>${ic} ${esc(me?C.d.name:R.name)}</b><i>${me?'Your pet!':esc(R.owner)+'\'s '+PET_TYPES[R.type].name}</i></div><span class="pjs">${x.out?'Out':x.tot+' ⭐'}</span></div>`;}
 function psPay(){const C=CUT,d=C.d,me=C.order[3],place=C.place,tot=me.tot;
   const lv0=sk('pets').lv;let pay=0,lvUp=0;
