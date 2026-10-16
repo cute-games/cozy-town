@@ -1287,6 +1287,9 @@ const FOODS={
   sandwich:{n:'Cheese sandwich',i:'🥪',p:0,f:45},salad:{n:'Garden salad',i:'🥗',p:0,f:35},fruitsalad:{n:'Fruit salad',i:'🥣',p:0,f:40},soup:{n:'Pumpkin soup',i:'🍲',p:0,f:60},
   pancakes:{n:'Pancakes',i:'🥞',p:0,f:50},carrotcake:{n:'Carrot cake',i:'🎂',p:0,f:45},milkshake:{n:'Strawberry milkshake',i:'🥤',p:11,f:35},lemonade:{n:'Lemonade',i:'🧃',p:0,f:20},friedegg:{n:'Fried egg',i:'🍳',p:0,f:25},
   coconut:{n:'Coconut drink',i:'🥥',p:8,f:14},
+  /* 🍔 night 3, job 10: from the food truck in the park (burger, fries, hot dog, taco) and the Market (the rest) */
+  sushi:{n:'Sushi',i:'🍣',p:14,f:30},riceball:{n:'Rice ball',i:'🍙',p:6,f:14},burger:{n:'Burger',i:'🍔',p:15,f:38},fries:{n:'Fries',i:'🍟',p:7,f:16},hotdog:{n:'Hot dog',i:'🌭',p:9,f:22},
+  taco:{n:'Taco',i:'🌮',p:9,f:20},noodles:{n:'Noodles',i:'🍜',p:12,f:32},dumplings:{n:'Dumplings',i:'🥟',p:10,f:24},lollipop:{n:'Lollipop',i:'🍭',p:3,f:5},pudding:{n:'Pudding',i:'🍮',p:8,f:15},
 };
 const RECIPES=[
   {id:'sandwich',need:{bread:1,cheese:1}},{id:'friedegg',need:{eggs:1}},{id:'salad',need:{tomato:1,carrot:1}},{id:'fruitsalad',need:{apple:1,banana:1,strawberry:1}},
@@ -1298,7 +1301,7 @@ const SEEDS={carrot:{n:'Carrot',i:'🥕',p:5,h:3,yield:['carrot',2],pl:'carrots'
   strawberry:{n:'Strawberry',i:'🍓',p:8,h:4,yield:['strawberry',3],pl:'strawberries',rd:'strawberries are'},pumpkin:{n:'Pumpkin',i:'🎃',p:12,h:6,yield:['pumpkin',1],pl:'pumpkin',rd:'pumpkin is'},
   sunflower:{n:'Sunflower',i:'🌻',p:8,h:5,furn:'sunflower',pl:'sunflowers',rd:'sunflowers are'},tulip:{n:'Tulip',i:'🌷',p:6,h:3,furn:'tulips',pl:'tulips',rd:'tulips are'}};
 const SHOPS={
-  market:{title:'Market',items:['apple','banana','orange','grapes','cherries','watermelon','corn','bread','milk','cheese','eggs','flour','chocolate','lemon','honey','popcorn','candy','pizza','cake','icecream']},
+  market:{title:'Market',items:['apple','banana','orange','grapes','cherries','watermelon','corn','bread','milk','cheese','eggs','flour','chocolate','lemon','honey','popcorn','candy','pizza','cake','icecream','sushi','riceball','noodles','dumplings','lollipop','pudding']},
   pizza:{title:'Pizzeria',items:['pizza','slice','garlic']},
   bakery:{title:'Bakery',items:['croissant','bread','bagel','pretzel','pie','cake','cookie','donut','muffin']},
   icecream:{title:'Ice cream shop',items:['icecream','sundae','popsicle','milkshake','icecake']},
@@ -1308,6 +1311,7 @@ const SHOPS={
   flowers:{title:'Flower shop',furn:FLOWER_SHOP},
   seeds:{title:'Seed box',items:Object.keys(SEEDS).map(k=>'seed_'+k)},
   beach:{title:'Beach kiosk',items:['popsicle','icecream','coconut','watermelon']},
+  truck:{title:'Food truck',items:['burger','fries','hotdog','taco']},
 };
 const PET_ITEMS={petfood:{n:'Pet food',i:'🦴',p:6},catfood:{n:'Cat food',i:'🐟',p:6},bunnyfood:{n:'Bunny & hamster food',i:'🥕',p:6},ball:{n:'Ball',i:'🎾',p:10},yarn:{n:'Yarn ball',i:'🧶',p:8},squeaky:{n:'Squeaky toy',i:'🐤',p:8},
   bow:{n:'Pink bow',i:'🎀',p:30},hat:{n:'Party hat',i:'🥳',p:35},collar:{n:'Bell collar',i:'🔔',p:25},scarf:{n:'Cozy scarf',i:'🧣',p:30},
@@ -1453,6 +1457,26 @@ function sitAt(b,i){if(P.ride)stopRide();if(seatTaken(b,i)){if(seatTaken(b,1-i))
   toast(b.loc==='beach'?'Ahh… the sea is so calm. 🌊 Move to stand up.':'Comfy! Move to stand up. You can eat from your 🎒 bag here.',3);if(typeof qEvent==='function')qEvent('sit');}
 /* 🏡 your yard moved to another lot: its bench moves along (the seats are kept at the old town-yard spots, like everything in the yard) */
 function benchYard(j){for(const b of BENCHES){if(!b.yard)continue;for(const s of b.seats){[s.x,s.z]=lotPt(j,s.lx,s.lz);s.yaw=(LANE_PLOTS[j].s<0?0:Math.PI)+Math.PI+b.ry0;}const c=lotPt(j,b.x0,b.z0);b.x=c[0];b.z=c[1];}}
+
+/* 🍔 the food truck in the park (night 3, job 10): by the fountain benches, off the paths, its window towards the fountain. Burgers, fries, hot dogs
+   and tacos from 8:00 to 20:00 like the shops (SHUT.truck). Mr. Patty stands inside (made with the other keepers). Cheap: toon boxes, one sign */
+function foodTruck(st,L,x,z){const B='#ff8a6b',W='#ffffff';
+  box(st,2.2,1.9,3.7,B,x,.5,z-.35);box(st,2.3,.12,3.8,W,x,2.4,z-.35,{ol:.015});   /* the body and its roof */
+  box(st,2.1,1.25,1.1,B,x,.5,z+2.05);box(st,1.9,.7,.08,'#bfe6ff',x,1.0,z+2.56,{ol:.012});box(st,2.2,.35,.25,'#5a5f8c',x,.4,z+2.72);   /* the cab, the windscreen, the bumper */
+  box(st,.3,.3,.3,'#fff1b8',x-.9,1.0,z+2.58,{ol:.012});box(st,.3,.3,.3,'#fff1b8',x+.9,1.0,z+2.58,{ol:.012});   /* headlights */
+  for(const [wx,wz] of [[-1.1,-1.4],[1.1,-1.4],[-1.1,1.8],[1.1,1.8]]){cyl(st,.38,.38,.3,'#3d2c5e',x+wx,.38,z+wz,{rz:Math.PI/2,center:true,seg:12,ol:.015});cyl(st,.16,.16,.32,'#c8cde0',x+wx,.38,z+wz,{rz:Math.PI/2,center:true,seg:8,ol:false});}
+  box(st,.06,.95,2.3,'#7cc8ff',x+1.1,1.15,z-.35,{ol:.012});box(st,.55,.08,2.5,W,x+1.33,1.08,z-.35,{ol:.015});   /* the serving window and the counter */
+  for(let i=0;i<6;i++)box(st,1.1,.05,.42,i%2?W:'#ff6b6b',x+1.62,2.22,z-1.4+i*.42,{rz:.32,ol:.012});   /* the striped awning */
+  /* a burger, a box of fries and a hot dog on the counter */
+  cyl(st,.13,.13,.05,'#c98f5e',x+1.35,1.16,z+.5,{seg:10,ol:.01});box(st,.26,.03,.26,'#ffd45c',x+1.35,1.21,z+.5,{ol:false});sph(st,.13,'#e0a874',x+1.35,1.26,z+.5,{s:[1,.6,1],ws:10,hs:6,ol:.01});
+  box(st,.2,.2,.14,'#ff6b6b',x+1.35,1.16,z-.3,{ol:.01});for(let i=0;i<4;i++)box(st,.03,.3,.03,'#ffd45c',x+1.28+i*.045,1.2,z-.3,{ol:false});
+  box(st,.34,.08,.12,'#ffe0c4',x+1.35,1.16,z-1.0,{ol:.01});cyl(st,.04,.04,.3,'#e0745a',x+1.35,1.28,z-1.0,{rz:Math.PI/2,center:true,seg:6,ol:false});
+  const sg=signPlane('🍔 Food truck',2.4,.6,'#ff6b6b','#ffffff');sg.position.set(x+1.13,2.05,z-.35);sg.rotation.y=Math.PI/2;L.g.add(sg);
+  sph(st,.11,null,x+1.75,1.95,z-.35,{mat:LAMP,ol:.012,ws:8,hs:6});   /* a little lamp under the awning for the evening */
+  col(L,x-1.25,z-2.3,x+1.95,z+2.85);
+  inter(L,{x:x+2.1,z:z-.35,r:2.4,icon:()=>shopOpen('truck')?'🍔':'🌙',label:'Food truck',say:()=>shopOpen('truck')?'':`🌙 Closed · opens at ${DAY_ON}:00`,
+    act:()=>{if(shopOpen('truck')){openShop('truck');return;}SFX.no();toast(`🌙 The Food truck is closed now. It opens at ${DAY_ON}:00 ☀️`,3);}});}
+const TRUCK={x:-32.5,z:11.8};   /* the park's south-west corner, by the bench, the window towards the fountain */
 
 /* ================= world ================= */
 const LOC={};let CUR=null;
@@ -1618,6 +1642,7 @@ function buildCity(){
   const fx=-22,fz=22;buildFountain(st,L,fx,fz);
   L.benches=[];for(let i=0;i<4;i++){const a=Math.PI/4+i*Math.PI/2,bx=fx+Math.cos(a)*9.6,bz=fz+Math.sin(a)*9.6,ry=Math.atan2(fx-bx,fz-bz);bench(st,bx,bz,ry);colC(L,bx,bz,.75);L.benches.push({x:bx,z:bz,ry,b:BENCHES[BENCHES.length-1]});}
   for(const [x,z] of [[-36,12.5],[-11.5,16],[-37.4,16.2],[-37.6,27.7],[-11.5,28],[-16,37.5],[-26,37.5],[-20,35.5],[-36,37.5],[-12.5,37.5]]){tree(st,x,z,1);colC(L,x,z,.28);}
+  foodTruck(st,L,TRUCK.x,TRUCK.z);   /* 🍔 the food truck, by the fountain benches */
   L.beds=[{id:'h1',x:-19.8,z:-10.6,ix:-19.8,iz:-9.9,yard:1},{id:'h2',x:-14.2,z:-10.6,ix:-14.2,iz:-9.9,yard:1}];   /* h1, h2: the flower beds in front of your house (on Friends Lane) */
   for(const [i,sx,sz] of [[1,1,-1],[2,-1,-1],[3,-1,1],[4,1,1]]){const x=fx+sx*8.84,z=fz+sz*8.84;flowerBed(st,x,z,1.8,1.0);col(L,x-.95,z-.55,x+.95,z+.55);L.beds.push({id:'p'+i,x,z,ix:x,iz:z+(sz>0?-.9:.9)});}
   bench(st,-13,34.6,Math.PI);bench(st,-10,34.6,Math.PI);col(L,-14,34.2,-9,35.1);
@@ -3225,7 +3250,7 @@ function dayLabel(){return(psLeft()?'🏆 ':'')+wdName().slice(0,3)+' · Day '+S
    Your home, Friends Lane, the flats, the park, the school building and the fire station are always open. */
 const DAY_ON=8,DAY_OFF=20,PS_ON=8,PS_OFF=20;
 const SHUT={market:['Market','Mr. Bun'],pets:['Pet Shop','Ms. Paws'],flowers:['Flower Shop','Ms. Petal'],cafe:['Café','Mr. Mocha'],clothes:['Clothes Shop','Ms. Stitch'],
-  toys:['Toy Store','Mr. Toby'],bakery:['Bakery','Mrs. Crumb'],icecream:['Ice Cream Shop','Mr. Sprinkles'],library:['Library','Ms. Page']};
+  toys:['Toy Store','Mr. Toby'],bakery:['Bakery','Mrs. Crumb'],icecream:['Ice Cream Shop','Mr. Sprinkles'],library:['Library','Ms. Page'],truck:['Food truck','Mr. Patty']};
 function isDaytime(){return!!S&&S.time>=DAY_ON&&S.time<DAY_OFF;}
 function shopOpen(id){return!SHUT[id]||isDaytime();}
 function workAt(){return`🌙 Work starts at ${DAY_ON}:00 ☀️`;}
@@ -3423,7 +3448,7 @@ function genQuest(k){try{const p=k.split(':'),kind=p[0],a=p[1];
 const qCheap=k=>{const p=k.split(':'),a=p[1];if(p[0]==='buy'){const it=itemInfo(a)||FURN[a];return!!it&&(it.p||0)<=20;}
   if(p[0]==='place')return!!S&&!!S.home&&(S.home.store||[]).some(it=>furnOf(it)===a);return true;};
 function questCandidates(r,old){const ok=k=>{const Q=getQ(k);return !!Q&&(!Q.need||Q.need())&&(old||qCheap(k));};
-  const foods=[...new Set([...SHOPS.market.items,...SHOPS.cafe.items,...SHOPS.bakery.items,...SHOPS.icecream.items])];
+  const foods=[...new Set([...SHOPS.market.items,...SHOPS.cafe.items,...SHOPS.bakery.items,...SHOPS.icecream.items,...SHOPS.truck.items])];
   const simple=[...Object.keys(QUESTS).filter(k=>!QUESTS[k].steps),...foods.map(f=>'buy:'+f),...foods.map(f=>'eat:'+f),...RECIPES.map(x=>'cook:'+x.id),
     ...FRIENDS.map(f=>'chat:'+f.id),...FRIENDS.map(f=>'gift:'+f.id),...PLACES.filter(pl=>!pl.nq).map(pl=>'find:'+pl.id),...['market','cafe','pets','flowers','clothes','toys','bakery','icecream','library','school','fire'].map(x=>'enter:'+x),
     ...BUY_FURN.filter(t=>t!=='shellshelf').map(t=>'place:'+t),...Object.keys(SEEDS).map(s=>'plant:'+s),...Object.keys(SEEDS).map(s=>'harvest:'+s),...SHOPS.toys.furn.map(t=>'buy:'+t),
@@ -4514,6 +4539,8 @@ function buildActors(){
     bakePerson(p);p.root.position.set(L.ox+x,(p===k7||p===k8)?.2:0,L.oz+z);L.g.parent.add(p.root);const tg=label(name,.3);tg.position.y=(p===k7||p===k12)?2.42:1.95;p.root.add(tg);   /* 🧁 behind the high cases the keepers stand on a little step */
     const k={p,L,x:L.ox+x,z:L.oz+z,name};KEEPERS.push(k);colC(L,x,z,(p===k10||p===k13)?.8:.5);   /* a bit of room round people, so you don't press your nose into them (the two teachers fill their corners: nobody squeezes in behind them) */
     inter(L,{x,z:z+1.1,r:2.2,icon:typeof shop==='function'?'💬':'🛒',label:'Talk to '+name,act:()=>{p.wave=1.2;SFX.talk();if(typeof shop==='function')shop();else if(shop==='clothes')openClothes();else openShop(shop);},obj:p.root});}
+  {const p=makePerson({skin:'#d9a06b',hair:'#3d2c5e',style:'short',top:'#ffffff',sleeve:'#ff8a6b',bottom:'#5a5f8c',shoes:'#3d2c5e',hat:'cap',hatc:'#ff6b6b',apron:'#ff6b6b',eyes:'happy',mouth:'grin'});   /* 🍔 Mr. Patty in the food truck */
+    bakePerson(p);const L=LOC.city,x=L.ox+TRUCK.x+.2,z=L.oz+TRUCK.z-.35;p.root.position.set(x,.5,z);p.root.rotation.y=Math.PI/2;scene.add(p.root);const tg=label('Mr. Patty',.3);tg.position.y=1.95;p.root.add(tg);KEEPERS.push({p,L,x,z,name:'Mr. Patty'});}
   {const ct=LOC.pizza.inter.find(t=>t.label==='Talk to Chef Blaze');if(ct){ct.icon=()=>dlWaiting()?'🍕':'💬';ct.label=()=>dlWaiting()?'Pick up the pizza':'Talk to Chef Blaze';}}
   const L=LOC.pets;
   L.pens.forEach((pen,i)=>{const t=pen.type;for(let k=0;k<2;k++){const col2=PET_TYPES[t].cols[k];const m=makePet(t,col2);scene.add(m.root);
