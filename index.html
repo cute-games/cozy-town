@@ -1340,8 +1340,9 @@ function foodModel(g,k,x,y,z){
 }
 
 /* ---- street props ---- */
-function tree(g,x,z,s=1){const c=pick(['#7ed37a','#6cc97c','#93dc76']);cyl(g,.15*s,.2*s,2.3*s,'#9b6b4a',x,0,z,{seg:8});sph(g,1.15*s,c,x,3.05*s,z,{ws:12,hs:9});sph(g,.75*s,c,x+.7*s,2.75*s,z+.15*s,{ws:10,hs:8});sph(g,.72*s,c,x-.62*s,2.8*s,z-.3*s,{ws:10,hs:8});sph(g,.62*s,c,x+.1*s,3.6*s,z+.4*s,{ws:10,hs:8});}
-function pine(g,x,z,s=1){cyl(g,.14*s,.18*s,.8*s,'#9b6b4a',x,0,z,{seg:8});const c=pick(['#4fb37a','#5bbf7e']);cone(g,1.2*s,1.6*s,c,x,.7*s,z,{seg:9});cone(g,.92*s,1.4*s,c,x,1.55*s,z,{seg:9});cone(g,.62*s,1.2*s,c,x,2.35*s,z,{seg:9});}
+function tree(g,x,z,s=1){const c=pick(TREE_COLS);   /* 🍂 the season's colours (job 11) */
+  cyl(g,.15*s,.2*s,2.3*s,'#9b6b4a',x,0,z,{seg:8});sph(g,1.15*s,c,x,3.05*s,z,{ws:12,hs:9});sph(g,.75*s,c,x+.7*s,2.75*s,z+.15*s,{ws:10,hs:8});sph(g,.72*s,c,x-.62*s,2.8*s,z-.3*s,{ws:10,hs:8});sph(g,.62*s,c,x+.1*s,3.6*s,z+.4*s,{ws:10,hs:8});}
+function pine(g,x,z,s=1){cyl(g,.14*s,.18*s,.8*s,'#9b6b4a',x,0,z,{seg:8});const c=pick(PINE_COLS);cone(g,1.2*s,1.6*s,c,x,.7*s,z,{seg:9});cone(g,.92*s,1.4*s,c,x,1.55*s,z,{seg:9});cone(g,.62*s,1.2*s,c,x,2.35*s,z,{seg:9});}
 function lampPost(g,x,z){LAMPXZ.push([x,z]);cyl(g,.07,.1,3,'#5a5f8c',x,0,z,{seg:8});cyl(g,.16,.16,.08,'#5a5f8c',x,2.95,z,{seg:10});sph(g,.19,null,x,3.21,z,{mat:LAMP,ol:.02,ws:12,hs:8});cone(g,.27,.24,'#5a5f8c',x,3.33,z,{seg:10});}
 function bench(g,x,z,ry=0){const p=new THREE.Group();p.position.set(x,0,z);p.rotation.y=ry;g.add(p);box(p,1.6,.08,.5,'#e0905e',0,.42,0);box(p,1.6,.36,.07,'#e0905e',0,.58,-.22);for(const sx of[-.7,.7]){box(p,.08,.42,.08,'#5a5f8c',sx,0,.15);box(p,.08,.95,.08,'#5a5f8c',sx,0,-.2);}
   if(BENCH_L&&!BENCH_SKIP)benchReg(BENCH_L,p,BENCH_SKIP<0);return p;}   /* 🪑 2 seats on every bench (night 3, job 5) */
@@ -1479,7 +1480,7 @@ function foodTruck(st,L,x,z){const B='#ff8a6b',W='#ffffff';
 const TRUCK={x:-32.5,z:11.8};   /* the park's south-west corner, by the bench, the window towards the fountain */
 
 /* ================= world ================= */
-const LOC={};let CUR=null;
+const LOC={};let GRASS_M=null;let CUR=null;
 function makeLoc(id,type,ox,oz,b){const g=new THREE.Group();g.position.set(ox,0,oz);scene.add(g);
   const L={id,type,g,ox,oz,cols:[],dcols:[],inter:[],bounds:{x1:ox+b[0],z1:oz+b[1],x2:ox+b[2],z2:oz+b[3]}};LOC[id]=L;return L;}
 function col(L,x1,z1,x2,z2){L.cols.push({x1:L.ox+Math.min(x1,x2),z1:L.oz+Math.min(z1,z2),x2:L.ox+Math.max(x1,x2),z2:L.oz+Math.max(z1,z2)});}
@@ -1601,7 +1602,7 @@ DOORS.apt1={inside:[-8.2,0,-Math.PI/2]};DOORS.apt2={inside:[5,1.4,Math.PI/2]};DO
 function buildCity(){
   const L=makeLoc('city','out',0,0,[-139,-80,80,80]);BENCH_L=L;
   const st=new THREE.Group();L.g.add(st);L.dyn=new THREE.Group();L.g.add(L.dyn);L.ducks=[];
-  const gr=new THREE.Mesh(new THREE.PlaneGeometry(800,800),toon({color:'#86d36a',polygonOffset:true,polygonOffsetFactor:4,polygonOffsetUnits:8}));gr.rotation.x=-Math.PI/2;gr.receiveShadow=true;gr.userData.keep=1;L.g.add(gr);
+  GRASS_M=toon({color:'#86d36a',polygonOffset:true,polygonOffsetFactor:4,polygonOffsetUnits:8});const gr=new THREE.Mesh(new THREE.PlaneGeometry(800,800),GRASS_M);gr.rotation.x=-Math.PI/2;gr.receiveShadow=true;gr.userData.keep=1;L.g.add(gr);   /* ❄️ GRASS_M turns white in snow (job 11) */
   const ROAD='#8c90b4',SIDE='#f3e7df',CURB='#ddcdd0',E=84,RX=[-50,0,50],RZ=[-50,0,50];
   const segs=(lo,hi,cuts,h)=>{let out=[[lo,hi]];for(const c of cuts){const nx=[];for(const [p,q] of out){if(c+h<=p||c-h>=q){nx.push([p,q]);continue;}if(c-h>p)nx.push([p,c-h]);if(c+h<q)nx.push([c+h,q]);}out=nx;}return out;};
   for(const z of RZ)flat(st,2*E,8,ROAD,0,.02,z);
@@ -3226,9 +3227,10 @@ function updSky(){
   if(NGLOW){NGLOW.uniforms.op.value=nf;NGLOW.visible=out&&nf>.01;}
   stars.material.opacity=nf;stars.visible=out&&nf>0;
   PANE.color.copy(skyU.bot.value).lerp(_c2.set('#ffffff'),.25);
-  if(out){const hal=HOL.cur==='halloween'?nf:0;if(hal>0){skyU.top.value.lerp(_c2.set('#3b1d5e'),hal*.55);skyU.bot.value.lerp(_c2.set('#5b2a7a'),hal*.5);FOG.color.copy(skyU.bot.value);}FOG.near=lerp(60,34,hal);FOG.far=lerp(340,230,hal);}   /* 🎃 Halloween nights: a purple sky and closer fog */
+  if(out){const hal=HOL.cur==='halloween'?nf:0;if(hal>0){skyU.top.value.lerp(_c2.set('#3b1d5e'),hal*.55);skyU.bot.value.lerp(_c2.set('#5b2a7a'),hal*.5);FOG.color.copy(skyU.bot.value);}FOG.near=lerp(60,34,hal);FOG.far=lerp(340,230,hal);
+    const gy=WX.grey;if(gy>0){skyU.top.value.lerp(_c2.set('#8a97ad'),gy*.7);skyU.bot.value.lerp(_c2.set('#c5ccd6'),gy*.6);FOG.color.copy(skyU.bot.value);FOG.near*=1-.35*gy;FOG.far*=1-.3*gy;}}   /* 🎃 Halloween nights: a purple sky and closer fog; 🌧️ grey weather (job 11) */
   if(out){
-    hemi.intensity=lerp(a[4],b[4],t);hemi.color.copy(C(5));hemi.groundColor.copy(C(6));sun.color.copy(C(7));sun.intensity=lerp(a[3],b[3],t);
+    hemi.intensity=lerp(a[4],b[4],t)*(1-.2*WX.grey);hemi.color.copy(C(5));hemi.groundColor.copy(C(6));sun.color.copy(C(7));sun.intensity=lerp(a[3],b[3],t)*(1-.55*WX.grey);
     let u,day=h>=6&&h<=18.5;u=day?(h-6)/12.5:(((h+24-18.5)%24)/11.5);const ang=Math.PI*u;
     SUND.set(Math.cos(ang)*.85,.32+Math.sin(ang)*.9,.45).normalize();lamp.intensity=0;busLamp();
     sunSprite.visible=day&&h>6.2&&h<18.3;moonSprite.visible=!day||h<6.4||h>18.2;
@@ -3708,10 +3710,58 @@ function walkersApart(dt){const W=[];for(const w of WALKERS){if(w.state==='home'
   for(const a of W){a.g.position.x=a.x;a.g.position.z=a.z;}}
 /* a walker that comes out (wakes up, or a new day) never appears inside another one */
 function wkSpawnApart(w){for(let t=0;t<6;t++){const o=WALKERS.find(q=>q!==w&&q.state!=='home'&&Math.hypot(q.x-w.x,q.z-w.z)<.75);if(!o)return;const a=w.face+Math.PI/2+t*1.1,x=w.x+Math.cos(a)*.8,z=w.z+Math.sin(a)*.8;if(onRoad(x,z)&&!onRoad(w.x,w.z))continue;w.x=x;w.z=z;}}
-/* 🌦️ the weather, as the grandmas need it (night 3, job 6; job 11 fills this in): wxForce('rain'|'snow'|'sunny'|'cloudy'|null) is for the tests */
-const WX={force:null};
+/* 🌦️ weather and seasons (night 3, job 11). The season comes from the real date (seasonOf, job 1): the trees take its colours when the town is
+   built (they are baked, so a new season shows at the next load). The weather comes from the shared clock only: every 3 game hours a block
+   (wxAt(day,hour): sunny, cloudy, rain or snow, by the season's shares; snow only in winter and the Christmas window), so two players with
+   the same clock see the same weather, and nothing new is sent online. The last game hour of a block fades into the next (wxNow().k).
+   Rain: a greyer sky, a softer sun, rain lines around you, a quiet rain sound outdoors (only with sound on). Snow: flakes around you, and
+   the grass turns white while it snows and for the next block. Nothing falls indoors. No thunder. wxForce(kind) is for the tests */
+const WX={force:null,cur:'sunny',grey:0,rain:0,snow:0,cover:0,t:0,snd:null,sndG:null};
+const WX_SHARE={spring:[['sunny',55],['cloudy',20],['rain',25]],summer:[['sunny',70],['cloudy',15],['rain',15]],autumn:[['sunny',45],['cloudy',25],['rain',30]],
+  winter:[['sunny',30],['cloudy',30],['snow',35],['rain',5]],xmas:[['sunny',20],['cloudy',20],['snow',60]]};
+function wxHash(d,b){let x=(Math.imul(d|0,8)+(b|0)+11)>>>0;x=Math.imul(x^(x>>>16),2246822519)>>>0;x=Math.imul(x^(x>>>13),3266489917)>>>0;x^=x>>>16;return(x>>>0)/4294967296;}
+function wxSeason(){return HOL.cur==='xmas'?'xmas':seasonOf(realDate());}
+function wxAt(day,hour){const b=Math.floor(hour/3),T=WX_SHARE[wxSeason()]||WX_SHARE.summer;let u=wxHash(day,b)*100;for(const [k,p] of T){if(u<p)return k;u-=p;}return T[0][0];}
+function wxNow(){if(WX.force)return{a:WX.force,b:WX.force,k:0};const d=S?S.day|0:1,h=S?S.time:12,b=Math.floor(h/3),hm=h-b*3;let d2=d,b2=b+1;if(b2>7){b2=0;d2++;}
+  return{a:wxAt(d,b*3+1.5),b:wxAt(d2,b2*3+1.5),k:hm>2?clamp(hm-2,0,1):0};}
 function wxForce(k){WX.force=k||null;}
-function wxKind(){return WX.force||'sunny';}
+function wxKind(){const w=wxNow();return w.k<.5?w.a:w.b;}   /* the grandmas, the butterflies and the birds ask this */
+/* a falling cloud of drops around the camera, moved on the GPU: y wraps every H metres, so it never runs out */
+function wxCloud(kind,n){const H=18,W=28,pos=new Float32Array(n*(kind==='rain'?6:3)),spd=new Float32Array(n*(kind==='rain'?2:1)),ph=new Float32Array(n*(kind==='rain'?2:1)),dy=new Float32Array(n*2),col=new Float32Array(n*3);
+  const r=seeded(kind==='rain'?31:kind==='snow'?32:33),LC=[[1,.55,.2],[.95,.3,.25],[1,.8,.25],[.9,.45,.15]];
+  for(let i=0;i<n;i++){const x=(r()-.5)*W,y=r()*H,z=(r()-.5)*W,s=kind==='rain'?12+r()*5:kind==='snow'?.9+r()*.7:.7+r()*.6,p=r()*6.28;
+    if(kind==='rain'){pos.set([x,y,z,x,y,z],i*6);spd.set([s,s],i*2);ph.set([p,p],i*2);dy.set([0,.5],i*2);}else{pos.set([x,y,z],i*3);spd[i]=s;ph[i]=p;const c=LC[i%4];col.set(c,i*3);}}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('spd',new THREE.BufferAttribute(spd,1));g.setAttribute('ph',new THREE.BufferAttribute(ph,1));
+  if(kind==='rain')g.setAttribute('dy',new THREE.BufferAttribute(dy,1));else g.setAttribute('col',new THREE.BufferAttribute(col,3));
+  const u={t:{value:0},op:{value:0},H:{value:H},pr:{value:Math.min(2,window.devicePixelRatio||1)}};
+  const vs=kind==='rain'?`uniform float t,H;attribute float spd,ph,dy;void main(){vec3 p=position;p.y=mod(p.y-t*spd,H)+dy;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.0);}`
+    :`uniform float t,H,pr;attribute float spd,ph;attribute vec3 col;varying vec3 vc;void main(){vc=col;vec3 p=position;p.y=mod(p.y-t*spd,H);p.x+=sin(t*.8+ph)*${kind==='snow'?'.5':'.9'};p.z+=cos(t*.6+ph)*${kind==='snow'?'.35':'.7'};vec4 mv=modelViewMatrix*vec4(p,1.0);gl_PointSize=clamp(${kind==='snow'?'70.0':'110.0'}/max(1.0,-mv.z),2.0,${kind==='snow'?'9.0':'13.0'})*pr;gl_Position=projectionMatrix*mv;}`;
+  const fs=kind==='rain'?`uniform float op;void main(){gl_FragColor=vec4(.78,.85,.97,op*.5);}`
+    :kind==='snow'?`uniform float op;void main(){vec2 c=gl_PointCoord-.5;if(dot(c,c)>.25)discard;gl_FragColor=vec4(1.0,1.0,1.0,op*.9);}`
+    :`uniform float op;varying vec3 vc;void main(){vec2 c=gl_PointCoord-.5;if(abs(c.x)+abs(c.y)*1.6>.5)discard;gl_FragColor=vec4(vc,op*.95);}`;
+  const m=new THREE.ShaderMaterial({uniforms:u,vertexShader:vs,fragmentShader:fs,transparent:true,depthWrite:false,fog:false});
+  const o=kind==='rain'?new THREE.LineSegments(g,m):new THREE.Points(g,m);o.frustumCulled=false;o.visible=false;o.renderOrder=5;o.userData.keep=1;o.userData.wx=kind;return o;}
+let RAINM=null,SNOWM=null,LEAFM=null;
+function wxBuild(){if(RAINM||!scene)return;RAINM=wxCloud('rain',700);SNOWM=wxCloud('snow',520);LEAFM=wxCloud('leaf',90);scene.add(RAINM,SNOWM,LEAFM);window.RAINM=RAINM;window.SNOWM=SNOWM;window.LEAFM=LEAFM;}
+/* the quiet rain: looped noise through a low filter; only outdoors, only with sound on */
+function wxSound(v){if(!AC||!SET.sound){v=0;}if(v>0&&!WX.snd){try{const n=AC.sampleRate*2,b=AC.createBuffer(1,n,AC.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*.6;
+    const s=AC.createBufferSource();s.buffer=b;s.loop=true;const f=AC.createBiquadFilter();f.type='lowpass';f.frequency.value=800;const g=AC.createGain();g.gain.value=0;s.connect(f);f.connect(g);g.connect(AC.destination);s.start();WX.snd=s;WX.sndG=g;}catch(e){WX.snd=null;}}
+  if(WX.sndG){const g=WX.sndG.gain,t=AC.currentTime;g.cancelScheduledValues(t);g.setTargetAtTime(v*.055,t,.4);if(v<=0){const s=WX.snd,gg=WX.sndG;WX.snd=null;WX.sndG=null;setTimeout(()=>{try{s.stop();s.disconnect();gg.disconnect();}catch(e){}},1500);}}}
+function wxTick(dt){if(!scene)return;wxBuild();const w=wxNow(),mix=(k)=>(w.a===k?1-w.k:0)+(w.b===k?w.k:0),rain=mix('rain'),snow=mix('snow'),cloud=mix('cloudy');
+  WX.cur=w.k<.5?w.a:w.b;WX.rain=rain;WX.snow=snow;WX.grey=Math.max(cloud*.55,rain*.9,snow*.7);WX.t+=dt;
+  /* snow stays on the grass for the block after a snow block */
+  let cover=snow;if(S&&!WX.force&&cover<1){const h=S.time,b=Math.floor(h/3);let d0=S.day|0,b0=b-1;if(b0<0){b0=7;d0--;}if(wxAt(d0,b0*3+1.5)==='snow')cover=1;}
+  WX.cover=cover;const out=!!CUR&&CUR.type==='out'&&PLAYING;
+  if(GRASS_M){_c1.set('#86d36a').lerp(_c2.set('#eef4f8'),cover);GRASS_M.color.lerp(_c1,Math.min(1,dt*1.5));}
+  const cam=camera.position;for(const o of[RAINM,SNOWM,LEAFM]){if(!o)continue;o.position.set(cam.x,cam.y-5,cam.z);o.material.uniforms.t.value=WX.t;}
+  const leaf=out&&SEASON==='autumn'&&rain<.3&&snow<.3?1-Math.max(rain,snow):0;
+  RAINM.visible=out&&rain>.02;RAINM.material.uniforms.op.value=rain;SNOWM.visible=out&&snow>.02;SNOWM.material.uniforms.op.value=snow;LEAFM.visible=leaf>.02;LEAFM.material.uniforms.op.value=leaf;
+  const sv=out&&rain>.02&&PLAYING?rain:0;if(Math.abs(sv-(WX.sv||0))>.02||(sv===0&&WX.snd)){WX.sv=sv;wxSound(sv);}}
+/* 🍂 the season's colours for the trees, set when the town is built */
+const SEASON_COLS={spring:{tree:['#9fe08a','#b4ea8e','#8fd97e','#ffc9dc','#ffb3c7'],pine:['#5fc484','#6bcf8c']},summer:{tree:['#7ed37a','#6cc97c','#93dc76'],pine:['#4fb37a','#5bbf7e']},
+  autumn:{tree:['#ff9f43','#ff6b4a','#ffd45c','#e8734a','#ffb347'],pine:['#4fa36f','#56ad76']},winter:{tree:['#cfe8dc','#dff2ea','#b8dcc8','#e8f4ee'],pine:['#9ccfb6','#b7dfcc']}};
+let SEASON='summer',TREE_COLS=SEASON_COLS.summer.tree,PINE_COLS=SEASON_COLS.summer.pine;
+function seasonSet(){try{SEASON=seasonOf(realDate());}catch(e){SEASON='summer';}const C=SEASON_COLS[SEASON]||SEASON_COLS.summer;TREE_COLS=C.tree;PINE_COLS=C.pine;}
 /* 👵 grandmas on benches by the houses (night 3, job 6): a bench beside each of the 6 town houses, two grandmas on each (grey or white hair in a bun,
    glasses, cardigans; every one looks different). They chat in little speech bubbles, take turns, nod and laugh. "Say hi" gets a kind line, never the
    same twice in a row. Out from 9:00 to 18:00 in dry weather; in rain, snow and at night they go inside, and you can sit on their bench */
@@ -7107,7 +7157,7 @@ addEventListener('resize',()=>setTimeout(leftFit,60));
      became a tall column of single words and the score pill ran out of its box. The bars below the clock may now be as wide as their words */
   +'@media (max-width:600px){#left>#nav,#left>#busTip,#left>#fbHud,#left>#tnHud{width:max-content;max-width:calc(100vw - 24px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px))}}#navX{flex:0 0 auto}#card.bustab.more::after{margin:-44px auto 0}';document.head.appendChild(st);}
 function updHud(force){$('coins').textContent=S.coins;const fd=$('food');fd.style.width=Math.round(S.hunger)+'%';fd.classList.toggle('low',S.hunger<25);
-  $('clock').textContent=clockStr(S.time);$('dayN').textContent=dayLabel();$('sunIc').textContent=nightF(S.time)>.5?'🌙':'☀️';phClock();if(force)renderTasks();leftFit();}
+  $('clock').textContent=clockStr(S.time);$('dayN').textContent=dayLabel();$('sunIc').textContent=WX.cur==='rain'?'🌧️':WX.cur==='snow'?'🌨️':WX.cur==='cloudy'?(nightF(S.time)>.5?'🌙':'☁️'):nightF(S.time)>.5?'🌙':'☀️';phClock();if(force)renderTasks();leftFit();}
 function showAction(){$('moveBtns').hidden=!PLAYING||DECO.on||!!CUT;const w=$('actWrap');if(!PLAYING||UI.open||DECO.on||!TARGET){w.hidden=true;return;}
   w.hidden=false;const lb=TARGET.say&&TARGET.say()||(typeof TARGET.label==='function'?TARGET.label():TARGET.label),ic=typeof TARGET.icon==='function'?TARGET.icon():TARGET.icon;if($('actLbl').textContent!==lb)$('actLbl').textContent=lb;if($('act').textContent!==ic)$('act').textContent=ic;}
 $('act').addEventListener('click',()=>{audioInit();if(KC.eat){KC.eat=false;return;}useTarget();});
@@ -7418,7 +7468,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     updGarden(dt);bdTick(dt);
     fbTick(dt);   /* ⚽ the football friends */
     {const vis=CUR.id==='city'&&sittersOut();for(const s of SITTERS){s.p.root.visible=vis;if(vis){s.t+=dt;s.p.head.rotation.y=Math.sin(s.t*.5)*.35;if(s.p.wave>0){s.p.wave-=dt;s.p.arms[1].rotation.z=2.5+Math.sin(s.p.wave*14)*.35;}else s.p.arms[1].rotation.z*=.85;}}}
-    psUpdate(dt);dayTick();holTick(dt);spookTick(dt);   /* 🎃 holidays from the real calendar; 👻 the spooky path */
+    psUpdate(dt);dayTick();holTick(dt);spookTick(dt);wxTick(dt);   /* 🎃 holidays from the real calendar; 👻 the spooky path; 🌦️ the weather */
     for(const k of KEEPERS)if(k.L===CUR){k.p.root.rotation.y=angLerp(k.p.root.rotation.y,Math.atan2(P.x-k.x,P.z-k.z),.05);animPerson(k.p,dt,false);}
     if(CUR&&CUR.id==='studio'&&!CR&&!fading){setLoc('city');P.x=-17;P.z=-4.6;P.yaw=0;P.pitch=0;P.sit=null;P.ride=null;$('hud').hidden=false;camera.clearViewOffset();resize();saveLocal();}
     if(CUT)cutUpdate(dt);if(CLIMB)climbUpdate(dt);floorVis();
@@ -7458,7 +7508,7 @@ async function boot(){
     sun=new THREE.DirectionalLight('#fff4e0',.9);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);const sc=sun.shadow.camera;sc.left=-30;sc.right=30;sc.top=30;sc.bottom=-30;sc.near=1;sc.far=150;sun.shadow.bias=-.0006;sun.shadow.normalBias=.09;scene.add(sun);scene.add(sun.target);
     lamp=new THREE.PointLight('#ffe2b8',0,20,1.4);scene.add(lamp);
     try{await Promise.race([document.fonts.load('800 40px "Baloo 2"'),new Promise(r=>setTimeout(r,2000))]);}catch(e){}
-    buildSky();buildCity();buildHome();buildMarket();buildPetShop();buildFlowerShop();buildCafe();buildClothesShop();buildToyStore();buildBakery();buildIceCream();buildLibrary();buildSchool();buildClassrooms();buildFireStation();buildPizzeria();buildApts();buildClientRoom();buildVisit();buildBeach();buildStudio();buildActors();buildTownfolk();buildPetShow();buildCars();buildBall();buildShoppers();
+    seasonSet();buildSky();buildCity();buildHome();buildMarket();buildPetShop();buildFlowerShop();buildCafe();buildClothesShop();buildToyStore();buildBakery();buildIceCream();buildLibrary();buildSchool();buildClassrooms();buildFireStation();buildPizzeria();buildApts();buildClientRoom();buildVisit();buildBeach();buildStudio();buildActors();buildTownfolk();buildPetShow();buildCars();buildBall();buildShoppers();
     S=freshState();setLoc('city');S=null;holCheck();   /* 🎃 decorations for today's real date */
     setupInput();applyGfx();addEventListener('resize',resize);
     requestAnimationFrame(t=>{last=t;frame(t);});
