@@ -2532,16 +2532,16 @@ function buildHome(){
   homeShell(L,false);
   return L;
 }
-/* the room inside your house: 12x10 normally, 18x14 once you buy the big house */
+/* the room inside your house: 12x10; the big house keeps this room and adds the stairs and a 12x10 upstairs (night 3: the downstairs doesn't grow) */
 function homeShell(L,big){if(L.big===big&&L.shellG)return;L.big=big;
   if(L.shellG){L.g.remove(L.shellG);L.shellG.traverse(o=>{if(o.geometry)o.geometry.dispose();});}
-  const W=big?18:12,D=big?14:10,H=big?3.6:3.2,g=new THREE.Group(),sh=new THREE.Group();g.add(sh);L.g.add(g);L.shellG=g;
-  HOMEW=W/2;HOMED=D/2;HOMEGX=big?6.6:4.4;L.cols.length=0;
+  const W=12,D=10,H=3.2,g=new THREE.Group(),sh=new THREE.Group();g.add(sh);L.g.add(g);L.shellG=g;
+  HOMEW=W/2;HOMED=D/2;HOMEGX=4.4;L.cols.length=0;
   shell(L,sh,W,D,H,WALL_M,FLOOR_M,'#f7eef2',g,big?UPG:0);
   doorAt(sh,0,HOMED-.02,Math.PI,'#5fd4b0',false,true);doorAt(sh,HOMEGX,-HOMED+.02,0,'#5fd4b0',false,true);
-  for(const x of big?[-6.5,-3,1.5]:[-3,1.5])windowIn(sh,x,1.0,-HOMED+.02,0);
-  for(const z of big?[-3.2,2.6]:[0]){windowIn(sh,HOMEW-.02,1.0,z,-Math.PI/2,'#7fdcb5');windowIn(sh,-HOMEW+.02,1.0,z,Math.PI/2,'#7fdcb5');}
-  if(big){for(const x of[-5,5])windowIn(sh,x,1.0,HOMED-.02,Math.PI);upFloor(L,sh,W,D,H,WALL_M,FLOOR_M);}
+  for(const x of[-3,1.5])windowIn(sh,x,1.0,-HOMED+.02,0);
+  for(const z of[0]){windowIn(sh,HOMEW-.02,1.0,z,-Math.PI/2,'#7fdcb5');windowIn(sh,-HOMEW+.02,1.0,z,Math.PI/2,'#7fdcb5');}
+  if(big){for(const x of[-2.7,2.7])windowIn(sh,x,1.0,HOMED-.02,Math.PI);upFloor(L,sh,W,D,H,WALL_M,FLOOR_M);}
   bake(sh,false);
   const grid=x=>{const gh=new THREE.GridHelper(W,W*2,0xb79cff,0xd9c8ff);gh.scale.z=D/W;gh.position.set(x,.012,0);g.add(gh);return gh;};
   const gv=!!(L.grid&&L.grid.visible);L.grid=grid(0);L.grid.visible=gv;
@@ -2556,8 +2556,8 @@ function homeShell(L,big){if(L.big===big&&L.shellG)return;L.big=big;
    upstairs is a room just as big, with the same paint and floor, and the stairs down at the same spot */
 function upFloor(L,sh,W,D,H,wm,fm){const ug=new THREE.Group();ug.position.x=UPX;sh.add(ug);
   shell({ox:L.ox+UPX,oz:L.oz,cols:L.cols},ug,W,D,H,wm,fm,'#f7eef2',ug,UPG);
-  for(const x of[-6.5,-3,1.5,6.6])windowIn(ug,x,1.0,-D/2+.02,0);for(const x of[-5,0,5])windowIn(ug,x,1.0,D/2-.02,Math.PI);
-  for(const z of[-3.2,2.6]){windowIn(ug,W/2-.02,1.0,z,-Math.PI/2,'#7fdcb5');windowIn(ug,-W/2+.02,1.0,z,Math.PI/2,'#7fdcb5');}
+  for(const x of(W>13?[-6.5,-3,1.5,6.6]:[-3,1.5,4.5]))windowIn(ug,x,1.0,-D/2+.02,0);for(const x of(W>13?[-5,0,5]:[-2.7,0,2.7]))windowIn(ug,x,1.0,D/2-.02,Math.PI);
+  for(const z of(D>11?[-3.2,2.6]:[0])){windowIn(ug,W/2-.02,1.0,z,-Math.PI/2,'#7fdcb5');windowIn(ug,-W/2+.02,1.0,z,Math.PI/2,'#7fdcb5');}
   const n=12,sd=4.2/n,sr=H/n,x0=-W/2,t=.3,a=Math.atan2(H,4.2);
   for(const [g,up] of[[sh,1],[ug,0]]){
     for(const k of[-1,1])box(g,4.2,H,t,null,x0-2.1,0,k*(UPG+t/2),{mat:wm,ol:false});box(g,t,H,2*UPG+2*t,null,x0-4.2-t/2,0,0,{mat:wm,ol:false});
@@ -2710,13 +2710,13 @@ function fromSave(loc,x,z){return loc==='city'&&LANE.mine!=null&&inYardR(x,z)?lo
 const VOX=2700;
 function buildVisit(){const L=makeLoc('visit','in',VOX,0,[-6,-5,6,5]);L.wallM=toon({color:'#ffd6e0'});L.floorM=toon({map:floorTex('wood')});L.fk='wood';
   L.items=new THREE.Group();L.items.visible=false;scene.add(L.items);visitShell(L,false);return L;}
-function visitShell(L,big,up){up=!!(big&&up);if(L.big===big&&L.hasUp===up&&L.shellG)return;L.big=big;L.hasUp=up;if(L.shellG)L.g.remove(L.shellG);
-  const W=big?18:12,D=big?14:10,H=big?3.6:3.2,hw=W/2,hd=D/2,gx=big?6.6:4.4,g=new THREE.Group(),sh=new THREE.Group();g.add(sh);L.g.add(g);L.shellG=g;L.W=hw;L.D=hd;L.cols.length=0;
+function visitShell(L,big,up,wide){up=!!(big&&up);wide=!!(big&&wide);if(L.big===big&&L.hasUp===up&&L.wide===wide&&L.shellG)return;L.big=big;L.hasUp=up;L.wide=wide;if(L.shellG)L.g.remove(L.shellG);
+  const W=wide?18:12,D=wide?14:10,H=wide?3.6:3.2,hw=W/2,hd=D/2,gx=wide?6.6:4.4,g=new THREE.Group(),sh=new THREE.Group();g.add(sh);L.g.add(g);L.shellG=g;L.W=hw;L.D=hd;L.cols.length=0;
   shell(L,sh,W,D,H,L.wallM,L.floorM,'#f7eef2',g,up?UPG:0);
   doorAt(sh,0,hd-.02,Math.PI,'#5fd4b0',false,true);doorAt(sh,gx,-hd+.02,0,'#5fd4b0',false,true);
-  for(const x of big?[-6.5,-3,1.5]:[-3,1.5])windowIn(sh,x,1.0,-hd+.02,0);
-  for(const z of big?[-3.2,2.6]:[0]){windowIn(sh,hw-.02,1.0,z,-Math.PI/2,'#7fdcb5');windowIn(sh,-hw+.02,1.0,z,Math.PI/2,'#7fdcb5');}
-  if(big)for(const x of[-5,5])windowIn(sh,x,1.0,hd-.02,Math.PI);
+  for(const x of wide?[-6.5,-3,1.5]:[-3,1.5])windowIn(sh,x,1.0,-hd+.02,0);
+  for(const z of wide?[-3.2,2.6]:[0]){windowIn(sh,hw-.02,1.0,z,-Math.PI/2,'#7fdcb5');windowIn(sh,-hw+.02,1.0,z,Math.PI/2,'#7fdcb5');}
+  if(big)for(const x of(wide?[-5,5]:[-2.7,2.7]))windowIn(sh,x,1.0,hd-.02,Math.PI);
   if(up)upFloor(L,sh,W,D,H,L.wallM,L.floorM);
   bake(sh,false);
   L.inter=L.inter.filter(i=>!i.vdoor);
@@ -4315,7 +4315,9 @@ function visSpot(L,a){const hx=a&&a.loc==='home'&&Number.isFinite(a.rx)&&Number.
   return collideXZ(best[0],best[1],.3,L);}
 function visLeave(msg){const d=laneHostDoor();visReset();if(msg)toast(msg,3.2);SFX.door();
   fade(()=>{setLoc('city');P.x=d[0];P.z=d[1];P.yaw=d[2];P.pitch=0;P.sit=null;bringFollowers();saveLocal();});}
-function visFill(hm){const L=LOC.visit;if(!L||!hm||typeof hm!=='object')return;visitShell(L,!!hm.b,typeof hm.u==='string');
+function visFill(hm){const L=LOC.visit;if(!L||!hm||typeof hm!=='object')return;
+  const wide=!!hm.b&&[hm.i,hm.u].some(v=>typeof v==='string'&&v.split(';').some(r=>{const q=r.split(',');return Math.abs(+q[2])>5.3||Math.abs(+q[3])>4.3;}));   /* an old-version friend's big layout: the old 18x14 room */
+  visitShell(L,!!hm.b,typeof hm.u==='string',wide);
   L.wallM.color.set(HEX.test(hm.w)?hm.w:'#ffd6e0');const fk=FLOORS[hm.f]?hm.f:'wood';
   if(L.fk!==fk){L.fk=fk;if(L.floorM.map)L.floorM.map.dispose();L.floorM.map=floorTex(fk);L.floorM.needsUpdate=true;}L.floorM.map.repeat.set(L.W/2,L.D/2);
   for(const c of [...L.items.children])L.items.remove(c);L.dcols.length=0;L.inter=L.inter.filter(i=>i.vdoor);
@@ -4545,12 +4547,30 @@ function rebuildHome(){for(const u of [...HOME_ITEMS.keys()])removeHomeItem(u);f
 /* ---- the big house: Decorating level 10 + BIG_PRICE coins (a big dream: about a week of work) ---- */
 const BIG_PRICE=2500;
 function applyHouse(){const big=!!S.bighouse;homeShell(LOC.home,big);if(YARD.plaque)YARD.plaque.visible=!big;}   /* your house on Friends Lane grows by itself (laneRefresh) */
-function growFurniture(){for(const it of S.home.items){const F=FURN[it.t];if(!F)continue;const sw=(it.r%2?F.d:F.w)/2,sd=(it.r%2?F.w:F.d)/2;
-  it.x=clamp(it.x*1.5,-HOMEW+sw+.02,HOMEW-sw-.02);it.z=clamp(it.z*1.4,-HOMED+sd+.02,HOMED-sd-.02);}}
+/* 🏡 the house at Decorating 10 (night 3, job 7, the owner's decision 16 Oct): the downstairs stays 12x10 and nothing moves; the upstairs is a
+   12x10 room with the same stairs. Price and level stay. A bigger house from before shrinks once, when the save loads: the push-apart is undone
+   (x/1.5, z/1.4), every piece is kept inside the walls, in the order it is saved; a piece that overlaps one already kept, or does not fit, goes to
+   📦 My stuff with its colour, to place again. Rugs and other flat things never block. The old layout is kept in the save (S.home.old) */
+function homeBlocked(R,fl){return(!!LOC.home.up&&R.x1<-HOMEW+3&&R.z1<1.4&&R.z2>-1.4)||(fl===0&&((R.x1<1.1&&R.x2>-1.1&&R.z2>HOMED-1.6)||(R.x1<HOMEGX+1.1&&R.x2>HOMEGX-1.1&&R.z1<-HOMED+1.6)));}
+function houseShrink(){const h=S.home;if(!S.bighouse||h.shrunk||!Array.isArray(h.items))return 0;
+  h.old={t:Date.now(),items:JSON.parse(JSON.stringify(h.items)),store:JSON.parse(JSON.stringify(h.store||[]))};
+  const W=6,D=5,kept=[],moved=[];
+  for(const it of h.items){const F=FURN[furnOf(it)];if(!F){kept.push(it);continue;}const fl=it.f?1:0;
+    const sw=(it.r%2?F.d:F.w)/2,sd=(it.r%2?F.w:F.d)/2;
+    let x=Math.round(it.x/1.5*4)/4,z=Math.round(it.z/1.4*4)/4;x=clamp(x,-W+sw+.02,W-sw-.02);z=clamp(z,-D+sd+.02,D-sd-.02);it.x=Math.round(x*100)/100;it.z=Math.round(z*100)/100;
+    if(F.flat){kept.push(it);continue;}
+    const R=fpRect(it.t,it.x,it.z,it.r);let ok=!homeBlocked(R,fl)&&R.x1>=-W-.001&&R.x2<=W+.001&&R.z1>=-D-.001&&R.z2<=D+.001;
+    if(ok)for(const o of kept){if((o.f?1:0)!==fl||FURN[furnOf(o)].flat)continue;const Q=fpRect(o.t,o.x,o.z,o.r);if(R.x1<Q.x2-.01&&R.x2>Q.x1+.01&&R.z1<Q.z2-.01&&R.z2>Q.z1+.01){ok=false;break;}}
+    if(ok)kept.push(it);else{delete it.f;it.mv=1;moved.push(it);}}
+  h.items=kept;h.store=(h.store||[]).concat(moved);h.shrunk=1;h.shrinkN=moved.length;
+  if(S.loc==='home'){const ox=LOC.home.ox,oz=LOC.home.oz,dx=S.px-ox,dz=S.pz-oz;if(dx>W||dx<-W||Math.abs(dz)>D){S.px=ox-3.4;S.pz=oz;S.yaw=-Math.PI/2;}}   /* saved upstairs or in the old big room: you start by the stairs */
+  return moved.length;}
+const storeWaiting=()=>S&&S.home&&S.home.store?S.home.store.filter(it=>it.mv).length:0;
+const cozierLine=n=>`Your house got cozier! 🏡 ${n?`${n} thing${n>1?'s are':' is'} waiting in 📦 My stuff to be placed again.`:'Everything still fits!'}`;
 function openBigHouse(){if(S.bighouse){toast('🏡 This is your big house! Enjoy all that space 🎉',3);return;}
   const lv=sk('decor').lv,ok=lv>=10&&S.coins>=BIG_PRICE;
   openPanel(`<div class="hd"><h2>🏡 Bigger house</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
-    <p class="ph-sub">A huge room inside, and stairs up to a whole second floor to decorate! All your furniture comes with you.</p>
+    <p class="ph-sub">Stairs up to a whole second floor to decorate! Your downstairs stays just as it is: nothing moves.</p>
     <div class="ph-row"><span>🛋️ Decorating level 10</span><span>${lv>=10?'✅':'level '+lv}</span></div>
     <div class="ph-row"><span>🪙 ${BIG_PRICE} coins</span><span>${S.coins>=BIG_PRICE?'✅':S.coins+' / '+BIG_PRICE}</span></div>
     ${ok?`<div class="row" style="justify-content:center;margin-top:12px"><button class="btn mint" data-a="bighouse">🏡 Buy it!</button></div>`
@@ -4978,7 +4998,7 @@ const DECO={on:false,placing:null,ghost:null,sel:null,mark:null,valid:false,x:0,
 /* in the big house it works on the floor you stand on (upstairs things are saved with f:1); the stairs' landing stays free */
 const HOMEX={id:'home',L:()=>homeFl()?LOC.home.up:LOC.home,list:()=>S.home.items,W:()=>HOMEW,D:()=>HOMED,map:()=>HOME_ITEMS,add:it=>addHomeItem(it),rm:u=>removeHomeItem(u),
   on:o=>(o.f|0)===homeFl(),put:it=>{if(homeFl())it.f=1;else delete it.f;},
-  blocked:R=>(!!LOC.home.up&&R.x1<-HOMEW+3&&R.z1<1.4&&R.z2>-1.4)||(!homeFl()&&((R.x1<1.1&&R.x2>-1.1&&R.z2>HOMED-1.6)||(R.x1<HOMEGX+1.1&&R.x2>HOMEGX-1.1&&R.z1<-HOMED+1.6)))};
+  blocked:R=>homeBlocked(R,homeFl())};
 const CLX={id:'client',L:()=>LOC.client,list:()=>dsItems(),W:()=>CLW,D:()=>CLD,map:()=>CL_ITEMS,add:it=>addClItem(it),rm:u=>removeClItem(u),blocked:R=>R.x1<1.25&&R.x2>-1.25&&R.z2>CLD-1.75};
 const DX=()=>DECO.X||HOMEX;
 function decoStart(){const X=CUR.id==='home'&&!CLIMB?HOMEX:CUR.id==='client'&&dsHere()?CLX:null;if(!X)return;if(zzIn())standUp();DECO.X=X;DECO.on=true;P.sit=null;X.L().grid.visible=true;$('cross').classList.add('big');$('actWrap').hidden=true;renderBar();
@@ -5016,7 +5036,7 @@ function selMark(it){DECO.sel=it;if(DECO.mark){scene.remove(DECO.mark);DECO.mark
   if(it){const L=DX().L(),R=fpRect(it.t,it.x,it.z,it.r);const m=new THREE.Mesh(new THREE.PlaneGeometry(R.x2-R.x1+.3,R.z2-R.z1+.3),new THREE.MeshBasicMaterial({color:'#ffd45c',transparent:true,opacity:.55,depthWrite:false}));
     m.rotation.x=-Math.PI/2;m.position.set(L.ox+it.x,.035,L.oz+it.z);scene.add(m);DECO.mark=m;}}
 function decoTurn(){if(!DECO.placing)return;DECO.r=(DECO.r+1)%4;SFX.tap();}
-function decoPlace(){if(!DECO.placing||!DECO.valid)return;const X=DX(),it=DECO.placing;it.x=DECO.x;it.z=DECO.z;it.r=DECO.r;delete it._from;if(X.put)X.put(it);X.list().push(it);X.add(it);
+function decoPlace(){if(!DECO.placing||!DECO.valid)return;const X=DX(),it=DECO.placing;it.x=DECO.x;it.z=DECO.z;it.r=DECO.r;delete it._from;delete it.mv;if(X.put)X.put(it);X.list().push(it);X.add(it);
   scene.remove(DECO.ghost);DECO.ghost=null;DECO.placing=null;DECO.valid=false;SFX.pop();
   if(X===HOMEX){doneTask('decor');qEvent('decor');qEvent('place:'+furnOf(it));if(FLOWER_TYPES.includes(it.t)){qEvent('placeflower');addXP('garden',4);}else addXP('decor',3);}
   else{addXP('decor',2);dcardUpd();jobHud(true);}change();renderBar();}
@@ -5206,7 +5226,7 @@ ACT.nbuy=(sh,i)=>{if(typeof sh==='string'&&sh.includes(':')){const p=sh.split(':
 /* bag */
 function openBag(){const foods=Object.keys(S.bag).filter(k=>S.bag[k]>0);
   openPanel(`<div class="hd"><h2>🎒 My bag</h2><div class="chip">🪙 <b>${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
-    <div class="row" style="margin:0 0 12px"><button class="btn lilac" data-a="mylook">👗 Change my look</button></div>
+    <div class="row" style="margin:0 0 12px"><button class="btn lilac" data-a="mylook">👗 Change my look</button></div>${storeWaiting()?`<p class="note">${cozierLine(storeWaiting())} Tap 🛋️ at home, then 🛍️ Shop → 📦 My stuff.</p>`:''}
     ${foods.length?`<p class="note">Tap food to eat it.</p><div class="grid" style="margin-top:8px">${foods.map(k=>{const it=itemInfo(k);return`<button class="it" data-a="eat:${k}"><span class="em">${it.i}</span><span>${it.n}</span><span class="have">×${S.bag[k]}</span></button>`;}).join('')}</div>`:'<p class="line">Your bag is empty. The market and the café have yummy food!</p>'}
     <div class="sec">Friends</div>${FRIENDS.filter(f=>frSt(f.id).met).map(f=>`<div class="opt"><span>${esc(f.name)}</span><span class="hearts" style="position:static">${hearts(heartsOf(f.id))}</span></div>`).join('')||'<p class="note">Say hi to the kids in town to make friends!</p>'}
     <div class="sec">Pets</div>${S.pets.map(d=>`<div class="opt"><span>${PET_TYPES[d.type].icon} ${esc(d.name)}</span><span class="hearts" style="position:static">${hearts(clamp(Math.round(d.happy/20),0,5))}</span></div>`).join('')||'<p class="note">Visit the pet shop to adopt a pet!</p>'}`);}
@@ -5235,7 +5255,7 @@ ACT.cbuy=()=>{const F=FURN[CAT.sel];if(S.coins<F.p)return;S.coins-=F.p;SFX.coin(
   closePanel();startPlacing(it);toast('Look where it should go, then tap ✅',3);change();};
 ACT.cplace=i=>{if(!(CUR.id==='home'&&DECO.on&&DX()===HOMEX)){SFX.no();toast('🏠 Go home to place it! Tap 🛋️ in your house.',3.2);return;}const it=S.home.store.splice(+i,1)[0];if(!it)return;closePanel();startPlacing(it);change();};
 ACT.bighouse=()=>{if(S.bighouse||sk('decor').lv<10||S.coins<BIG_PRICE)return;S.coins-=BIG_PRICE;S.bighouse=true;closePanel();
-  applyHouse();growFurniture();rebuildHome();SFX.coin();SFX.yay();change();toast('🎉 You got the big house! Go inside and see!',4.5);
+  applyHouse();rebuildHome();SFX.coin();SFX.yay();change();toast('🎉 You got the big house! Go inside: the stairs are in the west wall! 🪜',4.5);
   laneRefresh();const [hx,hz]=yardPt(-17,-10.5);for(let i=0;i<8;i++)setTimeout(()=>floatText(pick(['🎉','⭐','✨','🏡']),hx+rand(-3,3),4.5+rand(0,3),hz+rand(-1,1),{h:.8}),i*150);};
 ACT.wall=c=>{S.home.wall=c;WALL_M.color.set(c);SFX.pop();change();renderCatalog();};
 ACT.floor=k=>{S.home.floor=k;setFloor(k);SFX.pop();change();renderCatalog();};
@@ -7058,7 +7078,7 @@ function startGame(){if(S){awResume();return;}   /* back from the away title: th
   const local=readLocal(),remote=CSAVE.remote;let st=local;if(remote&&(!local||(remote.t||0)>(local.t||0)))st=remote;
   S=Object.assign(freshState(),st||{});S.home=Object.assign(freshState().home,S.home||{});
   S.look=Object.assign({},DEFAULT_LOOK,S.look||{});buildPlayerBody();
-  applyHouse();rebuildHome();
+  applyHouse();houseShrink();rebuildHome();   /* 🏡 a bigger house from before shrinks once (the pieces that don't fit wait in 📦 My stuff) */
   const moved=!S.laneT;if(moved)S.laneT=Date.now();MP.jt=S.laneT;laneRefresh(true);   /* 🏡 your lot on Friends Lane (before pets and you are put in your yard) */
   for(const d of S.pets)addPetActor(d);
   for(const f of FRIEND_ACTORS)f.wake();
@@ -7074,6 +7094,7 @@ function startGame(){if(S){awResume();return;}   /* back from the away title: th
     loc=safeSpot(loc)||'city';setLoc(loc);[P.x,P.z]=collideXZ(P.x,P.z,.3,CUR);
     let n=0;for(const p of PET_ACTORS)if(!p.d.stay&&p.loc!==CUR.id)nearMe(p,++n);
     toast('Welcome back, '+(S.name||'friend')+'! 💗',3);
+    if(S.home.shrunk&&!S.home.shrinkTold){S.home.shrinkTold=1;change();setTimeout(()=>{if(PLAYING)toast(cozierLine(S.home.shrinkN|0),5.5);},3800);}
     if(moved){const far=CUR.id==='city'&&P.x>-84;if(far)setNav('home',true);   /* the first time with your house on Friends Lane: the arrow shows the way */
       setTimeout(()=>{if(PLAYING)toast('🏡 Your house moved to Friends Lane, with your garden'+(far?'! Follow the pink arrow.':'!'),5);},3400);}
     busLoad();}   /* 🚌 at the beach: when the bus home goes (or Driver Dot comes for you) */
