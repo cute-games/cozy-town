@@ -1332,7 +1332,8 @@ function foodModel(g,k,x,y,z){
 function tree(g,x,z,s=1){const c=pick(['#7ed37a','#6cc97c','#93dc76']);cyl(g,.15*s,.2*s,2.3*s,'#9b6b4a',x,0,z,{seg:8});sph(g,1.15*s,c,x,3.05*s,z,{ws:12,hs:9});sph(g,.75*s,c,x+.7*s,2.75*s,z+.15*s,{ws:10,hs:8});sph(g,.72*s,c,x-.62*s,2.8*s,z-.3*s,{ws:10,hs:8});sph(g,.62*s,c,x+.1*s,3.6*s,z+.4*s,{ws:10,hs:8});}
 function pine(g,x,z,s=1){cyl(g,.14*s,.18*s,.8*s,'#9b6b4a',x,0,z,{seg:8});const c=pick(['#4fb37a','#5bbf7e']);cone(g,1.2*s,1.6*s,c,x,.7*s,z,{seg:9});cone(g,.92*s,1.4*s,c,x,1.55*s,z,{seg:9});cone(g,.62*s,1.2*s,c,x,2.35*s,z,{seg:9});}
 function lampPost(g,x,z){LAMPXZ.push([x,z]);cyl(g,.07,.1,3,'#5a5f8c',x,0,z,{seg:8});cyl(g,.16,.16,.08,'#5a5f8c',x,2.95,z,{seg:10});sph(g,.19,null,x,3.21,z,{mat:LAMP,ol:.02,ws:12,hs:8});cone(g,.27,.24,'#5a5f8c',x,3.33,z,{seg:10});}
-function bench(g,x,z,ry=0){const p=new THREE.Group();p.position.set(x,0,z);p.rotation.y=ry;g.add(p);box(p,1.6,.08,.5,'#e0905e',0,.42,0);box(p,1.6,.36,.07,'#e0905e',0,.58,-.22);for(const sx of[-.7,.7]){box(p,.08,.42,.08,'#5a5f8c',sx,0,.15);box(p,.08,.95,.08,'#5a5f8c',sx,0,-.2);}}
+function bench(g,x,z,ry=0){const p=new THREE.Group();p.position.set(x,0,z);p.rotation.y=ry;g.add(p);box(p,1.6,.08,.5,'#e0905e',0,.42,0);box(p,1.6,.36,.07,'#e0905e',0,.58,-.22);for(const sx of[-.7,.7]){box(p,.08,.42,.08,'#5a5f8c',sx,0,.15);box(p,.08,.95,.08,'#5a5f8c',sx,0,-.2);}
+  if(BENCH_L&&!BENCH_SKIP)benchReg(BENCH_L,p,BENCH_SKIP<0);return p;}   /* 🪑 2 seats on every bench (night 3, job 5) */
 function bin(g,x,z){cyl(g,.25,.22,.75,'#5fd4b0',x,0,z,{seg:12});cyl(g,.28,.28,.07,'#3fb08f',x,.75,z,{seg:12});}
 function hydrant(g,x,z){cyl(g,.13,.15,.5,'#ff6b6b',x,0,z,{seg:10});sph(g,.13,'#ff6b6b',x,.52,z,{ws:10,hs:6});box(g,.36,.08,.08,'#ff6b6b',x,.3,z);}
 function car(g,x,z,ry,c){const p=new THREE.Group();p.position.set(x,0,z);p.rotation.y=ry;g.add(p);
@@ -1424,6 +1425,27 @@ function shelfUnit(g,x,z,ry,w,items,c='#ffffff'){const p=new THREE.Group();p.pos
   box(p,w,2.0,.1,c,0,0,-.35);box(p,.1,2.0,.8,c,-w/2+.05,0,0);box(p,.1,2.0,.8,c,w/2-.05,0,0);
   for(const y of[.1,.75,1.4])box(p,w,.06,.8,c,0,y,0,{ol:.015});box(p,w,.1,.8,c,0,1.95,0);
   let k=0;for(const y of[.16,.81,1.46]){const it=items[k++%items.length];const n=Math.floor((w-.3)/.32);for(let i=0;i<n;i++)foodModel(p,it,-w/2+.32+i*.32,y,.05);}}
+
+/* 🪑 sit on every bench (night 3, job 5): every bench in town, the park, the football field, the lake, the bus stops, the beach and your yard has
+   2 seats. Tap a free seat: you sit (like the beach bench); move to stand up. Eating from the bag keeps you seated. Other players see you sitting
+   (the sit pose rides along in presence as st:1; old versions just see you standing there). Two players never share a seat: the second one gets
+   the other seat, or "This bench is full". The 3 park sitters moved to one seat each, so you can sit beside them */
+const BENCHES=[];let BENCH_L=null,BENCH_SKIP=0;
+const _bv=new THREE.Vector3(),_bq=new THREE.Quaternion();
+function benchReg(L,p,yard){p.updateWorldMatrix(true,false);p.getWorldPosition(_bv);p.getWorldQuaternion(_bq);const yaw=Math.atan2(2*(_bq.w*_bq.y+_bq.x*_bq.z),1-2*(_bq.y*_bq.y+_bq.z*_bq.z));
+  const b={id:L.id+':'+BENCHES.length,loc:L.id,x:_bv.x,z:_bv.z,ry:yaw,seats:[],sit:[null,null],yard:!!yard};BENCHES.push(b);
+  for(let i=0;i<2;i++){const lx=i?.42:-.42,lz=.06,x=b.x+Math.cos(yaw)*lx+Math.sin(yaw)*lz,z=b.z-Math.sin(yaw)*lx+Math.cos(yaw)*lz,s={x,z,yaw:yaw+Math.PI,i};b.seats.push(s);
+    const t={x:x-L.ox,z:z-L.oz,r:1.6,icon:'🪑',label:()=>seatTaken(b,i)?(seatTaken(b,1-i)?'This bench is full':'Sit down'):'Sit down',act:()=>sitAt(b,i),seat:1};
+    if(yard){t.lx=x;t.lz=z;s.lx=x;s.lz=z;yardInt(inter(L,t));}else inter(L,t);s.tg=t;}
+  return b;}
+/* who sits where: a townsperson or grandma (b.sit), or another player who sends the sit pose and stands on that seat */
+function seatTaken(b,i){if(b.sit[i]&&(typeof b.sit[i]!=='function'?true:b.sit[i]()))return true;const s=b.seats[i];
+  if(typeof MP!=='undefined'&&MP.peers)for(const a of MP.peers.values()){if(!a.st||!a.av||a.loc!==b.loc)continue;if(Math.hypot(a.x-s.x,a.z-s.z)<.45)return true;}return false;}
+function sitAt(b,i){if(P.ride)stopRide();if(seatTaken(b,i)){if(seatTaken(b,1-i)){SFX.no();toast('This bench is full 🪑',2.4);return;}i=1-i;}const s=b.seats[i];
+  P.sit={x:s.x,z:s.z,yaw:s.yaw,bench:b.id,seat:i};P.x=s.x;P.z=s.z;P.yaw=s.yaw;P.pitch=-.05;SFX.pop();
+  toast(b.loc==='beach'?'Ahh… the sea is so calm. 🌊 Move to stand up.':'Comfy! Move to stand up. You can eat from your 🎒 bag here.',3);if(typeof qEvent==='function')qEvent('sit');}
+/* 🏡 your yard moved to another lot: its bench moves along (the seats are kept at the old town-yard spots, like everything in the yard) */
+function benchYard(j){for(const b of BENCHES){if(!b.yard)continue;for(const s of b.seats){[s.x,s.z]=lotPt(j,s.lx,s.lz);s.yaw=(LANE_PLOTS[j].s<0?0:Math.PI)+Math.PI+b.ry0;}const c=lotPt(j,b.x0,b.z0);b.x=c[0];b.z=c[1];}}
 
 /* ================= world ================= */
 const LOC={};let CUR=null;
@@ -1546,7 +1568,7 @@ DOORS.beach={city:[77.2,0,Math.PI/2],inside:[-25.5,0,-Math.PI/2]};
 DOORS.apt1={inside:[-8.2,0,-Math.PI/2]};DOORS.apt2={inside:[5,1.4,Math.PI/2]};DOORS.apt3={inside:[5,1.4,Math.PI/2]};
 
 function buildCity(){
-  const L=makeLoc('city','out',0,0,[-139,-80,80,80]);
+  const L=makeLoc('city','out',0,0,[-139,-80,80,80]);BENCH_L=L;
   const st=new THREE.Group();L.g.add(st);L.dyn=new THREE.Group();L.g.add(L.dyn);L.ducks=[];
   const gr=new THREE.Mesh(new THREE.PlaneGeometry(800,800),toon({color:'#86d36a',polygonOffset:true,polygonOffsetFactor:4,polygonOffsetUnits:8}));gr.rotation.x=-Math.PI/2;gr.receiveShadow=true;gr.userData.keep=1;L.g.add(gr);
   const ROAD='#8c90b4',SIDE='#f3e7df',CURB='#ddcdd0',E=84,RX=[-50,0,50],RZ=[-50,0,50];
@@ -1587,7 +1609,7 @@ function buildCity(){
   disc(st,10,'#f6e2b8',-22,.024,22,{seg:56});flat(st,3,6,'#f6e2b8',-22,.023,11.2);flat(st,6,3,'#f6e2b8',-10.8,.023,22);
   for(const [a,b] of [[22,25],[23,26],[24,26]]){const A=WP[a],B=WP[b],len=Math.hypot(B[0]-A[0],B[1]-A[1]);flat(st,1.8,len,'#f6e2b8',(A[0]+B[0])/2,.022,(A[1]+B[1])/2,{ry:Math.atan2(B[0]-A[0],B[1]-A[1])});}
   const fx=-22,fz=22;buildFountain(st,L,fx,fz);
-  L.benches=[];for(let i=0;i<4;i++){const a=Math.PI/4+i*Math.PI/2,bx=fx+Math.cos(a)*9.6,bz=fz+Math.sin(a)*9.6,ry=Math.atan2(fx-bx,fz-bz);bench(st,bx,bz,ry);colC(L,bx,bz,.75);L.benches.push({x:bx,z:bz,ry});}
+  L.benches=[];for(let i=0;i<4;i++){const a=Math.PI/4+i*Math.PI/2,bx=fx+Math.cos(a)*9.6,bz=fz+Math.sin(a)*9.6,ry=Math.atan2(fx-bx,fz-bz);bench(st,bx,bz,ry);colC(L,bx,bz,.75);L.benches.push({x:bx,z:bz,ry,b:BENCHES[BENCHES.length-1]});}
   for(const [x,z] of [[-36,12.5],[-11.5,16],[-37.4,16.2],[-37.6,27.7],[-11.5,28],[-16,37.5],[-26,37.5],[-20,35.5],[-36,37.5],[-12.5,37.5]]){tree(st,x,z,1);colC(L,x,z,.28);}
   L.beds=[{id:'h1',x:-19.8,z:-10.6,ix:-19.8,iz:-9.9,yard:1},{id:'h2',x:-14.2,z:-10.6,ix:-14.2,iz:-9.9,yard:1}];   /* h1, h2: the flower beds in front of your house (on Friends Lane) */
   for(const [i,sx,sz] of [[1,1,-1],[2,-1,-1],[3,-1,1],[4,1,1]]){const x=fx+sx*8.84,z=fz+sz*8.84;flowerBed(st,x,z,1.8,1.0);col(L,x-.95,z-.55,x+.95,z+.55);L.beds.push({id:'p'+i,x,z,ix:x,iz:z+(sz>0?-.9:.9)});}
@@ -1659,7 +1681,7 @@ function buildCity(){
     L.score={c,t};drawScore();}
    inter(L,{x:-25,z:58.7,r:2.0,icon:'🔄',label:'Start a new match',act:newMatch,when:()=>!fbBoard()});
    for(const bx of[-35,-15]){bench(st,bx,58.6,Math.PI);col(L,bx-.9,58.3,bx+.9,58.95);}}
-  for(const bx of FBB)bench(st,bx,FBZ,Math.PI);   /* 🧃 the football friends' team bench, across from the scoreboard (colliders: fbBuild) */
+  BENCH_SKIP=1;for(const bx of FBB)bench(st,bx,FBZ,Math.PI);BENCH_SKIP=0;   /* 🧃 the football friends' team bench, across from the scoreboard (colliders: fbBuild) */
   L.ball={x:-25,z:68.5,vx:0,vz:0,g:null,cool:0};
   [13,25,37].forEach((x,i)=>{const [w,r]=HC[i+3];building(st,{x,z:61.5,w:8,d:7,h:3.6,wall:w,roof:r,face:-1,gable:true,rh:2.4,door:{x,c:HOUSES[i+3].dc}});col(L,x-4.1,57.9,x+4.1,65.1);});
   // east: toy store, bakery, library, ice cream (they face the ring road)
@@ -1773,7 +1795,7 @@ function palm(g,x,z,s=1,lean=.25,ry=0){const p=new THREE.Group();p.position.set(
 function parasol(g,x,z,c){cyl(g,.04,.04,2.3,'#ffffff',x,0,z,{seg:6,ol:.01});cone(g,1.35,.55,c,x,1.95,z,{seg:10,ol:.03});cone(g,.5,.24,'#ffffff',x,2.4,z,{seg:10,ol:.015});}
 function towel(g,x,z,c){flat(g,1.0,1.9,c,x,.02,z);for(const s of[-1,1])flat(g,1.0,.2,'#ffffff',x,.024,z+s*.6);}
 function buildBeach(){
-  const L=makeLoc('beach','out',BEACH_X,0,[-34.3,-22,25,44]);const st=new THREE.Group();L.g.add(st);
+  const L=makeLoc('beach','out',BEACH_X,0,[-34.3,-22,25,44]);const st=new THREE.Group();L.g.add(st);BENCH_L=L;
   const gr=new THREE.Mesh(new THREE.PlaneGeometry(1400,1400),toon({color:'#f6dfa9',polygonOffset:true,polygonOffsetFactor:4,polygonOffsetUnits:8}));gr.rotation.x=-Math.PI/2;gr.receiveShadow=true;gr.userData.keep=1;L.g.add(gr);
   /* the sea: one big flat mesh; a tiny shader adds slow ripples and sparkles */
   const seaM=toon({color:'#46c0ea',emissive:new THREE.Color('#1f86c9'),emissiveIntensity:.28});BEACH.seaM=seaM;
@@ -1823,8 +1845,7 @@ function buildBeach(){
   /* rocks at both ends */
   for(const [x,z,s] of [[7.5,-19.5,1],[9.5,-20.6,.8],[10.8,-18.4,.6],[8.6,18.6,.9],[10.4,19.8,.7],[6.4,20.4,.5]]){sph(st,.7*s,pick(['#b8b4c4','#a7a3b5','#c8c4d6']),x,.15*s,z,{s:[1.3,.75,1.1],ws:10,hs:7,ol:.03});colC(L,x,z,.85*s);}
   /* a bench facing the sea */
-  bench(st,3,-7,Math.PI/2);colC(L,3,-7,.75);
-  inter(L,{x:3.7,z:-7,r:1.6,icon:'🪑',label:'Sit and look at the sea',act:()=>{P.sit={x:L.ox+3.1,z:L.oz-7,yaw:-Math.PI/2};P.x=P.sit.x;P.z=P.sit.z;P.yaw=P.sit.yaw;P.pitch=-.05;SFX.pop();toast('Ahh… the sea is so calm. 🌊 Move to stand up.',3);}});
+  bench(st,3,-7,Math.PI/2);colC(L,3,-7,.75);   /* (2 seats, like every bench) */
   busStopBeach(L,st);   /* 🚌 the bus stop by the gate and a ⛺ camp spot */
   buildCourt(L,st);
   bake(st,true,32);
@@ -2614,7 +2635,7 @@ function flowerCorner(L,st){const x1=-23.4,x2=-10.6,z1=-24.5,z2=-7.0,HG='#5fbf74
   /* the hedges: the back one runs the whole width and is a little taller, so the side hedges' ink can't cross on its top; their ink shells
      start just above the grass, so no dark line flickers along their feet */
   fence(st,x1,z2,x2,z2);for(const x of[x1,x2])hbox(st,.7,.8,z2-z1-.35,HG,x,(z1+.35+z2)/2,.03);hbox(st,x2-x1+.7,.86,.7,HG,(x1+x2)/2,z1,.03);
-  tree(st,-20.2,-18.6,1.1);bench(st,-17.4,-15.6,0);
+  tree(st,-20.2,-18.6,1.1);BENCH_SKIP=1;bench(st,-17.4,-15.6,0);BENCH_SKIP=0;   /* (nobody can reach this bench: it is inside the hedge) */
   for(const [x,z] of [[-17,-7.9],[-17.35,-9.25],[-16.95,-10.6],[-17.3,-11.95],[-17.05,-13.3],[-17.35,-14.6]])disc(st,.36,'#e9e0f7',x,.03,z,{seg:14});
   {const x=-13.4,z=-16.4;cyl(st,.1,.14,.75,'#e9e0f7',x,0,z,{seg:10,ol:.015});cyl(st,.46,.3,.15,'#e9e0f7',x,.75,z,{seg:16,ol:.015});disc(st,.38,'#9fd8f2',x,.905,z,{seg:16});}
   for(const [x,z,R] of [[-21.2,-9.7,1.1],[-12.8,-9.7,1.1],[-12.9,-21.6,1.2],[-21.3,-22.3,1.0],[-15.5,-20.2,.9]]){sph(st,R,'#6cc97c',x,0,z,{s:[1,.32,1],ws:12,hs:6});
@@ -2635,6 +2656,7 @@ function buildYard(L){const g=new THREE.Group(),gin=new THREE.Group(),st=new THR
   const gs=signPlane('🌱 My Garden',1.5,.42,'#5fd4b0','#ffffff'),gb=new THREE.Mesh(gs.geometry,gs.material);gs.position.set(-11.45,2.3,-18.455);gb.position.set(-11.45,2.3,-18.545);gb.rotation.y=Math.PI;gin.add(gs,gb);   /* readable from both sides */
   for(let k=0;k<8;k++)disc(st,.36,'#e9e0f7',-11.45,.03,-7.6-k*1.4,{seg:14});
   doorAt(st,-14,-18.52,Math.PI,'#5fd4b0');
+  {BENCH_SKIP=-1;const yb=bench(st,-20.0,-9.1,Math.PI);BENCH_SKIP=0;const B=BENCHES[BENCHES.length-1];B.x0=-20.0;B.z0=-9.1;B.ry0=Math.PI;for(const q of B.seats){q.lx=q.x;q.lz=q.z;}colC(FL,-20.0,-9.1,.8);}   /* 🪑 a bench in your front yard */
   L.plots=[];for(const [i,x,z] of [[0,-21,-20.9],[1,-18.3,-20.9],[2,-15.6,-20.9],[3,-21,-23.0],[4,-18.3,-23.0],[5,-15.6,-23.0]]){box(st,1.8,.16,1.2,'#b07a52',x,0,z,{ol:.02});col(FL,x-.92,z-.62,x+.92,z+.62);L.plots.push({i,x,z});}
   /* the shed stands beside the arch's way (not right behind it): its door, the seed box and the 🌱 Seeds sign face the arch */
   box(st,1.6,2.0,1.4,'#ffd6e0',-13.4,0,-23.3);prism(st,1.9,1.8,.75,'#ff7aa8',-13.4,2.0,-23.3,{ry:Math.PI/2});box(st,.7,1.6,.06,'#5fd4b0',-13.75,0,-22.58,{ol:.015});col(FL,-14.3,-24.05,-12.5,-22.55);
@@ -2657,7 +2679,7 @@ function yardPlace(){const j=LANE.mine,C=LOC.city;if(j==null||!YARD.g||j===YARD.
   YARD.g.position.set(cx,0,cz);YARD.g.rotation.y=p.s<0?0:Math.PI;YARD.g.visible=true;
   for(const c of YARD.wc){const i=C.cols.indexOf(c);if(i>=0)C.cols.splice(i,1);}
   YARD.wc=YARD.cols.map(c=>{if(c.cr===undefined)return lotRect(j,c);const q=lotPt(j,c.cx,c.cz);return{cx:q[0],cz:q[1],cr:c.cr};});C.cols.push(...YARD.wc);
-  YARD.j=j;YARD.on=true;for(const t of YARD.ints)yardT(t,j);
+  YARD.j=j;YARD.on=true;for(const t of YARD.ints)yardT(t,j);benchYard(j);
   const yw=v=>p.s<0?v:v+Math.PI,d=lotPt(j,-17,-9.6),bk=lotPt(j,-14,-19.7);DOORS.home.city=[d[0],d[1],yw(Math.PI)];DOORS.homeback.city=[bk[0],bk[1],yw(0)];
   for(const [id,x,z,dx,dz] of[['home',-17,-15,-17,-6.9],['garden',-16.75,-21.5,-11.45,-6.9]]){const pl=PLACES.find(q=>q.id===id);[pl.x,pl.z]=lotPt(j,x,z);pl.door=lotPt(j,dx,dz);   /* the arrow aims at the pavement in front of your gate / garden path */
     if(NAV&&NAV.id===id&&!NAV.actor)setNavTo(pl,true);}
@@ -3026,7 +3048,7 @@ function buildPizzeria(){const {L,sh,pr}=room('pizza',1600,'#fff0e0','pizza');
   for(const [tx,tz,c] of [[3.4,1.3,'#ffffff'],[-3.2,1.6,'#ff6b6b']]){const t=buildFurn('table',c);t.position.set(tx,0,tz);pr.add(t);colC(L,tx,tz,.62);pizzaModel(pr,tx,.78,tz,tx>0?2:0);
     seatAt(L,pr,tx-1.05,tz,Math.PI/2,WOOD);seatAt(L,pr,tx+1.05,tz,-Math.PI/2,WOOD);}
   bake(sh,false);bake(pr,true);return L;}
-function buildStudio(){const L=makeLoc('studio','in',700,0,[-4,-4,4,4]);const g=new THREE.Group();L.g.add(g);
+function buildStudio(){BENCH_L=null;const L=makeLoc('studio','in',700,0,[-4,-4,4,4]);const g=new THREE.Group();L.g.add(g);
   cyl(g,1.25,1.25,.08,'#ffd6ec',0,0,0,{seg:40,ol:.03});cyl(g,.9,.9,.09,'#ffe9f4',0,0,0,{seg:40,ol:false});
   const r=seeded(11),C=['#ff7aa8','#ffd45c','#5fd4b0','#7cc8ff','#b79cff'];
   for(let i=0;i<18;i++){const a=r()*TAU,d=2.2+r()*2.6;sph(g,.06+r()*.07,C[i%5],Math.cos(a)*d,.5+r()*2.6,-1.4-r()*2.6,{ws:8,hs:6,ol:.012});}
@@ -4126,7 +4148,7 @@ function mpUpsert(p){const pr=p.presence||{};if(!pr.nm)return;let a=MP.peers.get
   const s=pr.say;if(s&&typeof s==='object'&&s.id!==a.sayId){a.sayId=s.id;const txt=Number.isInteger(s.m)&&QUICK[s.m]?QUICK[s.m]:Number.isInteger(s.e)&&EMOS[s.e]?EMOS[s.e]:null;if(txt&&!fresh)mpBubble(a,txt);}
   const bk=JSON.stringify(pr.bl||null);if(bk!==a.bk){a.bk=bk;if(pr.bl)ballFrom(a,pr.bl);else if(!BS.mine&&BS.own===a.peer)ballOwnerGone();}
   const ck=JSON.stringify(pr.sc||null);if(ck!==a.ck){a.ck=ck;if(pr.sc)scoreFrom(a,pr.sc);}
-  a.zz=pr.zz===1?1:0;a.aw=pr.aw===1?1:0;zzRung(a,pr.rg);clockFrom(a,pr.ck);mpExtra(a,pr,fresh);}
+  a.zz=pr.zz===1?1:0;a.aw=pr.aw===1?1:0;a.st=pr.st===1?1:0;zzRung(a,pr.rg);clockFrom(a,pr.ck);mpExtra(a,pr,fresh);}
 /* 🕰️ one clock for everyone: my clock rides along in presence as ck:[day,hour], refreshed only after 5 game minutes
    (or a new day), so standing still sends little. A friend ahead by 2+ game minutes pulls my clock forward, never back.
    A brand-new player first finishes Rosie's welcome in the morning, then joins the friends' time.
@@ -4281,7 +4303,7 @@ function hostAnswer(ok,quiet){const q=HOST.cur;if(!q)return;HOST.cur=null;const 
 function mpTick(dt){if(!MP.grp)return;const loc=CUR?CUR.id:'city';
   MP.t+=dt;if(MP.t>=.15){MP.t=0;const st={nm:S.name||'Friend',lk:packLook(),loc,x:Math.round(P.x*100)/100,z:Math.round(P.z*100)/100,ry:Math.round((P.sit&&P.sit.bus?P.sit.yaw:P.yaw)*100)/100,mv:P.moving?1:0,ck:mpClock()};   /* (on the bus your body faces forward on the seat, wherever you look) */
     {const b=LOC.city.ball,m=S.match||{l:0,r:0,v:0},r2=v=>Math.round(v*100)/100;st.sc=[m.l|0,m.r|0,m.v|0];st.bl=BS.mine&&b?[r2(b.x),r2(b.z),r2(b.vx),r2(b.vz),BS.k,Math.round((b.reset||0)*10)/10]:null;}
-    st.zz=zzIn()?1:null;st.aw=AW.on?1:null;st.rg=ZZ.rg&&Date.now()-ZZ.rgT<12000?ZZ.rg:null;   /* 😴 in bed / 🔔 a ring (optional; null clears them: presence merges) */
+    st.zz=zzIn()?1:null;st.aw=AW.on?1:null;st.st=P.sit&&!P.sit.bed&&!P.sit.bus?1:null;   /* 🪑 sitting on a bench or a chair */st.rg=ZZ.rg&&Date.now()-ZZ.rgT<12000?ZZ.rg:null;   /* 😴 in bed / 🔔 a ring (optional; null clears them: presence merges) */
     mpStamp(st);   /* 🦘 jumps, 🐾 pets with me (optional) */
     laneStamp(st);const key=JSON.stringify(st);if(key!==MP.lastKey){MP.lastKey=key;MP.grp.presence(st).catch(()=>{});}}
   for(const a of MP.peers.values()){if(!a.av)continue;let sp=peerSpot(a);const vis=!!sp,lie=vis&&!!a.zz;a.av.root.visible=vis;if(lie)sp=mpBedSpot(a,sp);if(sp){a.tx=sp[0];a.tz=sp[1];a.ry=sp[2];}
@@ -4314,8 +4336,8 @@ function mpPose(a,dt,vis,lie,d){const p=a.av,R=p.root;
     if(lie){for(const l of p.legs)l.rotation.x=0;for(const r of p.arms)r.rotation.set(0,0,0);p.head.rotation.set(0,0,0);   /* tucked in under a puffy duvet in the bed's colour */
       const b=a.bed,bunk=!!b&&b[3]==='bunkbed';p.duv=new THREE.Group();box(p.duv,bunk?.96:1.2,.2,1.2,b?b[4]:'#ff9ec4');p.duv.position.set(0,-.12,.96);R.add(p.duv);p.bunk=bunk;}}
   if(a.jy>0||a.jv>0){a.jv-=18*dt;a.jy+=a.jv*dt;if(a.jy<=0)a.jy=a.jv=0;}
-  R.position.set(a.x,lie?0.62:(a.jy||0)+brAt(CUR.id,a.x,a.z),a.z);R.rotation.y=lie?a.ry+Math.PI:angLerp(R.rotation.y,a.ry+Math.PI,Math.min(1,dt*8));
-  if(vis&&!lie){animPerson(p,dt,a.mv&&d>.02);if(a.jy>0){p.legs[0].rotation.x=.55;p.legs[1].rotation.x=-.25;}}
+  R.position.set(a.x,lie?0.62:(a.jy||0)+brAt(CUR.id,a.x,a.z)+(a.st&&!a.mv?-.07:0),a.z);R.rotation.y=lie?a.ry+Math.PI:angLerp(R.rotation.y,a.ry+Math.PI,Math.min(1,dt*8));
+  if(vis&&!lie){animPerson(p,dt,a.mv&&d>.02&&!a.st);if(a.jy>0){p.legs[0].rotation.x=.55;p.legs[1].rotation.x=-.25;}if(a.st&&!a.mv){sitPose(p);p.b.position.y=0;}}   /* 🪑 sitting: legs forward, a little lower */
   const zz=vis&&(lie||!!a.aw);if(zz&&!a.zzs){a.zzs=label('💤',.42,{bg:null,bw:0,pad:8,stroke:'#ffffff',strokeW:10});R.add(a.zzs);}
   if(a.zzs){a.zzs.visible=zz;if(zz){a.zzT=(a.zzT||0)+dt;const b=Math.sin(a.zzT*2.4)*.07;if(lie)a.zzs.position.set(p.bunk?.72:0,(p.bunk?.42:.7)+b,-.1);else a.zzs.position.set(0,(a.bub?2.95:2.5)+b,0);}}
   mpPetsTick(a,dt,vis);}
@@ -4402,8 +4424,9 @@ function randomLook(){const kid=Math.random()<.35;return{skin:pick(['#ffe0c2','#
 function buildTownfolk(){const homes=[27,29,31,33,27,29,31,31,29,27,31];[0,1,2,3,4,5,6,10,11,12,13].forEach((li,i)=>WALKERS.push(new Walker(TOWNFOLK[li],homes[i],i<2)));
   const more=['hN1','hN2','hN3','hS1','hS2','hS3','aptW','aptW','aptW','hN2','hS1','aptW','hS3'];more.forEach((h,i)=>WALKERS.push(new Walker(randomLook(),WPN[h],i===0)));
   const B=LOC.city.benches;[[TOWNFOLK[7],B[0]],[TOWNFOLK[8],B[2]],[TOWNFOLK[9],B[3]]].forEach(([lk,b])=>{const p=makePerson(lk);sitPose(p);bakePerson(p);
-    const sc=lk.scale||1,fx=Math.sin(b.ry),fz=Math.cos(b.ry);p.root.position.set(b.x-fx*.06,.55-.62*sc,b.z-fz*.06);p.root.rotation.y=b.ry;scene.add(p.root);
-    const s={p,x:b.x,z:b.z,t:Math.random()*6};s.target={x:b.x+fx*.4,z:b.z+fz*.4,r:2.2,icon:'👋',label:'Say hi',obj:p.root,act:()=>{p.wave=1.2;SFX.talk();toast('“'+pick(SIT_LINES)+'”',2.6);}};SITTERS.push(s);colC(LOC.city,b.x-LOC.city.ox,b.z-LOC.city.oz,.01);});}
+    const sc=lk.scale||1,fx=Math.sin(b.ry),fz=Math.cos(b.ry),st=b.b&&b.b.seats[0],sx=st?st.x:b.x,sz=st?st.z:b.z;if(b.b)b.b.sit[0]=()=>sittersOut();   /* 🪑 on one seat (the left one), so you can sit beside them */
+    p.root.position.set(sx-fx*.06,.55-.62*sc,sz-fz*.06);p.root.rotation.y=b.ry;scene.add(p.root);
+    const s={p,x:sx,z:sz,t:Math.random()*6};s.target={x:sx+fx*.4,z:sz+fz*.4,r:2.2,icon:'👋',label:'Say hi',obj:p.root,act:()=>{p.wave=1.2;SFX.talk();toast('“'+pick(SIT_LINES)+'”',2.6);}};SITTERS.push(s);colC(LOC.city,sx-LOC.city.ox,sz-LOC.city.oz,.01);});}
 
 /* ---- shop people, pen animals, litter ---- */
 function buildActors(){
