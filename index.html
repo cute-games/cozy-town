@@ -1535,10 +1535,36 @@ function buildSky(){
   const hills=new THREE.Group();outside.add(hills);
   for(let i=0;i<28;i++){const a=i/28*TAU+rand(-.08,.08),r=rand(205,250),R=rand(40,62),c=pick(['#86d37c','#79c973','#93dc85']),y=-rand(8,18),x=Math.cos(a)*r;let z=Math.sin(a)*r;
     const foot=R*Math.sqrt(Math.max(0,1-(2*y/R)**2));if(x<-60&&Math.abs(z)<44+foot)z=(z<0?-1:1)*(44+foot);   /* 🏡 Friends Lane runs west through a valley: hills step aside */
-    sph(hills,R,c,x,y,z,{ol:.9,ws:18,hs:10,s:[1,.5,1]});}
+    sph(hills,R,c,x,y,z,{ol:.9,ws:18,hs:10,s:[1,.5,1]});HILLS.push({x,y,z,R});}
   for(let i=0;i<110;i++){const a=rand(0,TAU),r=rand(94,160);const x=Math.cos(a)*r,z=Math.sin(a)*r;if(Math.abs(x)<7||Math.abs(z)<7||(x<-78&&Math.abs(z)<38)||(Math.abs(Math.abs(x)-50)<7&&Math.abs(z)<95)||(Math.abs(Math.abs(z)-50)<7&&Math.abs(x)<95))continue;(Math.random()<.5?pine:tree)(hills,x,z,rand(1.3,2.2));}
   bake(hills,false);}finally{Math.random=mr;}
 }
+
+/* 🌲 the forest belt and tree groups (night 3, job 12). Past the town barriers (and north and south of Friends Lane) a belt of round trees and
+   pines several rows deep, at the same spots the map already draws (mapTrees), plus a close row just outside the barriers, and small tree
+   groups in empty corners inside the town. Never on roads, paths, doors, the bus route, the football field, the pond and lake, the park or the
+   lane (the lane valley x < -78, |z| < 31.5 stays free for new plots). Built light: low-poly trees, no outlines, no shadows, merged by 64 m
+   chunks into one vertex-colour piece each. Season colours from job 11. The near row and the groups go on the map too */
+const HILLS=[];
+function groundY(x,z){let y=0;for(const h of HILLS){const d=((x-h.x)**2+(z-h.z)**2)/(h.R*h.R);if(d<1)y=Math.max(y,h.y+h.R*.5*Math.sqrt(1-d));}return y;}
+function treeLo(g,x,y,z,s,c){cyl(g,.15*s,.2*s,2.3*s,'#9b6b4a',x,y,z,{seg:5,ol:false});sph(g,1.15*s,c,x,y+3.05*s,z,{ws:7,hs:5,ol:false});sph(g,.75*s,c,x+.7*s,y+2.75*s,z+.15*s,{ws:6,hs:4,ol:false});sph(g,.72*s,c,x-.62*s,y+2.8*s,z-.3*s,{ws:6,hs:4,ol:false});}
+function pineLo(g,x,y,z,s,c){cyl(g,.14*s,.18*s,.8*s,'#9b6b4a',x,y,z,{seg:5,ol:false});cone(g,1.2*s,1.6*s,c,x,y+.7*s,z,{seg:6,ol:false});cone(g,.92*s,1.4*s,c,x,y+1.55*s,z,{seg:6,ol:false});cone(g,.62*s,1.2*s,c,x,y+2.35*s,z,{seg:6,ol:false});}
+const laneFree=(x,z)=>x<-78&&Math.abs(z)<31.5,beachFree=(x,z)=>x>78&&Math.abs(z)<11;
+function freeSpot(L,x,z,r){for(const c of L.cols){if(c.cr!==undefined){if(Math.hypot(x-c.cx,z-c.cz)<c.cr+r)return false;}else if(x>c.x1-r&&x<c.x2+r&&z>c.z1-r&&z<c.z2+r)return false;}
+  for(const t of L.inter)if(Math.hypot(x-t.x,z-t.z)<7)return false;return true;}
+function buildForest(L,st){const F=new THREE.Group();L.g.add(F);const r=seeded(68),TC=()=>TREE_COLS[(r()*TREE_COLS.length)|0],PC=()=>PINE_COLS[(r()*PINE_COLS.length)|0];
+  const plant=(x,z,s)=>{const y=groundY(x,z);if(r()<.45)pineLo(F,x,y,z,s*1.15,PC());else treeLo(F,x,y,z,s,TC());};
+  for(const [x,z,R] of mapTrees())plant(x,z,clamp(R/1.9,.9,2.4));   /* the belt, where the map draws it */
+  const near=[];for(let i=0;i<900&&near.length<150;i++){const side=(r()*4)|0,u=(r()-.5)*2*91,v=85.5+r()*5.5,x=side<2?u:(side===2?v:-v),z=side<2?(side===0?v:-v):u;   /* a close row just past the barriers */
+    if(laneFree(x,z)||beachFree(x,z)||near.some(([a,b])=>Math.hypot(a-x,b-z)<2.6))continue;near.push([x,z]);}
+  for(const [x,z] of near){const R=1.6+r()*1.4;plant(x,z,R/1.5);mapTrees().push([x,z,R]);}
+  bake(F,false,64);
+  /* tree groups in empty corners inside the town */
+  const G=[],roadNear=(x,z)=>[-50,0,50].some(c=>Math.abs(x-c)<9||Math.abs(z-c)<9),bad=(x,z)=>Math.abs(x)>80||Math.abs(z)>80||roadNear(x,z)||(x>-42&&x<-6&&z>6&&z<43)||(x>-44&&x<-10&&z>53)||Math.hypot(x-69,z-69)<14||Math.hypot(x-36.2,z+36.2)<8||x<-76;
+  for(let i=0;i<700&&G.length<9;i++){const x=(r()-.5)*160,z=(r()-.5)*160;if(Math.abs(x)<54&&Math.abs(z)<54)continue;if(bad(x,z)||!freeSpot(L,x,z,4.5)||G.some(g=>Math.hypot(g[0]-x,g[1]-z)<16))continue;
+    const T=[];for(let k=0;k<14&&T.length<3+((r()*3)|0);k++){const a=r()*TAU,d=.8+r()*3.0,tx=x+Math.cos(a)*d,tz=z+Math.sin(a)*d;if(bad(tx,tz)||!freeSpot(L,tx,tz,1.4)||T.some(([a2,b2])=>Math.hypot(a2-tx,b2-tz)<2.3))continue;T.push([tx,tz]);}
+    if(T.length<2)continue;G.push([x,z]);for(const [tx,tz] of T){const s=.9+r()*.5;if(r()<.3)pine(st,tx,tz,s*1.1);else tree(st,tx,tz,s);colC(L,tx,tz,.3);mapTrees().push([tx,tz,1.1*s]);}}
+  L.treeGroups=G;}
 
 /* ---- the town ---- */
 const WP=[[-34,-5.6],[-20,-5.6],[-5.6,-5.6],[5.6,-5.6],[20,-5.6],[34,-5.6],[-34,5.6],[-20,5.6],[-5.6,5.6],[5.6,5.6],[20,5.6],[34,5.6],
@@ -1800,6 +1826,7 @@ function buildCity(){
       placed++;}}
   Object.assign(L.pondC,{lk:1,walk:[{ax:L.ox+BRG.x,az:L.oz+BRG.z-BRG.hl,ux:0,uz:1,len:BRG.hl*2,hw:.62}]});for(const a of[-1,1])for(const b of[-1,1])colC(L,BRG.x+.68*a,BRG.z+2.2*b,.1);   /* 🌉 the pond stays solid water, except the way over the bridge; its end posts are solid (set after the nature above, so every bush stays where it was) */
   buildLane(L,st);buildClosedSigns(L);buildGrandmas(L,st);   /* 👵 grandmas on benches by the town houses */
+  buildForest(L,st);   /* 🌲 the forest belt and the tree groups */
   bake(st,true,32);
   L.g.add(glowMesh(glowGeo(LAMPXZ.flatMap(([x,z])=>[[x,3.21,z,.8,[.5,.38,.18]],[x,.1,z,4.4,4.4,[.3,.23,.11]]]))));
   buildFlies(L);   /* ✨ fireflies in the park at night */
@@ -3758,7 +3785,7 @@ function wxTick(dt){if(!scene)return;wxBuild();const w=wxNow(),mix=(k)=>(w.a===k
   RAINM.visible=out&&rain>.02;RAINM.material.uniforms.op.value=rain;SNOWM.visible=out&&snow>.02;SNOWM.material.uniforms.op.value=snow;LEAFM.visible=leaf>.02;LEAFM.material.uniforms.op.value=leaf;
   const sv=out&&rain>.02&&PLAYING?rain:0;if(Math.abs(sv-(WX.sv||0))>.02||(sv===0&&WX.snd)){WX.sv=sv;wxSound(sv);}}
 /* 🍂 the season's colours for the trees, set when the town is built */
-const SEASON_COLS={spring:{tree:['#9fe08a','#b4ea8e','#8fd97e','#ffc9dc','#ffb3c7'],pine:['#5fc484','#6bcf8c']},summer:{tree:['#7ed37a','#6cc97c','#93dc76'],pine:['#4fb37a','#5bbf7e']},
+const SEASON_COLS={spring:{tree:['#9fe08a','#b4ea8e','#8fd97e','#a6e68c','#ffc9dc'],pine:['#5fc484','#6bcf8c']},summer:{tree:['#7ed37a','#6cc97c','#93dc76'],pine:['#4fb37a','#5bbf7e']},
   autumn:{tree:['#ff9f43','#ff6b4a','#ffd45c','#e8734a','#ffb347'],pine:['#4fa36f','#56ad76']},winter:{tree:['#cfe8dc','#dff2ea','#b8dcc8','#e8f4ee'],pine:['#9ccfb6','#b7dfcc']}};
 let SEASON='summer',TREE_COLS=SEASON_COLS.summer.tree,PINE_COLS=SEASON_COLS.summer.pine;
 function seasonSet(){try{SEASON=seasonOf(realDate());}catch(e){SEASON='summer';}const C=SEASON_COLS[SEASON]||SEASON_COLS.summer;TREE_COLS=C.tree;PINE_COLS=C.pine;}
