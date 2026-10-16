@@ -3592,9 +3592,9 @@ class Walker{
     if(walk&&(this.nt>0?d<9&&(c>.6||d<2.5):d<8&&c>.82&&d<this.ld)){if(this.nt<=0&&this.wv<=0&&this.p.wave<=0){this.p.wave=1.2;this.wv=12;}this.nt=1.6;}
     else this.nt=Math.max(0,this.nt-dt*(walk&&c<0?3:1));
     this.ld=d;this.wv=Math.max(0,this.wv-dt);this.nk=this.nt>0?Math.min(1,this.nk+dt*2.5):Math.max(0,this.nk-dt*1.25);return this.nk*this.nk*(3-2*this.nk);}
-  init(){if(this.awake()){this.state='out';const n=Math.floor(Math.random()*WP.length);this.node=n;this.x=WP[n][0];this.z=WP[n][1];this.prev=-1;this.wait=rand(0,3);}else{this.state='home';this.node=this.home;this.x=WP[this.home][0];this.z=WP[this.home][1];}}
+  init(){if(this.awake()){this.state='out';const n=Math.floor(Math.random()*WP.length);this.node=n;this.x=WP[n][0];this.z=WP[n][1];this.prev=-1;this.wait=rand(0,3);wkSpawnApart(this);}else{this.state='home';this.node=this.home;this.x=WP[this.home][0];this.z=WP[this.home][1];}}
   update(dt){const aw=this.awake();
-    if(this.state==='home'){if(!aw){this.g.visible=false;return;}this.state='out';this.node=this.home;this.x=WP[this.home][0];this.z=WP[this.home][1];this.prev=-1;this.wait=rand(0,2);this.nt=this.nk=0;}
+    if(this.state==='home'){if(!aw){this.g.visible=false;return;}this.state='out';this.node=this.home;this.x=WP[this.home][0];this.z=WP[this.home][1];this.prev=-1;this.wait=rand(0,2);this.nt=this.nk=0;wkSpawnApart(this);}
     if(!aw&&this.state==='out')this.state='going';
     /* bedtime: out of sight (far away, off the screen, or you are indoors) a walker is home at once, so the night gets quiet; in sight they walk home */
     if(this.state==='going'&&(CUR.id!=='city'||Math.hypot(this.x-camera.position.x,this.z-camera.position.z)>52||!inView(this.x,this.z,5))){this.state='home';this.node=this.home;this.x=WP[this.home][0];this.z=WP[this.home][1];this.g.visible=false;return;}
@@ -3604,7 +3604,7 @@ class Walker{
       if(d<.15){if(this.state==='going'){if(this.node===this.home){this.state='home';this.g.visible=false;return;}this.prev=this.node;this.node=NEXT[this.node][this.home];}
         else{const nb=NEIGH[this.node].filter(k=>k!==this.prev);this.prev=this.node;this.node=nb.length?pick(nb):pick(NEIGH[this.node]);if(Math.random()<(PAUSE.has(this.prev)?.55:.15))this.wait=rand(2,7);}}
       else if(CUR.id==='city'&&Math.hypot(P.x-this.x,P.z-this.z)<.95)this.moving=false;
-      else{const s=Math.min(d,(this.state==='going'?1.5:1.25)*(1-.58*e)*dt);this.x+=dx/d*s;this.z+=dz/d*s;this.face=Math.atan2(dx,dz);this.moving=true;}}   /* noticing you: 42% speed */
+      else{const s=Math.min(d,(this.state==='going'?1.5:1.25)*(1-.58*e)*(this.slow?.45:1)*dt);this.x+=dx/d*s;this.z+=dz/d*s;this.face=Math.atan2(dx,dz);this.moving=true;}}   /* noticing you: 42% speed; someone right in front walking the same way: slower */
     const far=Math.hypot(this.x-camera.position.x,this.z-camera.position.z)>48;this.g.visible=CUR.id==='city'&&!far;this.g.position.set(this.x,0,this.z);
     /* 👀 turning to you: walking, the body turns a little (it still walks along its path); standing, all the way. The head turns the rest
        (angLerp(x,a,1)-x = the smallest turn from x to a) */
@@ -3613,6 +3613,38 @@ class Walker{
     if(!far){animPerson(this.p,dt,this.moving,1-.5*e);const h=this.p.head;h.rotation.y=lerp(h.rotation.y,e>0?clamp(angLerp(this.g.rotation.y,a,1)-this.g.rotation.y,-1,1)*e:0,Math.min(1,dt*6));}
     this.target.x=this.x;this.target.z=this.z;this.target.r=2.2+1.3*e;}   /* "Say hi" reach: 2.2 m, 3.5 m when they notice you */
 }
+/* 🚶 townspeople give way (night 3, job 4). Walkers used to follow their paths and pass through each other. Now: face to face, each steps about
+   0.7 m to its right (never from the pavement onto the road), passes, then walks back to its path by itself; walking the same way, the one behind
+   slows down; and nobody is ever closer than 0.6 m to another walker (a gentle push apart every frame). Waiting walkers count too. They also go
+   round bench sitters, grandmas, friends, pets and players. Cheap: only walkers near each other are compared (24 walkers, a distance check first) */
+const WK={stat:[]};
+function wkStat(){const S0=WK.stat;S0.length=0;if(!CUR||CUR.id!=='city')return S0;const add=(x,z,r)=>S0.push({x,z,r});
+  if(PLAYING)add(P.x,P.z,.5);if(typeof sittersOut==='function'&&S&&sittersOut())for(const s of SITTERS)add(s.x,s.z,.45);
+  if(typeof GRAN!=='undefined')for(const b of GRAN.benches)if(b.out)add(b.b.x,b.b.z,1.0);
+  for(const f of FRIEND_ACTORS)if(f.loc==='city'&&f.mode!=='away')add(f.x,f.z,.42);for(const p of PET_ACTORS)if(p.loc==='city')add(p.x,p.z,.36);
+  if(typeof MP!=='undefined')for(const a of MP.peers.values())if(a.av&&a.av.root.visible&&a.loc==='city')add(a.x,a.z,.42);return S0;}
+/* move a walker a little; from the pavement never onto the road (on a zebra crossing it may move along the road) */
+function wkNudge(w,nx,nz){const x=w.x+nx,z=w.z+nz;if(onRoad(x,z)&&!onRoad(w.x,w.z))return false;w.x=x;w.z=z;return true;}
+function wkSide(w,k){const rx=Math.cos(w.face),rz=-Math.sin(w.face);if(!wkNudge(w,rx*k,rz*k))wkNudge(w,-rx*k,-rz*k);}   /* a step to its right (or left if the road is there) */
+function walkersApart(dt){const W=[];for(const w of WALKERS){if(w.state==='home')continue;w.slow=0;W.push(w);}
+  for(let i=0;i<W.length;i++){const a=W[i];for(let j=i+1;j<W.length;j++){const b=W[j];const dx=b.x-a.x,dz=b.z-a.z,d=Math.hypot(dx,dz);if(d>1.4)continue;
+    const ax=Math.sin(a.face),az=Math.cos(a.face),bx=Math.sin(b.face),bz=Math.cos(b.face),dot=ax*bx+az*bz;
+    if(dot<-.3&&a.moving&&b.moving){const k=Math.min(.7,(1.4-d))*dt*2.2;wkSide(a,k);wkSide(b,k);}   /* face to face: each steps to its right */
+    else if(dot>.5&&d<1.1){const behind=(dx*ax+dz*az)>0?a:b;behind.slow=1;}}   /* same way: the one behind slows down */
+    /* people and pets who stand or sit about: walk round them */
+    for(const o of WK.stat){const dx=a.x-o.x,dz=a.z-o.z,d=Math.hypot(dx,dz),m=o.r+.3;if(d>=m)continue;if(d<1e-4){wkNudge(a,m,0);continue;}const k=m-d;if(!wkNudge(a,dx/d*k,dz/d*k)){const rx=Math.cos(a.face),rz=-Math.sin(a.face);wkNudge(a,rx*k,rz*k);}}}
+  /* never inside each other: a few passes, because pushing one pair apart can nudge a third walker (at a corner where paths meet) */
+  for(let pass=0;pass<4;pass++){let moved=false;
+    for(let i=0;i<W.length;i++){const a=W[i];for(let j=i+1;j<W.length;j++){const b=W[j];const dx=b.x-a.x,dz=b.z-a.z,d2=Math.hypot(dx,dz);if(d2>=.64)continue;moved=true;
+      let px,pz;if(d2<1e-4){px=Math.cos(a.face);pz=-Math.sin(a.face);}else{px=dx/d2;pz=dz/d2;}const k=(.64-d2)/2+.005;
+      if(wkNudge(b,px*k,pz*k)){if(!wkNudge(a,-px*k,-pz*k))wkNudge(b,px*k,pz*k);}
+      else if(wkNudge(a,-px*k*2,-pz*k*2)){}
+      else if(wkNudge(b,-pz*k*2,px*k*2)||wkNudge(b,pz*k*2,-px*k*2)||wkNudge(a,-pz*k*2,px*k*2)||wkNudge(a,pz*k*2,-px*k*2)){}   /* along the pavement */
+      else{b.x+=px*k;b.z+=pz*k;a.x-=px*k;a.z-=pz*k;}}}   /* (last resort, almost never: nowhere to go but the road edge) */
+    if(!moved)break;}
+  for(const a of W){a.g.position.x=a.x;a.g.position.z=a.z;}}
+/* a walker that comes out (wakes up, or a new day) never appears inside another one */
+function wkSpawnApart(w){for(let t=0;t<6;t++){const o=WALKERS.find(q=>q!==w&&q.state!=='home'&&Math.hypot(q.x-w.x,q.z-w.z)<.75);if(!o)return;const a=w.face+Math.PI/2+t*1.1,x=w.x+Math.cos(a)*.8,z=w.z+Math.sin(a)*.8;if(onRoad(x,z)&&!onRoad(w.x,w.z))continue;w.x=x;w.z=z;}}
 /* ---- 🌙 night glows: soft light sprites in one shared additive material (no real lights, no shadows). The sky fades
    them in at dusk and out at dawn; by day the material is switched off, so they cost nothing ---- */
 let NGLOW=null,CARGLOW=null;const LAMPXZ=[];
@@ -7204,7 +7236,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     fanTick(dt);let fi=0;for(const f of FRIEND_ACTORS)f.update(dt,f.mode==='follow'?fi++:0);PET_ACTORS.forEach((p,i)=>p.update(dt,fi+i+(fi?0:1)));
     if(CUR.id==='pets')updatePen(dt);
     if(CUR.id==='toys'&&CUR.train){const T=CUR.train;T.userData.t=(T.userData.t||0)+dt*.9;T.children.forEach((c,i)=>{const a=T.userData.t-i*.32;c.position.set(Math.cos(a)*.88,0,Math.sin(a)*.55);c.rotation.y=Math.atan2(-Math.sin(a)*.88,Math.cos(a)*.55);});}
-    for(const w of WALKERS)w.update(dt);
+    wkStat();for(const w of WALKERS)w.update(dt);walkersApart(dt);   /* 🚶 townspeople give way to each other and walk round people who stand or sit about */
     updateCars(dt);mpTick(dt);laneTick(dt);zzTick(dt);for(const s of SHOPPERS)s.update(dt);
     updGarden(dt);bdTick(dt);
     fbTick(dt);   /* ⚽ the football friends */
@@ -7223,7 +7255,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     if(MAPV.on){mapT+=dt;if(mapT>=.1){mapT=0;mapTick();}}   /* 🗺️ the open map: your arrow, the dotted way and friends move */
     awTick(dt);netTick(dt);
   }else{titleT+=dt*.05;
-    if(CUR&&CUR.id==='city'){for(const w of WALKERS)w.update(dt);updateCars(dt);}
+    if(CUR&&CUR.id==='city'){wkStat();for(const w of WALKERS)w.update(dt);walkersApart(dt);updateCars(dt);}
     if(!S||!CUR||CUR.id==='city'){const cx=FTN?FTN.fx:0,cz=FTN?FTN.fz:0;camera.position.set(cx+Math.cos(titleT)*30,14,cz+Math.sin(titleT)*30);camera.lookAt(cx,1,cz);}}
   if(CUR&&CUR.type==='out'){const L=LOC.city,tt=now/1000;
     updFountain(dt);updDucks(dt,tt);brTick(dt);updFlies(tt);   /* 🌉 up and over the pond bridge; ✨ fireflies in the park at night */
