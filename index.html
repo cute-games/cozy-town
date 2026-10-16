@@ -4932,7 +4932,8 @@ document.addEventListener('focusin',()=>setTimeout(kbFit,0));document.addEventLi
 function cardShow(el,keep){const c=$('card');if(!el||$('panel').hidden||!c.contains(el))return;const cr=c.getBoundingClientRect(),r=el.getBoundingClientRect();
   let d=r.bottom-(Math.min(cr.bottom,visH())-8);if(d<=1)return;if(keep)d=Math.min(d,keep.getBoundingClientRect().top-Math.max(cr.top,0)-8);if(d>1)c.scrollTop+=d;}
 const ACT={};
-$('card').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||b.disabled)return;const [k,...r]=b.dataset.a.split(':');if(k!=='buy')SFX.tap();if(ACT[k])ACT[k](r.join(':'),b);});
+const quietCard=()=>!!(typeof FR!=='undefined'&&FR&&quietFriend(FR))||!!(typeof PH!=='undefined'&&PH.app==='msg'&&PH.chat==='ro');   /* 🤫 a card of Rosie's: even the button tap is silent */
+$('card').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||b.disabled)return;const [k,...r]=b.dataset.a.split(':');if(k!=='buy'&&!quietCard())SFX.tap();if(ACT[k])ACT[k](r.join(':'),b);});
 ACT.close=()=>closePanel();
 ACT.tnGo=()=>{closePanel();tnStart();};
 ACT.fbTeam=()=>fbStart('team');ACT.fbDuel=()=>fbStart('duel');ACT.fbJuice=()=>fbJuice();ACT.fbAgain=()=>fbStart(FB.lastM);
@@ -4950,7 +4951,8 @@ const fill=(s,f)=>String(s).replace(/\{name\}/g,S.name||'friend').replace(/\{foo
 
 /* friends */
 let FR=null;
-function openFriend(f,line){FR=f;if(f.mode!=='talk'){f.prev=f.mode;f.mode='talk';}f.face=Math.atan2(P.x-f.x,P.z-f.z);f.g.rotation.y=f.face;f.p.wave=1;SFX.talk();const st=frSt(f.d.id);
+const quietFriend=f=>!!f&&f.d.id==='rosie';   /* 🤫 Rosie makes no sound at all (night 3, job 2): no chat blip, no ding for her messages */
+function openFriend(f,line){FR=f;if(f.mode!=='talk'){f.prev=f.mode;f.mode='talk';}f.face=Math.atan2(P.x-f.x,P.z-f.z);f.g.rotation.y=f.face;f.p.wave=1;if(!quietFriend(f))SFX.talk();const st=frSt(f.d.id);
   if(!line){if(!st.met){st.met=1;line=f.d.hello;addPts(f,3);}else line=bdRosie(f)||f.d.greet||pick(["Hi {name}! Nice to see you!","Hey {name}! What are you up to?","Oh, {name}! Hi hi!"]);}
   renderFriend(line);}
 function renderFriend(line,sub){const f=FR,st=frSt(f.d.id),h=heartsOf(f.d.id),fol=f.prev==='follow';
@@ -4958,15 +4960,15 @@ function renderFriend(line,sub){const f=FR,st=frSt(f.d.id),h=heartsOf(f.d.id),fo
     <p class="line">${esc(fill(line))}</p>${sub||`<div class="row"><button class="btn mint" data-a="fchat">💬 Chat</button><button class="btn butter" data-a="fgift">🎁 Give a present</button>
     ${f.d.id==='rosie'?'<button class="btn lilac" data-a="fjob">💼 Jobs</button>':''}${fol?'<button class="btn sky" data-a="fstop">👋 See you later</button>':`<button class="btn sky" data-a="fhang" ${h<1?'disabled':''}>🤝 Hang out${h<1?' (needs 1 ♥)':''}</button>`}
     <button class="btn white" data-a="close">Bye!</button></div>`}`,{bottom:true,onClose:()=>{if(f.mode==='talk')f.mode=f.prev==='follow'?'follow':'walk';FR=null;}});}
-ACT.fchat=()=>{const f=FR,st=frSt(f.d.id);SFX.talk();qEvent('chat',1,f.d.id);qEvent('chat:'+f.d.id);const pk=a=>{const b=Math.random()<.75&&bdRosie(f);if(b&&b!==f.d._last)return f.d._last=b;const L=a.length>1?a.filter(x=>x!==f.d._last):a,r=pick(L.length?L:a);f.d._last=r;return r;};if(st.chat!==S.day){st.chat=S.day;addPts(f,4);addXP('friends',4);renderFriend(pk(f.d.lines));}else renderFriend(pk(f.d.only?f.d.lines:f.d.lines.concat(["We talked so much today! Let's hang out.","Hehe, you're fun to talk to!"])));};
+ACT.fchat=()=>{const f=FR,st=frSt(f.d.id);if(!quietFriend(f))SFX.talk();qEvent('chat',1,f.d.id);qEvent('chat:'+f.d.id);const pk=a=>{const b=Math.random()<.75&&bdRosie(f);if(b&&b!==f.d._last)return f.d._last=b;const L=a.length>1?a.filter(x=>x!==f.d._last):a,r=pick(L.length?L:a);f.d._last=r;return r;};if(st.chat!==S.day){st.chat=S.day;addPts(f,4);addXP('friends',4);renderFriend(pk(f.d.lines));}else renderFriend(pk(f.d.only?f.d.lines:f.d.lines.concat(["We talked so much today! Let's hang out.","Hehe, you're fun to talk to!"])));};
 ACT.fgift=()=>{const foods=Object.keys(S.bag).filter(k=>FOODS[k]&&S.bag[k]>0);
   if(!foods.length){renderFriend("You don't have any food in your bag. The market has yummy stuff!");return;}
   renderFriend(FR.d.giftAsk||'Ooh, a present? For me?',`<div class="grid" style="margin-top:12px">${foods.map(k=>`<button class="it" data-a="give:${k}"><span class="em">${FOODS[k].i}</span><span>${FOODS[k].n}</span><span class="have">×${S.bag[k]}</span></button>`).join('')}</div><div class="row"><button class="btn white" data-a="fback">Back</button></div>`);};
 ACT.fback=()=>renderFriend('So, what do you want to do?');
 ACT.give=k=>{const f=FR,st=frSt(f.d.id);if(st.gift===S.day){renderFriend("You're so sweet! But I'm full. Maybe tomorrow? 😊");return;}
-  S.bag[k]--;st.gift=S.day;SFX.pet();qEvent('gift');qEvent('gift:'+f.d.id);addXP('friends',5);const fav=f.d.fav===k;addPts(f,fav?10:5);floatText('💗',f.x,2.1,f.z,{h:.6});
+  S.bag[k]--;st.gift=S.day;if(!quietFriend(f))SFX.pet();qEvent('gift');qEvent('gift:'+f.d.id);addXP('friends',5);const fav=f.d.fav===k;addPts(f,fav?10:5);floatText('💗',f.x,2.1,f.z,{h:.6});
   renderFriend(fav?`Wow, ${FOODS[k].n.toLowerCase()}! That's my FAVORITE! Thank you, {name}!`:`Ooh, ${FOODS[k].n.toLowerCase()}! Thank you, {name}!`);change();};
-ACT.fhang=()=>{const f=FR;f.prev='follow';SFX.yay();qEvent('hang');qEvent('hang:'+f.d.id);addXP('friends',3);renderFriend("Yay! Let's go! I'll follow you. Show me your house!");};
+ACT.fhang=()=>{const f=FR;f.prev='follow';if(!quietFriend(f))SFX.yay();qEvent('hang');qEvent('hang:'+f.d.id);addXP('friends',3);renderFriend("Yay! Let's go! I'll follow you. Show me your house!");};
 ACT.fstop=()=>{const f=FR;f.prev='walk';if(f.loc!=='city'){f.loc='city';f.node=f.d.home;f.x=WP[f.node][0];f.z=WP[f.node][1];}renderFriend('Okay! See you later, {name}! 👋');};
 
 /* pets */
@@ -5843,18 +5845,18 @@ function msgPhone(){const m=msgs(),c=PH.chat;
   if(c==='pz')h+=`<p class="ph-sub" style="margin-top:10px">✏️ Write the flat number on your notepad so you don't forget!</p>`;
   if(c==='ro'){if(PH.jobs)h+=`<div class="phjobs">${jobCards()}</div>`;h+=`<div class="creply"><button class="btn mint" data-a="rjob">💼 I want a new job</button><button class="btn white" data-a="rhi">👋 Just saying hi!</button></div>`;}
   return h;}
-ACT.chat=c=>{PH.chat=c||null;PH.jobs=false;if(c){msgs().u[c]=0;updPhoneBadge();change();}SFX.tap();renderPhone();};
+ACT.chat=c=>{PH.chat=c||null;PH.jobs=false;if(c){msgs().u[c]=0;updPhoneBadge();change();}if(c!=='ro')SFX.tap();renderPhone();};
 ACT.phchat=c=>{openPhone('msg',c);};
 ACT.tutgo=()=>{closePanel();setTimeout(tutStart,250);};
-const rosieLater=(t,ms)=>setTimeout(()=>{addMsg('ro','ro',t);SFX.talk();},ms||800);
+const rosieLater=(t,ms)=>setTimeout(()=>{addMsg('ro','ro',t);},ms||800);   /* (no sound: Rosie is quiet) */
 ACT.rjob=()=>{addMsg('ro','me','I want a new job! 💼');JOBCTX='msg';PH.jobs=true;renderPhone();rosieLater('Yay! 🎉 Which job do you want? Pick one!',600);};
 ACT.rhi=()=>{addMsg('ro','me','Just saying hi! 👋');PH.jobs=false;renderPhone();
   rosieLater(pick([`Hi ${S.name||'friend'}! 💗 You made my day!`,"Hiii! 👋 Come find me at the park by the fountain later!","Hi hi! 🌸 Have you tried the ice cream shop? It's sooo yummy!","Hello! 😊 I hope you're having a super cozy day!","Hey! 🐶 Did you know you can adopt a pet at the Pet Shop?"]),900);};
 function askJob(){S.jobAsk=true;change();addMsg('ro','ro',`Hi ${S.name||'friend'}! 👋 Guess what? Now you can have a JOB in Cozy Town! 💼 Tap “I want a new job” to pick one!`);
-  SFX.ding();showNote('📱 New message from Rosie!','Open 💬 Messages on your phone to read it.',false,'💬','ro');}
-function askJobOld(){S.jobAsk=true;JOBCTX='ask';SFX.ding();change();
+  showNote('📱 New message from Rosie!','Open 💬 Messages on your phone to read it.',false,'💬','ro');}   /* (no ding: Rosie is quiet) */
+function askJobOld(){S.jobAsk=true;JOBCTX='ask';change();
   openPanel(`${rosieHd()}<p class="line">📱 Hi ${esc(S.name||'friend')}! Guess what? Now you can have a JOB in Cozy Town! What do you want to be?</p>${jobCards()}<div class="row"><button class="btn white" data-a="jobskip">Maybe later</button></div>`,{bottom:true,lock:true});}
-ACT.job=k=>{if(!JOBS[k]||JOBS[k].soon)return;const same=S.job===k;setJob(k);SFX.yay();
+ACT.job=k=>{if(!JOBS[k]||JOBS[k].soon)return;const same=S.job===k;setJob(k);if(!quietCard())SFX.yay();
   if(JOBCTX==='msg'){PH.jobs=false;addMsg('ro','me',`${JOBS[k].i} ${JOBS[k].n}, please!`);rosieLater(same?`That's already your job! You're doing great. ${JOBS[k].i}`:jobHello(k),700);if(!same)setTimeout(()=>tutMaybe(),1200);return;}
   if(JOBCTX==='intro'){openPanel(`${rosieHd()}<p class="line">${esc(jobHello(k))}</p><div class="row"><button class="btn mint" data-a="inext">Next</button></div>`,{bottom:true,lock:true});return;}
   const line=same?`That's already your job! You're doing great. ${JOBS[k].i}`:jobHello(k),go=k==='delivery'?`<button class="btn butter" data-a="nav:pizza">📍 Show me the way</button>`:'';
@@ -6831,7 +6833,7 @@ function jobPhone(){let h;
 let INTRO=0;const ROSIE=()=>FRIEND_ACTORS[0];
 const INTRO_LINES=["Hi! You must be new here! I'm Rosie. I live in this town.","What's your name? And what do you look like? Show me!","{name}! What a great name. And I love your look! Welcome to Cozy Town!","Oh! Everyone in Cozy Town has a job. What job do you want to do?","Your new house is on Friends Lane, just down this road! Follow the pink arrow to find it. 🏡",
   "The market and the pet shop are just down the street. Look for the signs!","I'll be at the park by the fountain. Come find me! Bye for now!"];
-function introStep(){const f=ROSIE(),i=INTRO,line=INTRO_LINES[i];f.p.wave=.8;SFX.talk();document.body.classList.add('talk');   /* 👋 while Rosie talks: no aim dot on her face, no jump/run buttons on her card */
+function introStep(){const f=ROSIE(),i=INTRO,line=INTRO_LINES[i];f.p.wave=.8;document.body.classList.add('talk');   /* 👋 while Rosie talks: no aim dot on her face, no jump/run buttons on her card */
   if(i===1){openPanel(`<div class="who" style="--c:#ff9ec4">Rosie</div><p class="line">${esc(line)}</p><div class="row"><button class="btn mint" data-a="imake">✨ Make my character</button></div>`,{bottom:true,lock:true});return;}
   if(i===3){JOBCTX='intro';S.jobAsk=true;openPanel(`${rosieHd()}<p class="line">${esc(line)}</p>${jobCards()}<div class="row"><button class="btn white" data-a="jobskip">I'll pick later</button></div>`,{bottom:true,lock:true});return;}
   if(i===4)setNav('home',true);   /* the pink arrow shows up as Rosie talks about it */
