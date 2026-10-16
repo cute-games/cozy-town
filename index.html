@@ -1766,7 +1766,7 @@ function buildCity(){
       else{if(!free(x,z,1.3))continue;tree(st,x,z,1+r()*.3);colC(L,x,z,.3);}
       placed++;}}
   Object.assign(L.pondC,{lk:1,walk:[{ax:L.ox+BRG.x,az:L.oz+BRG.z-BRG.hl,ux:0,uz:1,len:BRG.hl*2,hw:.62}]});for(const a of[-1,1])for(const b of[-1,1])colC(L,BRG.x+.68*a,BRG.z+2.2*b,.1);   /* 🌉 the pond stays solid water, except the way over the bridge; its end posts are solid (set after the nature above, so every bush stays where it was) */
-  buildLane(L,st);buildClosedSigns(L);
+  buildLane(L,st);buildClosedSigns(L);buildGrandmas(L,st);   /* 👵 grandmas on benches by the town houses */
   bake(st,true,32);
   L.g.add(glowMesh(glowGeo(LAMPXZ.flatMap(([x,z])=>[[x,3.21,z,.8,[.5,.38,.18]],[x,.1,z,4.4,4.4,[.3,.23,.11]]]))));
   buildFlies(L);   /* ✨ fireflies in the park at night */
@@ -3667,6 +3667,48 @@ function walkersApart(dt){const W=[];for(const w of WALKERS){if(w.state==='home'
   for(const a of W){a.g.position.x=a.x;a.g.position.z=a.z;}}
 /* a walker that comes out (wakes up, or a new day) never appears inside another one */
 function wkSpawnApart(w){for(let t=0;t<6;t++){const o=WALKERS.find(q=>q!==w&&q.state!=='home'&&Math.hypot(q.x-w.x,q.z-w.z)<.75);if(!o)return;const a=w.face+Math.PI/2+t*1.1,x=w.x+Math.cos(a)*.8,z=w.z+Math.sin(a)*.8;if(onRoad(x,z)&&!onRoad(w.x,w.z))continue;w.x=x;w.z=z;}}
+/* 🌦️ the weather, as the grandmas need it (night 3, job 6; job 11 fills this in): wxForce('rain'|'snow'|'sunny'|'cloudy'|null) is for the tests */
+const WX={force:null};
+function wxForce(k){WX.force=k||null;}
+function wxKind(){return WX.force||'sunny';}
+/* 👵 grandmas on benches by the houses (night 3, job 6): a bench beside each of the 6 town houses, two grandmas on each (grey or white hair in a bun,
+   glasses, cardigans; every one looks different). They chat in little speech bubbles, take turns, nod and laugh. "Say hi" gets a kind line, never the
+   same twice in a row. Out from 9:00 to 18:00 in dry weather; in rain, snow and at night they go inside, and you can sit on their bench */
+const GRAN={benches:[],t:0,last:'',lines:["Oh, what a dear! Have a biscuit, sweetheart. 🍪","You remind me of my grandson. Such a nice smile!","In my day we walked everywhere. Keeps you young!","Lovely weather for a sit, isn't it?","Mind you don't catch cold, pet. Button up!","Aren't you a busy bee! Off you go and play.","Would you like a sweet? I always carry some. 🍬","My knitting is nearly done. A scarf for the cat! 🧶","Hello dear! Say hi to your mum from me.","Such good manners! Your parents must be proud."],
+  chat:['🧶','☕','Oh my!','In my day…','Lovely weather!','Hee hee!','Did you hear?','🍪','Oh, I know!','My word!']};
+const GRAN_LOOKS=[{skin:'#f6d3bb',hair:'#d8d8e4',style:'bun',top:'#b79cff',bottom:'#6f7dff',shoes:'#3d2c5e',dress:true,glasses:'glasses',glc:'#3d2c5e',eyes:'happy',mouth:'small',scale:1.06},
+  {skin:'#ffe0c2',hair:'#f4f4f8',style:'bun',top:'#ffb3c7',bottom:'#ffffff',shoes:'#9a6a43',dress:true,glasses:'glasses',glc:'#ff7aa8',eyes:'sleepy',mouth:'small',scale:1.02},
+  {skin:'#c98d63',hair:'#c9c9d6',style:'bun',top:'#7fdcb5',bottom:'#3f4c86',shoes:'#3d2c5e',dress:true,glasses:'glasses',glc:'#ffd45c',eyes:'happy',mouth:'smile',scale:1.08},
+  {skin:'#8a5a3c',hair:'#e8e8f0',style:'bun',top:'#ffd45c',bottom:'#5b5f8c',shoes:'#ffffff',dress:true,glasses:'glasses',glc:'#7cc8ff',eyes:'sleepy',mouth:'small',scale:1.04},
+  {skin:'#f5cfb0',hair:'#bdbdcc',style:'bun',top:'#ff8a6b',bottom:'#6b6f8e',shoes:'#3d2c5e',dress:true,glasses:'glasses',glc:'#3d2c5e',eyes:'happy',mouth:'small',scale:1.1},
+  {skin:'#d9a06b',hair:'#f0f0f6',style:'bun',top:'#8fd3ff',bottom:'#ffffff',shoes:'#9a6a43',dress:true,glasses:'glasses',glc:'#b79cff',eyes:'sleepy',mouth:'smile',scale:1.0},
+  {skin:'#f6d3bb',hair:'#d2d2de',style:'bun',top:'#c9f2e3',bottom:'#3d2c5e',shoes:'#3d2c5e',dress:true,glasses:'glasses',glc:'#ff7aa8',eyes:'happy',mouth:'small',scale:1.07},
+  {skin:'#ffe0c2',hair:'#e4e4ee',style:'bun',top:'#e6dbff',bottom:'#6f7dff',shoes:'#ffffff',dress:true,glasses:'glasses',glc:'#3d2c5e',eyes:'sleepy',mouth:'small',scale:1.03},
+  {skin:'#c98d63',hair:'#f6f6fa',style:'bun',top:'#ffe0c4',bottom:'#5b5f8c',shoes:'#3d2c5e',dress:true,glasses:'glasses',glc:'#ffd45c',eyes:'happy',mouth:'smile',scale:1.09},
+  {skin:'#f5cfb0',hair:'#cfcfdc',style:'bun',top:'#ff9ec4',bottom:'#3f4c86',shoes:'#9a6a43',dress:true,glasses:'glasses',glc:'#7cc8ff',eyes:'sleepy',mouth:'small',scale:1.01},
+  {skin:'#d9a06b',hair:'#e0e0ea',style:'bun',top:'#fff1b8',bottom:'#6b6f8e',shoes:'#3d2c5e',dress:true,glasses:'glasses',glc:'#3d2c5e',eyes:'happy',mouth:'small',scale:1.05},
+  {skin:'#8a5a3c',hair:'#cbcbd8',style:'bun',top:'#d9e8ff',bottom:'#ffffff',shoes:'#ffffff',dress:true,glasses:'glasses',glc:'#ff7aa8',eyes:'sleepy',mouth:'smile',scale:1.06}];
+function granOut(){return!!S&&S.time>=9&&S.time<18&&!/rain|snow/.test(wxKind());}
+/* a sitting grandma baked in two parts (body, head), so the head can nod and turn: 4 draw calls each */
+function granPerson(look){const p=makePerson(look);sitPose(p);p.head.userData.keep=1;bake(p.b,true);bake(p.head,true);return p;}
+function buildGrandmas(L,st){let k=0;
+  for(const [hx,hz,ry] of [[13,-57.25,0],[25,-57.25,0],[37,-57.25,0],[13,57.25,Math.PI],[25,57.25,Math.PI],[37,57.25,Math.PI]]){const bx=hx+3.4,bz=hz;
+    const b=bench(st,bx,bz,ry);colC(L,bx,bz,.8);const B=BENCHES[BENCHES.length-1];if(!B||!B.seats)continue;const G={b:B,g:[],out:false,t:Math.random()*5,turn:0,bub:null,bubT:0};
+    for(let i=0;i<2;i++){const look=GRAN_LOOKS[k++%GRAN_LOOKS.length],s=B.seats[i],p=granPerson(look),sc=look.scale||1,fx=Math.sin(B.ry),fz=Math.cos(B.ry);
+      p.root.position.set(s.x-fx*.06,.55-.62*sc,s.z-fz*.06);p.root.rotation.y=B.ry;p.root.visible=false;L.g.add(p.root);G.g.push({p,look,s,nod:0,laugh:0,y0:.55-.62*sc});B.sit[i]=()=>granOut();}
+    const fx=Math.sin(ry),fz=Math.cos(ry);inter(L,{x:bx+fx*.9,z:bz+fz*.9,r:2.3,icon:'👋',label:'Say hi to the grandmas',when:()=>granOut(),act:()=>granHi(G)});GRAN.benches.push(G);}}
+function granHi(G){const L=GRAN.lines.filter(x=>x!==GRAN.last),t=pick(L);GRAN.last=t;for(const q of G.g){q.nod=1.2;q.turn=1;}SFX.talk();toast('“'+t+'”',3.4);if(typeof qEvent==='function'&&cool('granhi',6))qEvent('hi');}
+function granBubble(G,q,txt){granBubOff(G);const b=label(txt,.3);b.position.y=1.92;q.p.root.add(b);G.bub=b;G.bubT=2.6;}
+function granBubOff(G){const b=G.bub;if(!b)return;G.bub=null;if(b.parent)b.parent.remove(b);b.material.map.dispose();b.material.dispose();}
+function granTick(dt){const out=granOut()&&!!CUR&&CUR.id==='city';
+  for(const G of GRAN.benches){if(G.out!==out){G.out=out;for(const q of G.g)q.p.root.visible=out;if(!out)granBubOff(G);}if(!out)continue;
+    const near=Math.hypot(P.x-G.b.x,P.z-G.b.z)<30;if(!near){if(G.bub)granBubOff(G);continue;}
+    if(G.bub){G.bubT-=dt;if(G.bubT<=0)granBubOff(G);}
+    G.t-=dt;if(G.t<=0){G.t=rand(2.8,5.5);const i=G.k=1-(G.k|0),q=G.g[i],o=G.g[1-i];granBubble(G,q,pick(GRAN.chat));q.laugh=Math.random()<.4?1:0;o.nod=1;}   /* they take turns */
+    for(const q of G.g){const h=q.p.head;const toP=Math.atan2(P.x-q.p.root.position.x,P.z-q.p.root.position.z)-q.p.root.rotation.y;
+      if(q.turn>0){q.turn-=dt*.4;h.rotation.y=angLerp(h.rotation.y,clamp(angLerp(0,toP,1),-.9,.9),Math.min(1,dt*4));}else h.rotation.y=lerp(h.rotation.y,Math.sin(G.t*.9+q.y0*7)*.25,Math.min(1,dt*2));
+      if(q.nod>0){q.nod-=dt;h.rotation.x=Math.sin(q.nod*12)*.14;}else h.rotation.x*=.85;
+      if(q.laugh>0){q.laugh-=dt;q.p.root.position.y=q.y0+Math.abs(Math.sin(q.laugh*16))*.035;}else q.p.root.position.y=q.y0;}}}
 /* ---- 🌙 night glows: soft light sprites in one shared additive material (no real lights, no shadows). The sky fades
    them in at dusk and out at dawn; by day the material is switched off, so they cost nothing ---- */
 let NGLOW=null,CARGLOW=null;const LAMPXZ=[];
@@ -7259,7 +7301,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     fanTick(dt);let fi=0;for(const f of FRIEND_ACTORS)f.update(dt,f.mode==='follow'?fi++:0);PET_ACTORS.forEach((p,i)=>p.update(dt,fi+i+(fi?0:1)));
     if(CUR.id==='pets')updatePen(dt);
     if(CUR.id==='toys'&&CUR.train){const T=CUR.train;T.userData.t=(T.userData.t||0)+dt*.9;T.children.forEach((c,i)=>{const a=T.userData.t-i*.32;c.position.set(Math.cos(a)*.88,0,Math.sin(a)*.55);c.rotation.y=Math.atan2(-Math.sin(a)*.88,Math.cos(a)*.55);});}
-    wkStat();for(const w of WALKERS)w.update(dt);walkersApart(dt);   /* 🚶 townspeople give way to each other and walk round people who stand or sit about */
+    wkStat();for(const w of WALKERS)w.update(dt);walkersApart(dt);granTick(dt);   /* 🚶 townspeople give way to each other and walk round people who stand or sit about */
     updateCars(dt);mpTick(dt);laneTick(dt);zzTick(dt);for(const s of SHOPPERS)s.update(dt);
     updGarden(dt);bdTick(dt);
     fbTick(dt);   /* ⚽ the football friends */
