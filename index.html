@@ -1563,8 +1563,53 @@ function buildForest(L,st){const F=new THREE.Group();L.g.add(F);const r=seeded(6
   const G=[],roadNear=(x,z)=>[-50,0,50].some(c=>Math.abs(x-c)<9||Math.abs(z-c)<9),bad=(x,z)=>Math.abs(x)>80||Math.abs(z)>80||roadNear(x,z)||(x>-42&&x<-6&&z>6&&z<43)||(x>-44&&x<-10&&z>53)||Math.hypot(x-69,z-69)<14||Math.hypot(x-36.2,z+36.2)<8||x<-76;
   for(let i=0;i<700&&G.length<9;i++){const x=(r()-.5)*160,z=(r()-.5)*160;if(Math.abs(x)<54&&Math.abs(z)<54)continue;if(bad(x,z)||!freeSpot(L,x,z,4.5)||G.some(g=>Math.hypot(g[0]-x,g[1]-z)<16))continue;
     const T=[];for(let k=0;k<14&&T.length<3+((r()*3)|0);k++){const a=r()*TAU,d=.8+r()*3.0,tx=x+Math.cos(a)*d,tz=z+Math.sin(a)*d;if(bad(tx,tz)||!freeSpot(L,tx,tz,1.4)||T.some(([a2,b2])=>Math.hypot(a2-tx,b2-tz)<2.3))continue;T.push([tx,tz]);}
-    if(T.length<2)continue;G.push([x,z]);for(const [tx,tz] of T){const s=.9+r()*.5;if(r()<.3)pine(st,tx,tz,s*1.1);else tree(st,tx,tz,s);colC(L,tx,tz,.3);mapTrees().push([tx,tz,1.1*s]);}}
+    if(T.length<2)continue;G.push([x,z]);let first=true;for(const [tx,tz] of T){const s=.9+r()*.5;if(r()<.3&&!first)pine(st,tx,tz,s*1.1);else{tree(st,tx,tz,s);if(first)(L.owlTrees||(L.owlTrees=[])).push([tx,tz]);}first=false;colC(L,tx,tz,.3);mapTrees().push([tx,tz,1.1*s]);}}
   L.treeGroups=G;}
+
+/* 🦋 wild animals (night 3, job 13): one batch per kind, moved on the graphics chip, no shadows, only in town. Butterflies flutter round the
+   flower beds and the park fountain in the daytime (spring, summer and autumn until 31 October; not in rain or snow). Birds (BIRDS, not "owls":
+   the night-walking townspeople already have that name) flap in loose flocks high over the town in the daytime, fewer in winter. Real owls
+   (WILD.hoots) sit in some trees at night (the park, the tree groups, the forest edge, your yard) with big blinking eyes and a soft hoo-hoo
+   now and then when you are near (only with sound on). WILD.force(true) shows the butterflies and birds whatever the time (for the tests) */
+const WILD={bf:null,birds:null,hoots:null,forced:false,hoot:0,spots:[],force(on){WILD.forced=!!on;}};
+const BF_COLS=['#ff9ec4','#ffd45c','#7cc8ff','#b79cff','#ff8a6b','#7fdcb5','#ffffff','#ff6b6b'];
+function bfGeo(c){return flockGeo(g=>{box(g,.03,.03,.14,'#3d2c5e',0,0,0,{ol:false,center:true});for(const s of[-1,1]){box(g,.17,.006,.13,c,s*.1,0,.01,{ol:false,center:true});box(g,.1,.006,.08,shade(c,-.18),s*.13,.004,-.07,{ol:false,center:true});}});}
+function birdGeo(c){return flockGeo(g=>{sph(g,.09,c,0,0,0,{s:[1,.8,1.4],ws:7,hs:5,ol:false});sph(g,.06,c,0,.05,.12,{ws:6,hs:4,ol:false});cone(g,.025,.06,'#ffb347',0,.04,.2,{rx:Math.PI/2,center:true,seg:4,ol:false});
+  for(const s of[-1,1])box(g,.3,.012,.12,shade(c,-.12),s*.17,.03,0,{ol:false,center:true});box(g,.07,.01,.12,shade(c,-.12),0,.02,-.15,{ol:false,center:true});});}
+function owlGeos(){const body=flockGeo(g=>{sph(g,.17,'#8a5a36',0,0,0,{s:[1,1.15,1],ws:9,hs:7,ol:false});sph(g,.12,'#d9a06b',0,-.04,.09,{s:[1,1.1,.6],ws:8,hs:6,ol:false});
+    for(const s of[-1,1])cone(g,.05,.12,'#8a5a36',s*.1,.17,0,{center:true,seg:4,ol:false});cone(g,.03,.07,'#ffb347',0,.02,.19,{rx:Math.PI/2,center:true,seg:4,ol:false});});
+  const eyes=flockGeo(g=>{for(const s of[-1,1]){sph(g,.058,'#fff6d6',s*.066,.07,.135,{ws:8,hs:6,ol:false});sph(g,.03,'#1a1330',s*.066,.07,.185,{ws:6,hs:4,ol:false});}});return{body,eyes};}
+/* many copies of the same geometry at given spots: ctr + ph per copy (eyes get eye=1 and the eye line ey so they can blink) */
+function wildMerge(list){let n=0;for(const it of list)n+=it.geo.attributes.position.count;const P=new Float32Array(n*3),C=new Float32Array(n*3),K=new Float32Array(n*3),PH=new Float32Array(n),E=new Float32Array(n),EY=new Float32Array(n);let off=0;const m4=new THREE.Matrix4();
+  for(const it of list){const g=it.geo,m=g.attributes.position.count,src=g.clone();m4.makeRotationY(it.yaw||0);if(it.sc)m4.scale(new THREE.Vector3(it.sc,it.sc,it.sc));src.applyMatrix4(m4);P.set(src.attributes.position.array,off*3);C.set(g.attributes.color.array,off*3);
+    for(let i=0;i<m;i++){const j=off+i;K[j*3]=it.x;K[j*3+1]=it.y;K[j*3+2]=it.z;PH[j]=it.ph;E[j]=it.eye?1:0;EY[j]=it.ey||0;}off+=m;src.dispose();}
+  const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(P,3));geo.setAttribute('color',new THREE.BufferAttribute(C,3));geo.setAttribute('ctr',new THREE.BufferAttribute(K,3));geo.setAttribute('ph',new THREE.BufferAttribute(PH,1));geo.setAttribute('eye',new THREE.BufferAttribute(E,1));geo.setAttribute('ey',new THREE.BufferAttribute(EY,1));
+  geo.boundingSphere=new THREE.Sphere(new THREE.Vector3(0,0,0),400);return geo;}
+function owlMesh(spots){const G=owlGeos(),list=[];for(const [x,y,z,yaw,ph] of spots){list.push({geo:G.body,x,y,z,yaw,ph,sc:1.6},{geo:G.eyes,x,y,z,yaw,ph,sc:1.6,eye:1,ey:.07*1.6});}   /* a bit bigger than life, so you can see it in the leaves */
+  const m=new THREE.ShaderMaterial({uniforms:{tm:{value:0}},vertexColors:true,
+    vertexShader:'attribute vec3 ctr;attribute float ph,eye,ey;uniform float tm;varying vec3 vC;varying float vY;void main(){float f=fract(tm*0.21+ph);float b=smoothstep(0.0,0.05,f)*(1.0-smoothstep(0.09,0.14,f));vec3 p=position;p.y=mix(p.y,ey,b*eye);vC=color;vY=position.y;gl_Position=projectionMatrix*modelViewMatrix*vec4(ctr+p,1.0);}',
+    fragmentShader:'varying vec3 vC;varying float vY;void main(){gl_FragColor=vec4(vC*(0.8+0.6*clamp(vY,-0.15,0.15)),1.0);}'});
+  const mesh=new THREE.Mesh(wildMerge(list),m);mesh.userData.keep=1;mesh.frustumCulled=false;G.body.dispose();G.eyes.dispose();return mesh;}
+function buildWild(L){const r=seeded(69);
+  /* butterflies round the flower beds and the fountain */
+  const spots=(L.beds||[]).map(b=>[b.x,b.z,2.2]).concat([[-22,22,6.5],[-14,30,3],[-30,14,3]]),bf=[];
+  for(const [cx,cz,ra] of spots){const n=3+((r()*3)|0);for(let i=0;i<n;i++)bf.push({geo:bfGeo(BF_COLS[(r()*BF_COLS.length)|0]),x:cx,y:.6+r()*1.0,z:cz,ph:r()*TAU,sp:(.5+r()*.6)*(r()<.5?1:-1),ra:.6+r()*ra,ya:.25,wing:.7,fl:15+r()*4});}
+  WILD.bf=flockMesh(bf);WILD.bf.visible=false;L.g.add(WILD.bf);
+  /* birds high over the town */
+  const nb=SEASON==='winter'?12:30,BC=['#ffffff','#c8cde0','#7cc8ff','#8a5a36','#ffd45c'],birds=[];
+  for(let i=0;i<nb;i++){const c=[[-20,-20],[25,15],[0,-55],[-60,40],[50,-50]][i%5];birds.push({geo:birdGeo(BC[(r()*BC.length)|0]),x:c[0]+(r()-.5)*10,y:15+r()*12,z:c[1]+(r()-.5)*10,ph:r()*TAU,sp:(.1+r()*.12)*(i%2?1:-1),ra:9+r()*14,ya:1.2,wing:1.0,fl:5+r()*3});}
+  WILD.birds=flockMesh(birds);WILD.birds.visible=false;L.g.add(WILD.birds);
+  /* owls in some trees: the park, the tree groups, the forest edge, your yard tree */
+  const owls=[];const perch=(x,z,s)=>{const yaw=Math.atan2(-x,-z);owls.push([x+Math.sin(yaw)*1.22*s,2.62*s,z+Math.cos(yaw)*1.22*s,yaw,r()]);};
+  for(const [x,z] of [[-36,12.5],[-11.5,28],[-26,37.5],[-37.6,27.7]])perch(x,z,1);
+  for(const [x,z] of (L.owlTrees||[]))perch(x,z,1.1);perch(-20.2,-18.6,1.1);
+  WILD.spots=owls;WILD.hoots=owlMesh(owls);WILD.hoots.visible=false;L.g.add(WILD.hoots);}
+SFX.hoot=()=>{tone(392,.2,'sine',.05,0,370);tone(330,.26,'sine',.05,.26,300);};
+function wildTick(dt,now){if(!WILD.bf||!S)return;const t=(now/1000)%1e4,out=!!CUR&&CUR.id==='city',h=S.time,day=h>=7&&h<19,nf=nightF(h),mo=realDate().getMonth()+1;
+  const wet=WX.rain>.3||WX.snow>.3,bfSeason=SEASON!=='winter'&&!(SEASON==='autumn'&&mo===11);
+  WILD.bf.visible=out&&(WILD.forced||(day&&bfSeason&&!wet));WILD.birds.visible=out&&(WILD.forced||(day&&!wet));WILD.hoots.visible=out&&nf>.3;
+  for(const m of[WILD.bf,WILD.birds,WILD.hoots])if(m.visible)m.material.uniforms.tm.value=t;
+  if(WILD.hoots.visible&&PLAYING){WILD.hoot-=dt;if(WILD.hoot<=0){WILD.hoot=6+Math.random()*8;if(WILD.spots.some(o=>Math.hypot(o[0]-P.x,o[2]-P.z)<9))SFX.hoot();}}}
 
 /* ---- the town ---- */
 const WP=[[-34,-5.6],[-20,-5.6],[-5.6,-5.6],[5.6,-5.6],[20,-5.6],[34,-5.6],[-34,5.6],[-20,5.6],[-5.6,5.6],[5.6,5.6],[20,5.6],[34,5.6],
@@ -1826,7 +1871,7 @@ function buildCity(){
       placed++;}}
   Object.assign(L.pondC,{lk:1,walk:[{ax:L.ox+BRG.x,az:L.oz+BRG.z-BRG.hl,ux:0,uz:1,len:BRG.hl*2,hw:.62}]});for(const a of[-1,1])for(const b of[-1,1])colC(L,BRG.x+.68*a,BRG.z+2.2*b,.1);   /* 🌉 the pond stays solid water, except the way over the bridge; its end posts are solid (set after the nature above, so every bush stays where it was) */
   buildLane(L,st);buildClosedSigns(L);buildGrandmas(L,st);   /* 👵 grandmas on benches by the town houses */
-  buildForest(L,st);   /* 🌲 the forest belt and the tree groups */
+  buildForest(L,st);buildWild(L);   /* 🌲 the forest belt and the tree groups; 🦋 butterflies, birds and owls */
   bake(st,true,32);
   L.g.add(glowMesh(glowGeo(LAMPXZ.flatMap(([x,z])=>[[x,3.21,z,.8,[.5,.38,.18]],[x,.1,z,4.4,4.4,[.3,.23,.11]]]))));
   buildFlies(L);   /* ✨ fireflies in the park at night */
@@ -7513,7 +7558,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     if(!S||!CUR||CUR.id==='city'){const cx=FTN?FTN.fx:0,cz=FTN?FTN.fz:0;camera.position.set(cx+Math.cos(titleT)*30,14,cz+Math.sin(titleT)*30);camera.lookAt(cx,1,cz);}}
   if(CUR&&CUR.type==='out'){const L=LOC.city,tt=now/1000;
     updFountain(dt);updDucks(dt,tt);brTick(dt);updFlies(tt);   /* 🌉 up and over the pond bridge; ✨ fireflies in the park at night */
-    updBall(dt);holAnim(now);   /* 🦇 bats and 👻 ghosts drift on the graphics chip */
+    updBall(dt);holAnim(now);wildTick(dt,now);   /* 🦇 bats and 👻 ghosts drift on the graphics chip; 🦋 the wild animals too */
     L.swings.forEach((s,i)=>{if(!(P.ride&&P.ride.kind==='swing'&&P.ride.i===i))s.rotation.x=lerp(s.rotation.x,Math.sin(tt*1.3+i*1.7)*.18,.05);});
     for(const c of clouds){c.position.x+=c.userData.sp*dt;if(c.position.x>230)c.position.x=-230;c.scale.setScalar(clamp(Math.min(230-c.position.x,c.position.x+230)/40,.01,1));}   /* ☁️ shrink away before the wrap, grow back after it */
     for(const l of LITTER)l.sp.position.y=.45+Math.sin(tt*3+l.k)*.06;}
