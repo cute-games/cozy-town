@@ -2744,6 +2744,15 @@ function buildClientRoom(){const L=makeLoc('client','in',2100,0,[-CLW,-CLD,CLW,C
   L.items=new THREE.Group();L.items.visible=false;scene.add(L.items);
   const gh=new THREE.GridHelper(CLW*2,CLW*4,0xb79cff,0xd9c8ff);gh.scale.z=CLD/CLW;gh.position.y=.012;gh.visible=false;L.g.add(gh);L.grid=gh;
   inter(L,{x:0,z:CLD-.7,r:1.6,icon:'🚪',label:'Go outside',act:()=>exitClient()});
+  /* 🚪 the door to the other room (night 3, job 9): one picture on the wall (one piece, so the room stays as light as before), on the west wall in
+     room 1 and on the east wall in room 2; shown for two-room orders only */
+  const dp=t=>{const c=document.createElement('canvas');c.width=256;c.height=512;const x=c.getContext('2d');x.fillStyle='#b79cff';x.fillRect(6,6,244,92);x.fillStyle='#ffffff';x.font=`800 46px ${FONT}`;x.textAlign='center';x.textBaseline='middle';x.fillText(t,128,54);
+    x.fillStyle='#3d2c5e';x.fillRect(22,118,212,394);x.fillStyle='#5fd4b0';x.fillRect(32,128,192,384);x.fillStyle='#7fe2c2';x.fillRect(58,160,140,110);x.fillRect(58,320,140,110);x.fillStyle='#ffd45c';x.beginPath();x.arc(200,330,13,0,Math.PI*2);x.fill();
+    const tx=new THREE.CanvasTexture(c);tx.minFilter=THREE.LinearFilter;return tx;};
+  L.rdoorTex=[dp('Room 2 →'),dp('← Room 1')];
+  const rd=new THREE.Mesh(new THREE.PlaneGeometry(1.3,2.6),new THREE.MeshBasicMaterial({map:L.rdoorTex[0],transparent:true}));rd.position.set(-CLW+.03,1.3,1.6);rd.rotation.y=Math.PI/2;rd.visible=false;rd.userData.keep=1;L.g.add(rd);L.rdoor=rd;
+  inter(L,{x:-CLW+.9,z:1.6,r:1.5,icon:'🚪',label:'Room 2 ➡️',when:()=>dsTwo()&&!(S.ds.o.ri|0)&&!CUT,act:()=>dsGoRoom(1)});
+  inter(L,{x:CLW-.9,z:1.6,r:1.5,icon:'🚪',label:'⬅️ Room 1',when:()=>dsTwo()&&!!(S.ds.o.ri|0)&&!CUT,act:()=>dsGoRoom(0)});
   return L;}
 function buildMarket(){
   const L=makeLoc('market','in',400,0,[-7,-5,7,5]);const sh=new THREE.Group(),pr=new THREE.Group();L.g.add(sh,pr);
@@ -5035,7 +5044,7 @@ const DECO={on:false,placing:null,ghost:null,sel:null,mark:null,valid:false,snap
 const HOMEX={id:'home',L:()=>homeFl()?LOC.home.up:LOC.home,list:()=>S.home.items,W:()=>HOMEW,D:()=>HOMED,map:()=>HOME_ITEMS,add:it=>addHomeItem(it),rm:u=>removeHomeItem(u),
   on:o=>(o.f|0)===homeFl(),put:it=>{if(homeFl())it.f=1;else delete it.f;},
   blocked:R=>homeBlocked(R,homeFl())};
-const CLX={id:'client',L:()=>LOC.client,list:()=>dsItems(),W:()=>CLW,D:()=>CLD,map:()=>CL_ITEMS,add:it=>addClItem(it),rm:u=>removeClItem(u),blocked:R=>R.x1<1.25&&R.x2>-1.25&&R.z2>CLD-1.75};
+const CLX={id:'client',L:()=>LOC.client,list:()=>dsItems(),W:()=>CLW,D:()=>CLD,map:()=>CL_ITEMS,add:it=>addClItem(it),rm:u=>removeClItem(u),blocked:R=>(R.x1<1.25&&R.x2>-1.25&&R.z2>CLD-1.75)||(dsTwo()&&R.z1<2.3&&R.z2>.9&&((S.ds.o.ri|0)?R.x2>CLW-1.4:R.x1<-CLW+1.4))};   /* the front door, and the side door to the other room, stay free */
 const DX=()=>DECO.X||HOMEX;
 function decoStart(){const X=CUR.id==='home'&&!CLIMB?HOMEX:CUR.id==='client'&&dsHere()?CLX:null;if(!X)return;if(zzIn())standUp();DECO.X=X;DECO.on=true;P.sit=null;X.L().grid.visible=true;$('cross').classList.add('big');$('actWrap').hidden=true;renderBar();
   if(X===HOMEX)toast(DECO_HINT,3.4);}
@@ -6133,7 +6142,7 @@ function jobHud(force){const el=$('job'),on=!!(PLAYING&&S&&(S.job==='delivery'||
     $('jobTxt').classList.remove('late','rare');const mh=CUR.id!=='city';if($('mmBtn').hidden!==mh)$('mmBtn').hidden=mh;return;}
   if(S.job==='designer'){const d=ds(),o=d.o;let h;
     if(o){const H=HOUSE(o.h),T=dsTheme(o);
-      if(CUR.id==='client'){const R=DROOM[T.room];h=`${T.e} <b>${esc(T.n)}</b><div class="tm">🪑 ${o.items.length} <small>(${R.cnt[0]}–${R.cnt[1]})</small></div>`;}
+      if(CUR.id==='client'){const R=DROOM[T.room];h=`${o.r2?`<small>Room ${(o.ri|0)+1}/2</small> `:''}${T.e} <b>${esc(T.n)}</b><div class="tm">🪑 ${dsItems().length} <small>(${R.cnt[0]}–${R.cnt[1]})</small></div>`;}
       else{const tg=jobTarget(),m=CUR.id==='city'&&tg?' <span class="nw">· '+Math.round(Math.hypot(tg.x-P.x,tg.z-P.z))+' m</span>':'',inA=CUR.id.startsWith('apt');
         h=inA&&APT.b===o.h?`🎨 Find flat <b>${o.flat}</b>!`:inA?`🎨 Wrong building! → <b>${esc(H.n)}</b>`:`🎨 → <b>${esc(H.n)}</b>${o.flat?' · flat '+o.flat:''}${m}`;}}
     else if(d.done>=DS_MAX)h=`🌟 All ${DS_MAX} rooms done today!`;
@@ -6303,12 +6312,20 @@ const DTHEMES=[
   {id:'natliv',n:'Forest living room',e:'🌳',room:'living',pal:['green','wood'],plants:2,ask:'Green and leafy, like a forest!',good:'It feels like a forest in here! 💚',ph:[['sofa','#7fdcb5'],['bonsai'],['fern']]},
   {id:'unikids',n:'Unicorn play room',e:'🦄',room:'kids',pal:['purple','pink','white'],ask:'I love unicorns and purple!',good:'Purple and magical! I love it! 🦄',ph:[['unicorn','#e6dbff'],['beanbag','#b79cff'],['castle','#e6dbff']]}];
 function ds(){const d=S.ds||(S.ds={});if(d.day!==S.day){d.day=S.day;d.done=0;}if(!isFinite(d.wait))d.wait=5;return d;}
-const dsTheme=o=>DTHEMES.find(t=>t.id===((o||(S.ds&&S.ds.o)||{}).th))||DTHEMES[0];
+/* 🚪 an order has 1 or 2 rooms (night 3, job 9): room 2 is o.r2 = {th, items}, o.ri is the room you are in. An old one-room order has no r2 */
+const dsThemeOf=(o,ri)=>DTHEMES.find(t=>t.id===(ri&&o.r2?o.r2.th:o.th))||DTHEMES[0];
+const dsTheme=o=>{o=o||(S&&S.ds&&S.ds.o)||{};return dsThemeOf(o,o.r2?o.ri|0:0);};
+const dsTwo=()=>!!(S&&S.ds&&S.ds.o&&S.ds.o.r2);
 function dsWho(o){const L=resList(o.h);return L[o.w|0]||WHO[o.h];}
 function dsGoing(id){return!!(S&&S.job==='designer'&&S.ds&&S.ds.o&&S.ds.o.h===id);}
 function dsFlat(num){return!!(dsGoing(APT.b)&&S.ds.o.flat===num);}
 function dsHere(){return!!(S&&S.job==='designer'&&S.ds&&S.ds.o&&CUR&&CUR.id==='client');}
-const dsItems=()=>{const o=S.ds&&S.ds.o;return o?(o.items||(o.items=[])):[];};
+const dsItems=()=>{const o=S.ds&&S.ds.o;if(!o)return[];if(o.r2&&o.ri)return o.r2.items||(o.r2.items=[]);return o.items||(o.items=[]);};
+/* going through the side door: the same room is dressed up as the other one (its colours, floor and things); you come out by the door */
+function dsRoomShow(i){const o=S.ds&&S.ds.o,L=LOC.client;if(!o||!o.r2||!L)return;o.ri=i?1:0;dsRoomSetup();
+  P.x=L.ox+(i?CLW-1.3:-CLW+1.3);P.z=L.oz+1.6;P.yaw=i?Math.PI/2:-Math.PI/2;P.pitch=-.1;P.sit=null;if(DECO.on){if(DECO.placing)decoCancel();selMark(null);}
+  bringFollowers();dcardUpd(true);jobHud(true);change();}
+function dsGoRoom(i,cb){const o=S.ds&&S.ds.o;if(!o||!o.r2||fading||(CUT&&!CUT.rev))return;SFX.door();fade(()=>{dsRoomShow(i);if(cb)cb();});}
 /* '' = fits, 'room' = wrong kind of room, 'col' = wrong color for this client */
 function dsFits(T,t,c){const R=DROOM[T.room];if(!R.items.includes(t))return'room';const F=FURN[t];if(!F||!F.cols)return'';if(T.plants&&DS_PLANTS.includes(t))return'';return T.pal.includes(famOf(c||F.cols[0]))?'':'col';}
 /* the "ideas" tray: everything that fits this client, the must-haves first */
@@ -6316,11 +6333,12 @@ function dsTray(T){const R=DROOM[T.room],must=new Set([...(R.must||[]).flat(),..
   const order=[...R.items].sort((a,b)=>(must.has(b)-must.has(a))||(DS_PLANTS.includes(a)-DS_PLANTS.includes(b))||(DS_TOYS.includes(a)-DS_TOYS.includes(b)));
   for(const t of order){const F=FURN[t];if(!F)continue;if(!F.cols){out.push([t,'']);continue;}for(const c of F.cols)if(!dsFits(T,t,c))out.push([t,c]);}return out;}
 function nearPlace(H){let b=null,bd=1e9;for(const p of PLACES){if(p.id==='home'||p.id==='garden')continue;const d=Math.hypot(p.door[0]-H.x,p.door[1]-H.z);if(d<bd){bd=d;b=p;}}return bd<40?b:null;}
-function dsNew(){const d=ds(),H=pick(HOUSES.filter(h=>h.id!==d.last)),T=pick(DTHEMES.filter(t=>t.id!==d.lt));
+function dsNew(n){const d=ds(),H=pick(HOUSES.filter(h=>h.id!==d.last)),T=pick(DTHEMES.filter(t=>t.id!==d.lt));
+  if(n==null)n=Math.random()<1/3?2:1;const T2=n>1?pick(DTHEMES.filter(t=>t.room!==T.room)):null;   /* 🚪 about 1 in 3 clients wants two rooms, never more */
   const flat=isApt(H.id)?(1+Math.floor(Math.random()*3))*10+1+Math.floor(Math.random()*5):0;
-  const o={h:H.id,th:T.id,w:Math.floor(Math.random()*resList(H.id).length),items:[]};if(flat)o.flat=flat;d.o=o;d.last=H.id;d.lt=T.id;
+  const o={h:H.id,th:T.id,w:Math.floor(Math.random()*resList(H.id).length),items:[]};if(flat)o.flat=flat;if(T2){o.r2={th:T2.id,items:[]};o.ri=0;}d.o=o;d.last=H.id;d.lt=T2?T2.id:T.id;
   const W=dsWho(o),np=H.id==='nb'?null:nearPlace(H);
-  const x=`Hi! I'm ${W.nm} 😊 I live in the ${H.n}${flat?', flat '+flat:''}${np?', near '+theN(np):''}. Can you make me ${aN(T.n.toLowerCase())}? ${T.ask} ${T.e}`;
+  const x=`Hi! I'm ${W.nm} 😊 I live in the ${H.n}${flat?', flat '+flat:''}${np?', near '+theN(np):''}. Can you make me ${aN(T.n.toLowerCase())}${T2?' and '+aN(T2.n.toLowerCase()):''}? ${T.ask}${T2?' And the other room: '+T2.ask:''} ${T.e}${T2?T2.e:''}`;
   addMsg('cl','cl',x,{t2:'🎨 New client: '+W.nm});SFX.ding();try{if(navigator.vibrate)navigator.vibrate([120,80,120]);}catch(e){}
   showNote('🎨 New client!',x,false,'🎨','cl');change();jobHud(true);dcardUpd(true);}
 function jobTarget(){if(!S)return null;if(S.job==='delivery')return hasDlOrder()?dlTarget():null;
@@ -6336,7 +6354,7 @@ function dsNeat(its){const out=[],tol=.35,W=CLW,D=CLD;
     if(back<=tol)continue;out.push({k:front<=tol?'face':'mid',it});}
   if(its.length>=4){const q=[0,0,0,0];for(const it of its)q[(it.x<0?0:1)+(it.z<0?0:2)]++;if(Math.max(...q)>=Math.ceil(its.length*.75))out.push({k:'pile'});}
   return out;}
-function dsScore(o){const T=dsTheme(o),R=DROOM[T.room],its=o.items||[],n=its.length,[lo,hi]=R.cnt;
+function dsScore(o,ri){if(ri==null)ri=o.r2?o.ri|0:0;const T=dsThemeOf(o,ri),R=DROOM[T.room],its=(ri&&o.r2?o.r2.items:o.items)||[],n=its.length,[lo,hi]=R.cnt;
   const off=its.filter(it=>dsFits(T,it.t,it.c)),miss=[],mustMiss=(R.must||[]).filter(g=>!its.some(it=>g.includes(it.t))).map(g=>g[0]);
   for(const g of T.need||[])if(!its.some(it=>g.includes(it.t)))miss.push(g[0]);
   if(T.plants&&its.filter(it=>DS_PLANTS.includes(it.t)).length<T.plants)miss.push('plants');
@@ -6362,7 +6380,7 @@ const starsHalf=n=>`<span class="stars">${'★'.repeat(Math.floor(n))}${n%1?'<em
 let CLRET=null;const CLFLOORS={};
 function dsRoomSetup(){const o=S.ds&&S.ds.o,L=LOC.client;if(!o||!L)return;const T=dsTheme(o),R=DROOM[T.room],H=HOUSE(o.h);
   CL_WALL.color.set(R.wall);if(!CLFLOORS[R.floor]){CLFLOORS[R.floor]=floorTex(R.floor);CLFLOORS[R.floor].repeat.set(CLW/2,CLD/2);}CL_FLOOR.map=CLFLOORS[R.floor];CL_FLOOR.needsUpdate=true;
-  L.leafM.color.set(H.dc);L.panM.color.set(shade(H.dc,.12));L.hinge.rotation.y=0;
+  L.leafM.color.set(H.dc);L.panM.color.set(shade(H.dc,.12));L.hinge.rotation.y=0;if(L.rdoor){const ri=o.ri|0;L.rdoor.visible=!!o.r2;L.rdoor.material.map=L.rdoorTex[ri];L.rdoor.material.needsUpdate=true;L.rdoor.position.x=ri?CLW-.03:-CLW+.03;L.rdoor.rotation.y=ri?-Math.PI/2:Math.PI/2;}
   for(const u of[...CL_ITEMS.keys()])removeClItem(u);for(const it of o.items)addClItem(it);}
 function addClItem(it){const L=LOC.client,F=FURN[it.t];if(!F)return null;const g=buildFurn(it.t,it.c||undefined);g.position.set(L.ox+it.x,0,L.oz+it.z);g.rotation.y=it.r*Math.PI/2;
   g.traverse(o=>{if(o.isMesh&&o.material!==OL){o.castShadow=true;o.receiveShadow=true;}if(o.userData&&o.userData.shade&&o.material)o.material.emissiveIntensity=.6;});g.userData.u=it.u;L.items.add(g);
@@ -6376,20 +6394,26 @@ function exitClient(cb){if(DECO.on)decoEnd();const r=CLRET;SFX.door();
   fade(()=>{if(cb)cb();if(r&&r.loc!=='city'&&LOC[r.loc]){setLoc(r.loc);P.x=r.x;P.z=r.z;P.yaw=r.yaw+Math.PI;}
     else{setLoc('city');const H=HOUSE((r&&r.h)||(S.ds&&S.ds.o&&S.ds.o.h)||(S.ds&&S.ds.prevH)||'nb');P.x=H.x+Math.sin(H.ry)*1.7;P.z=H.z+Math.cos(H.ry)*1.7;P.yaw=H.ry+Math.PI;}
     P.pitch=0;P.sit=null;CLRET=null;bringFollowers();dcardUpd(true);jobHud(true);saveLocal();});}
-function dsFinishAsk(){const o=S.ds&&S.ds.o;if(!o)return;const n=o.items.length,W=dsWho(o);
-  openPanel(`<div class="who" style="--c:#b79cff">🎨 All done?</div><p class="line">${n?`${esc(W.nm)} will come in and look at your room! 👀`:'The room is still empty! Tap 🛋️ Furniture and put some things in first.'}</p><div class="row">${n?`<button class="btn mint" data-a="dsgo">🎉 Yes, call ${esc(W.nm)}!</button><button class="btn white" data-a="close">Not yet</button>`:'<button class="btn white" data-a="close">OK</button>'}</div>`,{bottom:true});}
+function dsFinishAsk(){const o=S.ds&&S.ds.o;if(!o)return;const W=dsWho(o),two=!!o.r2,n1=o.items.length,n2=two?(o.r2.items||[]).length:0,ok=n1>0&&(!two||n2>0);
+  const why=ok?'':!two?'The room is still empty! Tap 🛋️ Furniture and put some things in first.':!n1&&!n2?'Both rooms are still empty! Tap 🛋️ Furniture and put some things in each room.':!n2?'Room 2 is still empty! Go through the side door (Room 2 →) and put some things there too.':'Room 1 is still empty! Go back through the side door (← Room 1) and put some things there too.';
+  openPanel(`<div class="who" style="--c:#b79cff">🎨 All done?</div><p class="line">${ok?`${esc(W.nm)} will come in and look at your ${two?'rooms':'room'}! 👀`:why}</p><div class="row">${ok?`<button class="btn mint" data-a="dsgo">🎉 Yes, call ${esc(W.nm)}!</button><button class="btn white" data-a="close">Not yet</button>`:'<button class="btn white" data-a="close">OK</button>'}</div>`,{bottom:true});}
 ACT.dsgo=()=>{closePanel();revStart();};
 
 /* 🎬 the client comes in, looks around, and gives you stars (seen through your own eyes) */
 function rvStarsSet(v,fx){const el=$('rvStars');el.hidden=false;[...el.children].forEach((b,k)=>{const f=clamp(v-k,0,1),fg=b.querySelector('.fg'),w=Math.round(f*100)+'%';
   if(fg.style.width!==w){fg.style.width=w;if(fx==='pop'){b.classList.remove('spop');void b.offsetWidth;b.classList.add('spop');}}
   if(fx==='lose'){b.classList.remove('slose');void b.offsetWidth;b.classList.add('slose');}});}
+function rvReset(){const el=$('rvStars');[...el.children].forEach(b=>{b.querySelector('.fg').style.width='0%';b.className='';});el.hidden=true;}
+/* the client's look at one room: its score, its lines, the client back at the door */
+function revRoom(C,ri){const L=LOC.client,s=dsScore(C.o,ri),{L:lines,D:del}=dsLines(s);C.room=ri;C.s=s;C.rooms[ri]=s;C.lines=lines;C.del=del;C.shown=0;C.run=0;C.hm=0;
+  C.p.root.position.set(L.ox+.05,0,L.oz+CLD-.32);C.p.root.rotation.y=Math.PI;C.p.root.visible=false;rvReset();}
 function revStart(){const d=ds(),o=d.o;if(!o||CUT)return;const L=LOC.client,W=dsWho(o);if(DECO.on)decoEnd();closePanel();
-  const s=dsScore(o),{L:lines,D:del}=dsLines(s),p=makePerson(W.look);p.root.position.set(L.ox+.05,0,L.oz+CLD-.32);p.root.rotation.y=Math.PI;p.root.visible=false;scene.add(p.root);
-  document.body.classList.add('cut');$('note').hidden=true;P.sit=null;const el=$('rvStars');[...el.children].forEach(b=>{b.querySelector('.fg').style.width='0%';b.className='';});el.hidden=true;
-  CUT={rev:1,t:0,stage:0,shake:0,p,W,s,lines,del,o,shown:0,run:0,next:0,vx:L.ox+1.0,vz:L.oz+CLD-1.55,from:{x:P.x,z:P.z}};
-  setTimeout(()=>{if(CUT&&CUT.rev){SFX.knock();popText('Knock knock! 🚪');}},350);}
-function revUpdate(dt){const C=CUT,L=LOC.client,t=(C.t+=dt),sm=k=>k*k*(3-2*k),p=C.p,ease=1-Math.exp(-dt*5);
+  const two=!!o.r2,p=makePerson(W.look);p.root.visible=false;scene.add(p.root);
+  document.body.classList.add('cut');$('note').hidden=true;P.sit=null;rvReset();
+  CUT={rev:1,t:0,stage:-1,shake:0,p,W,o,two,room:0,rooms:[],s:null,stars:0,lines:[],del:[],shown:0,run:0,next:0,vx:L.ox+1.0,vz:L.oz+CLD-1.55,from:{x:P.x,z:P.z}};
+  const go=()=>{const C=CUT;if(!C||!C.rev)return;revRoom(C,0);C.from={x:P.x,z:P.z};C.t=0;C.stage=0;setTimeout(()=>{if(CUT&&CUT.rev){SFX.knock();popText('Knock knock! 🚪');}},350);};
+  if(two&&(o.ri|0)!==0){SFX.door();fade(()=>{dsRoomShow(0);go();});}else go();}   /* 🚪 two rooms: the client always starts in room 1, even if you called from room 2 */
+function revUpdate(dt){const C=CUT;if(C.stage<0||C.stage===4)return;const L=LOC.client,t=(C.t+=dt),sm=k=>k*k*(3-2*k),p=C.p,ease=1-Math.exp(-dt*5);
   for(const w of[...FRIEND_ACTORS,...PET_ACTORS])if(w.g&&w.loc==='client')w.g.visible=false;
   const k=sm(clamp(t/.8,0,1));P.x=lerp(C.from.x,C.vx,k);P.z=lerp(C.from.z,C.vz,k);P.moving=false;
   if(C.stage<3)L.hinge.rotation.y=1.7*sm(clamp((t-1.0)/.6,0,1));else L.hinge.rotation.y=1.7*(1-sm(clamp((t-C.t3-.6)/.6,0,1)));
@@ -6408,19 +6432,22 @@ function revUpdate(dt){const C=CUT,L=LOC.client,t=(C.t+=dt),sm=k=>k*k*(3-2*k),p=
   if(C.stage===0&&t>=6.5){C.stage=1;C.next=t;}
   if(C.stage===1&&t>=C.next){if(C.shown<C.lines.length){const dd=C.del[C.shown];C.shown++;C.run+=dd;rvStarsSet(clamp(C.run,0,3),dd<0?'lose':dd>0?'pop':'');
       if(dd<0)SFX.no();else if(dd>0)SFX.pop();else SFX.talk();revShow();C.next=t+2.8;}
+    else if(C.two&&C.room===0){C.stage=4;popText('Now the other room! 🚪');SFX.door();if(UI.open)closePanel();   /* 🚪 then room 2 */
+      fade(()=>{const C=CUT;if(!C||!C.rev)return;dsRoomShow(1);revRoom(C,1);C.from={x:P.x,z:P.z};C.t=0;C.stage=0;});}
     else{C.stage=2;revPay();revShow();}}
   if(C.stage===3&&t-C.t3>1.25&&!C.out){C.out=1;exitClient(revEnd);}}
 function revShow(){const C=CUT;if(!C||!C.rev)return;const W=C.W;
   let h=`<div class="who" style="--c:${W.look.top}">${esc(W.nm)}</div>${C.lines.slice(0,C.shown).map((x,i)=>`<p class="line rvl${i===C.shown-1&&C.stage<2?' new':''}">${esc(x)}</p>`).join('')}`;
-  if(C.stage>=2)h+=`<p class="earn">${starsHalf(C.s.stars)}<br>You got <b>${C.pay} 🪙</b>!</p><div class="row"><button class="btn mint" data-a="revbye">👋 Bye!</button></div>`;
+  if(C.stage>=2)h+=`<p class="earn">${starsHalf(C.stars)}${C.two?`<br><small>Room 1 ${starsHalf(C.rooms[0].stars)} · Room 2 ${starsHalf(C.rooms[1].stars)}</small>`:''}<br>You got <b>${C.pay} 🪙</b>!</p><div class="row"><button class="btn mint" data-a="revbye">👋 Bye!</button></div>`;
   openPanel(h,{bottom:true,lock:true});}
-function revPay(){const C=CUT,d=ds(),st=C.s.stars,pay=DS_PAY(st);C.pay=pay;S.coins+=pay;d.done++;d.prevH=C.o.h;d.o=null;d.wait=rand(25,40);
-  S.dsTotal=(S.dsTotal||0)+1;hardEvent('room',1);addMsg('cl','cl',`${st>=2.5?'🌟':st>=1.5?'😊':'🙂'} ${C.W.nm} gave you ${String(st).replace('.5','½')} ⭐ for the ${C.s.T.n.toLowerCase()}. You got ${pay} 🪙!`,{q:1});
-  bumpLevel('decor',1,true);change();jobHud(true);dcardUpd(true);SFX.coin();if(st>=2.5)setTimeout(()=>SFX.yay(),300);popText('+'+pay+' 🪙','coin');}
+function revPay(){const C=CUT,d=ds(),R=C.rooms.filter(Boolean),st=R.length>1?Math.round(R.reduce((a,s)=>a+s.stars,0)/R.length*2)/2:C.s.stars,pay=R.reduce((a,s)=>a+DS_PAY(s.stars),0);   /* 🚪 two rooms: the stars averaged (to halves), each room paid */
+  C.pay=pay;C.stars=st;S.coins+=pay;d.done++;d.prevH=C.o.h;d.o=null;d.wait=rand(25,40);
+  S.dsTotal=(S.dsTotal||0)+R.length;hardEvent('room',R.length);addMsg('cl','cl',`${st>=2.5?'🌟':st>=1.5?'😊':'🙂'} ${C.W.nm} gave you ${String(st).replace('.5','½')} ⭐ for the ${R.map(q=>q.T.n.toLowerCase()).join(' and the ')}. You got ${pay} 🪙!`,{q:1});
+  bumpLevel('decor',R.length,true);change();jobHud(true);dcardUpd(true);SFX.coin();if(st>=2.5)setTimeout(()=>SFX.yay(),300);popText('+'+pay+' 🪙','coin');}
 ACT.revbye=()=>{const C=CUT;if(!C||!C.rev||C.stage!==2)return;closePanel();C.stage=3;C.t3=C.t;C.p.wave=1.3;$('rvStars').hidden=true;};
 function revEnd(){const C=CUT;if(!C||!C.rev)return;scene.remove(C.p.root);CUT=null;document.body.classList.remove('cut');$('rvStars').hidden=true;if(UI.open)closePanel();
   if(LOC.client)LOC.client.hinge.rotation.y=0;for(const u of[...CL_ITEMS.keys()])removeClItem(u);
-  const d=ds();setTimeout(()=>toast(d.done>=DS_MAX?`🌟 That's ${DS_MAX} rooms! Great job today! More clients tomorrow.`:'🎨 Nice work! A new client will message you soon.',3.6),500);}
+  const d=ds();setTimeout(()=>toast(d.done>=DS_MAX?`🌟 That's ${DS_MAX} clients! Great job today! More clients tomorrow.`:'🎨 Nice work! A new client will message you soon.',3.6),500);}
 
 /* 🏆 Pet Show — every Saturday in the park. Four pets take turns on stage, the judges hold up score cards,
    and the pet with the most points wins. The other pets can do great, okay, badly — or even fall out of the show! */
@@ -6931,13 +6958,13 @@ let DCARD_KEY='';
 function dcardUpd(force){const el=$('dcard');if(!el)return;const on=!!(PLAYING&&S&&S.job==='designer');if(el.hidden===on)el.hidden=!on;if($('pad').hidden!==on)$('pad').hidden=on;if(!on){DCARD_KEY='';return;}
   const d=ds(),o=d.o;
   if(!o){const key='none:'+d.done+':'+isDaytime();if(!force&&key===DCARD_KEY)return;DCARD_KEY=key;el.classList.add('empty');
-    el.innerHTML=`<div class="dct">🎨 ${d.done>=DS_MAX?'All done today! 🌟':!isDaytime()?`Clients come at ${DAY_ON}:00 ☀️`:'Waiting for a client…'}</div><div class="dcr"><span>${d.done} / ${DS_MAX} rooms today</span></div>`;return;}
-  const T=dsTheme(o),R=DROOM[T.room],n=o.items.length,inR=CUR&&CUR.id==='client',key=[o.h,o.th,n,inR].join(':');if(!force&&key===DCARD_KEY)return;DCARD_KEY=key;el.classList.remove('empty');
-  el.innerHTML=`<div class="dct">${T.e} ${esc(T.n)}</div><img class="dci" alt="" src="${dsPhoto(T)}"><div class="dcr"><span class="dcp">${T.pal.map(f=>`<i style="background:${FAMDOT[f]}"></i>`).join('')}${T.plants?'🌿':''}</span><span class="dcn">🪑 ${R.cnt[0]}–${R.cnt[1]}${inR?` <small>(${n})</small>`:''}</span></div>`;}
+    el.innerHTML=`<div class="dct">🎨 ${d.done>=DS_MAX?'All done today! 🌟':!isDaytime()?`Clients come at ${DAY_ON}:00 ☀️`:'Waiting for a client…'}</div><div class="dcr"><span>${d.done} / ${DS_MAX} clients today</span></div>`;return;}
+  const T=dsTheme(o),R=DROOM[T.room],n=dsItems().length,inR=CUR&&CUR.id==='client',key=[o.h,o.th,o.ri|0,n,inR].join(':');if(!force&&key===DCARD_KEY)return;DCARD_KEY=key;el.classList.remove('empty');
+  el.innerHTML=`<div class="dct">${T.e} ${esc(T.n)}${o.r2?` <small>· room ${(o.ri|0)+1} of 2</small>`:''}</div><img class="dci" alt="" src="${dsPhoto(T)}"><div class="dcr"><span class="dcp">${T.pal.map(f=>`<i style="background:${FAMDOT[f]}"></i>`).join('')}${T.plants?'🌿':''}</span><span class="dcn">🪑 ${R.cnt[0]}–${R.cnt[1]}${inR?` <small>(${n})</small>`:''}</span></div>`;}
 $('dcard').addEventListener('click',()=>{audioInit();SFX.tap();dcardBig();});
 function dcardBig(){const o=S.ds&&S.ds.o;if(!o){openPhone('job');return;}const T=dsTheme(o),R=DROOM[T.room],W=dsWho(o),H=HOUSE(o.h);
   openPanel(`<div class="hd"><h2>${T.e} ${esc(T.n)}</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
-    <img class="dcbig" alt="" src="${dsPhoto(T)}"><p class="line">${esc(W.nm)}: “${esc(T.ask)}”</p>
+    <img class="dcbig" alt="" src="${dsPhoto(T)}"><p class="line">${esc(W.nm)}: “${esc(T.ask)}”</p>${o.r2?`<p class="note">🚪 Two rooms! This is room ${(o.ri|0)+1}: ${esc(T.n)}. The other one: ${esc(dsThemeOf(o,(o.ri|0)?0:1).n)}. The door in the side wall leads there.</p>`:''}
     <div class="dcrow"><span class="dcp lg">${T.pal.map(f=>`<i style="background:${FAMDOT[f]}"></i>`).join('')}</span><span>${T.pal.map(f=>FAMN[f]).join(' · ')}</span></div>
     <div class="dcrow">🪑 <b>${R.cnt[0]}–${R.cnt[1]}</b> things${T.plants?` · 🌿 ${T.plants}+ plants`:''}</div>
     <p class="note">📍 ${esc(H.n)}${o.flat?', flat '+o.flat:''}. The picture is just an idea. Make it your own way! ✨</p>`);}
@@ -7005,8 +7032,8 @@ function jobPhone(){let h;
   if(S.job==='delivery'){const d=dl(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${dlMax()}</b> pizzas delivered<br>🕛 ${PZ_TIME} 🍕</p><div class="qcard"><div class="qtop"><span class="qi">🌟</span><div><div class="qt">Pizza stars: ${starsH(dlStars())}</div><div class="qd"><b>${STAR_T[dlStars()]}</b> · <b>${dlPay()} 🪙</b> for every pizza! Extra pizzas: <b>${dlHalf()} 🪙</b>. Be fast for ⭐ RARE customers to win stars. More stars = more coins!</div></div></div></div>`;
     if(o){const H=HOUSE(o.h);h+=`<div class="qcard"><div class="qtop"><span class="qi">🍕</span><div><div class="qt">${o.r?'⭐ RARE · ':''}${esc(oWho(o).nm)}: ${o.pz} pizza</div><div class="qd">${o.st==='wait'?'Pick it up at the Pizzeria first!':`Take it to the <b>${esc(H.n)}</b>${o.flat?', flat <b>'+o.flat+'</b>':''}. ${o.left>0?'⏱️ '+mmss(o.left):'⏰ Late!'}`}</div></div></div></div>`;}
     h+=`<div class="row"><button class="btn butter" data-a="nav:pizza">📍 Show me the Pizzeria</button><button class="btn sky" data-a="dotpick">🎨 Dot color</button></div>`;}
-  if(S.job==='designer'){const d=ds(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${DS_MAX}</b> rooms decorated<br>💰 <b>${DS_PAY(0)}–${DS_PAY(3)} 🪙</b> a room: more ⭐ = more coins!</p>`;
-    if(o){const T=dsTheme(o),H=HOUSE(o.h),W=dsWho(o);h+=`<div class="qcard"><div class="qtop"><span class="qi">${T.e}</span><div><div class="qt">${esc(W.nm)}: ${esc(T.n)}</div><div class="qd">At the <b>${esc(H.n)}</b>${o.flat?', flat <b>'+o.flat+'</b>':''}. Follow the dot on your map!</div></div></div></div>`;}
+  if(S.job==='designer'){const d=ds(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${DS_MAX}</b> clients<br>💰 <b>${DS_PAY(0)}–${DS_PAY(3)} 🪙</b> a room: more ⭐ = more coins! Some clients want two rooms.</p>`;
+    if(o){const T=dsTheme(o),H=HOUSE(o.h),W=dsWho(o);h+=`<div class="qcard"><div class="qtop"><span class="qi">${T.e}</span><div><div class="qt">${esc(W.nm)}: ${esc(dsThemeOf(o,0).n)}${o.r2?' and '+esc(dsThemeOf(o,1).n):''}</div><div class="qd">At the <b>${esc(H.n)}</b>${o.flat?', flat <b>'+o.flat+'</b>':''}. Follow the dot on your map!</div></div></div></div>`;}
     else h+=`<p class="ph-sub">${d.done>=DS_MAX?'🌟 All done for today! More clients tomorrow.':!isDaytime()?workAt()+' Clients message you from 8:00 to 20:00.':'🎨 A client will message you soon!'}</p>`;
     h+=`<div class="row"><button class="btn sky" data-a="dotpick">🎨 Dot color</button><button class="btn white" data-a="dtutgo">📖 Tips</button></div>`;}
   if(S.job==='teacher'){const d=tc(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${TC_MAX}</b> classes taught<br>💰 <b>${TC_PAY(1)}–${TC_PAY(3)} 🪙</b> a class: more ⭐ = more coins!</p>`;
