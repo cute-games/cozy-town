@@ -1622,7 +1622,7 @@ function buildForest(L,st){const F=new THREE.Group();L.g.add(F);const r=seeded(6
   const near=[];for(let i=0;i<900&&near.length<150;i++){const side=(r()*4)|0,u=(r()-.5)*2*91,v=85.5+r()*5.5,x=side<2?u:(side===2?v:-v),z=side<2?(side===0?v:-v):u;   /* a close row just past the barriers */
     if(laneFree(x,z)||beachFree(x,z)||near.some(([a,b])=>Math.hypot(a-x,b-z)<2.6))continue;near.push([x,z]);}
   for(const [x,z] of near){const R=1.6+r()*1.4;plant(x,z,R/1.5);mapTrees().push([x,z,R]);}
-  bake(F,false,64);
+  bake(F,false,96);   /* (96 m chunks: fewer pieces) */
   /* tree groups in empty corners inside the town */
   const G=[],roadNear=(x,z)=>[-50,0,50].some(c=>Math.abs(x-c)<9||Math.abs(z-c)<9),bad=(x,z)=>Math.abs(x)>80||Math.abs(z)>80||roadNear(x,z)||(x>-42&&x<-6&&z>6&&z<43)||(x>-44&&x<-10&&z>53)||Math.hypot(x-69,z-69)<14||Math.hypot(x-36.2,z+36.2)<8||x<-76;
   for(let i=0;i<700&&G.length<9;i++){const x=(r()-.5)*160,z=(r()-.5)*160;if(Math.abs(x)<54&&Math.abs(z)<54)continue;if(bad(x,z)||!freeSpot(L,x,z,4.5)||G.some(g=>Math.hypot(g[0]-x,g[1]-z)<16))continue;
@@ -7660,7 +7660,7 @@ function holBuild(h){const L=LOC.city,G=new THREE.Group(),st=new THREE.Group();G
     for(const [x,z] of [[-21,-11],[-13,-11],[-15.5,-19],[-20.5,-21.5],[-12,-21],[-22,-15.5],[-17.4,-13]])egg(x,z,i++);   /* 🌸 the Flower Corner garden */
     for(const [x,z,ry,c] of [[-26.5,11.8,.6,'#ffffff'],[-17.2,12.2,-.5,'#ffc9dc'],[-33.3,30.8,2.2,'#f8f5f0']]){const m=makePet('bunny',c),b=m.root;b.scale.setScalar(1.7);b.position.set(x,0,z);b.rotation.y=ry;st.add(b);const bw=new THREE.Group();bw.position.set(0,.5,.12);bw.rotation.set(0,0,-.2);m.head.add(bw);bowShape(bw,.6,PC[(i++)%6],{ol:.006});HOL.n++;}
     garland(st,-38.0,1.9,8.3,-24.2,8.3,PC);garland(st,-19.8,1.9,8.3,-8.3,8.3,PC);garland(st,-84.6,3.7,-4.45,-84.6,4.45,PC);HOL.n+=3;}
-  bake(st,true,32);if(glows.length)G.add(glowMesh(glowGeo(glows)));}
+  bake(st,true,64);if(glows.length)G.add(glowMesh(glowGeo(glows)));}   /* (64 m chunks: fewer pieces with Halloween on, within the agreed town limit) */
 function holAnim(now){if(!HOL.g)return;const t=(now/1000)%1e4;HOL.g.traverse(o=>{if(o.material&&o.material.uniforms&&o.material.uniforms.tm)o.material.uniforms.tm.value=t;});}
 /* 👻 the Spooky path: a marked path in the quiet south-west corner of the park. Open after 18:00. On the path, 3 spots where a ghost or a
    skeleton pops up with "BOO!", a quick wobble and a soft sound, each spot once per night per player. Never during jobs, scenes, sleep or the bus */
