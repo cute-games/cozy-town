@@ -18,6 +18,7 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 | Stage 1 end: version stamp 2026101702, full check, the friends' wedge fix, kit v6 zip, this report, PR "Run 4, stage 1" | yes | yes | full check + reruns: every line passes except the 11 run-4 lines of jobs still to come (N20, N21, N22, N25, N28, N33, N34, N36, N37, N38, N39); counts: 58 lists, 728 things before, 732 after; grew: {"clothes": "22 -> 26"} |
 | 10. Levels to 50, garden spots, house floors, house colour (stage 2, branch claude/run-4-s2) | yes | yes | N33, N34 pass |
 | 11. The other holidays: Valentine's, the Easter month, December, New Year, the school party | yes | yes | N20, N21, N22 pass; N1 (rewritten again to whole months) pass |
+| 12. The Pet Shop upstairs | yes | yes | N28 pass; N11 rerun pass |
 
 (filled in after every job; if the session restarts: undo any half-done job, carry on from the next one)
 
@@ -123,6 +124,14 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 - School, 1 Sep (item 6). New: six balloon bunches in front of the school (by the door, the corners and the path) and four in its hall, built and cleared by the day; Mrs. Maple gives a little globe (a new furniture piece: a blue globe with green lands on a golden arc and a dark stand, not for sale) once per player per year; it waits in 📦 My stuff. Test N22.
 - Should look like (BUILDER): February: a pink heart fountain in the corner's west half with petals in the air; the Easter month: a big white bunny with a golden bow by the stepping stones, golden-banded eggs in nests around town (not the small pastel ones); December: the tall tree with presents and coloured lights in the corner, Santa beside it waving coins; 28 to 31 Dec at night: bursts of coloured sparks high over the town; 31 Dec and 1 Jan: a striped party hat on every head and confetti falling; 1 Sep: bright balloon bunches around the school and in its hall. Pictures: tools/pictures-4/after-valentine-fountain.png, after-easter-bunny.png, after-december-tree-santa.png, after-fireworks.png, after-party-hats-confetti.png, after-school-balloons.png, after-school-hall-balloons.png.
 - Decided alone: the holiday spot inside the corner is at (−19.6, −12.6), the west half, clear of the stepping stones, mounds and bushes; the egg candidate spots are pavement edges, park grass, the lane and the school front, each nudged out of any collider; Santa's coins grow in a straight line from 10 to 300; the party hat swaps in for an own hat rather than sitting on top of it; the globe is a floor piece 0.4 m wide (the game has no stacking on tables).
+
+### Job 12: The Pet Shop upstairs (item 12)
+- Old: one 14×10 room: three pens along the back wall (puppies with their breeds; kittens with the owl; bunnies with the ducks and the capybara), the hamsters' table, a side shelf of food and toys, the counter, the cat tree and doghouse on show, the birdcage.
+- New: two floors, built like your house's floors (floor 1 is 40 m further along z, only the floor you stand on is attached, the same step-by-step stairs in the west wall with ⬆️/⬇️ plates and spots). Upstairs: seven fenced areas, one kind each, so they never mix: puppies with their breeds (pug, pomchi, sausage dog), kittens, bunnies, a capybara, ducks at a little blue pond, an owl on a perch, the hamsters on their glass-topped table; a sign over every area, a little bench to watch from; the 💗 "Adopt" spot at every animal as before, and the animals wander inside their own fence only. Downstairs: the counter, two long shelves of snacks and toys along the back wall, a rack of pet clothes (bows, hats, collars, scarves, crowns, bow ties, capes, wings in bright colours) with its own 👒 spot, the side shelf, the pet furniture on show (cat tree, doghouse, pet bed), the birdcage, and a "🐾 Animals upstairs ⬆️" sign by the stairs. The 🛒 spot sells food, toys and clothes as before.
+- Other players: positions upstairs travel in the presence as they are (z + 40), so two new players see each other upstairs; old versions place the same coordinates 40 m away in their one-floor shop (the same harmless gap as the house floors).
+- Test N28: 2 floors, 7 areas each holding only its own kind and not overlapping, 14 animals, 60 s of wandering with none outside its own fence, the shelves and the clothes rack downstairs, buying a treat, the stairs up and down, adopting a pug upstairs. The night-3 line N11 (every kind adopts, follows, eats, plays, dresses, Pet Show) is rerun.
+- Should look like (BUILDER): downstairs a bright mint shop with full shelves and a colourful clothes rack, the stairs in the west wall; upstairs a long room with seven low pastel fences, each with its sign and its animals, a pond for the ducks, a perch for the owl, the hamsters' table, windows on three sides. Pictures: tools/pictures-4/after-petshop-downstairs.png, after-petshop-upstairs.png.
+- Decided alone: the hamsters keep their table (now upstairs); the owl's area is a perch at 95 cm, the capybara has an area of its own; the pet shop's clothes rack got its own name (the Clothes Shop already has a `clothesRack`, and sharing the name broke its mannequins in the first dry run).
 
 ## 2. Check output per job, exactly as printed
 
@@ -836,6 +845,19 @@ FAIL, anything else: none
     PASS | N20 Holiday spot: February heart fountain and petals; in the Easter month the bunny and 25 eggs (all 25 -> bunny costume and 50 coins, once a year); December Christmas tree and Santa (10 coins on 1 Dec, 300 on 31 Dec, once per real day); other months the flower garden as before | 14 Feb: valentine, gate open True, pieces {'heart fountain': 1, 'heart': 4, 'garland': 2}, petals True; walking at the heart fountain stops 1.6 m from its middle; 10 Mar 2027: easter, bunny True, 25 h
     PASS | N21 New Year: fireworks every game night 28 to 31 Dec; party hats on everyone and confetti on 31 Dec and 1 Jan; nothing on 2 Jan | fireworks [want, drawn, bursts in 4.5 s]: 27 Dec night: False False 0, 28 Dec night: True True 1, 28 Dec day: False False 0, 31 Dec night: True True 2, 1 Jan night: False False 0; party [hats on / hat
     PASS | N22 School: on 1 Sep balloons around and in the school; a teacher gives the globe once; nothing on 2 Sep | 1 Sep: party True, 10 balloon bunches (6 outside by the school: 6 within its front; in the hall True); the teacher: globes in My stuff 0 -> 1 after talking, 1 after talking again (year 2026); '👩‍🏫 “Ha
+[partial run: some stages skipped by --only]
+```
+
+### Job 12 (N28 written for this job in the kit's pets4.py, and the night-3 line N11 again; the scratch-copy dry run found the pet clothes rack's helper sharing its name with the Clothes Shop's, which broke the mannequins' geometry until it was renamed)
+```
+[stage night3: running]
+    PASS | N11 | pomchi: adopt True (saved as dog), follows True, fed True, played True, 4/4 outfit slots, tag 0.8, sound True, 4 colours, 6 names, Pet Show True (3) | pug: adopt True (saved as dog), follows True, fed True, played True, 4/4 outfit slots, tag 0.78, sound True, 4 colours, 6 names, Pet Show True (4) | 
+[stage night3: done in 41 s]
+    PASS | N11 Pets: each new kind and breed can be adopted, follows, eats, plays, wears every outfit slot and does the Pet Show; an old version sees breeds as a puppy and does not crash on new kinds | pomchi: adopt True (saved as dog), follows True, fed True, played True, 4/4 outfit slots, tag 0.8, sound True, 4 colours, 6 names, Pet Show True (3) | pug: adopt True (saved as dog), follows True, fed
+[stage run4: running]
+    PASS | N28 | 2 floors; 7 areas upstairs for ['bunny', 'capybara', 'cat', 'dog', 'duck', 'hamster', 'owl']; 14 animals; 60 s of wandering: 0 of 16800 animal-frames outside their own area; who lives where: [['dog', 'pug', 'pomchi', 'sausage'], ['cat', 'cat'], ['bunny', 'bunny'], ['capybara'], ['duck', 'duck'], ['o
+[stage run4: done in 16 s]
+    PASS | N28 Pet shop: two floors; each kind in its own area upstairs, no kind in another's area; clothes and snacks on shelves downstairs; adopting and buying still work | 2 floors; 7 areas upstairs for ['bunny', 'capybara', 'cat', 'dog', 'duck', 'hamster', 'owl']; 14 animals; 60 s of wandering: 0 of 16800 animal-frames outside their own area; who lives where: [['dog', 
 [partial run: some stages skipped by --only]
 ```
 
