@@ -2784,7 +2784,7 @@ function homeShell(L,big){if(L.big===big&&L.shellG)return;L.big=big;
   shell(L,sh,W,D,H,WALL_M,FLOOR_M,'#f7eef2',g,big?UPG:0);
   doorAt(sh,0,HOMED-.02,Math.PI,'#5fd4b0',false,true);doorAt(sh,HOMEGX,-HOMED+.02,0,'#5fd4b0',false,true);
   for(const x of[-3,1.5])windowIn(sh,x,1.0,-HOMED+.02,0);
-  for(const z of[0]){windowIn(sh,HOMEW-.02,1.0,z,-Math.PI/2,'#7fdcb5');windowIn(sh,-HOMEW+.02,1.0,z,Math.PI/2,'#7fdcb5');}
+  windowIn(sh,HOMEW-.02,1.0,0,-Math.PI/2,'#7fdcb5');for(const z of(big?[-3,3]:[0]))windowIn(sh,-HOMEW+.02,1.0,z,Math.PI/2,'#7fdcb5');   /* 🪟 run 4, job 2 (item 25, the root cause): the west window sat at z 0, right in the stair doorway of the big house, so it hung across the view on the stairs; with stairs the west windows sit at z ±3 */
   if(big){for(const x of[-2.7,2.7])windowIn(sh,x,1.0,HOMED-.02,Math.PI);upFloor(L,sh,W,D,H,WALL_M,FLOOR_M);}
   bake(sh,false);
   const grid=x=>{const gh=new THREE.GridHelper(W,W*2,0xb79cff,0xd9c8ff);gh.scale.z=D/W;gh.position.set(x,.012,0);g.add(gh);return gh;};
@@ -2801,7 +2801,7 @@ function homeShell(L,big){if(L.big===big&&L.shellG)return;L.big=big;
 function upFloor(L,sh,W,D,H,wm,fm){const ug=new THREE.Group();ug.position.x=UPX;sh.add(ug);
   shell({ox:L.ox+UPX,oz:L.oz,cols:L.cols},ug,W,D,H,wm,fm,'#f7eef2',ug,UPG);
   for(const x of(W>13?[-6.5,-3,1.5,6.6]:[-3,1.5,4.5]))windowIn(ug,x,1.0,-D/2+.02,0);for(const x of(W>13?[-5,0,5]:[-2.7,0,2.7]))windowIn(ug,x,1.0,D/2-.02,Math.PI);
-  for(const z of(D>11?[-3.2,2.6]:[0])){windowIn(ug,W/2-.02,1.0,z,-Math.PI/2,'#7fdcb5');windowIn(ug,-W/2+.02,1.0,z,Math.PI/2,'#7fdcb5');}
+  for(const z of(D>11?[-3.2,2.6]:[0]))windowIn(ug,W/2-.02,1.0,z,-Math.PI/2,'#7fdcb5');for(const z of(D>11?[-3.2,2.6]:[-3,3]))windowIn(ug,-W/2+.02,1.0,z,Math.PI/2,'#7fdcb5');   /* 🪟 never at z 0: the stairs come up there (run 4, item 25) */
   const n=12,sd=4.2/n,sr=H/n,x0=-W/2,t=.3,a=Math.atan2(H,4.2);
   for(const [g,up] of[[sh,1],[ug,0]]){
     for(const k of[-1,1])box(g,4.2,H,t,null,x0-2.1,0,k*(UPG+t/2),{mat:wm,ol:false});box(g,t,H,2*UPG+2*t,null,x0-4.2-t/2,0,0,{mat:wm,ol:false});
@@ -2891,6 +2891,9 @@ function flowerCorner(L,st){const x1=-23.4,x2=-10.6,z1=-24.5,z2=-7.0,HG='#5fbf74
 /* 🌱 your yard on Friends Lane: the garden behind your house, its gate, the back door, the mailbox and the "Bigger house!" sign.
    It is built once at the old town-yard spots (the same numbers old saves use) and put on your lot; it moves along if your lot changes */
 const YARD={g:null,gin:null,cols:[],wc:[],ints:[],on:false,j:null,plaque:null};
+/* 🌱 the seed spots in the yard (the old town-yard frame; lotPt moves them to your lot). Friends' lots draw the same spots from their presence (gd) */
+const YARD_PLOTS=[[0,-21,-20.9],[1,-18.3,-20.9],[2,-15.6,-20.9],[3,-21,-23.0],[4,-18.3,-23.0],[5,-15.6,-23.0]];
+function gardenSnap(){if(!S||!Array.isArray(S.garden))return null;const out=[];S.garden.forEach((st,i)=>{if(st&&st.seed&&SEEDS[st.seed])out.push(i+','+st.seed+','+plotStage(st));});return out.length?out.join(';'):null;}   /* "spot,seed,stage;…" (run 4, job 2) */
 function buildYard(L){const g=new THREE.Group(),gin=new THREE.Group(),st=new THREE.Group(),FL={cols:YARD.cols,ox:0,oz:0};
   gin.position.set(17,0,15);g.add(gin);gin.add(st);L.g.add(g);g.visible=false;YARD.g=g;YARD.gin=gin;
   flat(st,12.3,6.0,'#a2e48a',-16.75,.012,-21.55);
@@ -2901,7 +2904,7 @@ function buildYard(L){const g=new THREE.Group(),gin=new THREE.Group(),st=new THR
   for(let k=0;k<8;k++)disc(st,.36,'#e9e0f7',-11.45,.03,-7.6-k*1.4,{seg:14});
   doorAt(st,-14,-18.52,Math.PI,'#5fd4b0');
   {BENCH_SKIP=-1;const yb=bench(st,-20.0,-9.1,Math.PI);BENCH_SKIP=0;const B=BENCHES[BENCHES.length-1];B.x0=-20.0;B.z0=-9.1;B.ry0=Math.PI;for(const q of B.seats){q.lx=q.x;q.lz=q.z;}colC(FL,-20.0,-9.1,.8);}   /* 🪑 a bench in your front yard */
-  L.plots=[];for(const [i,x,z] of [[0,-21,-20.9],[1,-18.3,-20.9],[2,-15.6,-20.9],[3,-21,-23.0],[4,-18.3,-23.0],[5,-15.6,-23.0]]){box(st,1.8,.16,1.2,'#b07a52',x,0,z,{ol:.02});col(FL,x-.92,z-.62,x+.92,z+.62);L.plots.push({i,x,z});}
+  L.plots=[];for(const [i,x,z] of YARD_PLOTS){box(st,1.8,.16,1.2,'#b07a52',x,0,z,{ol:.02});col(FL,x-.92,z-.62,x+.92,z+.62);L.plots.push({i,x,z});}
   /* the shed stands beside the arch's way (not right behind it): its door, the seed box and the 🌱 Seeds sign face the arch */
   box(st,1.6,2.0,1.4,'#ffd6e0',-13.4,0,-23.3);prism(st,1.9,1.8,.75,'#ff7aa8',-13.4,2.0,-23.3,{ry:Math.PI/2});box(st,.7,1.6,.06,'#5fd4b0',-13.75,0,-22.58,{ol:.015});col(FL,-14.3,-24.05,-12.5,-22.55);
   box(st,.8,.45,.5,'#c98f5e',-12.95,0,-22.35);for(let k=0;k<4;k++)box(st,.14,.2,.04,['#ff7aa8','#ffd45c','#5fd4b0','#ff8a6b'][k],-13.25+k*.2,.45,-22.35,{rx:-.2,ol:.01});col(FL,-13.4,-22.65,-12.5,-22.05);
@@ -2959,7 +2962,7 @@ function visitShell(L,big,up,wide){up=!!(big&&up);wide=!!(big&&wide);if(L.big===
   shell(L,sh,W,D,H,L.wallM,L.floorM,'#f7eef2',g,up?UPG:0);
   doorAt(sh,0,hd-.02,Math.PI,'#5fd4b0',false,true);doorAt(sh,gx,-hd+.02,0,'#5fd4b0',false,true);
   for(const x of wide?[-6.5,-3,1.5]:[-3,1.5])windowIn(sh,x,1.0,-hd+.02,0);
-  for(const z of wide?[-3.2,2.6]:[0]){windowIn(sh,hw-.02,1.0,z,-Math.PI/2,'#7fdcb5');windowIn(sh,-hw+.02,1.0,z,Math.PI/2,'#7fdcb5');}
+  for(const z of wide?[-3.2,2.6]:[0])windowIn(sh,hw-.02,1.0,z,-Math.PI/2,'#7fdcb5');for(const z of wide?[-3.2,2.6]:(up?[-3,3]:[0]))windowIn(sh,-hw+.02,1.0,z,Math.PI/2,'#7fdcb5');   /* 🪟 with stairs no west window at z 0 (run 4, item 25) */
   if(big)for(const x of(wide?[-5,5]:[-2.7,2.7]))windowIn(sh,x,1.0,hd-.02,Math.PI);
   if(up)upFloor(L,sh,W,D,H,L.wallM,L.floorM);
   bake(sh,false);
@@ -4507,13 +4510,13 @@ function mpUpsert(p){const pr=p.presence||{};if(!pr.nm)return;let a=MP.peers.get
   if(!a){a={peer:p.peer,nm,lk:'',x:0,z:0,tx:0,tz:0,ry:0,rx:0,rz:0,rry:0,mv:false,loc:'city',av:null,bub:null,bubT:0,sayId:pr.say&&pr.say.id,twin:mpTwin(pr)};MP.peers.set(p.peer,a);
     if(MP.ready){SFX.yay();toast(a.twin?'📱 Your game is open on your other iPad or phone too!':'👋 '+nm+' is here! Open 👫 Friends to go to them.',3.4);}}
   a.loc=(typeof pr.loc==='string'&&LOC[pr.loc])?pr.loc:'city';const ok=v=>Number.isFinite(v)&&Math.abs(v)<2000;if(ok(pr.x))a.rx=pr.x;if(ok(pr.z))a.rz=pr.z;if(ok(pr.ry))a.rry=pr.ry;a.mv=!!pr.mv;laneFields(a,pr,fresh);
-  const lk=JSON.stringify(pr.lk||{});if(lk!==a.lk||nm!==a.nm||!a.av){a.lk=lk;a.nm=nm;mpBuildAv(a,cleanLook(pr.lk));if(fresh){const sp=peerSpot(a)||[a.rx,a.rz,a.rry];a.x=a.tx=sp[0];a.z=a.tz=sp[1];a.ry=sp[2];}}
+  const lk=JSON.stringify(pr.lk||{}),old=!(Number.isFinite(pr.v)&&pr.v>=COZY_BUILD);if(lk!==a.lk||nm!==a.nm||!a.av||old!==a.old){a.lk=lk;a.nm=nm;a.old=old;mpBuildAv(a,cleanLook(pr.lk));if(fresh){const sp=peerSpot(a)||[a.rx,a.rz,a.rry];a.x=a.tx=sp[0];a.z=a.tz=sp[1];a.ry=sp[2];}}
   const s=pr.say;if(s&&typeof s==='object'&&s.id!==a.sayId){a.sayId=s.id;const txt=Number.isInteger(s.m)&&QUICK[s.m]?QUICK[s.m]:Number.isInteger(s.e)&&EMOS[s.e]?EMOS[s.e]:null;if(txt&&!fresh)mpBubble(a,txt);}
   const bk=JSON.stringify(pr.bl||null);if(bk!==a.bk){a.bk=bk;if(pr.bl)ballFrom(a,pr.bl);else if(!BS.mine&&BS.own===a.peer)ballOwnerGone();}
   const ck=JSON.stringify(pr.sc||null);if(ck!==a.ck){a.ck=ck;if(pr.sc)scoreFrom(a,pr.sc);}
   a.zz=pr.zz===1?1:0;a.aw=pr.aw===1?1:0;a.st=pr.st===1?1:0;mpExtra(a,pr,fresh);}
 /* 🕰️ run 4, job 1: there is one clock for everyone (clockNow), so nobody takes a friend's clock any more and presence carries no ck */
-function mpBuildAv(a,look){mpDropAv(a);const p=makePerson(lookToPerson(look));bakePerson(p);const tg=label('⭐ '+a.nm,.3);tg.position.y=2.0;p.root.add(tg);p.tag=tg;scene.add(p.root);a.av=p;a.av.root.position.set(a.x,0,a.z);}
+function mpBuildAv(a,look){mpDropAv(a);const p=makePerson(lookToPerson(look));bakePerson(p);const txt='⭐ '+a.nm+(a.old?' · ⏳ older version':''),tg=label(txt,.3);tg.userData.txt=txt;tg.position.y=2.0;p.root.add(tg);p.tag=tg;scene.add(p.root);a.av=p;a.av.root.position.set(a.x,0,a.z);}
 function mpDropAv(a){if(a.av){scene.remove(a.av.root);a.av=null;}a.bub=null;a.lie=false;a.lieK='';if(a.zzs){a.zzs.material.map.dispose();a.zzs.material.dispose();a.zzs=null;}mpPetsDrop(a);}
 function mpBubble(a,txt){if(!a.av)return;if(a.bub&&a.bub.parent)a.bub.parent.remove(a.bub);const b=label(txt,.36);b.position.y=2.45;a.av.root.add(b);a.bub=b;a.bubT=5;SFX.talk();
   if(a.loc===CUR.id)a.av.wave=1.2;toast('⭐ '+a.nm+': '+txt,3.4);}
@@ -4531,8 +4534,8 @@ function laneMe(){return MP.me||'me';}
 /* every player (you too) gets a lot, picked from their name; if two names want the same lot, whoever came first (jt) keeps it.
    jt is when you first lived on Friends Lane (saved), so the same friend keeps the same lot day after day.
    Lots 0-5 use exactly the old versions' rule (they only know those 6); when they are full, lots 6-11 the same way, then more lots */
-function laneAssign(){const me=laneMe(),list=[{k:me,nm:cleanName(S.name||'Friend'),jt:MP.jt||0,big:!!S.bighouse}];
-  for(const a of MP.peers.values())list.push({k:a.peer,nm:a.nm,jt:Number.isFinite(a.jt)?a.jt:9e15,big:!!a.bh});
+function laneAssign(){const me=laneMe(),list=[{k:me,nm:cleanName(S.name||'Friend'),jt:MP.jt||0,big:!!S.bighouse,gd:gardenSnap()||''}];
+  for(const a of MP.peers.values())list.push({k:a.peer,nm:a.nm,jt:Number.isFinite(a.jt)?a.jt:9e15,big:!!a.bh,gd:a.gd||''});
   list.sort((a,b)=>a.jt-b.jt||(a.k<b.k?-1:a.k>b.k?1:0));
   const own=[],slot=new Map(),take=(b,h)=>{let j=b+h%6,t=0;while(own[j]&&t<6){j=b+(j-b+1)%6;t++;}return own[j]?-1:j;};
   for(const p of list){const h=hashStr(p.nm.toLowerCase());let j=take(0,h);if(j<0)j=take(6,h);
@@ -4542,7 +4545,7 @@ function laneAssign(){const me=laneMe(),list=[{k:me,nm:cleanName(S.name||'Friend
 function laneRefresh(force){const C=LOC.city;if(!C||!C.lane||typeof S==='undefined'||!S)return;const r=laneAssign();LANE.slotOf=r.slot;
   const m=r.slot.get(laneMe());while(C.lane.length<r.own.length&&laneGrow(m>=C.lane.length));   /* more players than lots: more lots appear */
   LANE.own=C.lane.map(lp=>r.own[lp.j]||null);
-  for(const lp of C.lane){const o=LANE.own[lp.j];const key=o?[o.k===laneMe()?'ME':o.k,o.nm,o.big?1:0].join('|'):'';if(key!==lp.key||force){lp.key=key;laneHouse(lp,o);}}
+  for(const lp of C.lane){const o=LANE.own[lp.j];const key=o?[o.k===laneMe()?'ME':o.k,o.nm,o.big?1:0,o.gd||''].join('|'):'';if(key!==lp.key||force){lp.key=key;laneHouse(lp,o);}}
   if(m!=null&&m!==LANE.mine){LANE.mine=m;yardPlace();}}
 function laneHouse(lp,o){const C=LOC.city;for(const c of [...lp.g.children])lp.g.remove(c);
   const ci=C.cols.indexOf(lp.col);if(ci>=0)C.cols.splice(ci,1);
@@ -4551,7 +4554,10 @@ function laneHouse(lp,o){const C=LOC.city;for(const c of [...lp.g.children])lp.g
   sg.position.set(lp.sx,1.575,lp.sz);sg.rotation.y=lp.ry;lp.g.add(sg);
   if(!o)return;
   const big=!!o.big,hg=new THREE.Group(),opt={x:lp.hx,z:lp.hz,w:9,d:7,h:big?7.0:3.8,wall:pal[0],trim:'#ffffff',roof:pal[1],face:lp.s<0?1:-1,gable:true,rh:big?2.8:2.6,chimney:true,door:{x:lp.hx,c:'#5fd4b0'}};
-  if(big)opt.floors=2;building(hg,opt);for(const bx of[-19.8,-14.2]){const [x,z]=lotPt(lp.j,bx,-10.6);flowerBed(hg,x,z,3,.9);}bake(hg,true);lp.g.add(hg);C.cols.push(lp.col);
+  if(big)opt.floors=2;building(hg,opt);for(const bx of[-19.8,-14.2]){const [x,z]=lotPt(lp.j,bx,-10.6);flowerBed(hg,x,z,3,.9);}
+  lp.gdKey=o.k===laneMe()?'':(o.gd||'');if(lp.gdKey)for(const row of lp.gdKey.split(';').slice(0,40)){const [i,seed,sg]=row.split(','),pl=YARD_PLOTS[+i];if(!pl||!SEEDS[seed])continue;const [x,z]=lotPt(lp.j,pl[1],pl[2]);   /* 🌱 a friend's garden: their soil and crops at the same spots as in a yard (their presence says what grows; old versions send nothing) */
+    box(hg,1.8,.16,1.2,'#b07a52',x,0,z,{ol:.02});const cg=new THREE.Group();cg.position.set(x,.16,z);cg.rotation.y=lp.s<0?0:Math.PI;hg.add(cg);buildCrop(cg,seed,clamp(+sg|0,0,3));}
+  bake(hg,true);lp.g.add(hg);C.cols.push(lp.col);
   const tg=label('🏠 '+o.nm,.9);tg.position.set(lp.hx,big?10.9:7.9,lp.hz);tg.onBeforeRender=laneTagR;lp.g.add(tg);}
 function laneTick(dt){LANE.t+=dt;if(LANE.t>=1){LANE.t=0;laneRefresh();}visTick(dt);}
 function laneIcon(j){const o=LANE.own[j];return o&&o.k===laneMe()?'🏠':'🔔';}
@@ -4569,21 +4575,24 @@ function peerSpot(a){const me=CUR.id,VD=VOX-LOC.home.ox;
   if(a.loc==='studio'||a.loc==='client')return null;
   return a.loc===me?[a.rx,a.rz,a.rry]:null;}
 function placeOf(a){if(a.loc==='visit'){if(MP.me&&a.ho===MP.me)return'🏠 Visiting your house!';const h=MP.peers.get(a.ho);return'🏠 At '+(h?esc(h.nm)+"'s house":"a friend's house");}return PLACE_OF[a.loc]||'📍 In town';}
-function laneFields(a,pr,fresh){a.jt=Number.isFinite(pr.jt)?pr.jt:undefined;a.bh=pr.bh?1:0;a.ho=typeof pr.ho==='string'?pr.ho:null;
+function laneFields(a,pr,fresh){a.jt=Number.isFinite(pr.jt)?pr.jt:undefined;a.bh=pr.bh?1:0;a.ho=typeof pr.ho==='string'?pr.ho:null;a.gd=typeof pr.gd==='string'?pr.gd.slice(0,600):'';
   const obj=v=>v&&typeof v==='object'?v:null;a.kn=obj(pr.kn);a.an=obj(pr.an);a.hm=obj(pr.hm);
   const guest=!!MP.me&&a.loc==='visit'&&a.ho===MP.me;if(guest&&!a.guest&&!fresh){SFX.yay();toast('🏠 '+a.nm+' is visiting your house!',3);}a.guest=guest;
   hostSeeKnock(a);}
-function laneStamp(st){st.jt=MP.jt||0;st.bh=S.bighouse?1:0;
+function laneStamp(st){st.jt=MP.jt||0;st.bh=S.bighouse?1:0;st.gd=gardenSnap();   /* 🌱 my garden for friends' games (optional; old versions ignore it) */
   if(CUR.id==='visit'&&VIS.st==='in'){st.loc='visit';st.ho=VIS.host;st.x=Math.round((P.x-VOX+LOC.home.ox)*100)/100;}else st.ho=null;
   st.kn=VIS.st==='knock'?{to:VIS.host,id:VIS.id}:null;st.an=HOST.an;
   let hosting=performance.now()<HOST.until;if(!hosting&&MP.me)for(const a of MP.peers.values())if(a.loc==='visit'&&a.ho===MP.me){hosting=true;break;}
   st.hm=null;if(hosting){const lim=MP.pmax||(window.WEBNET?60000:3600);st.hm=homeSnap(0);st.hm=homeSnap(Math.max(0,lim-jsonBytes(st)));}}
 const TENC=new TextEncoder();function jsonBytes(o){return TENC.encode(JSON.stringify(o)).length;}
 /* the house layout rides along in presence; Claude rooms cap presence at 4 KiB, so a very full house sends what fits (placed-first items first).
-   i = the ground floor (old versions only read this); u = upstairs in the big house, sent with what is left, so it is dropped first */
-function homeSnap(budget){const h=S.home,r=v=>Math.round(v*10)/10;let used=0;
+   i = the ground floor (old versions only read this); u = upstairs in the big house, sent with what is left, so it is dropped first.
+   Run 4, job 2 (item 26, the root cause): a visitor used to GUESS the room size from the spots: a big house with any piece within 70 cm of a wall (a kitchen flush to the
+   back wall, |z| > 4.3) looked like an old 18x14 layout, so the visitor drew the old big room around a 12x10 layout and the kitchen stood 2 m from the wall. Now the layout
+   says its room size (W, D: half the width and depth); old versions ignore it. Spots are sent to the centimetre (they were rounded to 10 cm) */
+function homeSnap(budget){const h=S.home,r=v=>Math.round(v*100)/100;let used=0;
   const rows=fl=>{const out=[];for(const it of h.items.filter(it=>(it.f&&S.bighouse?1:0)===fl).slice(0,160)){const s=[it.t,it.c||'',r(it.x),r(it.z),it.r|0,it.on?1:0].concat(it.sh?['s'+((S.beach&&S.beach.n)|0)]:[]).join(',');if(budget!=null&&used+s.length+1>budget)break;out.push(s);used+=s.length+1;}return out.join(';');};
-  const o={b:S.bighouse?1:0,w:h.wall,f:h.floor,i:rows(0)};if(S.bighouse)o.u=rows(1);return o;}
+  const o={b:S.bighouse?1:0,w:h.wall,f:h.floor,W:HOMEW,D:HOMED,i:rows(0)};if(S.bighouse)o.u=rows(1);return o;}
 function goKnock(peer){if(busWarp('city'))return;const a=MP.peers.get(peer),j=LANE.slotOf.get(peer);if(!a||j==null||!LOC.city.lane){toast('🏠 Their house is not on Friends Lane right now.',2.8);return;}
   const d=LOC.city.lane[j].door;if(DECO.on)decoEnd();if(P.ride)stopRide();if(P.sit)standUp();closePanel();SFX.door();
   fade(()=>{setLoc('city');P.x=d[0]+Math.sin(d[2]+Math.PI)*1.6;P.z=d[1]+Math.cos(d[2]+Math.PI)*1.6;P.yaw=d[2]+Math.PI;P.pitch=.06;P.sit=null;bringFollowers();saveLocal();setTimeout(()=>laneKnock(peer),450);});}
@@ -4617,7 +4626,7 @@ function visSpot(L,a){const hx=a&&a.loc==='home'&&Number.isFinite(a.rx)&&Number.
 function visLeave(msg){const d=laneHostDoor();visReset();if(msg)toast(msg,3.2);SFX.door();
   fade(()=>{setLoc('city');P.x=d[0];P.z=d[1];P.yaw=d[2];P.pitch=0;P.sit=null;bringFollowers();saveLocal();});}
 function visFill(hm){const L=LOC.visit;if(!L||!hm||typeof hm!=='object')return;
-  const wide=!!hm.b&&[hm.i,hm.u].some(v=>typeof v==='string'&&v.split(';').some(r=>{const q=r.split(',');return Math.abs(+q[2])>5.3||Math.abs(+q[3])>4.3;}));   /* an old-version friend's big layout: the old 18x14 room */
+  const wide=hm.W==null&&!!hm.b&&[hm.i,hm.u].some(v=>typeof v==='string'&&v.split(';').some(r=>{const q=r.split(',');return Math.abs(+q[2])>5.3||Math.abs(+q[3])>4.3;}));   /* only a layout that does not say its size (an old version) is guessed at: its big layout = the old 18x14 room (run 4, job 2) */
   visitShell(L,!!hm.b,typeof hm.u==='string',wide);
   L.wallM.color.set(HEX.test(hm.w)?hm.w:'#ffd6e0');const fk=FLOORS[hm.f]?hm.f:'wood';
   if(L.fk!==fk){L.fk=fk;if(L.floorM.map)L.floorM.map.dispose();L.floorM.map=floorTex(fk);L.floorM.needsUpdate=true;}L.floorM.map.repeat.set(L.W/2,L.D/2);
@@ -4625,7 +4634,7 @@ function visFill(hm){const L=LOC.visit;if(!L||!hm||typeof hm!=='object')return;
   const rows=[];L.vf=-1;for(const fl of L.up?[0,1]:[0]){const v=hm[fl?'u':'i'];if(typeof v==='string'&&v)for(const row of v.split(';').slice(0,160))rows.push([row,fl]);}
   for(const [row,fl] of rows){const [t,c,xs,zs,rs,on,sn]=row.split(','),shl=t==='shelf'&&/^s\d+$/.test(sn||''),F=FURN[t];if(!F)continue;const x=+xs,z=+zs,r=(+rs||0)&3,ox=L.ox+fl*UPX;
     if(!Number.isFinite(x)||!Number.isFinite(z)||Math.abs(x)>L.W||Math.abs(z)>L.D)continue;
-    const g=buildFurn(shl?'shellshelf':t,HEX.test(c)?c:null);g.position.set(ox+x,0,L.oz+z);g.rotation.y=r*Math.PI/2;g.traverse(o=>{if(o.isMesh&&o.material!==OL){o.castShadow=true;o.receiveShadow=true;}});g.userData.fl=fl;L.items.add(g);
+    const g=buildFurn(shl?'shellshelf':t,HEX.test(c)?c:null);g.position.set(ox+x,0,L.oz+z);g.rotation.y=r*Math.PI/2;g.traverse(o=>{if(o.isMesh&&o.material!==OL){o.castShadow=true;o.receiveShadow=true;}});g.userData.fl=fl;g.userData.row={t,x,z,r,fl};L.items.add(g);
     if(shl)shelfShow(g,+sn.slice(1));   /* 🐚 their shells, not yours */
     if(F.use==='lamp')setLamp({g,it:{on:on==='1'}});
     const R=fpRect(t,x,z,r),rect={x1:ox+R.x1,z1:L.oz+R.z1,x2:ox+R.x2,z2:L.oz+R.z2};if(!F.flat)L.dcols.push(rect);
@@ -4646,7 +4655,7 @@ function hostAnswer(ok,quiet){const q=HOST.cur;if(!q)return;HOST.cur=null;const 
   else if(!quiet)toast('💛 Okay! '+q.nm+' can try again later.',2.4);
   setTimeout(hostCard,700);}
 function mpTick(dt){if(!MP.grp)return;const loc=CUR?CUR.id:'city';
-  MP.t+=dt;if(MP.t>=.15){MP.t=0;const st={nm:S.name||'Friend',lk:packLook(),loc,x:Math.round(P.x*100)/100,z:Math.round(P.z*100)/100,ry:Math.round((P.sit&&P.sit.bus?P.sit.yaw:P.yaw)*100)/100,mv:P.moving?1:0};   /* (on the bus your body faces forward on the seat, wherever you look) */
+  MP.t+=dt;if(MP.t>=.15){MP.t=0;const st={nm:S.name||'Friend',lk:packLook(),loc,x:Math.round(P.x*100)/100,z:Math.round(P.z*100)/100,ry:Math.round((P.sit&&P.sit.bus?P.sit.yaw:P.yaw)*100)/100,mv:P.moving?1:0,v:COZY_BUILD};   /* v: my version stamp (run 4, job 2): a friend with none or a smaller one shows ⏳ older version */   /* (on the bus your body faces forward on the seat, wherever you look) */
     {const b=LOC.city.ball,m=S.match||{l:0,r:0,v:0},r2=v=>Math.round(v*100)/100;st.sc=[m.l|0,m.r|0,m.v|0];st.bl=BS.mine&&b?[r2(b.x),r2(b.z),r2(b.vx),r2(b.vz),BS.k,Math.round((b.reset||0)*10)/10]:null;}
     st.zz=zzIn()?1:null;st.aw=AW.on?1:null;st.st=P.sit&&!P.sit.bed&&!P.sit.bus?1:null;   /* 🪑 sitting on a bench or a chair; 😴 zz: in bed (optional; null clears them: presence merges) */
     mpStamp(st);   /* 🦘 jumps, 🐾 pets with me (optional) */
@@ -4727,7 +4736,7 @@ function mpPhone(){
   const say=`<p class="ph-sub" style="margin-top:12px">Say something:</p><div class="qmsg">${QUICK.map((q,i)=>`<button class="pill" data-a="mpsay:${i}">${esc(q)}</button>`).join('')}</div><div class="qmsg">${EMOS.map((e,i)=>`<button class="emo" data-a="mpemo:${i}">${e}</button>`).join('')}</div>`;
   return`<p class="ph-sub">🟢 You are online! Everyone who opens Cozy Town plays in this world with you.</p>
     <p class="ph-sub" style="margin-top:10px">${list.length?'Playing now:':'No friends are playing right now. When they open Cozy Town, they will show up here! 💗'}</p>
-    ${list.map((a,i)=>`<div class="ph-row"><span>⭐ ${esc(a.nm)}<br><small>${placeOf(a)}</small></span><span style="display:flex;gap:6px;flex:none"><button class="btn mint sm" data-a="mpgo:${i}">🚀 Go</button><button class="btn sm" data-a="mpvisit:${i}" aria-label="Visit their house">🏠</button></span></div>`).join('')}${list.length?say:''}`;}
+    ${list.map((a,i)=>`<div class="ph-row"><span>⭐ ${esc(a.nm)}${a.old?' <small>⏳ older version</small>':''}<br><small>${placeOf(a)}</small></span><span style="display:flex;gap:6px;flex:none"><button class="btn mint sm" data-a="mpgo:${i}">🚀 Go</button><button class="btn sm" data-a="mpvisit:${i}" aria-label="Visit their house">🏠</button></span></div>`).join('')}${list.length?say:''}`;}
 function openChat(){if(!MP.grp)return;openPanel(`<div class="hd"><h2>💬 Say something</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
   <div class="qmsg">${QUICK.map((q,i)=>`<button class="pill" data-a="mpsay:${i}">${esc(q)}</button>`).join('')}</div><div class="qmsg">${EMOS.map((e,i)=>`<button class="emo" data-a="mpemo:${i}">${e}</button>`).join('')}</div>`,{bottom:true});}
 
@@ -5085,7 +5094,17 @@ async function updFetch(url,mode){const ac=window.AbortController?new AbortContr
 async function updCheck(){const now=performance.now();if(!UPD.on||UPD.busy||UPD.go||now-UPD.last<20000)return;UPD.last=now;UPD.busy=true;
   const t=await updFetch(location.pathname+'?cz='+Date.now(),'no-store');UPD.busy=false;if(t==null)return;   /* offline, 404, too slow: try again next time */
   const f=updRead(t);if(f&&(f.n>COZY_BUILD||f.n===COZY_BUILD&&!!updMine()&&f.id!==updMine())){UPD.newer=f;if(!UPD.iv)UPD.iv=setInterval(updAct,500);updAct();}}   /* found once = stays until tapped */
-function updAct(){if(UPD.go)return;const f=UPD.newer;if(f&&!PLAYING&&!UI.open&&!document.body.classList.contains('bookopen')&&navigator.onLine!==false&&performance.now()-UPD.fail>60000&&!updTried(f.id)){updGo(true);return;}updPill();}
+/* ✨ run 4, job 2 (item 27): a newer file found while playing is taken by itself at the next calm moment: never during a card, a scene (a client's visit, a class, the Pet Show,
+   the claw machine), the bus, a photo shoot, a dance round, a scare on the spooky path, typing, in bed, decorating, on the stairs or in the character maker. A short
+   "✨ Updating Cozy Town…" note shows first (1.4 s), then the game saves and reloads. At most once per new version per session (updTried: the loop guard); after that the button shows */
+function updCalm(){return!!(S&&S.intro)&&!UI.open&&!CUT&&!CR&&!TUT&&!DTUT&&!BUS.ride&&!fading&&!CLIMB&&!DECO.on&&!zzIn()&&!kbTyping()&&!$('hud').hidden&&!!CUR&&CUR.id!=='client'&&CUR.id!=='studio'
+  &&!(typeof SPOOK!=='undefined'&&(SPOOK.cur||(SPOOK.on&&SPOOK.near&&SPOOK.near())))&&!(typeof PHO!=='undefined'&&PHO&&PHO.on)&&!(typeof DANCE!=='undefined'&&DANCE&&DANCE.on)&&!(typeof TN!=='undefined'&&TN.on)
+  &&!(typeof HS!=='undefined'&&HS.cust)&&!(typeof dlCarrying==='function'&&dlCarrying())&&!(typeof KC!=='undefined'&&KC.on);}
+function updAct(){if(UPD.go)return;const f=UPD.newer;
+  if(f&&navigator.onLine!==false&&performance.now()-UPD.fail>60000&&!updTried(f.id)){
+    if(!PLAYING&&!UI.open&&!document.body.classList.contains('bookopen')){updGo(true);return;}
+    if(PLAYING&&updCalm()){if(!UPD.note){UPD.note=performance.now();toast('✨ Updating Cozy Town… your game is saved 💾',3.4);}else if(performance.now()-UPD.note>1400){updGo(true);return;}return;}}
+  UPD.note=0;updPill();}
 function updPill(){const f=UPD.newer,T=$('title');let b=$('updBtn');
   const on=!!f&&(PLAYING?!!(S&&S.intro)&&!UI.open&&!CUT&&!CR&&!TUT&&!DTUT&&!BUS.ride&&!$('hud').hidden:!T.hidden&&!UI.open&&!document.body.classList.contains('bookopen'));   /* waits while a card, a show, a lesson or a bus ride is on (and on short phone screens while the action button is up: no room) */
   if(!on){if(b&&!b.hidden){b.hidden=true;T.classList.toggle('upd',!!$('tUpd'));}return;}
