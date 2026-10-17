@@ -725,6 +725,7 @@ const SFX={
   aww(){tone(587,.16,'sine',.08,0,466);tone(466,.24,'sine',.07,.15,392);},
   ring(){for(let k=0;k<2;k++)for(let i=0;i<8;i++)tone(i%2?1047:1319,.06,'triangle',.11,k*.75+i*.07);},
   boo(){tone(190,.34,'sine',.11,0,95);tone(760,.14,'triangle',.035,.04,260);},   /* 👻 a soft, friendly BOO */
+  spook(k){if(k==='skel'){for(let i=0;i<4;i++)tone(1400+i*120,.03,'triangle',.05,i*.07);}else if(k==='zombie')tone(120,.5,'sine',.1,0,88);else if(k==='bats'){for(let i=0;i<6;i++)tone(900+(i%2)*200,.025,'square',.018,i*.06);}else if(k==='pumpkin'){tone(240,.4,'sine',.09,0,180);tone(480,.12,'triangle',.03,.1,360);}else this.boo();},   /* 👻💀🧟🦇🎃 soft scare sounds (run 4): quiet and short */
 };
 function playTune(){const s=[0,4,7,12,7,4,5,9,12,9,7,4,0];s.forEach((n,i)=>tone(523.25*Math.pow(2,n/12),.3,'triangle',.13,i*.2));}
 
@@ -848,6 +849,15 @@ function hairFor(h,L){
   if(s==='pigtails'){sph(h,.13,c,-.35,.2,-.05);sph(h,.13,c,.35,.2,-.05);sph(h,.05,'#ffd45c',-.29,.29,.02,{ol:.012});sph(h,.05,'#ffd45c',.29,.29,.02,{ol:.012});}
   if(s==='curly')for(const [x,z] of [[-.17,.12],[0,.15],[.17,.12],[-.2,-.08],[0,-.05],[.2,-.08],[-.1,-.2],[.1,-.2]])sph(h,.13,c,x,.5,z,{ws:10,hs:8});
 }
+/* 🎃 Halloween costumes (run 4, job 3): a hooded onesie over the clothes (the face stays open), with ears, a tail, spikes or a ghostly hem. Cheap boxes, baked with the body */
+const COSTUMES={cat:{c:'#8e8e9e',n:'Cat'},dog:{c:'#b07a52',n:'Dog'},ghost:{c:'#f4f2ff',n:'Ghost'},dino:{c:'#5fbf74',n:'Dinosaur'}};
+function costumeFor(b,head,legs,arms,k){const C=COSTUMES[k].c,D=shade(C,-.14),o={ol:.012};
+  box(b,.5,.54,.32,C,0,.59,0,o);for(const hip of legs)box(hip,.21,.5,.23,C,0,-.5,0,o);for(const sh of arms)box(sh,.17,.4,.19,C,0,-.4,0,o);   /* the onesie */
+  box(head,.56,.5,.5,C,0,.03,-.08,o);   /* the hood: open at the face */
+  if(k==='cat'){for(const s of[-1,1]){cone(head,.09,.17,C,s*.17,.5,-.06,{seg:4,...o});cone(head,.05,.1,'#ffb3c7',s*.17,.52,-.03,{seg:4,ol:false});}cyl(b,.035,.05,.55,C,0,.42,-.26,{rx:-1.1,center:true,seg:6,...o});sph(b,.055,D,0,.69,-.47,{ws:6,hs:5,ol:false});box(b,.26,.32,.02,'#f6f0ff',0,.6,.165,{ol:false});}
+  else if(k==='dog'){for(const s of[-1,1])box(head,.11,.28,.06,D,s*.31,.06,-.06,{rz:s*.22,...o});cyl(b,.04,.06,.36,C,0,.5,-.2,{rx:-.7,center:true,seg:6,...o});box(b,.26,.34,.02,'#f6e6c8',0,.58,.165,{ol:false});sph(head,.05,'#2e2347',0,-.07,.245,{ws:6,hs:5,ol:false});}
+  else if(k==='ghost'){for(const [x,z] of[[-.17,.12],[.17,.12],[-.17,-.12],[.17,-.12],[0,.17],[0,-.17]])sph(b,.1,C,x,.34,z,{ws:7,hs:5,ol:false});box(head,.6,.1,.54,C,0,.27,-.08,{ol:false});}
+  else if(k==='dino'){for(let i=0;i<3;i++)cone(head,.06,.14,D,0,.31,-.22+i*.12,{seg:4,...o});for(let i=0;i<4;i++)cone(b,.05,.12,D,0,.98-i*.16,-.17,{rx:-.5,seg:4,...o});cone(b,.11,.62,C,0,.4,-.44,{rx:-1.35,center:true,seg:7,...o});for(let i=0;i<3;i++)cone(b,.04,.1,D,0,.5-i*.07,-.36-i*.14,{rx:-.4,seg:4,ol:false});box(b,.3,.4,.02,'#ffe08a',0,.6,.165,{ol:false});}}
 function makePerson(L){
   const root=new THREE.Group(),b=new THREE.Group();root.add(b);b.scale.setScalar(L.scale||1);
   const legs=[],arms=[];
@@ -865,6 +875,7 @@ function makePerson(L){
   box(head,.1,.028,.01,INK,0,.085,fz,{ol:false});}
   hairFor(head,L);
   if(L.hat&&L.hat!=='none')hatFor(head,L.hat,L.hatc);if(L.glasses&&L.glasses!=='none')glassesFor(head,L.glasses,L.glc);
+  if(L.co&&COSTUMES[L.co])costumeFor(b,head,legs,arms,L.co);   /* 🎃 a costume over the clothes (run 4, job 3) */
   root.traverse(o=>{if(o.isMesh&&o.material===OL)o.material=OLP;});
   return {root,b,legs,arms,head,phase:Math.random()*6,wave:0};
 }
@@ -1854,7 +1865,7 @@ function buildCity(){
   for(const [x,z] of [[-36,12.5],[-11.5,16],[-37.4,16.2],[-37.6,27.7],[-11.5,28],[-16,37.5],[-26,37.5],[-20,35.5],[-36,37.5],[-12.5,37.5]]){tree(st,x,z,1);colC(L,x,z,.28);}
   foodTruck(st,L,TRUCK.x,TRUCK.z);   /* 🍔 the food truck, by the fountain benches */
   L.beds=[{id:'h1',x:-19.8,z:-10.6,ix:-19.8,iz:-9.9,yard:1},{id:'h2',x:-14.2,z:-10.6,ix:-14.2,iz:-9.9,yard:1}];   /* h1, h2: the flower beds in front of your house (on Friends Lane) */
-  for(const [i,sx,sz] of [[1,1,-1],[2,-1,-1],[3,-1,1],[4,1,1]]){const x=fx+sx*8.84,z=fz+sz*8.84;flowerBed(st,x,z,1.8,1.0);col(L,x-.95,z-.55,x+.95,z+.55);L.beds.push({id:'p'+i,x,z,ix:x,iz:z+(sz>0?-.9:.9)});}
+  for(const [i,sx,sz] of [[1,1,-1],[2,-1,-1],[3,-1,1],[4,1,1]]){const x=fx+sx*8.84,z=fz+sz*8.84;flowerBed(st,x,z,1.8,1.0);col(L,x-.95,z-.55,x+.95,z+.55);RAISED.push({x,z,w:1.8,d:1.0,h:.22});L.beds.push({id:'p'+i,x,z,ix:x,iz:z+(sz>0?-.9:.9)});}
   bench(st,-13,34.6,Math.PI);bench(st,-10,34.6,Math.PI);col(L,-14,34.2,-9,35.1);
   // playground
   const sl=new THREE.Group();sl.position.set(-37.2,0,31.5);st.add(sl);
@@ -2882,7 +2893,7 @@ function flowerCorner(L,st){const x1=-23.4,x2=-10.6,z1=-24.5,z2=-7.0,HG='#5fbf74
   tree(st,-20.2,-18.6,1.1);BENCH_SKIP=1;bench(st,-17.4,-15.6,0);BENCH_SKIP=0;   /* (nobody can reach this bench: it is inside the hedge) */
   for(const [x,z] of [[-17,-7.9],[-17.35,-9.25],[-16.95,-10.6],[-17.3,-11.95],[-17.05,-13.3],[-17.35,-14.6]])disc(st,.36,'#e9e0f7',x,.03,z,{seg:14});
   {const x=-13.4,z=-16.4;cyl(st,.1,.14,.75,'#e9e0f7',x,0,z,{seg:10,ol:.015});cyl(st,.46,.3,.15,'#e9e0f7',x,.75,z,{seg:16,ol:.015});disc(st,.38,'#9fd8f2',x,.905,z,{seg:16});}
-  for(const [x,z,R] of [[-21.2,-9.7,1.1],[-12.8,-9.7,1.1],[-12.9,-21.6,1.2],[-21.3,-22.3,1.0],[-15.5,-20.2,.9]]){sph(st,R,'#6cc97c',x,0,z,{s:[1,.32,1],ws:12,hs:6});
+  for(const [x,z,R] of [[-21.2,-9.7,1.1],[-12.8,-9.7,1.1],[-12.9,-21.6,1.2],[-21.3,-22.3,1.0],[-15.5,-20.2,.9]]){sph(st,R,'#6cc97c',x,0,z,{s:[1,.32,1],ws:12,hs:6});RAISED.push({x,z,R,h:R*.32});
     for(let k=0;k<Math.round(R*13);k++){const a=r()*TAU,d=Math.sqrt(r())*R*.8;sph(st,.09,FLOWER_COLS[k%5],x+Math.cos(a)*d,.2+(1-d/R)*.12+R*.06,z+Math.sin(a)*d,{ws:6,hs:4,ol:false});}}
   for(const [x,z] of [[-22.2,-13.8],[-11.8,-13.4]]){const c='#5fbf74';sph(st,.6,c,x,.4,z,{ws:10,hs:8});sph(st,.45,c,x+.45,.32,z+.2,{ws:10,hs:8});sph(st,.42,c,x-.35,.3,z-.25,{ws:10,hs:8});}
   for(const x of[-22.05,-19.95])box(st,.1,1.55,.1,'#ffffff',x,0,-7.3,{ol:.015});box(st,2.3,.62,.08,'#ffffff',-21,1.05,-7.3,{ol:.02});
@@ -3368,7 +3379,9 @@ const CLOTHES={dress:{n:'Dresses',i:'👗',p:120},sweaters:{n:'6 new sweater col
   headphones:{n:'Headphones',i:'🎧',p:120,hat:1,cols:['#ff7aa8','#7cc8ff','#5fd4b0','#ffd45c','#2e2347']},tiara:{n:'Tiara',i:'💎',p:180,hat:1,cols:['#ff7aa8','#7cc8ff','#b79cff']},
   flower:{n:'Hair flower',i:'🌺',p:60,hat:1,cols:['#ff7aa8','#ff6b6b','#ffffff','#ffd45c','#b79cff']},halo:{n:'Angel halo',i:'😇',p:100,hat:1,cols:['#ffd45c','#ffffff','#ff9ec4']},
   unicorn:{n:'Unicorn headband',i:'🦄',p:110,hat:1,cols:['#ffffff','#ff9ec4','#b79cff','#7cc8ff']},beret:{n:'Beret',i:'🎨',p:70,hat:1,cols:['#ff6b6b','#2e2347','#ff9ec4','#5fd4b0']},crown:{n:'Crown',i:'👑',p:400,hat:1,cols:['#ffd45c','#d8dcea','#ff9ec4']},
-  glasses:{n:'Glasses',i:'👓',p:60,gl:1,cols:['#3d2c5e','#ff7aa8','#7cc8ff','#ffd45c']},sunglasses:{n:'Sunglasses',i:'🕶️',p:80,gl:1,cols:['#2e2347','#ff7aa8','#5fa8ff','#ffd45c']},hearts:{n:'Heart glasses',i:'💖',p:70,gl:1,cols:['#ff4d8d','#ff7aa8','#b79cff']}};
+  glasses:{n:'Glasses',i:'👓',p:60,gl:1,cols:['#3d2c5e','#ff7aa8','#7cc8ff','#ffd45c']},sunglasses:{n:'Sunglasses',i:'🕶️',p:80,gl:1,cols:['#2e2347','#ff7aa8','#5fa8ff','#ffd45c']},hearts:{n:'Heart glasses',i:'💖',p:70,gl:1,cols:['#ff4d8d','#ff7aa8','#b79cff']},
+  /* 🎃 Halloween costumes (run 4, job 3): in the Clothes Shop in October only; worn over your clothes (one tap on, one tap off at the mirror); kept after October */
+  co_cat:{n:'Cat costume',i:'🐈',p:160,co:'cat',oct:1},co_dog:{n:'Dog costume',i:'🐕',p:160,co:'dog',oct:1},co_ghost:{n:'Ghost costume',i:'👻',p:160,co:'ghost',oct:1},co_dino:{n:'Dinosaur costume',i:'🦖',p:180,co:'dino',oct:1}};
 function variants(k){return(S.outfits||[]).filter(v=>v.k===k);}
 function owns(k){const C=CLOTHES[k];if(C&&(C.hat||C.gl))return variants(k).length>0;return !!(S.wardrobe&&S.wardrobe[k]);}
 function lookOpts(k){let base=LOOK_OPTS[k];if(k==='top'&&owns('sweaters'))base=base.concat(CLOTHES.sweaters.cols);if(k==='bottom'&&owns('pants'))base=base.concat(CLOTHES.pants.cols);if(k==='shoes'&&owns('shoes'))base=base.concat(CLOTHES.shoes.cols);const x=S&&S.xcol&&S.xcol[k];return x&&x.length?base.concat(x.filter(c=>!base.includes(c))):base;}
@@ -3376,7 +3389,7 @@ const LOOK_OPTS={eyes:[['round','Round'],['happy','Happy'],['sleepy','Sleepy'],[
   mouth:[['smile','Smile'],['grin','Big grin'],['small','Small'],['cat','Kitty']],
   style:[['long','Long'],['bob','Bob'],['short','Short'],['ponytail','Ponytail'],['bun','Bun'],['pigtails','Pigtails'],['curly','Curly']],
   hair:['#704d2d','#8d6238','#c5874a','#ffa760'],top:['#fdc1fa','#fe8cf8','#34bffc','#36a4fe'],bottom:['#37a4fc','#35bffb'],shoes:['#8c6137','#232028']};
-function lookToPerson(l){l=Object.assign({},DEFAULT_LOOK,l||{});return{hatc:l.hatc,glc:l.glc,skin:l.skin,hair:l.hair,hair2:shade(l.hair,-.1),style:l.style,eyes:l.eyes,mouth:l.mouth,top:l.top,sleeve:shade(l.top,-.11),bottom:l.bottom,shoes:l.shoes,round:true,swoop:l.style==='long'||l.style==='bob',dress:l.outfit==='dress',hat:l.hat,glasses:l.glasses};}
+function lookToPerson(l){l=Object.assign({},DEFAULT_LOOK,l||{});return{co:COSTUMES[l.co]?l.co:null,hatc:l.hatc,glc:l.glc,skin:l.skin,hair:l.hair,hair2:shade(l.hair,-.1),style:l.style,eyes:l.eyes,mouth:l.mouth,top:l.top,sleeve:shade(l.top,-.11),bottom:l.bottom,shoes:l.shoes,round:true,swoop:l.style==='long'||l.style==='bob',dress:l.outfit==='dress',hat:l.hat,glasses:l.glasses};}
 let CLO={sel:null,col:null};
 function openClothes(){S.wardrobe=S.wardrobe||{};S.outfits=S.outfits||[];
   let body;if(CLO.sel){const C=CLOTHES[CLO.sel],have=variants(CLO.sel).map(v=>v.c);
@@ -3384,7 +3397,7 @@ function openClothes(){S.wardrobe=S.wardrobe||{};S.outfits=S.outfits||[];
       <p class="note" style="text-align:center">Pick a color${have.length?' (✔ = you have it)':''}</p><div class="swrow" style="justify-content:center">${C.cols.map(c=>`<button class="sw ${c===CLO.col?'on':''}" style="background:${c}" data-a="clocol:${c}" aria-label="Color">${have.includes(c)?'✔':''}</button>`).join('')}</div>
       <div class="row" style="justify-content:center"><button class="btn mint" data-a="clobuy" ${S.coins<C.p?'disabled':''}>Buy it</button><button class="btn white" data-a="cloback">Back</button></div>${S.coins<C.p?'<p class="note" style="text-align:center">Not enough coins yet.</p>':''}`;}
   else body=newInHTML('clothes')+`<div class="sec">All clothes</div><p class="note">Hats and glasses come in lots of colors. Try them on at the 🪞 mirror.</p>
-    <div class="grid" style="margin-top:10px">${Object.entries(CLOTHES).map(([k,c])=>{const n=(c.hat||c.gl)?variants(k).length:0,mine=!(c.hat||c.gl)&&owns(k);
+    ${HOL.cur==='halloween'?'<p class="note">🎃 Costumes are here for October! Wear one over your clothes at the 🪞 mirror.</p>':''}<div class="grid" style="margin-top:10px">${Object.entries(CLOTHES).filter(([k,c])=>!c.oct||HOL.cur==='halloween'||owns(k)).map(([k,c])=>{const n=(c.hat||c.gl)?variants(k).length:0,mine=!(c.hat||c.gl)&&owns(k);
       return`<button class="it" data-a="cloth:${k}"><span class="em">${c.i}</span><span>${c.n}</span><span class="pr">${mine?'✔ Yours':c.p+' 🪙'}</span>${n?`<span class="have">You have ${n}</span>`:''}</button>`;}).join('')}</div>`;
   openPanel(`<div class="hd"><h2>👗 Clothing store</h2><div class="chip">🪙 <b id="pc">${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>${shutNote('clothes')}${body}`,{onClose:()=>{CLO.sel=null;}});}
 const TASKS=[
@@ -4490,8 +4503,8 @@ const HEX=/^#[0-9a-f]{6}$/i;
 function cleanName(n){return(typeof n==='string'?n:'').replace(/[^\p{L}\p{N} _.'-]/gu,'').trim().slice(0,14)||'Friend';}
 function cleanLook(l){const o=Object.assign({},DEFAULT_LOOK);if(!l||typeof l!=='object')return o;for(const k of['skin','hair','top','bottom','shoes'])if(HEX.test(l[k]))o[k]=l[k];
   for(const k of['style','eyes','mouth'])if(LOOK_OPTS[k].some(([v])=>v===l[k]))o[k]=l[k];o.outfit=l.outfit==='dress'?'dress':'sweater';
-  o.hat=CLOTHES[l.hat]&&CLOTHES[l.hat].hat?l.hat:'none';o.hatc=HEX.test(l.hatc)?l.hatc:null;o.glasses=CLOTHES[l.glasses]&&CLOTHES[l.glasses].gl?l.glasses:'none';o.glc=HEX.test(l.glc)?l.glc:null;return o;}
-function packLook(){const l=Object.assign({},DEFAULT_LOOK,S.look||{});const o={};for(const k of['skin','hair','style','eyes','mouth','top','bottom','shoes','outfit','hat','hatc','glasses','glc'])if(typeof l[k]==='string')o[k]=l[k];return o;}
+  o.hat=CLOTHES[l.hat]&&CLOTHES[l.hat].hat?l.hat:'none';o.hatc=HEX.test(l.hatc)?l.hatc:null;o.glasses=CLOTHES[l.glasses]&&CLOTHES[l.glasses].gl?l.glasses:'none';o.glc=HEX.test(l.glc)?l.glc:null;o.co=COSTUMES[l.co]?l.co:null;return o;}
+function packLook(){const l=Object.assign({},DEFAULT_LOOK,S.look||{});const o={};for(const k of['skin','hair','style','eyes','mouth','top','bottom','shoes','outfit','hat','hatc','glasses','glc','co'])if(typeof l[k]==='string')o[k]=l[k];return o;}   /* co: a costume (run 4; old versions ignore it and show the clothes) */
 function mpUI(){if(PH.app==='mp'&&UI.open)renderPhone();}
 async function mpConnect(){if(MP.grp||MP.state==='connecting')return;MP.state='connecting';mpUI();let r=null;
   try{const use=window.claude&&typeof window.claude.use==='function'?window.claude.use.bind(window.claude):null;r=await(MP.tries===0&&EARLY.room?EARLY.room:use?use('room'):(window.WEBROOM?window.WEBROOM():null));}catch(e){r=null;}
@@ -5261,6 +5274,7 @@ function updatePlayer(dt){
   if(P.jy>0||P.vy>0){P.vy-=18*dt;P.jy+=P.vy*dt;if(P.jy<=0){P.jy=0;P.vy=0;P.dip=.07;SFX.land();}}
   P.dip=Math.max(0,P.dip-dt*.5);
   if(UI.open||!PLAYING||CUT||CLIMB||TUT||DTUT){P.moving=false;return;}
+  if(P.freeze>0){P.freeze-=dt;P.moving=false;return;}   /* 👻 a scare: you stop for a moment (run 4, job 3) */
   if(P.ride){P.moving=false;if(P.ride.kind==='swing'){const K=IN.keys,jm=IN.joy.id!==null?Math.hypot(IN.joy.x,IN.joy.y):0;if(jm>.5||K.KeyW||K.KeyS||K.KeyA||K.KeyD||K.ArrowUp||K.ArrowDown)stopRide();}return;}
   let f=0,s=0;if(IN.joy.id!==null){f=-IN.joy.y;s=IN.joy.x;}
   const K=IN.keys;f+=(K.KeyW||K.ArrowUp?1:0)-(K.KeyS||K.ArrowDown?1:0);s+=(K.KeyD?1:0)-(K.KeyA?1:0);
@@ -5287,7 +5301,9 @@ function updateCamera(dt){const bob=P.moving&&P.jy<=0?Math.sin(P.bobT)*.04:0;P.b
   if(PB){const show=PLAYING&&!P.sit&&!CR&&!P.ride;PB.root.visible=show;if(show){const fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw);PB.root.position.set(P.x-fx*.13,P.jy+(P.cy||0),P.z-fz*.13);PB.root.rotation.y=P.yaw+Math.PI;animPerson(PB,dt,P.moving&&P.jy<=0,P.run?1.5:1);
     if(P.jy>0){PB.legs[0].rotation.x=.55;PB.legs[1].rotation.x=-.25;}}}
   if(P.sit){P.x=P.sit.x;P.z=P.sit.z;}
-  camera.position.set(P.x,(P.sit?P.sit.h||1.05:1.5)+P.bobA+P.jy-P.dip+(P.cy||0),P.z);ballLook(dt);camera.rotation.set(P.pitch+BLK.a,P.yaw,0,'YXZ');}
+  camera.position.set(P.x,(P.sit?P.sit.h||1.05:1.5)+P.bobA+P.jy-P.dip+(P.cy||0),P.z);ballLook(dt);camera.rotation.set(P.pitch+BLK.a,P.yaw,0,'YXZ');
+  if(SHAKE.t>0){SHAKE.t-=dt;const a=SHAKE.t*.08;camera.position.x+=rand(-a,a);camera.position.y+=rand(-a,a)*.5;camera.rotation.z+=rand(-a,a)*.3;}}   /* 👻 a little shake at a scare (run 4) */
+const SHAKE={t:0};
 /* ⚽ while the ball is your kick target the view dips a little, so you see the ball, its glow and the arrow (a = extra tilt, not your own look;
    when you look around yourself the tilt becomes yours and the helper waits a moment, so it never fights your finger) */
 const BLK={a:0,q:0};
@@ -5423,7 +5439,7 @@ ACT.tnGo=()=>{closePanel();tnStart();};
 ACT.fbTeam=()=>fbStart('team');ACT.fbDuel=()=>fbStart('duel');ACT.fbJuice=()=>fbJuice();ACT.fbAgain=()=>fbStart(FB.lastM);
 ACT.cloth=k=>{const c=CLOTHES[k];if(!c)return;SFX.tap();
   if(c.hat||c.gl){CLO.sel=k;CLO.col=c.cols.find(x=>!variants(k).some(v=>v.c===x))||c.cols[0];openClothes();return;}
-  if(owns(k)){toast(c.i+' You have these already! Try them on at the 🪞 mirror.',3);return;}if(shutBuy('clothes'))return;
+  if(owns(k)){toast(c.i+' You have these already! Try them on at the 🪞 mirror.',3);return;}if(c.oct&&HOL.cur!=='halloween'){toast('🎃 Costumes come back in October!',3);return;}if(shutBuy('clothes'))return;
   if(S.coins<c.p){SFX.no();toast('Not enough coins yet! 🪙');return;}S.coins-=c.p;S.wardrobe[k]=1;SFX.coin();SFX.yay();toast(c.i+' '+c.n+': it\'s yours! Try it on at the mirror. 🪞',3.2);qEvent('clothes');qEvent('buy:'+k);change();openClothes();};
 ACT.clocol=c=>{CLO.col=c;openClothes();};
 ACT.cloback=()=>{CLO.sel=null;openClothes();};
@@ -6210,19 +6226,19 @@ function crTag(){if(CR.tag){if(CR.tag.parent)CR.tag.parent.remove(CR.tag);CR.tag
 function renderCreator(){const L=CR.look;
   const sw=k=>lookOpts(k).map(c=>`<button class="sw ${L[k]===c?'on':''}" style="background:${c}" data-a="lk:${k}:${c}" aria-label="Color"></button>`).join('');
   const own=f=>[['none','None']].concat((S.outfits||[]).filter(v=>CLOTHES[v.k]&&CLOTHES[v.k][f]).map(v=>[v.k+'|'+v.c,`${CLOTHES[v.k].i} ${CLOTHES[v.k].n} <i class="dot" style="background:${v.c}"></i>`]));
-  const cur=k=>k==='hat'?(L.hat&&L.hat!=='none'?L.hat+'|'+(L.hatc||HAT_DEF[L.hat]):'none'):k==='glasses'?(L.glasses&&L.glasses!=='none'?L.glasses+'|'+(L.glc||HAT_DEF[L.glasses]):'none'):L[k];
+  const cur=k=>k==='hat'?(L.hat&&L.hat!=='none'?L.hat+'|'+(L.hatc||HAT_DEF[L.hat]):'none'):k==='glasses'?(L.glasses&&L.glasses!=='none'?L.glasses+'|'+(L.glc||HAT_DEF[L.glasses]):'none'):k==='co'?(L.co||'none'):L[k];
   const pl2=(k,opts)=>opts.map(([v,n])=>`<button class="pill ${cur(k)===v?'on':''}" data-a="lk:${k}:${v}">${n}</button>`).join('');
   const pl=k=>LOOK_OPTS[k].map(([v,n])=>`<button class="pill ${L[k]===v?'on':''}" data-a="lk:${k}:${v}">${n}</button>`).join('');
   const row=(lab,inner,k)=>`<div class="crow" data-k="${k}"><span class="cl">${lab}</span><div class="chs">${inner}</div></div>`;
   openPanel(`<div class="cr"><input class="inp crname" id="crName" maxlength="14" placeholder="Type your name" value="${esc(CR.name)}" autocomplete="off" aria-label="Your name">
     <p class="note crhint" id="crHint" hidden>Type your name first!</p>
     ${row('Eyes',pl('eyes'),'eyes')}${row('Skin tone',sw('skin'),'skin')}${row('Mouth',pl('mouth'),'mouth')}${row('Hair',pl('style'),'style')}
-    ${row('Hair color',sw('hair'),'hair')}${owns('dress')?row('Outfit',pl2('outfit',[['sweater','👚 Sweater & pants'],['dress','👗 Dress']]),'outfit'):''}${own('hat').length>1?row('Hat',pl2('hat',own('hat')),'hat'):''}${own('gl').length>1?row('Glasses',pl2('glasses',own('gl')),'glasses'):''}${row('Sweater color',sw('top'),'top')}${row('Pants color',sw('bottom'),'bottom')}${row('Shoe color',sw('shoes'),'shoes')}
+    ${row('Hair color',sw('hair'),'hair')}${owns('dress')?row('Outfit',pl2('outfit',[['sweater','👚 Sweater & pants'],['dress','👗 Dress']]),'outfit'):''}${own('hat').length>1?row('Hat',pl2('hat',own('hat')),'hat'):''}${own('gl').length>1?row('Glasses',pl2('glasses',own('gl')),'glasses'):''}${Object.keys(CLOTHES).some(k=>CLOTHES[k].co&&owns(k))?row('Costume',pl2('co',[['none','None']].concat(Object.keys(CLOTHES).filter(k=>CLOTHES[k].co&&owns(k)).map(k=>[CLOTHES[k].co,CLOTHES[k].i+' '+CLOTHES[k].n]))),'co'):''}${row('Sweater color',sw('top'),'top')}${row('Pants color',sw('bottom'),'bottom')}${row('Shoe color',sw('shoes'),'shoes')}
     ${Object.keys(CLOTHES).some(k=>!owns(k))?'<p class="note" style="text-align:center">Get dresses, hats and more at the 👗 clothing store!</p>':''}
     <div class="row crsave"><button class="btn mint big crgo" data-a="crdone">That's me! ✨</button>${CR.mode==='edit'?'<button class="btn white" data-a="crcancel">Cancel</button>':''}</div></div>`,{lock:true,side:true});
   const n=$('crName');n.addEventListener('input',()=>{CR.name=n.value.trim().slice(0,14);crTag();$('crHint').hidden=true;});n.addEventListener('keydown',e=>{if(e.key==='Enter')n.blur();});}
-ACT.lk=arg=>{const i=arg.indexOf(':'),k=arg.slice(0,i),v=arg.slice(i+1);
-  if(k==='hat'||k==='glasses'){const [a,c]=v.split('|');CR.look[k]=a;if(k==='hat')CR.look.hatc=c||null;else CR.look.glc=c||null;}else CR.look[k]=v;crAvatar();CR.av.wave=.7;SFX.pop();
+ACT.lk=arg=>{const i=arg.indexOf(':'),k=arg.slice(0,i);let v=arg.slice(i+1);
+  if(k==='hat'||k==='glasses'){const [a,c]=v.split('|');CR.look[k]=a;if(k==='hat')CR.look.hatc=c||null;else CR.look.glc=c||null;}else if(k==='co'){if(v===(CR.look.co||'none'))v='none';CR.look.co=v==='none'?null:v;}else CR.look[k]=v;crAvatar();CR.av.wave=.7;SFX.pop();   /* 🎃 a costume: one tap on, the same tap off */
   const row=document.querySelector(`.crow[data-k="${k}"]`);if(row)row.querySelectorAll('[data-a]').forEach(b=>b.classList.toggle('on',b.dataset.a==='lk:'+k+':'+v));};
 ACT.crdone=()=>{const n=$('crName'),nm=(n.value||'').trim().slice(0,14);if(!nm){$('crHint').hidden=false;n.focus();SFX.no();return;}
   n.blur();S.name=nm;S.look=Object.assign({},CR.look);SFX.yay();const mode=CR.mode;closePanel();if(S.look.hat&&S.look.hat!=='none')qEvent('wear:'+S.look.hat);if(S.look.glasses&&S.look.glasses!=='none')qEvent('wear:'+S.look.glasses);
@@ -7581,17 +7597,22 @@ function bdTick(dt){const f=FRIEND_ACTORS[0],ok=f&&f.d.id==='rosie'&&f.mode!=='a
 function realDate(){return new Date();}
 /* Western Easter Sunday of a year (the calendar rule) */
 function easterOf(y){const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),mo=Math.floor((h+l-7*m+114)/31),da=((h+l-7*m+114)%31)+1;return new Date(y,mo-1,da);}
-/* 'halloween' 17 Oct to 1 Nov · 'xmas' 1 Dec to 6 Jan · 'easter' Palm Sunday to Easter Monday · null on other days */
+/* 'halloween' 1 to 31 Oct (run 4: all of October, the owner's decision 17 Oct) · 'xmas' 1 Dec to 6 Jan · 'easter' Palm Sunday to Easter Monday · null on other days */
 function holidayOf(d){const y=d.getFullYear(),m=d.getMonth()+1,day=d.getDate(),md=m*100+day;
-  if(md>=1017&&md<=1101)return'halloween';if(md>=1201||md<=106)return'xmas';
+  if(m===10)return'halloween';if(md>=1201||md<=106)return'xmas';
   const E=easterOf(y),t=new Date(y,m-1,day).getTime();if(t>=E.getTime()-7*864e5-36e5&&t<=E.getTime()+864e5+36e5)return'easter';return null;}
 /* 🌼 a season of the real calendar (job 11 uses it for the trees and the weather): spring March to May, summer June to August, autumn September to November, winter December to February */
 function seasonOf(d){const m=d.getMonth()+1;return m<=2||m===12?'winter':m<=5?'spring':m<=8?'summer':'autumn';}
-const HOL={cur:undefined,g:null,n:0,t:0,anim:[],cols:[]};
+const HOL={cur:undefined,g:null,n:0,t:0,anim:[],cols:[],pieces:[],ghosts:[]};
+/* 🧱 run 4 (item 13): every holiday piece sits on the ground (or a flower bed / mound it stands on) or hangs on posts or a wall. RAISED = the raised beds and mounds in town;
+   supportAt(x,z) = the height a piece standing there sits on; holPiece() writes down each piece's bottom and support for the check (gap under 2 cm), hanging pieces their ends */
+const RAISED=[];
+function supportAt(x,z){let h=0;for(const r of RAISED){if(r.R!==undefined){const d=Math.hypot(x-r.x,z-r.z);if(d<r.R)h=Math.max(h,r.h*Math.sqrt(1-(d/r.R)*(d/r.R)));}else if(Math.abs(x-r.x)<=r.w/2&&Math.abs(z-r.z)<=r.d/2)h=Math.max(h,r.h);}return h;}
+function holPiece(k,x,z,bottom,hang){HOL.pieces.push(hang?{k,x,z,hang}:{k,x,z,b:bottom,s:supportAt(x,z)});}
 function holCheck(){if(!LOC.city)return;const h=holidayOf(realDate());if(h===HOL.cur)return;holClear();HOL.cur=h;if(h){try{holBuild(h);}catch(e){console.error(e);}}}
 function holTick(dt){HOL.t+=dt;if(HOL.t<2)return;HOL.t=0;holCheck();}
 function holClear(){const L=LOC.city;if(HOL.g){L.g.remove(HOL.g);HOL.g.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material&&o.material.userData.hol)o.material.dispose();});HOL.g=null;}
-  for(const c of HOL.cols){const i=L.cols.indexOf(c);if(i>=0)L.cols.splice(i,1);}HOL.cols=[];L.inter=L.inter.filter(t=>!t.hol);HOL.n=0;HOL.anim=[];spookClear();}
+  for(const c of HOL.cols){const i=L.cols.indexOf(c);if(i>=0)L.cols.splice(i,1);}HOL.cols=[];L.inter=L.inter.filter(t=>!t.hol);HOL.n=0;HOL.anim=[];HOL.pieces=[];HOL.ghosts=[];spookClear();}
 /* 🦇🐦🦋 a flock: many little creatures in ONE mesh, each flying its own slow loop and flapping, all worked out on the graphics chip.
    items: [{geo (a vertex-coloured, non-indexed geometry built with the usual box/sph helpers), x,y,z (the middle of its loop), ra (loop size), sp (speed), ph (phase), ya (up-down), fl (flap speed)}] */
 function flockGeo(build){const g=new THREE.Group();build(g);g.updateMatrixWorld(true);const parts=[];g.traverse(o=>{if(!o.isMesh||o.material.side===THREE.BackSide)return;const src=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone();src.applyMatrix4(o.matrixWorld);
@@ -7615,11 +7636,12 @@ function quadsMesh(list,material){const P=[],U=[],I=[],m=new THREE.Matrix4();lis
   const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(P,3));geo.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));geo.setIndex(I);geo.computeBoundingSphere();const mesh=new THREE.Mesh(geo,material);mesh.userData.keep=1;return mesh;}
 /* 🎏 a garland of little flags on a sagging string between two points */
 function garland(g,x1,y1,z1,x2,z2,cols){const len=Math.hypot(x2-x1,z2-z1),n=Math.max(3,Math.round(len/.55)),a=Math.atan2(x2-x1,z2-z1);
+  for(const [x,z] of[[x1,z1],[x2,z2]])cyl(g,.035,.045,y1+.02,'#5a4634',x,0,z,{seg:6,ol:.01});holPiece('garland',(x1+x2)/2,(z1+z2)/2,0,[[x1,y1,z1],[x2,y1,z2]]);   /* 🪵 it hangs between two posts of its own (run 4, item 13: no garland floats in the air) */
   for(let i=0;i<=n;i++){const t=i/n,x=x1+(x2-x1)*t,z=z1+(z2-z1)*t,y=y1-Math.sin(t*Math.PI)*.35;if(i<n)box(g,.03,.03,len/n,'#f4ecff',x+(x2-x1)/n/2,y-.02+(Math.sin((t+.5/n)*Math.PI)-Math.sin(t*Math.PI))*-.17,z+(z2-z1)/n/2,{ry:a,ol:false,center:true});
     if(i>0&&i<n)cone(g,.14,.3,cols[i%cols.length],x,y-.3,z,{rx:Math.PI,ry:a,center:true,seg:3,ol:false,s:[1,1,.25]});}}
 /* the doors in town: shops (the same list as the Closed signs), the pizzeria, the school, the fire station */
-const HOL_DOORS=[[18,-10.98,0],[32,-10.98,0],[18,10.98,Math.PI],[31.5,10.98,Math.PI],[59.48,-31,-Math.PI/2],[59.48,-14,-Math.PI/2],[59.98,20,-Math.PI/2],[58.98,36,-Math.PI/2],[-59.98,-12.5,Math.PI/2],[59.98,8.6,-Math.PI/2],[-25,-57.9,0],[-59.9,-29.6,Math.PI/2]];
-function pumpkin(g,x,z,ry,s){s=s||1;const p=new THREE.Group();p.position.set(x,0,z);p.rotation.y=ry;g.add(p);sph(p,.27*s,'#ff8a2b',0,.25*s,0,{s:[1,.84,1],ws:10,hs:7,ol:.02});cyl(p,.035*s,.045*s,.1*s,'#5fae64',0,.46*s,0,{seg:6,ol:.01});
+const HOL_DOORS=[[18,-10.98,0],[32,-10.98,0],[18,10.98,Math.PI],[31.5,10.98,Math.PI],[59.48,-31,-Math.PI/2],[59.48,-14,-Math.PI/2],[59.98,20,-Math.PI/2],[58.98,36,-Math.PI/2],[-59.98,-12.5,Math.PI/2],[59.98,8.6,-Math.PI/2],[-25,-59.0,0],[-59.9,-29.6,Math.PI/2]];   /* (the school's door is on its front wall at z -59: its wreath used to hang 1.1 m in front of it: run 4, item 13) */
+function pumpkin(g,x,z,ry,s){s=s||1;const p=new THREE.Group();p.position.set(x,supportAt(x,z),z);p.rotation.y=ry;g.add(p);sph(p,.27*s,'#ff8a2b',0,.226*s,0,{s:[1,.84,1],ws:10,hs:7,ol:.02});holPiece('pumpkin',x,z,p.position.y-.0008*s);   /* (it used to hover 2.3 cm: run 4, item 13) */cyl(p,.035*s,.045*s,.1*s,'#5fae64',0,.46*s,0,{seg:6,ol:.01});
   for(const sd of[-1,1])cone(p,.05*s,.07*s,'#2e2347',sd*.09*s,.3*s,.255*s,{rx:Math.PI/2,center:true,seg:3,ol:false});box(p,.16*s,.045*s,.02*s,'#2e2347',0,.18*s,.26*s,{ol:false});for(const sd of[-1,1])box(p,.03*s,.035*s,.02*s,'#2e2347',sd*.055*s,.21*s,.262*s,{ol:false});HOL.n++;}
 function holBuild(h){const L=LOC.city,G=new THREE.Group(),st=new THREE.Group();G.add(st);L.g.add(G);HOL.g=G;const glows=[];
   if(h==='halloween'){
@@ -7632,61 +7654,80 @@ function holBuild(h){const L=LOC.city,G=new THREE.Group(),st=new THREE.Group();G
     {const c=document.createElement('canvas');c.width=c.height=96;const x=c.getContext('2d');x.strokeStyle='rgba(255,255,255,.85)';x.lineWidth=2.2;for(let i=0;i<6;i++){x.beginPath();x.moveTo(0,0);const a=i/5*Math.PI/2;x.lineTo(Math.cos(a)*96,Math.sin(a)*96);x.stroke();}
       for(let r=16;r<96;r+=16){x.beginPath();for(let i=0;i<=10;i++){const a=i/10*Math.PI/2,k=r*(1-.08*(i%2));x.lineTo(Math.cos(a)*k,Math.sin(a)*k);}x.stroke();}
       const tx=new THREE.CanvasTexture(c),wm=new THREE.MeshBasicMaterial({map:tx,transparent:true,depthWrite:false,side:THREE.DoubleSide});wm.userData.hol=1;
-      G.add(quadsMesh([[-37.72,3.3,19.95,.95,.95,Math.PI/2],[-37.72,3.3,24.05,.95,.95,-Math.PI/2],[-84.3,4.3,-4.3,.9,.9,Math.PI/2],[-84.3,4.3,4.3,.9,.9,-Math.PI/2],[-14.5,2.3,7.45,.8,.8,0],[-17.9,2.3,7.45,.8,.8,0]],wm));HOL.n+=6;}
+      const webs=[[-37.72,3.3,19.95,.95,.95,Math.PI/2],[-37.72,3.3,24.05,.95,.95,-Math.PI/2],[-84.3,4.3,-4.3,.9,.9,Math.PI/2],[-84.3,4.3,4.3,.9,.9,-Math.PI/2],[-14.5,2.3,7.45,.8,.8,0],[-17.9,2.3,7.45,.8,.8,0]];G.add(quadsMesh(webs,wm));HOL.n+=6;for(const w of webs)holPiece('cobweb',w[0],w[2],0,[[w[0],w[1],w[2]]]);}
     /* 🦇 bats over the park and the lane gate, 👻 little friendly ghosts floating in the park (one mesh each) */
     const bat=()=>flockGeo(g=>{sph(g,.09,'#2e2347',0,0,0,{s:[1,.8,1.3],ws:7,hs:5,ol:false});for(const s of[-1,1]){box(g,.34,.02,.16,'#3d2c5e',s*.25,0,0,{ol:false});box(g,.12,.02,.1,'#3d2c5e',s*.44,0,-.04,{ol:false});}for(const s of[-1,1])cone(g,.03,.06,'#2e2347',s*.05,.09,.02,{seg:3,ol:false});});
     const bats=[];for(let i=0;i<9;i++){const park=i<6;bats.push({geo:bat(),x:park?-24+(i%3)*5:-80,y:5.5+i*.4,z:park?24+Math.floor(i/3)*3:(i-6)*2-2,ra:3+(i%4),sp:.5+(i%3)*.15,ph:i*1.3,ya:.5,wing:1,fl:14+i});}
     G.add(flockMesh(bats));HOL.n+=bats.length;
     const ghost=c=>flockGeo(g=>{sph(g,.26,c,0,.3,0,{ws:10,hs:8,ol:false});cyl(g,.26,.34,.42,c,0,-.12,0,{seg:10,ol:false});for(let i=0;i<5;i++){const a=i/5*TAU;sph(g,.09,c,Math.cos(a)*.27,-.14,Math.sin(a)*.27,{ws:6,hs:5,ol:false});}
       for(const s of[-1,1])sph(g,.045,'#2e2347',s*.09,.34,.24,{ws:6,hs:5,ol:false});sph(g,.05,'#2e2347',0,.2,.25,{s:[1.2,.6,.5],ws:6,hs:5,ol:false});for(const s of[-1,1])sph(g,.04,'#ffb3c7',s*.17,.25,.22,{ws:6,hs:5,ol:false});});
-    const gh=[[-34,1.4,32],[-14,1.5,20],[-26,1.6,38.5],[-16,1.3,12.5]].map((p,i)=>({geo:ghost(i%2?'#f4f2ff':'#e8f6ff'),x:p[0],y:p[1],z:p[2],ra:1.4+i*.3,sp:.35+i*.06,ph:i*2.1,ya:.25,wing:0,fl:0}));
-    const gm=flockMesh(gh);G.add(gm);HOL.n+=gh.length;
+    /* 👻 little friendly ghosts float all over town (run 4, item 31): over the pavements (the walkers' paths, so never inside a building), the park, Friends Lane and the Flower Corner; one batch */
+    const GP=[];for(let i=0;i<WE.length;i+=4){const [a,b]=WE[i],A=WP[a],B=WP[b];GP.push([(A[0]+B[0])/2,(A[1]+B[1])/2,.9]);}
+    for(const p of [[-30,16,1.6],[-26,30,1.6],[-14,26,1.6],[-34,36,1.4],[-20,20,1.6],[-92,-3,1.4],[-104,3,1.4],[-118,-3,1.4],[-132,3,1.4],[-20,-11,1.2],[-14,-14,1.2],[-19,-20,1.2],[-13,-22,1.2]])GP.push(p);
+    const gh=GP.map((p,i)=>({geo:ghost(i%2?'#f4f2ff':'#e8f6ff'),x:p[0],y:1.4+(i%4)*.22,z:p[1],ra:p[2],sp:.3+(i%5)*.05,ph:i*2.1,ya:.25,wing:0,fl:0}));
+    const gm=flockMesh(gh);G.add(gm);HOL.n+=gh.length;HOL.ghosts=GP.map(p=>[p[0],p[1]]);
     spookBuild(L,G,st);}
   else if(h==='xmas'){
     /* 🎄 the big tree at the edge of the park plaza, presents under it, lights, wreaths */
-    const T=buildFurn('xmastree');T.scale.setScalar(4.2);T.position.set(-27.5,0,13.5);st.add(T);HOL.n++;{const c={cx:L.ox-27.5,cz:L.oz+13.5,cr:1.7};L.cols.push(c);HOL.cols.push(c);}
-    for(let i=0;i<10;i++){const a=i/10*TAU+.3,r=1.9+(i%2)*.4,x=-27.5+Math.cos(a)*r,z=13.5+Math.sin(a)*r,s=.3+(i%3)*.08,c=['#ff4d6d','#7cc8ff','#ffd45c','#5fd4b0','#b79cff'][i%5];box(st,s,s,s,c,x,0,z,{ry:a,ol:.012});box(st,s*1.04,s*.18,s*.18,'#ffffff',x,s*.42,z,{ry:a,ol:false});box(st,s*.18,s*.18,s*1.04,'#ffffff',x,s*.42,z,{ry:a,ol:false});HOL.n++;}
+    const T=buildFurn('xmastree');T.scale.setScalar(4.2);T.position.set(-27.5,0,13.5);st.add(T);HOL.n++;holPiece('christmas tree',-27.5,13.5,0);{const c={cx:L.ox-27.5,cz:L.oz+13.5,cr:1.7};L.cols.push(c);HOL.cols.push(c);}
+    for(let i=0;i<10;i++){const a=i/10*TAU+.3,r=1.9+(i%2)*.4,x=-27.5+Math.cos(a)*r,z=13.5+Math.sin(a)*r,s=.3+(i%3)*.08,c=['#ff4d6d','#7cc8ff','#ffd45c','#5fd4b0','#b79cff'][i%5];box(st,s,s,s,c,x,0,z,{ry:a,ol:.012});holPiece('present',x,z,0);box(st,s*1.04,s*.18,s*.18,'#ffffff',x,s*.42,z,{ry:a,ol:false});box(st,s*.18,s*.18,s*1.04,'#ffffff',x,s*.42,z,{ry:a,ol:false});HOL.n++;}
     for(let i=0;i<24;i++){const a=i/24*TAU;glows.push([-27.5+Math.cos(a)*(1.2-i%3*.25),1.3+i*.1,13.5+Math.sin(a)*(1.2-i%3*.25),.6,[[1,.3,.3],[.3,.9,.4],[1,.85,.3],[.4,.6,1]][i%4]]);}
     const LC=[[1,.3,.3],[.3,.9,.4],[1,.85,.3],[.4,.6,1]];let k=0;
     for(const [hx,hz,f] of [[13,-58,1],[25,-58,1],[37,-58,1],[13,58,-1],[25,58,-1],[37,58,-1]])for(let x=hx-4;x<=hx+4.01;x+=.65)glows.push([x,3.55,hz+f*.12,.42,LC[k++%4]]);
     for(const [x,z] of LAMPXZ)for(let i=0;i<3;i++){const a=i/3*TAU;glows.push([x+Math.cos(a)*.28,2.55,z+Math.sin(a)*.28,.42,LC[i%4]]);}
-    for(const H of HOUSES){if(isApt(H.id))continue;const fx=Math.sin(H.ry),fz=Math.cos(H.ry),x=H.x+fx*.14,z=H.z+fz*.14,w=new THREE.Group();w.position.set(x,1.95,z);w.rotation.y=H.ry;st.add(w);
+    for(const H of HOUSES){if(isApt(H.id))continue;const fx=Math.sin(H.ry),fz=Math.cos(H.ry),x=H.x+fx*.14,z=H.z+fz*.14,w=new THREE.Group();w.position.set(x,1.95,z);w.rotation.y=H.ry;st.add(w);holPiece('wreath',x,z,0,[[x,1.95,z]]);
       const t=new THREE.Mesh(new THREE.TorusGeometry(.3,.07,7,18),mat('#2f7a4a'));w.add(t);for(let i=0;i<6;i++){const a=i/6*TAU;sph(w,.035,i%2?'#ff4d4d':'#ffd45c',Math.cos(a)*.3,Math.sin(a)*.3,.04,{ws:6,hs:5,ol:false});}bowShape(w,.9,'#ff3b4d',{ol:false});w.children[w.children.length-1].position.set(0,.33,.03);HOL.n++;}
-    for(const [x,z,ry] of HOL_DOORS){const fx=Math.sin(ry),fz=Math.cos(ry),w=new THREE.Group();w.position.set(x+fx*.1,2.0,z+fz*.1);w.rotation.y=ry;st.add(w);const t=new THREE.Mesh(new THREE.TorusGeometry(.26,.06,7,18),mat('#2f7a4a'));w.add(t);sph(w,.07,'#ff3b4d',0,-.26,.03,{ws:8,hs:6,ol:false});HOL.n++;}
+    for(const [x,z,ry] of HOL_DOORS){const fx=Math.sin(ry),fz=Math.cos(ry),w=new THREE.Group();w.position.set(x+fx*.1,2.0,z+fz*.1);w.rotation.y=ry;st.add(w);holPiece('wreath',x+fx*.1,z+fz*.1,0,[[x+fx*.1,2.0,z+fz*.1]]);const t=new THREE.Mesh(new THREE.TorusGeometry(.26,.06,7,18),mat('#2f7a4a'));w.add(t);sph(w,.07,'#ff3b4d',0,-.26,.03,{ws:8,hs:6,ol:false});HOL.n++;}
     garland(st,-38.0,1.9,8.3,-24.2,8.3,['#ff4d6d','#5fd4b0','#ffd45c']);garland(st,-19.8,1.9,8.3,-8.3,8.3,['#ff4d6d','#5fd4b0','#ffd45c']);HOL.n+=2;}
   else if(h==='easter'){
     const PC=['#ffb3c7','#bfe6ff','#fff1b8','#c9f2e3','#e6dbff','#ffd9b8'],r=seeded(17);
-    const egg=(x,z,i)=>{const c=PC[i%6],e=new THREE.Group();e.position.set(x,0,z);e.rotation.y=r()*TAU;st.add(e);sph(e,.13,c,0,.16,0,{s:[1,1.3,1],ws:9,hs:7,ol:.012});cyl(e,.135,.135,.05,PC[(i+2)%6],0,.14,0,{seg:12,ol:false});for(let k=0;k<4;k++){const a=k/4*TAU;sph(e,.025,PC[(i+4)%6],Math.cos(a)*.125,.23,Math.sin(a)*.125,{ws:5,hs:4,ol:false});}HOL.n++;};
+    const egg=(x,z,i)=>{const c=PC[i%6],e=new THREE.Group();e.position.set(x,supportAt(x,z),z);e.rotation.y=r()*TAU;st.add(e);holPiece('egg',x,z,e.position.y-.009);sph(e,.13,c,0,.16,0,{s:[1,1.3,1],ws:9,hs:7,ol:.012});cyl(e,.135,.135,.05,PC[(i+2)%6],0,.14,0,{seg:12,ol:false});for(let k=0;k<4;k++){const a=k/4*TAU;sph(e,.025,PC[(i+4)%6],Math.cos(a)*.125,.23,Math.sin(a)*.125,{ws:5,hs:4,ol:false});}HOL.n++;};
     let i=0;for(const [x,z] of [[-35,14],[-33,17.5],[-30.5,11.5],[-13,16.5],[-11,19],[-12.5,29.5],[-10.5,31],[-15,33],[-34,34],[-32,31.5],[-36,27.5],[-19,36.5],[-24,13],[-18,13.5],[-25.5,34],[-28,36.5]])egg(x,z,i++);
     for(const [x,z] of [[-21,-11],[-13,-11],[-15.5,-19],[-20.5,-21.5],[-12,-21],[-22,-15.5],[-17.4,-13]])egg(x,z,i++);   /* 🌸 the Flower Corner garden */
-    for(const [x,z,ry,c] of [[-26.5,11.8,.6,'#ffffff'],[-17.2,12.2,-.5,'#ffc9dc'],[-33.3,30.8,2.2,'#f8f5f0']]){const m=makePet('bunny',c),b=m.root;b.scale.setScalar(1.7);b.position.set(x,0,z);b.rotation.y=ry;st.add(b);const bw=new THREE.Group();bw.position.set(0,.5,.12);bw.rotation.set(0,0,-.2);m.head.add(bw);bowShape(bw,.6,PC[(i++)%6],{ol:.006});HOL.n++;}
+    for(const [x,z,ry,c] of [[-26.5,11.8,.6,'#ffffff'],[-17.2,12.2,-.5,'#ffc9dc'],[-33.3,30.8,2.2,'#f8f5f0']]){const m=makePet('bunny',c),b=m.root;b.scale.setScalar(1.7);b.position.set(x,supportAt(x,z),z);b.rotation.y=ry;st.add(b);holPiece('bunny',x,z,b.position.y);const bw=new THREE.Group();bw.position.set(0,.5,.12);bw.rotation.set(0,0,-.2);m.head.add(bw);bowShape(bw,.6,PC[(i++)%6],{ol:.006});HOL.n++;}
     garland(st,-38.0,1.9,8.3,-24.2,8.3,PC);garland(st,-19.8,1.9,8.3,-8.3,8.3,PC);garland(st,-84.6,3.7,-4.45,-84.6,4.45,PC);HOL.n+=3;}
   bake(st,true,64);if(glows.length)G.add(glowMesh(glowGeo(glows)));}   /* (64 m chunks: fewer pieces with Halloween on, within the agreed town limit) */
 function holAnim(now){if(!HOL.g)return;const t=(now/1000)%1e4;HOL.g.traverse(o=>{if(o.material&&o.material.uniforms&&o.material.uniforms.tm)o.material.uniforms.tm.value=t;});}
-/* 👻 the Spooky path: a marked path in the quiet south-west corner of the park. Open after 18:00. On the path, 3 spots where a ghost or a
-   skeleton pops up with "BOO!", a quick wobble and a soft sound, each spot once per night per player. Never during jobs, scenes, sleep or the bus */
-const SPOOK={spots:[{x:-39.3,z:29.2,px:-38.2},{x:-39.3,z:33.2,px:-38.3},{x:-39.3,z:37.2,px:-38.1}],on:false,ghost:null,skel:null,cur:null,t:0,
+/* 👻 the Spooky path (run 4, job 3): a winding purple-lit trail through the Flower Corner (the holiday spot, job 4), 21 m long (the park's old path was 13.6 m),
+   open after 18:00 in October. 6 scare spots with 5 kinds of soft scares: a ghost, a skeleton, a zombie, a bat swarm and a pumpkin head. When one pops up you stop
+   and turn smoothly to face it, the view shakes a little and a soft spooky sound plays (only with sound on). Each spot once per night per player; never in jobs,
+   class, scenes, sleep, the bus or the Pet Show (SPOOK.ok) */
+const SPOOK_WAY=[[-17,-8.3],[-15.5,-11.2],[-18.8,-13.2],[-19.3,-16.3],[-16.5,-18.2],[-18.3,-21.0],[-15.2,-23.3]];
+const SPOOK={spots:[{x:-15.5,z:-11.2,px:-14.2,pz:-11.6,k:'ghost'},{x:-18.8,z:-13.2,px:-20.1,pz:-13.0,k:'skel'},{x:-19.3,z:-16.3,px:-20.6,pz:-16.6,k:'zombie'},{x:-16.5,z:-18.2,px:-15.4,pz:-17.5,k:'bats'},{x:-18.3,z:-21.0,px:-19.6,pz:-21.4,k:'pumpkin'},{x:-15.2,z:-23.3,px:-13.9,pz:-22.9,k:'ghost'}],
+  kinds:['ghost','skel','zombie','bats','pumpkin'],m:{},cur:null,t:0,len:0,
   open(){return HOL.cur==='halloween'&&!!S&&(S.time>=18||S.time<6);},
-  ok(){return!CUT&&!P.sit&&!P.ride&&!UI.open&&!DECO.on&&!fading&&!CLIMB&&!TUT&&!DTUT&&!CR&&!!CUR&&CUR.id==='city'&&!(typeof dlCarrying==='function'&&dlCarrying())&&!(typeof PSX!=='undefined'&&PSX.on&&Math.hypot(P.x+34,P.z-22)<9);}};
-function spookBuild(L,G,st){const r=seeded(41);
-  for(let z=26;z<=39.6;z+=1.15){disc(st,.36,z%2.3<1.2?'#5a3e8a':'#4a2f74',-39.3+(r()-.5)*.2,.028,z,{seg:12});}
-  for(const [x,z] of [[-38.5,27],[-38.5,31.2],[-38.5,35.3],[-38.5,39]]){cyl(st,.03,.035,.9,'#3d2c5e',x,0,z,{seg:6,ol:.01});box(st,.2,.26,.2,'#2e2347',x,.9,z,{ol:.012});box(st,.14,.18,.14,'#ffd36b',x,.94,z,{ol:false});}
-  const sp=new THREE.Group();sp.position.set(-38.4,0,25.1);st.add(sp);box(sp,.12,1.5,.12,'#3d2c5e',0,0,0,{ol:.015});box(sp,2.0,.6,.1,'#2e2347',0,1.45,0,{ol:.02});
-  const sg=signPlane('👻 Spooky path',1.9,.52,'#2e2347','#d9c4ff');sg.position.set(0,1.75,-.06);sg.rotation.y=Math.PI;G.add(sg);sg.position.add(sp.position);   /* read coming from the north */
-  const sg2=signPlane('Open after 18:00 🌙',1.6,.3,'#d9c4ff','#2e2347');sg2.position.set(-38.4,1.22,25.04);sg2.rotation.y=Math.PI;G.add(sg2);
-  {const c={cx:L.ox-38.4,cz:L.oz+25.1,cr:.2};L.cols.push(c);HOL.cols.push(c);}
-  const gh=new THREE.Group();G.add(gh);sph(gh,.42,'#f4f2ff',0,1.1,0,{ws:12,hs:9});cyl(gh,.42,.55,.7,'#f4f2ff',0,.4,0,{seg:12});for(let i=0;i<6;i++){const a=i/6*TAU;sph(gh,.14,'#f4f2ff',Math.cos(a)*.44,.38,Math.sin(a)*.44,{ws:7,hs:5,ol:.012});}
-  for(const s of[-1,1])sph(gh,.08,'#2e2347',s*.15,1.18,.38,{ws:7,hs:5,ol:false});sph(gh,.1,'#2e2347',0,.95,.4,{s:[1.3,1,.5],ws:7,hs:5,ol:false});for(const s of[-1,1])sph(gh,.065,'#ffb3c7',s*.27,1.0,.33,{ws:6,hs:5,ol:false});bake(gh,false);gh.visible=false;SPOOK.ghost=gh;
-  const sk=new THREE.Group();G.add(sk);sph(sk,.3,'#fbf7ff',0,1.55,0,{ws:12,hs:9});box(sk,.34,.26,.3,'#fbf7ff',0,1.1,0,{ol:.015});for(let i=0;i<3;i++)box(sk,.42,.05,.3,'#fbf7ff',0,.78+i*.14,0,{ol:.01});box(sk,.1,.6,.1,'#fbf7ff',0,.5,0,{ol:.01});
-  for(const s of[-1,1]){box(sk,.08,.7,.08,'#fbf7ff',s*.14,0,0,{ol:.01});box(sk,.08,.62,.08,'#fbf7ff',s*.36,.86,0,{rz:s*.7,ol:.01});sph(sk,.07,'#2e2347',s*.11,1.6,.26,{ws:7,hs:5,ol:false});}box(sk,.22,.05,.05,'#2e2347',0,1.4,.29,{ol:false});bake(sk,false);sk.visible=false;SPOOK.skel=sk;}
-function spookClear(){if(SPOOK.cur){SPOOK.cur.g.visible=false;SPOOK.cur=null;}SPOOK.ghost=SPOOK.skel=null;}
+  ok(){return!CUT&&!P.sit&&!P.ride&&!UI.open&&!DECO.on&&!fading&&!CLIMB&&!TUT&&!DTUT&&!CR&&!!CUR&&CUR.id==='city'&&!(typeof dlCarrying==='function'&&dlCarrying())&&!(typeof PSX!=='undefined'&&PSX.on&&Math.hypot(P.x+34,P.z-22)<9);},
+  near(){return!!S&&!!CUR&&CUR.id==='city'&&P.x>-23.4&&P.x<-10.6&&P.z>-24.5&&P.z<-7;}};
+function spookBuild(L,G,st){const r=seeded(41),W=SPOOK_WAY;let len=0;
+  for(let i=1;i<W.length;i++){const [ax,az]=W[i-1],[bx,bz]=W[i],d=Math.hypot(bx-ax,bz-az),n=Math.max(2,Math.round(d/.9));len+=d;for(let k=0;k<n;k++){const t=k/n,x=ax+(bx-ax)*t+(r()-.5)*.16,z=az+(bz-az)*t+(r()-.5)*.16;disc(st,.36,k%2?'#5a3e8a':'#4a2f74',x,.028,z,{seg:12});}}
+  SPOOK.len=len;
+  for(const [x,z] of [[-14.2,-9.6],[-20.3,-14.6],[-15.0,-15.6],[-19.8,-19.6],[-16.9,-23.6]]){cyl(st,.03,.035,.9,'#3d2c5e',x,0,z,{seg:6,ol:.01});box(st,.2,.26,.2,'#2e2347',x,.9,z,{ol:.012});box(st,.14,.18,.14,'#ffd36b',x,.94,z,{ol:false});holPiece('path lamp',x,z,0);}
+  /* the signs by the gate: two posts, a board for each sign, the text in front of the board (no post can cross the words) */
+  const sp=new THREE.Group();sp.position.set(-13.2,0,-7.32);st.add(sp);for(const s of[-1,1])box(sp,.1,1.9,.1,'#3d2c5e',s*1.02,0,0,{ol:.015});
+  box(sp,2.1,.56,.08,'#2e2347',0,1.36,0,{ol:.02});box(sp,1.7,.32,.08,'#d9c4ff',0,.94,0,{ol:.015});
+  const sg=signPlane('👻 Spooky path',1.95,.5,'#2e2347','#d9c4ff');sg.position.set(-13.2,1.64,-7.26);G.add(sg);
+  const sg2=signPlane('Open after 18:00 🌙',1.58,.28,'#d9c4ff','#2e2347');sg2.position.set(-13.2,1.1,-7.27);G.add(sg2);holPiece('spooky sign',-13.2,-7.32,0);
+  /* the five kinds (each one group, hidden until it pops up): built in the holiday group so they go away with October */
+  const M={};
+  {const gh=new THREE.Group();G.add(gh);sph(gh,.42,'#f4f2ff',0,1.1,0,{ws:12,hs:9});cyl(gh,.42,.55,.7,'#f4f2ff',0,.4,0,{seg:12});for(let i=0;i<6;i++){const a=i/6*TAU;sph(gh,.14,'#f4f2ff',Math.cos(a)*.44,.38,Math.sin(a)*.44,{ws:7,hs:5,ol:.012});}
+    for(const s of[-1,1])sph(gh,.08,'#2e2347',s*.15,1.18,.38,{ws:7,hs:5,ol:false});sph(gh,.1,'#2e2347',0,.95,.4,{s:[1.3,1,.5],ws:7,hs:5,ol:false});for(const s of[-1,1])sph(gh,.065,'#ffb3c7',s*.27,1.0,.33,{ws:6,hs:5,ol:false});bake(gh,false);M.ghost=gh;}
+  {const sk=new THREE.Group();G.add(sk);sph(sk,.3,'#fbf7ff',0,1.55,0,{ws:12,hs:9});box(sk,.34,.26,.3,'#fbf7ff',0,1.1,0,{ol:.015});for(let i=0;i<3;i++)box(sk,.42,.05,.3,'#fbf7ff',0,.78+i*.14,0,{ol:.01});box(sk,.1,.6,.1,'#fbf7ff',0,.5,0,{ol:.01});
+    for(const s of[-1,1]){box(sk,.08,.7,.08,'#fbf7ff',s*.14,0,0,{ol:.01});box(sk,.08,.62,.08,'#fbf7ff',s*.36,.86,0,{rz:s*.7,ol:.01});sph(sk,.07,'#2e2347',s*.11,1.6,.26,{ws:7,hs:5,ol:false});}box(sk,.22,.05,.05,'#2e2347',0,1.4,.29,{ol:false});bake(sk,false);M.skel=sk;}
+  {const z=makePerson({skin:'#9fd49a',hair:'#3d2c5e',style:'short',top:'#6b4fa3',sleeve:'#4e3a7a',bottom:'#4a5a6a',shoes:'#2e2347',eyes:'sleepy',mouth:'small',round:true});for(const a of z.arms)a.rotation.x=-1.35;z.head.rotation.z=.18;bakePerson(z);z.root.userData.keep=1;G.add(z.root);M.zombie=z.root;}
+  {const bat=()=>flockGeo(g=>{sph(g,.08,'#2e2347',0,0,0,{s:[1,.8,1.3],ws:7,hs:5,ol:false});for(const s of[-1,1]){box(g,.3,.02,.14,'#3d2c5e',s*.22,0,0,{ol:false});}for(const s of[-1,1])cone(g,.03,.05,'#2e2347',s*.05,.08,.02,{seg:3,ol:false});});
+    const bats=[];for(let i=0;i<7;i++)bats.push({geo:bat(),x:0,y:1.2+i*.12,z:0,ra:.6+(i%3)*.25,sp:2.2+(i%2)*.6,ph:i*.9,ya:.3,wing:1,fl:16+i});const bm=flockMesh(bats);G.add(bm);M.bats=bm;}
+  {const pk=new THREE.Group();G.add(pk);cone(pk,.46,1.35,'#2e2347',0,0,0,{seg:10,ol:.015});for(const s of[-1,1])box(pk,.1,.1,.4,'#2e2347',s*.3,1.05,.2,{ol:.01});pumpkin(pk,0,0,0,1.25);pk.children[pk.children.length-1].position.y=1.3;HOL.n--;bake(pk,false);M.pumpkin=pk;}
+  for(const k in M){M[k].visible=false;M[k].userData.keep=1;}SPOOK.m=M;}
+function spookClear(){if(SPOOK.cur){SPOOK.cur.g.visible=false;SPOOK.cur=null;}SPOOK.m={};}
 function spookNight(){return S.time>=18?S.day:S.day-1;}   /* a night runs from 18:00 over midnight to the morning */
-function spookTick(dt){const c=SPOOK.cur;if(c){c.t+=dt;const g=c.g,k=c.t<.3?c.t/.3:c.t>1.7?Math.max(0,1-(c.t-1.7)/.35):1;g.scale.set(k,k*(1+Math.sin(c.t*22)*.08*(c.t<.9?1:0)),k);g.rotation.z=Math.sin(c.t*18)*.14*Math.max(0,1-c.t);g.rotation.y=c.yaw;g.position.y=.1+Math.sin(c.t*6)*.06;
-    if(c.t>2.1){g.visible=false;SPOOK.cur=null;}return;}
-  if(!SPOOK.ghost||!SPOOK.open()||!SPOOK.ok())return;const n=spookNight();if(!S.spook||S.spook.d!==n)S.spook={d:n,s:[0,0,0]};
+const SPOOK_SAY={ghost:'BOO! 👻',skel:'Rattle rattle! 💀',zombie:'Braaains… 🧟',bats:'Flap flap! 🦇',pumpkin:'Hee hee! 🎃'};
+function spookTick(dt){const c=SPOOK.cur;if(c){c.t+=dt;const g=c.g,k=c.t<.3?c.t/.3:c.t>2.0?Math.max(0,1-(c.t-2.0)/.35):1;g.scale.set(k,k*(1+Math.sin(c.t*22)*.08*(c.t<.9?1:0)),k);if(c.k!=='bats')g.rotation.z=Math.sin(c.t*18)*.14*Math.max(0,1-c.t);g.rotation.y=c.yaw;g.position.y=c.k==='bats'?0:.1+Math.sin(c.t*6)*.06;
+    if(c.t<.7)P.yaw=angLerp(P.yaw,c.face,Math.min(1,dt*7));   /* you turn smoothly to face it */
+    if(c.t>2.35){g.visible=false;SPOOK.cur=null;}return;}
+  if(!SPOOK.m.ghost||!SPOOK.open()||!SPOOK.ok())return;const n=spookNight();if(!S.spook||S.spook.d!==n||!Array.isArray(S.spook.s)||S.spook.s.length<SPOOK.spots.length)S.spook={d:n,s:SPOOK.spots.map(()=>0)};
   SPOOK.spots.forEach((q,i)=>{if(SPOOK.cur||S.spook.s[i])return;if(Math.hypot(P.x-q.x,P.z-q.z)>1.4)return;S.spook.s[i]=1;change();
-    const g=i%2?SPOOK.skel:SPOOK.ghost;g.position.set(q.px,.1,q.z);g.visible=true;g.scale.setScalar(.01);const yaw=Math.atan2(P.x-q.px,P.z-q.z);SPOOK.cur={g,t:0,yaw};
-    floatText('BOO! '+(i%2?'💀':'👻'),q.px,2.1,q.z,{h:.55,life:1.4});SFX.boo();P.pitch=clamp(P.pitch+.06,-1.2,1.2);});}
+    const g=SPOOK.m[q.k];if(!g)return;g.position.set(q.px,.1,q.pz);g.visible=true;g.scale.setScalar(.01);const yaw=Math.atan2(P.x-q.px,P.z-q.pz);SPOOK.cur={g,t:0,yaw,k:q.k,face:Math.atan2(-(q.px-P.x),-(q.pz-P.z))};
+    P.freeze=1.0;SHAKE.t=.4;floatText(SPOOK_SAY[q.k],q.px,2.1,q.pz,{h:.55,life:1.4});SFX.spook(q.k);P.pitch=clamp(P.pitch*.5,-1.2,1.2);});}
 
 function applyGfx(){const nice=SET.gfx!=='fast';renderer.setPixelRatio(Math.min(devicePixelRatio||1,nice?2:1));renderer.shadowMap.enabled=nice;sun.castShadow=nice;
   scene.traverse(o=>{if(o.material){(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.needsUpdate=true);}});resize();}

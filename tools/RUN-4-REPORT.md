@@ -8,6 +8,7 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 | Setup: kit v6, fixtures, backup, counts before | kit v6 run4 stage + fixtures done; counts before: see 1 | with job 1 | A3/E1 pass |
 | 1. One clock for everyone | yes | yes | N15, N16, N10 (rewritten), B1 pass |
 | 2. The same game for everyone | yes | yes | N17, N18 pass |
+| 3. Halloween, all of October | yes | yes | N1 (rewritten) pass; N19 passes once job 4 frees the corner (see job 4) |
 
 (filled in after every job; if the session restarts: undo any half-done job, carry on from the next one)
 
@@ -29,6 +30,15 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 - Item 25 (a window across the view on the stairs), the root cause: the west-wall window sat at z 0, exactly in the stair doorway of the big house (home and visit, downstairs and upstairs), so it hung across the view on the stairs; houses without stairs and old 18x14 layouts (windows at z −3.2 / 2.6) never had it, which is why only some players saw it. With stairs the west windows now sit at z ±3 (home, upstairs, visit). Proved by looking along the stair slope from the bottom, the middle and the top on both floors: nothing nearer than 3.9 m.
 - Gardens: what you planted rides along in presence (`gd`: spot, seed, stage); friends see your soil and crops on your Friends Lane lot (old versions send and show nothing). The seed spots live in one list (`YARD_PLOTS`) for job 10.
 - Item 27, everything others can see and where it comes from: time and weather (the one clock), holiday pieces and ghosts (built from fixed lists and seeded draws), trash spots (a seeded draw of the day), houses (big or not, from presence; floors and colour come with job 10), furniture (presence `hm`, now with the room size), gardens (presence `gd`), sitting, bed, jumps, pets and their outfits (presence), clothes and costumes (presence `lk`; costumes with job 3), name and version (presence). Local scenery that nobody shares and that is not the same on two devices: the townspeople walkers, cars, ducks, birds and butterflies (they wander on each device). Grandmas: the same places for everyone from job 8.
+
+### Job 3: Halloween, all of October (items 1, 4 October part, 13, 31)
+- Window: 1 to 31 October (was 17 Oct to 1 Nov). Everything night 3 built for Halloween stays (pumpkins, garlands, cobwebs, bats, the purple night sky and closer fog).
+- Costumes (item 1): the Clothes Shop sells a 🐈 cat, 🐕 dog, 👻 ghost and 🦖 dinosaur costume in October (160–180 🪙, like the dearer clothes). A costume is a hooded onesie over your clothes (the face stays open) with ears, a tail, spikes or a ghostly hem; you wear it at the 🪞 mirror with one tap on the "Costume" row and take it off with the same tap. Saved in `look.co`, sent in presence (`lk.co`); old versions drop it and show the clothes. After October the shop stops selling them; what you bought stays in your wardrobe and can be worn.
+- The spooky path moves to the Flower Corner: a winding purple-disc trail of 20.8 m (the park's was 13.6 m, so +53%) from the gate (x −17) past the bench, the little fountain and the mounds, with 5 purple lamps; its "👻 Spooky path" and "Open after 18:00 🌙" signs stand on two posts with a board each (no post crosses the words). The park's west-side path and signs are gone (an agreed removal).
+- Scares: 6 spots, 5 kinds, never gory: a ghost, a skeleton, a zombie (a green townsperson with its arms out), a bat swarm (7 little bats) and a pumpkin head on a dark cloak. When one pops up you stop for a second (`P.freeze`), turn smoothly to face it (within 0.01 rad in 0.7 s), the view shakes a little (`SHAKE`) and a soft short sound plays (`SFX.spook(kind)`: a boo, a rattle, a low moan, a flutter, a woo; quiet, only with sound on). Each spot once per night per player (`S.spook`), never in jobs, class, scenes, sleep, the bus or the Pet Show (`SPOOK.ok`).
+- Ghosts (item 31): 56 little friendly ghosts in one batch float over the pavements (every fourth walkers' path, so never inside a building), the park, Friends Lane and the Flower Corner (the park used to have 4).
+- Item 13 (floating decorations), the root causes and the fixes: pumpkins hovered 2.3 cm (their sphere sat at y 0.25 with a squashed radius of 0.227: now 0.226 → on the ground); the garlands by the Flower Corner and the park hung in the air between nothing (now every garland has two thin posts of its own); the school's holiday door spot was 1.1 m in front of the school's wall (now on the wall, z −59); Easter eggs and the bunnies sit on the ground or on the flower beds and mounds they stand on (`supportAt`). Every piece writes down its bottom and its support (`HOL.pieces`), so the check can measure every Halloween, Christmas and Easter piece: gap under 2 cm, hanging pieces within 0.6 m of a post or a wall.
+- Should look like (BUILDER): the Flower Corner in October: a purple-lit winding path through the flower garden with 5 little lamps, two signs on posts by the gate, and now and then a soft monster popping up beside the path at night; the town in October: little white ghosts drifting over the pavements, the park, the lane and the corner, pumpkins on the ground at every door, garlands on their posts.
 
 ## 2. Check output per job, exactly as printed
 
@@ -131,4 +141,27 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
     PASS | N18 | iPad and PC: time 14:15 / 14:15, Wednesday / Wednesday, weather sunny / sunny, holiday halloween with 49 / 49 pieces (same shapes True), trash spots 10 same True, Friends Lane lots (owner, floors, garden) same True, grandmas same True; B visits A (ok/ok/ok, let in True): in visit, room 12x10 (host 1
 [stage run4: done in 29 s]
     PASS | N18 Same for everyone: an iPad-size player and a PC-size player see the same time, weather, every house's floors and colour, every furniture piece (x, z, turn, floor) on visits, gardens, holiday pieces, ghosts, trash, grandmas; on every house's stairs no wall or window crosses the view | iPad and PC: time 14:15 / 14:15, Wednesday / Wednesday, weather sunny / sunny, holiday halloween with 49 / 49 pieces (same shapes True), trash spots 10 same True, Friends Lane lots (owner, floors, gar
+```
+
+### Job 3 (N1 rewritten to October passes; N19: the only remaining marks were the 4 ghosts at the Flower Corner, which the corner's whole-block collider counted as 'inside a building' until job 4 replaces it, and the school wreath, fixed right after; the skeleton's '4 sounds with sound off' was the test counting calls instead of played tones)
+```
+[stage files: running]
+[stage files: done in 0 s]
+    PASS | A1 newest live versions read right before the check | claude-form-of-github-live.html read on 2026-10-17, github-live.html read on 2026-10-17
+    PASS | A2 dated private backup of the live game | backup 709bf763d51be0160c118e2f9249f9f6 vs live GitHub 709bf763d51be0160c118e2f9249f9f6; title "Run 4 backup of the live game (tools/prerun4-index.html), made 2026-10-17, checked 2026-10-17"
+    PASS | F3a live GitHub version = live Claude version + web part, nothing else | 55 added lines in 2 places, no lines removed or changed
+    PASS | F1 no ZZTEST test data in the file to publish | ZZTEST appears 0 times
+    PASS | F5 no new outside addresses (same 3D library and font) | ['cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js', 'fonts.googleapis.com', 'fonts.googleapis.com/css2', 'fonts.gstatic.com']
+[stage counts: running]
+[stage counts: done in 60 s]
+    PASS | A3 everything in the live game is still in the new one, by name | 58 lists, 728 things before, 732 after; grew: {"clothes": "22 -> 26"}
+    PASS | E1 no more drawing work than before, area by area (more than 10% needs your OK); agreed more: city +15% pieces / +25% triangles, pets +100% pieces / +100% triangles | 26 areas, 1441 pieces, 1204820 triangles in total | for information, seen from 5 spots: city 184 draws; home 34 draws; market 38 draws; cafe 52 draws; school 44 draws
+[stage night3: running]
+    PASS | N1 | 25 Oct day: halloween (101 pieces), spooky path open False; 25 Oct 19:30: halloween, spooky path open True; spot 1: BOO 1 time(s) on the first visit, 1 after a second visit; scare allowed in bed: False, in a scene: False; 20 Dec: xmas (32 pieces); 28 Mar 2027: easter (29 pieces); 10 Feb: None (0 pie
+[stage night3: done in 18 s]
+    PASS | N1 Holidays: Halloween 1-31 Oct (run 4), Christmas 1 Dec-6 Jan, Easter Palm Sunday-Easter Monday, nothing on other dates (faked dates); jump scares only on the spooky path after 18:00, once per night per spot, never in bed or in a scene | 25 Oct day: halloween (101 pieces), spooky path open False; 25 Oct 19:30: halloween, spooky path open True; spot 1: BOO 1 time(s) on the first visit, 1 after a second visit; scare allowed in bed: Fals
+[stage run4: running]
+    FAIL | N19 | oct1-day: halloween (101 pieces, path open False); oct1-night: halloween (101 pieces, path open True); oct31-day: halloween (101 pieces, path open False); oct31-night: halloween (101 pieces, path open True); nov1: None (0 pieces, path open False); sep30: None (0 pieces, path open False); October sho
+[stage run4: done in 29 s]
+    FAIL | N19 Halloween: October 1 and 31 (day and night) show it, 1 Nov doesn't; costumes on sale only in October, wearable, seen by others, kept after; the spooky path at the Flower Corner at least 20% longer than the park's was, at least 5 scare kinds, each turns you to face it with a small shake and a soft sound only with sound on; ghosts all over town, none inside; every holiday piece touches the ground or a support (gap under 2 cm) | oct1-day: halloween (101 pieces, path open False); oct1-night: halloween (101 pieces, path open True); oct31-day: halloween (101 pieces, path open False); oct31-night: halloween (101 pieces, path open
 ```
