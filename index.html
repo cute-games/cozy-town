@@ -636,13 +636,13 @@ function textCanvas(text,o={}){
   const size=o.size||44,pad=o.pad??20,bw=o.bw??6;
   const c=document.createElement('canvas'),x=c.getContext('2d');
   const f=`800 ${size}px ${FONT}`;x.font=f;
-  const tw=Math.ceil(x.measureText(text).width);
+  const ink=inkOf(text,f,'middle'),tw=Math.max(Math.ceil(ink.w),4);   /* the pixels the text really covers (run 4, job 5: an emoji can draw wider than it measures) */
   c.width=tw+pad*2+bw*2;c.height=Math.ceil(size*1.36)+bw*2;
-  x.font=f;x.textAlign='center';x.textBaseline='middle';
+  x.font=f;x.textAlign='left';x.textBaseline='middle';
   if(o.bg!==null){x.fillStyle=o.bg||'#fff7fb';rr(x,bw/2,bw/2,c.width-bw,c.height-bw,999);x.fill();if(bw){x.lineWidth=bw;x.strokeStyle=o.border||'#3d2c5e';x.stroke();}}
   const ty=c.height/2+size*.07;
-  if(o.stroke){x.lineJoin='round';x.lineWidth=o.strokeW||10;x.strokeStyle=o.stroke;x.strokeText(text,c.width/2,ty);}
-  x.fillStyle=o.fg||'#3d2c5e';x.fillText(text,c.width/2,ty);
+  const tx=c.width/2-ink.cx;if(o.stroke){x.lineJoin='round';x.lineWidth=o.strokeW||10;x.strokeStyle=o.stroke;x.strokeText(text,tx,ty);}
+  x.fillStyle=o.fg||'#3d2c5e';x.fillText(text,tx,ty);
   return c;
 }
 function spriteOf(c,h){const t=new THREE.CanvasTexture(c);t.minFilter=THREE.LinearFilter;t.generateMipmaps=false;const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthWrite:false,fog:false}));s.scale.set(h*c.width/c.height,h,1);s.userData.keep=1;return s;}
@@ -668,13 +668,25 @@ function hudDodge(s,cam){s.center.y=.5;s.material.depthTest=true;if(s.material.o
   if(x+w/2<0||x-w/2>W||y+h/2<0||y-h/2>H)return;   /* (off the screen anyway) */
   for(let n=0;n<4;n++){let more=0;for(const b of R)if(x+w/2>b.left&&x-w/2<b.right&&y-h/2+dn<b.bottom+4&&y+h/2+dn>b.top){dn=b.bottom+4-(y-h/2);more=1;}if(!more)break;}
   if(dn>Math.max(h*2.5,H*.22))s.material.opacity=0;else if(dn>0){s.center.y=.5+dn/h;s.material.depthTest=false;}}   /* (moved down onto its house: drawn on top of it; too far under the HUD: not shown) */
-function signPlane(text,w,h,bg,fg){text=String(text).replace(/\ufe0f/g,'');   /* 🧹 no hidden character after an emoji: some tablets drew it as a little box (night 3, job 18) */
+/* 🔤 run 4, job 5 (item 7), the root cause of off-centre and cut-off signs: the text was placed by measureText, but a colour emoji (iPad) can draw wider than it
+   measures, so "🏖 To the beach" or "🏰 Knights & castles" slid off centre or past the edge (the test machine had no colour emoji, so the checks never saw it).
+   Now every sign, plate and label draws the text once on a scratch canvas, finds the pixels it REALLY covers (inkOf) and scales and centres by those */
+let INKC=null;
+function inkBox(x,W,H,bgc){const d=x.getImageData(0,0,W,H).data;let x1=W,y1=H,x2=-1,y2=-1;for(let j=0;j<H;j++){const row=j*W*4;for(let i=0;i<W;i++){const k=row+i*4;if(bgc?Math.abs(d[k]-bgc[0])+Math.abs(d[k+1]-bgc[1])+Math.abs(d[k+2]-bgc[2])>90:d[k+3]>40){if(i<x1)x1=i;if(i>x2)x2=i;if(j<y1)y1=j;if(j>y2)y2=j;}}}return x2<0?null:{x1,y1,x2:x2+1,y2:y2+1};}
+/* the ink of a text drawn with this font: its size and its middle, relative to the text's origin (textAlign left, the given baseline) */
+function inkOf(text,font,baseline){const c=INKC||(INKC=document.createElement('canvas')),x=c.getContext('2d');x.font=font;const tw=Math.ceil(x.measureText(text).width),s=parseInt(font.match(/(\d+)px/)[1],10)||40;
+  const W=Math.min(4096,Math.ceil(tw*1.6+s*2+40)),H=Math.min(1024,Math.ceil(s*2.6));if(c.width!==W||c.height!==H){c.width=W;c.height=H;}
+  x.clearRect(0,0,W,H);x.font=font;x.textAlign='left';x.textBaseline=baseline||'alphabetic';x.fillStyle='#000';const ox=Math.floor(s*.6),oy=Math.floor(H*(baseline==='middle'?.5:.66));x.fillText(text,ox,oy);
+  const b=inkBox(x,W,H);if(!b)return{w:tw,h:s,cx:tw/2,cy:baseline==='middle'?0:-s*.35,x1:0};return{w:b.x2-b.x1,h:b.y2-b.y1,cx:(b.x1+b.x2)/2-ox,cy:(b.y1+b.y2)/2-oy,x1:b.x1-ox};}
+function signPlane(text,w,h,bg,fg){text=String(text).replace(/️/g,'');   /* 🧹 no hidden character after an emoji: some tablets drew it as a little box (night 3, job 18) */
   const H=160,W=Math.round(H*w/h),c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
-  const draw=()=>{x.fillStyle=bg;x.fillRect(0,0,W,H);let s=104;x.font=`800 ${s}px ${FONT}`;const tw=x.measureText(text).width;
-    if(tw>W-100){s=Math.floor(s*(W-100)/tw);x.font=`800 ${s}px ${FONT}`;}   /* a wide margin: some tablets draw emoji wider than they measure them */
-    x.textAlign='center';x.textBaseline='middle';x.fillStyle=fg;x.fillText(text,W/2,H/2+s*.07);};
+  const draw=()=>{x.fillStyle=bg;x.fillRect(0,0,W,H);let s=104,f=()=>`800 ${s}px ${FONT}`,b=inkOf(text,f(),'alphabetic');
+    const mx=Math.max(12,W*.06),my=Math.max(8,H*.1),k=Math.min((W-2*mx)/(b.w||1),(H-2*my)/(b.h||1),1);if(k<1){s=Math.max(12,Math.floor(s*k));b=inkOf(text,f(),'alphabetic');}   /* a wide margin: inside the sign with room to spare */
+    x.font=f();x.textAlign='left';x.textBaseline='alphabetic';x.fillStyle=fg;const tx=W/2-b.cx,ty=H/2-b.cy;x.fillText(text,tx,ty);   /* the ink's middle lands in the sign's middle */
+    const bgc=/^#[0-9a-f]{6}$/i.test(bg)?[1,3,5].map(i=>parseInt(bg.slice(i,i+2),16)):null,v=bgc&&inkBox(x,W,H,bgc);   /* second look: only the pixels that really show against the sign's colour (the steam of ☕ is nearly white) decide the middle */
+    if(v){const dx=W/2-(v.x1+v.x2)/2,dy=H/2-(v.y1+v.y2)/2;if(Math.abs(dx)>1||Math.abs(dy)>1){x.fillStyle=bg;x.fillRect(0,0,W,H);x.fillStyle=fg;x.fillText(text,tx+dx,ty+dy);}}};
   draw();const t=new THREE.CanvasTexture(c);t.anisotropy=4;fontLate(()=>{draw();t.needsUpdate=true;});
-  const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:t}));m.userData.keep=1;return m;
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:t}));m.userData.keep=1;m.userData.sign={text,w,h,bg,fg,c};return m;
 }
 /* 🔤 signs drawn before the round game font arrived are drawn again once it is there (slow internet: the font may come after the town is built) */
 let FONTQ=null;
@@ -1500,7 +1512,7 @@ function buildingIn(g,o){
     for(let i=0;i<n;i++)box(p,sw,.08,1.5,i%2?'#ffffff':o.awning,-(w+.4)/2+sw*(i+.5),2.86,.7,{rx:.32,ol:.012,center:true});
     for(let i=0;i<n;i++)box(p,sw,.26,.04,i%2?'#ffffff':o.awning,-(w+.4)/2+sw*(i+.5),2.36,1.42,{ol:.012});
     const bw=Math.min(w-1,7);box(p,bw,1.0,.16,o.signBg||'#ffffff',0,3.25,.1);
-    const sm=signPlane(o.sign,bw-.3,.8,o.signBg||'#ffffff',o.signFg||'#3d2c5e');sm.position.set(0,3.75,.19);p.add(sm);}
+    const sm=signPlane(o.sign,bw-.3,.8,o.signBg||'#ffffff',o.signFg||'#3d2c5e');sm.position.set(0,3.75,.2);p.add(sm);}   /* 2 cm in front of its board (run 4, job 5) */
 }
 function windowIn(g,x,y,z,ry,cur='#ff9ec4'){const p=new THREE.Group();p.position.set(x,y,z);p.rotation.y=ry;g.add(p);
   box(p,1.6,1.5,.08,'#ffffff',0,-.09,0);box(p,1.4,1.3,.1,null,0,0,0,{mat:PANE,ol:false});
@@ -1547,8 +1559,8 @@ function foodTruck(st,L,x,z){const B='#ff8a6b',W='#ffffff';
   cyl(st,.13,.13,.05,'#c98f5e',x+1.35,1.16,z+.5,{seg:10,ol:.01});box(st,.26,.03,.26,'#ffd45c',x+1.35,1.21,z+.5,{ol:false});sph(st,.13,'#e0a874',x+1.35,1.26,z+.5,{s:[1,.6,1],ws:10,hs:6,ol:.01});
   box(st,.2,.2,.14,'#ff6b6b',x+1.35,1.16,z-.3,{ol:.01});for(let i=0;i<4;i++)box(st,.03,.3,.03,'#ffd45c',x+1.28+i*.045,1.2,z-.3,{ol:false});
   box(st,.34,.08,.12,'#ffe0c4',x+1.35,1.16,z-1.0,{ol:.01});cyl(st,.04,.04,.3,'#e0745a',x+1.35,1.28,z-1.0,{rz:Math.PI/2,center:true,seg:6,ol:false});
-  const sg=signPlane('🍔 Food truck',2.4,.6,'#ff6b6b','#ffffff');sg.position.set(x+1.13,2.05,z-.35);sg.rotation.y=Math.PI/2;L.g.add(sg);
-  sph(st,.11,null,x+1.75,1.95,z-.35,{mat:LAMP,ol:.012,ws:8,hs:6});   /* a little lamp under the awning for the evening */
+  box(st,.08,.74,2.6,W,x+1.0,2.5,z-.35,{ol:.015});const sg=signPlane('🍔 Food truck',2.4,.6,'#ff6b6b','#ffffff');sg.position.set(x+1.06,2.87,z-.35);sg.rotation.y=Math.PI/2;L.g.add(sg);   /* 🪧 on the roof's edge above the awning (run 4, job 5: the awning's inner edge used to run through the sign's top) */
+  sph(st,.11,null,x+1.75,1.95,z+.95,{mat:LAMP,ol:.012,ws:8,hs:6});   /* a little lamp under the awning's end for the evening (no longer in front of the sign) */
   col(L,x-1.25,z-2.3,x+1.95,z+2.85);
   inter(L,{x:x+2.1,z:z-.35,r:2.4,icon:()=>shopOpen('truck')?'🍔':'🌙',label:'Food truck',say:()=>shopOpen('truck')?'':`🌙 Closed · opens at ${DAY_ON}:00`,
     act:()=>{if(shopOpen('truck')){openShop('truck');return;}SFX.no();toast(`🌙 The Food truck is closed now. It opens at ${DAY_ON}:00 ☀️`,3);}});}
@@ -1752,8 +1764,8 @@ function buildSalon(){const L=makeLoc('salon','in',4100,0,[-6,-4.5,6,4.5]);const
   col(L,-6,-1.4,-5.6,2.0);
   box(pr,2.6,.1,.6,'#b79cff',3.6,.45,3.3,{ol:.015});box(pr,2.6,.5,.08,'#b79cff',3.6,.55,3.56,{ol:.015});for(const s of[-1.1,1.1])box(pr,.1,.45,.5,'#5a5f8c',3.6+s,0,3.3,{ol:.012});col(L,2.2,2.9,5.0,3.7);   /* a waiting bench */
   const s1=signPlane('✂ Hair Salon',3.4,.7,'#ff9ec4','#ffffff');s1.position.set(0,2.75,-4.44);L.g.add(s1);
-  const s2=signPlane('💇 Long · Bob · Ponytail',3.0,.5,'#ffffff','#3d2c5e');s2.position.set(5.94,2.2,1.6);s2.rotation.y=-Math.PI/2;L.g.add(s2);
-  const s3=signPlane('🌀 Bun · Pigtails · Curly',3.0,.5,'#ffffff','#3d2c5e');s3.position.set(5.94,1.55,1.6);s3.rotation.y=-Math.PI/2;L.g.add(s3);
+  const s2=signPlane('💇 Long · Bob · Ponytail',2.8,.5,'#ffffff','#3d2c5e');s2.position.set(5.94,2.2,2.25);s2.rotation.y=-Math.PI/2;L.g.add(s2);   /* past the window's curtain (run 4, job 5: the curtain's top crossed the posters' end) */
+  const s3=signPlane('🌀 Bun · Pigtails · Curly',2.8,.5,'#ffffff','#3d2c5e');s3.position.set(5.94,1.55,2.25);s3.rotation.y=-Math.PI/2;L.g.add(s3);
   bake(sh,false);bake(pr,true);
   inter(L,{x:0,z:3.8,r:1.9,icon:'🚪',label:'Go outside',act:()=>exitTo('salon')});
   inter(L,{x:-2.4,z:-.6,r:2.4,icon:'✂️',hs:1,label:()=>HS.cust&&HS.cust.sat?'Do '+HS.cust.name+"'s hair":'Your salon chair',act:()=>{if(HS.cust&&HS.cust.sat)hsCard();else{SFX.tap();toast(S.job==='hair'?(hs().done>=HS_MAX?`🌟 All ${HS_MAX} customers done today!`:!isDaytime()?`Customers come from ${DAY_ON}:00 ☀️`:'A customer will come in soon! ✂️'):'Want to work here? Ask Rosie for the ✂️ Hairstylist job!',3.2);}}});
@@ -1887,7 +1899,7 @@ function buildCity(){
     for(let i=0;i<10;i++){const z=19.95+i*.47;cone(st,.13,.26,['#ff4d6d','#ffd45c','#7cc8ff','#7fdcb5','#b79cff'][i%5],-37.74,3.42,z,{rz:Math.PI,center:true,seg:3,ol:false,s:[.35,1,1]});}
     box(st,.03,.03,4.3,'#3d2c5e',-37.74,3.55,SZ,{ol:false});
     for(const [bx,z] of[[-35.2,19.95],[-36.95,24.05]]){box(st,.015,1.5,.015,'#ffffff',bx,TOP,z,{ol:false});for(const [dx,dy,dz,c] of [[0,2.15,0,'#ff7aa8'],[.12,1.95,.14,'#ffd45c'],[-.1,1.98,-.12,'#7cc8ff']])sph(st,.17,c,bx+dx,dy,z+dz,{s:[1,1.18,1],ws:10,hs:8,ol:.015});}
-    const sg=signPlane('🏆 Pet Show',3.0,.8,'#ffd45c','#3d2c5e');sg.position.set(-37.82,2.62,SZ);sg.rotation.y=Math.PI/2;L.g.add(sg);
+    const sg=signPlane('🏆 Pet Show',3.0,.8,'#ffd45c','#3d2c5e');sg.position.set(-37.82,2.62,SZ);sg.rotation.y=Math.PI/2;L.g.add(sg);   /* 2 cm in front of the stage's back wall (run 4, job 5: it was flush with it) */
     const sg2=signPlane('Every Saturday!',1.9,.38,'#ffffff','#ff4d8d');sg2.position.set(-37.82,1.98,SZ);sg2.rotation.y=Math.PI/2;L.g.add(sg2);
     box(st,.7,.74,3.3,'#ffffff',-32.75,0,SZ);box(st,.05,.62,3.34,'#ff4d6d',-33.12,.1,SZ,{ol:.015});box(st,.06,.06,3.36,'#ffd45c',-33.12,.7,SZ,{ol:false});
     for(const z of[21.05,22,22.95]){box(st,.44,.44,.44,'#9a6a43',-32.02,0,z);box(st,.48,.07,.48,'#ff9ec4',-32.02,.44,z,{ol:.012});box(st,.07,.62,.48,'#9a6a43',-31.76,.5,z);}
@@ -3151,7 +3163,7 @@ function buildClaw(L,sh,pr,mx,mz){
   for(let i=0;i<7;i++)sph(pr,.032,null,mx+.55,2.13,mz-.5+i*.1667,{mat:GLOW,ws:6,hs:5,ol:false});
   for(const s of[-1,1])box(pr,.03,.03,1.0,'#c8cde0',mx+s*.45,1.98,mz,{ol:false});
   const sg=signPlane('🕹 CLAW',.95,.24,'#ffd45c','#ff4d8d');sg.position.set(mx+.553,2.3,mz);sg.rotation.y=Math.PI/2;L.g.add(sg);
-  const ps=signPlane('10 🪙 a go!',.5,.13,'#ffffff','#3d2c5e');ps.position.set(mx+.796,.66,mz-.2);ps.rotation.y=Math.PI/2;L.g.add(ps);
+  const ps=signPlane('10 🪙 a go!',.5,.13,'#ffffff','#3d2c5e');ps.position.set(mx+.815,.66,mz-.2);   /* 2 cm in front of the machine's side (run 4, job 5) */ps.rotation.y=Math.PI/2;L.g.add(ps);
   col(L,mx-.55,mz-.62,mx+.82,mz+.62);
   inter(L,{x:mx+1.35,z:mz,r:1.6,icon:'🕹️',label:'Play the claw machine · 10 🪙',act:()=>clawOpen()});
   const g=new THREE.Group();L.dyn.add(g);
@@ -3213,7 +3225,7 @@ function buildSchool(){const {L,sh,pr}=room('school',1400,'#fff6dc','wood');
   for(const s of[-1,1])for(let i=0;i<7;i++){const z=-1.9+i*.62,c=['#7cc8ff','#ff9ec4','#ffd45c','#7fdcb5'][(i+(s>0?2:0))%4];
     box(pr,.45,1.9,.58,c,s*5.75,0,z,{ol:.012});for(let k=0;k<3;k++)box(pr,.02,.02,.3,'#3d2c5e',s*5.52,1.62+k*.07,z,{ol:false});sph(pr,.03,'#ffffff',s*5.52,1.05,z-s*.18,{ws:6,hs:5,ol:false});}
   for(const s of[-1,1])col(L,s*5.5,-2.25,s*6,2.3);
-  box(pr,1.9,1.2,.06,'#a8714a',3.4,.8,4.44);const nb=signPlane('📌 Fun facts!',1.7,1.0,'#fff6c8','#3d2c5e');nb.position.set(3.4,1.4,4.4);nb.rotation.y=Math.PI;L.g.add(nb);
+  box(pr,1.9,1.2,.06,'#a8714a',3.4,.8,4.44);const nb=signPlane('📌 Fun facts!',1.7,1.0,'#fff6c8','#3d2c5e');nb.position.set(3.4,1.4,4.39);   /* 2 cm in front of its board (run 4, job 5) */nb.rotation.y=Math.PI;L.g.add(nb);
   inter(L,{x:3.4,z:3.5,r:1.7,icon:'✏️',label:'Learn something new',act:()=>{SFX.pop();toast('✏️ '+pick(BOOK_FACTS),4.6);if(cool('learn',3))addXP('read',4);qEvent('read');}});
   box(pr,2.0,.95,.5,'#a8714a',-3.4,0,4.15);box(pr,2.06,.05,.56,'#ffffff',-3.4,.95,4.15,{ol:.01});col(L,-4.45,3.85,-2.35,4.5);
   for(const [x,h] of [[-4.0,.34],[-3.4,.46],[-2.8,.3]]){cyl(pr,.07,.09,.06,'#ffc93c',x,1.0,4.15,{seg:10,ol:.008});cyl(pr,.025,.025,h*.4,'#ffc93c',x,1.06,4.15,{seg:6,ol:false});cyl(pr,.13,.07,h*.5,'#ffc93c',x,1.06+h*.4,4.15,{seg:12,ol:.01});}
@@ -3265,7 +3277,7 @@ const FLOOR_C=[null,{w:'#fff0e2',s:'#ffc2b8',r:'#ff8a8a',n:'#e0605a'},{w:'#eaf3f
 function plateTex(t,bg,fg,w,h){w=w||256;h=h||150;const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');
   x.fillStyle='#3d2c5e';rr(x,0,0,w,h,28);x.fill();x.fillStyle=bg;rr(x,9,9,w-18,h-18,21);x.fill();
   x.fillStyle=fg;x.textAlign='center';x.textBaseline='middle';let fs=Math.round(h*.62);x.font=`900 ${fs}px ${FONT}`;
-  while(x.measureText(t).width>w-34&&fs>12){fs-=3;x.font=`900 ${fs}px ${FONT}`;}x.fillText(t,w/2,h/2+fs*.06);
+  while(x.measureText(t).width>w-34&&fs>12){fs-=3;x.font=`900 ${fs}px ${FONT}`;}let b=inkOf(t,x.font,'middle');while(b.w>w-34&&fs>12){fs-=3;x.font=`900 ${fs}px ${FONT}`;b=inkOf(t,x.font,'middle');}x.textAlign='left';x.fillText(t,w/2-b.cx,h/2-b.cy);   /* centred by the ink (run 4, job 5) */
   const T=new THREE.CanvasTexture(c);T.anisotropy=4;return T;}
 function plate(g,t,bg,fg,w,h,x,y,z,ry,two){const M=new THREE.MeshBasicMaterial({map:plateTex(t,bg,fg,512,Math.round(512*h/w))});
   for(const k of two?[0,1]:[0]){const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),M);m.position.set(x,y,z);m.rotation.y=(ry||0)+k*Math.PI;g.add(m);}}
@@ -7520,7 +7532,7 @@ function buildBoard(L,st){const X=-17.3,Z=10.6,ry=Math.atan2(-22-X,22-Z),W='#b77
   box(g,2.3,1.25,.1,W,0,.8,0);box(g,2.08,1.03,.03,'#d9a066',0,.91,.065,{ol:false});box(g,2.3,.36,.1,W,0,2.05,0);prism(g,2.7,.66,.36,'#ff8a6b',0,2.41,0);
   for(const [x,y,w,h,c,r] of [[-.72,1.43,.42,.36,0,.08],[-.18,1.5,.36,.34,1,-.06],[.36,1.41,.44,.38,2,.05],[.8,1.53,.3,.3,3,-.1],[-.6,.99,.4,.34,4,-.05],[.04,1.0,.36,.32,5,.07],[.6,.97,.42,.36,0,-.04]]){
     box(g,w,h,.012,BD.COLS[c],x,y,.087,{ol:false,rz:r});for(const k of[.58,.36])box(g,w*(k>.5?.66:.48),.025,.006,'#8a7fa8',x,y+h*k,.095,{ol:false,rz:r});sph(g,.032,'#ff4d6d',x,y+h-.05,.1,{ws:6,hs:4,ol:false});}
-  bake(g);const sg=signPlane('💡 Ideas Board',2.05,.3,'#fff7fb','#3d2c5e');sg.position.set(0,2.23,.052);g.add(sg);g.visible=false;L.g.add(g);BD.g=g;
+  bake(g);const sg=signPlane('💡 Ideas Board',2.05,.3,'#fff7fb','#3d2c5e');sg.position.set(0,2.23,.066);g.add(sg);   /* 1.6 cm in front of the header board (run 4, job 5: it was 2 mm) */g.visible=false;L.g.add(g);BD.g=g;
   const c=Math.cos(ry),s=Math.sin(ry);for(const k of[-.85,0,.85])BD.cols.push({cx:X+c*k,cz:Z-s*k,cr:.32});   /* only solid while the board is shown */
   inter(L,{x:X+s*1.1,z:Z+c*1.1,r:2.6,icon:'📌',label:'Read the ideas board',act:()=>openBoard(),when:()=>BD.on,obj:g});   /* tap the board itself too (hidden = not tappable) */
   /* 🌳 a big old oak next to the board (always there) */
@@ -7658,7 +7670,7 @@ function holBuild(h){const L=LOC.city,G=new THREE.Group(),st=new THREE.Group();G
     for(const [x,z,ry] of HOL_DOORS){const fx=Math.sin(ry),fz=Math.cos(ry),px=x+fx*.75+Math.cos(ry)*.85,pz=z+fz*.75-Math.sin(ry)*.85;pumpkin(st,px,pz,ry,1);glows.push([px,.3,pz,1.1,[.9,.42,.08]]);}
     for(const lp of L.lane||[]){const ry=lp.ry,px=lp.sx+Math.cos(ry)*.55,pz=lp.sz-Math.sin(ry)*.55;pumpkin(st,px,pz,ry,.8);glows.push([px,.26,pz,.95,[.9,.42,.08]]);}   /* 🏡 by every sign on Friends Lane */
     for(const [x,z] of [[-84.6,-4.45],[-84.6,4.45]]){pumpkin(st,x+.55,z,Math.PI/2,1.1);glows.push([x+.55,.32,z,1.2,[.9,.42,.08]]);}
-    const OP=['#ff8a2b','#8a4de0'];garland(st,-38.0,1.9,8.3,-24.2,8.3,OP);garland(st,-19.8,1.9,8.3,-8.3,8.3,OP);garland(st,-84.6,3.7,-4.45,-84.6,4.45,OP);garland(st,-37.8,3.3,19.85,-37.8,24.15,OP);HOL.n+=4;
+    const OP=['#ff8a2b','#8a4de0'];garland(st,-38.0,1.9,8.3,-24.2,8.3,OP);garland(st,-19.8,1.9,8.3,-8.3,8.3,OP);garland(st,-84.6,3.7,-4.45,-84.6,4.45,OP);garland(st,-37.8,3.9,19.85,-37.8,24.15,OP);HOL.n+=4;   /* the stage's garland hangs from the post tops: its pendants used to hang over the Pet Show sign (run 4, job 5) */
     for(const [x,z] of [[-30,-8.3],[-24,-8.3]])garland(st,x-2.6,2.0,z,x+2.6,z,OP);
     /* 🕸️ cobwebs in corners: the Pet Show stage, the lane gate, the bus shelter */
     {const c=document.createElement('canvas');c.width=c.height=96;const x=c.getContext('2d');x.strokeStyle='rgba(255,255,255,.85)';x.lineWidth=2.2;for(let i=0;i<6;i++){x.beginPath();x.moveTo(0,0);const a=i/5*Math.PI/2;x.lineTo(Math.cos(a)*96,Math.sin(a)*96);x.stroke();}

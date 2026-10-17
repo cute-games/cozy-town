@@ -10,6 +10,7 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 | 2. The same game for everyone | yes | yes | N17, N18 pass |
 | 3. Halloween, all of October | yes | yes | N1 (rewritten) pass; N19 passes once job 4 frees the corner (see job 4) |
 | 4. The holiday spot at the Flower Corner | yes | yes | N19 pass (with the gate); gate smoke test pass |
+| 5. Signs and text | yes | yes | N23 pass (66 signs in 15 places, worst off-centre 0.6%, nothing crossed or coplanar) |
 
 (filled in after every job; if the session restarts: undo any half-done job, carry on from the next one)
 
@@ -48,6 +49,12 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 - Map: the corner's badge shows 🎃 "Spooky path" in October (🎄, 🐰, 💗 in the other holiday months from job 11) and its tap says the gate is open; otherwise 🌸 "Flower Corner".
 - Walkers: no townsperson path enters the corner, so nothing changes for them.
 - Should look like (BUILDER): from the north road in a holiday month: the white fence with an open gate in the middle, the stepping stones leading in, the "🌸 Flower Corner" sign left of the gate and (October) the two spooky signs right of it; in other months the same garden with the gate closed. Pictures: tools/pictures-4/after-flower-corner-gate-open-october-night.png, after-flower-corner-spooky-path.png, after-flower-corner-gate-closed-november.png.
+
+### Job 5: Signs and text (item 7)
+- Old: `signPlane` placed its text with measureText (centre-aligned) and only shrank the font while the measured width was wider than the sign; a colour emoji (iPad) draws wider than it measures, so "🏖 To the beach" and "🏰 Knights & castles" slid off centre or past the edge, and plates (apartment doors) and labels (name tags, bubbles) had the same weak spot. The food truck's sign stood in the awning's plane (the awning's inner edge ran through the sign's top, the lamp in front of it); the Pet Show signs were flush with the stage's back wall (z-fighting) and the Halloween garland's pendants hung over the sign's middle; the salon's two hairstyle posters had their left end behind the window curtain's top; the shop signs on buildings were 1 cm in front of their board, the school's "Fun facts" board 1 cm, the claw machine's price sign 6 mm, the Ideas Board's header 2 mm.
+- New: `inkOf`/`inkBox`: every sign, plate and label draws its text once on a scratch canvas and measures the pixels it really covers; a sign scales its font so the ink fits inside a 6% margin and puts the ink's middle on the sign's middle, then looks once more at the drawn sign and centres by the pixels that stand out against the sign's colour (the steam of ☕ is nearly white on a white sign). Food truck: sign on a board on the roof's edge above the awning, the lamp under the awning's end. Pet Show: both signs 2 cm in front of the wall, the stage garland hangs from the post tops (3.9 m, pendants above the sign among the pennants). Salon posters: 2.8 m wide, moved 65 cm along the wall, clear of the curtain. Building signs 2 cm in front of their board; "Fun facts" 2 cm; claw price 2 cm; Ideas Board 1.6 cm.
+- Test: N23 (66 signs in 15 places; worst off-centre 0.6%, limit 3%; nothing crossed or coplanar; with measureText bent 30% wider and 35% narrower every sign is still centred within 0.6% and inside). The first N23 run also found a bug in the test itself: a ray through a sign's own diagonal hits both its triangles, which it counted as "coplanar with something"; the test now ignores the sign's own second hit.
+- Should look like (BUILDER): every sign's text sits in the middle of its board with air all around. The Food truck sign stands on the truck's roof edge above the striped awning, the little lamp at the awning's far end. The Pet Show sign is on the stage's back wall between the red pillars with "Every Saturday!" under it; in October the garland hangs high by the post tops. In the salon the two hairstyle posters hang on the east wall right of the window, clear of the curtain. Picture: tools/pictures-4/after-pet-show-sign-october.png.
 
 ## 2. Check output per job, exactly as printed
 
@@ -192,4 +199,20 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
     PASS | N19 | oct1-day: halloween (101 pieces, path open False); oct1-night: halloween (101 pieces, path open True); oct31-day: halloween (101 pieces, path open False); oct31-night: halloween (101 pieces, path open True); nov1: None (0 pieces, path open False); sep30: None (0 pieces, path open False); October sho
 [stage run4: done in 29 s]
     PASS | N19 Halloween: October 1 and 31 (day and night) show it, 1 Nov doesn't; costumes on sale only in October, wearable, seen by others, kept after; the spooky path at the Flower Corner at least 20% longer than the park's was, at least 5 scare kinds, each turns you to face it with a small shake and a soft sound only with sound on; ghosts all over town, none inside; every holiday piece touches the ground or a support (gap under 2 cm) | oct1-day: halloween (101 pieces, path open False); oct1-night: halloween (101 pieces, path open True); oct31-day: halloween (101 pieces, path open False); oct31-night: halloween (101 pieces, path open
+```
+
+### Job 5 (N23 after the mounts and the test's own diagonal bug were fixed; the first two runs printed 28 flagged signs: 25 shop signs 1 cm off their boards, the Pet Show sign under the garland, the salon posters behind the curtain, and the three flush signs named above)
+```
+[stage files: running]
+[stage files: done in 1 s]
+    PASS | A1 newest live versions read right before the check | claude-form-of-github-live.html read on 2026-10-17, github-live.html read on 2026-10-17
+    PASS | A2 dated private backup of the live game | backup 709bf763d51be0160c118e2f9249f9f6 vs live GitHub 709bf763d51be0160c118e2f9249f9f6; title "Run 4 backup of the live game (tools/prerun4-index.html), made 2026-10-17, checked 2026-10-17"
+    PASS | F3a live GitHub version = live Claude version + web part, nothing else | 55 added lines in 2 places, no lines removed or changed
+    PASS | F1 no ZZTEST test data in the file to publish | ZZTEST appears 0 times
+    PASS | F5 no new outside addresses (same 3D library and font) | ['cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js', 'fonts.googleapis.com', 'fonts.googleapis.com/css2', 'fonts.gstatic.com']
+[stage run4: running]
+    PASS | N23 | 66 signs in 15 places; the worst off-centre 0.6% (limit 3%); crossed or coplanar: 0; '🏖 To the beach': off centre 0.3%, inside True, nothing crosses it True, nothing coplanar True; '🏰 Knights & castles': off centre 0.0%, inside True, nothing crosses it True, nothing coplanar True; '🏆 Pet Show': off 
+[stage run4: done in 22 s]
+    PASS | N23 Signs: every sign's text centered (within 3% of the sign) and inside its box with a margin, with and without a colour emoji font; the four named signs clean; no post, roof, light or spike crosses any sign's text | 66 signs in 15 places; the worst off-centre 0.6% (limit 3%); crossed or coplanar: 0; '🏖 To the beach': off centre 0.3%, inside True, nothing crosses it True, nothing coplanar True; '🏰 Knights & castle
+[partial run: some stages skipped by --only]
 ```
