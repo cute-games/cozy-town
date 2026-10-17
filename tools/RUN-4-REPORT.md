@@ -19,6 +19,7 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 | 10. Levels to 50, garden spots, house floors, house colour (stage 2, branch claude/run-4-s2) | yes | yes | N33, N34 pass |
 | 11. The other holidays: Valentine's, the Easter month, December, New Year, the school party | yes | yes | N20, N21, N22 pass; N1 (rewritten again to whole months) pass |
 | 12. The Pet Shop upstairs | yes | yes | N28 pass; N11 rerun pass |
+| 13. More furniture (72 new pieces) | yes | yes | N36 pass |
 
 (filled in after every job; if the session restarts: undo any half-done job, carry on from the next one)
 
@@ -132,6 +133,14 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 - Test N28: 2 floors, 7 areas each holding only its own kind and not overlapping, 14 animals, 60 s of wandering with none outside its own fence, the shelves and the clothes rack downstairs, buying a treat, the stairs up and down, adopting a pug upstairs. The night-3 line N11 (every kind adopts, follows, eats, plays, dresses, Pet Show) is rerun.
 - Should look like (BUILDER): downstairs a bright mint shop with full shelves and a colourful clothes rack, the stairs in the west wall; upstairs a long room with seven low pastel fences, each with its sign and its animals, a pond for the ducks, a perch for the owl, the hamsters' table, windows on three sides. Pictures: tools/pictures-4/after-petshop-downstairs.png, after-petshop-upstairs.png.
 - Decided alone: the hamsters keep their table (now upstairs); the owl's area is a perch at 95 cm, the capybara has an area of its own; the pet shop's clothes rack got its own name (the Clothes Shop already has a `clothesRack`, and sharing the name broke its mannequins in the first dry run).
+
+### Job 13: More furniture (item 28)
+- Old: 58 furniture pieces (39 in the home catalog). New: 72 more, marked `r4:1` in the furniture table, every one low-poly in the game's style from the same box/cylinder/sphere helpers, priced like its neighbours, most in several colours, all in the home catalog (`BUY_FURN`), so the "New in!" picks and the Interior designer's orders (`DS_ALL`) draw on them too:
+  - beds: canopy bed, daybed, baby crib, race car bed · seats: corner sofa, loveseat, stool, bar stool, rocking chair, hanging egg chair, wooden bench, pouf · tables: coffee table, side table, big dining table, round table, nightstand, vanity table (a mirror: changes your look) · lamps: floor lamp, table lamp, star lamp, neon sign (on a wall), paper lantern (all switch on and off) · rugs: heart, striped, star, doormat · plants: palm, monstera, orchid, herb pots, lucky bamboo, hanging plant (on a wall) · shelves and storage: cube shelf, corner shelf, treasure chest, coat rack, shoe rack, ladder shelf · kitchen: kitchen island, oven (cooks), dishwasher, coffee corner, kitchen trolley, spice shelf (on a wall) · bathroom: shower (a bubble bath), toilet, towel rack (on a wall), bath mat, laundry basket · kids' room: indoor slide, play tent, building blocks, toy train, drum kit (plays a tune), chalkboard · decorations: big vase, candles, photo frame, wall clock, bunting, snow globe, cuckoo clock, poster (five of them on walls) · outdoor: sun lounger, parasol, birdbath, barbecue (cooks), garden flamingo, picnic table · and the disco floor and the disco ball on its stand for job 17's dance game (the floor's tiles and the ball carry `userData` tags for the lights).
+- The school globe (job 11) stays a gift. Nothing old moved or changed.
+- Test N36: every new piece in the catalog with a price and a footprint, builds with finite geometry inside its footprint and under the ceiling, places in the house one by one; the catalog lists them, thumbnails draw, the designer's pool has them; a loveseat bought through the catalog; five pieces saved, read back and sent in the home presence; a PC-size visitor builds them in the host's room.
+- Should look like (BUILDER): the catalog's "All furniture" grid is three times longer, each new piece with a clean little thumbnail; in the house a corner sofa, a canopy bed or a play tent look like the old pieces' siblings (same outlines, same pastel palette, same scale). Pictures: tools/pictures-4/after-new-furniture-in-the-house.png, after-new-furniture-catalog.png.
+- Decided alone: the pieces' prices follow their nearest old relative (a stool 35 like the plant, a canopy bed 420 like the bunk bed and the sofa together); wall pieces hang at 1.0 to 2.2 m like the wall cupboard; the disco ball stands on a tall pole rather than hanging from the ceiling (the game has no ceiling mounts); the catalog keeps one long grid (no categories were asked for).
 
 ## 2. Check output per job, exactly as printed
 
@@ -858,6 +867,15 @@ FAIL, anything else: none
     PASS | N28 | 2 floors; 7 areas upstairs for ['bunny', 'capybara', 'cat', 'dog', 'duck', 'hamster', 'owl']; 14 animals; 60 s of wandering: 0 of 16800 animal-frames outside their own area; who lives where: [['dog', 'pug', 'pomchi', 'sausage'], ['cat', 'cat'], ['bunny', 'bunny'], ['capybara'], ['duck', 'duck'], ['o
 [stage run4: done in 16 s]
     PASS | N28 Pet shop: two floors; each kind in its own area upstairs, no kind in another's area; clothes and snacks on shelves downstairs; adopting and buying still work | 2 floors; 7 areas upstairs for ['bunny', 'capybara', 'cat', 'dog', 'duck', 'hamster', 'owl']; 14 animals; 60 s of wandering: 0 of 16800 animal-frames outside their own area; who lives where: [['dog', 
+[partial run: some stages skipped by --only]
+```
+
+### Job 13 (N36 written for this job in the kit's furn4.py; the scratch-copy dry run found five pieces poking out of their footprint or under the floor: the race car bed's and the drum kit's wheels, the palm's fronds, the monstera, the disco ball's arm; all five were trimmed)
+```
+[stage run4: running]
+    PASS | N36 | 72 new pieces (r4), 54 with several colours; builds, fits its footprint, buyable and priced: 72 of 72; kinds covered: 13 of 13; in the shop's list 72, thumbnails drawn 6/6, in the designer's pool 72; placed in the house one by one: 72 (failed []); bought a loveseat from the catalog for 190 coins (pl
+[stage run4: done in 33 s]
+    PASS | N36 Furniture: at least 60 new pieces across every kind, each buyable, placeable, saved and seen by a visitor | 72 new pieces (r4), 54 with several colours; builds, fits its footprint, buyable and priced: 72 of 72; kinds covered: 13 of 13; in the shop's list 72, thumbnails drawn 6/6, in the designer's pool 72; 
 [partial run: some stages skipped by --only]
 ```
 
