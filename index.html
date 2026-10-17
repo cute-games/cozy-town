@@ -448,7 +448,9 @@ button{font-family:inherit}
 #knockCard .kc-m{margin:6px 0 12px;font-size:16px;font-weight:700;line-height:1.35}
 #knockCard .kc-b{display:flex;gap:10px;justify-content:center}
 @keyframes kcPop{0%{transform:translateX(-50%) scale(.6);opacity:0}70%{transform:translateX(-50%) scale(1.06);opacity:1}100%{transform:translateX(-50%) scale(1)}}/* 😴 sleeping together: the bed card at the bottom, and the phone wiggles when friends ring */#zzCard{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translateX(-50%);width:min(380px,calc(100vw - 32px));background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:22px;box-shadow:0 5px 0 var(--soft);padding:8px 12px 14px;text-align:center;pointer-events:auto}#zzCard[hidden]{display:none}#zzCard .zt{font-size:22px;font-weight:900}#zzCard .zs{font-size:15px;font-weight:700;line-height:1.25;margin:2px 0 10px}#zzCard .zb{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}#zzCard .btn{font-size:18px;padding:10px 12px}body.zz #joy,body.zz #moveBtns,body.zz #actWrap{visibility:hidden}#bPhone.ring{animation:noteWiggle .4s ease-in-out 6}/* 👀 away or offline: the "Still there?" / "Reconnecting…" card over the game, and the message on the title */#awayBox{position:fixed;inset:0;z-index:9700;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(46,35,71,.45)}#awayBox[hidden]{display:none}#awayBox .awc{width:min(380px,100%);background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:24px;box-shadow:0 5px 0 var(--soft);padding:16px 16px 18px;text-align:center;animation:awPop .35s ease-out both}#awayBox .awt{font-size:28px;font-weight:900;line-height:1.2}#awayBox .aws{font-size:17px;font-weight:700;line-height:1.3;margin:6px 0 14px}#awayBox .awc[role=alert] .aws{margin-bottom:2px}@keyframes awPop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.06);opacity:1}100%{transform:scale(1)}}@media (prefers-reduced-motion:reduce){#awayBox .awc{animation:none}}#tMsg{margin:0;max-width:min(620px,100%);background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:20px;box-shadow:0 4px 0 var(--soft);padding:10px 18px;font-weight:800;font-size:clamp(18px,2.8vw,24px);line-height:1.3}body.away #title .tag,body.away #tSet{display:none}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #awayBox{background:rgba(8,5,20,.72)}:root:not([data-theme="light"]) #awayBox .awc{border-color:var(--brown)}}:root[data-theme="dark"] #awayBox{background:rgba(8,5,20,.72)}:root[data-theme="dark"] #awayBox .awc{border-color:var(--brown)}body.away #panel,body.away #tut,body.away #toast,body.away #knockCard,body.away #tchBar,body.away .pop{visibility:hidden}/* 📖 What's new: the Update Book on the title (idea 37) */#tRow{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}body.away #tNew{display:none}#tCred{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 12px);margin:0;white-space:nowrap;color:#fff;font-weight:800;font-size:clamp(17px,2.2vw,23px);line-height:1.2;letter-spacing:.2px;text-shadow:2px 0 0 #3d2c5e,-2px 0 0 #3d2c5e,0 2px 0 #3d2c5e,0 -2px 0 #3d2c5e,1.5px 1.5px 0 #3d2c5e,-1.5px 1.5px 0 #3d2c5e,1.5px -1.5px 0 #3d2c5e,-1.5px -1.5px 0 #3d2c5e,0 4px 0 #3d2c5e;pointer-events:none}#tCred b{color:#ff7aa8}@media (max-width:600px){#tCred{bottom:calc(env(safe-area-inset-bottom,0px) + 42px)}}@media (max-height:500px){#tCred{left:calc(env(safe-area-inset-left,0px) + 12px);transform:none;bottom:calc(env(safe-area-inset-bottom,0px) + 8px);font-size:16px}}#book img{pointer-events:none;-webkit-user-drag:none;user-select:none}#book{position:fixed;inset:0;z-index:9000;display:none;align-items:center;justify-content:center;padding:calc(10px + env(safe-area-inset-top,0px)) calc(10px + env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) calc(10px + env(safe-area-inset-left,0px));background:rgba(25,16,48,.5);touch-action:none}#book.open{display:flex}#book .bk-card{position:relative;width:min(1040px,100%);max-height:100%;overflow:auto;display:flex;flex-direction:column;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:26px;box-shadow:0 8px 0 var(--soft);padding:14px 18px 18px;text-align:left;animation:bkPop .16s ease-out}@keyframes bkPop{from{transform:scale(.96);opacity:0}to{transform:none;opacity:1}}@media (prefers-reduced-motion:reduce){#book .bk-card{animation:none}}#book .bk-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}#book .bk-lbl{font-weight:800;font-size:20px;flex:1}#book .bk-num{font-weight:800;font-size:16px;opacity:.75}#book .bk-head .btn.x{position:static;flex:none;margin:0}#book .bk-page{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:22px;align-items:center;min-height:0;touch-action:pan-y}#book .bk-pic,#book .bk-art{position:relative;aspect-ratio:4/3;width:100%}#book .bk-main{width:100%;height:100%;object-fit:cover;display:block;border:3px solid var(--line);border-radius:20px;background:var(--paper2,#f3e9ff)}#book .bk-inset{position:absolute;right:-8px;bottom:-10px;width:42%;aspect-ratio:4/3;object-fit:cover;border:3px solid var(--line);border-radius:14px;box-shadow:0 4px 0 var(--soft);transform:rotate(3deg);background:var(--paper2,#f3e9ff)}#book .bk-grid4{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px}#book .bk-grid4 img{width:100%;height:100%;min-height:0;object-fit:cover;display:block;border:3px solid var(--line);border-radius:14px}#book .bk-art{border:3px solid var(--line);border-radius:20px;background:var(--paper2,#f3e9ff);display:grid;place-items:center;font-size:clamp(64px,10vw,120px)}#book .bk-txt{display:flex;flex-direction:column;gap:10px;min-width:0}#book .bk-txt h2{margin:0 0 4px;font-size:clamp(26px,3.3vw,40px);line-height:1.08;font-weight:800}#book .bk-txt p{margin:0;font-size:clamp(17px,2vw,23px);line-height:1.3;font-weight:700}#book .bk-txt ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}#book .bk-txt li{font-size:clamp(17px,2vw,23px);line-height:1.25;font-weight:700;background:var(--paper2,#f3e9ff);border:2px solid var(--line);border-radius:14px;padding:6px 12px}#book .bk-credit b{color:var(--pink,#ff7aa8)}#book .bk-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:16px}#book .bk-dots{display:flex;gap:8px;justify-content:center;min-width:0}#book .bk-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--line);flex:none}#book .bk-dot.on{background:var(--pink,#ff7aa8)}#book .bk-nav{min-width:120px;flex:none;white-space:nowrap}#book .bk-board{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:12px}#book .bk-tag{background:var(--butter,#ffd45c);color:#3d2c5e;border:3px solid #3d2c5e;border-radius:16px;box-shadow:0 4px 0 rgba(61,44,94,.28);padding:6px 16px;font-weight:800;font-size:clamp(20px,2.6vw,30px);line-height:1.2;white-space:nowrap;transform:rotate(var(--r,0deg))}@media (max-aspect-ratio:1/1){#book .bk-card{padding:12px 14px 14px;height:min(100%,1000px)}#book .bk-page{grid-template-columns:1fr;gap:14px;align-content:start}#book .bk-pic,#book .bk-art{height:min(45vh,calc((100vw - 64px)*.75));width:auto;justify-self:center}#book .bk-foot{margin-top:auto;padding-top:12px}#book .bk-txt h2{font-size:clamp(26px,4.2vw,40px)}#book .bk-txt p,#book .bk-txt li{font-size:clamp(17px,2.8vw,24px)}}@media (max-width:480px){#book .bk-nav{min-width:0;width:56px;padding:0}#book .bk-nav .bk-w{display:none}#book .bk-nav.last{width:auto;padding:0 14px}#book .bk-nav.last .bk-w{display:inline}#book .bk-dot{width:10px;height:10px}#book .bk-dots{gap:4px}#book .bk-lbl{font-size:18px}}@media (max-height:500px){#book .bk-card{padding:8px 14px 10px}#book .bk-head{margin-bottom:6px}#book .bk-foot{margin-top:8px}#book .bk-page{grid-template-columns:auto minmax(0,1fr);gap:16px}#book .bk-pic,#book .bk-art{height:calc(100vh - 156px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));width:auto}#book .bk-art{font-size:72px}#book .bk-txt{gap:6px}#book .bk-txt h2{font-size:24px;margin:0}#book .bk-txt p,#book .bk-txt li{font-size:16px}#book .bk-txt li{padding:3px 10px}#book .bk-board{gap:8px}#book .bk-tag{font-size:17px;padding:4px 12px}}
-/* 7 Oct 2026: homework paper readable in light and dark; bigger right/wrong buttons; class messages at the top; buttons at least 44 px */.tpaper .paper{color:#3d2c5e}.tpaper .tqq{color:#3d2c5e;font-size:17px;font-weight:700}.tpaper .tb{min-width:58px;min-height:52px;font-size:22px}.tpaper .tb+.tb{margin-left:10px}@media (max-height:500px){.tpaper .tb{min-height:44px;min-width:52px;font-size:19px}.tpaper .tqq{font-size:16px}}@media (min-width:700px) and (min-height:600px){#card.tpaper{width:min(640px,92vw);max-width:min(640px,92vw)}}body.tch #toast{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto}.pill{min-height:44px}.sw{min-width:44px;min-height:44px}.ph-home{height:44px;background:none;position:relative}.ph-home::after{content:'';position:absolute;left:0;right:0;top:17px;height:10px;border-radius:99px;background:rgba(255,255,255,.6)}@media (max-height:500px){#card{max-height:calc(100vh - 16px);max-height:calc(100dvh - 16px);overflow-y:auto;overscroll-behavior:contain}#card:has(.earn) .row:last-child{position:sticky;bottom:0;background:var(--paper);padding:6px 0 2px;margin-bottom:0}}.ph-back{width:44px;height:44px}.qbtn{min-height:44px}.x{width:44px;height:44px;min-height:44px;border-width:3px}.qtag{color:#3d2c5e}</style>
+/* 7 Oct 2026: homework paper readable in light and dark; bigger right/wrong buttons; class messages at the top; buttons at least 44 px */.tpaper .paper{color:#3d2c5e}.tpaper .tqq{color:#3d2c5e;font-size:17px;font-weight:700}.tpaper .tb{min-width:58px;min-height:52px;font-size:22px}.tpaper .tb+.tb{margin-left:10px}@media (max-height:500px){.tpaper .tb{min-height:44px;min-width:52px;font-size:19px}.tpaper .tqq{font-size:16px}}@media (min-width:700px) and (min-height:600px){#card.tpaper{width:min(640px,92vw);max-width:min(640px,92vw)}}body.tch #toast{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto}.pill{min-height:44px}.sw{min-width:44px;min-height:44px}.ph-home{height:44px;background:none;position:relative}.ph-home::after{content:'';position:absolute;left:0;right:0;top:17px;height:10px;border-radius:99px;background:rgba(255,255,255,.6)}@media (max-height:500px){#card{max-height:calc(100vh - 16px);max-height:calc(100dvh - 16px);overflow-y:auto;overscroll-behavior:contain}#card:has(.earn) .row:last-child{position:sticky;bottom:0;background:var(--paper);padding:6px 0 2px;margin-bottom:0}}.ph-back{width:44px;height:44px}.qbtn{min-height:44px}.x{width:44px;height:44px;min-height:44px;border-width:3px}.qtag{color:#3d2c5e}.hsrow{display:flex;gap:10px;align-items:center}.hspic{width:92px;height:92px;border-radius:14px;border:3px solid #3d2c5e;background:#fff0f6;flex:none}.hsgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0}.hsgrid .btn{min-height:44px;padding:6px 6px;font-size:15px}.hsw{gap:8px;margin:4px 0}.hsw .sw{width:44px;height:44px}.hsdo{margin-top:6px}.hsdo .btn{min-height:44px;padding-top:8px;padding-bottom:8px}
+@media (max-height:520px){.hspic{width:62px;height:62px}.hsrow .line{font-size:14px;margin:0}.hsgrid{gap:4px;margin:4px 0}.hsgrid .btn{padding:4px 4px;font-size:14px}}
+</style>
 </head>
 <body>
 <canvas id="c"></canvas>
@@ -827,19 +829,20 @@ addEventListener('resize',()=>setTimeout(()=>{toastFit();notePlace();try{cardMor
   +'#card.psc.aim{display:grid;grid-template-columns:1fr auto;column-gap:12px;align-items:center}#card.psc.aim>.hd,#card.psc.aim>.note{grid-column:1/-1}.psc .psbar{height:44px;margin:6px 4px}#card.psc.aim .row{margin:0}.psc .psnow{font-size:22px;padding:8px 26px}'
   +'.phone{width:min(440px,94vw);padding:8px 10px 6px;gap:4px}.ph-screen{padding:8px 12px 10px}.ph-clock{font-size:32px;margin-top:0}.ph-date{font-size:14px;margin-bottom:0}.apps{grid-template-columns:repeat(5,1fr);gap:6px 4px;margin-top:6px}.app{font-size:13px;gap:2px}.app .ic{width:54px;height:54px;font-size:28px;border-radius:17px}.calic b{font-size:10px;line-height:15px}.calic i{font-size:24px;line-height:33px}}';
   document.head.appendChild(st);}
-let fading=false;
+let fading=false,RENDER0=null;
 function fade(fn){if(fading){setTimeout(()=>fade(fn),320);return;}fading=true;const f=$('fade');f.classList.add('on');setTimeout(()=>{try{fn();}catch(e){console.error(e);}setTimeout(()=>{f.classList.remove('on');fading=false;},80);},270);}
 
 /* ================= models ================= */
 function hairFor(h,L){
-  const c=L.hair,c2=L.hair2||c,s=L.style;
+  const c=L.hair,c2=L.hair2||c,s=L.style,len=L.len||(s==='long'?'long':(s==='short'||s==='curly')?'short':'shoulder');   /* ✂️ len: long, shoulder, short (job 15) */
   box(h,.54,.14,.48,c,0,.37,0);
   if(L.swoop){box(h,.34,.1,.07,c,-.09,.3,.215,{rz:-.2,ol:false});box(h,.24,.08,.07,c,.14,.34,.215,{rz:.12,ol:false});}
   else box(h,.52,.08,.07,c,0,.32,.215,{ol:false});
-  if(s==='short'||s==='curly'){box(h,.06,.2,.42,c2,-.27,.22,-.02);box(h,.06,.2,.42,c2,.27,.22,-.02);}
+  if(s==='bob'){box(h,.08,.28,.46,c2,-.27,.12,-.01);box(h,.08,.28,.46,c2,.27,.12,-.01);box(h,.56,.1,.5,c2,0,.1,-.02,{ol:false});}
+  else if(s==='short'||s==='curly'||len==='short'){box(h,.06,.2,.42,c2,-.27,.22,-.02);box(h,.06,.2,.42,c2,.27,.22,-.02);}
   else{box(h,.08,.34,.46,c2,-.27,.06,-.01);box(h,.08,.34,.46,c2,.27,.06,-.01);}
   box(h,.54,.4,.08,c2,0,.08,-.25);
-  if(s==='long'){box(h,.56,.42,.1,c2,0,-.3,-.25);box(h,.1,.36,.26,c2,-.27,-.28,-.08);box(h,.1,.36,.26,c2,.27,-.28,-.08);}
+  if(s==='long'||(len==='long'&&s!=='bun'&&s!=='short'&&s!=='bob'&&s!=='long')){box(h,.56,.42,.1,c2,0,-.3,-.25);box(h,.1,.36,.26,c2,-.27,-.28,-.08);box(h,.1,.36,.26,c2,.27,-.28,-.08);}
   if(s==='ponytail'){sph(h,.07,'#ff7aa8',0,.36,-.31,{ol:.015});box(h,.15,.38,.13,c,0,-.04,-.36,{rx:.22});}
   if(s==='bun')sph(h,.15,c,0,.58,-.05);
   if(s==='pigtails'){sph(h,.13,c,-.35,.2,-.05);sph(h,.13,c,.35,.2,-.05);sph(h,.05,'#ffd45c',-.29,.29,.02,{ol:.012});sph(h,.05,'#ffd45c',.29,.29,.02,{ol:.012});}
@@ -1672,6 +1675,79 @@ function wildTick(dt,now){if(!WILD.bf||!S)return;const t=(now/1000)%1e4,out=!!CU
   for(const m of[WILD.bf,WILD.birds,WILD.hoots])if(m.visible)m.material.uniforms.tm.value=t;
   if(WILD.hoots.visible&&PLAYING){WILD.hoot-=dt;if(WILD.hoot<=0){WILD.hoot=6+Math.random()*8;if(WILD.spots.some(o=>Math.hypot(o[0]-P.x,o[2]-P.z)<9))SFX.hoot();}}}
 
+/* ✂️ the hairstylist job and the Hair Salon (night 3, job 15). The salon stands on the west road by the Apartments, open 8:00 to 20:00 like the shops.
+   Rosie offers the job like the others (JOBS.hair). In the salon a customer comes in, sits in your chair and shows a picture of the hair they want
+   (their own face with that hair): a length (long, shoulder, short), a style (straight, bob, ponytail, bun, pigtails, curly) and one of 8 colours.
+   ✂️ cuts shorter (never back), 🪮 picks the style, 🎨 the colour; the hair changes as you work. ✅ Done gives 1 to 5 stars by how close it is
+   (length, style, colour, and not cutting too much) and coins by stars. The customer is always kind. Works by touch and on PC. HS_MAX a day */
+const SALON={x:-63.5,z:40.5,door:[-59.2,40.5]},HS_MAX=4,HS_PAY=[0,15,35,60,90,120];
+const HS_COLS=[['#2e2347','black'],['#5a3a24','dark brown'],['#8d6238','brown'],['#e8734a','ginger'],['#f2d16b','blonde'],['#d8d8e4','silver'],['#ff7aa8','pink'],['#7cc8ff','blue']];
+const HS_STYLES=[['straight','Straight','💇'],['bob','Bob','🔔'],['ponytail','Ponytail','🎀'],['bun','Bun','🍩'],['pigtails','Pigtails','🎎'],['curly','Curly','🌀']],HS_LENS=['long','shoulder','short'];
+const HS_NAMES=['Mia','Leo','Zoe','Max','Ava','Tom','Ruby','Ivy','Jack','Nora','Finn','Lily','Ben','Ella','Sam','Mo'];
+const HS={cust:null,wait:2,last:null,tt:0};
+function hs(){const d=S.hs||(S.hs={});if(d.day!==S.day){d.day=S.day;d.done=0;}return d;}
+const hsColN=c=>(HS_COLS.find(x=>x[0]===c)||['','a new'])[1],hsStyleN=k=>(HS_STYLES.find(x=>x[0]===k)||[k,k])[1].toLowerCase(),hsLenN=l=>l==='shoulder'?'shoulder-length':l;
+/* the look of a customer with a given hair (the model's style comes from the style and the length) */
+function hsLookOf(c,h){const s=h.style==='straight'?(h.len==='long'?'long':h.len==='short'?'short':'mid'):h.style;return Object.assign({},c.look,{hair:h.col,hair2:null,style:s,len:h.len,swoop:false,hat:null,glasses:c.look.glasses});}
+function hsNewCust(){const look=Object.assign({},pick(TOWNFOLK),{scale:1});delete look.hat;delete look.hatc;
+  const want={len:pick(HS_LENS),style:pick(HS_STYLES)[0],col:pick(HS_COLS)[0]},li=HS_LENS.indexOf(want.len);
+  const hair={len:HS_LENS[Math.floor(Math.random()*(li+1))],style:pick(HS_STYLES.filter(s=>s[0]!==want.style))[0],col:pick(HS_COLS.filter(k=>k[0]!==want.col))[0]};   /* never shorter than wanted: hair can't grow back */
+  const c={name:pick(HS_NAMES),look,want,hair,p:null,x:0,z:3.4,sat:false,leaving:false,pic:'',t:0};c.p=makePerson(hsLookOf(c,c.hair));scene.add(c.p.root);return c;}
+function hsRebuild(c,standing){const r=c.p.root,ry=r.rotation.y;scene.remove(r);c.p=makePerson(hsLookOf(c,c.hair));c.p.root.rotation.y=ry;if(!standing&&c.sat)sitPose(c.p);scene.add(c.p.root);hsPlace(c);}
+function hsPlace(c){const L=LOC.salon;if(!L)return;c.p.root.position.set(L.ox+c.x,c.sat?.6-.62:0,L.oz+c.z);c.p.root.visible=!!CUR&&CUR.id==='salon';}
+function hsClear(){if(HS.cust){scene.remove(HS.cust.p.root);HS.cust=null;}HS.wait=2;if(UI.open&&document.querySelector('#card [data-a="hsdone"],#card [data-a="hsbye"]'))closePanel();}
+const hsAsk=c=>`Hi! I'd like my hair ${hsLenN(c.want.len)} and ${hsStyleN(c.want.style)}, in ${hsColN(c.want.col)}, please! ${pick(['💇','✨','😊','💕'])}`;
+/* the wish picture: the customer's own face with the hair they want */
+function hsPic(c){if(c.pic)return c.pic;let url='';try{const sc=shotScene(),p=makePerson(hsLookOf(c,c.want));sc.add(p.root);p.root.updateMatrixWorld(true);const v=new THREE.Vector3();p.head.getWorldPosition(v);
+    const cam=new THREE.PerspectiveCamera(30,1,.05,20);cam.position.set(v.x+.05,v.y+.42,v.z+1.95);cam.lookAt(v.x,v.y+.3,v.z);url=offShot(sc,cam,220,220,0xfff0f6);}catch(e){console.warn(e);}c.pic=url;return url;}
+function hsCard(){const c=HS.cust;if(!c||!c.sat||c.leaving)return;const h=c.hair;
+  openPanel(`<div class="who" style="--c:#ff9ec4">✂️ ${esc(c.name)}</div><div class="hsrow"><img class="hspic" alt="The hair ${esc(c.name)} wants" src="${hsPic(c)}"><p class="line">“${esc(hsAsk(c))}”<br><small>Now: <b>${hsLenN(h.len)}</b>, <b>${hsStyleN(h.style)}</b>, <b>${hsColN(h.col)}</b></small></p></div>
+    <div class="hsgrid">${HS_STYLES.map(([k,n,i])=>`<button class="btn ${h.style===k?'mint':'white'}" data-a="hscomb:${k}">${i} ${n}</button>`).join('')}</div>
+    <div class="swrow hsw">${HS_COLS.map(([k,n])=>`<button class="sw ${h.col===k?'on':''}" style="background:${k}" data-a="hsdye:${k}" aria-label="${n}"></button>`).join('')}</div>
+    <div class="row hsdo"><button class="btn butter" data-a="hscut" ${h.len==='short'?'disabled':''}>✂️ Cut shorter</button><button class="btn mint" data-a="hsdone">✅ Done!</button><button class="btn white" data-a="close" aria-label="Later">✕</button></div>`,{bottom:true});}
+const starsHalf5=n=>`<span class="stars">${'★'.repeat(n)}<i>${'★'.repeat(5-n)}</i></span>`;
+function hsTick(dt){const c=HS.cust;if(!S||!PLAYING)return;
+  if(S.job!=='hair'){if(c)hsClear();return;}
+  if(c&&c.p)c.p.root.visible=!!CUR&&CUR.id==='salon';
+  if(!c){if(!CUR||CUR.id!=='salon'||hs().done>=HS_MAX||!isDaytime())return;HS.wait-=dt;if(HS.wait<=0){HS.cust=hsNewCust();hsPlace(HS.cust);SFX.door();popText('🚪 '+HS.cust.name+' comes in!');}return;}
+  c.t+=dt;const p=c.p;if(!CUR||CUR.id!=='salon')return;   /* the customer waits in the chair while you are out */
+  if(!c.sat&&!c.leaving){const tx=-2.4,tz=-1.9,dx=tx-c.x,dz=tz-c.z,dd=Math.hypot(dx,dz);
+    if(dd>.05){const s=Math.min(dd,1.5*dt);c.x+=dx/dd*s;c.z+=dz/dd*s;p.root.rotation.y=Math.atan2(dx,dz);animPerson(p,dt,true);}
+    else{c.sat=true;c.x=tx;c.z=tz;p.root.rotation.y=0;sitPose(p);SFX.pop();popText('✂️ '+c.name+' sits down!');if(!UI.open&&!CUT&&!TUT)hsCard();}}
+  else if(c.leaving){const tx=0,tz=3.6,dx=tx-c.x,dz=tz-c.z,dd=Math.hypot(dx,dz);
+    if(dd>.08){const s=Math.min(dd,1.5*dt);c.x+=dx/dd*s;c.z+=dz/dd*s;p.root.rotation.y=Math.atan2(dx,dz);animPerson(p,dt,true);}
+    else{scene.remove(p.root);HS.cust=null;HS.wait=rand(5,9);SFX.door();jobHud(true);return;}}
+  else{animPerson(p,dt,false,.6);sitPose(p);const h=p.head;h.rotation.y=lerp(h.rotation.y,clamp(angLerp(p.root.rotation.y,Math.atan2(P.x-p.root.position.x,P.z-p.root.position.z),1)-p.root.rotation.y,-.9,.9),Math.min(1,dt*5));}   /* in the chair: looks at you */
+  hsPlace(c);}
+/* the first-time tips (the same little card as the pizza tips) */
+const HS_TUT=[{t:'Hairstylist tips! ✂️',x:"Hi! I'm Ms. Snippy from the Hair Salon! 💇 Let me show you how the job works. It's fun, I promise!"},
+  {t:'Your salon 🏠',x:'The Hair Salon is on the west road, by the Apartments. Customers come in from 8:00 to 20:00 and sit in your chair.'},
+  {t:'The wish picture 🖼️',x:'Every customer shows you a picture of the hair they want: how LONG it is, which STYLE, and which COLOUR.'},
+  {t:'Scissors ✂️',x:"Scissors make hair shorter: long, then shoulder, then short. Careful! Hair can't grow back while they sit in your chair!"},
+  {t:'Comb and dye 🪮🎨',x:'The comb picks the style: straight, bob, ponytail, bun, pigtails or curly. The dye picks the colour. Change them as often as you like!'},
+  {t:'Done! ⭐',x:'Tap ✅ Done when it looks like the picture. The closer it is, the more stars and coins! Customers are always kind. You can see these tips again in ⚙️ Settings.'}];
+function hsTutStart(){if(TUT||!PLAYING)return;if(UI.open)closePanel();TUT={i:0,hs:1,steps:HS_TUT};$('tut').hidden=false;tutShow();}
+function hsTutTick(dt){if(S&&S.job==='hair'&&!S.hsTut&&S.intro&&!TUT&&!DTUT&&!UI.open&&!CUT&&!fading&&PLAYING){HS.tt+=dt;if(HS.tt>.6)hsTutStart();}else HS.tt=0;}
+/* the salon inside: two chairs facing the room, mirrors on the back wall, a sink, the dye shelf, posters */
+function buildSalon(){const L=makeLoc('salon','in',4100,0,[-6,-4.5,6,4.5]);const sh=new THREE.Group(),pr=new THREE.Group();L.g.add(sh,pr);
+  shell(L,sh,12,9,3.3,mat('#ffe6f5'),toon({map:floorTex('check')}),'#fff3fa');
+  doorAt(sh,0,4.5-.02,Math.PI,null,true,true);windowIn(sh,6-.02,1.0,-.5,-Math.PI/2,'#ff9ec4');windowIn(sh,-6+.02,1.0,2.4,Math.PI/2,'#ff9ec4');
+  for(const x of[-2.4,2.4]){cyl(pr,.34,.4,.1,'#c8cde0',x,0,-1.9,{seg:16,ol:.012});cyl(pr,.06,.06,.4,'#c8cde0',x,.1,-1.9,{seg:8,ol:false});box(pr,.62,.12,.6,'#ff9ec4',x,.5,-1.9,{ol:.015});box(pr,.62,.5,.1,'#ff9ec4',x,.6,-2.2,{ol:.015});
+    for(const s of[-1,1])box(pr,.08,.22,.5,'#ff7aa8',x+s*.31,.62,-1.95,{ol:.012});colC(L,x,-1.9,.5);
+    box(pr,1.0,1.2,.06,'#dff2ff',x,.9,-4.42,{ol:.02});box(pr,1.14,.08,.08,'#ffd45c',x,2.1,-4.42,{ol:.012});box(pr,1.14,.08,.08,'#ffd45c',x,.82,-4.42,{ol:.012});
+    for(let k=0;k<4;k++)sph(pr,.045,null,x-.45+k*.3,2.22,-4.4,{mat:LAMP,ol:.01,ws:8,hs:6});}   /* 💡 lights over the mirrors */
+  box(pr,1.6,.9,.7,'#ffffff',-4.6,0,-3.9,{ol:.015});box(pr,1.7,.08,.8,'#c8cde0',-4.6,.9,-3.9,{ol:.012});sph(pr,.42,'#dff2ff',-4.6,.98,-3.95,{s:[1,.25,.8],ws:12,hs:8,ol:.012});cyl(pr,.03,.03,.3,'#c8cde0',-4.6,1.0,-4.2,{seg:6,ol:false});col(L,-5.5,-4.4,-3.7,-3.4);   /* the sink */
+  for(let r=0;r<2;r++){box(pr,.14,.05,3.0,'#ffffff',-5.9,1.2+r*.5,.3,{ol:.012});for(let i=0;i<8;i++){const c=HS_COLS[(i+r*3)%8][0];cyl(pr,.06,.07,.26,c,-5.85,1.25+r*.5,-1.0+i*.37,{seg:8,ol:.01});sph(pr,.045,'#ffffff',-5.85,1.53+r*.5,-1.0+i*.37,{ws:6,hs:5,ol:false});}}   /* 🎨 the dye bottles */
+  col(L,-6,-1.4,-5.6,2.0);
+  box(pr,2.6,.1,.6,'#b79cff',3.6,.45,3.3,{ol:.015});box(pr,2.6,.5,.08,'#b79cff',3.6,.55,3.56,{ol:.015});for(const s of[-1.1,1.1])box(pr,.1,.45,.5,'#5a5f8c',3.6+s,0,3.3,{ol:.012});col(L,2.2,2.9,5.0,3.7);   /* a waiting bench */
+  const s1=signPlane('✂️ Hair Salon',3.4,.7,'#ff9ec4','#ffffff');s1.position.set(0,2.75,-4.44);L.g.add(s1);
+  const s2=signPlane('💇 Long · Bob · Ponytail',3.0,.5,'#ffffff','#3d2c5e');s2.position.set(5.94,2.2,1.6);s2.rotation.y=-Math.PI/2;L.g.add(s2);
+  const s3=signPlane('🌀 Bun · Pigtails · Curly',3.0,.5,'#ffffff','#3d2c5e');s3.position.set(5.94,1.55,1.6);s3.rotation.y=-Math.PI/2;L.g.add(s3);
+  bake(sh,false);bake(pr,true);
+  inter(L,{x:0,z:3.8,r:1.9,icon:'🚪',label:'Go outside',act:()=>exitTo('salon')});
+  inter(L,{x:-2.4,z:-.6,r:2.4,icon:'✂️',hs:1,label:()=>HS.cust&&HS.cust.sat?'Do '+HS.cust.name+"'s hair":'Your salon chair',act:()=>{if(HS.cust&&HS.cust.sat)hsCard();else{SFX.tap();toast(S.job==='hair'?(hs().done>=HS_MAX?`🌟 All ${HS_MAX} customers done today!`:!isDaytime()?`Customers come from ${DAY_ON}:00 ☀️`:'A customer will come in soon! ✂️'):'Want to work here? Ask Rosie for the ✂️ Hairstylist job!',3.2);}}});
+  return L;}
+
 /* ---- the town ---- */
 const WP=[[-34,-5.6],[-20,-5.6],[-5.6,-5.6],[5.6,-5.6],[20,-5.6],[34,-5.6],[-34,5.6],[-20,5.6],[-5.6,5.6],[5.6,5.6],[20,5.6],[34,5.6],
   [-5.6,-20],[-5.6,-34],[5.6,-20],[5.6,-34],[-5.6,20],[-5.6,34],[5.6,20],[5.6,34],
@@ -1729,6 +1805,7 @@ const DOORS={pizza:{city:[58.9,8.6,Math.PI/2],inside:[0,3.2,0]},toys:{city:[58.4
 
 for(const id of APTB){const h=HOUSE(id);DOORS['apt1'+id]={city:[h.x+Math.sin(h.ry)*1.3,h.z+Math.cos(h.ry)*1.3,h.ry+Math.PI],inside:[-8.2,0,-Math.PI/2]};}
 DOORS.beach={city:[77.2,0,Math.PI/2],inside:[-25.5,0,-Math.PI/2]};
+DOORS.salon={city:[-58.4,40.5,-Math.PI/2],inside:[0,3.2,0]};
 DOORS.apt1={inside:[-8.2,0,-Math.PI/2]};DOORS.apt2={inside:[5,1.4,Math.PI/2]};DOORS.apt3={inside:[5,1.4,Math.PI/2]};
 
 function buildCity(){
@@ -1870,6 +1947,8 @@ function buildCity(){
   bldAt(st,-66,25,Math.PI/2,{w:20,d:10,h:9.6,wall:'#ffd0b5',boxes:true,door:{x:0,c:'#7cc8ff'}});col(L,-71.1,14.9,-60.6,35.1);
   bldAt(st,-63.5,-12.5,Math.PI/2,{w:8,d:7,h:4.4,wall:'#ffe3ef',shop:true,awning:'#b79cff',sign:'👗 Clothes Shop',door:{x:0,glass:true},win:SWIN});col(L,-67.1,-16.6,-59.6,-8.4);
   inter(L,{x:-59.2,z:-12.5,r:2.3,icon:'👗',label:'Go into the Clothes Shop',act:()=>enter('clothes')});
+  bldAt(st,SALON.x,SALON.z,Math.PI/2,{w:8,d:7,h:4.4,wall:'#ffe6f5',shop:true,awning:'#ff9ec4',sign:'✂️ Hair Salon',door:{x:0,glass:true},win:SWIN});col(L,-67.1,36.4,-59.6,44.6);   /* ✂️ the Hair Salon (job 15) */
+  inter(L,{x:SALON.door[0],z:SALON.door[1],r:2.3,icon:'✂️',label:'Go into the Hair Salon',act:()=>enter('salon')});
   // south-east corner: a lake with a wooden pier you can walk out on (it points from the south-west shore to the middle)
   {const lx=69,lz=69,ux=Math.SQRT1_2,uz=Math.SQRT1_2,R0=8.1,S0=[lx-ux*R0,lz-uz*R0],at=(t,s)=>[S0[0]+ux*t+uz*s,S0[1]+uz*t-ux*s],RY=Math.PI/4,WD='#c98f5e',WD2='#9a6a43';
    disc(st,8.0,'#b9a98f',lx,.013,lz,{seg:48});disc(st,7.5,null,lx,.035,lz,{mat:WATER,seg:48});
@@ -3385,7 +3464,7 @@ function dayLabel(){return(psLeft()?'🏆 ':'')+wdName().slice(0,3)+' · Day '+S
    Your home, Friends Lane, the flats, the park, the school building and the fire station are always open. */
 const DAY_ON=8,DAY_OFF=20,PS_ON=8,PS_OFF=20;
 const SHUT={market:['Market','Mr. Bun'],pets:['Pet Shop','Ms. Paws'],flowers:['Flower Shop','Ms. Petal'],cafe:['Café','Mr. Mocha'],clothes:['Clothes Shop','Ms. Stitch'],
-  toys:['Toy Store','Mr. Toby'],bakery:['Bakery','Mrs. Crumb'],icecream:['Ice Cream Shop','Mr. Sprinkles'],library:['Library','Ms. Page'],truck:['Food truck','Mr. Patty']};
+  toys:['Toy Store','Mr. Toby'],bakery:['Bakery','Mrs. Crumb'],icecream:['Ice Cream Shop','Mr. Sprinkles'],library:['Library','Ms. Page'],truck:['Food truck','Mr. Patty'],salon:['Hair Salon','Ms. Snippy']};
 function isDaytime(){return!!S&&S.time>=DAY_ON&&S.time<DAY_OFF;}
 function shopOpen(id){return!SHUT[id]||isDaytime();}
 function workAt(){return`🌙 Work starts at ${DAY_ON}:00 ☀️`;}
@@ -3564,7 +3643,7 @@ function genQuest(k){try{const p=k.split(':'),kind=p[0],a=p[1];
   if(kind==='chat'){const f=FRIENDS.find(x=>x.id===a);return f?{i:'💬',t:'Say hello',d:'Chat with '+f.name,n:1,r:10,ev:k}:null;}
   if(kind==='gift'){const f=FRIENDS.find(x=>x.id===a);return f?{i:'🎁',t:'Surprise!',d:'Give '+f.name+' a present',n:1,r:20,ev:k}:null;}
   if(kind==='find'){const pl=PLACES.find(x=>x.id===a);return pl?{i:pl.i,t:'Explorer',d:'Find '+theN(pl)+' with your 🗺️ map',n:1,r:12,ev:k}:null;}
-  if(kind==='enter'){const n={market:'Market',cafe:'Café',pets:'Pet Shop',flowers:'Flower shop',clothes:'Clothing store',toys:'Toy Store',bakery:'Bakery',icecream:'Ice Cream shop',library:'Library',school:'School',fire:'Fire Station'}[a];return n?{i:'🚪',t:'Pop in',d:'Go into the '+n,n:1,r:8,ev:k}:null;}
+  if(kind==='enter'){const n={salon:'Hair Salon',market:'Market',cafe:'Café',pets:'Pet Shop',flowers:'Flower shop',clothes:'Clothing store',toys:'Toy Store',bakery:'Bakery',icecream:'Ice Cream shop',library:'Library',school:'School',fire:'Fire Station'}[a];return n?{i:'🚪',t:'Pop in',d:'Go into the '+n,n:1,r:8,ev:k}:null;}
   if(kind==='place'){const F=FURN[a];return F?{i:F.i,t:'Decorator',d:'Put '+aAn(F.n)+' in your house',n:1,r:10+Math.min(30,Math.round(F.p/20)),ev:k}:null;}
   if(kind==='plant'){const K=SEEDS[a];return K?{i:'🌱',t:'Seed time',d:'Plant '+K.n.toLowerCase()+' seeds in your garden',n:1,r:12,ev:k}:null;}
   if(kind==='harvest'){const K=SEEDS[a];return K?{i:K.i,t:'Harvest',d:'Pick '+onePl(K)+' from your garden',n:1,r:25,ev:k}:null;}
@@ -4861,15 +4940,15 @@ const TUT_STEPS=[
   {t:"Let's go! 🛵",x:'Come to the Pizzeria and talk to me to start working. Pizza time is 12:00–21:00, Monday to Friday. You can see these tips again in ⚙️ Settings. Good luck!'}];
 let tutT=0;
 function tutStart(){if(TUT||!PLAYING)return;if(UI.open)closePanel();TUT={i:0};$('tut').hidden=false;tutShow();}
-function tutShow(){if(!TUT)return;const st=TUT_STEPS[TUT.i],el=st.el?$(st.el):null,hole=$('tutHole'),card=$('tutCard');
+function tutShow(){if(!TUT)return;const STEPS=TUT.steps||TUT_STEPS,st=STEPS[TUT.i],el=st.el?$(st.el):null,hole=$('tutHole'),card=$('tutCard');card.querySelector('.tutAv').textContent=TUT.hs?'✂️':'👨‍🍳';
   $('tutT').textContent=st.t;$('tutX').innerHTML=esc(st.x)+(st.demo?'<span class="tutDemo"><span class="ni">🍕</span><span><b>📩 Common order — hurry!</b>Mia wants a cheese pizza at the Pink house. ⏱️ 2 minutes!</span></span>':'');
-  $('tutNext').textContent=TUT.i===TUT_STEPS.length-1?"Let's go! 🛵":'Next ›';$('tutDots').innerHTML=TUT_STEPS.map((_,i)=>`<i class="${i===TUT.i?'on':''}"></i>`).join('');
+  $('tutNext').textContent=TUT.i===STEPS.length-1?(TUT.hs?"Let's go! ✂️":"Let's go! 🛵"):'Next ›';$('tutDots').innerHTML=STEPS.map((_,i)=>`<i class="${i===TUT.i?'on':''}"></i>`).join('');
   const rc=el&&!el.hidden&&el.offsetParent!==null?el.getBoundingClientRect():null,ch=card.offsetHeight,pad=8;
   if(rc&&rc.width>0){hole.classList.remove('none');Object.assign(hole.style,{left:rc.left-pad+'px',top:rc.top-pad+'px',width:rc.width+pad*2+'px',height:rc.height+pad*2+'px'});
     const below=rc.bottom+pad+14;card.style.top=(below+ch<innerHeight-8?below:Math.max(8,rc.top-pad-14-ch))+'px';}
   else{hole.classList.add('none');card.style.top=Math.max(8,(innerHeight-ch)/2)+'px';}SFX.tap();}
-function tutEnd(){TUT=null;$('tut').hidden=true;if(S){S.tutDone=1;change();}}
-$('tutNext').addEventListener('click',e=>{e.stopPropagation();if(!TUT)return;TUT.i++;if(TUT.i>=TUT_STEPS.length){tutEnd();SFX.yay();}else tutShow();});
+function tutEnd(){const hsT=!!(TUT&&TUT.hs);TUT=null;$('tut').hidden=true;if(S){if(hsT)S.hsTut=1;else S.tutDone=1;change();}}
+$('tutNext').addEventListener('click',e=>{e.stopPropagation();if(!TUT)return;TUT.i++;if(TUT.i>=(TUT.steps||TUT_STEPS).length){tutEnd();SFX.yay();}else tutShow();});
 $('tutSkip').addEventListener('click',e=>{e.stopPropagation();tutEnd();});
 addEventListener('resize',()=>{if(TUT)setTimeout(tutShow,60);});
 function tutMaybe(){tutT=0;dtutT=0;}
@@ -5527,7 +5606,7 @@ const PLACES=[
   {id:'school',n:'Cozy Town School',nt:1,i:'🏫',x:-25,z:-64.5,w:28,d:11,c:'#ffe7a3',door:[-25,-58.2]},{id:'toys',n:'Toy Store',i:'🧸',x:64,z:-31,w:9,d:12,c:'#ffd6e0',door:[58.7,-31]},
   {id:'bakery',n:'Bakery',i:'🥐',x:63,z:-14,w:7,d:8,c:'#fff1b8',door:[58.7,-14]},{id:'library',n:'Library',i:'📚',x:65,z:20,w:10,d:14,c:'#c7e6ff',door:[59.2,20]},
   {id:'icecream',n:'Ice Cream Shop',i:'🍦',x:62,z:36,w:6,d:7,c:'#e6dbff',door:[58.4,36]},{id:'fire',n:'Fire Station',i:'🚒',x:-65,z:-25,w:10,d:14,c:'#ff8f8f',door:[-59.2,-25]},
-  {id:'clothes',n:'Clothes Shop',i:'👗',x:-63.5,z:-12.5,w:7,d:8,c:'#ffe3ef',door:[-59.2,-12.5]},{id:'field',n:'Football Field',i:'⚽',x:-25,z:68.5,w:28,d:18,c:'#6fc45f',door:[-25,59.8],flat:1},
+  {id:'clothes',n:'Clothes Shop',i:'👗',x:-63.5,z:-12.5,w:7,d:8,c:'#ffe3ef',door:[-59.2,-12.5]},{id:'salon',n:'Hair Salon',i:'✂️',x:-63.5,z:40.5,w:7,d:8,c:'#ffe6f5',door:[-59.2,40.5]},{id:'field',n:'Football Field',i:'⚽',x:-25,z:68.5,w:28,d:18,c:'#6fc45f',door:[-25,59.8],flat:1},
   {id:'lake',n:'Lake',i:'🦆',x:69,z:69,r:7.6,c:'#7fd8ff',door:[61.2,61.2],flat:1},{id:'pond',n:'Duck Pond',i:'🦆',x:36.2,z:-36.2,r:2.1,c:'#7fd8ff',door:[33.6,-38.8],flat:1},
   {id:'pizza',n:'Pizzeria',i:'🍕',x:63,z:8.6,w:6,d:7,c:'#ffd2bd',door:[59.2,8.6]}];
 /* nq: not used for quests (old saves must get the same quests as before) */
@@ -5937,6 +6016,7 @@ function openSettings(){const fromTitle=!PLAYING;
     <div class="opt"><span>Graphics</span><span class="row" style="margin:0"><button class="btn ${SET.gfx==='nice'?'butter':'white'}" data-a="sgfx:nice">Pretty</button><button class="btn ${SET.gfx==='fast'?'butter':'white'}" data-a="sgfx:fast">Fast</button></span></div>
     <div class="opt"><span>🍕 Pizza job</span><button class="btn white" data-a="tutgo">📖 Show me the tips</button></div>
     <div class="opt"><span>🎨 Designer job</span><button class="btn white" data-a="dtutgo">📖 Show me the tips</button></div>
+    <div class="opt"><span>✂️ Hairstylist job</span><button class="btn white" data-a="hstutgo">📖 Show me the tips</button></div>
     <div class="opt"><span>✏️ Notepad</span><button class="btn ${PAD.del?'butter':'white'}" data-a="padrest"${PAD.del?'':' disabled'}>↩️ Last page</button></div>
     ${PLAYING&&S&&S.pets.length?`<div class="opt"><span>🐾 Pets</span><button class="btn mint" data-a="fetchpets">🐾 Bring my pets to me</button></div>`:''}
     ${PLAYING?'<div class="opt"><span>Stuck somewhere?</span><button class="btn mint" data-a="gohome">🏠 Take me home</button></div>':''}
@@ -6161,7 +6241,7 @@ $('panel').addEventListener('pointermove',e=>{if(CR&&CR.drag!==null){CR.rot+=(e.
 for(const ev of['pointerup','pointercancel'])$('panel').addEventListener(ev,()=>{if(CR)CR.drag=null;});
 
 /* ================= jobs: Rosie helps you pick one ================= */
-const JOBS={delivery:{i:'🍕',n:'Pizza delivery',d:"Bring pizzas to people's houses!"},designer:{i:'🎨',n:'Interior designer',d:'Decorate rooms for people and get stars!'},teacher:{i:'📚',n:'Teacher',d:'Teach a class and grade homework!'}};
+const JOBS={delivery:{i:'🍕',n:'Pizza delivery',d:"Bring pizzas to people's houses!"},designer:{i:'🎨',n:'Interior designer',d:'Decorate rooms for people and get stars!'},teacher:{i:'📚',n:'Teacher',d:'Teach a class and grade homework!'},hair:{i:'✂️',n:'Hairstylist',d:'Give people the hairstyle they want!'}};
 const DLV_DAY=3,PIZZAS=['cheese','pepperoni','veggie','pineapple','mushroom','super cheesy'],DLV_TIMES=[120,180,300,1800],PIZZERIA=[59.2,8.6];
 const DOT_COLS=[['#ff3b3b','Red'],['#2f7bff','Blue'],['#16c75a','Green'],['#ffd000','Yellow'],['#a24dff','Purple'],['#ff8a00','Orange'],['#ff4fd8','Pink'],['#1d1622','Black'],['#ffffff','White']];
 const WHO={
@@ -6234,8 +6314,9 @@ function jobCards(){return`<div class="jobs">${Object.keys(JOBS).map(k=>{const J
 function jobHello(k){const later=' Want a different job later? '+(JOBCTX==='msg'?'Just message me! 📱':'Just come talk to me!');
   return k==='delivery'?"Pizza delivery! 🍕 Yay! Go to the Pizzeria, next to the Bakery. Chef Blaze will give you pizzas to bring to people."+later
     :k==='designer'?"Interior designer! 🎨 Yay! People will send you a message when they want a room decorated. Go to their house and pick furniture on your phone. It's free for your job! Make it pretty and get stars! ⭐"+later
-    :k==='teacher'?"Teacher! 📚 Yay! Mrs. Maple, the school director, will message you which class to teach. Go to the school, find the right classroom, sit at your desk and teach! Then grade the homework. ✏️"+later:'Great choice!';}
-function setJob(k){if(S.job===k)return;if(S.dl)S.dl.o=null;if(S.ds)S.ds.o=null;if(S.tc)S.tc.o=null;tcClear();if(CUR&&CUR.id==='client')exitClient();S.job=k||null;S.jobAsk=true;change();jobHud(true);dcardUpd(true);}
+    :k==='teacher'?"Teacher! 📚 Yay! Mrs. Maple, the school director, will message you which class to teach. Go to the school, find the right classroom, sit at your desk and teach! Then grade the homework. ✏️"+later
+    :k==='hair'?"Hairstylist! ✂️ Yay! Go to the Hair Salon on the west road, by the Apartments. Customers sit in your chair and show you the hair they want. Cut, comb and dye it, and get stars! ⭐"+later:'Great choice!';}
+function setJob(k){if(S.job===k)return;if(S.dl)S.dl.o=null;if(S.ds)S.ds.o=null;if(S.tc)S.tc.o=null;tcClear();hsClear();if(CUR&&CUR.id==='client')exitClient();S.job=k||null;S.jobAsk=true;change();jobHud(true);dcardUpd(true);}
 /* 💬 Messages: chats with the Pizzeria and Rosie, saved in your game */
 function msgs(){const m=S.msg||(S.msg={pz:[],ro:[]});if(!m.pz)m.pz=[];if(!m.ro)m.ro=[];if(!m.cl)m.cl=[];if(!m.dr)m.dr=[];if(!m.u)m.u={pz:0,ro:0};return m;}
 const msgUnread=()=>S?Object.values(msgs().u).reduce((a,b)=>a+(b|0),0):0;
@@ -6255,7 +6336,7 @@ ACT.chat=c=>{PH.chat=c||null;PH.jobs=false;if(c){msgs().u[c]=0;updPhoneBadge();c
 ACT.phchat=c=>{openPhone('msg',c);};
 ACT.tutgo=()=>{closePanel();setTimeout(tutStart,250);};
 const rosieLater=(t,ms)=>setTimeout(()=>{addMsg('ro','ro',t);},ms||800);   /* (no sound: Rosie is quiet) */
-ACT.rjob=()=>{addMsg('ro','me','I want a new job! 💼');JOBCTX='msg';PH.jobs=true;renderPhone();rosieLater('Yay! 🎉 Which job do you want? Pick one!',600);};
+ACT.rjob=()=>{addMsg('ro','me','I want a new job! 💼');JOBCTX='msg';addMsg('ro','ro','Yay! 🎉 Which job do you want? Pick one!');PH.jobs=true;renderPhone();};   /* her question comes with the cards, so nothing jumps under your finger (night 3) */
 ACT.rhi=()=>{addMsg('ro','me','Just saying hi! 👋');PH.jobs=false;renderPhone();
   rosieLater(pick([`Hi ${S.name||'friend'}! 💗 You made my day!`,"Hiii! 👋 Come find me at the park by the fountain later!","Hi hi! 🌸 Have you tried the ice cream shop? It's sooo yummy!","Hello! 😊 I hope you're having a super cozy day!","Hey! 🐶 Did you know you can adopt a pet at the Pet Shop?"]),900);};
 function askJob(){S.jobAsk=true;change();addMsg('ro','ro',`Hi ${S.name||'friend'}! 👋 Guess what? Now you can have a JOB in Cozy Town! 💼 Tap “I want a new job” to pick one!`);
@@ -6339,7 +6420,12 @@ $('note').addEventListener('click',()=>{SFX.tap();$('note').hidden=true;if(NOTE_
 /* the job box and the little map in the top left corner */
 let jobT=0,mmT=0,MMB=null,dcT=0;
 function dlTarget(){const d=dl(),o=d.o;if(!o)return null;if(o.st==='wait')return{x:PIZZERIA[0],z:PIZZERIA[1]};const H=HOUSE(o.h);return{x:H.x+Math.sin(H.ry)*.8,z:H.z+Math.cos(H.ry)*.8};}
-function jobHud(force){const el=$('job'),on=!!(PLAYING&&S&&(S.job==='delivery'||S.job==='designer'||S.job==='teacher'));if(el.hidden===on)el.hidden=!on;if(!on)return;
+function jobHud(force){const el=$('job'),on=!!(PLAYING&&S&&(S.job==='delivery'||S.job==='designer'||S.job==='teacher'||S.job==='hair'));if(el.hidden===on)el.hidden=!on;if(!on)return;
+  if(S.job==='hair'){const d=hs(),c=HS.cust;let h;   /* ✂️ the hairstylist (job 15) */
+    if(CUR.id==='salon')h=c?(c.sat?`✂️ <b>${esc(c.name)}</b> is in your chair!`:c.leaving?`👋 Bye, ${esc(c.name)}!`:`✂️ ${esc(c.name)} is coming in…`):d.done>=HS_MAX?`🌟 All ${HS_MAX} customers done today!`:!isDaytime()?workAt():`✂️ Waiting for a customer… <small>(${d.done}/${HS_MAX})</small>`;
+    else{const tg=jobTarget(),m=CUR.id==='city'&&tg?' <span class="nw">· '+Math.round(Math.hypot(tg.x-P.x,tg.z-P.z))+' m</span>':'';h=`✂️ → <b>Hair Salon</b>${m} <small>(${d.done}/${HS_MAX})</small>`;}
+    if(force||h!==jobHud.last){$('jobTxt').innerHTML=h;jobHud.last=h;}
+    $('jobTxt').classList.remove('late','rare');const mh=CUR.id!=='city';if($('mmBtn').hidden!==mh)$('mmBtn').hidden=mh;return;}
   if(S.job==='teacher'){const d=tc(),o=d.o;let h;
     if(o){const S0=SUBJ[o.subj],id=CUR.id;
       if(id==='cl_'+o.subj)h=`📚 Sit at your desk to start the <b>${S0.n}</b> class!`;
@@ -6554,7 +6640,7 @@ function dsNew(n){const d=ds(),H=pick(HOUSES.filter(h=>h.id!==d.last)),T=pick(DT
   showNote('🎨 New client!',x,false,'🎨','cl');change();jobHud(true);dcardUpd(true);}
 function jobTarget(){if(!S)return null;if(S.job==='delivery')return hasDlOrder()?dlTarget():null;
   if(S.job==='designer'){const o=S.ds&&S.ds.o,H=o&&HOUSE(o.h);return H?{x:H.x+Math.sin(H.ry)*.8,z:H.z+Math.cos(H.ry)*.8}:null;}
-  if(S.job==='teacher')return S.tc&&S.tc.o?{x:-25,z:-58.2}:null;return null;}
+  if(S.job==='teacher')return S.tc&&S.tc.o?{x:-25,z:-58.2}:null;if(S.job==='hair')return{x:SALON.door[0],z:SALON.door[1]};return null;}
 
 /* scoring: ⭐ vibe (½ if one thing is off) + ⭐ right amount + neat ⭐ (or messy −1) */
 function dsNeat(its){const out=[],tol=.35,W=CLW,D=CLD;
@@ -7148,7 +7234,7 @@ const THUMBS=new Map(),PHOTOS=new Map();let THR=null,THF=0;
 function offShot(sc,cam,w,h,clear){const R=THR||(THR={rt:null,buf:null,w:0,h:0,cv:document.createElement('canvas')});
   if(R.w!==w||R.h!==h){if(R.rt)R.rt.dispose();R.rt=new THREE.WebGLRenderTarget(w,h);R.buf=new Uint8Array(w*h*4);R.w=w;R.h=h;R.cv.width=w;R.cv.height=h;}
   const oc=renderer.getClearColor(new THREE.Color()),oa=renderer.getClearAlpha();
-  renderer.setRenderTarget(R.rt);renderer.setClearColor(clear||0x000000,clear?1:0);renderer.clear();renderer.render(sc,cam);renderer.readRenderTargetPixels(R.rt,0,0,w,h,R.buf);renderer.setRenderTarget(null);renderer.setClearColor(oc,oa);
+  renderer.setRenderTarget(R.rt);renderer.setClearColor(clear||0x000000,clear?1:0);renderer.clear();(RENDER0||renderer.render.bind(renderer))(sc,cam);   /* (the real render, even while a test runs frames without drawing) */renderer.readRenderTargetPixels(R.rt,0,0,w,h,R.buf);renderer.setRenderTarget(null);renderer.setClearColor(oc,oa);
   const x=R.cv.getContext('2d'),img=x.createImageData(w,h),row=w*4;for(let y=0;y<h;y++)img.data.set(R.buf.subarray((h-1-y)*row,(h-y)*row),y*row);x.putImageData(img,0,0);return R.cv.toDataURL('image/png');}
 function shotScene(){const sc=new THREE.Scene();sc.add(new THREE.HemisphereLight('#ffffff','#e6d8f0',.55));const d=new THREE.DirectionalLight('#fff3e0',.48);d.position.set(2.5,5,4);sc.add(d);return sc;}
 function thumb(t,c){const k=t+'|'+(c||'');if(THUMBS.has(k))return THUMBS.get(k);let url='';
@@ -7209,6 +7295,19 @@ function dtutEnd(){DTUT=null;$('dtut').hidden=true;if(S){S.dsTut=1;change();}}
 $('dtNext').addEventListener('click',()=>{audioInit();SFX.tap();if(!DTUT)return;if(DTUT.i>=DTUT_STEPS.length-1){dtutEnd();return;}DTUT.i++;dtutShow();});
 $('dtSkip').addEventListener('click',()=>{SFX.tap();dtutEnd();});
 ACT.dtutgo=()=>{closePanel();setTimeout(dtutStart,250);};
+/* ✂️ the hairstylist's buttons (job 15; here because ACT is made just above) */
+SFX.snip=()=>{tone(1800,.05,'square',.05);tone(1500,.05,'square',.05,.08);};
+ACT.hscut=()=>{const c=HS.cust;if(!c||!c.sat)return;const h=c.hair;if(h.len==='long')h.len='shoulder';else if(h.len==='shoulder')h.len='short';else return;SFX.snip();hsRebuild(c);floatText('✂️',c.p.root.position.x,1.6,c.p.root.position.z,{h:.5});hsCard();};
+ACT.hscomb=k=>{const c=HS.cust;if(!c||!c.sat||!HS_STYLES.some(s=>s[0]===k))return;c.hair.style=k;SFX.pop();hsRebuild(c);hsCard();};
+ACT.hsdye=k=>{const c=HS.cust;if(!c||!c.sat||!HS_COLS.some(x=>x[0]===k))return;c.hair.col=k;SFX.pop();hsRebuild(c);hsCard();};
+ACT.hsdone=()=>{const c=HS.cust;if(!c||!c.sat)return;const h=c.hair,w=c.want,d=hs();let st=5;if(h.len!==w.len)st--;if(h.style!==w.style)st--;if(h.col!==w.col)st--;if(HS_LENS.indexOf(h.len)>HS_LENS.indexOf(w.len))st--;st=Math.max(1,st);
+  const pay=HS_PAY[st];S.coins+=pay;d.done++;S.hsTotal=(S.hsTotal||0)+1;HS.last={stars:st,pay};hardEvent('hair',1);SFX.coin();if(st>=4)setTimeout(()=>SFX.yay(),300);popText('+'+pay+' 🪙','coin');change();jobHud(true);
+  const line=st===5?pick(["It's exactly what I wanted! 😍","Perfect! I love it! 💕","Wow, just like the picture! ✨"]):st>=3?pick(['Oh, that looks nice! Thank you! 😊','I like it! A bit different, but nice! 💕']):pick(["Hee hee, that's… different! But hair grows back! 😄","Oh my! Well, it's a new look! 😅 Thank you!"]);
+  openPanel(`<div class="who" style="--c:#ff9ec4">✂️ ${esc(c.name)}</div><p class="line">${esc(line)}</p><p class="earn">${starsHalf5(st)}<br>You got <b>${pay} 🪙</b>!</p><div class="row"><button class="btn mint" data-a="hsbye">👋 Bye!</button></div>`,{bottom:true,lock:true});};
+ACT.hsbye=()=>{const c=HS.cust;if(!c)return;closePanel();c.sat=false;c.leaving=true;hsRebuild(c,true);c.p.wave=1.2;const d=hs();
+  setTimeout(()=>{if(PLAYING)toast(d.done>=HS_MAX?`🌟 That's ${HS_MAX} customers! Great job today! More tomorrow.`:'✂️ Nice work! The next customer will come soon.',3.4);},400);};
+ACT.hstutgo=()=>{closePanel();setTimeout(hsTutStart,250);};
+
 
 /* the designer job, every frame */
 function dsTick(dt){const d=ds();
@@ -7251,6 +7350,9 @@ function jobPhone(){let h;
     if(o){const S0=SUBJ[o.subj];h+=`<div class="qcard"><div class="qtop"><span class="qi">${S0.i}</span><div><div class="qt">Teach the ${S0.n} class</div><div class="qd">Go to <b>Cozy Town School</b>. In the hallway, it's ${tcDoor(S0)}.</div></div></div></div>`;}
     else h+=`<p class="ph-sub">${d.done>=TC_MAX?'🌟 All classes done today! More tomorrow.':!isDaytime()?workAt()+' Classes are from 8:00 to 20:00.':'📱 Mrs. Maple will message you when a class needs you.'}</p>`;
     h+=`<div class="row"><button class="btn butter" data-a="nav:school">📍 Show me the school</button><button class="btn sky" data-a="phchat:dr">💬 Messages</button></div>`;}
+  if(S.job==='hair'){const d=hs();h+=`<p class="ph-sub">Today: <b>${d.done} / ${HS_MAX}</b> customers<br>💰 <b>${HS_PAY[1]}–${HS_PAY[5]} 🪙</b> a customer: more ⭐ = more coins!</p>
+    <p class="ph-sub">${d.done>=HS_MAX?'🌟 All customers done today! More tomorrow.':!isDaytime()?workAt()+' The salon is open from 8:00 to 20:00.':'✂️ Go to the Hair Salon on the west road. Customers come in and sit in your chair!'}</p>
+    <div class="row"><button class="btn butter" data-a="nav:salon">📍 Show me the salon</button><button class="btn white" data-a="hstutgo">📖 Tips</button></div>`;}
   return h+`<p class="ph-sub" style="margin-top:14px">Want a different job? Message Rosie!</p><div class="row"><button class="btn white" data-a="phchat:ro">💬 Message Rosie</button></div>`;}
 
 /* intro */
@@ -7602,7 +7704,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     updGarden(dt);bdTick(dt);
     fbTick(dt);   /* ⚽ the football friends */
     {const vis=CUR.id==='city'&&sittersOut();for(const s of SITTERS){s.p.root.visible=vis;if(vis){s.t+=dt;s.p.head.rotation.y=Math.sin(s.t*.5)*.35;if(s.p.wave>0){s.p.wave-=dt;s.p.arms[1].rotation.z=2.5+Math.sin(s.p.wave*14)*.35;}else s.p.arms[1].rotation.z*=.85;}}}
-    psUpdate(dt);dayTick();holTick(dt);spookTick(dt);wxTick(dt);   /* 🎃 holidays from the real calendar; 👻 the spooky path; 🌦️ the weather */
+    psUpdate(dt);dayTick();holTick(dt);spookTick(dt);wxTick(dt);hsTick(dt);hsTutTick(dt);   /* 🎃 holidays from the real calendar; 👻 the spooky path; 🌦️ the weather */
     for(const k of KEEPERS)if(k.L===CUR){k.p.root.rotation.y=angLerp(k.p.root.rotation.y,Math.atan2(P.x-k.x,P.z-k.z),.05);animPerson(k.p,dt,false);}
     if(CUR&&CUR.id==='studio'&&!CR&&!fading){setLoc('city');P.x=-17;P.z=-4.6;P.yaw=0;P.pitch=0;P.sit=null;P.ride=null;$('hud').hidden=false;camera.clearViewOffset();resize();saveLocal();}
     if(CUT)cutUpdate(dt);if(CLIMB)climbUpdate(dt);floorVis();
@@ -7632,7 +7734,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
 async function boot(){
   capsEarly();
   try{
-    const cv=$('c');renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,powerPreference:'high-performance'});
+    const cv=$('c');renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,powerPreference:'high-performance'});RENDER0=renderer.render.bind(renderer);
     renderer.shadowMap.type=THREE.PCFSoftShadowMap;
     {const K=THREE.ShaderChunk,f=K.shadowmap_pars_fragment;if(f.includes('return shadow;'))K.shadowmap_pars_fragment=f.replace('return shadow;','return mix(shadow,1.0,smoothstep(.72,.98,max(abs(shadowCoord.x-.5),abs(shadowCoord.y-.5))*2.));');}   /* 🌳 shadows fade out softly far away instead of popping in */
     initMaterials(renderer.capabilities.isWebGL2);
@@ -7642,7 +7744,7 @@ async function boot(){
     sun=new THREE.DirectionalLight('#fff4e0',.9);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);const sc=sun.shadow.camera;sc.left=-30;sc.right=30;sc.top=30;sc.bottom=-30;sc.near=1;sc.far=150;sun.shadow.bias=-.0006;sun.shadow.normalBias=.09;scene.add(sun);scene.add(sun.target);
     lamp=new THREE.PointLight('#ffe2b8',0,20,1.4);scene.add(lamp);
     try{await Promise.race([document.fonts.load('800 40px "Baloo 2"'),new Promise(r=>setTimeout(r,2000))]);}catch(e){}
-    seasonSet();buildSky();buildCity();buildHome();buildMarket();buildPetShop();buildFlowerShop();buildCafe();buildClothesShop();buildToyStore();buildBakery();buildIceCream();buildLibrary();buildSchool();buildClassrooms();buildFireStation();buildPizzeria();buildApts();buildClientRoom();buildVisit();buildBeach();buildStudio();buildActors();buildTownfolk();buildPetShow();buildCars();buildBall();buildShoppers();
+    seasonSet();buildSky();buildCity();buildHome();buildMarket();buildPetShop();buildFlowerShop();buildCafe();buildSalon();buildClothesShop();buildToyStore();buildBakery();buildIceCream();buildLibrary();buildSchool();buildClassrooms();buildFireStation();buildPizzeria();buildApts();buildClientRoom();buildVisit();buildBeach();buildStudio();buildActors();buildTownfolk();buildPetShow();buildCars();buildBall();buildShoppers();
     S=freshState();setLoc('city');S=null;holCheck();   /* 🎃 decorations for today's real date */
     setupInput();applyGfx();addEventListener('resize',resize);
     requestAnimationFrame(t=>{last=t;frame(t);});
