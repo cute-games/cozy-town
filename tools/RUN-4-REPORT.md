@@ -16,6 +16,7 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 | 8. Grandmas | yes | yes | N24 pass; N6 (rewritten) pass |
 | 9. Small things and the stage-1 book | yes | yes | N27, N29, N35, N41 pass; book stage W1/W2 pass (7 pages) |
 | Stage 1 end: version stamp 2026101702, full check, the friends' wedge fix, kit v6 zip, this report, PR "Run 4, stage 1" | yes | yes | full check + reruns: every line passes except the 11 run-4 lines of jobs still to come (N20, N21, N22, N25, N28, N33, N34, N36, N37, N38, N39); counts: 58 lists, 728 things before, 732 after; grew: {"clothes": "22 -> 26"} |
+| 10. Levels to 50, garden spots, house floors, house colour (stage 2, branch claude/run-4-s2) | yes | yes | N33, N34 pass |
 
 (filled in after every job; if the session restarts: undo any half-done job, carry on from the next one)
 
@@ -103,6 +104,14 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
   - N14 old: "Smooth and light: E1 within the agreed limits, measured with Halloween on, rain on and the animals out; index.html under 1.8 MB" → new: "Smooth and light (rewritten for run 4): E1 within the run-4 limits given to the check (town up to 15% more pieces and 25% more triangles, measured with Halloween, rain and the ghosts on; pet shop up to double; every other area 10%; a new area at most the beach's size), measured against the starting file; index.html under 1.8 MB" (N40 in the run4 stage is the same measurement under the run-4 wording).
 - Should look like (BUILDER): when you stop walking, all four friends come round in front of you and stand in a loose arc at least 1.2 m apart, none hidden behind another; a friend arriving late steps round the one in its way instead of stopping behind it.
 - Decided alone: the sideways slip is only for a mover whose push runs against its own direction (the standing one still steps back as before), so nothing else about following changes.
+
+### Job 10: Levels to 50, the garden's seed spots, house floors and house colour (items 21, 22, 23)
+- Levels (item 21). Old: every skill stopped at level 10 (`MAXLV=10`); a player at 10 earned no more XP. New: `MAXLV=50`; the XP a level needs (10 per level) and the level-up coins (10 × the new level) are unchanged, so a player at 10 carries straight on; XP past 50 is dropped. Test N33 (every skill reaches 50 and stays there after more XP).
+- Garden spots (item 22). Old: 6 beds in the yard. New: 30 pots along the inside of the fence (never on the way from the gate or the back door, never by the shed), six more opening at gardening level 10, 20, 30, 40 and 50; a locked pot says its level; a pot grows the same crops smaller; the garden save grows to 36 slots and old 6-slot saves keep their beds. Friends see the pots and their crops at the same spots on your lot (the presence string `gd` carries "spot,seed,stage" for pots too; old versions ignore pots they do not know). Test N33.
+- House floors (item 22). Old: one room, or the big house (two floors: the upstairs room 40 m east of the ground floor, reached by the stairs in the west wall; Decorating 10 + 2,500 coins). New: floor 3 at Decorating 20, 4 at 30, 5 at 40, 6 at 50, 2,500 coins each (the yard sign asks "One more floor?"; at six: "Six floors! Your house is as tall as it gets"); every floor is the same 12×10 room with the stairs going on up in the same design; floor k lives 40 m further along z (UPZ) and only the floor you stand on is attached to the scene, so a six-floor house draws like a one-floor house; the stairs work up and down on every floor (the same step-by-step climb as the flats); decorating works per floor (`homeFloorL(k)`, items carry `f`); the outside on Friends Lane shows as many floors as you own (the building gets a storey per floor, the name sign climbs with it), also for friends (presence `hf`); the home presence sends `n` and `u2…u5` for the floors above the second (old versions read `b`, `i` and `u` as before and see two floors). Old saves keep every piece: an old big-house save keeps its 33 pieces (the upstairs ones 40 m along z now); a save made upstairs before night 3 starts by the stairs as night 3 decided. Test N34.
+- House colour (item 23). New: at the yard sign, "🎨 House colour": 12 ready colours and a "pick any colour" slider (free); your lot's house is repainted at once and everyone on the lane sees it (presence `hc`); "↩️ The lane's own colour" goes back. Test N34 (presence hc, a friend's lot built in the friend's colour).
+- Should look like (BUILDER): from the lane, your house grows a storey for every floor you own, up to six, in your colour, with your name sign on top; inside, every floor is the same bright room with the stairs in the west wall and "⬆️ Upstairs"/"⬇️ Downstairs" plates; the garden has 30 small terracotta pots along the fence, the locked ones say "🔒 Gardening level 20" and so on. Pictures: tools/pictures-4/after-house-six-floors.png, after-house-colour.png, after-garden-pots.png, after-floor-4-inside.png.
+- Decided alone: floors stack along z (not x) so the old upstairs code's single offset becomes a per-floor one; one floor attached at a time; the same price for every floor; the colour is free and only outside; pots open six at a time per 10 levels.
 
 ## 2. Check output per job, exactly as printed
 
@@ -790,6 +799,17 @@ playwright._impl._errors.TargetClosedError: Channel.send: Target page, context o
 PASS: N1, N2, N3, N4, N5, N6, N7, N8, N9, N10, N11, N12, N13, N14, N15, N16, N17, N18, N19, N23, N24, N26, N27, N29, N30, N31, N32, N35, N40, N41
 FAIL, jobs still to come (every run-4 line starts as FAIL and passes only on proof): N20, N21, N22, N25, N28, N33, N34, N36, N37, N38, N39
 FAIL, anything else: none
+
+### Job 10 (N33 and N34, both written for this job in the kit's house4.py; the scratch-copy dry runs before them found two things in the edits, not the game: the house-colour button was declared before ACT existed, and a visitor sitting on upstairs furniture still used the old east offset)
+```
+[stage run4: running]
+    PASS | N33 | skills ['garden', 'cook', 'pets', 'friends', 'clean', 'sport', 'decor', 'music', 'read']: every one reaches {50} and stays there after more XP {50}; XP per level [10, 100, 490] (10 per level as before); level-up coins paid [500, 500, 500]…; yard spots 36 (30 pots), garden save slots 36; a spot's gar
+    PASS | N34 | an old big-house save: 2 floors, 33 pieces kept (16 upstairs, drawn 40 m along: [40]), 33 placed; buying floors [had, after a try one level short, after the level, coins left, floors built]: [[2, 2, 3, 0, 3], [3, 3, 4, 0, 4], [4, 4, 5, 0, 5], [5, 5, 6, 0, 6]]; at 6 floors: ['at 6', 6, 2500]; pieces 
+[stage run4: done in 57 s]
+    PASS | N33 Levels and garden: every skill reaches 50 and stops there; +6 seed spots at gardening 10/20/30/40/50; another player sees your plants | skills ['garden', 'cook', 'pets', 'friends', 'clean', 'sport', 'decor', 'music', 'read']: every one reaches {50} and stays there after more XP {50}; XP per level [10, 100, 490] (10 per level as before
+    PASS | N34 House floors and colour: 2 floors at decorating 10 up to 6 at 50; the stairs work up and down on every floor; the outside shows the floors and the chosen colour, also for others; old saves keep every piece | an old big-house save: 2 floors, 33 pieces kept (16 upstairs, drawn 40 m along: [40]), 33 placed; buying floors [had, after a try one level short, after the level, coins left, floors built]: [[2, 2, 3
+[partial run: some stages skipped by --only]
+```
 
 ## 3. Before and after pictures, and the "should look like" lines (stage 1)
 All in tools/pictures-4/ (the three before-pictures of the Flower Corner from the start of the run, the after-pictures named by job above). Every job's entry in section 1 carries its "should look like (BUILDER)" line; stage 3 checks against them:

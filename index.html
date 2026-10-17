@@ -2809,53 +2809,60 @@ function buildHome(){
   homeShell(L,false);
   return L;
 }
-/* the room inside your house: 12x10; the big house keeps this room and adds the stairs and a 12x10 upstairs (night 3: the downstairs doesn't grow) */
-function homeShell(L,big){if(L.big===big&&L.shellG)return;L.big=big;
-  if(L.shellG){L.g.remove(L.shellG);L.shellG.traverse(o=>{if(o.geometry)o.geometry.dispose();});}
-  const W=12,D=10,H=3.2,g=new THREE.Group(),sh=new THREE.Group();g.add(sh);L.g.add(g);L.shellG=g;
-  HOMEW=W/2;HOMED=D/2;HOMEGX=4.4;L.cols.length=0;
-  shell(L,sh,W,D,H,WALL_M,FLOOR_M,'#f7eef2',g,big?UPG:0);
-  doorAt(sh,0,HOMED-.02,Math.PI,'#5fd4b0',false,true);doorAt(sh,HOMEGX,-HOMED+.02,0,'#5fd4b0',false,true);
-  for(const x of[-3,1.5])windowIn(sh,x,1.0,-HOMED+.02,0);
-  windowIn(sh,HOMEW-.02,1.0,0,-Math.PI/2,'#7fdcb5');for(const z of(big?[-3,3]:[0]))windowIn(sh,-HOMEW+.02,1.0,z,Math.PI/2,'#7fdcb5');   /* 🪟 run 4, job 2 (item 25, the root cause): the west window sat at z 0, right in the stair doorway of the big house, so it hung across the view on the stairs; with stairs the west windows sit at z ±3 */
-  if(big){for(const x of[-2.7,2.7])windowIn(sh,x,1.0,HOMED-.02,Math.PI);upFloor(L,sh,W,D,H,WALL_M,FLOOR_M);}
-  bake(sh,false);
-  const grid=x=>{const gh=new THREE.GridHelper(W,W*2,0xb79cff,0xd9c8ff);gh.scale.z=D/W;gh.position.set(x,.012,0);g.add(gh);return gh;};
-  const gv=!!(L.grid&&L.grid.visible);L.grid=grid(0);L.grid.visible=gv;
-  L.inter=L.inter.filter(i=>!i.hdoor);
+/* the rooms inside your house: 12x10 each. Floor 0 is the room everyone starts with; the big house adds floor 1 with the stairs in the west wall (night 3), and
+   run 4 (item 22) adds one more floor every 10 decorating levels, up to 6. Floor k lives 40 m further along z (UPZ), so every floor has the same local layout and the
+   stairs continue up in the same design. Only the floor you stand on is attached to the scene (its own shell and stairs), so a six-floor house draws like a one-floor one */
+const UPZ=40;
+function homeFloors(){return S&&S.bighouse?clamp(2+(S.home.xf|0),2,6):1;}   /* floors you own: 1, or 2 + the extra floors bought (S.home.xf) */
+const flOf=(L,z)=>L&&L.fls&&L.fls.length>1?clamp(Math.round((z-L.oz)/UPZ),0,L.fls.length-1):0;   /* which floor a z is on */
+/* the stairs between two floors, in one floor's group: up=1 the flight going up from this floor, up=0 the flight arriving from below (local coordinates, both at the west doorway) */
+function stairsIn(g,up,W,H,wm,both){const n=12,sd=4.2/n,sr=H/n,x0=-W/2,t=.3,a=Math.atan2(H,4.2);
+  for(const k of[-1,1])box(g,4.2,H,t,null,x0-2.1,0,k*(UPG+t/2),{mat:wm,ol:false});box(g,t,H,2*UPG+2*t,null,x0-4.2-t/2,0,0,{mat:wm,ol:false});
+  for(let i=0;i<n-1+up;i++)box(g,sd,up?(i+1)*sr:H-(i+1)*sr,2*UPG,'#d9a46c',x0-(i+.5)*sd,up?0:-H,0,{ol:.012});
+  shaftAt(g,4.2,up?3.2:H,2*UPG,x0-2.1,up?H+1.6:-H/2,0,wm,up?'#f7eef2':'#8f6b4c',up);   /* 🪜 walls in the room's paint (repainting changes them too) */
+  if(!up)box(g,4.2,.1,2*UPG,'#f7eef2',x0-2.1,H,0,{ol:false});
+  for(const k of[-1,1])box(g,.1,2.7,.1,'#ffffff',x0+.04,0,k*(UPG+.05),{ol:.015});box(g,.1,.1,2*UPG+.2,'#ffffff',x0+.04,2.6,0,{ol:.015});
+  box(g,Math.hypot(4.2,H),.07,.08,'#ffffff',x0-2.1,(up?H:-H)/2+.95,-UPG+.07,{rz:up?-a:a,center:true,ol:.01});
+  const pg=new THREE.Group();pg.userData.keep=1;g.add(pg);plate(pg,up?'⬆️ Upstairs':'⬇️ Downstairs','#ffffff','#3d2c5e',both?.84:1.0,.26,x0+.03,(2.6+H)/2,both?(up?-.44:.44):0,Math.PI/2);}   /* a floor with stairs both ways gets the two plates side by side */
+/* every floor of a house (yours or a friend's): its own group, baked on its own, with its doors (floor 0), windows and stairs; flag = the inter tag ('hdoor' / 'vdoor') */
+function houseFloors(L,n,W,D,H,wm,fm,wide,flag){const hw=W/2,hd=D/2,gx=wide?6.6:4.4,fls=[];
+  for(let k=0;k<n;k++){const g=new THREE.Group(),sh=new THREE.Group();g.add(sh);g.position.set(0,0,UPZ*k);const F={k,g,sh,grid:null};fls.push(F);
+    shell({ox:L.ox,oz:L.oz+UPZ*k,cols:L.cols},sh,W,D,H,wm,fm,'#f7eef2',g,n>1?UPG:0);
+    if(k===0){doorAt(sh,0,hd-.02,Math.PI,'#5fd4b0',false,true);doorAt(sh,gx,-hd+.02,0,'#5fd4b0',false,true);
+      for(const x of wide?[-6.5,-3,1.5]:[-3,1.5])windowIn(sh,x,1.0,-hd+.02,0);
+      for(const z of wide?[-3.2,2.6]:[0])windowIn(sh,hw-.02,1.0,z,-Math.PI/2,'#7fdcb5');for(const z of wide?[-3.2,2.6]:(n>1?[-3,3]:[0]))windowIn(sh,-hw+.02,1.0,z,Math.PI/2,'#7fdcb5');   /* 🪟 with stairs no west window at z 0 (run 4, item 25) */
+      if(n>1)for(const x of(wide?[-5,5]:[-2.7,2.7]))windowIn(sh,x,1.0,hd-.02,Math.PI);}
+    else{for(const x of(W>13?[-6.5,-3,1.5,6.6]:[-3,1.5,4.5]))windowIn(sh,x,1.0,-hd+.02,0);for(const x of(W>13?[-5,0,5]:[-2.7,0,2.7]))windowIn(sh,x,1.0,hd-.02,Math.PI);
+      for(const z of(D>11?[-3.2,2.6]:[0]))windowIn(sh,hw-.02,1.0,z,-Math.PI/2,'#7fdcb5');for(const z of(D>11?[-3.2,2.6]:[-3,3]))windowIn(sh,-hw+.02,1.0,z,Math.PI/2,'#7fdcb5');}
+    const both=k<n-1&&k>0;if(k<n-1)stairsIn(sh,1,W,H,wm,both);if(k>0)stairsIn(sh,0,W,H,wm,both);
+    bake(sh,false);
+    const gh=new THREE.GridHelper(W,W*2,0xb79cff,0xd9c8ff);gh.scale.z=D/W;gh.position.set(0,.012,UPZ*k);gh.visible=false;L.g.add(gh);F.grid=gh;
+    if(k<n-1)inter(L,{x:-hw+.9,z:UPZ*k-.6,r:1.6,icon:'⬆️',label:'Go upstairs',act:()=>hclimb(1),[flag]:1});
+    if(k>0)inter(L,{x:-hw+.9,z:UPZ*k+.6,r:1.6,icon:'⬇️',label:'Go downstairs',act:()=>hclimb(-1),[flag]:1});}
+  L.fls=fls;L.g.add(fls[0].g);L.vf=-1;L.grid=fls[0].grid;
+  L.bounds={x1:L.ox-hw,z1:L.oz-hd,x2:L.ox+hw,z2:L.oz+UPZ*(n-1)+hd};return fls;}
+function homeShell(L,n){n=clamp(n|0,1,6);if(L.nfl===n&&L.fls)return;L.nfl=n;L.big=n>1;
+  if(L.fls)for(const F of L.fls){if(F.g.parent)F.g.parent.remove(F.g);F.g.traverse(o=>{if(o.geometry&&!o.userData.keep)o.geometry.dispose();});if(F.grid.parent)F.grid.parent.remove(F.grid);}
+  const W=12,D=10,H=3.2;HOMEW=W/2;HOMED=D/2;HOMEGX=4.4;L.cols.length=0;L.inter=L.inter.filter(i=>!i.hdoor);
+  houseFloors(L,n,W,D,H,WALL_M,FLOOR_M,false,'hdoor');
   inter(L,{x:0,z:HOMED-.7,r:1.9,icon:'🚪',label:'Go outside',act:()=>exitTo('home'),hdoor:1});
   inter(L,{x:HOMEGX,z:-HOMED+.7,r:1.8,icon:'🌱',label:'Go to your garden',act:()=>exitTo('home','back'),hdoor:1});
-  L.bounds={x1:L.ox-HOMEW,z1:L.oz-HOMED,x2:L.ox+HOMEW,z2:L.oz+HOMED};
-  L.up=null;if(big){const gu=grid(UPX);gu.visible=false;L.up={ox:L.ox+UPX,oz:L.oz,items:L.items,grid:gu,w:HOMEW};upSpots(L,'hdoor');}
   DOORS.home.inside=[0,HOMED-1.3,0];DOORS.homeback.inside=[HOMEGX,-HOMED+1.4,Math.PI];
   if(FLOOR_M.map)FLOOR_M.map.repeat.set(HOMEW/2,HOMED/2);}
-/* 🪜 the big house's second floor (in your home, and in a friend's when you visit): stairs go up behind a doorway in the west wall;
-   upstairs is a room just as big, with the same paint and floor, and the stairs down at the same spot */
-function upFloor(L,sh,W,D,H,wm,fm){const ug=new THREE.Group();ug.position.x=UPX;sh.add(ug);
-  shell({ox:L.ox+UPX,oz:L.oz,cols:L.cols},ug,W,D,H,wm,fm,'#f7eef2',ug,UPG);
-  for(const x of(W>13?[-6.5,-3,1.5,6.6]:[-3,1.5,4.5]))windowIn(ug,x,1.0,-D/2+.02,0);for(const x of(W>13?[-5,0,5]:[-2.7,0,2.7]))windowIn(ug,x,1.0,D/2-.02,Math.PI);
-  for(const z of(D>11?[-3.2,2.6]:[0]))windowIn(ug,W/2-.02,1.0,z,-Math.PI/2,'#7fdcb5');for(const z of(D>11?[-3.2,2.6]:[-3,3]))windowIn(ug,-W/2+.02,1.0,z,Math.PI/2,'#7fdcb5');   /* 🪟 never at z 0: the stairs come up there (run 4, item 25) */
-  const n=12,sd=4.2/n,sr=H/n,x0=-W/2,t=.3,a=Math.atan2(H,4.2);
-  for(const [g,up] of[[sh,1],[ug,0]]){
-    for(const k of[-1,1])box(g,4.2,H,t,null,x0-2.1,0,k*(UPG+t/2),{mat:wm,ol:false});box(g,t,H,2*UPG+2*t,null,x0-4.2-t/2,0,0,{mat:wm,ol:false});
-    for(let i=0;i<n-1+up;i++)box(g,sd,up?(i+1)*sr:H-(i+1)*sr,2*UPG,'#d9a46c',x0-(i+.5)*sd,up?0:-H,0,{ol:.012});
-    shaftAt(g,4.2,up?3.2:H,2*UPG,x0-2.1,up?H+1.6:-H/2,0,wm,up?'#f7eef2':'#8f6b4c',up);   /* 🪜 walls in the room's paint (repainting changes them too) */
-    if(!up)box(g,4.2,.1,2*UPG,'#f7eef2',x0-2.1,H,0,{ol:false});
-    for(const k of[-1,1])box(g,.1,2.7,.1,'#ffffff',x0+.04,0,k*(UPG+.05),{ol:.015});box(g,.1,.1,2*UPG+.2,'#ffffff',x0+.04,2.6,0,{ol:.015});
-    box(g,Math.hypot(4.2,H),.07,.08,'#ffffff',x0-2.1,(up?H:-H)/2+.95,-UPG+.07,{rz:up?-a:a,center:true,ol:.01});
-    const pg=new THREE.Group();pg.userData.keep=1;g.add(pg);plate(pg,up?'⬆️ Upstairs':'⬇️ Downstairs','#ffffff','#3d2c5e',1.0,.28,x0+.03,(2.6+H)/2,0,Math.PI/2);}}
-function upSpots(L,fl){const w=L.up.w;L.bounds.x2+=UPX;
-  inter(L,{x:-w+.9,z:0,r:1.6,icon:'⬆️',label:'Go upstairs',act:()=>hclimb(1),[fl]:1});
-  inter(L,{x:UPX-w+.9,z:0,r:1.6,icon:'⬇️',label:'Go downstairs',act:()=>hclimb(-1),[fl]:1});}
-/* which floor of your house you stand on: 0 = ground floor, 1 = upstairs */
-const homeFl=()=>CUR===LOC.home&&LOC.home.up&&P.x>LOC.home.ox+UPX/2?1:0;
-/* only the floor you stand on draws its furniture (fewer draw calls on iPads) */
-function floorVis(){const L=CUR;if(!L||!L.up||!L.items)return;const f=P.x>L.ox+UPX/2?1:0;if(f===L.vf)return;L.vf=f;for(const g of L.items.children)g.visible=(g.userData.fl|0)===f;}
-/* up or down the big house stairs: the same step-by-step climb as in the flats */
-function hclimb(dir){const L=CUR,U=L.up;if(CLIMB||CUT||fading||!U)return;if(DECO.on)decoEnd();P.sit=null;SFX.tap();const x0=L.ox+(dir>0?0:UPX)-U.w;
-  CLIMB={t:0,L,dir,x0:P.x,z0:P.z,y0:P.yaw,p0:P.pitch,x1:x0-3.3,z1:L.oz,ya:Math.PI/2,h:3,st:0,fd:false,end:()=>{
-    [P.x,P.z]=collideXZ(L.ox+(dir>0?UPX:0)-U.w+2.6,L.oz,.3,L);P.yaw=-Math.PI/2;P.pitch=0;P.cy=0;bringFollowers(true);saveLocal();
-    toast(dir<0?'🏡 Back downstairs':L===LOC.home?'🏡 Upstairs! Tap 🛋️ to decorate up here too.':'🏡 Upstairs!',2.6);}};}
+/* the floor you stand on in your house: 0 = ground floor */
+const homeFl=()=>CUR===LOC.home?flOf(LOC.home,P.z):0;
+/* a floor as a place to decorate: the home with that floor's z and grid */
+function homeFloorL(k){const L=LOC.home;if(!k||!L.fls||!L.fls[k])return L;const o=Object.create(L);o.oz=L.oz+UPZ*k;o.grid=L.fls[k].grid;return o;}
+/* only the floor you stand on is attached and draws its furniture (fewer draw calls on iPads) */
+function floorVis(){const L=CUR;if(!L||!L.fls||L.fls.length<2||!L.items)return;const f=flOf(L,P.z);if(f===L.vf)return;L.vf=f;
+  L.fls.forEach((F,k)=>{if(k===f){if(!F.g.parent)L.g.add(F.g);}else if(F.g.parent)L.g.remove(F.g);});
+  for(const g of L.items.children)g.visible=(g.userData.fl|0)===f;}
+/* up or down the stairs: the same step-by-step climb as in the flats, from this floor to the next */
+function hclimb(dir){const L=CUR;if(CLIMB||CUT||fading||!L.fls||L.fls.length<2)return;const f=flOf(L,P.z),to=f+dir;if(to<0||to>=L.fls.length)return;if(DECO.on)decoEnd();P.sit=null;SFX.tap();
+  const w=L===LOC.home?HOMEW:L.W,x0=L.ox-w,z0=L.oz+UPZ*f;
+  CLIMB={t:0,L,dir,x0:P.x,z0:P.z,y0:P.yaw,p0:P.pitch,x1:x0-3.3,z1:z0,ya:Math.PI/2,h:3,st:0,fd:false,end:()=>{
+    [P.x,P.z]=collideXZ(L.ox-w+2.6,L.oz+UPZ*to,.3,L);P.yaw=-Math.PI/2;P.pitch=0;P.cy=0;floorVis();bringFollowers(true);saveLocal();
+    toast(dir<0?(to?'🏡 Down to floor '+(to+1):'🏡 Back downstairs'):L===LOC.home?(to===1?'🏡 Upstairs! Tap 🛋️ to decorate up here too.':'🏡 Floor '+(to+1)+'! Tap 🛋️ to decorate here too.'):'🏡 Upstairs!',2.6);}};}
 
 /* ===== 🏡 Friends Lane: the west road goes on past the edge of town, with a house lot for every player. Your house is here too ===== */
 /* lots 0-5 are where old versions have them; 6-11 are further down the lane; when even more friends play, more lots appear */
@@ -2936,6 +2943,15 @@ const fcOpen=()=>!!FC.open;
 const YARD={g:null,gin:null,cols:[],wc:[],ints:[],on:false,j:null,plaque:null};
 /* 🌱 the seed spots in the yard (the old town-yard frame; lotPt moves them to your lot). Friends' lots draw the same spots from their presence (gd) */
 const YARD_PLOTS=[[0,-21,-20.9],[1,-18.3,-20.9],[2,-15.6,-20.9],[3,-21,-23.0],[4,-18.3,-23.0],[5,-15.6,-23.0]];
+/* 🪴 run 4, item 22: 30 more seed spots: pots along the inside of the fence (never on the way from the gate or the back door, never by the shed), six more at gardening level 10, 20, 30, 40 and 50 */
+const YARD_POTS=[[-21.3,-18.95],[-20.6,-18.95],[-19.9,-18.95],[-19.2,-18.95],[-18.5,-18.95],[-17.8,-18.95],
+  [-17.1,-18.95],[-16.4,-18.95],[-15.7,-18.95],[-22.55,-20.0],[-22.55,-20.7],[-22.55,-21.4],
+  [-22.55,-22.1],[-22.55,-22.8],[-22.55,-23.5],[-22.55,-24.1],[-21.9,-24.15],[-21.2,-24.15],
+  [-20.5,-24.15],[-19.8,-24.15],[-19.1,-24.15],[-18.4,-24.15],[-17.7,-24.15],[-17.0,-24.15],
+  [-16.3,-24.15],[-15.6,-24.15],[-14.9,-24.15],[-10.95,-20.4],[-10.95,-21.1],[-10.95,-21.8]].map(([x,z],k)=>[6+k,x,z]);
+const YARD_ALL=YARD_PLOTS.concat(YARD_POTS);
+const plotGate=i=>i<6?1:10*(1+Math.floor((i-6)/6));   /* the gardening level a spot needs: beds 1, pots 10, 20, 30, 40, 50 */
+const plotOpen=i=>!!S&&sk('garden').lv>=plotGate(i);
 function gardenSnap(){if(!S||!Array.isArray(S.garden))return null;const out=[];S.garden.forEach((st,i)=>{if(st&&st.seed&&SEEDS[st.seed])out.push(i+','+st.seed+','+plotStage(st));});return out.length?out.join(';'):null;}   /* "spot,seed,stage;…" (run 4, job 2) */
 function buildYard(L){const g=new THREE.Group(),gin=new THREE.Group(),st=new THREE.Group(),FL={cols:YARD.cols,ox:0,oz:0};
   gin.position.set(17,0,15);g.add(gin);gin.add(st);L.g.add(g);g.visible=false;YARD.g=g;YARD.gin=gin;
@@ -2948,6 +2964,7 @@ function buildYard(L){const g=new THREE.Group(),gin=new THREE.Group(),st=new THR
   doorAt(st,-14,-18.52,Math.PI,'#5fd4b0');
   {BENCH_SKIP=-1;const yb=bench(st,-20.0,-9.1,Math.PI);BENCH_SKIP=0;const B=BENCHES[BENCHES.length-1];B.x0=-20.0;B.z0=-9.1;B.ry0=Math.PI;for(const q of B.seats){q.lx=q.x;q.lz=q.z;}colC(FL,-20.0,-9.1,.8);}   /* 🪑 a bench in your front yard */
   L.plots=[];for(const [i,x,z] of YARD_PLOTS){box(st,1.8,.16,1.2,'#b07a52',x,0,z,{ol:.02});col(FL,x-.92,z-.62,x+.92,z+.62);L.plots.push({i,x,z});}
+  for(const [i,x,z] of YARD_POTS){cyl(st,.26,.2,.3,'#c9805a',x,0,z,{seg:10,ol:.015});cyl(st,.29,.29,.05,'#b8704c',x,.28,z,{seg:10,ol:.012});colC(FL,x,z,.32);L.plots.push({i,x,z,pot:1});}   /* 🪴 the pots */
   /* the shed stands beside the arch's way (not right behind it): its door, the seed box and the 🌱 Seeds sign face the arch */
   box(st,1.6,2.0,1.4,'#ffd6e0',-13.4,0,-23.3);prism(st,1.9,1.8,.75,'#ff7aa8',-13.4,2.0,-23.3,{ry:Math.PI/2});box(st,.7,1.6,.06,'#5fd4b0',-13.75,0,-22.58,{ol:.015});col(FL,-14.3,-24.05,-12.5,-22.55);
   box(st,.8,.45,.5,'#c98f5e',-12.95,0,-22.35);for(let k=0;k<4;k++)box(st,.14,.2,.04,['#ff7aa8','#ffd45c','#5fd4b0','#ff8a6b'][k],-13.25+k*.2,.45,-22.35,{rx:-.2,ol:.01});col(FL,-13.4,-22.65,-12.5,-22.05);
@@ -2959,7 +2976,7 @@ function buildYard(L){const g=new THREE.Group(),gin=new THREE.Group(),st=new THR
   yi(-14,-19.3,{r:1.9,icon:'🏠',label:'Go inside your house',act:()=>enter('home','back')});
   yi(-12.95,-21.4,{r:1.8,icon:'🌱',label:'Buy seeds',act:()=>openShop('seeds')});
   yi(-15.4,-7.1,{r:1.8,icon:'📬',label:'Check your mail',act:checkMail});
-  yi(-20.4,-6.8,{r:1.7,icon:'🏡',label:()=>S.bighouse?'Your big house!':'Bigger house',act:()=>openBigHouse()});}
+  yi(-20.4,-6.8,{r:1.7,icon:'🏡',label:()=>homeFloors()>=6?'Your big house!':homeFloors()>1?'One more floor?':'Bigger house',act:()=>openBigHouse()});}
 /* a spot to use in your yard (given at the old town-yard spot): it moves with the yard. b = a flower bed that moves along */
 function yardInt(t,b){t.tx=t.x;t.tz=t.z;if(t.rect)t.trect=t.rect;if(b){b.tx=b.x;b.tz=b.z;t.bed=b;}t.when=()=>YARD.on;YARD.ints.push(t);if(YARD.j!=null)yardT(t,YARD.j);return t;}
 function yardT(t,j){[t.x,t.z]=lotPt(j,t.tx,t.tz);if(t.trect)t.rect=lotRect(j,t.trect);if(t.bed)[t.bed.x,t.bed.z]=lotPt(j,t.bed.tx,t.bed.tz);}
@@ -3000,18 +3017,12 @@ function fromSave(loc,x,z){return loc==='city'&&LANE.mine!=null&&inYardR(x,z)&&(
 const VOX=2700;
 function buildVisit(){const L=makeLoc('visit','in',VOX,0,[-6,-5,6,5]);L.wallM=toon({color:'#ffd6e0'});L.floorM=toon({map:floorTex('wood')});L.fk='wood';
   L.items=new THREE.Group();L.items.visible=false;scene.add(L.items);visitShell(L,false);return L;}
-function visitShell(L,big,up,wide){up=!!(big&&up);wide=!!(big&&wide);if(L.big===big&&L.hasUp===up&&L.wide===wide&&L.shellG)return;L.big=big;L.hasUp=up;L.wide=wide;if(L.shellG)L.g.remove(L.shellG);
-  const W=wide?18:12,D=wide?14:10,H=wide?3.6:3.2,hw=W/2,hd=D/2,gx=wide?6.6:4.4,g=new THREE.Group(),sh=new THREE.Group();g.add(sh);L.g.add(g);L.shellG=g;L.W=hw;L.D=hd;L.cols.length=0;
-  shell(L,sh,W,D,H,L.wallM,L.floorM,'#f7eef2',g,up?UPG:0);
-  doorAt(sh,0,hd-.02,Math.PI,'#5fd4b0',false,true);doorAt(sh,gx,-hd+.02,0,'#5fd4b0',false,true);
-  for(const x of wide?[-6.5,-3,1.5]:[-3,1.5])windowIn(sh,x,1.0,-hd+.02,0);
-  for(const z of wide?[-3.2,2.6]:[0])windowIn(sh,hw-.02,1.0,z,-Math.PI/2,'#7fdcb5');for(const z of wide?[-3.2,2.6]:(up?[-3,3]:[0]))windowIn(sh,-hw+.02,1.0,z,Math.PI/2,'#7fdcb5');   /* 🪟 with stairs no west window at z 0 (run 4, item 25) */
-  if(big)for(const x of(wide?[-5,5]:[-2.7,2.7]))windowIn(sh,x,1.0,hd-.02,Math.PI);
-  if(up)upFloor(L,sh,W,D,H,L.wallM,L.floorM);
-  bake(sh,false);
-  L.inter=L.inter.filter(i=>!i.vdoor);
-  inter(L,{x:0,z:hd-.7,r:1.9,icon:'🚪',label:'Go outside',act:()=>visLeave('👋 Bye, '+VIS.nm+'! Thanks for having me!'),vdoor:1});
-  L.bounds={x1:L.ox-hw,z1:L.oz-hd,x2:L.ox+hw,z2:L.oz+hd};L.up=up?{ox:L.ox+UPX,oz:L.oz,w:hw}:null;if(up)upSpots(L,'vdoor');}
+function visitShell(L,n,wide){n=clamp(n|0,1,6);wide=!!(n>1&&wide);if(L.nfl===n&&L.wide===wide&&L.fls)return;L.nfl=n;L.big=n>1;L.wide=wide;
+  if(L.fls)for(const F of L.fls){if(F.g.parent)F.g.parent.remove(F.g);F.g.traverse(o=>{if(o.geometry&&!o.userData.keep)o.geometry.dispose();});if(F.grid.parent)F.grid.parent.remove(F.grid);}
+  const W=wide?18:12,D=wide?14:10,H=wide?3.6:3.2,hw=W/2,hd=D/2;L.W=hw;L.D=hd;L.cols.length=0;L.inter=L.inter.filter(i=>!i.vdoor);
+  houseFloors(L,n,W,D,H,L.wallM,L.floorM,wide,'vdoor');
+  inter(L,{x:0,z:hd-.7,r:1.9,icon:'🚪',label:'Go outside',act:()=>visLeave('👋 Bye, '+VIS.nm+'! Thanks for having me!'),vdoor:1});}
+const visFloors=hm=>clamp(+hm.n||(hm.b&&typeof hm.u==='string'?2:1),1,6);   /* how many floors a host's presence describes (old versions: b and u) */
 /* 🎨 the client's room for the Interior designer job. There is just one, re-painted for every client. */
 const CLW=3.6,CLD=3.0;let CL_WALL=null,CL_FLOOR=null;
 function buildClientRoom(){const L=makeLoc('client','in',2100,0,[-CLW,-CLD,CLW,CLD]);
@@ -3555,7 +3566,7 @@ const BOOK_FACTS=['Did you know? Octopuses have three hearts! 🐙','Did you kno
   'Did you know? Snails can sleep for 3 years! 🐌','Did you know? The Moon has moonquakes! 🌙','Did you know? Cows have best friends! 🐄','Did you know? Honey never goes bad! 🍯'];
 function readBook(){if(CUR&&CUR.id==='library'&&shutBuy('library'))return;SFX.pop();toast('📖 '+pick(BOOK_FACTS),4.6);if(cool('book',3))addXP('read',4);qEvent('read');}
 function knock(id){if(id&&dlCarrying()){deliverKnock(id);return;}if(id&&dsGoing(id)){enterClient();return;}SFX.knock();toast(pick(["Knock knock… nobody's home right now.","Knock knock… someone's playing music inside! 🎶","Knock knock… you hear a dog bark hello. 🐶","Knock knock… “Just a minute!” Someone is baking cookies! 🍪"]));}
-const MAXLV=10,xpNeed=lv=>10*lv;
+const MAXLV=50,xpNeed=lv=>10*lv;   /* ⭐ run 4, item 21: every skill goes to 50 (it was 10); the XP rule and the level-up coins are the same, a player at 10 carries on from 10 */
 function sk(k){S.skills=S.skills||{};return S.skills[k]||(S.skills[k]={lv:1,xp:0});}
 function addXP(k,n){if(!S||!SKILLS[k])return;const s=sk(k);if(s.lv>=MAXLV)return;s.xp+=n;let up=false;
   while(s.lv<MAXLV&&s.xp>=xpNeed(s.lv)){s.xp-=xpNeed(s.lv);s.lv++;up=true;}if(s.lv>=MAXLV)s.xp=0;
@@ -3567,12 +3578,12 @@ const CD={};function cool(k,s){const t=performance.now();if(CD[k]&&t-CD[k]<s*100
 /* ---- your backyard garden (behind your house on Friends Lane; it is part of your yard, see buildYard) ---- */
 const PLOTS=[];let PLANT=null;
 function plotStage(st){if(!st||!st.seed)return -1;if(st.g>=1)return 3;if(st.g>=.5)return 2;if(st.g>=.12)return 1;return 0;}
-function gardenInit(){S.garden=S.garden||[];for(let i=0;i<6;i++)S.garden[i]=S.garden[i]||{};
-  if(!PLOTS.length){const L=LOC.city,G=YARD.gin;for(const pl of L.plots){const soilM=toon({color:'#7a5236'});const soil=new THREE.Mesh(new THREE.BoxGeometry(1.6,.05,1.0),soilM);soil.position.set(pl.x,.15,pl.z);soil.receiveShadow=true;G.add(soil);
-    const grp=new THREE.Group();grp.position.set(pl.x,.175,pl.z);G.add(grp);const rec={pl,soil,soilM,grp,key:'',icon:null,iconK:''};
-    rec.target={x:pl.x,z:pl.z,r:1.6,rect:{x1:pl.x-.92,z1:pl.z-.62,x2:pl.x+.92,z2:pl.z+.62},obj:grp,icon:'🌱',label:()=>plotLabel(rec),act:()=>usePlot(rec)};L.inter.push(rec.target);yardInt(rec.target);PLOTS.push(rec);}}
+function gardenInit(){S.garden=S.garden||[];for(let i=0;i<YARD_ALL.length;i++)S.garden[i]=S.garden[i]||{};
+  if(!PLOTS.length){const L=LOC.city,G=YARD.gin;for(const pl of L.plots){const soilM=toon({color:'#7a5236'});const soil=new THREE.Mesh(pl.pot?new THREE.CylinderGeometry(.22,.22,.04,10):new THREE.BoxGeometry(1.6,.05,1.0),soilM);soil.position.set(pl.x,pl.pot?.32:.15,pl.z);soil.receiveShadow=true;G.add(soil);
+    const grp=new THREE.Group();grp.position.set(pl.x,pl.pot?.34:.175,pl.z);if(pl.pot)grp.scale.setScalar(.55);G.add(grp);const rec={pl,soil,soilM,grp,key:'',icon:null,iconK:''};   /* 🪴 a pot grows the same crop, smaller */
+    rec.target=pl.pot?{x:pl.x,z:pl.z,r:1.5,obj:grp,icon:'🌱',label:()=>plotLabel(rec),act:()=>usePlot(rec)}:{x:pl.x,z:pl.z,r:1.6,rect:{x1:pl.x-.92,z1:pl.z-.62,x2:pl.x+.92,z2:pl.z+.62},obj:grp,icon:'🌱',label:()=>plotLabel(rec),act:()=>usePlot(rec)};L.inter.push(rec.target);yardInt(rec.target);PLOTS.push(rec);}}
   for(const r of PLOTS)plotRefresh(r);}
-function plotLabel(rec){const st=S.garden[rec.pl.i];if(!st.seed)return'Plant seeds';const K=SEEDS[st.seed];if(st.g>=1)return'Pick your '+K.pl;if(st.w!==S.day)return'Water your '+K.pl;return K.n+' growing… '+Math.floor(st.g*100)+'%';}
+function plotLabel(rec){const st=S.garden[rec.pl.i]||{};if(!plotOpen(rec.pl.i))return'🔒 Gardening level '+plotGate(rec.pl.i);if(!st.seed)return'Plant seeds';const K=SEEDS[st.seed];if(st.g>=1)return'Pick your '+K.pl;if(st.w!==S.day)return'Water your '+K.pl;return K.n+' growing… '+Math.floor(st.g*100)+'%';}
 function buildCrop(g,seed,sg){const o={ol:.012},spots=[[-.5,-.24],[0,-.24],[.5,-.24],[-.5,.24],[0,.24],[.5,.24]],G='#5fbf74',G2='#4fae64';
   if(sg===0){for(const [x,z] of spots)sph(g,.06,'#5a3a24',x,.0,z,{s:[1,.5,1],ws:6,hs:5,ol:false});return;}
   if(sg===1){for(const [x,z] of spots){cone(g,.05,.14,G,x,0,z,{seg:5,...o});}return;}
@@ -3590,9 +3601,10 @@ function plotRefresh(rec){const st=S.garden[rec.pl.i]||{};rec.soilM.color.set(st
   const sg=plotStage(st),key=sg+':'+(st.seed||'');
   if(key!==rec.key){rec.key=key;while(rec.grp.children.length){const c=rec.grp.children[0];rec.grp.remove(c);c.traverse(o=>{if(o.geometry)o.geometry.dispose();});}if(sg>=0){buildCrop(rec.grp,st.seed,sg);bake(rec.grp,true);}}   /* one piece per bed (few draw calls: the garden is in view all down Friends Lane) */
   const need=!st.seed?'':st.g>=1?'✨':st.w!==S.day?'💧':'';
-  if(need!==rec.iconK){rec.iconK=need;if(rec.icon){YARD.gin.remove(rec.icon);rec.icon=null;}if(need){const s=label(need,.42,{bg:null,bw:0,pad:4});s.position.set(rec.pl.x,1.25,rec.pl.z);YARD.gin.add(s);rec.icon=s;}}
-  rec.target.icon=!st.seed?'🌱':st.g>=1?'🧺':st.w!==S.day?'💧':'🌿';}
-function usePlot(rec){const st=S.garden[rec.pl.i];
+  if(need!==rec.iconK){rec.iconK=need;if(rec.icon){YARD.gin.remove(rec.icon);rec.icon=null;}if(need){const s=label(need,.42,{bg:null,bw:0,pad:4});s.position.set(rec.pl.x,rec.pl.pot?1.0:1.25,rec.pl.z);YARD.gin.add(s);rec.icon=s;}}
+  rec.target.icon=!plotOpen(rec.pl.i)?'🔒':!st.seed?'🌱':st.g>=1?'🧺':st.w!==S.day?'💧':'🌿';}
+function usePlot(rec){const st=S.garden[rec.pl.i]||(S.garden[rec.pl.i]={});
+  if(!plotOpen(rec.pl.i)){SFX.no();toast('🔒 This pot opens at gardening level '+plotGate(rec.pl.i)+'. Plant, water and pick to level up! 🌱',3.2);return;}
   if(!st.seed){const have=Object.keys(SEEDS).filter(k=>S.bag['seed_'+k]>0);if(!have.length){SFX.no();toast('You need seeds! Buy some at the seed box by the shed. 🌱',3.2);return;}
     PLANT=rec;openPanel(`<div class="hd"><h2>🌱 Plant seeds</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div><p class="note">What do you want to grow?</p><div class="grid" style="margin-top:8px">${have.map(k=>`<button class="it" data-a="plant:${k}"><span class="em">${SEEDS[k].i}</span><span>${SEEDS[k].n}</span><span class="have">×${S.bag['seed_'+k]}</span></button>`).join('')}</div>`);return;}
   if(st.g>=1)return harvest(rec);
@@ -4653,8 +4665,8 @@ function laneMe(){return MP.me||'me';}
 /* every player (you too) gets a lot, picked from their name; if two names want the same lot, whoever came first (jt) keeps it.
    jt is when you first lived on Friends Lane (saved), so the same friend keeps the same lot day after day.
    Lots 0-5 use exactly the old versions' rule (they only know those 6); when they are full, lots 6-11 the same way, then more lots */
-function laneAssign(){const me=laneMe(),list=[{k:me,nm:cleanName(S.name||'Friend'),jt:MP.jt||0,big:!!S.bighouse,gd:gardenSnap()||''}];
-  for(const a of MP.peers.values())list.push({k:a.peer,nm:a.nm,jt:Number.isFinite(a.jt)?a.jt:9e15,big:!!a.bh,gd:a.gd||''});
+function laneAssign(){const me=laneMe(),list=[{k:me,nm:cleanName(S.name||'Friend'),jt:MP.jt||0,big:!!S.bighouse,gd:gardenSnap()||'',col:houseCol()||'',fl:homeFloors()}];
+  for(const a of MP.peers.values())list.push({k:a.peer,nm:a.nm,jt:Number.isFinite(a.jt)?a.jt:9e15,big:!!a.bh,gd:a.gd||'',col:HEX.test(a.hc||'')?a.hc:'',fl:clamp(+a.hf||(a.bh?2:1),1,6)});   /* hc, hf: house colour and floors (run 4, items 23 and 22) */
   list.sort((a,b)=>a.jt-b.jt||(a.k<b.k?-1:a.k>b.k?1:0));
   const own=[],slot=new Map(),take=(b,h)=>{let j=b+h%6,t=0;while(own[j]&&t<6){j=b+(j-b+1)%6;t++;}return own[j]?-1:j;};
   for(const p of list){const h=hashStr(p.nm.toLowerCase());let j=take(0,h);if(j<0)j=take(6,h);
@@ -4664,7 +4676,7 @@ function laneAssign(){const me=laneMe(),list=[{k:me,nm:cleanName(S.name||'Friend
 function laneRefresh(force){const C=LOC.city;if(!C||!C.lane||typeof S==='undefined'||!S)return;const r=laneAssign();LANE.slotOf=r.slot;
   const m=r.slot.get(laneMe());while(C.lane.length<r.own.length&&laneGrow(m>=C.lane.length));   /* more players than lots: more lots appear */
   LANE.own=C.lane.map(lp=>r.own[lp.j]||null);
-  for(const lp of C.lane){const o=LANE.own[lp.j];const key=o?[o.k===laneMe()?'ME':o.k,o.nm,o.big?1:0,o.gd||''].join('|'):'';if(key!==lp.key||force){lp.key=key;laneHouse(lp,o);}}
+  for(const lp of C.lane){const o=LANE.own[lp.j];const key=o?[o.k===laneMe()?'ME':o.k,o.nm,o.big?1:0,o.gd||'',o.col||'',o.fl||1].join('|'):'';if(key!==lp.key||force){lp.key=key;laneHouse(lp,o);}}
   if(m!=null&&m!==LANE.mine){LANE.mine=m;yardPlace();}}
 function laneHouse(lp,o){const C=LOC.city;for(const c of [...lp.g.children])lp.g.remove(c);
   const ci=C.cols.indexOf(lp.col);if(ci>=0)C.cols.splice(ci,1);
@@ -4672,12 +4684,12 @@ function laneHouse(lp,o){const C=LOC.city;for(const c of [...lp.g.children])lp.g
   let sg;if(o)sg=signPlane(o.nm+"'s house",2.2,.8,pal[1],'#ffffff');else{const f=LANE.free||(LANE.free=signPlane('For a friend 💛',2.2,.8,'#ffffff','#ff7aa8'));sg=new THREE.Mesh(f.geometry,f.material);}   /* empty lots share one sign picture */
   sg.position.set(lp.sx,1.575,lp.sz);sg.rotation.y=lp.ry;lp.g.add(sg);
   if(!o)return;
-  const big=!!o.big,hg=new THREE.Group(),opt={x:lp.hx,z:lp.hz,w:9,d:7,h:big?7.0:3.8,wall:pal[0],trim:'#ffffff',roof:pal[1],face:lp.s<0?1:-1,gable:true,rh:big?2.8:2.6,chimney:true,door:{x:lp.hx,c:'#5fd4b0'}};
-  if(big)opt.floors=2;building(hg,opt);for(const bx of[-19.8,-14.2]){const [x,z]=lotPt(lp.j,bx,-10.6);flowerBed(hg,x,z,3,.9);}
-  lp.gdKey=o.k===laneMe()?'':(o.gd||'');if(lp.gdKey)for(const row of lp.gdKey.split(';').slice(0,40)){const [i,seed,sg]=row.split(','),pl=YARD_PLOTS[+i];if(!pl||!SEEDS[seed])continue;const [x,z]=lotPt(lp.j,pl[1],pl[2]);   /* 🌱 a friend's garden: their soil and crops at the same spots as in a yard (their presence says what grows; old versions send nothing) */
-    box(hg,1.8,.16,1.2,'#b07a52',x,0,z,{ol:.02});const cg=new THREE.Group();cg.position.set(x,.16,z);cg.rotation.y=lp.s<0?0:Math.PI;hg.add(cg);buildCrop(cg,seed,clamp(+sg|0,0,3));}
+  const fl=clamp(o.fl||(o.big?2:1),1,6),big=fl>1,hg=new THREE.Group(),opt={x:lp.hx,z:lp.hz,w:9,d:7,h:big?3.8+3.2*(fl-1):3.8,wall:o.col||pal[0],trim:'#ffffff',roof:pal[1],face:lp.s<0?1:-1,gable:true,rh:big?2.8:2.6,chimney:true,door:{x:lp.hx,c:'#5fd4b0'}};   /* 🏡 as many floors as the owner has, in the owner's colour (run 4, items 22, 23) */
+  if(big)opt.floors=fl;building(hg,opt);for(const bx of[-19.8,-14.2]){const [x,z]=lotPt(lp.j,bx,-10.6);flowerBed(hg,x,z,3,.9);}
+  lp.gdKey=o.k===laneMe()?'':(o.gd||'');if(lp.gdKey)for(const row of lp.gdKey.split(';').slice(0,40)){const [i,seed,sg]=row.split(','),pl=YARD_ALL[+i];if(!pl||!SEEDS[seed])continue;const [x,z]=lotPt(lp.j,pl[1],pl[2]),pot=+i>=6;   /* 🌱 a friend's garden: their soil and crops at the same spots as in a yard (their presence says what grows; old versions send nothing); pots too (run 4, item 22) */
+    if(pot){cyl(hg,.26,.2,.3,'#c9805a',x,0,z,{seg:10,ol:.015});}else box(hg,1.8,.16,1.2,'#b07a52',x,0,z,{ol:.02});const cg=new THREE.Group();cg.position.set(x,pot?.34:.16,z);cg.rotation.y=lp.s<0?0:Math.PI;if(pot)cg.scale.setScalar(.55);hg.add(cg);buildCrop(cg,seed,clamp(+sg|0,0,3));}
   bake(hg,true);lp.g.add(hg);C.cols.push(lp.col);
-  const tg=label('🏠 '+o.nm,.9);tg.position.set(lp.hx,big?10.9:7.9,lp.hz);tg.onBeforeRender=laneTagR;lp.g.add(tg);}
+  const tg=label('🏠 '+o.nm,.9);tg.position.set(lp.hx,big?opt.h+3.9:7.9,lp.hz);tg.onBeforeRender=laneTagR;lp.g.add(tg);}
 function laneTick(dt){LANE.t+=dt;if(LANE.t>=1){LANE.t=0;laneRefresh();}visTick(dt);}
 function laneIcon(j){const o=LANE.own[j];return o&&o.k===laneMe()?'🏠':'🔔';}
 function laneLabel(j){const o=LANE.own[j];if(!o)return'';if(o.k===laneMe())return'Go inside your house';
@@ -4698,7 +4710,7 @@ function laneFields(a,pr,fresh){a.jt=Number.isFinite(pr.jt)?pr.jt:undefined;a.bh
   const obj=v=>v&&typeof v==='object'?v:null;a.kn=obj(pr.kn);a.an=obj(pr.an);a.hm=obj(pr.hm);
   const guest=!!MP.me&&a.loc==='visit'&&a.ho===MP.me;if(guest&&!a.guest&&!fresh){SFX.yay();toast('🏠 '+a.nm+' is visiting your house!',3);}a.guest=guest;
   hostSeeKnock(a);}
-function laneStamp(st){st.jt=MP.jt||0;st.bh=S.bighouse?1:0;st.gd=gardenSnap();   /* 🌱 my garden for friends' games (optional; old versions ignore it) */
+function laneStamp(st){st.jt=MP.jt||0;st.bh=S.bighouse?1:0;st.gd=gardenSnap();st.hc=houseCol()||null;st.hf=homeFloors();   /* 🌱 my garden for friends' games (optional; old versions ignore it) */
   if(CUR.id==='visit'&&VIS.st==='in'){st.loc='visit';st.ho=VIS.host;st.x=Math.round((P.x-VOX+LOC.home.ox)*100)/100;}else st.ho=null;
   st.kn=VIS.st==='knock'?{to:VIS.host,id:VIS.id}:null;st.an=HOST.an;
   let hosting=performance.now()<HOST.until;if(!hosting&&MP.me)for(const a of MP.peers.values())if(a.loc==='visit'&&a.ho===MP.me){hosting=true;break;}
@@ -4710,8 +4722,8 @@ const TENC=new TextEncoder();function jsonBytes(o){return TENC.encode(JSON.strin
    back wall, |z| > 4.3) looked like an old 18x14 layout, so the visitor drew the old big room around a 12x10 layout and the kitchen stood 2 m from the wall. Now the layout
    says its room size (W, D: half the width and depth); old versions ignore it. Spots are sent to the centimetre (they were rounded to 10 cm) */
 function homeSnap(budget){const h=S.home,r=v=>Math.round(v*100)/100;let used=0;
-  const rows=fl=>{const out=[];for(const it of h.items.filter(it=>(it.f&&S.bighouse?1:0)===fl).slice(0,160)){const s=[it.t,it.c||'',r(it.x),r(it.z),it.r|0,it.on?1:0].concat(it.sh?['s'+((S.beach&&S.beach.n)|0)]:[]).join(',');if(budget!=null&&used+s.length+1>budget)break;out.push(s);used+=s.length+1;}return out.join(';');};
-  const o={b:S.bighouse?1:0,w:h.wall,f:h.floor,W:HOMEW,D:HOMED,i:rows(0)};if(S.bighouse)o.u=rows(1);return o;}
+  const rows=fl=>{const out=[];for(const it of h.items.filter(it=>(S.bighouse?it.f|0:0)===fl).slice(0,160)){const s=[it.t,it.c||'',r(it.x),r(it.z),it.r|0,it.on?1:0].concat(it.sh?['s'+((S.beach&&S.beach.n)|0)]:[]).join(',');if(budget!=null&&used+s.length+1>budget)break;out.push(s);used+=s.length+1;}return out.join(';');};
+  const n=homeFloors(),o={b:S.bighouse?1:0,w:h.wall,f:h.floor,W:HOMEW,D:HOMED,n,i:rows(0)};if(S.bighouse)o.u=rows(1);for(let k=2;k<n;k++)o['u'+k]=rows(k);return o;}   /* n, u2…u5: the floors above the second (run 4, item 22; old versions ignore them) */
 function goKnock(peer){if(busWarp('city'))return;const a=MP.peers.get(peer),j=LANE.slotOf.get(peer);if(!a||j==null||!LOC.city.lane){toast('🏠 Their house is not on Friends Lane right now.',2.8);return;}
   const d=LOC.city.lane[j].door;if(DECO.on)decoEnd();if(P.ride)stopRide();if(P.sit)standUp();closePanel();SFX.door();
   fade(()=>{setLoc('city');P.x=d[0]+Math.sin(d[2]+Math.PI)*1.6;P.z=d[1]+Math.cos(d[2]+Math.PI)*1.6;P.yaw=d[2]+Math.PI;P.pitch=.06;P.sit=null;bringFollowers();saveLocal();setTimeout(()=>laneKnock(peer),450);});}
@@ -4746,19 +4758,19 @@ function visLeave(msg){const d=laneHostDoor();visReset();if(msg)toast(msg,3.2);S
   fade(()=>{setLoc('city');P.x=d[0];P.z=d[1];P.yaw=d[2];P.pitch=0;P.sit=null;bringFollowers();saveLocal();});}
 function visFill(hm){const L=LOC.visit;if(!L||!hm||typeof hm!=='object')return;
   const wide=hm.W==null&&!!hm.b&&[hm.i,hm.u].some(v=>typeof v==='string'&&v.split(';').some(r=>{const q=r.split(',');return Math.abs(+q[2])>5.3||Math.abs(+q[3])>4.3;}));   /* only a layout that does not say its size (an old version) is guessed at: its big layout = the old 18x14 room (run 4, job 2) */
-  visitShell(L,!!hm.b,typeof hm.u==='string',wide);
+  visitShell(L,visFloors(hm),wide);
   L.wallM.color.set(HEX.test(hm.w)?hm.w:'#ffd6e0');const fk=FLOORS[hm.f]?hm.f:'wood';
   if(L.fk!==fk){L.fk=fk;if(L.floorM.map)L.floorM.map.dispose();L.floorM.map=floorTex(fk);L.floorM.needsUpdate=true;}L.floorM.map.repeat.set(L.W/2,L.D/2);
   for(const c of [...L.items.children])L.items.remove(c);L.dcols.length=0;L.inter=L.inter.filter(i=>i.vdoor);
-  const rows=[];L.vf=-1;for(const fl of L.up?[0,1]:[0]){const v=hm[fl?'u':'i'];if(typeof v==='string'&&v)for(const row of v.split(';').slice(0,160))rows.push([row,fl]);}
-  for(const [row,fl] of rows){const [t,c,xs,zs,rs,on,sn]=row.split(','),shl=t==='shelf'&&/^s\d+$/.test(sn||''),F=FURN[t];if(!F)continue;const x=+xs,z=+zs,r=(+rs||0)&3,ox=L.ox+fl*UPX;
+  const rows=[];L.vf=-1;for(let fl=0;fl<(L.fls?L.fls.length:1);fl++){const v=hm[fl===0?'i':fl===1?'u':'u'+fl];if(typeof v==='string'&&v)for(const row of v.split(';').slice(0,160))rows.push([row,fl]);}
+  for(const [row,fl] of rows){const [t,c,xs,zs,rs,on,sn]=row.split(','),shl=t==='shelf'&&/^s\d+$/.test(sn||''),F=FURN[t];if(!F)continue;const x=+xs,z=+zs,r=(+rs||0)&3,ox=L.ox,oz=L.oz+UPZ*fl;
     if(!Number.isFinite(x)||!Number.isFinite(z)||Math.abs(x)>L.W||Math.abs(z)>L.D)continue;
-    const g=buildFurn(shl?'shellshelf':t,HEX.test(c)?c:null);g.position.set(ox+x,0,L.oz+z);g.rotation.y=r*Math.PI/2;g.traverse(o=>{if(o.isMesh&&o.material!==OL){o.castShadow=true;o.receiveShadow=true;}});g.userData.fl=fl;g.userData.row={t,x,z,r,fl};L.items.add(g);
+    const g=buildFurn(shl?'shellshelf':t,HEX.test(c)?c:null);g.position.set(ox+x,0,oz+z);g.rotation.y=r*Math.PI/2;g.traverse(o=>{if(o.isMesh&&o.material!==OL){o.castShadow=true;o.receiveShadow=true;}});g.userData.fl=fl;g.userData.row={t,x,z,r,fl};L.items.add(g);
     if(shl)shelfShow(g,+sn.slice(1));   /* 🐚 their shells, not yours */
     if(F.use==='lamp')setLamp({g,it:{on:on==='1'}});
-    const R=fpRect(t,x,z,r),rect={x1:ox+R.x1,z1:L.oz+R.z1,x2:ox+R.x2,z2:L.oz+R.z2};if(!F.flat)L.dcols.push(rect);
-    if(F.use==='sit'){const yaw=r*Math.PI/2+Math.PI;L.inter.push({x:ox+x,z:L.oz+z,r:1.7,rect,icon:'🪑',label:'Sit down',
-      act:()=>{P.sit={x:ox+x,z:L.oz+z,yaw};P.x=P.sit.x;P.z=P.sit.z;P.yaw=yaw;P.pitch=-.12;SFX.pop();toast('Comfy! Move to stand up.');}});}}}
+    const R=fpRect(t,x,z,r),rect={x1:ox+R.x1,z1:oz+R.z1,x2:ox+R.x2,z2:oz+R.z2};if(!F.flat)L.dcols.push(rect);
+    if(F.use==='sit'){const yaw=r*Math.PI/2+Math.PI;L.inter.push({x:ox+x,z:oz+z,r:1.7,rect,icon:'🪑',label:'Sit down',
+      act:()=>{P.sit={x:ox+x,z:oz+z,yaw};P.x=P.sit.x;P.z=P.sit.z;P.yaw=yaw;P.pitch=-.12;SFX.pop();toast('Comfy! Move to stand up.');}});}}}
 function hostSeeKnock(a){const kn=a.kn;if(!kn||!MP.me||kn.to!==MP.me||typeof kn.id!=='string')return;const key=a.peer+'|'+kn.id;if(HOST.seen.has(key))return;HOST.seen.add(key);
   HOST.queue.push({peer:a.peer,id:kn.id,nm:a.nm});hostCard();}
 function hostCard(){if(HOST.cur||!HOST.queue.length)return;const q=HOST.queue.shift();if(!MP.peers.has(q.peer)){hostCard();return;}HOST.cur=q;
@@ -4799,7 +4811,7 @@ function mpHop(a){if(a.zz||a.jy>0)return;a.jv=5.4;a.jy=.0001;if(a.pets)for(const
 function mpBed(a){const h=a.hm;if(!h||typeof h!=='object')return null;let best=null,bd=1.2;
   for(const fl of[0,1]){const v=h[fl?'u':'i'];if(typeof v!=='string'||!v)continue;
     for(const row of v.split(';').slice(0,160)){const [t,c,xs,zs,rs]=row.split(','),F=FURN[t];if(!F||F.use!=='sleep')continue;
-      const r=(+rs||0)&3,fx=Math.sin(r*Math.PI/2),fz=Math.cos(r*Math.PI/2),x=LOC.home.ox+fl*UPX+(+xs)-fx*.55,z=LOC.home.oz+(+zs)-fz*.55,d=Math.hypot(x-a.rx,z-a.rz);
+      const r=(+rs||0)&3,fx=Math.sin(r*Math.PI/2),fz=Math.cos(r*Math.PI/2),x=LOC.home.ox+(+xs)-fx*.55,z=LOC.home.oz+fl*UPZ+(+zs)-fz*.55,d=Math.hypot(x-a.rx,z-a.rz);
       if(d<bd){bd=d;best=[x,z,r*Math.PI/2+Math.PI,t,HEX.test(c)?c:F.cols[0]];}}}
   return best;}
 function mpBedSpot(a,sp){const b=a.bed,q=Math.PI/2;return b?[b[0]+sp[0]-a.rx,b[1]+sp[1]-a.rz,b[2]]:[sp[0],sp[1],Math.round(a.rry/q)*q];}
@@ -4966,12 +4978,12 @@ function wish(){if(S.coins<1){SFX.no();toast('You need 1 🪙 to make a wish.');
 /* ---- home furniture ---- */
 function fpRect(t,x,z,r){const F=FURN[t],sw=(r%2)?F.d:F.w,sd=(r%2)?F.w:F.d;return{x1:x-sw/2,x2:x+sw/2,z1:z-sd/2,z2:z+sd/2};}
 function addHomeItem(it){
-  const L=LOC.home,F=FURN[furnOf(it)],up=it.f&&L.up?1:0,ox=L.ox+up*UPX;const g=buildFurn(furnOf(it),it.c);g.position.set(ox+it.x,0,L.oz+it.z);g.rotation.y=it.r*Math.PI/2;
+  const L=LOC.home,F=FURN[furnOf(it)],up=clamp(it.f|0,0,(L.fls?L.fls.length:1)-1),ox=L.ox,oz=L.oz+UPZ*up;const g=buildFurn(furnOf(it),it.c);g.position.set(ox+it.x,0,oz+it.z);g.rotation.y=it.r*Math.PI/2;
   g.traverse(o=>{if(o.isMesh&&o.material!==OL){o.castShadow=true;o.receiveShadow=true;}});g.userData.u=it.u;g.userData.fl=up;L.items.add(g);L.vf=-1;
   const rec={it,g,col:null,inter:null};
-  if(!F.flat&&!F.hang){const R=fpRect(it.t,it.x,it.z,it.r);rec.col={x1:ox+R.x1,z1:L.oz+R.z1,x2:ox+R.x2,z2:L.oz+R.z2};L.dcols.push(rec.col);}
+  if(!F.flat&&!F.hang){const R=fpRect(it.t,it.x,it.z,it.r);rec.col={x1:ox+R.x1,z1:oz+R.z1,x2:ox+R.x2,z2:oz+R.z2};L.dcols.push(rec.col);}
   if(F.use){const fx=Math.sin(it.r*Math.PI/2),fz=Math.cos(it.r*Math.PI/2),reach=Math.max(F.w,F.d)/2+1.1;
-    const R2=fpRect(it.t,it.x,it.z,it.r);rec.inter={x:ox+it.x,z:L.oz+it.z,r:1.7,rect:{x1:ox+R2.x1,z1:L.oz+R2.z1,x2:ox+R2.x2,z2:L.oz+R2.z2},obj:g,icon:{sleep:'😴',sit:'🪑',tv:'📺',lamp:'💡',piano:'🎹',fridge:'🧊',bath:'🛁',cook:'🍳',dress:'👗',shells:'🐚'}[F.use],
+    const R2=fpRect(it.t,it.x,it.z,it.r);rec.inter={x:ox+it.x,z:oz+it.z,r:1.7,rect:{x1:ox+R2.x1,z1:oz+R2.z1,x2:ox+R2.x2,z2:oz+R2.z2},obj:g,icon:{sleep:'😴',sit:'🪑',tv:'📺',lamp:'💡',piano:'🎹',fridge:'🧊',bath:'🛁',cook:'🍳',dress:'👗',shells:'🐚'}[F.use],
       label:()=>({sleep:'Sleep',sit:'Sit down',tv:rec.on?'Turn off the TV':'Watch TV',lamp:it.on?'Turn off the lamp':'Turn on the lamp',piano:'Play the piano',fridge:'Grab a snack',bath:'Take a bubble bath',cook:'Cook something',dress:'Change your look',shells:'Look at your shells'}[F.use]),
       act:()=>useFurn(rec,fx,fz)};L.inter.push(rec.inter);
     if(F.use==='lamp')setLamp(rec);}
@@ -4982,12 +4994,12 @@ function setLamp(rec){rec.g.traverse(o=>{if(o.userData.shade)o.material.emissive
 function rebuildHome(){for(const u of [...HOME_ITEMS.keys()])removeHomeItem(u);for(const it of S.home.items)addHomeItem(it);WALL_M.color.set(S.home.wall);setFloor(S.home.floor);}
 /* ---- the big house: Decorating level 10 + BIG_PRICE coins (a big dream: about a week of work) ---- */
 const BIG_PRICE=2500;
-function applyHouse(){const big=!!S.bighouse;homeShell(LOC.home,big);if(YARD.plaque)YARD.plaque.visible=!big;}   /* your house on Friends Lane grows by itself (laneRefresh) */
+function applyHouse(){const n=homeFloors();homeShell(LOC.home,n);if(YARD.plaque)YARD.plaque.visible=n<6;}   /* your house on Friends Lane grows by itself (laneRefresh) */
 /* 🏡 the house at Decorating 10 (night 3, job 7, the owner's decision 16 Oct): the downstairs stays 12x10 and nothing moves; the upstairs is a
    12x10 room with the same stairs. Price and level stay. A bigger house from before shrinks once, when the save loads: the push-apart is undone
    (x/1.5, z/1.4), every piece is kept inside the walls, in the order it is saved; a piece that overlaps one already kept, or does not fit, goes to
    📦 My stuff with its colour, to place again. Rugs and other flat things never block. The old layout is kept in the save (S.home.old) */
-function homeBlocked(R,fl){return(!!LOC.home.up&&R.x1<-HOMEW+3&&R.z1<1.4&&R.z2>-1.4)||(fl===0&&((R.x1<1.1&&R.x2>-1.1&&R.z2>HOMED-1.6)||(R.x1<HOMEGX+1.1&&R.x2>HOMEGX-1.1&&R.z1<-HOMED+1.6)));}
+function homeBlocked(R,fl){return(homeFloors()>1&&R.x1<-HOMEW+3&&R.z1<1.4&&R.z2>-1.4)||(fl===0&&((R.x1<1.1&&R.x2>-1.1&&R.z2>HOMED-1.6)||(R.x1<HOMEGX+1.1&&R.x2>HOMEGX-1.1&&R.z1<-HOMED+1.6)));}
 function houseShrink(){const h=S.home;if(!S.bighouse||h.shrunk||!Array.isArray(h.items))return 0;
   h.old={t:Date.now(),items:JSON.parse(JSON.stringify(h.items)),store:JSON.parse(JSON.stringify(h.store||[]))};
   const W=6,D=5,kept=[],moved=[];
@@ -5003,14 +5015,27 @@ function houseShrink(){const h=S.home;if(!S.bighouse||h.shrunk||!Array.isArray(h
   return moved.length;}
 const storeWaiting=()=>S&&S.home&&S.home.store?S.home.store.filter(it=>it.mv).length:0;
 const cozierLine=n=>`Your house got cozier! 🏡 ${n?`${n} thing${n>1?'s are':' is'} waiting in 📦 My stuff to be placed again.`:'Everything still fits!'}`;
-function openBigHouse(){if(S.bighouse){toast('🏡 This is your big house! Enjoy all that space 🎉',3);return;}
-  const lv=sk('decor').lv,ok=lv>=10&&S.coins>=BIG_PRICE;
-  openPanel(`<div class="hd"><h2>🏡 Bigger house</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
-    <p class="ph-sub">Stairs up to a whole second floor to decorate! Your downstairs stays just as it is: nothing moves.</p>
-    <div class="ph-row"><span>🛋️ Decorating level 10</span><span>${lv>=10?'✅':'level '+lv}</span></div>
+function openBigHouse(){const n=homeFloors();if(n>=6){toast('🏡 Six floors! Your house is as tall as it gets 🎉',3);return;}
+  const need=10*n,lv=sk('decor').lv,ok=lv>=need&&S.coins>=BIG_PRICE;   /* 🏡 run 4, item 22: floor 2 at decorating 10, 3 at 20 … 6 at 50, the same price each time */
+  openPanel(`<div class="hd"><h2>🏡 ${n===1?'Bigger house':'One more floor'}</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
+    <p class="ph-sub">${n===1?'Stairs up to a whole second floor to decorate! Your downstairs stays just as it is: nothing moves.':'Floor '+(n+1)+' of 6: the stairs go on up. Everything you have stays where it is.'}</p>
+    <div class="ph-row"><span>🛋️ Decorating level ${need}</span><span>${lv>=need?'✅':'level '+lv}</span></div>
     <div class="ph-row"><span>🪙 ${BIG_PRICE} coins</span><span>${S.coins>=BIG_PRICE?'✅':S.coins+' / '+BIG_PRICE}</span></div>
-    ${ok?`<div class="row" style="justify-content:center;margin-top:12px"><button class="btn mint" data-a="bighouse">🏡 Buy it!</button></div>`
-      :`<p class="ph-sub" style="margin-top:12px">${lv<10?'Put furniture in your house to level up Decorating 🛋️':'Keep saving your coins 🪙'}</p>`}`,{bottom:true});}
+    ${ok?`<div class="row" style="justify-content:center;margin-top:12px"><button class="btn mint" data-a="bighouse">🏡 ${n===1?'Buy it!':'Add the floor!'}</button></div>`
+      :`<p class="ph-sub" style="margin-top:12px">${lv<need?'Put furniture in your house to level up Decorating 🛋️':'Keep saving your coins 🪙'}</p>`}`,{bottom:true});}
+/* 🎨 the outside of your house, any colour (run 4, item 23): 12 ready colours and a "pick any colour" slider; free; everyone sees it through the lane fields (hc) */
+const HOUSE_COLS=[['#b79cff','Purple'],['#ffd6e0','Pink'],['#bfe6ff','Blue'],['#c9f2e3','Green'],['#fff1b8','Yellow'],['#ffe0c4','Peach'],['#e6dbff','Lilac'],['#bff0dc','Mint'],['#ffb3a7','Coral'],['#d9e8ff','Sky'],['#fff7e6','Cream'],['#ffffff','White']];
+const houseCol=()=>S&&S.home&&HEX.test(S.home.col||'')?S.home.col:null;
+function openHousePaint(){const cur=houseCol();
+  openPanel(`<div class="hd"><h2>🎨 House colour</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div><p class="note">Paint the outside of your house. Everyone on Friends Lane sees it!</p>
+    <div class="dots">${HOUSE_COLS.map(([c,n])=>`<button class="dotb${cur===c?' on':''}" data-a="hcol:${c}" aria-label="${n}"><i style="background:${c}"></i>${n}</button>`).join('')}</div>
+    <div class="opt" style="margin-top:10px"><span>Pick any colour</span><input type="range" id="hcHue" min="0" max="360" value="${cur?Math.round(hexHue(cur)):270}" aria-label="Any colour" style="flex:1;min-width:140px;height:44px"></div>
+    <div class="row" style="justify-content:center;margin-top:8px"><button class="btn white" data-a="hcol:">↩️ The lane's own colour</button></div>`,{cls:'setcard'});
+  const sl=$('hcHue');if(sl)sl.addEventListener('input',()=>setHouseCol(hslHex(+sl.value,.72,.82)),{passive:true});}
+function hexHue(h){const r=parseInt(h.slice(1,3),16)/255,g=parseInt(h.slice(3,5),16)/255,b=parseInt(h.slice(5,7),16)/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;if(!d)return 0;let hu=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;return (hu*60+360)%360;}
+function hslHex(h,s,l){const c=(1-Math.abs(2*l-1))*s,x=c*(1-Math.abs((h/60)%2-1)),m=l-c/2;let r=0,g=0,b=0;if(h<60){r=c;g=x;}else if(h<120){r=x;g=c;}else if(h<180){g=c;b=x;}else if(h<240){g=x;b=c;}else if(h<300){r=x;b=c;}else{r=c;b=x;}return'#'+[r,g,b].map(v=>Math.round((v+m)*255).toString(16).padStart(2,'0')).join('');}
+function setHouseCol(c){if(c&&!HEX.test(c))return;if(c)S.home.col=c;else delete S.home.col;change();laneRefresh(true);
+  const on=document.querySelector('#card .dotb.on');if(on)on.classList.remove('on');const b=c&&document.querySelector(`#card [data-a="hcol:${c}"]`);if(b)b.classList.add('on');}
 function setFloor(k){if(FLOOR_M.map)FLOOR_M.map.dispose();FLOOR_M.map=floorTex(k);FLOOR_M.map.repeat.set(HOMEW/2,HOMED/2);FLOOR_M.needsUpdate=true;}
 let tvT=0,tvLast=-1;
 function useFurn(rec,fx,fz){const F=FURN[furnOf(rec.it)];
@@ -5456,19 +5481,19 @@ function kitOnWall(t,x,z,r,W,D){const R=kitRect(t,x,z,r);return(R.r===0&&R.z1<-D
 const DECO={on:false,placing:null,ghost:null,sel:null,mark:null,valid:false,snap:false,x:0,z:0,r:0,X:null};
 /* the same decorating tools work in your own house and in a client's room */
 /* in the big house it works on the floor you stand on (upstairs things are saved with f:1); the stairs' landing stays free */
-const HOMEX={id:'home',L:()=>homeFl()?LOC.home.up:LOC.home,list:()=>S.home.items,W:()=>HOMEW,D:()=>HOMED,map:()=>HOME_ITEMS,add:it=>addHomeItem(it),rm:u=>removeHomeItem(u),
-  on:o=>(o.f|0)===homeFl(),put:it=>{if(homeFl())it.f=1;else delete it.f;},
+const HOMEX={id:'home',L:()=>homeFloorL(homeFl()),list:()=>S.home.items,W:()=>HOMEW,D:()=>HOMED,map:()=>HOME_ITEMS,add:it=>addHomeItem(it),rm:u=>removeHomeItem(u),
+  on:o=>(o.f|0)===homeFl(),put:it=>{const k=homeFl();if(k)it.f=k;else delete it.f;},
   blocked:R=>homeBlocked(R,homeFl())};
 const CLX={id:'client',L:()=>LOC.client,list:()=>dsItems(),W:()=>CLW,D:()=>CLD,map:()=>CL_ITEMS,add:it=>addClItem(it),rm:u=>removeClItem(u),blocked:R=>(R.x1<1.25&&R.x2>-1.25&&R.z2>CLD-1.75)||(dsTwo()&&R.z1<2.3&&R.z2>.9&&((S.ds.o.ri|0)?R.x2>CLW-1.4:R.x1<-CLW+1.4))};   /* the front door, and the side door to the other room, stay free */
 const DX=()=>DECO.X||HOMEX;
 function decoStart(){const X=CUR.id==='home'&&!CLIMB?HOMEX:CUR.id==='client'&&dsHere()?CLX:null;if(!X)return;if(zzIn())standUp();DECO.X=X;DECO.on=true;P.sit=null;X.L().grid.visible=true;$('cross').classList.add('big');$('actWrap').hidden=true;renderBar();
   if(X===HOMEX)toast(DECO_HINT,3.4);}
 const DECO_HINT='Look at something to move it, or open the shop 🛍️';
-function decoEnd(){if(DECO.placing)decoCancel();DECO.on=false;DX().L().grid.visible=false;if(DX()===HOMEX&&LOC.home.up)LOC.home.grid.visible=LOC.home.up.grid.visible=false;$('cross').classList.remove('big');$('bar').hidden=true;selMark(null);change();}
+function decoEnd(){if(DECO.placing)decoCancel();DECO.on=false;DX().L().grid.visible=false;if(DX()===HOMEX&&LOC.home.fls)for(const F of LOC.home.fls)F.grid.visible=false;$('cross').classList.remove('big');$('bar').hidden=true;selMark(null);change();}
 function renderBar(){const b=$('bar');b.hidden=!DECO.on;if(!DECO.on)return;
   if(DECO.placing)b.innerHTML=`<button class="btn sky" data-d="turn">🔄 Turn</button><button class="btn mint" data-d="place" ${DECO.valid?'':'disabled'}>✅ Put it here</button><button class="btn white" data-d="cancel">✖ Cancel</button>`;
   else if(DX()===CLX)b.innerHTML=`<button class="btn butter${dsItems().length?'':' dsPulse'}" data-d="furn">🛋️ Furniture</button>${DECO.sel?`<div class="brow"><button class="btn sky" data-d="move">✋ Move</button><button class="btn lilac" data-d="away">🗑️ Remove</button></div>`:''}<button class="btn mint" data-d="finish">🎉 Finished!</button><button class="btn white sm" data-d="leave">🚪 Leave</button>`;
-  else b.innerHTML=`<button class="btn butter" data-d="shop">🛍️ Shop</button>${DECO.sel?`<button class="btn sky" data-d="move">✋ Move it</button><button class="btn lilac" data-d="away">📦 Put away</button>`:''}<button class="btn mint" data-d="done">✅ Done</button>`;}
+  else b.innerHTML=`<button class="btn butter" data-d="shop">🛍️ Shop</button>${DECO.sel?`<button class="btn sky" data-d="move">✋ Move it</button><button class="btn lilac" data-d="away">📦 Put away</button>`:'<button class="btn lilac" data-d="paint">🎨 House colour</button>'}<button class="btn mint" data-d="done">✅ Done</button>`;}   /* 🎨 run 4, item 23 */
 function startPlacing(it){DECO.placing=it;DECO.r=it.r||0;selMark(null);
   const g=buildFurn(furnOf(it),it.c);g.traverse(o=>{if(!o.isMesh)return;if(o.material===OL||o.material.side===THREE.BackSide){o.visible=false;return;}const m=o.material.clone();m.transparent=true;m.opacity=.72;if(m.emissive)m.emissive.set('#000000');o.material=m;});
   const F=FURN[it.t];const fp=new THREE.Mesh(new THREE.PlaneGeometry(F.w,F.d),new THREE.MeshBasicMaterial({color:'#5fd4b0',transparent:true,opacity:.45,depthWrite:false}));fp.rotation.x=-Math.PI/2;fp.position.y=.03;g.add(fp);g.userData.fp=fp;
@@ -5508,7 +5533,7 @@ function decoMove(){const X=DX(),it=DECO.sel;if(!it)return;const L=X.list();L.sp
 function decoAway(){const X=DX(),it=DECO.sel;if(!it)return;const L=X.list();L.splice(L.indexOf(it),1);X.rm(it.u);selMark(null);SFX.pop();
   if(X===HOMEX){delete it.f;S.home.store.push(it);toast('Put away. Find it in 🛍️ Shop → My stuff.');}else{dcardUpd();jobHud(true);}change();renderBar();}
 $('bar').addEventListener('click',e=>{const b=e.target.closest('[data-d]');if(!b||b.disabled)return;SFX.tap();
-  ({turn:decoTurn,place:decoPlace,cancel:decoCancel,shop:()=>openCatalog('buy'),move:decoMove,away:decoAway,done:decoEnd,furn:()=>openPhone('furn'),finish:dsFinishAsk,leave:()=>exitClient()})[b.dataset.d]();});
+  ({turn:decoTurn,place:decoPlace,cancel:decoCancel,shop:()=>openCatalog('buy'),move:decoMove,away:decoAway,done:decoEnd,paint:openHousePaint,furn:()=>openPhone('furn'),finish:dsFinishAsk,leave:()=>exitClient()})[b.dataset.d]();});
 
 /* ================= panels ================= */
 function openPanel(html,o={}){const p=$('panel'),fresh=p.hidden;p.classList.toggle('bottom',!!o.bottom);p.classList.toggle('side',!!o.side);$('card').className='card'+(o.cls?' '+o.cls:'');$('card').innerHTML=html;p.hidden=false;if(fresh)$('card').scrollTop=0;   /* a card opened anew starts at its top (it used to keep the last card's scroll) */UI.open=true;UI.onClose=o.onClose||null;UI.lock=!!o.lock;
@@ -5715,9 +5740,10 @@ ACT.cbuy=()=>{const F=FURN[CAT.sel];if(S.coins<F.p)return;S.coins-=F.p;SFX.coin(
   if(!(CUR.id==='home'&&DECO.on&&DX()===HOMEX)){S.home.store.push(it);change();renderCatalog();toast('📦 Bought! Go home and place it from 📦 My stuff.',3.6);return;}
   closePanel();startPlacing(it);toast('Look where it should go, then tap ✅',3);change();};
 ACT.cplace=i=>{if(!(CUR.id==='home'&&DECO.on&&DX()===HOMEX)){SFX.no();toast('🏠 Go home to place it! Tap 🛋️ in your house.',3.2);return;}const it=S.home.store.splice(+i,1)[0];if(!it)return;closePanel();startPlacing(it);change();};
-ACT.bighouse=()=>{if(S.bighouse||sk('decor').lv<10||S.coins<BIG_PRICE)return;S.coins-=BIG_PRICE;S.bighouse=true;closePanel();
-  applyHouse();rebuildHome();SFX.coin();SFX.yay();change();toast('🎉 You got the big house! Go inside: the stairs are in the west wall! 🪜',4.5);
-  laneRefresh();const [hx,hz]=yardPt(-17,-10.5);for(let i=0;i<8;i++)setTimeout(()=>floatText(pick(['🎉','⭐','✨','🏡']),hx+rand(-3,3),4.5+rand(0,3),hz+rand(-1,1),{h:.8}),i*150);};
+ACT.bighouse=()=>{const n=homeFloors();if(n>=6||sk('decor').lv<10*n||S.coins<BIG_PRICE)return;S.coins-=BIG_PRICE;if(n===1)S.bighouse=true;else S.home.xf=(S.home.xf|0)+1;closePanel();
+  applyHouse();rebuildHome();SFX.coin();SFX.yay();change();toast(n===1?'🎉 You got the big house! Go inside: the stairs are in the west wall! 🪜':'🎉 Floor '+(n+1)+' is yours! The stairs go on up 🪜',4.5);
+  laneRefresh(true);
+ACT.hcol=c=>{SFX.pop();setHouseCol(c||null);};   /* 🎨 the house-colour buttons (run 4, item 23) */const [hx,hz]=yardPt(-17,-10.5);for(let i=0;i<8;i++)setTimeout(()=>floatText(pick(['🎉','⭐','✨','🏡']),hx+rand(-3,3),4.5+rand(0,3),hz+rand(-1,1),{h:.8}),i*150);};
 ACT.wall=c=>{S.home.wall=c;WALL_M.color.set(c);SFX.pop();change();renderCatalog();};
 ACT.floor=k=>{S.home.floor=k;setFloor(k);SFX.pop();change();renderCatalog();};
 
@@ -7594,7 +7620,7 @@ function startGame(){if(S){awResume();return;}   /* back from the away title: th
   psRefresh();S.hard=S.hard||{};hardMigrate();if(!S.q||S.q.day!==S.day)qNewDay(!!st);else{if(!S.q.used)S.q.used=S.q.list.slice();S.q.list=S.q.list.filter(k=>getQ(k));updPhoneBadge();}
   $('title').hidden=true;$('hud').hidden=false;PLAYING=true;if(innerWidth<600)$('tasks').classList.add('min');
   if(!S.intro){setLoc('city');startIntro();}
-  else{let loc=S.loc;P.x=S.px;P.z=S.pz;P.yaw=isFinite(S.yaw)?S.yaw:0;P.pitch=0;
+  else{let loc=S.loc;P.x=S.px;P.z=S.pz;P.yaw=isFinite(S.yaw)?S.yaw:0;P.pitch=0;if(loc==='home'&&P.x>LOC.home.ox+UPX/2){P.x-=UPX;P.z+=UPZ;}   /* 🪜 a save made upstairs before run 4 (the upstairs used to stand 40 m east; now floor 1 stands 40 m north) */
     if(loc==='city'&&inYardR(P.x,P.z)&&S.yq!==0){[P.x,P.z]=fromSave(loc,P.x,P.z);if(LANE_PLOTS[LANE.mine].s>0)P.yaw+=Math.PI;}   /* in your yard (an old save: the old town yard): in your yard on Friends Lane; a run-4 save in the Flower Corner stays there */
     if(!LOC[loc]||loc==='studio'){loc='city';P.x=-17;P.z=-4.6;P.yaw=0;}
     loc=safeSpot(loc)||'city';setLoc(loc);[P.x,P.z]=collideXZ(P.x,P.z,.3,CUR);
