@@ -14,6 +14,7 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 | 6. Look fixes (truck, clouds, trees, leaves) | yes | yes | N30, N31, N32 pass |
 | 7. Map | yes | yes | N26 pass (5 screen sizes) |
 | 8. Grandmas | yes | yes | N24 pass; N6 (rewritten) pass |
+| 9. Small things and the stage-1 book | yes | yes | N27, N29, N35, N41 pass; book stage W1/W2 pass (7 pages) |
 
 (filled in after every job; if the session restarts: undo any half-done job, carry on from the next one)
 
@@ -80,6 +81,15 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 - Tests: N24 (3 grandmas; the 6 house benches never held; two devices with clocks 1 s apart agree on every grandma's place at 8 moments within 1.3 m; a turn with the pair sitting on the two seats, ducks fed within 8 s; a 20 m+ walk at 1.15 m/s, standing at the place at 72 s with a bubble; Say hi 4 times never repeats). N6 rewritten (old: "out in dry daytime; inside in rain, snow and at night; their bench is full while they sit" → new: "the three are out in dry daytime and gone in rain, snow and at night; the duck-pond bench is full while two of them sit on it and free when they are gone, so you can sit"), never weaker.
 - Should look like (BUILDER): three little grandmas with grey buns and cardigans strolling the pavements, one stopping in front of a shop window with a speech bubble about it; some turns two of them side by side on the bench by the duck pond, crumbs flying, the ducks paddling over. Pictures: tools/pictures-4/after-grandmas-pond.png, after-grandma-at-a-place.png.
 - Decided alone: 80-second turns and the real UTC day as the plan's anchor (the plan restarts at midnight UTC when nobody sees it); the three looks are the first three of the old twelve; the pond pair is chosen by the plan, the third grandma goes elsewhere.
+
+### Job 9: Small things (items 3, 11, 24, 19) and the stage-1 book
+- Pond (item 3). Old: a wooden arched bridge over the duck pond with a walk strip through the water, four post colliders, hand rails, its own "Feed the ducks" spot, and the pond's rim stones kept clear of it. New: the bridge is gone (removal 2 of the 4 allowed): the pond is solid water all round (walking at it from four sides stops 2.5 m from its middle, the water's edge is 1.45 m), the 14 rim stones go all the way round, the two ducks stay with their feeding spot by the bench; `brY`/`brAt` stay as functions that return 0 (friends' and pets' heights used them). Test N29.
+- Trash (item 11). Old: three looks (a white ball, a coloured tube, two yellow sticks). New: four looks, picked by the spot's number (removal 3 of 4, the old looks): a soda can (a coloured tin on its side with a grey lid), crumpled paper (four off-white lumps), a banana peel (a stub with three yellow strips) and a coffee cup (white cup, brown band, dark lid); each piece carries its kind. Picking up works as before (+3 coins, remembered for the day, the quests and tasks count). Test N27: over 8 days all four kinds show; 28 spots, 10 a day.
+- Notepad switch (item 24). New: ⚙️ Settings → "✏️ Notepad": On/Off (default On, saved with the other settings, 52 px tall). Off hides the notepad, On brings it back; the notes live in their own storage and are untouched. The designer card still takes the notepad's place while it shows, and the notepad returns after it. Test N35.
+- Bus (item 19). No change by design; proved with the one clock (N41): every week has exactly 3 bus days, two devices agree on every bus day and hour, and the park-stop pill names the weekday of the next bus on a morning without one.
+- What's new book (stage 1): 7 pages (cover with four pictures and the credit line as it is; One clock; Halloween all October; Three grandmas; Your map; Look around; Small things), 1 to 3 short kid lines each, 11 new 400×300 webp pictures (135 KB in all, taken from the new game). The night-3 book is kept in tools/books/night-3-pages.js with its 13 pictures in tools/books/night-3/. The kit's book stage now reads the page count from the game (it was fixed at 9).
+- Should look like (BUILDER): the duck pond is a round blue pool ringed by grey stones with two ducks and the bench beside it, no bridge; on the pavements small cans, paper balls, peels and cups with a ✨ above them; ⚙️ Settings shows "✏️ Notepad  [✏️ On] [↩️ Last page]"; the title's "What's new" opens a 7-page book that starts with a four-picture cover. Pictures: tools/pictures-4/after-pond-no-bridge.png, after-pond-ducks.png, after-trash-soda-can.png, after-trash-banana-peel.png, after-notepad-switch-off.png, and the book pages in the check's shots.
+- Decided alone: the bridge's feeding spot went with it (the bench's spot stays); the Notepad switch sits in the same Settings row as "↩️ Last page".
 
 ## 2. Check output per job, exactly as printed
 
@@ -290,5 +300,42 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
     PASS | N24 | 3 grandmas; plan for the real day 20746 has 1081 turns; 6 benches by the town houses, seats never held by a grandma: True; two devices, 8 moments: the biggest difference in a grandma's place 1.24 m (1 s of walking is 1.15 m); turn 545: at 76 s two sit 2, seats [0, 1, 0], the pond bench taken [True, 
 [stage run4: done in 33 s]
     PASS | N24 Grandmas: exactly 3; none by the town houses; they sit on the duck-pond bench feeding the ducks at times, walk to places and talk about them; the same places for two players | 3 grandmas; plan for the real day 20746 has 1081 turns; 6 benches by the town houses, seats never held by a grandma: True; two devices, 8 moments: the biggest difference in a grandma's place 1.24 m (1
+[partial run: some stages skipped by --only]
+```
+
+### Job 9 (N27, N29 and N35 from the first run, where N29 failed on the test's own too-wide look for bridge bits: it counted the lake pier's walk strip; N29 again after narrowing it to the pond; N41 after fixing the test's own day loop, which moved its end with the clock it set; the book stage with 7 pages)
+```
+[stage run4: running]
+    PASS | N27 | 10 pieces of trash out of 28 spots today, kinds {'paper': 3, 'can': 1, 'cup': 4, 'peel': 2}; picking one up: True (+3 coins, remembered); over 8 days the trash kinds are ['can', 'cup', 'paper', 'peel']
+    FAIL | N29 | walking at the pond from four sides stops 2.5 m from its middle (the water's edge is 1.45 m); hand-rail tubes left: 0; ducks 2, Feed-the-ducks spots 3, walk strips through water 1, height over the pond 0 | PROBLEMS: ['bits of the bridge are still there']
+    PASS | N35 | default: switch on True, notepad shown True; Settings has the switch: {'text': '✏️ On', 'w': 92.6875, 'h': 52}; after Off: shown False, switch 'Off', saved False, notes kept True; after On: shown True, notes kept True; with the designer card the notepad steps aside True and comes back True
+Terminated
+EXIT 143
+```
+```
+[stage run4: running]
+    PASS | N29 | walking at the pond from four sides stops 2.5 m from its middle (the water's edge is 1.45 m); hand-rail tubes left: 0; ducks 2, Feed-the-ducks spots 3, walk strips through water 0, height over the pond 0
+[stage run4: done in 24 s]
+    PASS | N29 Pond: no bridge; nobody can walk on the water | walking at the pond from four sides stops 2.5 m from its middle (the water's edge is 1.45 m); hand-rail tubes left: 0; ducks 2, Feed-the-ducks spots 3, walk strips through water 0, height over the pon
+[partial run: some stages skipped by --only]
+```
+```
+[stage run4: running]
+    PASS | N41 | bus days per week (6 weeks): [3, 3, 3, 3, 3, 3]; the two devices agree on every bus day and hour: True; 10 mornings at the park stop: 4 bus days, 6 without; a morning without a bus says e.g. 🚌 Next bus: Fri 11:30; a bus day says e.g. 🚌 Next bus: 11:30
+[stage run4: done in 41 s]
+    PASS | N41 Bus: with the one clock the bus still comes 3 days a week and the pill shows the next bus with its weekday | bus days per week (6 weeks): [3, 3, 3, 3, 3, 3]; the two devices agree on every bus day and hour: True; 10 mornings at the park stop: 4 bus days, 6 without; a morning without a bus says e.g. 🚌 Next bu
+[partial run: some stages skipped by --only]
+```
+```
+[stage book: running]
+[stage book: done in 103 s]
+    PASS | W2 title says "Designed by Izabele 💗", on the screen, clear of the buttons and the version label (ipad-landscape) | text: 'Designed by Izabele 💗'; on screen: True; touches the version label: False; touches a button: False
+    PASS | W1 What's new book: 7 pages with pictures; Next, Back, swipe, arrow keys, Escape, ✕, tap outside and Let's play! work; Next stays in the same spot (ipad-landscape) | 7 pages; Next's right edge 1089–1089 px, top 617–617 px; 10 controls tried
+    PASS | W2 title says "Designed by Izabele 💗", on the screen, clear of the buttons and the version label (iphone-portrait) | text: 'Designed by Izabele 💗'; on screen: True; touches the version label: False; touches a button: False
+    PASS | W1 What's new book: 7 pages with pictures; Next, Back, swipe, arrow keys, Escape, ✕, tap outside and Let's play! work; Next stays in the same spot (iphone-portrait) | 7 pages; Next's right edge 363–363 px, top 765–765 px; 10 controls tried
+    PASS | W2 title says "Designed by Izabele 💗", on the screen, clear of the buttons and the version label (iphone-landscape) | text: 'Designed by Izabele 💗'; on screen: True; touches the version label: False; touches a button: False
+    PASS | W1 What's new book: 7 pages with pictures; Next, Back, swipe, arrow keys, Escape, ✕, tap outside and Let's play! work; Next stays in the same spot (iphone-landscape) | 7 pages; Next's right edge 817–817 px, top 314–314 px; 10 controls tried
+    PASS | W2 title says "Designed by Izabele 💗", on the screen, clear of the buttons and the version label (pc-1920) | text: 'Designed by Izabele 💗'; on screen: True; touches the version label: False; touches a button: False
+    PASS | W1 What's new book: 7 pages with pictures; Next, Back, swipe, arrow keys, Escape, ✕, tap outside and Let's play! work; Next stays in the same spot (pc-1920) | 7 pages; Next's right edge 1459–1459 px, top 747–747 px; 10 controls tried
 [partial run: some stages skipped by --only]
 ```
