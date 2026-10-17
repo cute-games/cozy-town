@@ -252,6 +252,7 @@ button{font-family:inherit}
 .jobc .ji{font-size:38px;line-height:1.1}
 .jobc b{font-size:17px;line-height:1.15}
 .jobc small{font-size:13px;font-weight:600;opacity:.85;line-height:1.2}
+.jobq{grid-column:1/-1;justify-self:center;min-height:44px;font-size:17px}
 .jobc.on{background:var(--mint)}
 .jobc[disabled]{opacity:.55;cursor:default;box-shadow:none}
 .jobc:not([disabled]):active{transform:translateY(3px);box-shadow:0 1px 0 var(--soft)}
@@ -305,6 +306,7 @@ button{font-family:inherit}
 #tutCard{position:fixed;left:50%;transform:translateX(-50%);width:min(430px,calc(100vw - 24px));background:#fff;color:#3d2c5e;border:4px solid #3d2c5e;border-radius:24px;box-shadow:0 6px 0 rgba(61,44,94,.35);padding:12px 16px 12px}
 .tutHd{display:flex;align-items:center;gap:10px;font-size:21px}.tutAv{font-size:36px;line-height:1}
 #tutX{font-size:17px;font-weight:700;line-height:1.35;margin:8px 0 6px}
+#tutPic{display:block;width:100%;aspect-ratio:2/1;border-radius:14px;border:3px solid #3d2c5e;margin:8px 0 2px;background:#fff7fb}#tutPic[hidden]{display:none}
 .tutRow{display:flex;justify-content:space-between;gap:10px}.tutRow .btn{font-size:18px;min-height:46px}
 #tutDots{display:flex;gap:6px;justify-content:center;margin-top:8px}#tutDots i{width:9px;height:9px;border-radius:50%;background:#ddd2f2}#tutDots i.on{background:#ff7aa8}
 .tutDemo{display:flex;gap:10px;align-items:center;margin-top:8px;background:#fff;border:3px solid #3d2c5e;border-radius:16px;padding:8px 10px;font-size:14px;line-height:1.3;color:#111}.tutDemo .ni{font-size:28px}.tutDemo b{display:block;font-size:15px}
@@ -486,7 +488,7 @@ button{font-family:inherit}
   
   <div id="note" hidden role="alert"><span class="ni">🍕</span><div><b id="noteT"></b><span id="noteX"></span><small>Tap to close</small></div></div>
 </div>
-<div id="tut" hidden><div id="tutHole"></div><div id="tutCard" role="dialog" aria-label="Pizza job tips"><div class="tutHd"><span class="tutAv">👨‍🍳</span><b id="tutT"></b></div><p id="tutX"></p><div class="tutRow"><button class="btn white" id="tutSkip">Skip</button><button class="btn mint" id="tutNext">Next ›</button></div><div id="tutDots"></div></div></div>
+<div id="tut" hidden><div id="tutHole"></div><div id="tutCard" role="dialog" aria-label="Job tips"><div class="tutHd"><span class="tutAv">👨‍🍳</span><b id="tutT"></b></div><img id="tutPic" alt="" hidden><p id="tutX"></p><div class="tutRow"><button class="btn white" id="tutSkip">Skip</button><button class="btn mint" id="tutNext">Next ›</button></div><div id="tutDots"></div></div></div>
 <div id="panel" hidden><div class="card" id="card"></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
 <div id="title">
@@ -1869,12 +1871,11 @@ function hsTick(dt){const c=HS.cust;if(!S||!PLAYING)return;
   else{animPerson(p,dt,false,.6);sitPose(p);const h=p.head;h.rotation.y=lerp(h.rotation.y,clamp(angLerp(p.root.rotation.y,Math.atan2(P.x-p.root.position.x,P.z-p.root.position.z),1)-p.root.rotation.y,-.9,.9),Math.min(1,dt*5));}   /* in the chair: looks at you */
   hsPlace(c);}
 /* the first-time tips (the same little card as the pizza tips) */
-const HS_TUT=[{t:'Hairstylist tips! ✂️',x:"Hi! I'm Ms. Snippy from the Hair Salon! 💇 Let me show you how the job works. It's fun, I promise!"},
-  {t:'Your salon 🏠',x:'The Hair Salon is on the west road, by the Apartments. Customers come in from 8:00 to 20:00 and sit in your chair.'},
-  {t:'The wish picture 🖼️',x:'Every customer shows you a picture of the hair they want: how LONG it is, which STYLE, and which COLOUR.'},
-  {t:'Scissors ✂️',x:"Scissors make hair shorter: long, then shoulder, then short. Careful! Hair can't grow back while they sit in your chair!"},
-  {t:'Comb and dye 🪮🎨',x:'The comb picks the style: straight, bob, ponytail, bun, pigtails or curly. The dye picks the colour. Change them as often as you like!'},
-  {t:'Done! ⭐',x:'Tap ✅ Done when it looks like the picture. The closer it is, the more stars and coins! Customers are always kind. You can see these tips again in ⚙️ Settings.'}];
+const HS_TUT=[   /* 🖼️ run 4, job 14: 4 picture steps */
+  {t:'Hairstylist ✂️',x:'A customer sits in your chair.',pic:'h1'},
+  {t:'The wish picture 🖼️',x:'Make the hair like the picture.',pic:'h2'},
+  {t:'Cut, comb, dye',x:'Tap the tools.',pic:'h3'},
+  {t:'Done! ⭐',x:'Tap ✅ when it matches.',pic:'h4'}];
 function hsTutStart(){if(TUT||!PLAYING)return;if(UI.open)closePanel();TUT={i:0,hs:1,steps:HS_TUT};$('tut').hidden=false;tutShow();}
 function hsTutTick(dt){if(S&&S.job==='hair'&&!S.hsTut&&S.intro&&!TUT&&!DTUT&&!UI.open&&!CUT&&!fading&&PLAYING){HS.tt+=dt;if(HS.tt>.6)hsTutStart();}else HS.tt=0;}
 /* the salon inside: two chairs facing the room, mirrors on the back wall, a sink, the dye shelf, posters */
@@ -5226,20 +5227,38 @@ function tvEnd(rec){rec.on=false;if(rec!==TVM.near||zzIn())return;TVM.rec=null;
   toast('📺 The end! The dancing cat takes a bow 🐱👋 Tap the TV to watch again.',3.6);}
 
 /* 🎓 pizza job tips: Chef Blaze shows the new player where everything is */
-const TUT_STEPS=[
-  {t:'Pizza job tips! 🍕',x:"Hi! I'm Chef Blaze! 🔥 Let me show you how pizza delivery works. It's quick, I promise!"},
-  {t:'New orders 📩',x:'When someone orders a pizza, a message pops up at the top with a ding! Read it carefully: WHO wants it, WHERE, and how much TIME you have.',demo:1},
-  {t:'Your map 🗺️',el:'mmBtn',x:'This map shows the whole town. The colored dot is where you need to go. The pink arrow is YOU, and it points where you are looking! Tap the map to change the dot color.'},
-  {t:'Your order ⏱️',el:'jobTxt',x:'Here you can see where the pizza goes and how much time is left.'},
-  {t:'Your notepad ✏️',el:'pad',x:"Write the flat number here so you don't forget it! Tap it 2× for a new page, 3× to go back, 4× to delete."},
-  {t:'Messages 📱',el:'bPhone',x:'Forgot the number? Open your phone and tap 💬 Messages. All your orders are saved there!'},
-  {t:'Big buildings 🏢',x:'Apartment buildings have lots of flats. Go inside, go up the stairs, and find the door with the right number. Flat 25 means floor 2, door 5!'},
-  {t:'RARE customers ⭐',x:"Gold messages are RARE customers. They want it super FAST! Be quick and they give a great review: a new star ⭐ and more coins for every pizza! Too slow? A bad review 😬"},
-  {t:"Let's go! 🛵",x:'Come to the Pizzeria and talk to me to start working. Pizza time is 12:00–21:00, Monday to Friday. You can see these tips again in ⚙️ Settings. Good luck!'}];
+const TUT_STEPS=[   /* 🖼️ run 4, job 14: 5 picture steps, almost no reading (the old long tips live on in the pictures) */
+  {t:'Pizza delivery 🍕',x:'A message dings. Read it!',pic:'p1'},
+  {t:'Follow the dot 🗺️',el:'mmBtn',x:'The dot is the house. The arrow is you.',pic:'p2'},
+  {t:'Ring the bell 🚪',x:'Find the door and tap it.',pic:'p3'},
+  {t:'Be quick! ⚡',x:'Fast pizza = more coins.',pic:'p4'},
+  {t:"Let's go! 🛵",x:'Talk to Chef Blaze at the Pizzeria.',pic:'p5'}];
+/* 🖼️ run 4, job 14 (item 30): the job tutorials are pictures. tutPic(id) draws one step on a small canvas: big emoji, fat arrows and a pointing hand, a few words at most */
+const TUTPICS=new Map();
+function tutPic(id){if(TUTPICS.has(id))return TUTPICS.get(id);const W=420,H=210,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  const INKC='#3d2c5e',em=(t,px,py,s)=>{x.font=`${s}px ${FONT}`;x.textAlign='center';x.textBaseline='middle';x.fillStyle=INKC;x.fillText(t,px,py);};
+  const txt=(t,px,py,s,col)=>{x.font=`800 ${s}px ${FONT}`;x.textAlign='center';x.textBaseline='middle';x.fillStyle=col||INKC;x.fillText(t,px,py);};
+  const rr=(px,py,w,h,r,fill,line)=>{x.beginPath();x.moveTo(px+r,py);x.arcTo(px+w,py,px+w,py+h,r);x.arcTo(px+w,py+h,px,py+h,r);x.arcTo(px,py+h,px,py,r);x.arcTo(px,py,px+w,py,r);x.closePath();if(fill){x.fillStyle=fill;x.fill();}if(line){x.lineWidth=4;x.strokeStyle=line;x.stroke();}};
+  const arrow=(x1,y1,x2,y2,col)=>{const a=Math.atan2(y2-y1,x2-x1);x.lineCap='round';x.lineWidth=7;x.strokeStyle=col||'#ff4d8d';x.beginPath();x.moveTo(x1,y1);x.lineTo(x2-Math.cos(a)*14,y2-Math.sin(a)*14);x.stroke();
+    x.fillStyle=col||'#ff4d8d';x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-Math.cos(a-.5)*26,y2-Math.sin(a-.5)*26);x.lineTo(x2-Math.cos(a+.5)*26,y2-Math.sin(a+.5)*26);x.closePath();x.fill();};
+  const hand=(px,py,s)=>em('👉',px,py,s||44);const up=(px,py,s)=>em('👆',px,py,s||44);
+  rr(0,0,W,H,22,'#fff7fb');
+  if(id==='p1'){rr(30,28,250,80,20,'#ffffff',INKC);em('📩',62,68,38);txt('Mia · Pink house',172,55,20);txt('🍕 cheese · ⏱️ 2 min',172,86,18);em('🔔',320,44,40);txt('ding!',320,84,16,'#ff4d8d');arrow(330,110,300,140);up(260,160,46);txt('Read it!',355,165,22);}
+  else if(id==='p2'){rr(40,25,150,150,16,'#dff3d0',INKC);x.fillStyle='#c9bfe8';for(const k of[60,105,150])x.fillRect(40,k,150,12);for(const k of[80,130])x.fillRect(k,25,12,150);x.fillStyle='#ff3b3b';x.beginPath();x.arc(165,60,11,0,6.3);x.fill();
+    x.fillStyle='#ff4fd8';x.beginPath();x.moveTo(70,150);x.lineTo(90,120);x.lineTo(110,150);x.closePath();x.fill();arrow(100,122,152,70,'#ff4fd8');hand(215,60,48);txt('The dot = the house',300,120,20);txt('The arrow = you',300,150,20);em('🗺️',330,60,40);}
+  else if(id==='p3'){em('🏠',120,105,120);rr(100,120,42,62,8,'#5fd4b0',INKC);x.fillStyle='#ffd45c';x.beginPath();x.arc(132,152,4,0,6.3);x.fill();em('🍕',280,70,54);arrow(255,95,160,140);up(150,185,44);txt('Find the door, tap it',300,160,20);}
+  else if(id==='p4'){em('⏱️',80,80,70);em('⚡',150,70,46);arrow(185,85,250,85);em('🪙',280,80,48);em('🪙',320,70,48);em('🪙',360,82,48);em('⭐',330,150,46);txt('Fast = more coins',150,160,22);}
+  else if(id==='p5'){em('🍕',70,60,46);em('👨‍🍳',130,110,90);rr(200,40,110,60,18,'#ffffff',INKC);txt('Hi! 🍕',255,70,24);em('🛵',340,150,70);arrow(205,125,290,150);txt('Talk to Chef Blaze',120,185,20);}
+  else if(id==='h1'){em('💺',130,120,100);em('🧑',130,78,60);em('🚪',300,80,70);arrow(265,110,190,118);hand(330,150,46);txt('A customer sits down',250,185,20);}
+  else if(id==='h2'){rr(40,40,120,120,14,'#ffffff',INKC);em('💇',100,100,70);txt('=',200,100,46);em('🧑',300,100,80);arrow(170,60,250,60);txt('Make the hair like the picture',230,185,19);}
+  else if(id==='h3'){for(const [i,e] of[[0,'✂️'],[1,'🪮'],[2,'🎨']]){x.fillStyle='#ffffff';x.beginPath();x.arc(90+i*120,80,42,0,6.3);x.fill();x.lineWidth=4;x.strokeStyle=INKC;x.stroke();em(e,90+i*120,80,46);}txt('shorter',90,138,16);txt('style',210,138,16);txt('colour',330,138,16);up(210,180,44);arrow(60,180,90,130);arrow(360,180,330,130);}
+  else if(id==='h4'){em('✅',90,90,86);em('⭐',210,70,44);em('⭐',260,60,44);em('⭐',310,70,44);em('🪙',260,130,46);arrow(145,100,195,100);txt('Tap ✅ when it matches',210,185,20);}
+  const url=c.toDataURL('image/png');TUTPICS.set(id,url);return url;}
 let tutT=0;
 function tutStart(){if(TUT||!PLAYING)return;if(UI.open)closePanel();TUT={i:0};$('tut').hidden=false;tutShow();}
 function tutShow(){if(!TUT)return;const STEPS=TUT.steps||TUT_STEPS,st=STEPS[TUT.i],el=st.el?$(st.el):null,hole=$('tutHole'),card=$('tutCard');card.querySelector('.tutAv').textContent=TUT.hs?'✂️':'👨‍🍳';
-  $('tutT').textContent=st.t;$('tutX').innerHTML=esc(st.x)+(st.demo?'<span class="tutDemo"><span class="ni">🍕</span><span><b>📩 Common order — hurry!</b>Mia wants a cheese pizza at the Pink house. ⏱️ 2 minutes!</span></span>':'');
+  $('tutT').textContent=st.t;{const pic=$('tutPic');if(st.pic){pic.src=tutPic(st.pic);pic.hidden=false;}else pic.hidden=true;}   /* 🖼️ the step's picture (run 4, job 14) */
+  $('tutX').innerHTML=esc(st.x)+(st.demo?'<span class="tutDemo"><span class="ni">🍕</span><span><b>📩 Common order — hurry!</b>Mia wants a cheese pizza at the Pink house. ⏱️ 2 minutes!</span></span>':'');
   $('tutNext').textContent=TUT.i===STEPS.length-1?(TUT.hs?"Let's go! ✂️":"Let's go! 🛵"):'Next ›';$('tutDots').innerHTML=STEPS.map((_,i)=>`<i class="${i===TUT.i?'on':''}"></i>`).join('');
   const rc=el&&!el.hidden&&el.offsetParent!==null?el.getBoundingClientRect():null,ch=card.offsetHeight,pad=8;
   if(rc&&rc.width>0){hole.classList.remove('none');Object.assign(hole.style,{left:rc.left-pad+'px',top:rc.top-pad+'px',width:rc.width+pad*2+'px',height:rc.height+pad*2+'px'});
@@ -6605,7 +6624,8 @@ function hasDlOrder(){return!!(S&&S.job==='delivery'&&S.dl&&S.dl.o);}
 let JOBCTX='talk',askT=0;
 const rosieHd=()=>`<div class="who" style="--c:#ff9ec4">Rosie</div>`;
 function jobCards(){return`<div class="jobs">${Object.keys(JOBS).map(k=>{const J=JOBS[k],on=S.job===k;
-  return`<button class="jobc${on?' on':''}" data-a="job:${k}" ${J.soon?'disabled':''}><span class="ji">${J.i}</span><b>${J.n}</b><small>${J.soon?'🔨 Coming soon!':on?'✅ Your job now':J.d}</small></button>`;}).join('')}</div>`;}
+  return`<button class="jobc${on?' on':''}" data-a="job:${k}" ${J.soon?'disabled':''}><span class="ji">${J.i}</span><b>${J.n}</b><small>${J.soon?'🔨 Coming soon!':on?'✅ Your job now':J.d}</small></button>${on&&(k==='delivery'||k==='hair')?`<button class="btn white jobq" data-a="jobtut:${k}" aria-label="How does this job work?">❓ How does it work?</button>`:''}`;}).join('')}</div>`;}
+ACT.jobtut=k=>{closePanel();PH.jobs=false;setTimeout(()=>{if(k==='hair')hsTutStart();else tutStart();},60);};   /* ❓ the picture tutorial again, any time (run 4, job 14) */
 function jobHello(k){const later=' Want a different job later? '+(JOBCTX==='msg'?'Just message me! 📱':'Just come talk to me!');
   return k==='delivery'?"Pizza delivery! 🍕 Yay! Go to the Pizzeria, next to the Bakery. Chef Blaze will give you pizzas to bring to people."+later
     :k==='designer'?"Interior designer! 🎨 Yay! People will send you a message when they want a room decorated. Go to their house and pick furniture on your phone. It's free for your job! Make it pretty and get stars! ⭐"+later

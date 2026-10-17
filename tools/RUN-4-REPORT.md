@@ -20,6 +20,7 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 | 11. The other holidays: Valentine's, the Easter month, December, New Year, the school party | yes | yes | N20, N21, N22 pass; N1 (rewritten again to whole months) pass |
 | 12. The Pet Shop upstairs | yes | yes | N28 pass; N11 rerun pass |
 | 13. More furniture (72 new pieces) | yes | yes | N36 pass |
+| 14. Job tutorials (pictures) | yes | yes | N38 pass |
 
 (filled in after every job; if the session restarts: undo any half-done job, carry on from the next one)
 
@@ -141,6 +142,13 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 - Test N36: every new piece in the catalog with a price and a footprint, builds with finite geometry inside its footprint and under the ceiling, places in the house one by one; the catalog lists them, thumbnails draw, the designer's pool has them; a loveseat bought through the catalog; five pieces saved, read back and sent in the home presence; a PC-size visitor builds them in the host's room.
 - Should look like (BUILDER): the catalog's "All furniture" grid is three times longer, each new piece with a clean little thumbnail; in the house a corner sofa, a canopy bed or a play tent look like the old pieces' siblings (same outlines, same pastel palette, same scale). Pictures: tools/pictures-4/after-new-furniture-in-the-house.png, after-new-furniture-catalog.png.
 - Decided alone: the pieces' prices follow their nearest old relative (a stool 35 like the plant, a canopy bed 420 like the bunk bed and the sofa together); wall pieces hang at 1.0 to 2.2 m like the wall cupboard; the disco ball stands on a tall pole rather than hanging from the ceiling (the game has no ceiling mounts); the catalog keeps one long grid (no categories were asked for).
+
+### Job 14: Job tutorials (item 30)
+- Old: the pizza delivery tips were 9 cards of text from Chef Blaze; the hairstylist tips 6 cards of text from Ms. Snippy; both shown once (the first time the job is taken) and again from ⚙️ Settings.
+- New: both are picture tutorials: 5 steps for pizza delivery (a message dings · follow the dot on the map, the arrow is you · find the door and tap it · fast = more coins · talk to Chef Blaze) and 4 for the hairstylist (a customer sits down · make the hair like the picture · tap the tools: shorter, style, colour · tap ✅ when it matches). Each step is a 420×210 picture drawn on a canvas (`tutPic`): big emoji, fat pink arrows, a pointing hand, a word or two in the picture, and one short line under it (3 to 9 words); the card keeps its Skip and Next buttons, the dots and the yellow spotlight on the real map button for the map step. Shown by itself the first time as before; a "❓ How does it work?" button sits under your current job in Rosie's job list (in person and in the phone chat) and opens it again any time; ⚙️ Settings' tips button still works.
+- Test N38: a fresh player takes each job: the tutorial shows by itself, 5 and 4 steps, every step with a picture and at most 9 words, finished it stays away, the job card has the ❓ and it brings the tutorial back.
+- Should look like (BUILDER): a white card with a picture panel (pale pink, rounded, dark border) showing, for example, a map square with a red dot and a pink arrow and a hand pointing at the dot, the title "Follow the dot 🗺️" and one line of words; Next › and the dots below. Pictures: tools/pictures-4/after-tutorial-delivery-step-1.png, after-tutorial-delivery-step-2.png, after-tutorial-hair-step-1.png, after-tutorial-hair-step-2.png.
+- Decided alone: the pictures are drawn in the game (no image files), so they follow the device's emoji font (on the check machine the emoji are boxes; the arrows, panels and hands draw everywhere); the old long tips are gone rather than kept behind a link (the plan asks for almost no reading).
 
 ## 2. Check output per job, exactly as printed
 
@@ -876,6 +884,15 @@ FAIL, anything else: none
     PASS | N36 | 72 new pieces (r4), 54 with several colours; builds, fits its footprint, buyable and priced: 72 of 72; kinds covered: 13 of 13; in the shop's list 72, thumbnails drawn 6/6, in the designer's pool 72; placed in the house one by one: 72 (failed []); bought a loveseat from the catalog for 190 coins (pl
 [stage run4: done in 33 s]
     PASS | N36 Furniture: at least 60 new pieces across every kind, each buyable, placeable, saved and seen by a visitor | 72 new pieces (r4), 54 with several colours; builds, fits its footprint, buyable and priced: 72 of 72; kinds covered: 13 of 13; in the shop's list 72, thumbnails drawn 6/6, in the designer's pool 72; 
+[partial run: some stages skipped by --only]
+```
+
+### Job 14 (N38 written for this job in the kit's tut4.py)
+```
+[stage run4: running]
+    PASS | N38 | delivery: shows by itself 5 steps: 'Pizza delivery 🍕' picture True 5 words, 'Follow the dot 🗺️' picture True 9 words, 'Ring the bell 🚪' picture True 6 words, 'Be quick! ⚡' picture True 5 words, 'Let's go! 🛵' picture True 7 words; after the last step: gone True, remembered True; second time by itself
+[stage run4: done in 28 s]
+    PASS | N38 Tutorials: the hairstylist and pizza jobs show a picture tutorial the first time and from "?" | delivery: shows by itself 5 steps: 'Pizza delivery 🍕' picture True 5 words, 'Follow the dot 🗺️' picture True 9 words, 'Ring the bell 🚪' picture True 6 words, 'Be quick! ⚡' picture True 5 words, 'Let's
 [partial run: some stages skipped by --only]
 ```
 
