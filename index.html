@@ -873,14 +873,17 @@ function hairFor(h,L){
   if(s==='curly')for(const [x,z] of [[-.17,.12],[0,.15],[.17,.12],[-.2,-.08],[0,-.05],[.2,-.08],[-.1,-.2],[.1,-.2]])sph(h,.13,c,x,.5,z,{ws:10,hs:8});
 }
 /* 🎃 Halloween costumes (run 4, job 3): a hooded onesie over the clothes (the face stays open), with ears, a tail, spikes or a ghostly hem. Cheap boxes, baked with the body */
-const COSTUMES={cat:{c:'#8e8e9e',n:'Cat'},dog:{c:'#b07a52',n:'Dog'},ghost:{c:'#f4f2ff',n:'Ghost'},dino:{c:'#5fbf74',n:'Dinosaur'}};
+const COSTUMES={cat:{c:'#8e8e9e',n:'Cat'},dog:{c:'#b07a52',n:'Dog'},ghost:{c:'#f4f2ff',n:'Ghost'},dino:{c:'#5fbf74',n:'Dinosaur'},bunny:{c:'#ffffff',n:'Bunny'}};   /* 🐰 bunny: the Easter egg hunt's prize (run 4, job 11) */
 function costumeFor(b,head,legs,arms,k){const C=COSTUMES[k].c,D=shade(C,-.14),o={ol:.012};
   box(b,.5,.54,.32,C,0,.59,0,o);for(const hip of legs)box(hip,.21,.5,.23,C,0,-.5,0,o);for(const sh of arms)box(sh,.17,.4,.19,C,0,-.4,0,o);   /* the onesie */
   box(head,.56,.5,.5,C,0,.03,-.08,o);   /* the hood: open at the face */
   if(k==='cat'){for(const s of[-1,1]){cone(head,.09,.17,C,s*.17,.5,-.06,{seg:4,...o});cone(head,.05,.1,'#ffb3c7',s*.17,.52,-.03,{seg:4,ol:false});}cyl(b,.035,.05,.55,C,0,.42,-.26,{rx:-1.1,center:true,seg:6,...o});sph(b,.055,D,0,.69,-.47,{ws:6,hs:5,ol:false});box(b,.26,.32,.02,'#f6f0ff',0,.6,.165,{ol:false});}
+  else if(k==='bunny'){for(const s of[-1,1]){sph(head,.075,C,s*.15,.62,-.04,{s:[1,2.8,.75],ws:8,hs:6,...o});sph(head,.04,'#ffb3c7',s*.15,.64,0,{s:[1,2.4,.5],ws:6,hs:5,ol:false});}sph(b,.085,C,0,.4,-.2,{ws:8,hs:6,ol:false});box(b,.26,.32,.02,'#ffe4ee',0,.6,.165,{ol:false});}   /* 🐰 long ears with pink insides, a fluffy tail, a soft tummy */
   else if(k==='dog'){for(const s of[-1,1])box(head,.11,.28,.06,D,s*.31,.06,-.06,{rz:s*.22,...o});cyl(b,.04,.06,.36,C,0,.5,-.2,{rx:-.7,center:true,seg:6,...o});box(b,.26,.34,.02,'#f6e6c8',0,.58,.165,{ol:false});sph(head,.05,'#2e2347',0,-.07,.245,{ws:6,hs:5,ol:false});}
   else if(k==='ghost'){for(const [x,z] of[[-.17,.12],[.17,.12],[-.17,-.12],[.17,-.12],[0,.17],[0,-.17]])sph(b,.1,C,x,.34,z,{ws:7,hs:5,ol:false});box(head,.6,.1,.54,C,0,.27,-.08,{ol:false});}
   else if(k==='dino'){for(let i=0;i<3;i++)cone(head,.06,.14,D,0,.31,-.22+i*.12,{seg:4,...o});for(let i=0;i<4;i++)cone(b,.05,.12,D,0,.98-i*.16,-.17,{rx:-.5,seg:4,...o});cone(b,.11,.62,C,0,.4,-.44,{rx:-1.35,center:true,seg:7,...o});for(let i=0;i<3;i++)cone(b,.04,.1,D,0,.5-i*.07,-.36-i*.14,{rx:-.4,seg:4,ol:false});box(b,.3,.4,.02,'#ffe08a',0,.6,.165,{ol:false});}}
+/* 🥳 run 4, job 11: on 31 Dec and 1 Jan everyone wears a party hat. Every person gets one at birth (hidden), in its own little baked group, and an own hat sits in a group too, so the two can swap at midnight without rebuilding anyone */
+const PARTY={on:false,hats:[],own:[],cols:['#ff6b6b','#ffd45c','#7cc8ff','#5fd4b0','#b79cff','#ff9ec4']};try{PARTY.on=nyeParty(realDate());}catch(e){}
 function makePerson(L){
   const root=new THREE.Group(),b=new THREE.Group();root.add(b);b.scale.setScalar(L.scale||1);
   const legs=[],arms=[];
@@ -897,12 +900,14 @@ function makePerson(L){
   else{for(const sx of[-1,1]){box(head,.075,.11,.02,INK,sx*.11,.17,fz,{ol:false});box(head,.03,.035,.01,'#ffffff',sx*.11+.015,.24,fz+.012,{ol:false});box(head,.09,.045,.01,'#ff9ab8',sx*.18,.1,fz,{ol:false});}
   box(head,.1,.028,.01,INK,0,.085,fz,{ol:false});}
   hairFor(head,L);
-  if(L.hat&&L.hat!=='none')hatFor(head,L.hat,L.hatc);if(L.glasses&&L.glasses!=='none')glassesFor(head,L.glasses,L.glc);
+  if(L.hat&&L.hat!=='none'){const hg=new THREE.Group();hg.userData.keep=1;head.add(hg);hatFor(hg,L.hat,L.hatc);bake(hg,false);if(!L.nohat){hg.visible=!PARTY.on;PARTY.own.push(hg);}}
+  if(!L.nohat){const ph=new THREE.Group();ph.userData.keep=1;ph.visible=PARTY.on;head.add(ph);hatFor(ph,'party',PARTY.cols[PARTY.hats.length%PARTY.cols.length]);bake(ph,false);PARTY.hats.push(ph);}   /* 🥳 the New Year party hat (run 4, job 11) */
+  if(L.glasses&&L.glasses!=='none')glassesFor(head,L.glasses,L.glc);
   if(L.co&&COSTUMES[L.co])costumeFor(b,head,legs,arms,L.co);   /* 🎃 a costume over the clothes (run 4, job 3) */
   root.traverse(o=>{if(o.isMesh&&o.material===OL)o.material=OLP;});
   return {root,b,legs,arms,head,phase:Math.random()*6,wave:0};
 }
-const HAT_DEF={cap:'#ff6b6b',beanie:'#7cc8ff',bow:'#ff4d8d',flowers:'#ff7aa8',crown:'#ffd45c',headphones:'#ff7aa8',bunny:'#ffffff',cat:'#2e2347',cowboy:'#9a6a43',witch:'#2e2347',tiara:'#ff7aa8',glasses:'#3d2c5e',sunglasses:'#2e2347',hearts:'#ff4d8d',tophat:'#2e2347',flower:'#ff7aa8',halo:'#ffd45c',unicorn:'#ffffff',beret:'#ff6b6b'};
+const HAT_DEF={party:'#ff6b6b',cap:'#ff6b6b',beanie:'#7cc8ff',bow:'#ff4d8d',flowers:'#ff7aa8',crown:'#ffd45c',headphones:'#ff7aa8',bunny:'#ffffff',cat:'#2e2347',cowboy:'#9a6a43',witch:'#2e2347',tiara:'#ff7aa8',glasses:'#3d2c5e',sunglasses:'#2e2347',hearts:'#ff4d8d',tophat:'#2e2347',flower:'#ff7aa8',halo:'#ffd45c',unicorn:'#ffffff',beret:'#ff6b6b'};
 /* 🎀 a proper bow: two ribbon loops pinched at a knot, with two little tails (s = size) */
 function bowShape(g,s,c,o){o=o||{};const ol=o.ol===undefined?.01:o.ol,d=shade(c,-.18),lt=shade(c,.1);
   for(const sd of[-1,1]){const L=new THREE.Group();L.rotation.z=sd*.22;g.add(L);
@@ -928,6 +933,7 @@ function flowerRing(g,c,rx,rz,y,n,fr,o){o=o||{};const v=new THREE.Mesh(new THREE
   return g;}
 function hatFor(h,k,c){const o={ol:.015};c=c||HAT_DEF[k]||'#ff7aa8';const d=shade(c,-.12);
   if(k==='cap'){sph(h,.29,c,0,.45,0,{s:[1,.55,1],ws:14,hs:8,...o});box(h,.36,.04,.26,c,0,.45,.31,o);sph(h,.03,'#ffffff',0,.61,0,{ws:6,hs:5,ol:false});}
+  else if(k==='party'){cone(h,.19,.46,c,0,.4,0,{seg:14,...o});for(let i=0;i<3;i++)for(let j=0;j<3;j++){const a=j/3*TAU+i*.7,rr=.19*(1-(i+.5)*.3);sph(h,.028,'#ffffff',Math.cos(a)*rr,.4+(i+.5)*.153,Math.sin(a)*rr,{ws:6,hs:5,ol:false});}sph(h,.06,'#ffd45c',0,.9,0,{ws:8,hs:6,ol:false});}   /* 🥳 the New Year party hat (run 4, job 11) */
   else if(k==='beanie'){sph(h,.3,c,0,.45,0,{s:[1,.75,1],ws:14,hs:8,...o});box(h,.6,.09,.52,d,0,.4,0,o);sph(h,.08,'#ffffff',0,.7,0,{ws:8,hs:6,...o});}
   else if(k==='bow'){const g=new THREE.Group();g.position.set(.19,.54,.03);g.rotation.set(0,.3,-.38);h.add(g);bowShape(g,1.3,c,{ol:.012});}
   else if(k==='flowers')flowerRing(h,c,.275,.255,.5,7,.07,{ol:.008});
@@ -1190,6 +1196,9 @@ const FURN={
   washer:{n:'Washing machine',i:'🧺',p:250,w:.75,d:.7,use:'wash',b(g){box(g,.75,.9,.7,'#f4f6fb',0,0,0);cyl(g,.24,.24,.04,'#c8cde0',0,.42,.35,{rx:Math.PI/2,center:true,seg:18,ol:.012});cyl(g,.18,.18,.05,'#9fd4f2',0,.42,.36,{rx:Math.PI/2,center:true,seg:18,ol:false});box(g,.6,.08,.02,'#d8dcea',0,.78,.355,{ol:false});sph(g,.03,'#ff7aa8',.25,.8,.36,{ws:6,hs:5,ol:false});}},
   computer:{n:'Computer desk',i:'💻',p:450,w:1.3,d:.7,cols:['#ffffff',WOOD,'#ffc9dc'],use:'game',b(g,c){box(g,1.3,.06,.7,c,0,.72,0);for(const [x,z] of [[-.6,-.3],[.6,-.3],[-.6,.3],[.6,.3]])box(g,.06,.72,.06,c,x,0,z,{ol:.01});box(g,.7,.45,.04,'#3d2c5e',0,.98,-.15);box(g,.62,.37,.02,'#7cc8ff',0,1.02,-.125,{ol:false});box(g,.12,.2,.08,'#3d2c5e',0,.78,-.15,{ol:.01});box(g,.5,.03,.18,'#ffffff',0,.78,.12,{ol:.01});}},
   gaming:{n:'Game console',i:'🎮',p:600,w:1.4,d:.55,use:'game',b(g){box(g,1.4,.45,.5,'#ffffff',0,0,0);box(g,1.3,.8,.06,'#2e2347',0,.45,-.1);box(g,1.2,.7,.02,'#b79cff',0,.5,-.065,{ol:false});box(g,.3,.06,.2,'#3d2c5e',-.3,.45,.12,{ol:.01});for(const [x,col] of [[.2,'#ff6b6b'],[.45,'#5fa8ff']])box(g,.16,.04,.1,col,x,.45,.15,{ol:.01});}},
+  globe:{n:'Little globe',i:'🌍',p:0,w:.4,d:.4,b(g){cyl(g,.14,.17,.05,'#3d2c5e',0,0,0,{seg:12});cyl(g,.03,.03,.22,'#c9a24a',0,.05,0,{seg:6,ol:.01});
+    const a=new THREE.Mesh(new THREE.TorusGeometry(.2,.018,6,20,Math.PI*1.2),mat('#c9a24a'));a.rotation.z=Math.PI*.4;a.position.set(0,.42,0);g.add(a);
+    sph(g,.17,'#6fb7ff',0,.42,0,{ws:14,hs:10,ol:.012});for(const [x,y,z,s] of [[.09,.5,.12,.07],[-.1,.44,.11,.06],[.04,.33,.15,.05],[-.07,.52,-.1,.05],[.12,.38,-.1,.06],[-.12,.3,-.08,.05]])sph(g,s,'#6fcf7a',x,y,z,{s:[1.3,.8,1],ws:7,hs:5,ol:false});}},   /* 🌍 the school party's gift (run 4, job 11): not for sale */
   xmastree:{n:'Holiday tree',i:'🎄',p:300,w:1.0,d:1.0,b(g){cyl(g,.06,.06,.3,'#8c6137',0,0,0,{seg:6});for(const [y,r,h] of [[.25,.5,.7],[.65,.4,.6],[1.0,.28,.5]])cone(g,r,h,'#4fae64',0,y,0,{seg:10});cone(g,.07,.14,'#ffd45c',0,1.5,0,{seg:5});for(let i=0;i<10;i++){const a=i*2.4,y=.35+i*.1,r=.42-i*.03;sph(g,.045,['#ff6b6b','#ffd45c','#7cc8ff','#ff9ec4'][i%4],Math.cos(a)*r,y,Math.sin(a)*r,{ws:6,hs:5,ol:false});}}},
   beanbag:{n:'Beanbag',i:'💺',p:100,w:.9,d:.9,cols:['#ff9ec4','#b79cff','#7cc8ff','#ffd45c','#5fd4b0'],use:'sit',b(g,c){sph(g,.45,c,0,.25,0,{s:[1,.6,1],ws:14,hs:10});sph(g,.3,c,0,.42,-.18,{s:[1.2,.8,.7],ws:12,hs:8});}},
   bunkbed:{n:'Bunk bed',i:'🛏️',p:450,w:1.2,d:2.1,cols:['#ff9ec4','#8fd3ff','#b79cff','#7fdcb5'],use:'sleep',b(g,c){for(const [x,z] of [[-.55,-1],[.55,-1],[-.55,1],[.55,1]])box(g,.08,1.8,.08,'#c98f5e',x,0,z,{ol:.012});for(const y of[.25,1.15]){box(g,1.1,.12,2.0,'#c98f5e',0,y,0);box(g,1.0,.15,1.9,'#ffffff',0,y+.12,0,{ol:.01});box(g,1.02,.08,1.3,c,0,y+.27,.3,{ol:.01});box(g,.5,.1,.3,'#ffffff',0,y+.27,-.75,{ol:.01});}for(let i=0;i<4;i++)box(g,.3,.04,.04,'#c98f5e',.42,.45+i*.25,1.05,{ol:false});}},
@@ -3424,7 +3433,7 @@ const CLOTHES={dress:{n:'Dresses',i:'👗',p:120},sweaters:{n:'6 new sweater col
   unicorn:{n:'Unicorn headband',i:'🦄',p:110,hat:1,cols:['#ffffff','#ff9ec4','#b79cff','#7cc8ff']},beret:{n:'Beret',i:'🎨',p:70,hat:1,cols:['#ff6b6b','#2e2347','#ff9ec4','#5fd4b0']},crown:{n:'Crown',i:'👑',p:400,hat:1,cols:['#ffd45c','#d8dcea','#ff9ec4']},
   glasses:{n:'Glasses',i:'👓',p:60,gl:1,cols:['#3d2c5e','#ff7aa8','#7cc8ff','#ffd45c']},sunglasses:{n:'Sunglasses',i:'🕶️',p:80,gl:1,cols:['#2e2347','#ff7aa8','#5fa8ff','#ffd45c']},hearts:{n:'Heart glasses',i:'💖',p:70,gl:1,cols:['#ff4d8d','#ff7aa8','#b79cff']},
   /* 🎃 Halloween costumes (run 4, job 3): in the Clothes Shop in October only; worn over your clothes (one tap on, one tap off at the mirror); kept after October */
-  co_cat:{n:'Cat costume',i:'🐈',p:160,co:'cat',oct:1},co_dog:{n:'Dog costume',i:'🐕',p:160,co:'dog',oct:1},co_ghost:{n:'Ghost costume',i:'👻',p:160,co:'ghost',oct:1},co_dino:{n:'Dinosaur costume',i:'🦖',p:180,co:'dino',oct:1}};
+  co_cat:{n:'Cat costume',i:'🐈',p:160,co:'cat',oct:1},co_dog:{n:'Dog costume',i:'🐕',p:160,co:'dog',oct:1},co_ghost:{n:'Ghost costume',i:'👻',p:160,co:'ghost',oct:1},co_dino:{n:'Dinosaur costume',i:'🦖',p:180,co:'dino',oct:1},co_bunny:{n:'Bunny costume',i:'🐰',p:0,co:'bunny',gift:1}};   /* 🐰 gift: not for sale, the Easter Bunny gives it (run 4, job 11) */
 function variants(k){return(S.outfits||[]).filter(v=>v.k===k);}
 function owns(k){const C=CLOTHES[k];if(C&&(C.hat||C.gl))return variants(k).length>0;return !!(S.wardrobe&&S.wardrobe[k]);}
 function lookOpts(k){let base=LOOK_OPTS[k];if(k==='top'&&owns('sweaters'))base=base.concat(CLOTHES.sweaters.cols);if(k==='bottom'&&owns('pants'))base=base.concat(CLOTHES.pants.cols);if(k==='shoes'&&owns('shoes'))base=base.concat(CLOTHES.shoes.cols);const x=S&&S.xcol&&S.xcol[k];return x&&x.length?base.concat(x.filter(c=>!base.includes(c))):base;}
@@ -3440,7 +3449,7 @@ function openClothes(){S.wardrobe=S.wardrobe||{};S.outfits=S.outfits||[];
       <p class="note" style="text-align:center">Pick a color${have.length?' (✔ = you have it)':''}</p><div class="swrow" style="justify-content:center">${C.cols.map(c=>`<button class="sw ${c===CLO.col?'on':''}" style="background:${c}" data-a="clocol:${c}" aria-label="Color">${have.includes(c)?'✔':''}</button>`).join('')}</div>
       <div class="row" style="justify-content:center"><button class="btn mint" data-a="clobuy" ${S.coins<C.p?'disabled':''}>Buy it</button><button class="btn white" data-a="cloback">Back</button></div>${S.coins<C.p?'<p class="note" style="text-align:center">Not enough coins yet.</p>':''}`;}
   else body=newInHTML('clothes')+`<div class="sec">All clothes</div><p class="note">Hats and glasses come in lots of colors. Try them on at the 🪞 mirror.</p>
-    ${HOL.cur==='halloween'?'<p class="note">🎃 Costumes are here for October! Wear one over your clothes at the 🪞 mirror.</p>':''}<div class="grid" style="margin-top:10px">${Object.entries(CLOTHES).filter(([k,c])=>!c.oct||HOL.cur==='halloween'||owns(k)).map(([k,c])=>{const n=(c.hat||c.gl)?variants(k).length:0,mine=!(c.hat||c.gl)&&owns(k);
+    ${HOL.cur==='halloween'?'<p class="note">🎃 Costumes are here for October! Wear one over your clothes at the 🪞 mirror.</p>':''}<div class="grid" style="margin-top:10px">${Object.entries(CLOTHES).filter(([k,c])=>(!c.oct||HOL.cur==='halloween'||owns(k))&&(!c.gift||owns(k))).map(([k,c])=>{const n=(c.hat||c.gl)?variants(k).length:0,mine=!(c.hat||c.gl)&&owns(k);
       return`<button class="it" data-a="cloth:${k}"><span class="em">${c.i}</span><span>${c.n}</span><span class="pr">${mine?'✔ Yours':c.p+' 🪙'}</span>${n?`<span class="have">You have ${n}</span>`:''}</button>`;}).join('')}</div>`;
   openPanel(`<div class="hd"><h2>👗 Clothing store</h2><div class="chip">🪙 <b id="pc">${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>${shutNote('clothes')}${body}`,{onClose:()=>{CLO.sel=null;}});}
 const TASKS=[
@@ -5574,7 +5583,7 @@ ACT.tnGo=()=>{closePanel();tnStart();};
 ACT.fbTeam=()=>fbStart('team');ACT.fbDuel=()=>fbStart('duel');ACT.fbJuice=()=>fbJuice();ACT.fbAgain=()=>fbStart(FB.lastM);
 ACT.cloth=k=>{const c=CLOTHES[k];if(!c)return;SFX.tap();
   if(c.hat||c.gl){CLO.sel=k;CLO.col=c.cols.find(x=>!variants(k).some(v=>v.c===x))||c.cols[0];openClothes();return;}
-  if(owns(k)){toast(c.i+' You have these already! Try them on at the 🪞 mirror.',3);return;}if(c.oct&&HOL.cur!=='halloween'){toast('🎃 Costumes come back in October!',3);return;}if(shutBuy('clothes'))return;
+  if(owns(k)){toast(c.i+' You have these already! Try them on at the 🪞 mirror.',3);return;}if(c.gift){toast('🐰 This one is a prize: find all 25 Easter eggs!',3);return;}if(c.oct&&HOL.cur!=='halloween'){toast('🎃 Costumes come back in October!',3);return;}if(shutBuy('clothes'))return;
   if(S.coins<c.p){SFX.no();toast('Not enough coins yet! 🪙');return;}S.coins-=c.p;S.wardrobe[k]=1;SFX.coin();SFX.yay();toast(c.i+' '+c.n+': it\'s yours! Try it on at the mirror. 🪞',3.2);qEvent('clothes');qEvent('buy:'+k);change();openClothes();};
 ACT.clocol=c=>{CLO.col=c;openClothes();};
 ACT.cloback=()=>{CLO.sel=null;openClothes();};
@@ -7234,7 +7243,8 @@ function tcNew(){const d=tc(),id=pick(Object.keys(SUBJ).filter(k=>k!==d.last)),S
   addMsg('dr','dr',x,{t2:'📚 Your class today: '+S0.n});SFX.ding();try{if(navigator.vibrate)navigator.vibrate([120,80,120]);}catch(e){}
   showNote('📚 Message from the school!',x,false,'📚','dr');change();jobHud(true);}
 function tcTick(dt){const d=tc();if(!d.o&&d.done<TC_MAX&&!CUT&&isDaytime()){d.wait-=dt;if(d.wait<=0)tcNew();}jobHud();}
-function tcTalk(){const o=S&&S.job==='teacher'&&S.tc&&S.tc.o;
+function tcTalk(){if(S&&schoolGift())return;   /* 🎈 1 Sep: the teacher's globe, once a year (run 4, job 11) */
+  const o=S&&S.job==='teacher'&&S.tc&&S.tc.o;
   if(o){const S0=SUBJ[o.subj];toast(`“Your class today is ${S0.n}! ${S0.i} It's ${tcDoor(S0)}. Good luck!”`,3.8);return;}
   if(S&&S.job==='teacher'){toast(tc().done>=TC_MAX?'“You taught all your classes today! Thank you! 🌟”':!isDaytime()?`“No classes at night! 🌙 Work starts at ${DAY_ON}:00. I will message you! ☀️”`:'“No class right now. I will message you when a class needs you! 📱”',3.6);return;}
   toast('“Welcome to Cozy Town School! Want to be a teacher? Ask Rosie for a job! 📚”',3.8);}
@@ -7735,22 +7745,128 @@ function bdTick(dt){const f=FRIEND_ACTORS[0],ok=f&&f.d.id==='rosie'&&f.mode!=='a
 function realDate(){return new Date();}
 /* Western Easter Sunday of a year (the calendar rule) */
 function easterOf(y){const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),mo=Math.floor((h+l-7*m+114)/31),da=((h+l-7*m+114)%31)+1;return new Date(y,mo-1,da);}
-/* 'halloween' 1 to 31 Oct (run 4: all of October, the owner's decision 17 Oct) · 'xmas' 1 Dec to 6 Jan · 'easter' Palm Sunday to Easter Monday · null on other days */
-function holidayOf(d){const y=d.getFullYear(),m=d.getMonth()+1,day=d.getDate(),md=m*100+day;
-  if(m===10)return'halloween';if(md>=1201||md<=106)return'xmas';
-  const E=easterOf(y),t=new Date(y,m-1,day).getTime();if(t>=E.getTime()-7*864e5-36e5&&t<=E.getTime()+864e5+36e5)return'easter';return null;}
+/* 🗓️ run 4, job 11 (the owner's design 17 Oct): every holiday fills its whole month. 'halloween' all of October · 'valentine' all of February · 'easter' the month of Easter Sunday · 'xmas' 1 to 31 December · null in other months.
+   New Year and the school party are days, not months: nyeFireworks (the nights of 28 to 31 Dec), nyeParty (31 Dec and 1 Jan: party hats and confetti), schoolParty (1 Sep) */
+function holidayOf(d){const y=d.getFullYear(),m=d.getMonth()+1;
+  if(m===10)return'halloween';if(m===12)return'xmas';if(m===2)return'valentine';
+  if(m===easterOf(y).getMonth()+1)return'easter';return null;}
+function nyeFireworks(d){return d.getMonth()===11&&d.getDate()>=28;}
+function nyeParty(d){const m=d.getMonth(),day=d.getDate();return(m===11&&day===31)||(m===0&&day===1);}
+function schoolParty(d){return d.getMonth()===8&&d.getDate()===1;}
 /* 🌼 a season of the real calendar (job 11 uses it for the trees and the weather): spring March to May, summer June to August, autumn September to November, winter December to February */
 function seasonOf(d){const m=d.getMonth()+1;return m<=2||m===12?'winter':m<=5?'spring':m<=8?'summer':'autumn';}
-const HOL={cur:undefined,g:null,n:0,t:0,anim:[],cols:[],pieces:[],ghosts:[]};
+const HOL={cur:undefined,key:undefined,g:null,n:0,t:0,anim:[],cols:[],pieces:[],ghosts:[],eggs:null,eggG:null,eggN:0,petals:null,santa:null};
 /* 🧱 run 4 (item 13): every holiday piece sits on the ground (or a flower bed / mound it stands on) or hangs on posts or a wall. RAISED = the raised beds and mounds in town;
    supportAt(x,z) = the height a piece standing there sits on; holPiece() writes down each piece's bottom and support for the check (gap under 2 cm), hanging pieces their ends */
 const RAISED=[];
 function supportAt(x,z){let h=0;for(const r of RAISED){if(r.R!==undefined){const d=Math.hypot(x-r.x,z-r.z);if(d<r.R)h=Math.max(h,r.h*Math.sqrt(1-(d/r.R)*(d/r.R)));}else if(Math.abs(x-r.x)<=r.w/2&&Math.abs(z-r.z)<=r.d/2)h=Math.max(h,r.h);}return h;}
 function holPiece(k,x,z,bottom,hang){HOL.pieces.push(hang?{k,x,z,hang}:{k,x,z,b:bottom,s:supportAt(x,z)});}
-function holCheck(){if(!LOC.city)return;const h=holidayOf(realDate());if(h===HOL.cur)return;holClear();HOL.cur=h;if(h){try{holBuild(h);}catch(e){console.error(e);}}fcGate(!!h);}   /* 🚪 the Flower Corner's gate opens in a holiday month (run 4, job 4) */
-function holTick(dt){HOL.t+=dt;if(HOL.t<2)return;HOL.t=0;holCheck();}
+function holCheck(){if(!LOC.city)return;const d=realDate(),h=holidayOf(d),key=h?h+':'+d.getFullYear():null;if(key===HOL.key)return;holClear();HOL.key=key;HOL.cur=h;if(h){try{holBuild(h);}catch(e){console.error(e);}}fcGate(!!h);}   /* the year is part of the key: a new year's Easter deals new egg spots (run 4, job 11) */   /* 🚪 the Flower Corner's gate opens in a holiday month (run 4, job 4) */
+function holTick(dt){HOL.t+=dt;if(HOL.t<2)return;HOL.t=0;holCheck();extraCheck();}   /* 🎉 extraCheck: New Year and the school party (run 4, job 11) */
 function holClear(){const L=LOC.city;if(HOL.g){L.g.remove(HOL.g);HOL.g.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material&&o.material.userData.hol)o.material.dispose();});HOL.g=null;}
-  for(const c of HOL.cols){const i=L.cols.indexOf(c);if(i>=0)L.cols.splice(i,1);}HOL.cols=[];L.inter=L.inter.filter(t=>!t.hol);HOL.n=0;HOL.anim=[];HOL.pieces=[];HOL.ghosts=[];spookClear();}
+  for(const c of HOL.cols){const i=L.cols.indexOf(c);if(i>=0)L.cols.splice(i,1);}HOL.cols=[];L.inter=L.inter.filter(t=>!t.hol);HOL.n=0;HOL.anim=[];HOL.pieces=[];HOL.ghosts=[];HOL.eggs=null;HOL.eggG=null;HOL.eggN=0;HOL.petals=null;HOL.santa=null;spookClear();}
+/* ===== 🎅💗🐰 run 4, job 11: the other holidays at the Flower Corner (the holiday spot of job 4), New Year and the school party ===== */
+const HOL_SPOT=[-19.6,-12.6];   /* the holiday spot inside the Flower Corner: the big tree in December, the heart fountain in February; clear of the stepping stones, the mounds and the bushes */
+/* 🎅 Santa stands by the tree and gives coins once per real day: 10 on 1 Dec, a little more each day, 300 on 31 Dec */
+function santaBuild(L,G,XT){const p=makePerson({skin:'#ffe0c2',hair:'#ffffff',style:'short',eyes:'happy',mouth:'smile',top:'#d3262f',sleeve:'#d3262f',bottom:'#d3262f',shoes:'#2e2347',hat:'beanie',hatc:'#d3262f',scale:1.12,nohat:1,round:true});
+  {const h=p.head;box(h,.34,.17,.1,'#ffffff',0,-.07,.2,{ol:false});box(h,.22,.06,.05,'#ffffff',0,.1,.225,{ol:false});box(h,.62,.08,.54,'#ffffff',0,.41,0,{ol:false});}   /* a beard, a moustache, the hat's white brim */
+  bakePerson(p);const x=XT[0]+2.3,z=XT[1]-.4;p.root.position.set(x,0,z);p.root.rotation.y=Math.PI/2+.4;G.add(p.root);HOL.santa=p;holPiece('santa',x,z,0);HOL.n++;
+  inter(L,{x,z,r:2.2,icon:'🎅',label:'Talk to Santa',act:santaTalk,obj:p.root,hol:1});}
+function santaCoins(d){return Math.round(10+(d.getDate()-1)*290/30);}
+function santaTalk(){const d=realDate(),key=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();SFX.talk();
+  if(S.santa===key){toast('🎅 “Ho ho ho! You had your coins today. Come back tomorrow for a few more!”',3.6);return;}
+  const n=santaCoins(d);S.santa=key;S.coins+=n;SFX.coin();SFX.yay();floatText('🪙 +'+n,P.x-Math.sin(P.yaw)*1.4,1.8,P.z-Math.cos(P.yaw)*1.4,{h:.6});
+  toast('🎅 “Ho ho ho! Merry Christmas! Here are '+n+' coins for you 🪙 Come again tomorrow!”',4);qEvent('santa');change();}
+/* 💗 February: a heart fountain at the holiday spot, hearts on sticks, pink petals drifting over the corner */
+function valentineBuild(L,G,st,glows){const [x,z]=HOL_SPOT,PK='#ff9ec4',RD='#ff4d8d';
+  cyl(st,1.15,1.25,.42,'#f6e2ee',x,0,z,{seg:24,ol:.02});disc(st,1.05,'#9fd8f2',x,.43,z,{seg:24});cyl(st,.14,.18,.9,'#f6e2ee',x,.42,z,{seg:10,ol:.015});
+  heartShape(st,.62,RD,x,1.6,z,0);for(let i=0;i<6;i++){const a=i/6*TAU;heartShape(st,.16,PK,x+Math.cos(a)*.95,.6,z+Math.sin(a)*.95,-a+Math.PI/2);}   /* little hearts round the rim */
+  for(let i=0;i<10;i++){const a=i/10*TAU;sph(st,.05,'#bfe9ff',x+Math.cos(a)*.45,.95+(i%2)*.18,z+Math.sin(a)*.45,{ws:6,hs:5,ol:false});}   /* water drops */
+  {const c={cx:L.ox+x,cz:L.oz+z,cr:1.3};L.cols.push(c);HOL.cols.push(c);}holPiece('heart fountain',x,z,0);HOL.n++;glows.push([x,1.5,z,1.6,[1,.45,.7]]);
+  for(const [hx,hz] of [[-21,-9.4],[-13,-9.4],[-22.3,-16],[-12.1,-15.8]]){heartShape(st,.22,RD,hx,1.1,hz,0);cyl(st,.03,.03,1.0,'#ffffff',hx,0,hz,{seg:6,ol:.01});holPiece('heart',hx,hz,0);HOL.n++;}   /* hearts on sticks by the mounds and bushes */
+  garland(st,-38.0,1.9,8.3,-24.2,8.3,[PK,RD,'#ffffff']);garland(st,-19.8,1.9,8.3,-8.3,8.3,[PK,RD,'#ffffff']);HOL.n+=2;
+  HOL.petals=petalCloud();HOL.petals.position.set(-17,0,-16);G.add(HOL.petals);}
+/* a heart standing up: two round lobes and a turned square for the point (s = size, ry = which way it faces) */
+function heartShape(g,s,c,x,y,z,ry){const q=new THREE.Group();q.position.set(x,y,z);q.rotation.y=ry;g.add(q);const o={ol:.012};
+  box(q,s*.72,s*.72,s*.3,c,0,0,0,{rz:Math.PI/4,center:true,...o});for(const k of[-1,1])sph(q,s*.37,c,k*s*.26,s*.26,0,{ws:10,hs:8,...o});}
+/* pink petals in one Points mesh, drifting across the corner with the breeze (holAnim moves its clock) */
+function petalCloud(){const n=140,H=6,W=13,D=17,pos=new Float32Array(n*3),spd=new Float32Array(n),ph=new Float32Array(n),r=seeded(14);
+  for(let i=0;i<n;i++){pos.set([(r()-.5)*W,r()*H,(r()-.5)*D],i*3);spd[i]=.35+r()*.35;ph[i]=r()*6.28;}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('spd',new THREE.BufferAttribute(spd,1));g.setAttribute('ph',new THREE.BufferAttribute(ph,1));
+  const m=new THREE.ShaderMaterial({uniforms:{tm:{value:0},H:{value:H},W:{value:W},pr:{value:Math.min(2,window.devicePixelRatio||1)}},
+    vertexShader:`uniform float tm,H,W,pr;attribute float spd,ph;varying float vr;void main(){vec3 p=position;p.y=mod(p.y-tm*spd,H);p.x=mod(p.x+W*.5+tm*.9+sin(tm*.7+ph)*.6,W)-W*.5;p.z+=cos(tm*.5+ph)*.4;vr=ph;vec4 mv=modelViewMatrix*vec4(p,1.0);gl_PointSize=clamp(55.0/max(1.0,-mv.z),2.0,7.0)*pr;gl_Position=projectionMatrix*mv;}`,
+    fragmentShader:`varying float vr;void main(){vec2 c=gl_PointCoord-.5;if(dot(c,c)>.25)discard;gl_FragColor=vec4(1.0,.62+.2*sin(vr),.8,.85);}`,transparent:true,depthWrite:false,fog:false});m.userData.hol=1;
+  const pts=new THREE.Points(g,m);pts.frustumCulled=false;pts.userData.keep=1;return pts;}
+/* 🥚 the Easter egg hunt: a bunny at the Flower Corner asks you to find 25 eggs hidden around town; the same spots for everyone that year (dealt by the year), each player finds their own.
+   All 25: the Bunny costume and 50 coins, once a year. Hunt eggs are bigger, banded with gold and sit in a little nest, so no decorative egg looks like one */
+const EGG_SPOTS=[[-33.5,12.2],[-30.2,17.8],[-24.6,16.4],[-19.2,18.6],[-12.6,22.4],[-11.4,27.2],[-16.2,31.4],[-23.8,33.2],[-30.6,33.6],[-35.6,24.4],[-36.2,17.6],[-27.4,27.2],
+  [-21.6,-10.2],[-12.6,-12.4],[-20.8,-20.8],[-13.2,-22.6],[-16.4,-21.2],[31.4,-33.4],[38.6,-33.8],[30.2,-40.4],[39.4,-39.6],[34.8,-42.6],
+  [6.2,-6.4],[9.4,6.6],[-6.8,6.4],[-6.6,-6.6],[52.8,-29.4],[52.6,-12.6],[53.4,21.6],[53.2,37.4],[-52.8,-23.6],[-52.6,-11.2],[-52.4,37.6],
+  [-27.6,-55.2],[-20.4,-55.4],[-32.6,-55.6],[-24.6,55.4],[-20.2,56.2],[-30.4,56.8],[-90.2,6.6],[-104.4,-6.6],[-118.6,6.4],[-91.4,-6.8],[-105.2,6.8],[-119.4,-6.4]];
+function eggYear(){return realDate().getFullYear();}
+function eggSpots(y){const r=seeded(y*977+5),a=EGG_SPOTS.map((p,i)=>[i,p]);for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a.slice(0,25);}
+function eggState(){const y=eggYear();if(!S.egg||S.egg.y!==y)S.egg={y,f:[]};return S.egg;}
+function eggFound(i){return eggState().f.indexOf(i)>=0;}
+function eggHuntBuild(L,G){const list=eggSpots(eggYear());HOL.eggs=list.map(([i,[x,z]])=>{const q=collideXZ(x,z,.3,L);return{i,x:q[0],z:q[1]};});
+  for(const e of HOL.eggs)inter(L,{x:e.x,z:e.z,r:1.6,icon:'🥚',label:()=>'Pick up the egg ('+eggState().f.length+'/25)',when:()=>!eggFound(e.i),act:()=>eggGet(e.i),hol:1});
+  eggsRebuild();
+  const m=makePet('bunny','#ffffff'),b=m.root;b.scale.setScalar(2.1);const bx=-18.3,bz=-12.9;b.position.set(bx,supportAt(bx,bz),bz);b.rotation.y=.3;G.add(b);holPiece('easter bunny',bx,bz,b.position.y);HOL.n++;
+  const bw=new THREE.Group();bw.position.set(0,.5,.12);bw.rotation.set(0,0,-.2);m.head.add(bw);bowShape(bw,.7,'#ffd45c',{ol:.006});
+  inter(L,{x:bx,z:bz,r:2.3,icon:'🐰',label:'Talk to the Easter Bunny',act:bunnyTalk,obj:b,hol:1});}
+function eggsRebuild(){const G=HOL.g;if(!G||!HOL.eggs)return;if(HOL.eggG){G.remove(HOL.eggG);HOL.eggG.traverse(o=>{if(o.geometry)o.geometry.dispose();});}
+  const g=new THREE.Group();HOL.eggG=g;G.add(g);const PC=['#ffb3c7','#bfe6ff','#fff1b8','#c9f2e3','#e6dbff','#ffd9b8'];let n=0;
+  for(const e of HOL.eggs){if(eggFound(e.i))continue;const y=supportAt(e.x,e.z),c=PC[e.i%6];n++;
+    for(let k=0;k<5;k++){const a=k/5*TAU;cone(g,.07,.14,'#6fcf7a',e.x+Math.cos(a)*.17,y,e.z+Math.sin(a)*.17,{seg:5,ol:false});}   /* the nest */
+    sph(g,.19,c,e.x,y+.24,e.z,{s:[1,1.3,1],ws:10,hs:8,ol:.012});cyl(g,.196,.196,.06,'#ffc93c',e.x,y+.22,e.z,{seg:14,ol:false});cyl(g,.15,.15,.05,'#ffc93c',e.x,y+.4,e.z,{seg:12,ol:false});sph(g,.05,'#ffffff',e.x+.08,y+.34,e.z+.14,{ws:6,hs:5,ol:false});}
+  bake(g,true);HOL.eggN=n;}
+function eggGet(i){const st=eggState();if(st.f.indexOf(i)>=0)return;st.f.push(i);SFX.pop();SFX.coin();const e=HOL.eggs&&HOL.eggs.find(q=>q.i===i);if(e)floatText('🥚 '+st.f.length+'/25',e.x,1.2,e.z,{h:.6});
+  toast(st.f.length>=25?'🥚 That was the last egg! All 25! Go and tell the Easter Bunny at the Flower Corner 🐰':'🥚 Egg '+st.f.length+' of 25! '+(25-st.f.length)+' to go 🐰',3.2);eggsRebuild();qEvent('egg');change();}
+function bunnyTalk(){const st=eggState(),y=st.y;SFX.talk();
+  if(st.f.length<25){toast(st.f.length?'🐰 “'+st.f.length+' of my 25 eggs found! Keep looking all around town. The prize is a secret! 🤫”':'🐰 “Happy Easter! I hid 25 eggs all around town. Find them all and I have a surprise for you! 🤫”',4);return;}
+  if(S.eggDone===y){toast('🐰 “You found them all! Enjoy your Bunny costume 🐰 See you next year!”',3.6);return;}
+  S.eggDone=y;S.wardrobe=S.wardrobe||{};S.wardrobe.co_bunny=1;S.coins+=50;SFX.yay();SFX.coin();floatText('🐰 +50 🪙',P.x-Math.sin(P.yaw)*1.4,1.8,P.z-Math.cos(P.yaw)*1.4,{h:.6});
+  toast('🐰 “All 25! Hooray! Here is the surprise: a Bunny costume 🐰 and 50 coins 🪙 Try it on at the mirror!”',4.6);qEvent('eggsdone');change();}
+/* 🎈 the school party on 1 Sep: balloon bunches around the school and in its hall; the teacher gives a little globe once a year */
+const SCH={on:false,g:null,gin:null,cols:[],pieces:0};
+function balloonBunch(g,x,z,cols){cyl(g,.025,.03,1.3,'#ffffff',x,0,z,{seg:6,ol:.008});
+  cols.forEach((c,k)=>{const a=k/cols.length*TAU+.4,bx=x+Math.cos(a)*.26,bz=z+Math.sin(a)*.26,by=1.78+(k%2)*.22;sph(g,.24,c,bx,by,bz,{s:[1,1.18,1],ws:10,hs:8,ol:.012});cone(g,.035,.07,c,bx,by-.36,bz,{seg:4,ol:false});box(g,.012,by-.36,.012,'#8a8aa0',bx,0,bz,{ol:false});});}
+function schoolBuild(){const L=LOC.city,g=new THREE.Group(),C=['#ff6b6b','#ffd45c','#7cc8ff','#5fd4b0','#ff9ec4','#b79cff'],c0=L.cols.length;L.g.add(g);SCH.g=g;SCH.pieces=0;
+  [[-28.6,-58.9],[-21.4,-58.9],[-38.6,-58.9],[-11.4,-58.9],[-33.6,-56.0],[-16.4,-56.0]].forEach(([x,z],k)=>{balloonBunch(g,x,z,[0,1,2,3].map(j=>C[(j+k)%6]));colC(L,x,z,.3);SCH.pieces++;holPiece('balloons',x,z,0);});
+  bake(g,true);SCH.cols=L.cols.slice(c0);
+  const I=LOC.school;if(I){const gi=new THREE.Group();I.g.add(gi);SCH.gin=gi;[[-5.0,3.6],[5.0,3.6],[-2.0,-4.1],[2.0,-4.1]].forEach(([x,z],k)=>{balloonBunch(gi,x,z,[4,1,2,5].map(j=>C[(j+k)%6]));SCH.pieces++;});bake(gi,true);}}
+function schoolClear(){const L=LOC.city;for(const G of [SCH.g,SCH.gin]){if(!G)continue;if(G.parent)G.parent.remove(G);G.traverse(o=>{if(o.geometry)o.geometry.dispose();});}SCH.g=null;SCH.gin=null;
+  for(const c of SCH.cols){const i=L.cols.indexOf(c);if(i>=0)L.cols.splice(i,1);}SCH.cols=[];SCH.pieces=0;}
+function schoolGift(){const d=realDate();if(!schoolParty(d))return false;const y=d.getFullYear();if(S.globe===y)return false;
+  S.globe=y;S.home.store=S.home.store||[];S.home.store.push({u:uid(),t:'globe',c:null,x:0,z:0,r:0});SFX.yay();
+  toast('👩‍🏫 “Happy first day of school! 🎈 Here is a little globe for your desk 🌍 It is waiting at home in 📦 My stuff.”',4.4);qEvent('globe');change();return true;}
+/* 🥳 New Year: the party hats swap in and out at midnight (31 Dec, 1 Jan), confetti falls outdoors on those days, fireworks on the nights of 28 to 31 Dec */
+function partySet(on){if(PARTY.on===on)return;PARTY.on=on;PARTY.hats=PARTY.hats.filter(h=>h.parent);PARTY.own=PARTY.own.filter(h=>h.parent);for(const h of PARTY.hats)h.visible=on;for(const h of PARTY.own)h.visible=!on;}
+function extraCheck(){if(!LOC.city)return;const d=realDate();partySet(nyeParty(d));const sp=schoolParty(d);if(sp!==SCH.on){SCH.on=sp;schoolClear();if(sp)schoolBuild();}
+  FW.want=nyeFireworks(d)&&!!S&&(S.time>=19||S.time<5.5);}
+const FW={m:null,want:false,t:0,k:0,next:0,n:0,c:new Float32Array(18),t0:new Float32Array(6).fill(-99)};
+function fwBuild(){if(FW.m)return;const B=6,N=90,P2=new Float32Array(B*N*3),Dd=new Float32Array(B*N*3),C=new Float32Array(B*N*3),BI=new Float32Array(B*N),r=seeded(99),cols=[[1,.45,.5],[1,.85,.35],[.5,.8,1],[.55,1,.7],[.8,.6,1],[1,.6,.3]];
+  for(let b=0;b<B;b++)for(let i=0;i<N;i++){const k=b*N+i,u=r()*2-1,ph=r()*TAU,s=Math.sqrt(1-u*u),sp=5.5+r()*4.5;Dd.set([s*Math.cos(ph)*sp,u*sp,s*Math.sin(ph)*sp],k*3);C.set(cols[(b+(i%7===0?1:0))%6],k*3);BI[k]=b;}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(P2,3));g.setAttribute('dir',new THREE.BufferAttribute(Dd,3));g.setAttribute('col',new THREE.BufferAttribute(C,3));g.setAttribute('bi',new THREE.BufferAttribute(BI,1));
+  const m=new THREE.ShaderMaterial({uniforms:{tm:{value:0},c:{value:FW.c},t0:{value:FW.t0},pr:{value:Math.min(2,window.devicePixelRatio||1)}},
+    vertexShader:`uniform float tm,pr;uniform vec3 c[6];uniform float t0[6];attribute vec3 dir,col;attribute float bi;varying vec3 vc;varying float va;
+      void main(){int b=int(bi+.5);float age=(tm-t0[b])/2.0;vc=col;if(age<0.0||age>1.0){gl_Position=vec4(2.0,2.0,2.0,1.0);gl_PointSize=0.0;va=0.0;return;}
+      vec3 p=c[b]+dir*age*(1.0-.35*age);p.y-=4.0*age*age;va=1.0-age*age;vec4 mv=modelViewMatrix*vec4(p,1.0);gl_PointSize=clamp(260.0/max(1.0,-mv.z),2.0,7.0)*pr*(1.0-.5*age);gl_Position=projectionMatrix*mv;}`,
+    fragmentShader:`varying vec3 vc;varying float va;void main(){vec2 q=gl_PointCoord-.5;float d=dot(q,q);if(d>.25)discard;gl_FragColor=vec4(vc+.35*(1.0-d*4.0),va*.95);}`,
+    transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false});
+  const pts=new THREE.Points(g,m);pts.frustumCulled=false;pts.visible=false;scene.add(pts);FW.m=pts;}
+function fwTick(dt){const on=FW.want&&!!CUR&&CUR.type!=='in';if(!on){if(FW.m)FW.m.visible=false;return;}fwBuild();FW.m.visible=true;FW.t+=dt;FW.m.material.uniforms.tm.value=FW.t;
+  if(FW.t>=FW.next){FW.k=(FW.k+1)%6;const a=rand(0,TAU),d=rand(40,70);FW.c.set([P.x+Math.cos(a)*d,rand(26,40),P.z+Math.sin(a)*d],FW.k*3);FW.t0[FW.k]=FW.t;FW.next=FW.t+rand(1.4,2.6);FW.n++;
+    if(cool('fw',.9))tone(rand(70,110),.18,'sine',.035);}}
+const CONF={m:null,op:0};
+function confBuild(){if(CONF.m)return;const n=260,H=14,W=24,pos=new Float32Array(n*3),spd=new Float32Array(n),ph=new Float32Array(n),col=new Float32Array(n*3),r=seeded(77),cols=[[1,.42,.42],[1,.83,.36],[.49,.78,1],[.37,.83,.69],[.72,.61,1],[1,.62,.77]];
+  for(let i=0;i<n;i++){pos.set([(r()-.5)*W,r()*H,(r()-.5)*W],i*3);spd[i]=1.1+r()*1.1;ph[i]=r()*TAU;col.set(cols[i%6],i*3);}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('spd',new THREE.BufferAttribute(spd,1));g.setAttribute('ph',new THREE.BufferAttribute(ph,1));g.setAttribute('col',new THREE.BufferAttribute(col,3));
+  const m=new THREE.ShaderMaterial({uniforms:{tm:{value:0},op:{value:0},H:{value:H},pr:{value:Math.min(2,window.devicePixelRatio||1)}},
+    vertexShader:`uniform float tm,H,pr;attribute float spd,ph;attribute vec3 col;varying vec3 vc;varying float vr;void main(){vec3 p=position;p.y=mod(p.y-tm*spd,H);p.x+=sin(tm*1.3+ph)*.7;p.z+=cos(tm*.9+ph)*.5;vc=col;vr=tm*3.0+ph;vec4 mv=modelViewMatrix*vec4(p,1.0);gl_PointSize=clamp(90.0/max(1.0,-mv.z),2.0,8.0)*pr;gl_Position=projectionMatrix*mv;}`,
+    fragmentShader:`uniform float op;varying vec3 vc;varying float vr;void main(){vec2 q=gl_PointCoord-.5;float c=cos(vr),s=sin(vr);vec2 r=vec2(q.x*c-q.y*s,q.x*s+q.y*c);if(abs(r.x)>.42||abs(r.y)>.22)discard;gl_FragColor=vec4(vc,op);}`,transparent:true,depthWrite:false,fog:false});
+  const pts=new THREE.Points(g,m);pts.frustumCulled=false;pts.visible=false;scene.add(pts);CONF.m=pts;}
+function confTick(dt){const on=PARTY.on&&!!CUR&&CUR.type!=='in';if(!on&&!CONF.m)return;confBuild();CONF.op=clamp(CONF.op+(on?dt:-dt)*.8,0,1);const m=CONF.m;m.visible=CONF.op>0;if(!m.visible)return;
+  m.position.set(camera.position.x,camera.position.y-7,camera.position.z);const u=m.material.uniforms;u.tm.value+=dt;u.op.value=CONF.op*.9;}
 /* 🦇🐦🦋 a flock: many little creatures in ONE mesh, each flying its own slow loop and flapping, all worked out on the graphics chip.
    items: [{geo (a vertex-coloured, non-indexed geometry built with the usual box/sph helpers), x,y,z (the middle of its loop), ra (loop size), sp (speed), ph (phase), ya (up-down), fl (flap speed)}] */
 function flockGeo(build){const g=new THREE.Group();build(g);g.updateMatrixWorld(true);const parts=[];g.traverse(o=>{if(!o.isMesh||o.material.side===THREE.BackSide)return;const src=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone();src.applyMatrix4(o.matrixWorld);
@@ -7807,9 +7923,10 @@ function holBuild(h){const L=LOC.city,G=new THREE.Group(),st=new THREE.Group();G
     spookBuild(L,G,st);}
   else if(h==='xmas'){
     /* 🎄 the big tree at the edge of the park plaza, presents under it, lights, wreaths */
-    const T=buildFurn('xmastree');T.scale.setScalar(4.2);T.position.set(-27.5,0,13.5);st.add(T);HOL.n++;holPiece('christmas tree',-27.5,13.5,0);{const c={cx:L.ox-27.5,cz:L.oz+13.5,cr:1.7};L.cols.push(c);HOL.cols.push(c);}
-    for(let i=0;i<10;i++){const a=i/10*TAU+.3,r=1.9+(i%2)*.4,x=-27.5+Math.cos(a)*r,z=13.5+Math.sin(a)*r,s=.3+(i%3)*.08,c=['#ff4d6d','#7cc8ff','#ffd45c','#5fd4b0','#b79cff'][i%5];box(st,s,s,s,c,x,0,z,{ry:a,ol:.012});holPiece('present',x,z,0);box(st,s*1.04,s*.18,s*.18,'#ffffff',x,s*.42,z,{ry:a,ol:false});box(st,s*.18,s*.18,s*1.04,'#ffffff',x,s*.42,z,{ry:a,ol:false});HOL.n++;}
-    for(let i=0;i<24;i++){const a=i/24*TAU;glows.push([-27.5+Math.cos(a)*(1.2-i%3*.25),1.3+i*.1,13.5+Math.sin(a)*(1.2-i%3*.25),.6,[[1,.3,.3],[.3,.9,.4],[1,.85,.3],[.4,.6,1]][i%4]]);}
+    const XT=HOL_SPOT;const T=buildFurn('xmastree');T.scale.setScalar(4.2);T.position.set(XT[0],0,XT[1]);st.add(T);HOL.n++;holPiece('christmas tree',XT[0],XT[1],0);{const c={cx:L.ox+XT[0],cz:L.oz+XT[1],cr:1.7};L.cols.push(c);HOL.cols.push(c);}   /* 🎄 run 4, job 11: the big tree stands at the Flower Corner (the holiday spot) with its presents; Santa beside it */
+    santaBuild(L,G,XT);
+    for(let i=0;i<10;i++){const a=i/10*TAU+.3,r=1.6+(i%2)*.3,x=XT[0]+Math.cos(a)*r,z=XT[1]+Math.sin(a)*r,s=.3+(i%3)*.08,c=['#ff4d6d','#7cc8ff','#ffd45c','#5fd4b0','#b79cff'][i%5];box(st,s,s,s,c,x,0,z,{ry:a,ol:.012});holPiece('present',x,z,0);box(st,s*1.04,s*.18,s*.18,'#ffffff',x,s*.42,z,{ry:a,ol:false});box(st,s*.18,s*.18,s*1.04,'#ffffff',x,s*.42,z,{ry:a,ol:false});HOL.n++;}
+    for(let i=0;i<24;i++){const a=i/24*TAU;glows.push([XT[0]+Math.cos(a)*(1.2-i%3*.25),1.3+i*.1,XT[1]+Math.sin(a)*(1.2-i%3*.25),.6,[[1,.3,.3],[.3,.9,.4],[1,.85,.3],[.4,.6,1]][i%4]]);}
     const LC=[[1,.3,.3],[.3,.9,.4],[1,.85,.3],[.4,.6,1]];let k=0;
     for(const [hx,hz,f] of [[13,-58,1],[25,-58,1],[37,-58,1],[13,58,-1],[25,58,-1],[37,58,-1]])for(let x=hx-4;x<=hx+4.01;x+=.65)glows.push([x,3.55,hz+f*.12,.42,LC[k++%4]]);
     for(const [x,z] of LAMPXZ)for(let i=0;i<3;i++){const a=i/3*TAU;glows.push([x+Math.cos(a)*.28,2.55,z+Math.sin(a)*.28,.42,LC[i%4]]);}
@@ -7817,13 +7934,15 @@ function holBuild(h){const L=LOC.city,G=new THREE.Group(),st=new THREE.Group();G
       const t=new THREE.Mesh(new THREE.TorusGeometry(.3,.07,7,18),mat('#2f7a4a'));w.add(t);for(let i=0;i<6;i++){const a=i/6*TAU;sph(w,.035,i%2?'#ff4d4d':'#ffd45c',Math.cos(a)*.3,Math.sin(a)*.3,.04,{ws:6,hs:5,ol:false});}bowShape(w,.9,'#ff3b4d',{ol:false});w.children[w.children.length-1].position.set(0,.33,.03);HOL.n++;}
     for(const [x,z,ry] of HOL_DOORS){const fx=Math.sin(ry),fz=Math.cos(ry),w=new THREE.Group();w.position.set(x+fx*.1,2.0,z+fz*.1);w.rotation.y=ry;st.add(w);holPiece('wreath',x+fx*.1,z+fz*.1,0,[[x+fx*.1,2.0,z+fz*.1]]);const t=new THREE.Mesh(new THREE.TorusGeometry(.26,.06,7,18),mat('#2f7a4a'));w.add(t);sph(w,.07,'#ff3b4d',0,-.26,.03,{ws:8,hs:6,ol:false});HOL.n++;}
     garland(st,-38.0,1.9,8.3,-24.2,8.3,['#ff4d6d','#5fd4b0','#ffd45c']);garland(st,-19.8,1.9,8.3,-8.3,8.3,['#ff4d6d','#5fd4b0','#ffd45c']);HOL.n+=2;}
+  else if(h==='valentine'){valentineBuild(L,G,st,glows);}   /* 💗 run 4, job 11 */
   else if(h==='easter'){
     const PC=['#ffb3c7','#bfe6ff','#fff1b8','#c9f2e3','#e6dbff','#ffd9b8'],r=seeded(17);
     const egg=(x,z,i)=>{const c=PC[i%6],e=new THREE.Group();e.position.set(x,supportAt(x,z),z);e.rotation.y=r()*TAU;st.add(e);holPiece('egg',x,z,e.position.y-.009);sph(e,.13,c,0,.16,0,{s:[1,1.3,1],ws:9,hs:7,ol:.012});cyl(e,.135,.135,.05,PC[(i+2)%6],0,.14,0,{seg:12,ol:false});for(let k=0;k<4;k++){const a=k/4*TAU;sph(e,.025,PC[(i+4)%6],Math.cos(a)*.125,.23,Math.sin(a)*.125,{ws:5,hs:4,ol:false});}HOL.n++;};
     let i=0;for(const [x,z] of [[-35,14],[-33,17.5],[-30.5,11.5],[-13,16.5],[-11,19],[-12.5,29.5],[-10.5,31],[-15,33],[-34,34],[-32,31.5],[-36,27.5],[-19,36.5],[-24,13],[-18,13.5],[-25.5,34],[-28,36.5]])egg(x,z,i++);
     for(const [x,z] of [[-21,-11],[-13,-11],[-15.5,-19],[-20.5,-21.5],[-12,-21],[-22,-15.5],[-17.4,-13]])egg(x,z,i++);   /* 🌸 the Flower Corner garden */
     for(const [x,z,ry,c] of [[-26.5,11.8,.6,'#ffffff'],[-17.2,12.2,-.5,'#ffc9dc'],[-33.3,30.8,2.2,'#f8f5f0']]){const m=makePet('bunny',c),b=m.root;b.scale.setScalar(1.7);b.position.set(x,supportAt(x,z),z);b.rotation.y=ry;st.add(b);holPiece('bunny',x,z,b.position.y);const bw=new THREE.Group();bw.position.set(0,.5,.12);bw.rotation.set(0,0,-.2);m.head.add(bw);bowShape(bw,.6,PC[(i++)%6],{ol:.006});HOL.n++;}
-    garland(st,-38.0,1.9,8.3,-24.2,8.3,PC);garland(st,-19.8,1.9,8.3,-8.3,8.3,PC);garland(st,-84.6,3.7,-4.45,-84.6,4.45,PC);HOL.n+=3;}
+    garland(st,-38.0,1.9,8.3,-24.2,8.3,PC);garland(st,-19.8,1.9,8.3,-8.3,8.3,PC);garland(st,-84.6,3.7,-4.45,-84.6,4.45,PC);HOL.n+=3;
+    eggHuntBuild(L,G);}   /* 🥚 run 4, job 11: the Easter Bunny and the 25 hunt eggs */
   bake(st,true,64);if(glows.length)G.add(glowMesh(glowGeo(glows)));}   /* (64 m chunks: fewer pieces with Halloween on, within the agreed town limit) */
 function holAnim(now){if(!HOL.g)return;const t=(now/1000)%1e4;HOL.g.traverse(o=>{if(o.material&&o.material.uniforms&&o.material.uniforms.tm)o.material.uniforms.tm.value=t;});}
 /* 👻 the Spooky path (run 4, job 3): a winding purple-lit trail through the Flower Corner (the holiday spot, job 4), 21 m long (the park's old path was 13.6 m),
@@ -7884,7 +8003,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     updGarden(dt);bdTick(dt);
     fbTick(dt);   /* ⚽ the football friends */
     {const vis=CUR.id==='city'&&sittersOut();for(const s of SITTERS){s.p.root.visible=vis;if(vis){s.t+=dt;s.p.head.rotation.y=Math.sin(s.t*.5)*.35;if(s.p.wave>0){s.p.wave-=dt;s.p.arms[1].rotation.z=2.5+Math.sin(s.p.wave*14)*.35;}else s.p.arms[1].rotation.z*=.85;}}}
-    psUpdate(dt);dayTick();holTick(dt);spookTick(dt);wxTick(dt);hsTick(dt);hsTutTick(dt);   /* 🎃 holidays from the real calendar; 👻 the spooky path; 🌦️ the weather */
+    psUpdate(dt);dayTick();holTick(dt);fwTick(dt);confTick(dt);spookTick(dt);wxTick(dt);hsTick(dt);hsTutTick(dt);   /* 🎃 holidays from the real calendar; 👻 the spooky path; 🌦️ the weather */
     for(const k of KEEPERS)if(k.L===CUR){k.p.root.rotation.y=angLerp(k.p.root.rotation.y,Math.atan2(P.x-k.x,P.z-k.z),.05);animPerson(k.p,dt,false);}
     if(CUR&&CUR.id==='studio'&&!CR&&!fading){setLoc('city');P.x=-17;P.z=-4.6;P.yaw=0;P.pitch=0;P.sit=null;P.ride=null;$('hud').hidden=false;camera.clearViewOffset();resize();saveLocal();}
     if(CUT)cutUpdate(dt);if(CLIMB)climbUpdate(dt);floorVis();
