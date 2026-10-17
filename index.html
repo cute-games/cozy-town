@@ -2889,16 +2889,26 @@ function flowerCorner(L,st){const x1=-23.4,x2=-10.6,z1=-24.5,z2=-7.0,HG='#5fbf74
   flat(st,x2-x1,z2-z1,'#a2e48a',(x1+x2)/2,.012,(z1+z2)/2);
   /* the hedges: the back one runs the whole width and is a little taller, so the side hedges' ink can't cross on its top; their ink shells
      start just above the grass, so no dark line flickers along their feet */
-  fence(st,x1,z2,x2,z2);for(const x of[x1,x2])hbox(st,.7,.8,z2-z1-.35,HG,x,(z1+.35+z2)/2,.03);hbox(st,x2-x1+.7,.86,.7,HG,(x1+x2)/2,z1,.03);
-  tree(st,-20.2,-18.6,1.1);BENCH_SKIP=1;bench(st,-17.4,-15.6,0);BENCH_SKIP=0;   /* (nobody can reach this bench: it is inside the hedge) */
+  /* 🚪 run 4, job 4 (the holiday spot): the fence has a gate at x -17 (where the stepping stones start). In a holiday month the gate stands open and you can walk in;
+     in other months it is closed and the corner is the flower garden to look at. Every hedge, the tree, the bench, the fountain, the mounds and the bushes are solid on their own */
+  fence(st,x1,z2,FC.gx-FC.gw,z2,L);fence(st,FC.gx+FC.gw,z2,x2,z2,L);fcGateBuild(L,st);
+  for(const x of[x1,x2]){hbox(st,.7,.8,z2-z1-.35,HG,x,(z1+.35+z2)/2,.03);col(L,x-.4,z1-.4,x+.4,z2+.1);}hbox(st,x2-x1+.7,.86,.7,HG,(x1+x2)/2,z1,.03);col(L,x1-.4,z1-.4,x2+.4,z1+.4);
+  tree(st,-20.2,-18.6,1.1);colC(L,-20.2,-18.6,.36);bench(st,-17.4,-15.6,0);col(L,-18.3,-15.95,-16.5,-15.3);   /* (the bench has two seats now that you can reach it) */
   for(const [x,z] of [[-17,-7.9],[-17.35,-9.25],[-16.95,-10.6],[-17.3,-11.95],[-17.05,-13.3],[-17.35,-14.6]])disc(st,.36,'#e9e0f7',x,.03,z,{seg:14});
-  {const x=-13.4,z=-16.4;cyl(st,.1,.14,.75,'#e9e0f7',x,0,z,{seg:10,ol:.015});cyl(st,.46,.3,.15,'#e9e0f7',x,.75,z,{seg:16,ol:.015});disc(st,.38,'#9fd8f2',x,.905,z,{seg:16});}
-  for(const [x,z,R] of [[-21.2,-9.7,1.1],[-12.8,-9.7,1.1],[-12.9,-21.6,1.2],[-21.3,-22.3,1.0],[-15.5,-20.2,.9]]){sph(st,R,'#6cc97c',x,0,z,{s:[1,.32,1],ws:12,hs:6});RAISED.push({x,z,R,h:R*.32});
+  {const x=-13.4,z=-16.4;cyl(st,.1,.14,.75,'#e9e0f7',x,0,z,{seg:10,ol:.015});cyl(st,.46,.3,.15,'#e9e0f7',x,.75,z,{seg:16,ol:.015});disc(st,.38,'#9fd8f2',x,.905,z,{seg:16});colC(L,x,z,.55);}
+  for(const [x,z,R] of [[-21.2,-9.7,1.1],[-12.8,-9.7,1.1],[-12.9,-21.6,1.2],[-21.3,-22.3,1.0],[-15.5,-20.2,.9]]){sph(st,R,'#6cc97c',x,0,z,{s:[1,.32,1],ws:12,hs:6});RAISED.push({x,z,R,h:R*.32});colC(L,x,z,R*.9);
     for(let k=0;k<Math.round(R*13);k++){const a=r()*TAU,d=Math.sqrt(r())*R*.8;sph(st,.09,FLOWER_COLS[k%5],x+Math.cos(a)*d,.2+(1-d/R)*.12+R*.06,z+Math.sin(a)*d,{ws:6,hs:4,ol:false});}}
-  for(const [x,z] of [[-22.2,-13.8],[-11.8,-13.4]]){const c='#5fbf74';sph(st,.6,c,x,.4,z,{ws:10,hs:8});sph(st,.45,c,x+.45,.32,z+.2,{ws:10,hs:8});sph(st,.42,c,x-.35,.3,z-.25,{ws:10,hs:8});}
-  for(const x of[-22.05,-19.95])box(st,.1,1.55,.1,'#ffffff',x,0,-7.3,{ol:.015});box(st,2.3,.62,.08,'#ffffff',-21,1.05,-7.3,{ol:.02});
+  for(const [x,z] of [[-22.2,-13.8],[-11.8,-13.4]]){const c='#5fbf74';sph(st,.6,c,x,.4,z,{ws:10,hs:8});sph(st,.45,c,x+.45,.32,z+.2,{ws:10,hs:8});sph(st,.42,c,x-.35,.3,z-.25,{ws:10,hs:8});colC(L,x,z,.8);}
+  for(const x of[-22.05,-19.95]){box(st,.1,1.55,.1,'#ffffff',x,0,-7.3,{ol:.015});colC(L,x,-7.3,.1);}box(st,2.3,.62,.08,'#ffffff',-21,1.05,-7.3,{ol:.02});
   const sg=signPlane('🌸 Flower Corner',2.15,.5,'#ff9ec4','#ffffff');sg.position.set(-21,1.36,-7.25);L.g.add(sg);
-  col(L,x1-.45,z1-.45,x2+.45,-6.85);}   /* nobody stands inside (see YARDR) */
+  for(const [x,z] of [[-14.2,-9.6],[-20.3,-14.6],[-15.0,-15.6],[-19.8,-19.6],[-16.9,-23.6]])colC(L,x,z,.12);}   /* the spooky path's lamps (October) stand at these spots */
+/* 🚪 the Flower Corner gate: a little picket gate in the fence gap; open (swung inwards) in a holiday month, closed (and solid) otherwise. holCheck calls fcGate */
+const FC={gx:-17,gw:.9,z:-7,g:null,open:null,col:null,L:null,lamps:[]};
+function fcGateBuild(L,st){const g=new THREE.Group();g.position.set(FC.gx-FC.gw,0,FC.z);L.g.add(g);FC.g=g;FC.L=L;const w=2*FC.gw-.1;
+  for(let i=0;i<=4;i++)box(g,.07,.78,.07,'#ffffff',.08+i*(w-.16)/4,0,0,{ol:.015});for(const y of[.28,.58])box(g,w,.07,.05,'#ffffff',w/2,y,0,{ol:.015});bake(g,true);
+  FC.col={x1:L.ox+FC.gx-FC.gw-.05,z1:L.oz+FC.z-.1,x2:L.ox+FC.gx+FC.gw+.05,z2:L.oz+FC.z+.1};fcGate(false);}
+function fcGate(open){open=!!open;if(FC.open===open||!FC.g)return;FC.open=open;FC.g.rotation.y=open?-1.75:0;const i=FC.L.cols.indexOf(FC.col);if(open){if(i>=0)FC.L.cols.splice(i,1);}else if(i<0)FC.L.cols.push(FC.col);}
+const fcOpen=()=>!!FC.open;
 /* 🌱 your yard on Friends Lane: the garden behind your house, its gate, the back door, the mailbox and the "Bigger house!" sign.
    It is built once at the old town-yard spots (the same numbers old saves use) and put on your lot; it moves along if your lot changes */
 const YARD={g:null,gin:null,cols:[],wc:[],ints:[],on:false,j:null,plaque:null};
@@ -2963,7 +2973,7 @@ function laneOut(x,z){const s=z<0?-1:1,out=[];let ex=x;
   out.push([ex,s*5.5],[-83.5,s*5.5]);return out;}
 /* a spot in your own yard is saved as the old town-yard spot (like old saves), so it stays in YOUR yard whichever lot is yours */
 function toSave(loc,x,z){if(loc==='city'&&LANE.mine!=null){const q=lotBack(LANE.mine,x,z);if(inYardR(q[0],q[1]))return q;}return[x,z];}
-function fromSave(loc,x,z){return loc==='city'&&LANE.mine!=null&&inYardR(x,z)?lotPt(LANE.mine,x,z):[x,z];}
+function fromSave(loc,x,z){return loc==='city'&&LANE.mine!=null&&inYardR(x,z)&&(!S||S.yq!==0)?lotPt(LANE.mine,x,z):[x,z];}   /* (a save made in the Flower Corner says yq 0: it stays there) */
 /* 🏠 a friend's house, inside: rebuilt from what their furniture looks like right now */
 const VOX=2700;
 function buildVisit(){const L=makeLoc('visit','in',VOX,0,[-6,-5,6,5]);L.wallM=toon({color:'#ffd6e0'});L.floorM=toon({map:floorTex('wood')});L.fk='wood';
@@ -3418,7 +3428,7 @@ function snap(){let loc=CUR?CUR.id:'city',x=P.x,z=P.z,yaw=P.yaw;
   if(loc==='client'){const hid=S.ds&&((S.ds.o&&S.ds.o.h)||S.ds.prevH),H=hid&&HOUSE(hid);if(H){loc='city';x=H.x+Math.sin(H.ry)*1.7;z=H.z+Math.cos(H.ry)*1.7;yaw=H.ry+Math.PI;}else loc='studio';}
   if(loc==='visit'){const d=laneHostDoor();loc='city';x=d[0];z=d[1];yaw=d[2];}
   if(loc==='studio'||!LOC[loc]||!isFinite(x)||!isFinite(z)){loc='city';x=-17;z=-4.6;yaw=0;}
-  {const q=toSave(loc,x,z);if(q[0]!==x&&LANE_PLOTS[LANE.mine].s>0)yaw-=Math.PI;x=q[0];z=q[1];}   /* in your yard: saved as the old town-yard spot (startGame turns it back) */
+  {const q=toSave(loc,x,z);S.yq=(q[0]!==x||q[1]!==z)?1:0;if(q[0]!==x&&LANE_PLOTS[LANE.mine].s>0)yaw-=Math.PI;x=q[0];z=q[1];}   /* in your yard: saved as the old town-yard spot (startGame turns it back); yq says so, because the Flower Corner (the same spot in town) can be walked in now (run 4, job 4) */
   S.loc=loc;S.px=x;S.pz=z;S.yaw=yaw;S.t=Date.now();}
 function safeSpot(loc){const L=LOC[loc];if(!L||loc==='studio')return null;const b=L.bounds;if(!isFinite(P.x)||!isFinite(P.z)||P.x<b.x1||P.x>b.x2||P.z<b.z1||P.z>b.z2){
   if((L.type==='in'||loc==='beach')&&DOORS[loc]){const d=DOORS[loc].inside;P.x=L.ox+d[0];P.z=L.oz+d[1];P.yaw=d[2];}else{P.x=-17;P.z=-4.6;P.yaw=0;}}return loc;}
@@ -4523,7 +4533,7 @@ function mpUpsert(p){const pr=p.presence||{};if(!pr.nm)return;let a=MP.peers.get
   if(!a){a={peer:p.peer,nm,lk:'',x:0,z:0,tx:0,tz:0,ry:0,rx:0,rz:0,rry:0,mv:false,loc:'city',av:null,bub:null,bubT:0,sayId:pr.say&&pr.say.id,twin:mpTwin(pr)};MP.peers.set(p.peer,a);
     if(MP.ready){SFX.yay();toast(a.twin?'📱 Your game is open on your other iPad or phone too!':'👋 '+nm+' is here! Open 👫 Friends to go to them.',3.4);}}
   a.loc=(typeof pr.loc==='string'&&LOC[pr.loc])?pr.loc:'city';const ok=v=>Number.isFinite(v)&&Math.abs(v)<2000;if(ok(pr.x))a.rx=pr.x;if(ok(pr.z))a.rz=pr.z;if(ok(pr.ry))a.rry=pr.ry;a.mv=!!pr.mv;laneFields(a,pr,fresh);
-  const lk=JSON.stringify(pr.lk||{}),old=!(Number.isFinite(pr.v)&&pr.v>=COZY_BUILD);if(lk!==a.lk||nm!==a.nm||!a.av||old!==a.old){a.lk=lk;a.nm=nm;a.old=old;mpBuildAv(a,cleanLook(pr.lk));if(fresh){const sp=peerSpot(a)||[a.rx,a.rz,a.rry];a.x=a.tx=sp[0];a.z=a.tz=sp[1];a.ry=sp[2];}}
+  const lk=JSON.stringify(pr.lk||{}),old=!(Number.isFinite(pr.v)&&pr.v>=COZY_BUILD);a.v=Number.isFinite(pr.v)?pr.v:0;if(lk!==a.lk||nm!==a.nm||!a.av||old!==a.old){a.lk=lk;a.nm=nm;a.old=old;mpBuildAv(a,cleanLook(pr.lk));if(fresh){const sp=peerSpot(a)||[a.rx,a.rz,a.rry];a.x=a.tx=sp[0];a.z=a.tz=sp[1];a.ry=sp[2];}}
   const s=pr.say;if(s&&typeof s==='object'&&s.id!==a.sayId){a.sayId=s.id;const txt=Number.isInteger(s.m)&&QUICK[s.m]?QUICK[s.m]:Number.isInteger(s.e)&&EMOS[s.e]?EMOS[s.e]:null;if(txt&&!fresh)mpBubble(a,txt);}
   const bk=JSON.stringify(pr.bl||null);if(bk!==a.bk){a.bk=bk;if(pr.bl)ballFrom(a,pr.bl);else if(!BS.mine&&BS.own===a.peer)ballOwnerGone();}
   const ck=JSON.stringify(pr.sc||null);if(ck!==a.ck){a.ck=ck;if(pr.sc)scoreFrom(a,pr.sc);}
@@ -4579,7 +4589,7 @@ function laneLabel(j){const o=LANE.own[j];if(!o)return'';if(o.k===laneMe())retur
 function laneDoor(j){const o=LANE.own[j];if(!o)return;if(o.k===laneMe()){enter('home');return;}laneKnock(o.k);}
 function laneHostDoor(){const j=LANE.slotOf.get(VIS.host),C=LOC.city;return j!=null&&C&&C.lane&&C.lane[j]?C.lane[j].door:[-17,-4.6,0];}
 /* a friend (old version) standing in THEIR own yard in town shows up at their house on Friends Lane */
-function citySpot(a){const j=LANE.slotOf.get(a.peer);if(j!=null&&inYardR(a.rx,a.rz)){const q=lotPt(j,a.rx,a.rz);return[q[0],q[1],LANE_PLOTS[j].s<0?a.rry:a.rry+Math.PI];}return[a.rx,a.rz,a.rry];}
+function citySpot(a){const j=LANE.slotOf.get(a.peer);if(j!=null&&!a.v&&inYardR(a.rx,a.rz)){   /* (only an old version, which sends no v, can stand in its old town yard; a new version there is in the Flower Corner) */const q=lotPt(j,a.rx,a.rz);return[q[0],q[1],LANE_PLOTS[j].s<0?a.rry:a.rry+Math.PI];}return[a.rx,a.rz,a.rry];}
 /* where a friend's avatar shows up in MY game (null = not here) */
 function peerSpot(a){const me=CUR.id,VD=VOX-LOC.home.ox;
   if(a.loc==='city')return me==='city'?citySpot(a):null;
@@ -5741,7 +5751,7 @@ function mapItems(){const it=[],C=LOC.city,nav=NAV&&!NAV.actor?NAV.id:'';
   for(const p of PLACES){if(!mapShown(p))continue;const a=MAP_AT[p.id]||[p.x,p.z],sel=p.id===nav;
     it.push({k:p.id,pl:p,i:p.i,n:p.id==='beach'?'Beach →':p.n,x:a[0],z:a[1],pri:sel||p.id==='home'||p.id==='beach'?0:p.flat&&p.id!=='bus'?2:1,me:p.id==='home',sel,ls:p.id==='beach'?[0,1,3]:null});}   /* (the 🏖️ beach sign at the east edge always shows: you go there by bus; its name never goes left, into the town) */
   if(C&&C.lane)for(const lp of C.lane){const o=LANE.own[lp.j];if(!o||o.k===laneMe())continue;const k='lot'+lp.j;it.push({k,lot:lp.j,i:'🏠',n:o.nm,x:lp.hx,z:lp.hz,pri:k===nav?0:2,sel:k===nav});}
-  it.push({k:'lane',deco:'lane',i:'🏡',n:'Friends Lane',x:-92,z:0,pri:1},{k:'fc',deco:'fc',i:'🌸',n:'Flower Corner',x:-17,z:-15.6,pri:3});
+  it.push({k:'lane',deco:'lane',i:'🏡',n:'Friends Lane',x:-92,z:0,pri:1},{k:'fc',deco:'fc',i:HOL.cur==='halloween'?'🎃':HOL.cur==='xmas'?'🎄':HOL.cur==='easter'?'🐰':HOL.cur==='valentine'?'💗':'🌸',n:HOL.cur==='halloween'?'Spooky path':'Flower Corner',x:-17,z:-15.6,pri:HOL.cur?1:3});   /* 🚪 in a holiday month the gate is open and the badge says what is there (run 4) */
   return it;}
 function mapLayout(x){const s=MAPV.s,B=mapB(),placed=[],out=[],hit=r=>placed.some(q=>r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1]),edge=r=>r[0]<B.x1*s||r[2]>B.x2*s||r[1]<B.z1*s||r[3]>B.z2*s;
   for(const it of mapItems().sort((a,b)=>a.pri-b.pri)){const px=it.x*s,py=it.z*s,R=it.sel?18:it.pri<2?16:it.pri<3?14:12,br=[px-R-2,py-R-2,px+R+2,py+R+2];
@@ -5875,7 +5885,7 @@ function mapTap(px,py){const me=mapMe(),[mx,my]=mapSP(me.x,me.z);
     if(!best&&wx>-23.6&&wx<-10.4&&wz>-24.8&&wz<-6.8)best={deco:'fc'};}
   if(best)mapPick(best);return!!best;}
 function mapPick(it,fit){
-  if(it.deco){SFX.tap();toast(it.deco==='fc'?'🌸 The Flower Corner: a little garden full of flowers!':it.deco==='lane'?'🏡 Friends Lane: every friend who plays has a house here!':'💛 This spot is for a friend! When a friend plays with you, their house pops up here.',3.4);return;}
+  if(it.deco){SFX.tap();toast(it.deco==='fc'?(fcOpen()?(HOL.cur==='halloween'?'🎃 The Flower Corner: the gate is open! The Spooky path winds through it after 18:00 👻':'🌸 The Flower Corner: the gate is open, come in!'):'🌸 The Flower Corner: a little garden full of flowers (the gate opens for holidays)!'):it.deco==='lane'?'🏡 Friends Lane: every friend who plays has a house here!':'💛 This spot is for a friend! When a friend plays with you, their house pops up here.',3.4);return;}
   let id,go;
   if(it.lot!=null){const o=LANE.own[it.lot],lp=LOC.city.lane[it.lot];if(!o||!lp)return;id='lot'+it.lot;go=()=>setNavTo({id,n:o.nm+"'s house",i:'🏠',nt:1,x:lp.hx,z:lp.hz,door:lotPt(it.lot,-17,-6.9)},true);}
   else{const pl=it.pl;if(!pl)return;id=pl.id;go=()=>{MAPV.beach=pl.id==='beach'&&CUR.id!=='beach';if(MAPV.beach)setNav('beach',true);else setNavTo(pl,true);};}
@@ -7483,7 +7493,7 @@ function startGame(){if(S){awResume();return;}   /* back from the away title: th
   $('title').hidden=true;$('hud').hidden=false;PLAYING=true;if(innerWidth<600)$('tasks').classList.add('min');
   if(!S.intro){setLoc('city');startIntro();}
   else{let loc=S.loc;P.x=S.px;P.z=S.pz;P.yaw=isFinite(S.yaw)?S.yaw:0;P.pitch=0;
-    if(loc==='city'&&inYardR(P.x,P.z)){[P.x,P.z]=fromSave(loc,P.x,P.z);if(LANE_PLOTS[LANE.mine].s>0)P.yaw+=Math.PI;}   /* in your yard (an old save: the old town yard): in your yard on Friends Lane */
+    if(loc==='city'&&inYardR(P.x,P.z)&&S.yq!==0){[P.x,P.z]=fromSave(loc,P.x,P.z);if(LANE_PLOTS[LANE.mine].s>0)P.yaw+=Math.PI;}   /* in your yard (an old save: the old town yard): in your yard on Friends Lane; a run-4 save in the Flower Corner stays there */
     if(!LOC[loc]||loc==='studio'){loc='city';P.x=-17;P.z=-4.6;P.yaw=0;}
     loc=safeSpot(loc)||'city';setLoc(loc);[P.x,P.z]=collideXZ(P.x,P.z,.3,CUR);
     let n=0;for(const p of PET_ACTORS)if(!p.d.stay&&p.loc!==CUR.id)nearMe(p,++n);
@@ -7609,7 +7619,7 @@ const HOL={cur:undefined,g:null,n:0,t:0,anim:[],cols:[],pieces:[],ghosts:[]};
 const RAISED=[];
 function supportAt(x,z){let h=0;for(const r of RAISED){if(r.R!==undefined){const d=Math.hypot(x-r.x,z-r.z);if(d<r.R)h=Math.max(h,r.h*Math.sqrt(1-(d/r.R)*(d/r.R)));}else if(Math.abs(x-r.x)<=r.w/2&&Math.abs(z-r.z)<=r.d/2)h=Math.max(h,r.h);}return h;}
 function holPiece(k,x,z,bottom,hang){HOL.pieces.push(hang?{k,x,z,hang}:{k,x,z,b:bottom,s:supportAt(x,z)});}
-function holCheck(){if(!LOC.city)return;const h=holidayOf(realDate());if(h===HOL.cur)return;holClear();HOL.cur=h;if(h){try{holBuild(h);}catch(e){console.error(e);}}}
+function holCheck(){if(!LOC.city)return;const h=holidayOf(realDate());if(h===HOL.cur)return;holClear();HOL.cur=h;if(h){try{holBuild(h);}catch(e){console.error(e);}}fcGate(!!h);}   /* 🚪 the Flower Corner's gate opens in a holiday month (run 4, job 4) */
 function holTick(dt){HOL.t+=dt;if(HOL.t<2)return;HOL.t=0;holCheck();}
 function holClear(){const L=LOC.city;if(HOL.g){L.g.remove(HOL.g);HOL.g.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material&&o.material.userData.hol)o.material.dispose();});HOL.g=null;}
   for(const c of HOL.cols){const i=L.cols.indexOf(c);if(i>=0)L.cols.splice(i,1);}HOL.cols=[];L.inter=L.inter.filter(t=>!t.hol);HOL.n=0;HOL.anim=[];HOL.pieces=[];HOL.ghosts=[];spookClear();}

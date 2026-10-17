@@ -9,6 +9,7 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 | 1. One clock for everyone | yes | yes | N15, N16, N10 (rewritten), B1 pass |
 | 2. The same game for everyone | yes | yes | N17, N18 pass |
 | 3. Halloween, all of October | yes | yes | N1 (rewritten) pass; N19 passes once job 4 frees the corner (see job 4) |
+| 4. The holiday spot at the Flower Corner | yes | yes | N19 pass (with the gate); gate smoke test pass |
 
 (filled in after every job; if the session restarts: undo any half-done job, carry on from the next one)
 
@@ -39,6 +40,14 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 - Ghosts (item 31): 56 little friendly ghosts in one batch float over the pavements (every fourth walkers' path, so never inside a building), the park, Friends Lane and the Flower Corner (the park used to have 4).
 - Item 13 (floating decorations), the root causes and the fixes: pumpkins hovered 2.3 cm (their sphere sat at y 0.25 with a squashed radius of 0.227: now 0.226 → on the ground); the garlands by the Flower Corner and the park hung in the air between nothing (now every garland has two thin posts of its own); the school's holiday door spot was 1.1 m in front of the school's wall (now on the wall, z −59); Easter eggs and the bunnies sit on the ground or on the flower beds and mounds they stand on (`supportAt`). Every piece writes down its bottom and its support (`HOL.pieces`), so the check can measure every Halloween, Christmas and Easter piece: gap under 2 cm, hanging pieces within 0.6 m of a post or a wall.
 - Should look like (BUILDER): the Flower Corner in October: a purple-lit winding path through the flower garden with 5 little lamps, two signs on posts by the gate, and now and then a soft monster popping up beside the path at night; the town in October: little white ghosts drifting over the pavements, the park, the lane and the corner, pumpkins on the ground at every door, garlands on their posts.
+
+### Job 4: The holiday spot at the Flower Corner (item 4, the spot itself)
+- Old: the whole corner block was one solid collider ("nobody stands inside"); the fence had no gate.
+- New: the low fence has a 1.8 m gate at x −17 (where the stepping stones start). `holCheck` opens it in a holiday month (swung inwards, its collider removed) and closes it in other months (`fcGate`). Inside, every hedge, the tree, the bench (which now has two seats you can reach), the little fountain, the five mounds, the two bushes, the sign posts and the path lamps are solid on their own. Smoke test on 20 Oct: through the gate you reach z −9.5; the fence stops you at −6.6; the tree, bench, fountain and hedge stop you. On 20 Nov the gate stops you at −6.6.
+- Standing in the corner is not standing in the old town yard (the same spot in town): a save made by run 4 says whether its spot was remapped from the Friends Lane yard (`S.yq`; older saves without it keep the old rule), and only an old-version friend (no `v` in presence) is remapped from the old yard to their lot; a new-version friend in the corner shows in the corner.
+- Map: the corner's badge shows 🎃 "Spooky path" in October (🎄, 🐰, 💗 in the other holiday months from job 11) and its tap says the gate is open; otherwise 🌸 "Flower Corner".
+- Walkers: no townsperson path enters the corner, so nothing changes for them.
+- Should look like (BUILDER): from the north road in a holiday month: the white fence with an open gate in the middle, the stepping stones leading in, the "🌸 Flower Corner" sign left of the gate and (October) the two spooky signs right of it; in other months the same garden with the gate closed. Pictures: tools/pictures-4/after-flower-corner-gate-open-october-night.png, after-flower-corner-spooky-path.png, after-flower-corner-gate-closed-november.png.
 
 ## 2. Check output per job, exactly as printed
 
@@ -164,4 +173,23 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
     FAIL | N19 | oct1-day: halloween (101 pieces, path open False); oct1-night: halloween (101 pieces, path open True); oct31-day: halloween (101 pieces, path open False); oct31-night: halloween (101 pieces, path open True); nov1: None (0 pieces, path open False); sep30: None (0 pieces, path open False); October sho
 [stage run4: done in 29 s]
     FAIL | N19 Halloween: October 1 and 31 (day and night) show it, 1 Nov doesn't; costumes on sale only in October, wearable, seen by others, kept after; the spooky path at the Flower Corner at least 20% longer than the park's was, at least 5 scare kinds, each turns you to face it with a small shake and a soft sound only with sound on; ghosts all over town, none inside; every holiday piece touches the ground or a support (gap under 2 cm) | oct1-day: halloween (101 pieces, path open False); oct1-night: halloween (101 pieces, path open True); oct31-day: halloween (101 pieces, path open False); oct31-night: halloween (101 pieces, path open
+```
+
+### Job 4 (N19 with the gate and the corner's own colliders; the gate smoke test printed: 2026-10-20 open true, throughGate z −9.46, throughFence −6.62, intoTree −17.94, intoBench −15.0, intoFountain −15.55, intoHedge x −22.7; 2026-11-20 open false, throughGate −6.6)
+```
+[stage files: running]
+[stage files: done in 1 s]
+    PASS | A1 newest live versions read right before the check | claude-form-of-github-live.html read on 2026-10-17, github-live.html read on 2026-10-17
+    PASS | A2 dated private backup of the live game | backup 709bf763d51be0160c118e2f9249f9f6 vs live GitHub 709bf763d51be0160c118e2f9249f9f6; title "Run 4 backup of the live game (tools/prerun4-index.html), made 2026-10-17, checked 2026-10-17"
+    PASS | F3a live GitHub version = live Claude version + web part, nothing else | 55 added lines in 2 places, no lines removed or changed
+    PASS | F1 no ZZTEST test data in the file to publish | ZZTEST appears 0 times
+    PASS | F5 no new outside addresses (same 3D library and font) | ['cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js', 'fonts.googleapis.com', 'fonts.googleapis.com/css2', 'fonts.gstatic.com']
+[stage counts: running]
+[stage counts: done in 58 s]
+    PASS | A3 everything in the live game is still in the new one, by name | 58 lists, 728 things before, 732 after; grew: {"clothes": "22 -> 26"}
+    PASS | E1 no more drawing work than before, area by area (more than 10% needs your OK); agreed more: city +15% pieces / +25% triangles, pets +100% pieces / +100% triangles | 26 areas, 1443 pieces, 1205012 triangles in total | for information, seen from 5 spots: city 130 draws; home 34 draws; market 14 draws; cafe 30 draws; school 44 draws
+[stage run4: running]
+    PASS | N19 | oct1-day: halloween (101 pieces, path open False); oct1-night: halloween (101 pieces, path open True); oct31-day: halloween (101 pieces, path open False); oct31-night: halloween (101 pieces, path open True); nov1: None (0 pieces, path open False); sep30: None (0 pieces, path open False); October sho
+[stage run4: done in 29 s]
+    PASS | N19 Halloween: October 1 and 31 (day and night) show it, 1 Nov doesn't; costumes on sale only in October, wearable, seen by others, kept after; the spooky path at the Flower Corner at least 20% longer than the park's was, at least 5 scare kinds, each turns you to face it with a small shake and a soft sound only with sound on; ghosts all over town, none inside; every holiday piece touches the ground or a support (gap under 2 cm) | oct1-day: halloween (101 pieces, path open False); oct1-night: halloween (101 pieces, path open True); oct31-day: halloween (101 pieces, path open False); oct31-night: halloween (101 pieces, path open
 ```
