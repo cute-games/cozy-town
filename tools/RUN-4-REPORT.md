@@ -12,6 +12,7 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 | 4. The holiday spot at the Flower Corner | yes | yes | N19 pass (with the gate); gate smoke test pass |
 | 5. Signs and text | yes | yes | N23 pass (66 signs in 15 places, worst off-centre 0.6%, nothing crossed or coplanar) |
 | 6. Look fixes (truck, clouds, trees, leaves) | yes | yes | N30, N31, N32 pass |
+| 7. Map | yes | yes | N26 pass (5 screen sizes) |
 
 (filled in after every job; if the session restarts: undo any half-done job, carry on from the next one)
 
@@ -64,6 +65,13 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 - Orange specks. They were the autumn leaf particles: a 28 m box around the camera reaching 13 m above your head, drawn as little diamonds, so they floated in the night sky. New: 90 leaves, each dealt to one of the 12 nearest round trees (dealt again once a second as you walk; a leaf keeps its tree while it is near, so none jumps mid-fall), starting inside the crown (3.05 m × the tree's size at most) and tumbling to the ground; a pointed-oval leaf shape with a midrib; none at the beach or anywhere without a round tree within 26 m; none outside autumn. Test N30: 90 of 90 dealt to 12 trees, highest start 3.05 m, farthest tree 19 m, invisible at the beach and in winter.
 - Should look like (BUILDER): the food truck stands west of the park's second flower bed with a metre of grass between, the striped awning in one piece, the red "🍔 Food truck" sign on top of the roof above the awning, headlights above the bumper; clouds are soft white puffs with a faint blue-grey underside (blue-grey at night, grey in rain); on autumn days small orange and yellow leaves tumble down from the tree crowns around you, never above them; the apartment block's east wall at noon is flat light blue with the tree's soft shadow and no streaks. Pictures: tools/pictures-4/after-food-truck.png, after-soft-clouds-day.png, after-soft-clouds-night.png, after-leaves-from-the-crowns.png, before-apartment-wall-noon-streaks.png, after-apartment-wall-noon.png.
 - Decided alone: the truck moved rather than the flower bed (the four beds sit symmetrically around the fountain and the watering job uses them); the corner tree moved 3 m to the fence rather than being removed.
+
+### Job 7: Map (item 10)
+- Which map players lose, and when: the small corner map lives inside the job box, and the job box was hidden whenever there was no job (so a player without a job never had the corner map); worse, the pizza job's every-frame tick hid the whole box for everyone whose job was not "delivery", so the hairstylist and anyone between jobs lost it too, and the teacher's and hairstylist's ticks never drew it at all: with those jobs the corner map was a plain green circle ("the whole map was only green"). The corner map was also only redrawn 14 times a second and only inside the delivery and designer ticks, so the facing arrow lagged or froze when you turned. The 📱 Map was never lost by itself, but one slip inside its painter would have left it a flat colour with no way out.
+- New: the job box shows for everyone in town (the job text only with a job; indoors and at the beach it hides as before: town only). A new `miniTick` runs every frame from the job tick for everyone and redraws the corner map the very frame you move or turn (and 14 times a second otherwise, for the pulsing job dot); the pizza tick no longer hides the box. Without a job, tapping the corner map opens the 📱 Map (with a job it still picks the dot colour; the 🎨 badge hides without a job). The map painters are wrapped so a slip in one layer can never leave either map one flat colour.
+- Test N26 on iPad landscape, iPhone upright and sideways, PC 1366 and an Android tablet: without a job the corner map is shown and drawn (110–228 colours), the job text hidden; five turns in a row each redraw the map that frame with rotate(−yaw) and pink arrow pixels at your spot; with the teacher, hairstylist, delivery and designer jobs the box shows text and a drawn map; hidden indoors, back in town; the 📱 Map draws 198–356 colours at every size.
+- Should look like (BUILDER): in town, with or without a job, the round corner map (the night-2 design: green blocks, lilac roads, the little buildings) sits top-left under the chips, with a pink arrow that swings as you turn; without a job there is no job text under it and tapping it opens the big 📱 Map. Pictures: tools/pictures-4/after-corner-map-no-job-ipad.png, after-corner-map-no-job-iphone.png, after-big-map-iphone.png.
+- Decided alone: without a job the corner map's tap opens the big map (the dot colour means nothing without a job).
 
 ## 2. Check output per job, exactly as printed
 
@@ -245,5 +253,14 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 [stage run4: done in 48 s]
     PASS | N31 Trees: no tree crown inside any building; no white smear on any wall | 219 round trees and 57 pines against 25 buildings' walls: 0 crowns inside a wall; the closest crown {'gap': 0.21, 'tree': [34.9, -30.2, 'tree'], 'building': '23,-31'}; wall at 12: steps>6 0.72% (limit
     PASS | N32 Food trucks: no flicker (no two surfaces closer than 1 cm facing the same way); the sign and the burger picture clean | the truck at (-34.2, 11.8): 842 triangles in 152 facing directions, 466 close same-facing pairs looked at, 0 overlapping within 1 cm; food trucks in the game (by their sign): 1; the sign: off centre 0
+[partial run: some stages skipped by --only]
+```
+
+### Job 7 (N26 after three test fixes: the first run measured the arrow from its pink fill, which the outline eats at 20 px; it now watches the canvas rotate call; one run found the pizza tick hiding the box, fixed in the game)
+```
+[stage run4: running]
+    PASS | N26 | ipad-landscape: no job: corner map shown True, job text hidden True, 228 colours on 162 px, label 'Your map. Tap to open the big map'; ipad-landscape: 5 turns in a row, each one frame: (drawn that frame, the arrow turned to the new facing, pink arrow pixels at your spot): [(1, True, 25), (1, True, 2
+[stage run4: done in 73 s]
+    PASS | N26 Map: the corner map and 📱 Map draw the town (never one flat colour) on every screen size; the facing arrow turns every frame you turn; the corner map shows wherever it should | ipad-landscape: no job: corner map shown True, job text hidden True, 228 colours on 162 px, label 'Your map. Tap to open the big map'; ipad-landscape: 5 turns in a row, each one frame: (drawn that fra
 [partial run: some stages skipped by --only]
 ```

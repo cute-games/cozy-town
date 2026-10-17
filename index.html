@@ -212,6 +212,7 @@ button{font-family:inherit}
 #job{pointer-events:none;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
 #mmBtn{pointer-events:auto;position:relative;padding:0;margin:0;width:140px;height:140px;border:4px solid var(--line);border-radius:50%;background:#9fe486;box-shadow:0 4px 0 var(--soft);cursor:pointer;touch-action:manipulation}
 #mmBtn[hidden]{display:none}
+#job.nojob .mmPal{display:none}
 #mm{display:block;width:100%;height:100%;border-radius:50%}
 .mmPal{position:absolute;right:-8px;bottom:-4px;width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid var(--line);font-size:15px;line-height:24px;text-align:center}
 #jobTxt{pointer-events:auto;cursor:pointer;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:16px;box-shadow:0 4px 0 var(--soft);padding:9px 12px;font-weight:700;font-size:16px;line-height:1.3;max-width:min(270px,100%);min-height:44px;align-content:center}
@@ -5862,7 +5863,7 @@ function mapDraw(force){const cv=$('mapc');if(!MAPV.on)return;if(!cv){mapOff();r
   if(force)MAPV.lay=null;const x=cv.getContext('2d'),dark=mapDark(),key=dark+'|'+mapKey(),s=MAPV.s,k=s*dpr,v=[MAPV.cx-cw/2/s,MAPV.cz-ch/2/s,MAPV.cx+cw/2/s,MAPV.cz+ch/2/s];let b=MAPV.bv;
   const pz=MAPV.g&&MAPV.g.n===2&&b&&s/b.s>.7&&s/b.s<1.45;   /* while pinching, the cache picture is stretched a little and painted again when the fingers let go */
   if(force||!b||b.key!==key||(b.s!==s&&!pz)||v[0]<b.x1||v[1]<b.z1||v[2]>b.x2||v[3]>b.z2){const m=MAP_M/s,B=MAPV.base||(MAPV.base=document.createElement('canvas')),bw=Math.round((cw+2*MAP_M)*dpr),bh=Math.round((ch+2*MAP_M)*dpr);
-    b={x1:v[0]-m,z1:v[1]-m,x2:v[2]+m,z2:v[3]+m,s,key};if(B.width!==bw||B.height!==bh){B.width=bw;B.height=bh;}mapPaint(B.getContext('2d'),b.x1,b.z1,k,bw,bh,{dark,u:dpr});MAPV.bv=b;}
+    b={x1:v[0]-m,z1:v[1]-m,x2:v[2]+m,z2:v[3]+m,s,key};if(B.width!==bw||B.height!==bh){B.width=bw;B.height=bh;}try{mapPaint(B.getContext('2d'),b.x1,b.z1,k,bw,bh,{dark,u:dpr});}catch(e){console.warn('map',e);}MAPV.bv=b;}   /* a slip in one layer never leaves the map one flat colour (run 4, item 10) */
   const lk=key+'|'+(NAV&&!NAV.actor?NAV.id:'');if(!MAPV.lay||MAPV.lay.s!==s||MAPV.lay.key!==lk)MAPV.lay={s,key:lk,items:mapLayout(x)};   /* the names: again after a zoom, or another place picked */
   const P2=dark?MAP_PAL.dark:MAP_PAL.light,t=performance.now()/1000,S2=(wx,wz)=>[((wx-MAPV.cx)*s+cw/2)*dpr,((wz-MAPV.cz)*s+ch/2)*dpr];
   {const bk=b.s*dpr,sw=Math.min(MAPV.base.width,(v[2]-v[0])*bk),sh=Math.min(MAPV.base.height,(v[3]-v[1])*bk);x.setTransform(1,0,0,1,0,0);
@@ -6488,7 +6489,9 @@ $('note').addEventListener('click',()=>{SFX.tap();$('note').hidden=true;if(NOTE_
 /* the job box and the little map in the top left corner */
 let jobT=0,mmT=0,MMB=null,dcT=0;
 function dlTarget(){const d=dl(),o=d.o;if(!o)return null;if(o.st==='wait')return{x:PIZZERIA[0],z:PIZZERIA[1]};const H=HOUSE(o.h);return{x:H.x+Math.sin(H.ry)*.8,z:H.z+Math.cos(H.ry)*.8};}
-function jobHud(force){const el=$('job'),on=!!(PLAYING&&S&&(S.job==='delivery'||S.job==='designer'||S.job==='teacher'||S.job==='hair'));if(el.hidden===on)el.hidden=!on;if(!on)return;
+function jobHud(force){const el=$('job'),job=!!(PLAYING&&S&&(S.job==='delivery'||S.job==='designer'||S.job==='teacher'||S.job==='hair')),town=!!(PLAYING&&S&&CUR&&CUR.id==='city'),on=job||town;   /* 🗺️ the corner map is for everyone in town, job or not (run 4, item 10: without a job the whole box was hidden, map included) */
+  if(el.hidden===on)el.hidden=!on;const jt=$('jobTxt');if(jt.hidden!==!job)jt.hidden=!job;el.classList.toggle('nojob',!job);const mb=$('mmBtn'),al=job?'Your map. Tap to change the dot color':'Your map. Tap to open the big map';if(mb.getAttribute('aria-label')!==al)mb.setAttribute('aria-label',al);
+  if(!on)return;if(!job){if(mb.hidden!==!town)mb.hidden=!town;jobHud.last=null;return;}
   if(S.job==='hair'){const d=hs(),c=HS.cust;let h;   /* ✂️ the hairstylist (job 15) */
     if(CUR.id==='salon')h=c?(c.sat?`✂️ <b>${esc(c.name)}</b> is in your chair!`:c.leaving?`👋 Bye, ${esc(c.name)}!`:`✂️ ${esc(c.name)} is coming in…`):d.done>=HS_MAX?`🌟 All ${HS_MAX} customers done today!`:!isDaytime()?workAt():`✂️ Waiting for a customer… <small>(${d.done}/${HS_MAX})</small>`;
     else{const tg=jobTarget(),m=CUR.id==='city'&&tg?' <span class="nw">· '+Math.round(Math.hypot(tg.x-P.x,tg.z-P.z))+' m</span>':'';h=`✂️ → <b>Hair Salon</b>${m} <small>(${d.done}/${HS_MAX})</small>`;}
@@ -6527,8 +6530,10 @@ function jobHud(force){const el=$('job'),on=!!(PLAYING&&S&&(S.job==='delivery'||
   else h='🍕 Go to the <b>Pizzeria</b> to start work'+(CUR.id==='beach'?' <small class="nw">· 🚌 bus first</small>':'');   /* (at the beach the way to work is the bus) */
   if(force||h!==jobHud.last){$('jobTxt').innerHTML=h;jobHud.last=h;}
   $('jobTxt').classList.toggle('late',!!(o&&o.st==='carry'&&o.left<=0));$('jobTxt').classList.toggle('rare',!!(o&&o.r));const mh=CUR.id!=='city';if($('mmBtn').hidden!==mh)$('mmBtn').hidden=mh;}
-function mmBase(){if(MMB)return MMB;const c=document.createElement('canvas');c.width=c.height=704;drawMapBase(c.getContext('2d'),704,{labels:false});MMB=c;return c;}
+function mmBase(){if(MMB)return MMB;const c=document.createElement('canvas');c.width=c.height=704;try{drawMapBase(c.getContext('2d'),704,{labels:false});}catch(e){console.warn('map',e);}MMB=c;return c;}
 const MM0=-86,MMW=172;/* the corner map shows the whole town: find the dot yourself! */
+const MM={x:NaN,z:NaN,yaw:NaN,t:0};
+function miniTick(dt){if($('job').hidden||$('mmBtn').hidden)return;MM.t+=dt;if(P.x===MM.x&&P.z===MM.z&&P.yaw===MM.yaw&&MM.t<.07)return;MM.t=0;MM.x=P.x;MM.z=P.z;MM.yaw=P.yaw;MM.n=(MM.n|0)+1;drawMini();}   /* 🧭 the arrow turns the very frame you turn; the pulsing dot still beats 14 times a second */
 function drawMini(){const cv=$('mm');if(!cv||$('job').hidden||$('mmBtn').hidden)return;
   const want=Math.max(120,Math.round(cv.clientWidth*Math.min(2.5,devicePixelRatio||1)));if(want&&cv.width!==want)cv.width=cv.height=want;
   const x=cv.getContext('2d'),N=cv.width,k=N/MMW,B=mmBase(),M=v=>(clamp(v,MM0+2,MM0+MMW-2)-MM0)*k;
@@ -6541,7 +6546,7 @@ function drawMini(){const cv=$('mm');if(!cv||$('job').hidden||$('mmBtn').hidden)
   const s=N*.05;x.save();x.translate(M(P.x),M(P.z));x.rotate(-P.yaw);x.lineJoin='round';
   x.beginPath();x.moveTo(0,-s*1.5);x.lineTo(s,s);x.lineTo(0,s*.35);x.lineTo(-s,s);x.closePath();
   x.lineWidth=N*.032;x.strokeStyle='#3d2c5e';x.stroke();x.lineWidth=N*.014;x.strokeStyle='#ffffff';x.stroke();x.fillStyle='#ff4d8d';x.fill();x.restore();}
-$('mmBtn').addEventListener('click',()=>{audioInit();openDot();});
+$('mmBtn').addEventListener('click',()=>{audioInit();if($('job').classList.contains('nojob'))openPhone('map');else openDot();});   /* without a job the corner map opens the big map (run 4, item 10) */
 $('jobTxt').addEventListener('click',()=>{audioInit();openPhone('job');});
 function openDot(){const d=dl();SFX.tap();
   openPanel(`<div class="hd"><h2>🎨 Map dot color</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div><p class="note">Pick a color that's easy to see on your map!</p>
@@ -7382,18 +7387,18 @@ ACT.hstutgo=()=>{closePanel();setTimeout(hsTutStart,250);};
 function dsTick(dt){const d=ds();
   if(!S.dsTut&&S.intro&&!DTUT&&!TUT&&!UI.open&&!CUT&&!CLIMB&&!fading&&!HOST.cur&&(CUR.id==='city'||CUR.id==='client')){dtutT+=dt;if(dtutT>1.2)dtutStart();}else dtutT=0;
   if(!d.o&&d.done<DS_MAX&&!CUT&&!DTUT&&isDaytime()){d.wait-=dt;if(d.wait<=0)dsNew();}
-  if(HELD&&!CUT)HELD.visible=false;
-  jobT+=dt;if(jobT>.25){jobT=0;jobHud();}mmT+=dt;if(mmT>.07){mmT=0;drawMini();}}
+  if(HELD&&!CUT)HELD.visible=false;}
 
 /* runs every frame */
 function jobTick(dt){
+  jobT+=dt;if(jobT>.25){jobT=0;jobHud();}miniTick(dt);   /* 🗺️ the HUD box and the corner map for everyone, the map drawn the very frame you move or turn (run 4, item 10: it used to draw only inside the delivery and designer ticks, 14 times a second, and never for the teacher or the hairstylist, whose corner map stayed a green circle) */
   if(S.job==='delivery'&&!S.tutDone&&S.intro&&!TUT&&!UI.open&&!CUT&&!CLIMB&&!fading&&!HOST.cur&&CUR.id==='city'){tutT+=dt;if(tutT>1.6)tutStart();}else tutT=0;
   if(S.job==='delivery'&&S.dl&&S.dl.o&&!S.dl.o.flat&&isApt(S.dl.o.h)){const o=S.dl.o,W=oWho(o);o.flat=(1+Math.floor(Math.random()*3))*10+1+Math.floor(Math.random()*5);addMsg('pz','pz',`📩 Order update: ${W.nm} lives in flat ${o.flat} at the ${HOUSE(o.h).n}.`);change();}
   if(S.intro&&!S.jobAsk){askT+=dt;if(askT>2.5&&!UI.open&&!CUT&&!fading&&CUR.id==='city')askJob();}
   dcT+=dt;if(dcT>.3){dcT=0;dcardUpd();}
   if(S.job==='designer'){dsTick(dt);return;}
   if(S.job==='teacher'){tcTick(dt);return;}
-  if(S.job!=='delivery'){if(!$('job').hidden)$('job').hidden=true;if(HELD&&!CUT)HELD.visible=false;return;}
+  if(S.job!=='delivery'){if(HELD&&!CUT)HELD.visible=false;return;}   /* (this line used to hide the whole HUD box, corner map included, every frame for everyone without the pizza job: run 4, item 10) */
   const d=dl(),o=d.o;
   if(o&&o.st==='carry'&&!CUT&&!TUT&&!AW.on&&!NET.lost&&!(UI.open&&CUR.id==='pizza')){const was=o.left;o.left-=dt;
     if(o.lim<1800&&was>30&&o.left<=30){toast('⏰ 30 seconds left! Hurry!',2.6);SFX.late();}
@@ -7403,8 +7408,7 @@ function jobTick(dt){
   if(!o&&d.on&&!dlOff()&&pizzaOpen()&&!CUT){d.wait-=dt;if(d.wait<=0)newOrder();}
   if(!o&&d.on&&!d.end&&d.done<DLV_DAY*2&&!pizzaOpen()&&!UI.open&&!CUT&&!TUT&&!CLIMB&&!fading&&!DECO.on&&!CR&&!$('toast').classList.contains('show'))dlShut();
   if(HELD&&!CUT){HELD.visible=!!(o&&o.st==='carry')&&!DECO.on&&!CR&&CUR.id!=='studio';if(HELD.visible)heldFit();}
-  jobT+=dt;if(jobT>.25){jobT=0;jobHud();}
-  mmT+=dt;if(mmT>.07){mmT=0;drawMini();}}
+}
 function jobPhone(){let h;
   if(!S.job)return`<p class="ph-sub">You don't have a job yet! Message <b>Rosie</b> or find her in town to pick one. 💬</p><div class="row"><button class="btn mint" data-a="phchat:ro">💬 Message Rosie</button><button class="btn white" data-a="findrosie">📍 Find Rosie</button></div>`;
   const J=JOBS[S.job];h=`<div class="qcard"><div class="qtop"><span class="qi">${J.i}</span><div><div class="qt">${J.n}</div><div class="qd">${J.d}</div></div></div></div>`;
