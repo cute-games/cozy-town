@@ -564,11 +564,16 @@ function shade(c,k){const o=new THREE.Color(c);o.offsetHSL(0,0,k);return '#'+o.g
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
 
 let renderer,scene,camera,hemi,sun,lamp,skyMesh,skyU,stars,sunSprite,moonSprite,FOG,outside,clouds=[];
+const TREES=[];   /* 🌳 every round tree in town (x, z, size, its group): the autumn leaves fall from the crowns near you (run 4, item 18) */
 let GRAD=null,OL=null,OLP=null,WIN,LAMP,WATER,PANE,GLOW,CLOUD,OLC,SWIN,WINM;
 const MATS=new Map();
-function mat(c){c=String(c).toLowerCase();let m=MATS.get(c);if(!m){m=new THREE.MeshToonMaterial({color:c,gradientMap:GRAD});m.userData.plain=1;MATS.set(c,m);}return m;}
+/* 🧱 a wall almost edge-on to the sun (run 4, item 17): the shadow map cannot tell lit from shadowed there and drew pale diagonal streaks on it (the "white smear"), while the toon shade
+   would light it at the middle tone; so within 7° of edge-on the side facing the sun counts as lit and the side facing away as shadowed, blending into the real shadow test beyond that */
+const SHADE_FIX=sh=>{sh.fragmentShader=sh.fragmentShader.replace('#include <lights_fragment_begin>',THREE.ShaderChunk.lights_fragment_begin.replace('? getShadow( directionalShadowMap[ i ], directionalLightShadow.shadowMapSize, directionalLightShadow.shadowBias, directionalLightShadow.shadowRadius, vDirectionalShadowCoord[ i ] ) : 1.0;',
+  '? mix( dot( geometry.normal, directLight.direction ) > 0.0 ? 1.0 : 0.0, getShadow( directionalShadowMap[ i ], directionalLightShadow.shadowMapSize, directionalLightShadow.shadowBias, directionalLightShadow.shadowRadius, vDirectionalShadowCoord[ i ] ), smoothstep( 0.0, 0.12, abs( dot( geometry.normal, directLight.direction ) ) ) ) : 1.0;'));};   /* (the include is still unresolved when onBeforeCompile runs, so the chunk is pasted in patched) */
+function mat(c){c=String(c).toLowerCase();let m=MATS.get(c);if(!m){m=new THREE.MeshToonMaterial({color:c,gradientMap:GRAD});m.userData.plain=1;m.onBeforeCompile=SHADE_FIX;MATS.set(c,m);}return m;}
 let TOONVC=null;
-function toon(o){return new THREE.MeshToonMaterial(Object.assign({gradientMap:GRAD},o));}
+function toon(o){const m=new THREE.MeshToonMaterial(Object.assign({gradientMap:GRAD},o));m.onBeforeCompile=SHADE_FIX;return m;}
 function initMaterials(gl2){
   const tones=[120,200,255],data=new Uint8Array(tones.length*4);tones.forEach((v,i)=>data.set([v,v,v,255],i*4));
   GRAD=new THREE.DataTexture(data,tones.length,1,THREE.RGBAFormat);
@@ -582,7 +587,9 @@ function initMaterials(gl2){
   WATER=toon({color:'#7fd8ff',emissive:new THREE.Color('#3aa6e0'),emissiveIntensity:.3,transparent:true,opacity:.9});
   PANE=new THREE.MeshBasicMaterial({color:'#bfe6ff'});
   GLOW=new THREE.MeshBasicMaterial({color:'#fff3c4'});
-  CLOUD=toon({color:'#ffffff',fog:false});
+  CLOUD=new THREE.ShaderMaterial({uniforms:{top:{value:new THREE.Color('#ffffff')},bot:{value:new THREE.Color('#dde4f0')}},   /* ☁️ soft puffs (run 4, item 18): a gentle top-to-bottom shade set by updSky, no outline, no hard dark faces */
+    vertexShader:'varying float vy;void main(){vy=normalize(mat3(modelMatrix)*normal).y;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
+    fragmentShader:'uniform vec3 top,bot;varying float vy;void main(){gl_FragColor=vec4(mix(bot,top,smoothstep(-.55,.75,vy)),1.0);}',fog:false});
 }
 
 /* ---- primitive builders: y is the bottom unless o.center; every solid gets an ink outline hull ---- */
@@ -1427,7 +1434,7 @@ function foodModel(g,k,x,y,z){
 }
 
 /* ---- street props ---- */
-function tree(g,x,z,s=1){const c=pick(TREE_COLS);   /* 🍂 the season's colours (job 11) */
+function tree(g,x,z,s=1){TREES.push([x,z,s,g]);const c=pick(TREE_COLS);   /* 🍂 the season's colours (job 11) */
   cyl(g,.15*s,.2*s,2.3*s,'#9b6b4a',x,0,z,{seg:8});sph(g,1.15*s,c,x,3.05*s,z,{ws:12,hs:9});sph(g,.75*s,c,x+.7*s,2.75*s,z+.15*s,{ws:10,hs:8});sph(g,.72*s,c,x-.62*s,2.8*s,z-.3*s,{ws:10,hs:8});sph(g,.62*s,c,x+.1*s,3.6*s,z+.4*s,{ws:10,hs:8});}
 function pine(g,x,z,s=1){cyl(g,.14*s,.18*s,.8*s,'#9b6b4a',x,0,z,{seg:8});const c=pick(PINE_COLS);cone(g,1.2*s,1.6*s,c,x,.7*s,z,{seg:9});cone(g,.92*s,1.4*s,c,x,1.55*s,z,{seg:9});cone(g,.62*s,1.2*s,c,x,2.35*s,z,{seg:9});}
 function lampPost(g,x,z){LAMPXZ.push([x,z]);cyl(g,.07,.1,3,'#5a5f8c',x,0,z,{seg:8});cyl(g,.16,.16,.08,'#5a5f8c',x,2.95,z,{seg:10});sph(g,.19,null,x,3.21,z,{mat:LAMP,ol:.02,ws:12,hs:8});cone(g,.27,.24,'#5a5f8c',x,3.33,z,{seg:10});}
@@ -1458,7 +1465,7 @@ function fence(g,x1,z1,x2,z2,L,c='#ffffff'){const len=Math.hypot(x2-x1,z2-z1),n=
   for(let i=0;i<=n;i++){const t=i/n;box(g,.1,.85,.1,c,x1+(x2-x1)*t,0,z1+(z2-z1)*t,{ol:.02});}
   for(const y of[.32,.62]){const p=new THREE.Group();p.position.set((x1+x2)/2,y,(z1+z2)/2);p.rotation.y=ang;g.add(p);box(p,.05,.1,len,c,0,0,0,{ol:.02});}
   if(L)col(L,Math.min(x1,x2)-.08,Math.min(z1,z2)-.08,Math.max(x1,x2)+.08,Math.max(z1,z2)+.08);}
-function flowerBed(g,x,z,w,d){box(g,w,.22,d,'#9b6b4a',x,0,z,{ol:.02});const r=seeded(Math.round(x*7+z*13));const n=Math.round(w*d*5);for(let i=0;i<n;i++){const fx=x-w/2+.15+r()*(w-.3),fz=z-d/2+.15+r()*(d-.3);cyl(g,.015,.015,.2,'#4fae5c',fx,.22,fz,{seg:4,ol:false});sph(g,.08,['#ff7aa8','#ffd45c','#ffffff','#b79cff','#ff8a6b'][(r()*5)|0],fx,.46,fz,{ws:8,hs:6,ol:.015});}}
+function flowerBed(g,x,z,w,d){box(g,w,.22,d,'#9b6b4a',x,0,z,{ol:.02});const r=seeded(Math.round(x*7+z*13));const n=Math.round(w*d*5),Q=[];for(let i=0;i<n;i++){const fx=x-w/2+.15+r()*(w-.3),fz=z-d/2+.15+r()*(d-.3);if(Q.some(q=>Math.hypot(q[0]-fx,q[1]-fz)<.2))continue;Q.push([fx,fz]);   /* no two flowers inside each other (run 4, job 6) */cyl(g,.015,.015,.2,'#4fae5c',fx,.22,fz,{seg:4,ol:false});sph(g,.08,['#ff7aa8','#ffd45c','#ffffff','#b79cff','#ff8a6b'][(r()*5)|0],fx,.46,fz,{ws:8,hs:6,ol:.015});}}
 function trafficLight(g,x,z,ry){const p=new THREE.Group();p.position.set(x,0,z);p.rotation.y=ry;g.add(p);cyl(p,.07,.08,3,'#5a5f8c',0,0,0,{seg:8});box(p,.36,.95,.3,'#3d3550',0,2.55,0);
   sph(p,.11,null,0,3.28,.14,{mat:new THREE.MeshBasicMaterial({color:'#7a3b48'}),ol:false});sph(p,.11,null,0,2.98,.14,{mat:new THREE.MeshBasicMaterial({color:'#7a6a3b'}),ol:false});sph(p,.11,null,0,2.68,.14,{mat:new THREE.MeshBasicMaterial({color:'#5dff9c'}),ol:false});}
 function mailbox(g,x,z,ry){const p=new THREE.Group();p.position.set(x,0,z);p.rotation.y=ry;g.add(p);box(p,.1,1,.1,'#9b6b4a',0,0,0);box(p,.34,.3,.5,'#7cc8ff',0,1,0);cyl(p,.17,.17,.5,'#7cc8ff',0,1.3,0,{rx:Math.PI/2,center:true,seg:14});box(p,.04,.3,.1,'#ff6b6b',.2,1.15,.1,{ol:.015});}
@@ -1550,21 +1557,21 @@ function benchYard(j){for(const b of BENCHES){if(!b.yard)continue;for(const s of
    and tacos from 8:00 to 20:00 like the shops (SHUT.truck). Mr. Patty stands inside (made with the other keepers). Cheap: toon boxes, one sign */
 function foodTruck(st,L,x,z){const B='#ff8a6b',W='#ffffff';
   box(st,2.2,1.9,3.7,B,x,.5,z-.35);box(st,2.3,.12,3.8,W,x,2.4,z-.35,{ol:.015});   /* the body and its roof */
-  box(st,2.1,1.25,1.1,B,x,.5,z+2.05);box(st,1.9,.7,.08,'#bfe6ff',x,1.0,z+2.56,{ol:.012});box(st,2.2,.35,.25,'#5a5f8c',x,.4,z+2.72);   /* the cab, the windscreen, the bumper */
-  box(st,.3,.3,.3,'#fff1b8',x-.9,1.0,z+2.58,{ol:.012});box(st,.3,.3,.3,'#fff1b8',x+.9,1.0,z+2.58,{ol:.012});   /* headlights */
-  for(const [wx,wz] of [[-1.1,-1.4],[1.1,-1.4],[-1.1,1.8],[1.1,1.8]]){cyl(st,.38,.38,.3,'#3d2c5e',x+wx,.38,z+wz,{rz:Math.PI/2,center:true,seg:12,ol:.015});cyl(st,.16,.16,.32,'#c8cde0',x+wx,.38,z+wz,{rz:Math.PI/2,center:true,seg:8,ol:false});}
+  box(st,2.1,1.25,1.1,B,x,.5,z+2.05);box(st,1.9,.6,.08,'#bfe6ff',x,1.1,z+2.58,{ol:.012});box(st,2.2,.35,.25,'#5a5f8c',x,.4,z+2.72);   /* the cab, the windscreen (2 cm proud of the cab's front: it was flush with it and flickered, run 4, job 6), the bumper */
+  for(const s of[-1,1])box(st,.28,.28,.28,'#fff1b8',x+s*.76,.76,z+2.5,{ol:.012});   /* headlights over the bumper, inside the cab's width (they used to share the cab's side face and sit in the windscreen) */
+  for(const [wx,wz] of [[-1.1,-1.4],[1.1,-1.4],[-1.1,1.8],[1.1,1.8]]){cyl(st,.38,.38,.3,'#3d2c5e',x+wx,.38,z+wz,{rz:Math.PI/2,center:true,seg:12,ol:.015});cyl(st,.16,.16,.34,'#c8cde0',x+wx,.38,z+wz,{rz:Math.PI/2,center:true,seg:8,ol:false});}   /* the hub 2 cm proud of the tyre (it was 1 cm) */
   box(st,.06,.95,2.3,'#7cc8ff',x+1.1,1.15,z-.35,{ol:.012});box(st,.55,.08,2.5,W,x+1.33,1.08,z-.35,{ol:.015});   /* the serving window and the counter */
-  for(let i=0;i<6;i++)box(st,1.1,.05,.42,i%2?W:'#ff6b6b',x+1.62,2.22,z-1.4+i*.42,{rz:.32,ol:.012});   /* the striped awning */
+  for(let i=0;i<6;i++)box(st,1.1,.05,.42,i%2?W:'#ff6b6b',x+1.62,2.22,z-1.4+i*.42,{rz:.32,ol:false});{const ref=new THREE.Object3D();ref.position.set(x+1.62,2.245,z-.35);ref.rotation.z=.32;hull(st,new THREE.BoxGeometry(1.124,.074,2.544),ref,{});}   /* the striped awning: six slats, one outline around the whole (each slat's own outline drew dark seams and specks, run 4, job 6) */
   /* a burger, a box of fries and a hot dog on the counter */
   cyl(st,.13,.13,.05,'#c98f5e',x+1.35,1.16,z+.5,{seg:10,ol:.01});box(st,.26,.03,.26,'#ffd45c',x+1.35,1.21,z+.5,{ol:false});sph(st,.13,'#e0a874',x+1.35,1.26,z+.5,{s:[1,.6,1],ws:10,hs:6,ol:.01});
   box(st,.2,.2,.14,'#ff6b6b',x+1.35,1.16,z-.3,{ol:.01});for(let i=0;i<4;i++)box(st,.03,.3,.03,'#ffd45c',x+1.28+i*.045,1.2,z-.3,{ol:false});
   box(st,.34,.08,.12,'#ffe0c4',x+1.35,1.16,z-1.0,{ol:.01});cyl(st,.04,.04,.3,'#e0745a',x+1.35,1.28,z-1.0,{rz:Math.PI/2,center:true,seg:6,ol:false});
-  box(st,.08,.74,2.6,W,x+1.0,2.5,z-.35,{ol:.015});const sg=signPlane('🍔 Food truck',2.4,.6,'#ff6b6b','#ffffff');sg.position.set(x+1.06,2.87,z-.35);sg.rotation.y=Math.PI/2;L.g.add(sg);   /* 🪧 on the roof's edge above the awning (run 4, job 5: the awning's inner edge used to run through the sign's top) */
+  box(st,.08,.96,2.6,W,x+1.0,2.5,z-.35,{ol:.015});const sg=signPlane('🍔 Food truck',2.4,.6,'#ff6b6b','#ffffff');sg.position.set(x+1.06,3.1,z-.35);sg.rotation.y=Math.PI/2;L.g.add(sg);   /* 🪧 on the roof's edge above the awning (run 4, job 5: the awning's inner edge used to run through the sign's top) */
   sph(st,.11,null,x+1.75,1.95,z+.95,{mat:LAMP,ol:.012,ws:8,hs:6});   /* a little lamp under the awning's end for the evening (no longer in front of the sign) */
   col(L,x-1.25,z-2.3,x+1.95,z+2.85);
   inter(L,{x:x+2.1,z:z-.35,r:2.4,icon:()=>shopOpen('truck')?'🍔':'🌙',label:'Food truck',say:()=>shopOpen('truck')?'':`🌙 Closed · opens at ${DAY_ON}:00`,
     act:()=>{if(shopOpen('truck')){openShop('truck');return;}SFX.no();toast(`🌙 The Food truck is closed now. It opens at ${DAY_ON}:00 ☀️`,3);}});}
-const TRUCK={x:-32.5,z:11.8};   /* the park's south-west corner, by the bench, the window towards the fountain */
+const TRUCK={x:-34.2,z:11.8};   /* the park's south-west corner, by the bench, the window towards the fountain (run 4, job 6: 1.7 m further west, so its counter and awning no longer hang over the flower bed; the tree that stood there moved to the fence) */
 
 /* ================= world ================= */
 const LOC={};let GRASS_M=null;let CUR=null;
@@ -1617,7 +1624,7 @@ function buildSky(){
   stars=new THREE.Points(sg,new THREE.PointsMaterial({color:'#ffffff',size:2.4,sizeAttenuation:false,transparent:true,opacity:0,fog:false,depthWrite:false}));stars.frustumCulled=false;scene.add(stars);
   outside=new THREE.Group();scene.add(outside);
   const mr=Math.random;Math.random=seeded(13);try{   /* 🌳 the same clouds, hills and far trees on every load (same drawing work every time) */
-  for(let i=0;i<16;i++){const c=new THREE.Group();const n=3+(Math.random()*3|0);for(let k=0;k<n;k++)sph(c,rand(5,9),null,k*6.5-n*3.2+rand(-2,2),rand(-1.5,1.5),rand(-3,3),{mat:CLOUD,olMat:OLC,ol:.55,ws:12,hs:8,s:[1,.68,1]});
+  for(let i=0;i<16;i++){const c=new THREE.Group();const n=3+(Math.random()*3|0);for(let k=0;k<n;k++)sph(c,rand(5,9),null,k*6.5-n*3.2+rand(-2,2),rand(-1.5,1.5),rand(-3,3),{mat:CLOUD,ol:false,ws:12,hs:8,s:[1,.68,1]});
     const a=rand(0,TAU),r=rand(80,220);c.position.set(Math.cos(a)*r,rand(48,80),Math.sin(a)*r);c.userData.sp=rand(.6,1.5);bake(c,false);outside.add(c);clouds.push(c);}
   const hills=new THREE.Group();outside.add(hills);
   for(let i=0;i<28;i++){const a=i/28*TAU+rand(-.08,.08),r=rand(205,250),R=rand(40,62),c=pick(['#86d37c','#79c973','#93dc85']),y=-rand(8,18),x=Math.cos(a)*r;let z=Math.sin(a)*r;
@@ -1688,7 +1695,7 @@ function buildWild(L){const r=seeded(69);
   WILD.birds=flockMesh(birds);WILD.birds.visible=false;L.g.add(WILD.birds);
   /* owls in some trees: the park, the tree groups, the forest edge, your yard tree */
   const owls=[];const perch=(x,z,s)=>{const yaw=Math.atan2(-x,-z);owls.push([x+Math.sin(yaw)*1.22*s,2.62*s,z+Math.cos(yaw)*1.22*s,yaw,r()]);};
-  for(const [x,z] of [[-36,12.5],[-11.5,28],[-26,37.5],[-37.6,27.7]])perch(x,z,1);
+  for(const [x,z] of [[-37,10.2],[-11.5,28],[-26,37.5],[-37.6,27.7]])perch(x,z,1);
   for(const [x,z] of (L.owlTrees||[]))perch(x,z,1.1);perch(-20.2,-18.6,1.1);
   WILD.spots=owls;WILD.hoots=owlMesh(owls);WILD.hoots.visible=false;L.g.add(WILD.hoots);}
 SFX.hoot=()=>{tone(392,.2,'sine',.05,0,370);tone(330,.26,'sine',.05,.26,300);};
@@ -1874,7 +1881,7 @@ function buildCity(){
   for(const [a,b] of [[22,25],[23,26],[24,26]]){const A=WP[a],B=WP[b],len=Math.hypot(B[0]-A[0],B[1]-A[1]);flat(st,1.8,len,'#f6e2b8',(A[0]+B[0])/2,.022,(A[1]+B[1])/2,{ry:Math.atan2(B[0]-A[0],B[1]-A[1])});}
   const fx=-22,fz=22;buildFountain(st,L,fx,fz);
   L.benches=[];for(let i=0;i<4;i++){const a=Math.PI/4+i*Math.PI/2,bx=fx+Math.cos(a)*9.6,bz=fz+Math.sin(a)*9.6,ry=Math.atan2(fx-bx,fz-bz);bench(st,bx,bz,ry);colC(L,bx,bz,.75);L.benches.push({x:bx,z:bz,ry,b:BENCHES[BENCHES.length-1]});}
-  for(const [x,z] of [[-36,12.5],[-11.5,16],[-37.4,16.2],[-37.6,27.7],[-11.5,28],[-16,37.5],[-26,37.5],[-20,35.5],[-36,37.5],[-12.5,37.5]]){tree(st,x,z,1);colC(L,x,z,.28);}
+  for(const [x,z] of [[-37,10.2],[-11.5,16],[-37.4,16.2],[-37.6,27.7],[-11.5,28],[-16,37.5],[-26,37.5],[-20,35.5],[-36,37.5],[-12.5,37.5]]){tree(st,x,z,1);colC(L,x,z,.28);}
   foodTruck(st,L,TRUCK.x,TRUCK.z);   /* 🍔 the food truck, by the fountain benches */
   L.beds=[{id:'h1',x:-19.8,z:-10.6,ix:-19.8,iz:-9.9,yard:1},{id:'h2',x:-14.2,z:-10.6,ix:-14.2,iz:-9.9,yard:1}];   /* h1, h2: the flower beds in front of your house (on Friends Lane) */
   for(const [i,sx,sz] of [[1,1,-1],[2,-1,-1],[3,-1,1],[4,1,1]]){const x=fx+sx*8.84,z=fz+sz*8.84;flowerBed(st,x,z,1.8,1.0);col(L,x-.95,z-.55,x+.95,z+.55);RAISED.push({x,z,w:1.8,d:1.0,h:.22});L.beds.push({id:'p'+i,x,z,ix:x,iz:z+(sz>0?-.9:.9)});}
@@ -2078,7 +2085,7 @@ function buildBeach(){
   for(const s of[-1,1])box(st,.9,1.0,19.4,'#5fbf74',-31.1,0,s*12.3,{ol:.03});
   const hl=new THREE.Group();L.g.add(hl);for(let i=0;i<9;i++)sph(hl,rand(30,46),pick(['#86d37c','#79c973','#93dc85']),-130-rand(0,40),-rand(6,12),-200+i*50,{ol:.9,ws:16,hs:9,s:[1,.5,1]});
   for(const [x,z,s] of [[-40,-14,1.3],[-44,9,1.4],[-52,-30,1.5],[-49,26,1.3],[-60,-2,1.6]])palm(hl,x,z,s,.2,rand(0,TAU));bake(hl,false);
-  for(let i=0;i<6;i++){const c=new THREE.Group();const n=3+(i%3);for(let k=0;k<n;k++)sph(c,rand(5,8),null,k*6.5-n*3.2,rand(-1.5,1.5),rand(-3,3),{mat:CLOUD,olMat:OLC,ol:.55,ws:12,hs:8,s:[1,.68,1]});
+  for(let i=0;i<6;i++){const c=new THREE.Group();const n=3+(i%3);for(let k=0;k<n;k++)sph(c,rand(5,8),null,k*6.5-n*3.2,rand(-1.5,1.5),rand(-3,3),{mat:CLOUD,ol:false,ws:12,hs:8,s:[1,.68,1]});
     c.position.set(rand(50,300),rand(52,76),rand(-200,200));c.userData.sp=rand(.6,1.4);bake(c,false);L.g.add(c);BEACH.clouds.push(c);}
   /* the boardwalk from the gate, and the gate back to town */
   for(let i=0;i<5;i++)box(st,2.2,.06,2,'#e2bd8f',-28.9+i*2.2,.015,0,{ol:.012});for(let x=-29.6;x<-19;x+=.55)box(st,.03,.01,2,'#b98a5e',x,.075,0,{ol:false});   /* (in 5 short pieces, lifted off the sand: no flicker at night) */
@@ -3492,10 +3499,12 @@ function updSky(){
   PANE.color.copy(skyU.bot.value).lerp(_c2.set('#ffffff'),.25);
   if(out){const hal=HOL.cur==='halloween'?nf:0;if(hal>0){skyU.top.value.lerp(_c2.set('#3b1d5e'),hal*.55);skyU.bot.value.lerp(_c2.set('#5b2a7a'),hal*.5);FOG.color.copy(skyU.bot.value);}FOG.near=lerp(60,34,hal);FOG.far=lerp(340,230,hal);
     const gk=WX.sky;if(gk>0){const G=WX_SKY[WX.kind]||WX_SKY.cloudy;skyU.top.value.lerp(_c2.set(G[0]).lerp(_c1.set('#181b28'),nf),gk);skyU.bot.value.lerp(_c2.set(G[1]).lerp(_c1.set('#2b2f42'),nf),gk);FOG.color.copy(skyU.bot.value);FOG.near*=1-.35*gk;FOG.far*=1-.3*gk;}}   /* 🎃 Halloween nights: a purple sky and closer fog; 🌧️ grey weather: a proper grey sky, never blue under rain (run 4, item 2) */
+  {const gk=out?WX.sky:0,U=CLOUD.uniforms;U.top.value.set('#ffffff').lerp(_c2.set('#d3d9e4'),gk).lerp(_c1.set('#9aa1c8'),nf);U.bot.value.set('#dde4f0').lerp(_c2.set('#a9b2c2'),gk).lerp(_c1.set('#5d6489'),nf);}   /* ☁️ clouds: white tops and blue-grey undersides by day, grey in grey weather, gently lit blue-grey at night (run 4, item 18) */
   if(out){
     hemi.intensity=lerp(a[4],b[4],t)*(1-.2*WX.grey);hemi.color.copy(C(5));hemi.groundColor.copy(C(6));sun.color.copy(C(7));sun.intensity=lerp(a[3],b[3],t)*(1-.55*WX.grey);
     let u,day=h>=6&&h<=18.5;u=day?(h-6)/12.5:(((h+24-18.5)%24)/11.5);const ang=Math.PI*u;
     SUND.set(Math.cos(ang)*.85,.32+Math.sin(ang)*.9,.45).normalize();lamp.intensity=0;busLamp();
+    sun.shadow.normalBias=.09+.25*(1-clamp(Math.abs(SUND.x)/.2,0,1));   /* 🧱 around noon the sun runs almost along the east and west walls, and the shadow map drew pale diagonal streaks on them (the "white smear", run 4, item 17): a bigger normal bias then; the sun is high, so shadows hardly move */
     sunSprite.visible=day&&h>6.2&&h<18.3&&WX.sky<.5;moonSprite.visible=!day||h<6.4||h>18.2;
     const sp=day?sunSprite:moonSprite;sp.position.copy(camera.position).addScaledVector(SUND,320);
     if(day)moonSprite.position.set(camera.position.x-SUND.x*320,camera.position.y+SUND.y*320,camera.position.z-SUND.z*320);
@@ -3993,22 +4002,44 @@ function wxNow(){if(WX.force)return{a:WX.force,b:WX.force,k:0};const d=S?S.day|0
 function wxForce(k){WX.force=k||null;}
 function wxKind(){const w=wxNow();return w.k<.5?w.a:w.b;}   /* the grandmas, the butterflies and the birds ask this */
 /* a falling cloud of drops around the camera, moved on the GPU: y wraps every H metres, so it never runs out */
-function wxCloud(kind,n){const H=18,W=28,pos=new Float32Array(n*(kind==='rain'?6:3)),spd=new Float32Array(n*(kind==='rain'?2:1)),ph=new Float32Array(n*(kind==='rain'?2:1)),dy=new Float32Array(n*2),col=new Float32Array(n*3);
-  const r=seeded(kind==='rain'?31:kind==='snow'?32:33),LC=[[1,.55,.2],[.95,.3,.25],[1,.8,.25],[.9,.45,.15]];
-  for(let i=0;i<n;i++){const x=(r()-.5)*W,y=r()*H,z=(r()-.5)*W,s=kind==='rain'?12+r()*5:kind==='snow'?.9+r()*.7:.7+r()*.6,p=r()*6.28;
-    if(kind==='rain'){pos.set([x,y,z,x,y,z],i*6);spd.set([s,s],i*2);ph.set([p,p],i*2);dy.set([0,.5],i*2);}else{pos.set([x,y,z],i*3);spd[i]=s;ph[i]=p;const c=LC[i%4];col.set(c,i*3);}}
+function wxCloud(kind,n){const H=18,W=28,rain=kind==='rain',pos=new Float32Array(n*(rain?6:3)),spd=new Float32Array(n*(rain?2:1)),ph=new Float32Array(n*(rain?2:1)),dy=new Float32Array(n*2);
+  const r=seeded(rain?31:32);
+  for(let i=0;i<n;i++){const x=(r()-.5)*W,y=r()*H,z=(r()-.5)*W,s=rain?12+r()*5:.9+r()*.7,p=r()*6.28;
+    if(rain){pos.set([x,y,z,x,y,z],i*6);spd.set([s,s],i*2);ph.set([p,p],i*2);dy.set([0,.5],i*2);}else{pos.set([x,y,z],i*3);spd[i]=s;ph[i]=p;}}
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('spd',new THREE.BufferAttribute(spd,1));g.setAttribute('ph',new THREE.BufferAttribute(ph,1));
-  if(kind==='rain')g.setAttribute('dy',new THREE.BufferAttribute(dy,1));else g.setAttribute('col',new THREE.BufferAttribute(col,3));
+  if(rain)g.setAttribute('dy',new THREE.BufferAttribute(dy,1));
   const u={t:{value:0},op:{value:0},H:{value:H},pr:{value:Math.min(2,window.devicePixelRatio||1)}};
-  const vs=kind==='rain'?`uniform float t,H;attribute float spd,ph,dy;void main(){vec3 p=position;p.y=mod(p.y-t*spd,H)+dy;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.0);}`
-    :`uniform float t,H,pr;attribute float spd,ph;attribute vec3 col;varying vec3 vc;void main(){vc=col;vec3 p=position;p.y=mod(p.y-t*spd,H);p.x+=sin(t*.8+ph)*${kind==='snow'?'.5':'.9'};p.z+=cos(t*.6+ph)*${kind==='snow'?'.35':'.7'};vec4 mv=modelViewMatrix*vec4(p,1.0);gl_PointSize=clamp(${kind==='snow'?'70.0':'110.0'}/max(1.0,-mv.z),2.0,${kind==='snow'?'9.0':'13.0'})*pr;gl_Position=projectionMatrix*mv;}`;
-  const fs=kind==='rain'?`uniform float op;void main(){gl_FragColor=vec4(.78,.85,.97,op*.5);}`
-    :kind==='snow'?`uniform float op;void main(){vec2 c=gl_PointCoord-.5;if(dot(c,c)>.25)discard;gl_FragColor=vec4(1.0,1.0,1.0,op*.9);}`
-    :`uniform float op;varying vec3 vc;void main(){vec2 c=gl_PointCoord-.5;if(abs(c.x)+abs(c.y)*1.6>.5)discard;gl_FragColor=vec4(vc,op*.95);}`;
+  const vs=rain?`uniform float t,H;attribute float spd,ph,dy;void main(){vec3 p=position;p.y=mod(p.y-t*spd,H)+dy;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.0);}`
+    :`uniform float t,H,pr;attribute float spd,ph;void main(){vec3 p=position;p.y=mod(p.y-t*spd,H);p.x+=sin(t*.8+ph)*.5;p.z+=cos(t*.6+ph)*.35;vec4 mv=modelViewMatrix*vec4(p,1.0);gl_PointSize=clamp(70.0/max(1.0,-mv.z),2.0,9.0)*pr;gl_Position=projectionMatrix*mv;}`;
+  const fs=rain?`uniform float op;void main(){gl_FragColor=vec4(.78,.85,.97,op*.5);}`
+    :`uniform float op;void main(){vec2 c=gl_PointCoord-.5;if(dot(c,c)>.25)discard;gl_FragColor=vec4(1.0,1.0,1.0,op*.9);}`;
   const m=new THREE.ShaderMaterial({uniforms:u,vertexShader:vs,fragmentShader:fs,transparent:true,depthWrite:false,fog:false});
-  const o=kind==='rain'?new THREE.LineSegments(g,m):new THREE.Points(g,m);o.frustumCulled=false;o.visible=false;o.renderOrder=5;o.userData.keep=1;o.userData.wx=kind;return o;}
+  const o=rain?new THREE.LineSegments(g,m):new THREE.Points(g,m);o.frustumCulled=false;o.visible=false;o.renderOrder=5;o.userData.keep=1;o.userData.wx=kind;return o;}
+/* 🍂 autumn leaves fall from the tree crowns around you (run 4, item 18: they used to be little orange diamonds anywhere in a 28 m box reaching 13 m over your head, so they showed high in the night sky).
+   90 leaves on the GPU: each belongs to one of the nearest round trees (dealt again once a second as you walk), starts inside its crown, tumbles down to the ground and starts over; none without a tree nearby */
+const LEAF={n:90,t:9,loc:null,trees:null,near:0};
+function leafCloud(n){const r=seeded(33),LC=[[1,.55,.2],[.95,.3,.25],[1,.8,.25],[.9,.45,.15]],pos=new Float32Array(n*3),org=new Float32Array(n*4),spd=new Float32Array(n),ph=new Float32Array(n),col=new Float32Array(n*3);
+  for(let i=0;i<n;i++){const a=r()*6.28,d=Math.sqrt(r());pos.set([Math.cos(a)*d,r(),Math.sin(a)*d],i*3);spd[i]=.5+r()*.5;ph[i]=r()*6.28;col.set(LC[i%4],i*3);}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('org',new THREE.BufferAttribute(org,4));g.setAttribute('spd',new THREE.BufferAttribute(spd,1));g.setAttribute('ph',new THREE.BufferAttribute(ph,1));g.setAttribute('col',new THREE.BufferAttribute(col,3));
+  const u={t:{value:0},op:{value:0},pr:{value:Math.min(2,window.devicePixelRatio||1)}};
+  const vs=`uniform float t,pr;attribute vec4 org;attribute float spd,ph;attribute vec3 col;varying vec3 vc;varying float va;
+    void main(){vc=col;float top=max(org.y,.5),fall=mod(t*spd+ph*1.7,top),k=fall/top;
+      vec3 p=vec3(org.x+position.x*org.w+sin(t*.9+ph)*.45+k*sin(ph)*1.2,top-fall,org.z+position.z*org.w+cos(t*.7+ph)*.45+k*cos(ph)*1.2);
+      va=ph+t*spd*2.5;vec4 mv=modelViewMatrix*vec4(p,1.0);gl_PointSize=clamp(120.0/max(1.0,-mv.z),2.0,16.0)*pr;gl_Position=projectionMatrix*mv;}`;
+  const fs=`uniform float op;varying vec3 vc;varying float va;void main(){vec2 c=gl_PointCoord-.5;float s=sin(va),co=cos(va);c=vec2(c.x*co-c.y*s,c.x*s+c.y*co);
+      float w=.23*(1.0-c.y*c.y/.2116);if(abs(c.y)>.46||abs(c.x)>w)discard;float rib=abs(c.x)<.018?.78:1.0;gl_FragColor=vec4(vc*rib,op*.95);}`;   /* a pointed oval with a midrib: a leaf */
+  const m=new THREE.ShaderMaterial({uniforms:u,vertexShader:vs,fragmentShader:fs,transparent:true,depthWrite:false,fog:false});
+  const o=new THREE.Points(g,m);o.frustumCulled=false;o.visible=false;o.renderOrder=5;o.userData.keep=1;o.userData.wx='leaf';return o;}
+/* the round trees of the place you are in, in world coordinates (found once per place) */
+function leafTrees(){const L=CUR;if(!L||!L.g)return[];if(LEAF.loc!==L){LEAF.loc=L;const v=new THREE.Vector3();LEAF.trees=TREES.filter(t=>{for(let p=t[3];p;p=p.parent)if(p===L.g)return true;return false;}).map(t=>{v.set(t[0],0,t[1]);t[3].localToWorld(v);return[v.x,v.z,t[2]];});}return LEAF.trees;}
+function leafDeal(){const T=leafTrees(),cx=camera.position.x,cz=camera.position.z,near=[];
+  for(const t of T){const d=Math.hypot(t[0]-cx,t[1]-cz);if(d<26)near.push([d,t]);}near.sort((a,b)=>a[0]-b[0]);const N=Math.min(12,near.length);LEAF.near=N;if(!N)return;
+  const a=LEAFM.geometry.attributes.org;let k=0;for(let i=0;i<LEAF.n;i++){if(a.getW(i)>0&&Math.hypot(a.getX(i)-cx,a.getZ(i)-cz)<30)continue;const t=near[k++%N][1],s=t[2];a.setXYZW(i,t[0],3.05*s,t[1],1.15*s);}   /* a leaf keeps its tree while the tree is near: no jumping mid-fall */
+  a.needsUpdate=true;}
+function leafTick(dt,leaf){if(!LEAFM)return;LEAF.t+=dt;if(leaf>.02&&LEAF.t>1){LEAF.t=0;leafDeal();}else if(leaf<=.02)LEAF.t=9;
+  LEAFM.visible=leaf>.02&&LEAF.near>0;LEAFM.material.uniforms.op.value=leaf;LEAFM.material.uniforms.t.value=WX.t;}
 let RAINM=null,SNOWM=null,LEAFM=null;
-function wxBuild(){if(RAINM||!scene)return;RAINM=wxCloud('rain',700);SNOWM=wxCloud('snow',520);LEAFM=wxCloud('leaf',90);scene.add(RAINM,SNOWM,LEAFM);window.RAINM=RAINM;window.SNOWM=SNOWM;window.LEAFM=LEAFM;}
+function wxBuild(){if(RAINM||!scene)return;RAINM=wxCloud('rain',700);SNOWM=wxCloud('snow',520);LEAFM=leafCloud(90);scene.add(RAINM,SNOWM,LEAFM);window.RAINM=RAINM;window.SNOWM=SNOWM;window.LEAFM=LEAFM;}
 /* the quiet rain: looped noise through a low filter; only outdoors, only with sound on */
 function wxSound(v){if(!AC||!SET.sound){v=0;}if(v>0&&!WX.snd){try{const n=AC.sampleRate*2,b=AC.createBuffer(1,n,AC.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*.6;
     const s=AC.createBufferSource();s.buffer=b;s.loop=true;const f=AC.createBiquadFilter();f.type='lowpass';f.frequency.value=800;const g=AC.createGain();g.gain.value=0;s.connect(f);f.connect(g);g.connect(AC.destination);s.start();WX.snd=s;WX.sndG=g;}catch(e){WX.snd=null;}}
@@ -4020,10 +4051,10 @@ function wxTick(dt){if(!scene)return;wxBuild();const w=wxNow(),mix=(k)=>(w.a===k
   let cover=snow;if(S&&!WX.force&&cover<1){const h=S.time,b=Math.floor(h/3);let d0=S.day|0,b0=b-1;if(b0<0){b0=7;d0--;}if(wxAt(d0,b0*3+1.5)==='snow')cover=1;}
   WX.cover=cover;const out=!!CUR&&CUR.type==='out'&&PLAYING;
   if(GRASS_M){_c1.set('#86d36a').lerp(_c2.set('#eef4f8'),cover);GRASS_M.color.lerp(_c1,Math.min(1,dt*1.5));}
-  const cam=camera.position;for(const o of[RAINM,SNOWM,LEAFM]){if(!o)continue;o.position.set(cam.x,cam.y-5,cam.z);o.material.uniforms.t.value=WX.t;}
+  const cam=camera.position;for(const o of[RAINM,SNOWM]){if(!o)continue;o.position.set(cam.x,cam.y-5,cam.z);o.material.uniforms.t.value=WX.t;}
   const leaf=out&&SEASON==='autumn'&&rain<.3&&snow<.3?1-Math.max(rain,snow):0;
   const rv=clamp((rain-.3)/.7,0,1),snv=clamp((snow-.3)/.7,0,1);   /* rain and snow only once the sky is grey (run 4, item 2) */
-  RAINM.visible=out&&rv>.02;RAINM.material.uniforms.op.value=rv;SNOWM.visible=out&&snv>.02;SNOWM.material.uniforms.op.value=snv;LEAFM.visible=leaf>.02;LEAFM.material.uniforms.op.value=leaf;
+  RAINM.visible=out&&rv>.02;RAINM.material.uniforms.op.value=rv;SNOWM.visible=out&&snv>.02;SNOWM.material.uniforms.op.value=snv;leafTick(dt,leaf);
   const sv=out&&rv>.02&&PLAYING?rv:0;if(Math.abs(sv-(WX.sv||0))>.02||(sv===0&&WX.snd)){WX.sv=sv;wxSound(sv);}}
 /* 🍂 the season's colours for the trees, set when the town is built */
 const SEASON_COLS={spring:{tree:['#9fe08a','#b4ea8e','#8fd97e','#a6e68c','#ffc9dc'],pine:['#5fc484','#6bcf8c']},summer:{tree:['#7ed37a','#6cc97c','#93dc76'],pine:['#4fb37a','#5bbf7e']},
