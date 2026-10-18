@@ -1,0 +1,22 @@
+M-116 | KEEP | own dancer's crown, side of head and raised arm run off the left edge in portrait (less than half, but clearly clipped)
+M-117 | KEEP | "Perfect +15" sits on the lower faces of both dancers in phone landscape (portrait and iPad keep it clear); minor
+M-118 | DROP | normal result card over the scene; it hides only her far arm and edge, the dancer is mostly visible
+M-119 | KEEP | the white centre dot lands exactly on her eye, so one eye looks like an odd white ring; minor
+M-120 | DROP | short-lived toast over top buttons that are dimmed behind the open map anyway
+M-121 | DROP | soft shadow from the door canopy, same blurry shadow look as the balloons and trees elsewhere
+M-122 | DROP | thin straight edge threads of the corner webs, read as web threads at normal size
+M-123 | DROP | single-pixel specks only slightly darker than the wall, not visible at normal size
+M-124 | KEEP | Finn's huge cut-off face fills the left quarter, covers Luna, his tag is under the map/notepad
+M-125 | KEEP | Finn again pressed to the left edge with tag under the map; tree trunk at the camera blocks the right
+M-126 | KEEP | Finn and Luna crowd the left with their backs turned, Finn's tag under the map, fence in front of Theo
+M-127 | KEEP | Theo fully hidden behind Luna (only his tag shows), Finn half behind a trunk with tag under the map
+M-128 | DROP | normal cut-off at the bottom of a scrolling list, with a scroll hint
+M-129 | DROP | about 40 px extra scroll hint, the list also swipes; close to normal size
+M-130 | DROP | test clock jump, not real play: the next shot reads 11:10 the same Monday and the sky follows game time every frame, so the 22:10 label was stale
+M-131 | DROP | faint single-pixel specks on the seam, not visible at normal size
+M-132 | DROP | same faint specks, not visible at normal size
+M-133 | KEEP | trunk splits the frame and hides Ben; the grandma stands in the group with her back turned
+M-134 | KEEP | the photo really shows the trunk through the group, Ben hidden and the grandma's back, yet it gets 5 stars
+M-135 | KEEP | trunk hides Zoe (one eye shows), tree crown fills the top, grandma's back in the group
+M-136 | DROP | Rosie is half off-screen; her tag's end is clipped but the name reads fine, normal at an edge
+M-137 | DROP | planned fade and down-arrow hint at the end of a scrolling list, normal overflow

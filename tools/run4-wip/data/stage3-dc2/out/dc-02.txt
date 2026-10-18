@@ -1,0 +1,23 @@
+M-024 | DROP | player avatar simply stands between the camera and the board in third-person view; step aside and it shows — placement, not the game
+M-025 | DROP | zoom shows a shaded dark 3D ring (a ring-on-stand object whose shadow lies on the floor bottom right) just off the right edge — camera placement, not a floating artifact
+M-026 | KEEP | zoom shows the sign flush against / a hair over the plate's left edge, plate corner tucked under the sign, no gap; cosmetic
+M-027 | KEEP | faded "I want a n…" bubble clearly visible inside the header beside "Rosie" under the 900 pill
+M-028 | KEEP | arrow button covers the end of "Move my game" ("Move my ga")
+M-029 | DROP | arrow only sits on the card's empty corner; "Ice cream 12" fully readable
+M-030 | DROP | arrow only sits on the card's empty corner; "Bell collar 25" fully readable
+M-031 | DROP | panel holds card, bell, arrow and tapping hand down to its lower part and the caption "A booking comes as a message." sits right under it; nothing missing or broken
+M-032 | KEEP | the grey-haired NPC's own head is drawn over the middle of her bubble ("I like th…llow s"), text unreadable
+M-033 | KEEP | "Say hi" button covers "ov" of Clover and the dashed frame line runs through label and button; only the right-edge cut is placement
+M-034 | KEEP | green bubble with timestamp shows through the header between "Rosie" and the coin pill
+M-035 | KEEP | arrow button hides "Brin" of "Bring my pets to me"
+M-036 | KEEP | teal dot sits alone on its own line under "Seafoam pet bed" while the other two New-in tiles keep it inline
+M-037 | KEEP | green/pink map sliver along the card's left edge and "Write here! 1/1" poking out under it
+M-038 | KEEP | same card-over-map-and-notepad overlap on the dance-off card
+M-039 | DROP | same as M-031: caption present below the panel, illustration fills it
+M-040 | KEEP | dashed frame line drawn straight across the apple pill and down beside the time chip
+M-041 | KEEP | same dashed line across the apple pill
+M-042 | KEEP | "+120" and coin cut in half by the card's top edge; minor, transient
+M-043 | KEEP | each white stone has a same-size dark disc fully offset beside it (present at night too and bench shadow falls the other way, so not a sun shadow); reads as a double row / floating stones
+M-044 | DROP | map HUD covers the banner only because the player stands close and left of it; step back and it clears — placement
+M-045 | DROP | player is right at the Toy Store door so the sign sits under the map; placement
+M-046 | KEEP | orange strip with a crisp dark left edge and faint stripes runs from the feet to the bottom edge and ignores the shade change the rest of the floor has — floor seam/overlap, not a shadow

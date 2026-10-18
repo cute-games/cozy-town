@@ -1,0 +1,34 @@
+[
+ {
+  "name": "dance-two-portrait",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3c_iphone-portrait_light_dance-A_001_dance-two-portrait.png",
+  "verdict": "NEW",
+  "why": "no earlier picture of this spot"
+ },
+ {
+  "name": "dance-two-landscape",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3c_iphone-landscape_light_dance-B_001_dance-two-landscape.png",
+  "verdict": "NEW",
+  "why": "no earlier picture of this spot"
+ },
+ {
+  "name": "dance-two-result-portrait",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3c_iphone-portrait_light_dance-A_002_dance-two-result-portrait.png",
+  "verdict": "NEW",
+  "why": "no earlier picture of this spot"
+ },
+ {
+  "name": "dance-two-result-landscape",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3c_iphone-landscape_light_dance-B_002_dance-two-result-landscape.png",
+  "verdict": "NEW",
+  "why": "no earlier picture of this spot"
+ }
+]

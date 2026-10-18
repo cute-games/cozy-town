@@ -1,0 +1,6 @@
+SCORE: 6
+Friends still hide behind each other: Luna is completely behind Theo (after turn 2) and Finn is behind Luna (in view 1). A friend who arrives late has to step round so all four faces show.
+After a turn, one friend ends up right on the camera (a giant face fills "after turn 1"). Rosie also stands so close that the right edge and the buttons cut her off. Keep the arc 2-3 m out and on screen.
+The pond matches the line (round, stones, bench, no bridge), but the ducks are blobs with no faces, and the white one looks like a snowman. Give them orange beaks and eyes.
+Settings: the Pets row is squashed against the bottom edge, and the down-arrow button floats outside the panel.
+Clock polish: the top bar says "09:40" but the cards say "7:00" and "8:00". The calendar icon still shows "17", and the phone shows the coin count three times.

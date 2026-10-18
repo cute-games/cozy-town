@@ -1,0 +1,20 @@
+M-001 | KEEP | fine vertical light/dark streaks plainly visible on the plain stone basin wall, even at 1x
+M-002 | DROP | the truck sign only runs off the screen edge; normal first-person framing, not a glitch
+M-003 | DROP | "Pet Show" reads fine; the pillar overlaps the board's end only from this side angle
+M-004 | KEEP | comb-tooth shadow streaks under every sill and the flower box; faint at 1x but real
+M-005 | DROP | the test spot stands behind a street tree; most of the field is still visible, not a game fault
+M-006 | KEEP | the roof shadow's lower edge is clearly saw-toothed across the whole pink wall
+M-007 | DROP | the banner is cut only by the screen edge; framing, turning shows it
+M-008 | KEEP | a friend's back fills the centre and hides the middle shelves
+M-009 | KEEP | a huge outlined yellow hair block fills the centre and bottom of the view
+M-010 | KEEP | grey vertical smears under the racks on the pink wall look like dirt
+M-011 | KEEP | a friend's brown/orange/yellow blocks are cut by the left edge under the joystick (the dark shot shows a friend in the same spot)
+M-012 | KEEP | a white/purple block is pressed against the right edge over the oven; the orange-haired friend hides prices and part of Mrs. Crumb
+M-013 | KEEP | the blonde friend's head hides the counter, the whole Scoops menu and part of the tag; a second friend blocks Mr. Sprinkles
+M-014 | DROP | the teachers stand at the edges of the view; framing only, turning shows them
+M-015 | DROP | entry framing; the dark arc is the pole's ring touching the ceiling, not floating
+M-016 | KEEP | the back wall is blank above the pens; the signs the code puts there are missing
+M-017 | DROP | each animal stands behind another (their feet sit at different depths); normal overlap, not inside each other
+M-018 | KEEP | a big plain pure-white disc fills the bottom middle and reads as a blank plate
+M-019 | KEEP | "Tricky" letters are about 7-8 px, dark on purple (about 4:1 contrast), the smallest text on the card
+M-020 | KEEP | the string is drawn as stepped separate pieces, and the flags hang about 10-15 px below it, not attached

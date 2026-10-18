@@ -1,0 +1,6 @@
+s3_pc-1366_dark_pc-1366-dark_033_town-duck-pond.png | pc-1366 dark, city, duck pond (middle of the water) | the two ducks are stuck inside each other and look like one white-and-yellow blob: the white duck's head pokes out behind the yellow duck's head, and its body pokes out in front of the yellow body with no outline where they meet. They should be two separate ducks | 2
+s3_pc-1366_dark_pc-1366-dark_015_shop-pets.png | pc-1366 dark, city, Pet Shop card (top text) | the line breaks between the sofa icon and its word: "...Place them at home with 🛋️" ends line 1 and "Decorate." sits alone on line 2 | 1
+s3_pc-1366_dark_pc-1366-dark_015_shop-pets.png | pc-1366 dark, city, Pet Shop card ("✨ New in!" row) | the grey hint "Buy one and something new pops up!" is tiny (letters about 7 px tall) and faint on the dark card, hard for a young child to read | 1
+s3_pc-1366_dark_pc-1366-dark_027_photo-shoot.png | pc-1366 dark, city, photo shoot (bottom-right bar) | the words "Zoom" under the − and + buttons and "Pose" under the 🧍 button are tiny (letters about 7 px tall, while "the fountain" is about 12 px), hard for a young child to read | 1
+
+Count: 4 problems (1 clear, 3 small)

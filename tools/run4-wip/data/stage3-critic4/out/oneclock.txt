@@ -1,0 +1,6 @@
+SCORE: 6
+Friends still hide: Theo right behind Rosie (after turn 1), Finn right behind Luna (after turn 2, in view 1), only name tags show; in view 2 three are bunched shoulder to shoulder, not a 1.2 m arc.
+In view 1 a big grey shape sits on the camera, covering a quarter of the screen and Rosie; after turn 1 Finn's name tag is under the notepad.
+What's new cover pictures carry test clutter (ZZTEST-GUEST8 names, a "You are online!" bar, HUD bits, a cut "ffles" label): use clean shots.
+Rainy Wednesday: the calendar's today box and "Good morning! It's Wednesday ☀️" show a sun while the HUD shows 🌧️; the 📅 header still shows "17".
+Small scuffs: Pet Shop windows cover the "Puppies"/"Bunnies" signs; one sleep card has a second, off-centre 💤; Settings' ⬇️ hangs outside the panel.

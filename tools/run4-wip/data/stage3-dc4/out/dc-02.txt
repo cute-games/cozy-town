@@ -1,0 +1,26 @@
+M-027 | DROP | pot labels only show as the action label when you walk up to a pot; here you stand at the house door ("Go inside your house")
+M-028 | KEEP | pink arrow is clamped at the map's left edge and its left half is clipped by the map frame
+M-029 | DROP | normal edge of a zoomed, draggable map; the buildings are cut there too
+M-030 | DROP | normal scrolling list; the ⬇️ hint shows there is more below
+M-031 | KEEP | pose card hides Zoe from the eyes down, inside the photo frame
+M-032 | DROP | test camera framing; the truck just runs off the screen edge, turning shows it
+M-033 | DROP | only about 6 px off-centre; nobody would notice
+M-034 | KEEP | glow stops in a hard straight line (orange to dark within 2 px), looks like a lit box
+M-035 | DROP | test camera framing, same as 068
+M-036 | DROP | tight, but nothing is cut or touching; reads fine
+M-037 | DROP | tip card sits at the bottom of a draggable map; labels slide under it like at the edges
+M-038 | DROP | normal edge of a draggable map
+M-039 | DROP | bouncing scroll hint at the card's bottom; scroll and the text shows
+M-040 | KEEP | tips rows for 3 jobs, photographer missing though it has a tutorial (its tips are only on the jobs page ❓)
+M-041 | DROP | barely overlaps the faint joystick ring; not noticeable
+M-042 | KEEP | ghost inside the camera: big grey blob on the left, its eye and cheek poke out at the notepad (same in dark 030)
+M-043 | DROP | test camera framing on a narrow phone
+M-044 | DROP | only the tag's corner overlaps; "Clover" fully readable
+M-045 | DROP | test camera framing on a narrow phone; turning shows the signs
+M-046 | DROP | ducks aren't missing (one swims there in dark 033); here they're just out of view behind the notepad
+M-047 | KEEP | notepad hides the "C"; sign reads "ozy Town School"
+M-048 | KEEP | pill hides the "r"; tag reads "Clove"
+M-049 | KEEP | notepad hides almost the whole shop sign, only "ore" shows
+M-050 | KEEP | cat button hides the tag, only "les" sticks out
+M-051 | DROP | only the post top and knob are hidden; "Tree Park" sign fully readable
+M-052 | DROP | crowded, but "Waffles" is still fully readable

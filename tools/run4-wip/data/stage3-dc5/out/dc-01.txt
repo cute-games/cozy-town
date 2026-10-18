@@ -1,0 +1,23 @@
+M-001 | KEEP | basin wall really has fine vertical streaks and a dotted line under the lip; looks like bristles on the 002 rim
+M-002 | DROP | a passing grandma standing in front of the sign for a moment is normal occlusion, she walks on
+M-003 | KEEP | faint but real comb of diagonal stripes under the roof edge (same under the sills in 008)
+M-004 | KEEP | eave shadow has a clear sawtooth edge and a dark blurry smear covers the top of the door
+M-005 | KEEP | in all three pens the two animals overlap into one blob (kittens look merged)
+M-006 | KEEP | "Downstairs" is clearly smaller than "Upstairs" on the plate next to it and almost touches its edge
+M-007 | KEEP | "Put a herb pots" is wrong grammar a parent will spot
+M-008 | DROP | the dimmed HUD sits right above the card (same on PC); tight but reads fine, nothing broken
+M-009 | KEEP | pose card covers most of Zoe's body inside the photo frame
+M-010 | KEEP | crown lines up exactly on the cab with no trunk showing, so it reads as a tree on the truck (always from this view)
+M-011 | KEEP | same crown sitting on the cab, reads as tree on the truck
+M-012 | KEEP | same yellow crown sitting on the cab, reads as tree on the truck
+M-013 | KEEP | blurred dark smear on the door and sawtooth eave shadow clearly visible (also on the 037 door)
+M-014 | KEEP | jagged sawtooth shadow patches on the crowns and trunks, obvious in 016 (the bands are just the faceted style)
+M-015 | KEEP | big dark arc across the counter front with nothing casting it
+M-016 | KEEP | lamp is a pale smudge with no outline, looks see-through in every shop
+M-017 | DROP | one shopper walking just in front of another for a moment; normal passing occlusion
+M-018 | KEEP | puppies are really piled into each other (the joystick over them is just the HUD)
+M-019 | KEEP | same "Downstairs" smaller-than-"Upstairs" mismatch as M-006
+M-020 | DROP | "Photographer" fits, same size as the other titles, not cut off; just a tight margin
+M-021 | KEEP | same wrong grammar "Put a herb pots"
+M-022 | DROP | list scrolls and has a down arrow; a half-cut last row at the edge is normal scrolling
+M-023 | KEEP | pose card hides about half of Zoe (body and legs)

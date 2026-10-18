@@ -1,0 +1,23 @@
+M-001 | KEEP | two overlapping red quads at the stage front, one bright, one dull/translucent, at mismatched angles — looks like a glitch, not a carpet
+M-002 | DROP | white duck is simply swimming behind the yellow one (smaller, higher = farther); ordinary occlusion, no visible interpenetration
+M-003 | KEEP | view is nothing but the game's dark outline/shell colours (no bakery visible, no player); same shot in the dark session shows the counter fine, so the camera got stuck inside geometry — intermittent but real, not clearly the photographer
+M-004 | KEEP | white "Fire Station" plate clearly covers the left part of the red bell plate
+M-005 | KEEP | none of the 4 pen fences has a sign; nothing looks broken though, so this is a spec miss rather than a visible glitch
+M-006 | KEEP | sent bubble sits under the translucent header, text cut to "I want a n", bubble bottom pokes out below the header
+M-007 | KEEP | floating scroll button sits on the "Move my game" button and hides its text end ("Move my ga")
+M-008 | KEEP | unnamed blonde in a white dress stands in front and hides Leo; Mia and Zoe only peek out behind her (family is there, but photobombed)
+M-009 | DROP | the ghost is a drifting night decoration passing in front of the sign; momentary overlap, not a glitch
+M-010 | KEEP | same as M-006 on iphone: bubble shows through the header, text cut to "I want a n", bubble pokes out below
+M-011 | KEEP | scroll button covers the start of "Bring my pets to me" (reads "g my pets to") and the button's second line is cut by the card bottom
+M-012 | KEEP | "Fast" wraps alone to a second row under "Slow"; all three "Show me the tips" labels wrap to two lines
+M-013 | KEEP | party card is drawn over the corner map (map's left strip visible beside the card) and over the notepad's top
+M-014 | KEEP | dance card drawn over the corner map (map edge pokes out at left) and over the notepad's top
+M-015 | KEEP | view really is a black slab with a skin-coloured stripe and purple below — the camera is jammed against the player's own back/head (fence behind), only a park strip at left; game camera-collision, not a deliberate framing
+M-016 | KEEP | dashed photo frame runs horizontally through the apple/hunger chip and down the left edge of the chips
+M-017 | KEEP | dashed photo frame cuts through the apple/hunger chip
+M-018 | KEEP | faint grey joystick ring visible behind the "the fountain" bar and between the − / + buttons
+M-019 | DROP | fixed corner map covers the banner only because of where the camera points; still reads "Town School" — framing, not a glitch
+M-020 | DROP | same framing case: the tree emoji is under the fixed corner map from this spot; nothing broken
+M-021 | KEEP | four thin pink/purple/yellow slats float at random angles on the truck's orange side with the lamp ball among them, attached to nothing
+M-022 | DROP | NPC bubble is under the notepad only because the NPC stands at the screen's left edge from this camera spot; text still readable
+M-023 | DROP | player is just behind the two stands seen side-on: hips hidden by the counter edge, legs visible through the slot, oranges sit beside the hand, not over it — plain occlusion, no clipping

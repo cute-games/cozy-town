@@ -1,0 +1,23 @@
+M-047 | KEEP | dimmed grey clock pill and chat circle visibly peek out above the phone's top edge, half behind the frame; minor
+M-048 | KEEP | same dimmed clock pill and chat button peeking out above the phone frame
+M-049 | KEEP | Pizza delivery / Interior designer / Teacher card tops show above and through the semi-transparent Rosie header
+M-050 | KEEP | same dimmed clock pill and chat button peeking out above the phone frame
+M-051 | KEEP | same dimmed clock pill and chat button peeking out above the phone frame
+M-052 | KEEP | same dimmed clock pill and chat button peeking out above the phone frame
+M-053 | KEEP | same dimmed clock pill and chat button peeking out above the phone frame
+M-054 | KEEP | same dimmed clock pill and chat button peeking out above the phone frame
+M-055 | KEEP | same dimmed clock pill and chat button peeking out above the phone frame
+M-056 | KEEP | same dimmed clock pill and chat button peeking out above the phone frame
+M-057 | DROP | the arrow button sits over the chick card's empty right corner; chick and card not hidden, ordinary floating button
+M-058 | KEEP | the arrow button covers "ps"; the button reads "Show me the ti"
+M-059 | DROP | button sits 2px to the right of the coin, "8 + coin" fully visible, no overlap
+M-060 | KEEP | the arrow button's top cuts into the pink end of the colour slider track
+M-061 | KEEP | Hug/Sit tiles cut by the screen bottom, no card bottom edge and no scroll hint
+M-062 | DROP | Waffles/Clover labels only clipped at their bottom edge and still readable; where the pets sit in the frame is camera placement
+M-063 | KEEP | no card bottom border anywhere on screen (pixel-checked), Bye! button touches the bottom edge
+M-064 | DROP | the purple discs are the Halloween "Spooky path" stones built on purpose beside the white stones (sign says so, same in every shot)
+M-065 | KEEP | same job cards cut under the Rosie header with text showing through, dark mode
+M-066 | KEEP | arrow button hides "ps" of "Show me the tips", dark mode
+M-067 | KEEP | arrow button cuts into the pink end of the slider, dark mode
+M-068 | KEEP | Hug/Sit tiles run off the bottom edge, no card bottom or scroll hint
+M-069 | KEEP | green "I want a new job!" bubble pokes out above the Rosie header with its text cut

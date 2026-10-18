@@ -1,0 +1,20 @@
+kit-n3-friends-friends-in-view-1.png | ipad-landscape, pavement by the Clothes Shop, friends gathered | Finn stands hidden behind Luna and the "Luna" name tag covers the "Finn" tag; Rosie is so close that her body runs off the bottom edge under the run/jump buttons | 2
+kit-n3-friends-friends-in-view-1.png | ipad-landscape, left third of the view | a ghost drifts right into the camera: a big grey blob with a pink cheek covers the left third of the scene and half of Luna | 2
+kit-n3-friends-friends-after-turn-1.png | ipad-landscape, left half of the view | a grandma (grey hair, pink cardigan) stands right against the camera, her face fills the left half of the screen | 2
+kit-n3-friends-friends-after-turn-1.png | ipad-landscape, middle, friends | Theo stands hidden behind Rosie and the "Rosie" tag covers the "Theo" tag | 2
+kit-n3-friends-friends-in-view-2.png | ipad-landscape, middle, friends behind the fence | Theo stands hidden behind Rosie and the "Rosie" tag sits on top of the "Theo" tag | 2
+kit-n3-friends-friends-after-turn-2.png | ipad-landscape, right half of the view | a grandma (grey bun, purple cardigan) stands right against the camera, her face fills the right half of the screen and hides Luna's tag | 2
+kit-n35-notepad-notepad-off.png | ipad-landscape, Settings card | the card runs off the bottom of the screen: the last row "Another iPad or phone / Move my game" is cut in half at the screen edge | 1
+kit-n27-trash-trash-peel.png | ipad-landscape, Flower Corner lane in the rain | camera tilted up at the sky and sitting in an autumn tree crown (its brown underside fills the top-left behind the map and notepad); the banana peel, the shot's subject, is not in view, only roofs at the bottom edge | 2
+kit-n27-trash-trash-can.png | ipad-landscape, park by the Pet Show stage in the rain | camera tilted up: three quarters of the picture is sky and clouds, the litter spot is not in view, only the stage top and the food truck roof at the bottom edge | 2
+kit-n9-food-food-truck.png | ipad-landscape, park, food truck | long flat yellow bars stick out of both wheels onto the grass at odd angles (two from the right wheel, one from the left), stray or misplaced parts | 2
+kit-n15-A-one-clock-A.png | ipad-landscape, Flower Corner, grass left of the tree | two flat blue bird shapes lie spread flat on the grass like squashed stickers | 1
+kit-n15-A-sleep-screen.png | ipad-landscape, in bed at home, middle of the screen | the sleep card ("22:10 · Sun", "Sleeping until 7:00", "Wake up" button) is almost fully transparent, its text unreadable over the floor; the cat Mochi's tag and crown sit on top of it | 2
+kit-n20-A-valentine-fountain.png | ipad-landscape, Flower Corner, grass left of the heart post | a flat blue bird shape lies spread flat on the grass | 1
+kit-n20-A-easter-bunny.png | ipad-landscape, Flower Corner, under the bunny | a flat blue bird shape lies spread flat on the grass next to the egg | 1
+kit-n20-A-december-tree-santa.png | ipad-landscape, note at the top right | the bunny's "Happy Easter! I hid 25 eggs…" note is still showing in the December scene with the tree and Santa | 1
+kit-n1-holidays-spooky-path.png | ipad-landscape, lawn at night | the spooky path is not in the picture: the camera looks across a plain lawn with one bush to the road, no stepping stones, lamps or gate signs in view | 2
+kit-n19-halloween-oct1-day.png | ipad-landscape, Flower Corner gate, left third of the view | a kid (orange hair, purple sweater) stands right against the camera, the head fills the left third of the screen | 2
+kit-n19-halloween-oct1-day.png | ipad-landscape, Flower Corner, grass by the tree and the bench | two flat blue bird shapes lie spread flat on the grass | 1
+kit-n19-halloween-oct31-night.png | ipad-landscape, Flower Corner at night | the five little path lamps are plain black boxes on posts with no glow while the street lamps and windows shine, so the path reads as unlit | 1
+kit-n19-spooky-path-scare.png | ipad-landscape, top edge | the "BOO!" scare text and its ghost icon are pushed above the top edge, only their lower halves show, behind the coin/apple/weather chips | 2

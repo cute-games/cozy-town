@@ -1,0 +1,6 @@
+SCORE: 6
+- Hide the floating "🏞️ the fountain / the Pet Show stage" world label (and the "Play with Mochi" cat buttons) while shooting: it sits on the people's legs on iPad, PC and iPhone.
+- iPhone landscape shoot is messy: "Grandma Rose" tag cut by "Oscar", joystick over the subjects, the label on the frame edge, "Play with Mochi" running off the right edge.
+- After the snap hide the "Pick the background…" hint and the name tags: on PC they stack over the "+120" burst and "Mrs. Lee" peeks out behind the result card.
+- Clipped text on the phone: the "Photo booking" title is cut by the coin pill, and job-card text shows through the header on iPhone landscape.
+- Result card: the photo is tiny on iPhone with empty space beside the text and the card covers the top HUD pills; enlarge the photo and drop the card a little.

@@ -1,0 +1,26 @@
+M-105 | DROP | the see-through joystick sits where it always sits on a sideways phone; the pond still shows through it
+M-106 | KEEP | the round ⬇️ really sits on the last row, over Beach's right end and part of the bus icon
+M-107 | DROP | the game puts the arrow just beside the card's corner on purpose, so it covers nothing; it still reads as part of the card
+M-108 | DROP | same as M-107: the arrow is beside the card's corner on purpose and covers nothing
+M-109 | DROP | same as M-107: the arrow is beside the card's corner on purpose and covers nothing
+M-110 | KEEP | the white and yellow ducks really push into each other with no outline where they meet, so they look glued
+M-111 | KEEP | flowers really stand on the dirt path just past the gate: two in the middle and a cluster on the right edge
+M-112 | KEEP | faint but real shadow stripes on both inner counter sides (shadow speckle of the kind that shimmers when you move)
+M-113 | KEEP | the ⬇️ covers Beach's right end and about half the bus icon
+M-114 | KEEP | a green strip of the corner map really peeks out above the top-left of the map panel
+M-115 | KEEP | the two ducks are merged into one white-and-yellow blob with a straight seam and no outline
+M-116 | KEEP | 🛋️ ends line 1 and "Decorate." sits alone on line 2
+M-117 | DROP | the hint is small but clear with good contrast (not faint), about the same size as the card's other small text
+M-118 | DROP | small captions under big, clear icon buttons; still readable
+M-119 | KEEP | a huge blocky face and teal shirt fill the bottom-left corner, cut off by the edges, with the joystick on top
+M-120 | KEEP | Santa's face is a blown-out yellow-white glow and a big pure-white flare sits on the tree's left
+M-121 | KEEP | Waffles' face is cut off by the bottom edge and the hat's pompom covers part of the "Waffles" tag
+M-122 | KEEP | a featureless black block (her hair from behind) fills the middle and the card hides the rest
+M-123 | KEEP | "down!" sits on the sign's scissors and the "!" runs into "Hair", so the two texts collide
+M-124 | DROP | the claim comes from the test's name; the screen is a normal street with the pizzeria job hint
+M-125 | KEEP | a huge brown roofed board right at the lens fills the right side of the screen
+M-126 | DROP | small captions under big, clear icon buttons; still readable
+M-127 | KEEP | the toast lies across the avatar's chin and chest, hiding the costume
+M-128 | KEEP | the ghost fills the middle of the screen and is cut off by the bottom edge, so it reads as a grey blob
+M-129 | KEEP | a gold shape really floats in the sky; its colours match a yellow butterfly right at the lens, and it reads as a box
+M-130 | DROP | the pastel eggs are the decoration eggs by design (hunt eggs are made to look different); nothing wrong shows

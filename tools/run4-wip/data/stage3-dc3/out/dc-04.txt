@@ -1,0 +1,26 @@
+M-079 | KEEP | phone's bottom edge and shadow cover the top of the joystick, run and jump buttons
+M-080 | KEEP | same overlap: phone covers the top of the joystick, run and jump buttons
+M-081 | KEEP | same overlap: phone covers the top of the joystick, run and jump buttons
+M-082 | KEEP | same overlap: phone covers the top of the joystick, run and jump buttons
+M-083 | KEEP | same overlap: phone covers the top of the joystick, run and jump buttons
+M-084 | KEEP | same overlap: phone covers the top of the joystick, run and jump buttons
+M-085 | DROP | big map can be dragged and zoomed; labels cut at its edge are a normal map view, not a glitch
+M-086 | KEEP | the 4 round HUD buttons stick out 2px above the Map panel's top edge; small but visible bumps
+M-087 | KEEP | coin chip and round buttons stick out 2px above the bag panel's top edge; visible bumps
+M-088 | KEEP | ⬇️ covers the last word "me" of "🐾 Bring my pets to me"
+M-089 | KEEP | same 2px bumps from the chip and round buttons along the Settings top edge
+M-090 | KEEP | same 2px bumps from the chip and round buttons along the Market top edge
+M-091 | KEEP | ⬇️ really sits on the Pet treats tile's corner and hangs below the card
+M-092 | KEEP | card cuts the corner map: about its lower third is hidden, the rest sticks out above
+M-093 | KEEP | card's bottom edge and shadow hide the top arc of the joystick ring
+M-094 | KEEP | the two buttons' outlines merge into one; zero gap between them
+M-095 | KEEP | the two buttons' outlines merge into one; zero gap between them
+M-096 | KEEP | card hides the corner map's bottom row and rounded bottom border (about 20px)
+M-097 | KEEP | card hides the corner map's bottom row and rounded bottom border (about 20px)
+M-098 | KEEP | 👉 sits under the door pointing right at empty space
+M-099 | KEEP | card hides the corner map's bottom row and rounded bottom border (about 20px)
+M-100 | KEEP | the second line runs into the 📸 (1px gap), looks cramped; "off-centre" is overstated, both lines share a centre
+M-101 | KEEP | photo bar buttons stick out 2px on the card's lower left and right edges, plus a thin yellow Snap! crescent at the bottom-right corner
+M-102 | KEEP | card hides all three people; only their name tags sit on its top edge (no hair actually shows)
+M-103 | KEEP | joystick ring sits inside the photo frame over Mia's shoes and the family's shadows
+M-104 | KEEP | the centre aim dot sits right on Leo's forehead like a spot

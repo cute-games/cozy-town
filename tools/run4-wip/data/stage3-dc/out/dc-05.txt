@@ -1,0 +1,27 @@
+M-129 | KEEP | pets' backs block the family and fountain base, Mochi/Waffles cut at the bottom, Clover tag sits on Zoe
+M-130 | KEEP | dashed frame line clearly crosses the corner map, job pill and notepad
+M-131 | KEEP | result thumbnail shows the three pets' backs and tags in front of the family
+M-132 | KEEP | same dashed line through map, job pill and notepad on the result screen
+M-133 | DROP | it is a red park butterfly mid-flutter (flat cartoon wings), gone in the light shot of the same view
+M-134 | KEEP | bubble reads "he ducks is … e best part": wall hides the first letters, hair hides "th"
+M-135 | KEEP | bun covers "of": "Toys were made [bun] wood in my day"
+M-136 | KEEP | black trunk fills the left quarter and a dark crown covers the top of the view
+M-137 | DROP | arrow is whole, it just sits at the map's left edge (player at the lane's end), not cut
+M-138 | DROP | that is the designed non-tappable scroll hint, meant to sit half over the card edge
+M-139 | KEEP | Jack tag covers Nora tag, only the bottom of "Nora" shows
+M-140 | KEEP | +20 coin pop covers parts of three lines of the New client card
+M-141 | KEEP | Knock knock banner and door cover the card's last line and "Tap to read it"
+M-142 | KEEP | Finn and his tag hidden behind Luna/Luna tag; Rosie runs off the bottom under the buttons
+M-143 | KEEP | a ghost right in the camera covers the left third and part of Luna
+M-144 | KEEP | Rosie tag covers Theo tag, Theo not visible behind her
+M-145 | KEEP | same Rosie-over-Theo tag overlap, only the bottom of "Theo" shows
+M-146 | DROP | card's rounded bottom ends above the screen edge; the half row is scrollable content under the ⬇ hint, by design
+M-147 | KEEP | long yellow slabs jut from both wheel hubs onto the grass, look like stray geometry (also in other shots)
+M-148 | DROP | these are the flower-bed butterflies hovering (flat cartoon wings), not squashed birds
+M-149 | DROP | caught during the sleep screen's 0.8 s fade-in; it ends opaque over a dark night overlay
+M-150 | DROP | a hovering butterfly, same as M-148
+M-151 | DROP | a hovering butterfly, same as M-148
+M-152 | DROP | a 4-second toast from talking to the bunny, left over from the test's instant date jump; not a real-play state
+M-153 | DROP | two hovering butterflies, same as M-148
+M-154 | DROP | unlit little posts read as dark decor at night; too subtle for a child or parent to flag
+M-155 | KEEP | BOO! text and ghost icon pushed off the top edge, only lower halves show behind the HUD chips

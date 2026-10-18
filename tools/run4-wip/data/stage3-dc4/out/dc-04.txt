@@ -1,0 +1,26 @@
+M-079 | KEEP | the ⬇️ button sits on the Jump tile's bottom-right corner, and the 4 top buttons are cut flat by the card's top edge (no gap)
+M-080 | KEEP | joystick ring and knob sit over Mia's and Leo's legs inside the photo frame
+M-081 | KEEP | hint pill covers the lower half of Mia's name tag ("Mia" letters cut)
+M-082 | KEEP | joystick centre at x≈370 is inside the frame; the ring covers Mia's and Leo's legs
+M-083 | KEEP | measured frame gaps ≈186 px left and ≈35 px right, so the trio sits left of the frame's middle; the result photo matches the whole screen (bench kids at both edges), not the frame
+M-084 | DROP | captions are 11px bold (6 px capitals), small but readable; the −, + and 🧍 icons already show what the buttons do
+M-085 | DROP | a quick reward pop (about 1.6 s) covering "Tue" for a moment is normal game feedback, not a glitch
+M-086 | KEEP | real: in landscape the joystick rests mid-screen, and its ring crosses the fountain basin's front wall
+M-087 | KEEP | ring covers Rosie's legs, the open gate leaf and the first stepping stones
+M-088 | KEEP | ring and knob sit on the pond's front half (water and front rock)
+M-089 | KEEP | ring covers the foot of the left gate post and the path through the gate
+M-090 | KEEP | phone screen is pixel-identical to the light theme while bag, settings, shops and map go dark
+M-091 | DROP | normal fade at the bottom of a list that scrolls; the text is still readable and scrolls into view
+M-092 | DROP | same scroll fade at the bottom of a scrolling page; the sentence continues when you scroll
+M-093 | DROP | labels cut at the edges of a map you can drag; the hint bar is meant to be there, and the bottom row can be dragged above it
+M-094 | KEEP | chips measured about 34 px tall with about 6 px gaps (upright phone: about 40/12), under the 44 px fingertip size, so small fingers can hit the wrong colour
+M-095 | KEEP | card's left edge lies on the corner map's and notepad's right borders, and its right edge touches the up-arrow button with 0 px gap
+M-096 | KEEP | chat, phone, bag and settings buttons are cut flat by the card's top edge
+M-097 | KEEP | ⬇️ round button sits on the Jump tile's bottom-right corner
+M-098 | KEEP | joystick ring and knob sit over Mia and Leo inside the photo frame
+M-099 | DROP | the card opens on purpose on the side away from Mia, the one being posed, and she stays visible; hiding the others while picking a pose is expected
+M-100 | KEEP | pill hides the bottom half of Mia's name tag, and her hair starts right under it (top of head hidden)
+M-101 | KEEP | joystick sits inside the frame over Mia's and Leo's legs and lower bodies
+M-102 | DROP | same 11px bold captions, small but readable, with clear icons above them
+M-103 | DROP | quick reward pop covering "Wed" for a moment, normal feedback
+M-104 | KEEP | ring sits over the open gate and the first stepping stones, and the knob is right in front of the gate

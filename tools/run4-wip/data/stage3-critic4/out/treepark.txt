@@ -1,0 +1,6 @@
+SCORE: 8
+- The Finish banner runs off the right edge in both finish pictures, and the "h" is cut off. Move or turn it so the whole word shows while the child rings the bell.
+- On phones the screen buttons and panels cover the gate. In portrait the notepad hides the left knob and the end of the sign. In landscape the joystick sits over the left post and the path.
+- "Medium path" is in smaller letters than "Easy path" and "Hard path". Make the yellow sign wider so all three match.
+- From the clearing, only the red path's ladder is easy to see. Put each path's first ladder clearly behind its own sign.
+- The big gold marker that points to the bell looks like a giant floating pencil. A rounder arrow or a star would be easier for a child to read.

@@ -1,0 +1,23 @@
+M-093 | KEEP | bus windows, orange/pink seats and yellow pole fill the view around the phone; big map shows "You!" in the road where the bus is parked, so the player is standing inside the bus
+M-094 | KEEP | same bus interior clearly visible around the phone (windows, seats, pole)
+M-095 | KEEP | same bus interior clearly visible around the phone
+M-096 | KEEP | same bus interior clearly visible around the phone
+M-097 | KEEP | same bus interior clearly visible around the phone
+M-098 | KEEP | bus windows, walls and seats visible around the bag panel
+M-099 | KEEP | bus windows, walls and seats visible around the settings panel
+M-100 | KEEP | dimmed but visible: bus windows, seats, and the pole's top and bottom around the book
+M-101 | KEEP | bus windows, walls and seats visible around the Market card
+M-102 | KEEP | bus windows, walls and seats visible around the Pet shop card
+M-103 | KEEP | yellow grab pole runs top to bottom behind the small card, whole bus interior on show
+M-104 | DROP | labels are small (x-height 7 px vs 8 px for "the fountain") but crisp and readable; the −/+/figure icons carry the meaning
+M-105 | DROP | Rosie is just walking past; in the pc-1366 light shot of the same view she is elsewhere and the sign is clear
+M-106 | KEEP | big curved darker patch on the stand front with nothing in view to cast it, same in the light theme, so it's always there
+M-107 | DROP | soft shadows of the three hanging baskets right above them; normal lighting, same in the light theme
+M-108 | KEEP | speech box covers the bunny's nose, mouth and lower half of its eyes
+M-109 | DROP | the player is standing close to a tall tree; the star going off the top edge is just how the view is framed
+M-110 | KEEP | yellow ball and white string at the tip, and yellow/pink balls at the lower right, float off the tree with sky or house showing in between
+M-111 | KEEP | right post pokes through the pink board with streaks, faint dashed line at the left end; posts cut the board in daylight too
+M-112 | DROP | soft shadow of the door canopy, same width as the canopy; normal lighting, also there in the normal school shot
+M-113 | KEEP | striped z-fighting strips at both board ends where the posts overlap the sign
+M-114 | KEEP | two "Special witch hat" cards look the same; the first one's dot is dark purple on a dark purple card, almost invisible
+M-115 | KEEP | dye shelf passes behind the right curtain and sticks out over the window; the end bottles are cut at the curtain edges

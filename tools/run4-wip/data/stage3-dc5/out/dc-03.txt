@@ -1,0 +1,23 @@
+M-047 | DROP | normal scroll fade at the bottom of a scrolling phone screen; the line is still readable and scrolls up
+M-048 | DROP | same deliberate scroll fade; the Halloween line is readable and scrolls into view
+M-049 | DROP | the game's own sky-blue focus outline (on palette), reads as a "tap here" glow, not broken
+M-050 | KEEP | pose card covers most of the frame: Zoe hidden, Leo's shoulder cut (Mia visible); shot shows the older 46vw card
+M-051 | KEEP | joystick ring and half its knob peek out from under the result card's left edge
+M-052 | DROP | the ducks are just lined up one behind the other from this angle, no clipping; apart in the dark shot
+M-053 | KEEP | view is inside the parked bus (grey walls, seats, pole, town only through windows); shot predates fix fda1555
+M-054 | KEEP | same inside-the-bus background behind Rosie's chat
+M-055 | KEEP | same inside-the-bus background behind the job list
+M-056 | KEEP | same inside-the-bus background behind Friends
+M-057 | KEEP | same inside-the-bus background behind Quests
+M-058 | KEEP | same inside-the-bus background behind Skills
+M-059 | KEEP | same inside-the-bus background behind Pets
+M-060 | KEEP | same inside-the-bus background behind Furniture
+M-061 | KEEP | same inside-the-bus background behind Calendar
+M-062 | KEEP | bus ceiling, seat and window visible around the bag panel
+M-063 | KEEP | bus ceiling, seat and window visible around Settings
+M-064 | KEEP | bus ceiling, seat and window visible around the Market card
+M-065 | KEEP | bus ceiling, seat and window visible around the Pet shop card
+M-066 | KEEP | bus pole, seats and windows plainly behind the kiosk card
+M-067 | KEEP | Green and Mint swatches look identical (Green isn't green); Blue and Sky are close too
+M-068 | KEEP | same pose card: Zoe and the right half of the fountain hidden, Leo cut at the shoulder; minor
+M-069 | DROP | ~14 px overhang of the button bar past the dashed frame is barely visible; buttons over the frame corner look normal

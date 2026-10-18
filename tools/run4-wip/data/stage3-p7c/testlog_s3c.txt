@@ -1,0 +1,4 @@
+10:33:35 ACTION open test copy web build md5 6bed95ff on iphone-portrait light as dance-A
+10:33:40 ACTION open test copy web build md5 6bed95ff on iphone-landscape light as dance-B
+10:34:11 UNDONE closed test copy web iphone-portrait light dance-A: its saves and test data are thrown away
+10:34:11 UNDONE closed test copy web iphone-landscape light dance-B: its saves and test data are thrown away

@@ -1,0 +1,14 @@
+M-021 | KEEP | string is stepped separate pieces; flags hang 12-16 px below it, visibly floating
+M-022 | KEEP | same garland as M-021, same stepped string and floating flags
+M-023 | KEEP | same garland as M-021, same stepped string and floating flags
+M-024 | KEEP | same garland as M-021, same stepped string and floating flags
+M-025 | KEEP | "family photo" line touches the camera icon (0 px gap); right side has ~9 px, so that part is overstated
+M-026 | KEEP | frame lines run behind Pose/Snap/Zoom; button bar sticks ~35 px past the frame
+M-027 | KEEP | same as M-026: frame runs behind the buttons, bar sticks out past it
+M-028 | KEEP | aim dot really sits on Leo's forehead; game hides it on faces (newer code also hides it in photo mode)
+M-029 | KEEP | "w" runs under the right pillar; ghost hides top of the "h" so it reads "Pet Snow"
+M-030 | DROP | not flags: these are the game's butterflies (two-tone wings, dark body) by the flower bed
+M-031 | KEEP | string is stepped separate pieces; flags hang 6-8 px below without touching
+M-032 | KEEP | faint but real shadow-acne stripes on left crate side and in the middle/right gap
+M-033 | KEEP | cut-off top half of the "I want a new job!" bubble shows above the Rosie header
+M-034 | KEEP | Me pill and + button cover a place marker; only "…or" of its name shows

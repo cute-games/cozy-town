@@ -1,0 +1,19 @@
+s3_pc-1366_dark_pc-1366-dark_001_phone-messages.png | pc-1366 dark, city at the park bus stop, behind the phone (messages) | the camera is inside the parked Beach Bus: the background is the inside of the bus (grey ceiling, thick window frames, orange walls, a seat, the yellow grab pole) and the town only shows through its windows | 2
+s3_pc-1366_dark_pc-1366-dark_002_phone-chat-rosie.png | pc-1366 dark, city bus stop, behind the phone (Rosie's chat) | same: camera inside the parked Beach Bus, bus interior fills the background | 2
+s3_pc-1366_dark_pc-1366-dark_003_phone-jobs.png | pc-1366 dark, city bus stop, behind the phone (Rosie's job list) | same: camera inside the parked Beach Bus, bus interior fills the background | 2
+s3_pc-1366_dark_pc-1366-dark_004_phone-friends.png | pc-1366 dark, city bus stop, behind the phone (friends) | same: camera inside the parked Beach Bus, bus interior fills the background | 2
+s3_pc-1366_dark_pc-1366-dark_005_phone-quests.png | pc-1366 dark, city bus stop, behind the phone (quests) | same: camera inside the parked Beach Bus, bus interior fills the background | 2
+s3_pc-1366_dark_pc-1366-dark_006_phone-skills.png | pc-1366 dark, city bus stop, behind the phone (skills) | same: camera inside the parked Beach Bus, bus interior fills the background | 2
+s3_pc-1366_dark_pc-1366-dark_007_phone-pets.png | pc-1366 dark, city bus stop, behind the phone (pets) | same: camera inside the parked Beach Bus, bus interior fills the background | 2
+s3_pc-1366_dark_pc-1366-dark_008_phone-furniture.png | pc-1366 dark, city bus stop, behind the phone (furniture shop) | same: camera inside the parked Beach Bus, bus interior fills the background | 2
+s3_pc-1366_dark_pc-1366-dark_009_phone-calendar.png | pc-1366 dark, city bus stop, behind the phone (calendar) | same: camera inside the parked Beach Bus, bus interior fills the background | 2
+s3_pc-1366_dark_pc-1366-dark_010_big-map.png | pc-1366 dark, big map, map edges | map labels cut by the map's edges: a stray "en" at the left edge, and "Hair Salon" half cut at the bottom edge under the "Tap a place" hint bar, which also hides that building | 1
+s3_pc-1366_dark_pc-1366-dark_011_bag.png | pc-1366 dark, city bus stop, behind the bag panel | same: camera inside the parked Beach Bus, bus windows, walls and seat around the panel | 2
+s3_pc-1366_dark_pc-1366-dark_012_settings.png | pc-1366 dark, city bus stop, behind the settings panel | same: camera inside the parked Beach Bus, bus windows, walls and seat around the panel | 2
+s3_pc-1366_dark_pc-1366-dark_013_whats-new-book.png | pc-1366 dark, city bus stop, behind the What's new book | same: camera inside the parked Beach Bus, bus walls, seat and the top of the grab pole show around the book | 2
+s3_pc-1366_dark_pc-1366-dark_013_whats-new-book.png | pc-1366 dark, What's new book, left and right edges | the book panel is wider than the gap between the HUD parts: it cuts into the corner map and notepad on the left, and the cut "...he bus (free 🎟️)" pill and a half-hidden round bus button stick out on the right | 1
+s3_pc-1366_dark_pc-1366-dark_014_shop-market.png | pc-1366 dark, city bus stop, behind the Market card | same: camera inside the parked Beach Bus, bus windows, walls and seat around the card | 2
+s3_pc-1366_dark_pc-1366-dark_015_shop-pets.png | pc-1366 dark, city bus stop, behind the Pet Shop card | same: camera inside the parked Beach Bus, bus windows, walls and seat around the card | 2
+s3_pc-1366_dark_pc-1366-dark_015_shop-pets.png | pc-1366 dark, Pet Shop card, "New in!" row, first tile | the "Midnight dog house" colour dot (dark navy) can't be seen on the dark purple tile, and the dark house picture hardly shows either | 1
+s3_pc-1366_dark_pc-1366-dark_016_shop-beach.png | pc-1366 dark, city bus stop, behind the beach kiosk card | same: camera inside the parked Beach Bus, the bus's yellow grab pole runs top to bottom through the middle of the view behind the card | 2
+count: 18

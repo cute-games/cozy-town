@@ -1,0 +1,32 @@
+M-097 | KEEP | ⬇️ button sits half outside card edge and overlaps the mint ⬆️ button
+M-098 | KEEP | card covers hunger/clock/chat/phone; backpack button visibly cut in half at card edge
+M-099 | KEEP | ⬇️ button outside card edge, overlaps mint button, nearly touches tips button
+M-100 | KEEP | same: chips hidden, half backpack button peeks out beside card
+M-101 | KEEP | ⬇️ button overlaps mint ⬆️ button
+M-102 | KEEP | half backpack button peeks out under card edge
+M-103 | KEEP | ⬇️ button overlaps mint ⬆️ button
+M-104 | KEEP | half backpack button peeks out under card edge
+M-105 | KEEP | ⬇️ button overlaps mint ⬆️ button
+M-106 | KEEP | invitation dialog sits on yellow toast, toast text hidden/cut
+M-107 | KEEP | dashed line strikes through 900, energy bar and 12:00 Sun
+M-108 | KEEP | dashed line crosses all top chips and the four round buttons
+M-109 | KEEP | banner bottom sits on family heads, their name tags not visible
+M-110 | KEEP | pets in front of family, Waffles label over joystick
+M-111 | KEEP | yellow 📸 Mia tab cut off by top of screen
+M-112 | KEEP | dashed line through 1020 chip
+M-113 | KEEP | photo shows pets and name labels in front of family
+M-114 | DROP | shelves do hold goods; sparse stock is style, not a glitch
+M-115 | KEEP | cut back button, avatar and coin chip peek under status bar
+M-116 | DROP | lone wrapped emoji is normal text flow, not noticeable
+M-117 | DROP | inline vs wrapped colour dot is a tiny wrap nit
+M-118 | KEEP | plain blue browser slider, no colours shown, off the game style
+M-119 | KEEP | dialog covers toast, text cut after "Go check it"
+M-120 | KEEP | dashed frame crosses map, job box, notepad and top buttons
+M-121 | KEEP | pets hide family legs, Clover/Waffles labels over Zoe and Mia/Leo
+M-122 | KEEP | dashed frame crosses map, job box, notepad and buttons
+M-123 | KEEP | frame still drawn through map, notepad and buttons behind card
+M-124 | KEEP | flat strips float off stage posts and lie on grass, one sunk
+M-125 | KEEP | bubble cut by house wall, grandma's head also covers text
+M-126 | KEEP | cut header circles peek under status bar
+M-127 | KEEP | dialog covers toast, text cut after "Go check it"
+M-128 | KEEP | dashed frame runs through map, job box and notepad

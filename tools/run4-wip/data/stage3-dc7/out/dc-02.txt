@@ -1,0 +1,11 @@
+M-013 | KEEP | all three job cards are cut off at the bottom in landscape, "stars!" sits half in the fade, big empty strip below
+M-014 | KEEP | Explorer card cut off, "Say hi at the fire station" half faded, only part of one card fits
+M-015 | KEEP | Halloween line half under the fade and cut off mid-sentence ("little...")
+M-016 | KEEP | a half-cut "Ice Cream Shop" label peeks out of the thin strip between the hint bar and the frame
+M-017 | KEEP | "Finn" and "Duck Pond" almost touch (about 3 px apart, slightly staggered), so they read as "Finn Duck Pond"
+M-018 | KEEP | hint bar hides the Cozy Park and Pet Shop labels (the pins show with no names), only a sliver of the fountain shows
+M-019 | DROP | buttons stay white in every dark shot (fountain, photo, settings), looks on purpose, all readable, nothing broken
+M-020 | KEEP | school sign sits above the dashed frame, cut by the top edge and partly under the chips (only a sliver dips in)
+M-021 | KEEP | toast sits inside the frame over Mia's legs, the cat's body is hidden (only ears, tail, paws show)
+M-022 | KEEP | the photo has no school sign, only a pink sliver at its top edge, yet it gets 5 stars (same cause as M-020)
+M-023 | KEEP | a cut-off "ne" from the Friends Lane label sits alone at the map's left edge by the pink bar, small but easy to spot

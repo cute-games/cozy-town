@@ -1,0 +1,890 @@
+[
+ {
+  "id": "M-001",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_002_town-pet-show-stage.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_ipad-landscape_light_ipad-landscape-light_002_town-pet-show-stage.png",
+  "where": "ipad-landscape, city: in front of the Pet Show stage",
+  "what": "the red carpet/step at the stage front is drawn as two mismatched overlapping red sheets (one bright, one dull and see-through) hanging off the stage edge onto the grass",
+  "bad": "2"
+ },
+ {
+  "id": "M-002",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_004_town-duck-pond.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_ipad-landscape_light_ipad-landscape-light_004_town-duck-pond.png",
+  "where": "ipad-landscape, city: the duck pond",
+  "what": "the two ducks overlap: the white duck's body sits inside the yellow duck's head",
+  "bad": "1"
+ },
+ {
+  "id": "M-003",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_026_inside-bakery.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_ipad-landscape_light_ipad-landscape-light_026_inside-bakery.png",
+  "where": "ipad-landscape, bakery",
+  "what": "the whole picture is dark navy: only black box shapes, a brown ceiling band and pink blocks in the corners; nothing of the bakery can be seen (unlit room or camera inside a dark object)",
+  "bad": "3"
+ },
+ {
+  "id": "M-004",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_030_inside-fire.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_ipad-landscape_light_ipad-landscape-light_030_inside-fire.png",
+  "where": "ipad-landscape, fire station",
+  "what": "the white \"Fire Station\" sign overlaps the red plate of the fire bell hanging next to it",
+  "bad": "1"
+ },
+ {
+  "id": "M-005",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_033_inside-pets-upstairs.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_ipad-landscape_light_ipad-landscape-light_033_inside-pets-upstairs.png",
+  "where": "ipad-landscape, pet shop upstairs",
+  "what": "none of the four pens in view has a name sign on its fence (builder: each fence with its sign)",
+  "bad": "1"
+ },
+ {
+  "id": "M-006",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_039_phone-jobs.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_ipad-landscape_light_ipad-landscape-light_039_phone-jobs.png",
+  "where": "ipad-landscape, phone: Rosie's chat",
+  "what": "the player's \"I want a new job\" bubble is scrolled under the Rosie header card and the coin pill; it shows through faintly and its text is cut to \"I want a n\"",
+  "bad": "2"
+ },
+ {
+  "id": "M-007",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_048_settings.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_ipad-landscape_light_ipad-landscape-light_048_settings.png",
+  "where": "ipad-landscape, settings card, bottom row",
+  "what": "the floating \u2b07 scroll button sits on top of the \"Move my game\" button and hides the end of its text (\"Move my ga\u2026\")",
+  "bad": "1"
+ },
+ {
+  "id": "M-008",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_063_photo-result.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_ipad-landscape_light_ipad-landscape-light_063_photo-result.png",
+  "where": "ipad-landscape, photo result card",
+  "what": "the snapped photo shows the same unnamed blonde character in front of Mia and Zoe instead of the family at the fountain",
+  "bad": "1"
+ },
+ {
+  "id": "M-009",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_066_town-pet-show-stage-night.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_ipad-landscape_light_ipad-landscape-light_066_town-pet-show-stage-night.png",
+  "where": "ipad-landscape, Pet Show stage, night",
+  "what": "a drifting ghost hovers in front of the Pet Show sign and hides its text (only a \"w\" shows)",
+  "bad": "1"
+ },
+ {
+  "id": "M-010",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_003_phone-jobs.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_iphone-portrait_light_iphone-portrait-light_003_phone-jobs.png",
+  "where": "iphone-portrait, Rosie's chat (job list)",
+  "what": "the player's sent bubble \"I want a new job\" has scrolled under the chat header and shows through it, half hidden behind the \"Rosie\" title and the \ud83e\ude99 900 pill, its text cut to \"I want a n\u2026\"",
+  "bad": "2"
+ },
+ {
+  "id": "M-011",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_012_settings.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_iphone-portrait_light_iphone-portrait-light_012_settings.png",
+  "where": "iphone-portrait, settings card, bottom row",
+  "what": "the \u2b07 scroll button sits in the middle of the \"Bring my pets to me\" button and covers its start (\"\u2026g my pets to\"); the button is also cut by the card edge",
+  "bad": "2"
+ },
+ {
+  "id": "M-012",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_012_settings.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_iphone-portrait_light_iphone-portrait-light_012_settings.png",
+  "where": "iphone-portrait, settings card, Look speed row",
+  "what": "the three speed buttons do not fit on one row, \"Fast\" wraps alone onto a second row under \"Slow\"; the \"Show me the tips\" button labels also wrap to two lines",
+  "bad": "1"
+ },
+ {
+  "id": "M-013",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_020_party-invitation.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_iphone-portrait_light_iphone-portrait-light_020_party-invitation.png",
+  "where": "iphone-portrait, city, top-left under the top bar",
+  "what": "the party invitation card is drawn over the corner map (the map's left edge pokes out beside the card all the way down) and over the notepad's top edge",
+  "bad": "2"
+ },
+ {
+  "id": "M-014",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_021_dance-card.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_iphone-portrait_light_iphone-portrait-light_021_dance-card.png",
+  "where": "iphone-portrait, city, top-left under the top bar",
+  "what": "the dance-off card is drawn over the corner map (map edge pokes out at the card's left) and over the notepad's top",
+  "bad": "2"
+ },
+ {
+  "id": "M-015",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_021_dance-card.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_iphone-portrait_light_iphone-portrait-light_021_dance-card.png",
+  "where": "iphone-portrait, city, scene behind the dance-off card",
+  "what": "the view is a flat near-black box from the card down to the bottom and off the right edge (camera inside/against a dark object), only a thin strip of park shows at the far left",
+  "bad": "2"
+ },
+ {
+  "id": "M-016",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_025_photo-pose-card.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_iphone-portrait_light_iphone-portrait-light_025_photo-pose-card.png",
+  "where": "iphone-portrait, city, top-left HUD",
+  "what": "the dashed white photo frame runs straight through the apple/hunger chip and down the left edge of the chips",
+  "bad": "1"
+ },
+ {
+  "id": "M-017",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_026_photo-shoot.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_iphone-portrait_light_iphone-portrait-light_026_photo-shoot.png",
+  "where": "iphone-portrait, city, top-left HUD",
+  "what": "the dashed white photo frame cuts through the apple/hunger chip",
+  "bad": "1"
+ },
+ {
+  "id": "M-018",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_026_photo-shoot.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_iphone-portrait_light_iphone-portrait-light_026_photo-shoot.png",
+  "where": "iphone-portrait, city, bottom photo bar",
+  "what": "the greyed-out joystick ring still shows through behind the \"the fountain\" bar and the \u2212 / + buttons",
+  "bad": "1"
+ },
+ {
+  "id": "M-019",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_033_town-school-front.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_iphone-portrait_light_iphone-portrait-light_033_town-school-front.png",
+  "where": "iphone-portrait, city, school front",
+  "what": "the corner map covers the start of the school banner so it reads \"y Town School\"",
+  "bad": "2"
+ },
+ {
+  "id": "M-020",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_035_town-treepark-gate.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2c/shots/s3_iphone-portrait_light_iphone-portrait-light_035_town-treepark-gate.png",
+  "where": "iphone-portrait, city, Tree Park gate beam",
+  "what": "the corner map covers the tree emoji at the start of the \"Tree Park\" beam text, only its green tip peeks out under the map",
+  "bad": "1"
+ },
+ {
+  "id": "M-021",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_002_town-pet-show-stage.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_ipad-landscape_dark_ipad-landscape-dark_002_town-pet-show-stage.png",
+  "where": "ipad-landscape, city, food truck (right side)",
+  "what": "four thin pink/purple/yellow slats hang at odd angles against the truck's orange side with the white lamp ball floating among them, detached from the awning (which sits above the hatch)",
+  "bad": "2"
+ },
+ {
+  "id": "M-022",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_006_town-east-shops.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_ipad-landscape_dark_ipad-landscape-dark_006_town-east-shops.png",
+  "where": "ipad-landscape, city, Toy Store front",
+  "what": "the grandma's speech bubble is cut by the notepad and reads \"hat a lovely window!\"",
+  "bad": "1"
+ },
+ {
+  "id": "M-023",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_019_inside-market.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_ipad-landscape_dark_ipad-landscape-dark_019_inside-market.png",
+  "where": "ipad-landscape dark, inside the market",
+  "what": "the player is half sunk behind/into the two fruit stands: counter tops cut across the hips, only a slit of the legs shows in a dark gap between the stands, oranges overlap the arms; camera hovers over the fruit bins",
+  "bad": "2"
+ },
+ {
+  "id": "M-024",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_028_inside-icecream.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_ipad-landscape_dark_ipad-landscape-dark_028_inside-icecream.png",
+  "where": "ipad-landscape dark, inside the ice cream shop",
+  "what": "the player's head covers the middle of the \"Scoops!\" board, three menu lines are cut to \"Ice\", \"M\", \"Ic\"",
+  "bad": "1"
+ },
+ {
+  "id": "M-025",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_030_inside-fire.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_ipad-landscape_dark_ipad-landscape-dark_030_inside-fire.png",
+  "where": "ipad-landscape dark, inside the fire station",
+  "what": "a thick dark curved stroke (rim of some ring-shaped thing) floats at the top right above the wall, attached to nothing, cut by the screen edge",
+  "bad": "1"
+ },
+ {
+  "id": "M-026",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_030_inside-fire.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_ipad-landscape_dark_ipad-landscape-dark_030_inside-fire.png",
+  "where": "ipad-landscape dark, inside the fire station",
+  "what": "the \"Fire Station\" sign's right end overlaps the red alarm plate behind the yellow bell",
+  "bad": "1"
+ },
+ {
+  "id": "M-027",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_039_phone-jobs.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_ipad-landscape_dark_ipad-landscape-dark_039_phone-jobs.png",
+  "where": "ipad-landscape dark, phone: Rosie's job list",
+  "what": "the sent \"I want a new job\" bubble is not clipped under the header: it pokes out beside \"Rosie\" under the 900 coin pill, text cut to \"I want a n\"",
+  "bad": "2"
+ },
+ {
+  "id": "M-028",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_048_settings.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_ipad-landscape_dark_ipad-landscape-dark_048_settings.png",
+  "where": "ipad-landscape dark, settings",
+  "what": "the blue scroll-down arrow sits on top of the \"Move my game\" button, hiding its last letters (\"Move my ga\")",
+  "bad": "2"
+ },
+ {
+  "id": "M-029",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_049_shop-market.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_ipad-landscape_dark_ipad-landscape-dark_049_shop-market.png",
+  "where": "ipad-landscape dark, Market shop card",
+  "what": "the blue scroll-down arrow sits on the corner of the \"Ice cream\" card",
+  "bad": "1"
+ },
+ {
+  "id": "M-030",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_050_shop-pets.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_ipad-landscape_dark_ipad-landscape-dark_050_shop-pets.png",
+  "where": "ipad-landscape dark, Pet Shop card",
+  "what": "the blue scroll-down arrow sits on the corner of the \"Bell collar\" card",
+  "bad": "1"
+ },
+ {
+  "id": "M-031",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_060_tutorial-photo.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_ipad-landscape_dark_ipad-landscape-dark_060_tutorial-photo.png",
+  "where": "ipad-landscape, photographer tutorial step 1",
+  "what": "the pink picture panel has no caption: the message card, bell, arrow and hand sit in its top half and the lower third of the panel is empty (the hairstylist panel has \"A customer sits down\", the pizza panel \"ding!\"/\"Read it!\")",
+  "bad": "1"
+ },
+ {
+  "id": "M-032",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_061_photo-pose-card.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_ipad-landscape_dark_ipad-landscape-dark_061_photo-pose-card.png",
+  "where": "ipad-landscape, photo shoot view behind the pose card",
+  "what": "a passing grandma's grey head covers the middle of a speech bubble (\"I like th\u2026 llow s\u2026\"), text unreadable",
+  "bad": "1"
+ },
+ {
+  "id": "M-033",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_062_photo-shoot.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_ipad-landscape_dark_ipad-landscape-dark_062_photo-shoot.png",
+  "where": "ipad-landscape, right edge of the photo frame",
+  "what": "the pet's \"Say hi\" button is drawn on top of the \"Clover\" name label, hiding the middle of the name; the label also runs off the right screen edge and the dashed frame line runs through the button",
+  "bad": "2"
+ },
+ {
+  "id": "M-034",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_003_phone-jobs.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-portrait_dark_iphone-portrait-dark_003_phone-jobs.png",
+  "where": "iphone-portrait, Rosie's chat (job list), header",
+  "what": "the chat is not clipped under the header: the player's green \"I want a new job\" bubble with its \"Thu \u00b7 20:20\" stamp shows through the header between the \"Rosie\" title and the coin pill, overlapping both",
+  "bad": "2"
+ },
+ {
+  "id": "M-035",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_012_settings.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-portrait_dark_iphone-portrait-dark_012_settings.png",
+  "where": "iphone-portrait, settings, bottom of the list",
+  "what": "the floating \u2b07\ufe0f scroll button sits on top of the last mint button's text (\"\ud83d\udc3e \u2026g my pets to\"), hiding its first word",
+  "bad": "1"
+ },
+ {
+  "id": "M-036",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_014_shop-pets.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-portrait_dark_iphone-portrait-dark_014_shop-pets.png",
+  "where": "iphone-portrait, Pet shop card, \"Seafoam pet bed\" tile",
+  "what": "the colour dot wraps onto its own line under the name, unlike the other two \"New in\" tiles where it follows the name",
+  "bad": "1"
+ },
+ {
+  "id": "M-037",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_020_party-invitation.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-portrait_dark_iphone-portrait-dark_020_party-invitation.png",
+  "where": "iphone-portrait, party invitation card",
+  "what": "the card is drawn over the corner map and the top of the notepad: a green/pink sliver of the map pokes out along the card's left edge and \"Write here! 1/1\" shows under it",
+  "bad": "2"
+ },
+ {
+  "id": "M-038",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_021_dance-card.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-portrait_dark_iphone-portrait-dark_021_dance-card.png",
+  "where": "iphone-portrait, dance-off card",
+  "what": "same: the card covers the corner map and half the notepad, both poking out at its edges",
+  "bad": "2"
+ },
+ {
+  "id": "M-039",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_024_tutorial-photo.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-portrait_dark_iphone-portrait-dark_024_tutorial-photo.png",
+  "where": "iphone-portrait, photographer tutorial step 1",
+  "what": "same as the iPad one: the picture panel has no caption and its lower third is empty",
+  "bad": "1"
+ },
+ {
+  "id": "M-040",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_025_photo-pose-card.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-portrait_dark_iphone-portrait-dark_025_photo-pose-card.png",
+  "where": "iphone-portrait, photo shoot, top-left HUD",
+  "what": "the dashed camera frame's top edge runs straight through the apple (hunger) bar and its left edge runs down the side of the bar and the time chip",
+  "bad": "1"
+ },
+ {
+  "id": "M-041",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_026_photo-shoot.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-portrait_dark_iphone-portrait-dark_026_photo-shoot.png",
+  "where": "iphone-portrait, photo shoot, top-left HUD",
+  "what": "same: the dashed frame line crosses the apple bar",
+  "bad": "1"
+ },
+ {
+  "id": "M-042",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_027_photo-result.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-portrait_dark_iphone-portrait-dark_027_photo-result.png",
+  "where": "iphone-portrait, photo result",
+  "what": "the floating \"+120 \ud83e\ude99\" reward text is half hidden behind the top edge of the result card",
+  "bad": "1"
+ },
+ {
+  "id": "M-043",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_031_town-flower-corner.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-portrait_dark_iphone-portrait-dark_031_town-flower-corner.png",
+  "where": "iphone-portrait dark, the Flower Corner gate",
+  "what": "beside every white stepping stone a dark-purple disc sits offset to the right (not a shadow: the tree's shadow falls left), so the path in from the gate reads as a double row of white and purple discs",
+  "bad": "2"
+ },
+ {
+  "id": "M-044",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_033_town-school-front.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-portrait_dark_iphone-portrait-dark_033_town-school-front.png",
+  "where": "iphone-portrait dark, the school front",
+  "what": "the corner map HUD covers the start of the \"Cozy Town School\" banner; only \"y Town School\" is readable",
+  "bad": "1"
+ },
+ {
+  "id": "M-045",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_034_town-east-shops.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-portrait_dark_iphone-portrait-dark_034_town-east-shops.png",
+  "where": "iphone-portrait dark, the Toy Store",
+  "what": "the corner map and notepad HUD cover the Toy Store sign; only \"ore\" is visible",
+  "bad": "2"
+ },
+ {
+  "id": "M-046",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_037_inside-market.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-portrait_dark_iphone-portrait-dark_037_inside-market.png",
+  "where": "iphone-portrait dark, inside the market",
+  "what": "an orange strip with a dark left edge runs straight down the floor from the player's feet to the bottom of the screen, splitting the floor into two shades; looks like a gap/seam between two floor pieces",
+  "bad": "2"
+ },
+ {
+  "id": "M-047",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_001_phone-messages.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_light_iphone-landscape-light_001_phone-messages.png",
+  "where": "iphone-landscape light, the phone: messages",
+  "what": "the dimmed clock chip and chat button poke out above the phone's top edge, half hidden behind its frame",
+  "bad": "1"
+ },
+ {
+  "id": "M-048",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_002_phone-chat-rosie.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_light_iphone-landscape-light_002_phone-chat-rosie.png",
+  "where": "iphone-landscape light, Rosie's chat",
+  "what": "the dimmed clock chip and chat button poke out above the phone's top edge, half hidden behind its frame",
+  "bad": "1"
+ },
+ {
+  "id": "M-049",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_003_phone-jobs.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_light_iphone-landscape-light_003_phone-jobs.png",
+  "where": "iphone-landscape light, Rosie's job list",
+  "what": "the job list sits scrolled up under the header: the top row of job cards (Pizza delivery, Interior designer, Teacher) is cut by the header bar and their text shows through it",
+  "bad": "2"
+ },
+ {
+  "id": "M-050",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_003_phone-jobs.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_light_iphone-landscape-light_003_phone-jobs.png",
+  "where": "iphone-landscape light, Rosie's job list",
+  "what": "the dimmed clock chip and chat button poke out above the phone's top edge, half hidden behind its frame",
+  "bad": "1"
+ },
+ {
+  "id": "M-051",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_004_phone-friends.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_light_iphone-landscape-light_004_phone-friends.png",
+  "where": "iphone-landscape light, the phone: friends",
+  "what": "the dimmed clock chip and chat button poke out above the phone's top edge, half hidden behind its frame",
+  "bad": "1"
+ },
+ {
+  "id": "M-052",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_005_phone-quests.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_light_iphone-landscape-light_005_phone-quests.png",
+  "where": "iphone-landscape light, the phone: quests",
+  "what": "the dimmed clock chip and chat button poke out above the phone's top edge, half hidden behind its frame",
+  "bad": "1"
+ },
+ {
+  "id": "M-053",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_006_phone-skills.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_light_iphone-landscape-light_006_phone-skills.png",
+  "where": "iphone-landscape light, the phone: skills",
+  "what": "the dimmed clock chip and chat button poke out above the phone's top edge, half hidden behind its frame",
+  "bad": "1"
+ },
+ {
+  "id": "M-054",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_007_phone-pets.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_light_iphone-landscape-light_007_phone-pets.png",
+  "where": "iphone-landscape light, the phone: pets",
+  "what": "the dimmed clock chip and chat button poke out above the phone's top edge, half hidden behind its frame",
+  "bad": "1"
+ },
+ {
+  "id": "M-055",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_008_phone-furniture.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_light_iphone-landscape-light_008_phone-furniture.png",
+  "where": "iphone-landscape light, the phone: furniture shop",
+  "what": "the dimmed clock chip and chat button poke out above the phone's top edge, half hidden behind its frame",
+  "bad": "1"
+ },
+ {
+  "id": "M-056",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_009_phone-calendar.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_light_iphone-landscape-light_009_phone-calendar.png",
+  "where": "iphone-landscape light, the phone: calendar",
+  "what": "the dimmed clock chip and chat button poke out above the phone's top edge, half hidden behind its frame",
+  "bad": "1"
+ },
+ {
+  "id": "M-057",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_011_bag.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_light_iphone-landscape-light_011_bag.png",
+  "where": "iphone-landscape light, the bag",
+  "what": "the scroll-down arrow button sits on top of the last food card of the second row (the chick card)",
+  "bad": "1"
+ },
+ {
+  "id": "M-058",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_012_settings.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_light_iphone-landscape-light_012_settings.png",
+  "where": "iphone-landscape light, settings",
+  "what": "the scroll-down arrow button covers the end of the \"\ud83d\udcd6 Show me the tips\" button; it reads \"Show me the ti\"",
+  "bad": "2"
+ },
+ {
+  "id": "M-059",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_013_shop-market.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_light_iphone-landscape-light_013_shop-market.png",
+  "where": "iphone-landscape light, the Market shop card",
+  "what": "the scroll-down arrow button overlaps the Bread card's price coin",
+  "bad": "1"
+ },
+ {
+  "id": "M-060",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_016_house-paint.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_light_iphone-landscape-light_016_house-paint.png",
+  "where": "iphone-landscape light, the house colour card",
+  "what": "the scroll-down arrow button overlaps the right end of the \"Pick any colour\" slider track",
+  "bad": "1"
+ },
+ {
+  "id": "M-061",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_025_photo-pose-card.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_light_iphone-landscape-light_025_photo-pose-card.png",
+  "where": "iphone-landscape light, the photographer's pose card",
+  "what": "the pose grid's third row (Hug, Sit) is cut by the bottom edge of the screen with no scroll hint",
+  "bad": "1"
+ },
+ {
+  "id": "M-062",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_026_photo-shoot.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_light_iphone-landscape-light_026_photo-shoot.png",
+  "where": "iphone-landscape light, the photo shoot at the fountain",
+  "what": "the pets' \"Waffles\" and \"Clover\" name labels run under the bottom-right background/Snap bar",
+  "bad": "1"
+ },
+ {
+  "id": "M-063",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_027_photo-result.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_light_iphone-landscape-light_027_photo-result.png",
+  "where": "iphone-landscape light, the photo result card",
+  "what": "the card runs off the bottom edge of the screen (its bottom border is cut, the Bye! button sits on the edge)",
+  "bad": "1"
+ },
+ {
+  "id": "M-064",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_031_town-flower-corner.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_light_iphone-landscape-light_031_town-flower-corner.png",
+  "where": "iphone-landscape light, the Flower Corner gate",
+  "what": "beside every white stepping stone a dark-purple disc sits offset to the right, so the path in from the gate reads as a double row of white and purple discs",
+  "bad": "2"
+ },
+ {
+  "id": "M-065",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_003_phone-jobs.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_dark_iphone-landscape-dark_003_phone-jobs.png",
+  "where": "iphone-landscape dark, the phone: Rosie's job list",
+  "what": "the top row of job cards (Pizza delivery, Interior designer, Teacher) is cut off at the top of the phone screen and runs under the \"Rosie\" header and the coin pill, their words showing through the header",
+  "bad": "2"
+ },
+ {
+  "id": "M-066",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_012_settings.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_dark_iphone-landscape-dark_012_settings.png",
+  "where": "iphone-landscape dark, settings",
+  "what": "the floating \u2b07\ufe0f scroll button sits on top of the \"\ud83d\udcd6 Show me the tips\" button and hides the end of its text (\"Show me the ti\u2026\")",
+  "bad": "2"
+ },
+ {
+  "id": "M-067",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_016_house-paint.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_dark_iphone-landscape-dark_016_house-paint.png",
+  "where": "iphone-landscape dark, the house colour card",
+  "what": "the floating \u2b07\ufe0f scroll button covers the pink end of the \"Pick any colour\" rainbow slider",
+  "bad": "1"
+ },
+ {
+  "id": "M-068",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_025_photo-pose-card.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_iphone-landscape_dark_iphone-landscape-dark_025_photo-pose-card.png",
+  "where": "iphone-landscape dark, the photographer's pose card",
+  "what": "the card is taller than the screen: the bottom row of pose tiles (Hug, Sit) runs off the bottom edge, with no card bottom and no scroll hint",
+  "bad": "1"
+ },
+ {
+  "id": "M-069",
+  "file": "s3_pc-1366_light_pc-1366-light_003_phone-jobs.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_pc-1366_light_pc-1366-light_003_phone-jobs.png",
+  "where": "pc-1366, Rosie's chat on the phone (city)",
+  "what": "the sent bubble \"I want a new job! \ud83d\udcbc\" sits half behind the Rosie header bar; its top pokes out above the header with the text cut off",
+  "bad": "2"
+ },
+ {
+  "id": "M-070",
+  "file": "s3_pc-1366_light_pc-1366-light_012_settings.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_pc-1366_light_pc-1366-light_012_settings.png",
+  "where": "pc-1366, settings panel, bottom row",
+  "what": "the round scroll-down arrow sits on top of the \"\ud83c\udfe0 Take me home\" button and hides the end of its text",
+  "bad": "2"
+ },
+ {
+  "id": "M-071",
+  "file": "s3_pc-1366_light_pc-1366-light_030_town-pet-show-stage.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_pc-1366_light_pc-1366-light_030_town-pet-show-stage.png",
+  "where": "pc-1366, city, food truck corner",
+  "what": "a cluster of flat purple shards (a low-poly butterfly or bird) hangs beside the food truck's front wheel with one piece poking into the tyre",
+  "bad": "1"
+ },
+ {
+  "id": "M-072",
+  "file": "s3_pc-1366_light_pc-1366-light_034_town-east-shops.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_pc-1366_light_pc-1366-light_034_town-east-shops.png",
+  "where": "pc-1366, city, the Toy Store front",
+  "what": "the \"\ud83e\uddf8 Toy Store\" text is not in the middle of its long white board; the right part of the board is empty",
+  "bad": "1"
+ },
+ {
+  "id": "M-073",
+  "file": "s3_pc-1366_dark_pc-1366-dark_003_phone-jobs.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_pc-1366_dark_pc-1366-dark_003_phone-jobs.png",
+  "where": "pc-1366, the phone: Rosie's chat (job list)",
+  "what": "the player's green \"I want a new job!\" bubble is scrolled up behind the \"Rosie\" header bar: its top is cut off and its text and time stamp are half hidden under the header",
+  "bad": "2"
+ },
+ {
+  "id": "M-074",
+  "file": "s3_pc-1366_dark_pc-1366-dark_011_bag.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_pc-1366_dark_pc-1366-dark_011_bag.png",
+  "where": "pc-1366, the bag panel, bottom right",
+  "what": "the round \u2193 scroll button sits on top of the last pet row, covering its hearts",
+  "bad": "1"
+ },
+ {
+  "id": "M-075",
+  "file": "s3_pc-1366_dark_pc-1366-dark_012_settings.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_pc-1366_dark_pc-1366-dark_012_settings.png",
+  "where": "pc-1366, settings panel, bottom right",
+  "what": "the round \u2193 scroll button sits on top of the \"Take me home\" button and hides the end of its text",
+  "bad": "2"
+ },
+ {
+  "id": "M-076",
+  "file": "s3_pc-1366_dark_pc-1366-dark_013_shop-market.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_pc-1366_dark_pc-1366-dark_013_shop-market.png",
+  "where": "pc-1366, the Market card, bottom right",
+  "what": "the round \u2193 scroll button sits on top of the last row's soft-serve card",
+  "bad": "1"
+ },
+ {
+  "id": "M-077",
+  "file": "s3_pc-1366_dark_pc-1366-dark_014_shop-pets.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_pc-1366_dark_pc-1366-dark_014_shop-pets.png",
+  "where": "pc-1366, the Pet Shop card, bottom right",
+  "what": "the round \u2193 scroll button sits on top of the last row's bell card",
+  "bad": "1"
+ },
+ {
+  "id": "M-078",
+  "file": "s3_pc-1366_dark_pc-1366-dark_030_town-pet-show-stage.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_pc-1366_dark_pc-1366-dark_030_town-pet-show-stage.png",
+  "where": "pc-1366, the Pet Show stage",
+  "what": "a flat purple slab hangs over the top right of the \"Pet Show\" sign and hides the \"w\"; flat pink and purple pieces stick out of the stage's left and right sides in mid-air",
+  "bad": "2"
+ },
+ {
+  "id": "M-079",
+  "file": "s3_pc-1366_dark_pc-1366-dark_030_town-pet-show-stage.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2/shots/s3_pc-1366_dark_pc-1366-dark_030_town-pet-show-stage.png",
+  "where": "pc-1366, the food truck",
+  "what": "the truck's front shows thin pink and yellow V-shaped slivers, a red zigzag by the counter and a purple sliver across the wheel instead of clean headlights and a bumper; the single round headlight sits up near the roof",
+  "bad": "2"
+ },
+ {
+  "id": "M-080",
+  "file": "s3b_ipad-landscape_light_easter-light_003_holiday-easter-egg.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2b/shots/s3b_ipad-landscape_light_easter-light_003_holiday-easter-egg.png",
+  "where": "ipad-landscape, city (park path)",
+  "what": "a plain white ball bulges out of the hunt egg's front between the two gold bands (looks like a stray part, not a decoration)",
+  "bad": "1"
+ },
+ {
+  "id": "M-081",
+  "file": "s3b_ipad-landscape_dark_christmas-night-dark_001_holiday-christmas-tree-night.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2b/shots/s3b_ipad-landscape_dark_christmas-night-dark_001_holiday-christmas-tree-night.png",
+  "where": "ipad-landscape, city (Flower Corner, night)",
+  "what": "the tree's string lights smear into bright yellow/pink/cyan chevron streaks across the lower-left branches (facet reflections), unlike the round bulbs elsewhere on the tree",
+  "bad": "1"
+ },
+ {
+  "id": "M-082",
+  "file": "s3b_ipad-landscape_dark_halloween-night-dark_001_halloween-spooky-gate.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2b/shots/s3b_ipad-landscape_dark_halloween-night-dark_001_halloween-spooky-gate.png",
+  "where": "ipad-landscape, city (Flower Corner gate, night)",
+  "what": "both gate signs are pushed off the screen edges: the \ud83c\udf38 Flower Corner board is cut at the left and the \ud83d\udc7b Spooky path board runs off the right edge",
+  "bad": "1"
+ },
+ {
+  "id": "M-083",
+  "file": "s3b_ipad-landscape_dark_halloween-night-dark_001_halloween-spooky-gate.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2b/shots/s3b_ipad-landscape_dark_halloween-night-dark_001_halloween-spooky-gate.png",
+  "where": "ipad-landscape, city (Flower Corner gate, night)",
+  "what": "the \"Waffles\" pet name tag is partly hidden behind the witch hat's pink pompom (the W is covered) and touches the yellow pet button",
+  "bad": "1"
+ },
+ {
+  "id": "M-084",
+  "file": "s3b_ipad-landscape_dark_halloween-night-dark_002_halloween-spooky-inside.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2b/shots/s3b_ipad-landscape_dark_halloween-night-dark_002_halloween-spooky-inside.png",
+  "where": "ipad-landscape, city (spooky path, 19:40)",
+  "what": "the little path lamps are plain dark boxes with no glow although the path is open; only the stepping stones look lit",
+  "bad": "1"
+ },
+ {
+  "id": "M-085",
+  "file": "s3b_ipad-landscape_dark_halloween-night-dark_005_halloween-clothes-costumes.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2b/shots/s3b_ipad-landscape_dark_halloween-night-dark_005_halloween-clothes-costumes.png",
+  "where": "ipad-landscape, clothes shop (store card)",
+  "what": "the dark Clothing store card is wide enough to cover the \ud83c\udf19 time chip (only the moon's edge peeks out at its left)",
+  "bad": "1"
+ },
+ {
+  "id": "M-086",
+  "file": "s3b_ipad-landscape_dark_halloween-night-dark_005_halloween-clothes-costumes.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2b/shots/s3b_ipad-landscape_dark_halloween-night-dark_005_halloween-clothes-costumes.png",
+  "where": "ipad-landscape, clothes shop (store card)",
+  "what": "the small \u2b07 scroll button (about 36 px) sits on the last tile, covering the \"t\" of \"Witch hat\" and part of its 90 \ud83e\ude99 price",
+  "bad": "1"
+ },
+ {
+  "id": "M-087",
+  "file": "s3b_ipad-landscape_light_jobs-light_004_job-delivery-note.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p2b/shots/s3b_ipad-landscape_light_jobs-light_004_job-delivery-note.png",
+  "where": "ipad-landscape, city (street, pizza job)",
+  "what": "no delivery message on screen: the frame is the same as the \"on the way\" picture (job box still \"Go to the Pizzeria to start work\", only the Beach Bus toast in the middle)",
+  "bad": "2"
+ },
+ {
+  "id": "M-088",
+  "file": "kit2-n21-newyear-fireworks.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n21-newyear-fireworks.png",
+  "where": "ipad-landscape, city (Flower Corner, 21:30)",
+  "what": "the Christmas tree's lights again smear into bright yellow/cyan chevron streaks across its lower-left branches",
+  "bad": "1"
+ },
+ {
+  "id": "M-089",
+  "file": "kit2-n21-newyear-party-hats-confetti.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n21-newyear-party-hats-confetti.png",
+  "where": "ipad-landscape, city (apartment door)",
+  "what": "the party hats are plain yellow and pink cones with white dots, not the striped hats described",
+  "bad": "1"
+ },
+ {
+  "id": "M-090",
+  "file": "kit2-n23-signs-sign-food-truck.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n23-signs-sign-food-truck.png",
+  "where": "ipad-landscape, city (park, food truck)",
+  "what": "garland pennants poke through the food truck's body: a pink pennant pair beside the serving window, a yellow one and two purple ones on the back box",
+  "bad": "2"
+ },
+ {
+  "id": "M-091",
+  "file": "kit2-n37-ipad-landscape-treepark-gate.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n37-ipad-landscape-treepark-gate.png",
+  "where": "ipad-landscape, city (Tree Park gate, 18:20)",
+  "what": "the time chip shows a \u2600\ufe0f sun while rain streaks fall from a grey sky",
+  "bad": "1"
+ },
+ {
+  "id": "M-092",
+  "file": "kit2-n37-ipad-landscape-treepark-start.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n37-ipad-landscape-treepark-start.png",
+  "where": "ipad-landscape, tree park (clearing)",
+  "what": "the whole picture is dimmed under a dark purple veil, HUD included (brightest pixel 165/255), like a fade overlay left on",
+  "bad": "2"
+ },
+ {
+  "id": "M-093",
+  "file": "kit2-n37-ipad-landscape-treepark-easy-first-deck.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n37-ipad-landscape-treepark-easy-first-deck.png",
+  "where": "ipad-landscape, tree park (easy first deck)",
+  "what": "the whole picture is nearly black under the same dark veil (brightest pixel 75/255); decks, bridge and HUD are barely readable",
+  "bad": "3"
+ },
+ {
+  "id": "M-094",
+  "file": "kit2-n37-ipad-landscape-treepark-finish.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n37-ipad-landscape-treepark-finish.png",
+  "where": "ipad-landscape, tree park (finish)",
+  "what": "the finish deck's yellow bell and \ud83c\udfc1 sign are cut off at the right screen edge; the frame is mostly empty grass and grey sky between two trunks",
+  "bad": "2"
+ },
+ {
+  "id": "M-095",
+  "file": "kit2-n26-map-ipad-landscape-corner-map-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n26-map-ipad-landscape-corner-map-ipad-landscape.png",
+  "where": "ipad-landscape, city (Flower Corner gate, 22:40)",
+  "what": "the time chip shows \ud83c\udf27\ufe0f rain but the sky is clear and starry with no rain falling",
+  "bad": "1"
+ },
+ {
+  "id": "M-096",
+  "file": "kit2-n32-truck-truck-front-left.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n32-truck-truck-front-left.png",
+  "where": "ipad-landscape, city (park, food truck)",
+  "what": "garland pennants poke through the truck's body again: a purple pennant pair low on the back box and a pink pair under the serving window",
+  "bad": "2"
+ },
+ {
+  "id": "M-097",
+  "file": "kit2-n32-truck-truck-evening.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n32-truck-truck-evening.png",
+  "where": "ipad-landscape, park by the food truck, HUD clock pill",
+  "what": "clock reads \"\u2600\ufe0f 10:00 Thu\" with a sun icon while the scene is dusk: purple sky, stars, lit lamps",
+  "bad": "1"
+ },
+ {
+  "id": "M-098",
+  "file": "kit2-n26-map-iphone-landscape-corner-map-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n26-map-iphone-landscape-corner-map-iphone-landscape.png",
+  "where": "iphone-landscape, Flower Corner, HUD left column",
+  "what": "notepad card shrunk to about 95\u00d765 px, its \"\u270f\ufe0f Write here!\" text only ~8 px",
+  "bad": "1"
+ },
+ {
+  "id": "M-099",
+  "file": "kit2-n26-map-iphone-landscape-big-map-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n26-map-iphone-landscape-big-map-iphone-landscape.png",
+  "where": "iphone-landscape, big map, bottom strip",
+  "what": "the \"Tap a place to see the way there!\" bar lies over the map; two place icons peek out half-hidden under it",
+  "bad": "1"
+ },
+ {
+  "id": "M-100",
+  "file": "kit2-n26-map-pc-1366-corner-map-pc-1366.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n26-map-pc-1366-corner-map-pc-1366.png",
+  "where": "pc-1366, Flower Corner at midnight, HUD clock pill",
+  "what": "time shown as \"0:00\" without the leading zero (other pills show \"23:00\", \"10:00\")",
+  "bad": "1"
+ },
+ {
+  "id": "M-101",
+  "file": "kit2-n3-friends-friends-in-view-1.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n3-friends-friends-in-view-1.png",
+  "where": "ipad-landscape, pavement by the Clothes Shop, scene",
+  "what": "three big flat grey blobs (cloud puffs at head height) float between the camera and the friends: Theo is completely hidden behind one, Rosie half hidden, the left third of the view blocked",
+  "bad": "3"
+ },
+ {
+  "id": "M-102",
+  "file": "kit2-n3-friends-friends-in-view-1.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n3-friends-friends-in-view-1.png",
+  "where": "ipad-landscape, pavement by the Clothes Shop, friends",
+  "what": "Finn stands hidden behind Luna, only his name label shows \u2014 not the loose arc with none hidden",
+  "bad": "2"
+ },
+ {
+  "id": "M-103",
+  "file": "kit2-n25-ipad-landscape-photo-shoot-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n25-ipad-landscape-photo-shoot-ipad-landscape.png",
+  "where": "ipad-landscape, school yard, photo view",
+  "what": "a tree trunk stands between the camera and the couple: Leo is hidden behind it (no name label), only Lily shows, and the asked school sign is nowhere in view",
+  "bad": "2"
+ },
+ {
+  "id": "M-104",
+  "file": "kit2-n25-ipad-landscape-photo-result-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n25-ipad-landscape-photo-result-ipad-landscape.png",
+  "where": "ipad-landscape, school yard, result card",
+  "what": "whole screen washed out white (snap flash still on): card, photo, text and stars all very faint",
+  "bad": "2"
+ },
+ {
+  "id": "M-105",
+  "file": "kit2-n25-ipad-landscape-photo-chat-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n25-ipad-landscape-photo-chat-ipad-landscape.png",
+  "where": "ipad-landscape, phone app header",
+  "what": "title cut to \"Photo bookin\" \u2014 the end is clipped before the 220-coin pill",
+  "bad": "2"
+ },
+ {
+  "id": "M-106",
+  "file": "kit2-n25-iphone-landscape-photo-shoot-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n25-iphone-landscape-photo-shoot-iphone-landscape.png",
+  "where": "iphone-landscape, park, photo view bottom centre",
+  "what": "the \"\ud83c\udfde\ufe0f the hedge\" background chip sits on top of the joystick ring (and over the dashed frame's bottom edge)",
+  "bad": "2"
+ },
+ {
+  "id": "M-107",
+  "file": "kit2-n25-iphone-landscape-photo-shoot-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n25-iphone-landscape-photo-shoot-iphone-landscape.png",
+  "where": "iphone-landscape, park, top-left",
+  "what": "\"Next bus: Tue 11:00\" pill sits across the dashed photo frame's top-left corner",
+  "bad": "1"
+ },
+ {
+  "id": "M-108",
+  "file": "kit2-n25-iphone-landscape-photo-result-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n25-iphone-landscape-photo-result-iphone-landscape.png",
+  "where": "iphone-landscape, park, result card",
+  "what": "whole screen washed out white (snap flash still on): card text and stars very faint",
+  "bad": "2"
+ },
+ {
+  "id": "M-109",
+  "file": "kit2-n25-iphone-landscape-photo-result-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n25-iphone-landscape-photo-result-iphone-landscape.png",
+  "where": "iphone-landscape, park, result card",
+  "what": "the live \"\ud83c\udfde\ufe0f the hedge\" chip is drawn on top of the card, right across the photo",
+  "bad": "2"
+ },
+ {
+  "id": "M-110",
+  "file": "kit2-n25-pc-1366-photo-shoot-pc-1366.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n25-pc-1366-photo-shoot-pc-1366.png",
+  "where": "pc-1366, Flower Corner gate, top-left",
+  "what": "\"Next bus: Tue 11:00\" pill sits across the dashed photo frame's top-left corner",
+  "bad": "1"
+ },
+ {
+  "id": "M-111",
+  "file": "kit2-n25-pc-1366-photo-result-pc-1366.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-kit2/shots/kit2-n25-pc-1366-photo-result-pc-1366.png",
+  "where": "pc-1366, Flower Corner gate, result card",
+  "what": "whole screen washed out white (snap flash still on): card text and stars very faint",
+  "bad": "2"
+ }
+]

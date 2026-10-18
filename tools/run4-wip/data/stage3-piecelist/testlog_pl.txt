@@ -1,0 +1,6 @@
+06:59:34 ACTION open test copy web build md5 45519f5a on pc-1366 light as x
+06:59:39 UNDONE closed test copy web pc-1366 light x: its saves and test data are thrown away
+07:00:09 ACTION open test copy web build md5 45519f5a on pc-1366 light as x
+07:00:14 UNDONE closed test copy web pc-1366 light x: its saves and test data are thrown away
+07:01:25 ACTION open test copy web build md5 5284fb2f on pc-1366 light as x
+07:01:29 UNDONE closed test copy web pc-1366 light x: its saves and test data are thrown away

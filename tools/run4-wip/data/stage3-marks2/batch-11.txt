@@ -1,0 +1,21 @@
+kit2-n32-truck-truck-evening.png | ipad-landscape, park by the food truck, HUD clock pill | clock reads "☀️ 10:00 Thu" with a sun icon while the scene is dusk: purple sky, stars, lit lamps | 1
+kit2-n26-map-iphone-landscape-corner-map-iphone-landscape.png | iphone-landscape, Flower Corner, HUD left column | notepad card shrunk to about 95×65 px, its "✏️ Write here!" text only ~8 px | 1
+kit2-n26-map-iphone-landscape-big-map-iphone-landscape.png | iphone-landscape, big map, bottom strip | the "Tap a place to see the way there!" bar lies over the map; two place icons peek out half-hidden under it | 1
+kit2-n26-map-pc-1366-corner-map-pc-1366.png | pc-1366, Flower Corner at midnight, HUD clock pill | time shown as "0:00" without the leading zero (other pills show "23:00", "10:00") | 1
+kit2-n3-friends-friends-in-view-1.png | ipad-landscape, pavement by the Clothes Shop, scene | three big flat grey blobs (cloud puffs at head height) float between the camera and the friends: Theo is completely hidden behind one, Rosie half hidden, the left third of the view blocked | 3
+kit2-n3-friends-friends-in-view-1.png | ipad-landscape, pavement by the Clothes Shop, friends | Finn stands hidden behind Luna, only his name label shows — not the loose arc with none hidden | 2
+kit2-n3-friends-friends-after-turn-1.png | ipad-landscape, pavement, scene | camera is inside/against two friends: giant dark hair and faces fill the screen, Luna's label cut to "una" by a head | 3
+kit2-n3-friends-friends-in-view-2.png | ipad-landscape, park fence, friends | friends bunched together: Rosie's head fills the right third right in front of the camera, Finn mostly hidden behind Theo and Rosie — not a loose arc 1.2 m apart | 2
+kit2-n3-friends-friends-after-turn-2.png | ipad-landscape, pavement, scene | camera inside a friend's head: one huge dark head with a brown face fills the whole view | 3
+kit2-n25-ipad-landscape-photo-shoot-ipad-landscape.png | ipad-landscape, school yard, photo view | a tree trunk stands between the camera and the couple: Leo is hidden behind it (no name label), only Lily shows, and the asked school sign is nowhere in view | 2
+kit2-n25-ipad-landscape-photo-result-ipad-landscape.png | ipad-landscape, school yard, result card | whole screen washed out white (snap flash still on): card, photo, text and stars all very faint | 2
+kit2-n25-ipad-landscape-photo-chat-ipad-landscape.png | ipad-landscape, phone app header | title cut to "Photo bookin" — the end is clipped before the 220-coin pill | 2
+kit2-n25-iphone-landscape-photo-shoot-iphone-landscape.png | iphone-landscape, park, photo view bottom centre | the "🏞️ the hedge" background chip sits on top of the joystick ring (and over the dashed frame's bottom edge) | 2
+kit2-n25-iphone-landscape-photo-shoot-iphone-landscape.png | iphone-landscape, park, top-left | "Next bus: Tue 11:00" pill sits across the dashed photo frame's top-left corner | 1
+kit2-n25-iphone-landscape-photo-result-iphone-landscape.png | iphone-landscape, park, result card | whole screen washed out white (snap flash still on): card text and stars very faint | 2
+kit2-n25-iphone-landscape-photo-result-iphone-landscape.png | iphone-landscape, park, result card | the live "🏞️ the hedge" chip is drawn on top of the card, right across the photo | 2
+kit2-n25-iphone-landscape-photo-result-iphone-landscape.png | iphone-landscape, park, result card | card fills the whole screen height with no margin: top edge flush with the screen top, the "📸 Mr. Bolt" chip sits in the HUD row beside the coin pill, "Bye!" touches the bottom | 1
+kit2-n25-pc-1366-photo-shoot-pc-1366.png | pc-1366, Flower Corner gate, top-left | "Next bus: Tue 11:00" pill sits across the dashed photo frame's top-left corner | 1
+kit2-n25-pc-1366-photo-result-pc-1366.png | pc-1366, Flower Corner gate, result card | whole screen washed out white (snap flash still on): card text and stars very faint | 2
+
+19 problems

@@ -1,0 +1,20 @@
+s3_iphone-landscape_dark_iphone-landscape-dark_017_house-paint.png | iphone-landscape (dark), city: house colour card | the 12 colour chips are only about 34 px tall with 6 px gaps and small labels. They are smaller than a fingertip, so it is easy to tap the wrong colour | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_018_big-house.png | iphone-landscape (dark), city: bigger house card | the card's left edge sits on top of the corner map's and the notepad's right borders, with no gap so the borders merge. Its right edge touches the mint up-arrow button | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_020_party-time.png | iphone-landscape (dark), city: host-a-party time card | same squeeze: the card's left edge covers the corner map's and the notepad's right borders, and its right edge touches the mint up-arrow button | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_026_photo-pose-card.png | iphone-landscape (dark), city fountain: pose card | the pose card's top edge covers the bottoms of the chat, phone, bag and settings buttons and cuts them off flat | 2
+s3_iphone-landscape_dark_iphone-landscape-dark_026_photo-pose-card.png | iphone-landscape (dark), city fountain: pose card | the round down-arrow button sits on top of the bottom-right corner of the "Jump" tile | 2
+s3_iphone-landscape_dark_iphone-landscape-dark_026_photo-pose-card.png | iphone-landscape (dark), city fountain: pose card | the joystick ring and knob sit on Mia and Leo inside the photo frame | 2
+s3_iphone-landscape_dark_iphone-landscape-dark_026_photo-pose-card.png | iphone-landscape (dark), city fountain: pose card | the pose card covers the right half of the photo frame, so Zoe can't be seen while you pose | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_026_photo-pose-card.png | iphone-landscape (dark), city fountain: pose card | the "Pose everyone, frame them, then Snap!" pill covers the bottom of Mia's name tag and the top of her head | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_027_photo-shoot.png | iphone-landscape (dark), city fountain: photo shoot | the joystick ring and knob sit in the middle of the photo frame, over Mia's and Leo's bodies | 2
+s3_iphone-landscape_dark_iphone-landscape-dark_027_photo-shoot.png | iphone-landscape (dark), city fountain: photo shoot | the "Zoom" labels under the minus and plus buttons and the "Pose" label are tiny (about 7 px tall) and hard to read | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_028_photo-result.png | iphone-landscape (dark), city: photo result card | the flying "+120" coin pop-up sits on the time chip and hides "Wed" | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_032_town-flower-corner.png | iphone-landscape (dark), city: Flower Corner gate | the joystick ring and knob sit right over the open gate and the stepping stones, which are what the picture is meant to show | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_033_town-duck-pond.png | iphone-landscape (dark), city: duck pond | the joystick ring and knob cover the front middle of the pond | 1
+s3_pc-1366_light_pc-1366-light_010_big-map.png | pc-1366 (light), city: big map | the round down-arrow button overlaps the right end of "Beach" and the left edge of "Bus stop" in the places list | 2
+s3_pc-1366_light_pc-1366-light_010_big-map.png | pc-1366 (light), city: big map | a thin strip of the small corner map shows above and to the left of the Map panel's top-left corner, so that corner looks double-edged | 1
+s3_pc-1366_light_pc-1366-light_011_bag.png | pc-1366 (light), city: bag | the round down-arrow "more below" button sits outside the card, past its right edge, floating over the street | 1
+s3_pc-1366_light_pc-1366-light_012_settings.png | pc-1366 (light), city: settings | the round down-arrow "more below" button sits outside the card, past its right edge, floating over the street | 1
+s3_pc-1366_light_pc-1366-light_014_shop-market.png | pc-1366 (light), city: Market shop card | the round down-arrow "more below" button sits outside the card, past its right edge, floating over the street | 1
+
+Count: 18 problems

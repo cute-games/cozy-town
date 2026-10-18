@@ -1,0 +1,3 @@
+M-183 | KEEP | note promises October costumes but none show when the card opens; the game lists all 4 costumes last, after 22 ordinary items, so a child must scroll far to find them
+M-184 | DROP | "Leo sits down!" is a 1.6-second pop text with a thick white outline and stays readable; landing on the background wall sign is just camera angle, not a glitch
+M-185 | DROP | no delivery was ever started (the job box correctly says go to the Pizzeria); the toast is caught mid 0.2-second fade-out and is fully solid in shot 003, so it is photographer timing

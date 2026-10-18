@@ -1,0 +1,6 @@
+SCORE: 6
+iPhone landscape: the "Everyone is posed!" banner sits on top of the −/+ Zoom buttons and hides them, and the joystick ring sits over the kids.
+PC "school sign" shoot: a tree trunk stands in front of Zoe and the bunny and no sign is in view, but the photo still gets 5 stars. Each spot needs a clear view of the background it asks for.
+The phone chat header is cut off as "Photo booki" with no "…". Shorten the title, for example to "Photos".
+The "+120 🪙" pop-up covers the clock pill on iPhone (clearly in landscape, just touching in portrait). Move it below the top bar.
+iPhone portrait: the pose card hides the whole group, "Snap!" wraps onto its own line in the banner, and the "Zoom"/"Pose" labels are tiny everywhere.

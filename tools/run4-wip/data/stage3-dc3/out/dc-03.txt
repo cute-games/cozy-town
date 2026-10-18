@@ -1,0 +1,26 @@
+M-053 | KEEP | flags start about 10 px below the grey string with a clear gap and nothing joining them, so they float
+M-054 | KEEP | same view, same ~10 px gap between the string and the flags
+M-055 | KEEP | same view, same flags floating under the string
+M-056 | KEEP | same view, same flags floating under the string
+M-057 | KEEP | the card's top edge cuts off the map's bottom row and its rounded corners
+M-058 | KEEP | the card's top edge cuts off the map's bottom row and its rounded corners
+M-059 | KEEP | the card's top edge cuts off the map's bottom row and its rounded corners
+M-060 | KEEP | the photo bar's dark button rims bulge out along the card's sides and bottom, and a yellow sliver of Snap shows at the bottom-right corner
+M-061 | DROP | these are the dark Halloween bats caught edge-on mid-flap; that is the low-poly style, not a drawing fault
+M-062 | KEEP | the joystick ring is drawn inside the viewfinder, across Mia's shoes and shadow
+M-063 | KEEP | the white aim dot shows in the viewfinder and looks like a spot on Leo's forehead
+M-064 | DROP | a Halloween bat seen edge-on; the bats around it read as bats, in the photo too
+M-065 | KEEP | "+120" and its coin sit across the bottoms of the chat and phone buttons
+M-066 | KEEP | faint but real fine vertical streaks on the left part of the basin's side, like shadow acne (the iPad picture of this basin shows the same striping)
+M-067 | DROP | a Halloween bat edge-on mid-flap; the V-shaped bat beside it reads fine
+M-068 | DROP | how this camera spot is framed; the truck is just out of the picture and nothing is broken
+M-069 | KEEP | thin broken purple dashes on the grass around the bench and lamp posts, which looks like z-fighting
+M-070 | DROP | the notepad just sits over the scene; the bench is behind it because of where the camera stands
+M-071 | DROP | the camera spot puts the sign's left end behind the HUD; the name still reads and nothing is broken in the game
+M-072 | KEEP | seen from below, the lamp is a yellow blob with black horn-like outline wedges mixed in with the chat and phone buttons; all three shops look this way from the spot just inside the door
+M-073 | KEEP | same lamp, same yellow disc with black wedges behind the top buttons
+M-074 | DROP | the pet shop is pastel mint by design and looks the same in the PC picture; pale boxes and soft tile lines, nothing broken
+M-075 | KEEP | same lamp, lower in the view: pale bell, yellow disc and black wedge edges, half behind the top buttons
+M-076 | KEEP | the phone's bottom edge cuts across the joystick, run and jump buttons, and slivers of the time chip, map and notepad stick out at its left
+M-077 | KEEP | the phone's bottom edge cuts across the joystick, run and jump buttons
+M-078 | KEEP | the phone's bottom edge cuts across the joystick, run and jump buttons

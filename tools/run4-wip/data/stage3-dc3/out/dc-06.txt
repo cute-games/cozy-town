@@ -1,0 +1,26 @@
+M-131 | KEEP | ⬇️ scroll button clearly sits on the lower-left of the ⬆️ jump button
+M-132 | KEEP | card's right edge hides the left part (about a third) of the 🎒 button
+M-133 | KEEP | same overlap, ⬇️ scroll button sits on the ⬆️ jump button
+M-134 | KEEP | card corner hides the left part (about a third) of the 🎒 button
+M-135 | KEEP | card bottom hides the top of the joystick and the top third of the 🏃 run button
+M-136 | KEEP | ⬇️ scroll-hint overlaps the ⬆️ jump button
+M-137 | KEEP | hint box covers the townsfolk's heads and name tags, only their bodies (Zoe's dress, part of Leo) show
+M-138 | KEEP | translucent joystick ring visibly crosses Mia's legs inside the photo frame (minor)
+M-139 | KEEP | card cuts the apple pill, hides the time chip, chat and phone, red "1" badge peeks out at the corner
+M-140 | KEEP | cut-off "Bring pizzas to / Decorate rooms for / Teach a class and" text shows between status bar and Rosie header
+M-141 | KEEP | bar hides the Ice Cream Shop pin and a bottom-left pin, their cut labels peek out below (Cozy Park and Pet Shop labels are actually intact)
+M-142 | KEEP | ⬇️ scroll-hint overlaps the ⬆️ jump button
+M-143 | KEEP | ⬇️ scroll-hint overlaps the ⬆️ jump button
+M-144 | KEEP | ⬇️ scroll-hint overlaps the ⬆️ jump button
+M-145 | KEEP | Mint dog house's dot wraps onto its own line, so 180 sits a line lower than 150 and 80 (minor)
+M-146 | KEEP | ⬇️ scroll-hint overlaps the ⬆️ jump button
+M-147 | KEEP | ⬇️ scroll-hint overlaps the ⬆️ jump button
+M-148 | KEEP | card overlaps the HUD row: cuts the right end (about a quarter) of the apple chip, hides the time chip and chat button
+M-149 | KEEP | same: apple chip's right end cut, time chip and chat button hidden
+M-150 | KEEP | same: apple chip's right end cut, time chip and chat button hidden
+M-151 | KEEP | joystick ring crosses Mia's legs inside the dashed frame (minor)
+M-152 | KEEP | card hides the apple bar, time chip and chat button, phone button mostly covered with its badge peeking out
+M-153 | KEEP | top half of the "I want a new job! 💼" bubble shows cut off in the gap above the Rosie header
+M-154 | KEEP | Me pill and + button cover a place pin, only a scrap of its label peeks out between them
+M-155 | KEEP | card's left edge clips about 10px of the time chip's rounded right end (minor but visible)
+M-156 | KEEP | same: about 10px of the "11:30 Tue" chip's right end is clipped by the card (minor)

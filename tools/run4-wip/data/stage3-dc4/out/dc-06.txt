@@ -1,0 +1,25 @@
+M-131 | DROP | test made the bunny talk, then jumped the date to December seconds later; its 4-second bubble was still showing (can't happen in real play)
+M-132 | DROP | no bursts in this frame, but fireworks pop about every 2 s at random spots around you (test log: drawn, 2-3 bursts); one still frame missed them
+M-133 | DROP | camera is about 8 m from the tree (Santa looks the same size as in the December shot), tilted up by the test to look for fireworks; glows are the tree's night lights, Santa is cut off only by that tilt
+M-134 | DROP | test placed the camera 2 m from a walker next to a lamp post; ordinary close-up, not a game fault
+M-135 | KEEP | header really reads "Photo booki", title clipped next to the 220 chip
+M-136 | KEEP | big flat grey shape fills the top-right third and hides the pink friend's head and tag
+M-137 | KEEP | Finn lined up right behind Luna; only hair, a yellow edge and his tag show
+M-138 | KEEP | Theo fully hidden behind Rosie; only his tag floats above hers
+M-139 | KEEP | Waffles' head huge at the lens under the joystick; Finn's tag under the notepad, only "n" shows
+M-140 | KEEP | Rosie very close on the right, feet cut off, Talk/chat/run/jump buttons cover her
+M-141 | KEEP | Finn hidden behind Luna (hair, sleeve, tag), Theo half behind Rosie
+M-142 | DROP | toast caught in its 0.2 s fade-in; words still readable, solid a moment later
+M-143 | DROP | the sign and trunk really stand in front of those pets, so the tags are hidden with them; normal 3D hiding
+M-144 | DROP | test set the clock to 11:00 a quarter second before the shot; the chip refreshes every 0.5 s (next shot shows 11:20)
+M-145 | DROP | test moved the camera 3.6 m back two frames before the shot; pets were still where the player had stood
+M-146 | DROP | camera spot at the deck corner was chosen by the test; a world banner running past the screen edge is normal, still readable
+M-147 | KEEP | score-bar names are the smallest text on screen (about 8 px capitals), hard to read
+M-148 | KEEP | Mochi's crown is solid black indoors, gold at the Tree Park gate
+M-149 | KEEP | Mochi's head huge at bottom-right under run/jump; a "W" tag cut off by the right edge
+M-150 | KEEP | banner covers the two Zoom buttons left of Snap; only their tops show
+M-151 | KEEP | joystick ring sits mid-frame over Oscar's legs and the gate; none at bottom-left
+M-152 | KEEP | "+120" pop sits on the clock chip and covers "ue" of "Tue"
+M-153 | KEEP | other player's back fills the left quarter right at the lens; "…EST-CLKA" tag runs under the map
+M-154 | KEEP | tree trunk splits the posed group and hides part of Zoe and the bunny; no school sign in view
+M-155 | KEEP | thumbnail shows the trunk through the group, yet 5 stars and "Wow, what a photo!"

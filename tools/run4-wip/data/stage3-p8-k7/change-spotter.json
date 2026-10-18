@@ -1,0 +1,3656 @@
+[
+ {
+  "name": "town-square-fountain",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_001_town-square-fountain.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_001_town-square-fountain.png",
+  "changed_share": 0.0741,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-pet-show-stage",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_002_town-pet-show-stage.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_002_town-pet-show-stage.png",
+  "changed_share": 0.0361,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-flower-corner",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_003_town-flower-corner.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_003_town-flower-corner.png",
+  "changed_share": 0.0392,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-duck-pond",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_004_town-duck-pond.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_004_town-duck-pond.png",
+  "changed_share": 0.0372,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-school-front",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_005_town-school-front.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_005_town-school-front.png",
+  "changed_share": 0.0387,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-east-shops",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_006_town-east-shops.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_006_town-east-shops.png",
+  "changed_share": 0.0504,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-treepark-gate",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_007_town-treepark-gate.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_007_town-treepark-gate.png",
+  "changed_share": 0.0503,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-apartments",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_008_town-apartments.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_008_town-apartments.png",
+  "changed_share": 0.0662,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-lake",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_009_town-lake.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_009_town-lake.png",
+  "changed_share": 0.0139,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-football",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_010_town-football.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_010_town-football.png",
+  "changed_share": 0.02,
+  "verdict": "SAME"
+ },
+ {
+  "name": "town-bus-stop",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_011_town-bus-stop.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_011_town-bus-stop.png",
+  "changed_share": 0.5737,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "lane-my-house",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_012_lane-my-house.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_012_lane-my-house.png",
+  "changed_share": 0.0662,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "lane-mailbox",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_013_lane-mailbox.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_013_lane-mailbox.png",
+  "changed_share": 0.026,
+  "verdict": "SAME"
+ },
+ {
+  "name": "beach",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_014_beach.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_014_beach.png",
+  "changed_share": 0.0172,
+  "verdict": "SAME"
+ },
+ {
+  "name": "treepark-start",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_015_treepark-start.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_015_treepark-start.png",
+  "changed_share": 0.1051,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "treepark-easy-deck",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_016_treepark-easy-deck.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_016_treepark-easy-deck.png",
+  "changed_share": 0.062,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "treepark-hard-decks",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_017_treepark-hard-decks.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_017_treepark-hard-decks.png",
+  "changed_share": 0.1486,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "treepark-finish",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_018_treepark-finish.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_018_treepark-finish.png",
+  "changed_share": 0.0299,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-market",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_019_inside-market.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_019_inside-market.png",
+  "changed_share": 0.0262,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-pets",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_020_inside-pets.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_020_inside-pets.png",
+  "changed_share": 0.0009,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-flowers",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_021_inside-flowers.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_021_inside-flowers.png",
+  "changed_share": 0.0625,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-cafe",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_022_inside-cafe.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_022_inside-cafe.png",
+  "changed_share": 0.0777,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-clothes",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_023_inside-clothes.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_023_inside-clothes.png",
+  "changed_share": 0.0292,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-salon",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_024_inside-salon.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_024_inside-salon.png",
+  "changed_share": 0.0001,
+  "verdict": "SAME"
+ },
+ {
+  "name": "inside-toys",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_025_inside-toys.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_025_inside-toys.png",
+  "changed_share": 0.0945,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-bakery",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_026_inside-bakery.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_026_inside-bakery.png",
+  "changed_share": 0.0657,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-library",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_027_inside-library.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_027_inside-library.png",
+  "changed_share": 0.0377,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-icecream",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_028_inside-icecream.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_028_inside-icecream.png",
+  "changed_share": 0.0759,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-school",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_029_inside-school.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_029_inside-school.png",
+  "changed_share": 0.0011,
+  "verdict": "SAME"
+ },
+ {
+  "name": "inside-fire",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_030_inside-fire.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_030_inside-fire.png",
+  "changed_share": 0.0014,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-pizza",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_031_inside-pizza.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_031_inside-pizza.png",
+  "changed_share": 0.0001,
+  "verdict": "SAME"
+ },
+ {
+  "name": "inside-home",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_032_inside-home.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_032_inside-home.png",
+  "changed_share": 0.0001,
+  "verdict": "SAME"
+ },
+ {
+  "name": "inside-pets-upstairs",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_033_inside-pets-upstairs.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_033_inside-pets-upstairs.png",
+  "changed_share": 0.0573,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-home-floor-2",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_034_inside-home-floor-2.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_034_inside-home-floor-2.png",
+  "changed_share": 0.0001,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-home-stairs",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_035_inside-home-stairs.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_035_inside-home-stairs.png",
+  "changed_share": 0.0003,
+  "verdict": "SAME"
+ },
+ {
+  "name": "inside-home-floor-2-stairs",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_036_inside-home-floor-2-stairs.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_036_inside-home-floor-2-stairs.png",
+  "changed_share": 0.0356,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "lane-my-house-six-floors",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_037_lane-my-house-six-floors.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_037_lane-my-house-six-floors.png",
+  "changed_share": 0.0151,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "lane-my-garden",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_038_lane-my-garden.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_038_lane-my-garden.png",
+  "changed_share": 0.0243,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-messages",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_039_phone-messages.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_039_phone-messages.png",
+  "changed_share": 0.3596,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-chat-rosie",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_040_phone-chat-rosie.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_040_phone-chat-rosie.png",
+  "changed_share": 0.3589,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-jobs",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_041_phone-jobs.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_041_phone-jobs.png",
+  "changed_share": 0.3605,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-friends",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_042_phone-friends.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_042_phone-friends.png",
+  "changed_share": 0.3595,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-quests",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_043_phone-quests.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_043_phone-quests.png",
+  "changed_share": 0.3692,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-skills",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_044_phone-skills.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_044_phone-skills.png",
+  "changed_share": 0.3612,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-pets",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_045_phone-pets.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_045_phone-pets.png",
+  "changed_share": 0.3607,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-furniture",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_046_phone-furniture.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_046_phone-furniture.png",
+  "changed_share": 0.3613,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-calendar",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_047_phone-calendar.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_047_phone-calendar.png",
+  "changed_share": 0.3647,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "big-map",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_048_big-map.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_048_big-map.png",
+  "changed_share": 0.1061,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "bag",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_049_bag.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_049_bag.png",
+  "changed_share": 0.2355,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "settings",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_050_settings.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_050_settings.png",
+  "changed_share": 0.2493,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "whats-new-book",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_051_whats-new-book.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_051_whats-new-book.png",
+  "changed_share": 0.1444,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-market",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_052_shop-market.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_052_shop-market.png",
+  "changed_share": 0.2435,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-pets",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_053_shop-pets.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_053_shop-pets.png",
+  "changed_share": 0.2502,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-beach",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_054_shop-beach.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_054_shop-beach.png",
+  "changed_share": 0.4061,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "house-paint",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_055_house-paint.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_055_house-paint.png",
+  "changed_share": 0.0365,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "big-house",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_056_big-house.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_056_big-house.png",
+  "changed_share": 0.1155,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "mailbox-menu",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_057_mailbox-menu.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_057_mailbox-menu.png",
+  "changed_share": 0.0704,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "party-time",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_058_party-time.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_058_party-time.png",
+  "changed_share": 0.0237,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "party-invitation",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_059_party-invitation.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_059_party-invitation.png",
+  "changed_share": 0.0293,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-card",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_060_dance-card.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_060_dance-card.png",
+  "changed_share": 0.033,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-pizza",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_061_tutorial-pizza.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_061_tutorial-pizza.png",
+  "changed_share": 0.0082,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-hair",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_062_tutorial-hair.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_062_tutorial-hair.png",
+  "changed_share": 0.0146,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-photo",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_063_tutorial-photo.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_063_tutorial-photo.png",
+  "changed_share": 0.0431,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-pose-card",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_064_photo-pose-card.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_064_photo-pose-card.png",
+  "changed_share": 0.3811,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-shoot",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_065_photo-shoot.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_065_photo-shoot.png",
+  "changed_share": 0.0461,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-result",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_066_photo-result.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_066_photo-result.png",
+  "changed_share": 0.2319,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-hud",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_067_dance-hud.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_067_dance-hud.png",
+  "changed_share": 0.0133,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-square-fountain-night",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_068_town-square-fountain-night.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_068_town-square-fountain-night.png",
+  "changed_share": 0.0222,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-pet-show-stage-night",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_069_town-pet-show-stage-night.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_069_town-pet-show-stage-night.png",
+  "changed_share": 0.0173,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-flower-corner-night",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_070_town-flower-corner-night.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_070_town-flower-corner-night.png",
+  "changed_share": 0.0311,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-duck-pond-night",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_071_town-duck-pond-night.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_071_town-duck-pond-night.png",
+  "changed_share": 0.0098,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-school-front-night",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_072_town-school-front-night.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_072_town-school-front-night.png",
+  "changed_share": 0.0186,
+  "verdict": "SAME"
+ },
+ {
+  "name": "town-east-shops-night",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_073_town-east-shops-night.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_073_town-east-shops-night.png",
+  "changed_share": 0.0006,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-treepark-gate-night",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_074_town-treepark-gate-night.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_074_town-treepark-gate-night.png",
+  "changed_share": 0.0014,
+  "verdict": "SAME"
+ },
+ {
+  "name": "town-apartments-night",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_075_town-apartments-night.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_075_town-apartments-night.png",
+  "changed_share": 0.0021,
+  "verdict": "SAME"
+ },
+ {
+  "name": "town-square-fountain-rain",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_076_town-square-fountain-rain.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_076_town-square-fountain-rain.png",
+  "changed_share": 0.0282,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-pet-show-stage-rain",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_077_town-pet-show-stage-rain.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_077_town-pet-show-stage-rain.png",
+  "changed_share": 0.0181,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-flower-corner-rain",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_078_town-flower-corner-rain.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_078_town-flower-corner-rain.png",
+  "changed_share": 0.033,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-duck-pond-rain",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_079_town-duck-pond-rain.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_079_town-duck-pond-rain.png",
+  "changed_share": 0.0299,
+  "verdict": "SAME"
+ },
+ {
+  "name": "town-school-front-rain",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_080_town-school-front-rain.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_080_town-school-front-rain.png",
+  "changed_share": 0.1736,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-east-shops-rain",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_081_town-east-shops-rain.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_081_town-east-shops-rain.png",
+  "changed_share": 0.0339,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-treepark-gate-rain",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_082_town-treepark-gate-rain.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_082_town-treepark-gate-rain.png",
+  "changed_share": 0.0412,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-apartments-rain",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_083_town-apartments-rain.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_light_ipad-landscape-light_083_town-apartments-rain.png",
+  "changed_share": 0.0044,
+  "verdict": "SAME"
+ },
+ {
+  "name": "town-square-fountain",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_001_town-square-fountain.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_001_town-square-fountain.png",
+  "changed_share": 0.0403,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-pet-show-stage",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_002_town-pet-show-stage.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_002_town-pet-show-stage.png",
+  "changed_share": 0.0701,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-flower-corner",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_003_town-flower-corner.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_003_town-flower-corner.png",
+  "changed_share": 0.0318,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-duck-pond",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_004_town-duck-pond.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_004_town-duck-pond.png",
+  "changed_share": 0.0501,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-school-front",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_005_town-school-front.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_005_town-school-front.png",
+  "changed_share": 0.0558,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-east-shops",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_006_town-east-shops.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_006_town-east-shops.png",
+  "changed_share": 0.0356,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-treepark-gate",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_007_town-treepark-gate.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_007_town-treepark-gate.png",
+  "changed_share": 0.0155,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-apartments",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_008_town-apartments.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_008_town-apartments.png",
+  "changed_share": 0.0817,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-lake",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_009_town-lake.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_009_town-lake.png",
+  "changed_share": 0.0194,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-football",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_010_town-football.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_010_town-football.png",
+  "changed_share": 0.0059,
+  "verdict": "SAME"
+ },
+ {
+  "name": "town-bus-stop",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_011_town-bus-stop.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_011_town-bus-stop.png",
+  "changed_share": 0.5553,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "lane-my-house",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_012_lane-my-house.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_012_lane-my-house.png",
+  "changed_share": 0.0788,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "lane-mailbox",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_013_lane-mailbox.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_013_lane-mailbox.png",
+  "changed_share": 0.0245,
+  "verdict": "SAME"
+ },
+ {
+  "name": "beach",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_014_beach.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_014_beach.png",
+  "changed_share": 0.0095,
+  "verdict": "SAME"
+ },
+ {
+  "name": "treepark-start",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_015_treepark-start.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_015_treepark-start.png",
+  "changed_share": 0.093,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "treepark-easy-deck",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_016_treepark-easy-deck.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_016_treepark-easy-deck.png",
+  "changed_share": 0.1142,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "treepark-hard-decks",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_017_treepark-hard-decks.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_017_treepark-hard-decks.png",
+  "changed_share": 0.078,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "treepark-finish",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_018_treepark-finish.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_018_treepark-finish.png",
+  "changed_share": 0.0195,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-market",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_019_inside-market.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_019_inside-market.png",
+  "changed_share": 0.0433,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-pets",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_020_inside-pets.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_020_inside-pets.png",
+  "changed_share": 0.044,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-flowers",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_021_inside-flowers.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_021_inside-flowers.png",
+  "changed_share": 0.0595,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-cafe",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_022_inside-cafe.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_022_inside-cafe.png",
+  "changed_share": 0.0814,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-clothes",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_023_inside-clothes.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_023_inside-clothes.png",
+  "changed_share": 0.059,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-salon",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_024_inside-salon.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_024_inside-salon.png",
+  "changed_share": 0.0007,
+  "verdict": "SAME"
+ },
+ {
+  "name": "inside-toys",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_025_inside-toys.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_025_inside-toys.png",
+  "changed_share": 0.0894,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-bakery",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_026_inside-bakery.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_026_inside-bakery.png",
+  "changed_share": 0.0925,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-library",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_027_inside-library.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_027_inside-library.png",
+  "changed_share": 0.0465,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-icecream",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_028_inside-icecream.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_028_inside-icecream.png",
+  "changed_share": 0.0593,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-school",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_029_inside-school.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_029_inside-school.png",
+  "changed_share": 0.0007,
+  "verdict": "SAME"
+ },
+ {
+  "name": "inside-fire",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_030_inside-fire.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_030_inside-fire.png",
+  "changed_share": 0.0033,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-pizza",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_031_inside-pizza.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_031_inside-pizza.png",
+  "changed_share": 0.002,
+  "verdict": "SAME"
+ },
+ {
+  "name": "inside-home",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_032_inside-home.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_032_inside-home.png",
+  "changed_share": 0.0007,
+  "verdict": "SAME"
+ },
+ {
+  "name": "inside-pets-upstairs",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_033_inside-pets-upstairs.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_033_inside-pets-upstairs.png",
+  "changed_share": 0.0391,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-home-floor-2",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_034_inside-home-floor-2.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_034_inside-home-floor-2.png",
+  "changed_share": 0.0007,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-home-stairs",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_035_inside-home-stairs.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_035_inside-home-stairs.png",
+  "changed_share": 0.0002,
+  "verdict": "SAME"
+ },
+ {
+  "name": "inside-home-floor-2-stairs",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_036_inside-home-floor-2-stairs.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_036_inside-home-floor-2-stairs.png",
+  "changed_share": 0.0362,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "lane-my-house-six-floors",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_037_lane-my-house-six-floors.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_037_lane-my-house-six-floors.png",
+  "changed_share": 0.0177,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "lane-my-garden",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_038_lane-my-garden.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_038_lane-my-garden.png",
+  "changed_share": 0.0243,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-messages",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_039_phone-messages.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_039_phone-messages.png",
+  "changed_share": 0.3785,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-chat-rosie",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_040_phone-chat-rosie.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_040_phone-chat-rosie.png",
+  "changed_share": 0.3747,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-jobs",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_041_phone-jobs.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_041_phone-jobs.png",
+  "changed_share": 0.3739,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-friends",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_042_phone-friends.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_042_phone-friends.png",
+  "changed_share": 0.3756,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-quests",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_043_phone-quests.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_043_phone-quests.png",
+  "changed_share": 0.3826,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-skills",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_044_phone-skills.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_044_phone-skills.png",
+  "changed_share": 0.375,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-pets",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_045_phone-pets.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_045_phone-pets.png",
+  "changed_share": 0.3744,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-furniture",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_046_phone-furniture.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_046_phone-furniture.png",
+  "changed_share": 0.3769,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-calendar",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_047_phone-calendar.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_047_phone-calendar.png",
+  "changed_share": 0.3821,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "big-map",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_048_big-map.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_048_big-map.png",
+  "changed_share": 0.0824,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "bag",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_049_bag.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_049_bag.png",
+  "changed_share": 0.2464,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "settings",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_050_settings.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_050_settings.png",
+  "changed_share": 0.2592,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "whats-new-book",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_051_whats-new-book.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_051_whats-new-book.png",
+  "changed_share": 0.1447,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-market",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_052_shop-market.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_052_shop-market.png",
+  "changed_share": 0.2512,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-pets",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_053_shop-pets.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_053_shop-pets.png",
+  "changed_share": 0.2585,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-beach",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_054_shop-beach.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_054_shop-beach.png",
+  "changed_share": 0.4185,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "house-paint",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_055_house-paint.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_055_house-paint.png",
+  "changed_share": 0.0514,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "big-house",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_056_big-house.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_056_big-house.png",
+  "changed_share": 0.1548,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "mailbox-menu",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_057_mailbox-menu.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_057_mailbox-menu.png",
+  "changed_share": 0.0974,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "party-time",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_058_party-time.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_058_party-time.png",
+  "changed_share": 0.0565,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "party-invitation",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_059_party-invitation.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_059_party-invitation.png",
+  "changed_share": 0.0591,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-card",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_060_dance-card.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_060_dance-card.png",
+  "changed_share": 0.0588,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-pizza",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_061_tutorial-pizza.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_061_tutorial-pizza.png",
+  "changed_share": 0.008,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-hair",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_062_tutorial-hair.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_062_tutorial-hair.png",
+  "changed_share": 0.0046,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-photo",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_063_tutorial-photo.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_063_tutorial-photo.png",
+  "changed_share": 0.0264,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-pose-card",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_064_photo-pose-card.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_064_photo-pose-card.png",
+  "changed_share": 0.3761,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-shoot",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_065_photo-shoot.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_065_photo-shoot.png",
+  "changed_share": 0.0473,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-result",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_066_photo-result.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_066_photo-result.png",
+  "changed_share": 0.266,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-hud",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_067_dance-hud.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_067_dance-hud.png",
+  "changed_share": 0.0134,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-square-fountain-night",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_068_town-square-fountain-night.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_068_town-square-fountain-night.png",
+  "changed_share": 0.0164,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-pet-show-stage-night",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_069_town-pet-show-stage-night.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_069_town-pet-show-stage-night.png",
+  "changed_share": 0.0142,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-flower-corner-night",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_070_town-flower-corner-night.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_070_town-flower-corner-night.png",
+  "changed_share": 0.0129,
+  "verdict": "SAME"
+ },
+ {
+  "name": "town-duck-pond-night",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_071_town-duck-pond-night.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_071_town-duck-pond-night.png",
+  "changed_share": 0.0134,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-school-front-night",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_072_town-school-front-night.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_072_town-school-front-night.png",
+  "changed_share": 0.0186,
+  "verdict": "SAME"
+ },
+ {
+  "name": "town-east-shops-night",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_073_town-east-shops-night.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_073_town-east-shops-night.png",
+  "changed_share": 0.0001,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-treepark-gate-night",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_074_town-treepark-gate-night.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_074_town-treepark-gate-night.png",
+  "changed_share": 0.0,
+  "verdict": "SAME"
+ },
+ {
+  "name": "town-apartments-night",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_075_town-apartments-night.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_075_town-apartments-night.png",
+  "changed_share": 0.0016,
+  "verdict": "SAME"
+ },
+ {
+  "name": "town-square-fountain-rain",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_076_town-square-fountain-rain.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_076_town-square-fountain-rain.png",
+  "changed_share": 0.0263,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-pet-show-stage-rain",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_077_town-pet-show-stage-rain.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_077_town-pet-show-stage-rain.png",
+  "changed_share": 0.0227,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-flower-corner-rain",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_078_town-flower-corner-rain.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_078_town-flower-corner-rain.png",
+  "changed_share": 0.0266,
+  "verdict": "SAME"
+ },
+ {
+  "name": "town-duck-pond-rain",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_079_town-duck-pond-rain.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_079_town-duck-pond-rain.png",
+  "changed_share": 0.0326,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-school-front-rain",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_080_town-school-front-rain.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_080_town-school-front-rain.png",
+  "changed_share": 0.0315,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-east-shops-rain",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_081_town-east-shops-rain.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_081_town-east-shops-rain.png",
+  "changed_share": 0.0014,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-treepark-gate-rain",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_082_town-treepark-gate-rain.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_082_town-treepark-gate-rain.png",
+  "changed_share": 0.0011,
+  "verdict": "SAME"
+ },
+ {
+  "name": "town-apartments-rain",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_083_town-apartments-rain.png",
+  "ref": "stage3-p7/shots/s3_ipad-landscape_dark_ipad-landscape-dark_083_town-apartments-rain.png",
+  "changed_share": 0.108,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-messages",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_001_phone-messages.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_001_phone-messages.png",
+  "changed_share": 0.1742,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-chat-rosie",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_002_phone-chat-rosie.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_002_phone-chat-rosie.png",
+  "changed_share": 0.1011,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-jobs",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_003_phone-jobs.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_003_phone-jobs.png",
+  "changed_share": 0.1039,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-friends",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_004_phone-friends.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_004_phone-friends.png",
+  "changed_share": 0.1029,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-quests",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_005_phone-quests.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_005_phone-quests.png",
+  "changed_share": 0.1439,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-skills",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_006_phone-skills.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_006_phone-skills.png",
+  "changed_share": 0.1067,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-pets",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_007_phone-pets.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_007_phone-pets.png",
+  "changed_share": 0.1059,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-furniture",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_008_phone-furniture.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_008_phone-furniture.png",
+  "changed_share": 0.1064,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-calendar",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_009_phone-calendar.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_009_phone-calendar.png",
+  "changed_share": 0.1282,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "big-map",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_010_big-map.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_010_big-map.png",
+  "changed_share": 0.1421,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "bag",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_011_bag.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_011_bag.png",
+  "changed_share": 0.4955,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "settings",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_012_settings.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_012_settings.png",
+  "changed_share": 0.4563,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "whats-new-book",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_013_whats-new-book.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_013_whats-new-book.png",
+  "changed_share": 0.0271,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-market",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_014_shop-market.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_014_shop-market.png",
+  "changed_share": 0.4285,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-pets",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_015_shop-pets.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_015_shop-pets.png",
+  "changed_share": 0.3918,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-beach",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_016_shop-beach.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_016_shop-beach.png",
+  "changed_share": 0.2397,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "house-paint",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_017_house-paint.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_017_house-paint.png",
+  "changed_share": 0.2507,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "big-house",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_018_big-house.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_018_big-house.png",
+  "changed_share": 0.1871,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "mailbox-menu",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_019_mailbox-menu.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_019_mailbox-menu.png",
+  "changed_share": 0.1507,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "party-time",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_020_party-time.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_020_party-time.png",
+  "changed_share": 0.0058,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "party-invitation",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_021_party-invitation.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_021_party-invitation.png",
+  "changed_share": 0.0059,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-card",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_022_dance-card.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_022_dance-card.png",
+  "changed_share": 0.0055,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-pizza",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_023_tutorial-pizza.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_023_tutorial-pizza.png",
+  "changed_share": 0.0007,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-hair",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_024_tutorial-hair.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_024_tutorial-hair.png",
+  "changed_share": 0.0005,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-photo",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_025_tutorial-photo.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_025_tutorial-photo.png",
+  "changed_share": 0.0005,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-pose-card",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_026_photo-pose-card.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_026_photo-pose-card.png",
+  "changed_share": 0.3957,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-shoot",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_027_photo-shoot.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_027_photo-shoot.png",
+  "changed_share": 0.0618,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-result",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_028_photo-result.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_028_photo-result.png",
+  "changed_share": 0.0434,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-hud",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_029_dance-hud.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_029_dance-hud.png",
+  "changed_share": 0.002,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-square-fountain",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_030_town-square-fountain.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_030_town-square-fountain.png",
+  "changed_share": 0.0146,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-pet-show-stage",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_031_town-pet-show-stage.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_031_town-pet-show-stage.png",
+  "changed_share": 0.0358,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-flower-corner",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_032_town-flower-corner.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_032_town-flower-corner.png",
+  "changed_share": 0.5775,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-duck-pond",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_033_town-duck-pond.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_033_town-duck-pond.png",
+  "changed_share": 0.0148,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-school-front",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_034_town-school-front.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_034_town-school-front.png",
+  "changed_share": 0.0273,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-east-shops",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_035_town-east-shops.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_035_town-east-shops.png",
+  "changed_share": 0.0014,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-treepark-gate",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_036_town-treepark-gate.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_036_town-treepark-gate.png",
+  "changed_share": 0.0022,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-apartments",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_037_town-apartments.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_037_town-apartments.png",
+  "changed_share": 0.0374,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-market",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_038_inside-market.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_038_inside-market.png",
+  "changed_share": 0.0272,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-pets",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_039_inside-pets.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_039_inside-pets.png",
+  "changed_share": 0.0018,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-flowers",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_040_inside-flowers.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_light_iphone-portrait-light_040_inside-flowers.png",
+  "changed_share": 0.0011,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-messages",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_001_phone-messages.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_001_phone-messages.png",
+  "changed_share": 0.1549,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-chat-rosie",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_002_phone-chat-rosie.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_002_phone-chat-rosie.png",
+  "changed_share": 0.102,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-jobs",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_003_phone-jobs.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_003_phone-jobs.png",
+  "changed_share": 0.1017,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-friends",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_004_phone-friends.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_004_phone-friends.png",
+  "changed_share": 0.1043,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-quests",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_005_phone-quests.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_005_phone-quests.png",
+  "changed_share": 0.1454,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-skills",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_006_phone-skills.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_006_phone-skills.png",
+  "changed_share": 0.1047,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-pets",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_007_phone-pets.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_007_phone-pets.png",
+  "changed_share": 0.106,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-furniture",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_008_phone-furniture.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_008_phone-furniture.png",
+  "changed_share": 0.1059,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-calendar",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_009_phone-calendar.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_009_phone-calendar.png",
+  "changed_share": 0.1277,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "big-map",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_010_big-map.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_010_big-map.png",
+  "changed_share": 0.1097,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "bag",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_011_bag.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_011_bag.png",
+  "changed_share": 0.3661,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "settings",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_012_settings.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_012_settings.png",
+  "changed_share": 0.484,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "whats-new-book",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_013_whats-new-book.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_013_whats-new-book.png",
+  "changed_share": 0.0216,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-market",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_014_shop-market.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_014_shop-market.png",
+  "changed_share": 0.3044,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-pets",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_015_shop-pets.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_015_shop-pets.png",
+  "changed_share": 0.3163,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-beach",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_016_shop-beach.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_016_shop-beach.png",
+  "changed_share": 0.2397,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "house-paint",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_017_house-paint.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_017_house-paint.png",
+  "changed_share": 0.2677,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "big-house",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_018_big-house.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_018_big-house.png",
+  "changed_share": 0.2026,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "mailbox-menu",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_019_mailbox-menu.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_019_mailbox-menu.png",
+  "changed_share": 0.1446,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "party-time",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_020_party-time.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_020_party-time.png",
+  "changed_share": 0.0069,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "party-invitation",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_021_party-invitation.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_021_party-invitation.png",
+  "changed_share": 0.0063,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-card",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_022_dance-card.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_022_dance-card.png",
+  "changed_share": 0.007,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-pizza",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_023_tutorial-pizza.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_023_tutorial-pizza.png",
+  "changed_share": 0.0007,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-hair",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_024_tutorial-hair.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_024_tutorial-hair.png",
+  "changed_share": 0.0004,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-photo",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_025_tutorial-photo.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_025_tutorial-photo.png",
+  "changed_share": 0.0006,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-pose-card",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_026_photo-pose-card.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_026_photo-pose-card.png",
+  "changed_share": 0.3954,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-shoot",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_027_photo-shoot.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_027_photo-shoot.png",
+  "changed_share": 0.0588,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-result",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_028_photo-result.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_028_photo-result.png",
+  "changed_share": 0.2834,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-hud",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_029_dance-hud.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_029_dance-hud.png",
+  "changed_share": 0.002,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-square-fountain",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_030_town-square-fountain.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_030_town-square-fountain.png",
+  "changed_share": 0.0214,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-pet-show-stage",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_031_town-pet-show-stage.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_031_town-pet-show-stage.png",
+  "changed_share": 0.0326,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-flower-corner",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_032_town-flower-corner.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_032_town-flower-corner.png",
+  "changed_share": 0.5791,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-duck-pond",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_033_town-duck-pond.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_033_town-duck-pond.png",
+  "changed_share": 0.0166,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-school-front",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_034_town-school-front.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_034_town-school-front.png",
+  "changed_share": 0.0307,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-east-shops",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_035_town-east-shops.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_035_town-east-shops.png",
+  "changed_share": 0.0123,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-treepark-gate",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_036_town-treepark-gate.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_036_town-treepark-gate.png",
+  "changed_share": 0.0023,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-apartments",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_037_town-apartments.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_037_town-apartments.png",
+  "changed_share": 0.0277,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-market",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_038_inside-market.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_038_inside-market.png",
+  "changed_share": 0.0015,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-pets",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_039_inside-pets.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_039_inside-pets.png",
+  "changed_share": 0.0013,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-flowers",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_040_inside-flowers.png",
+  "ref": "stage3-p7/shots/s3_iphone-portrait_dark_iphone-portrait-dark_040_inside-flowers.png",
+  "changed_share": 0.0307,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-messages",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_001_phone-messages.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_001_phone-messages.png",
+  "changed_share": 0.279,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-chat-rosie",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_002_phone-chat-rosie.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_002_phone-chat-rosie.png",
+  "changed_share": 0.2783,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-jobs",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_003_phone-jobs.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_003_phone-jobs.png",
+  "changed_share": 0.2792,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-friends",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_004_phone-friends.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_004_phone-friends.png",
+  "changed_share": 0.281,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-quests",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_005_phone-quests.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_005_phone-quests.png",
+  "changed_share": 0.2951,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-skills",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_006_phone-skills.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_006_phone-skills.png",
+  "changed_share": 0.2821,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-pets",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_007_phone-pets.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_007_phone-pets.png",
+  "changed_share": 0.2828,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-furniture",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_008_phone-furniture.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_008_phone-furniture.png",
+  "changed_share": 0.2806,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-calendar",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_009_phone-calendar.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_009_phone-calendar.png",
+  "changed_share": 0.2837,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "big-map",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_010_big-map.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_010_big-map.png",
+  "changed_share": 0.1695,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "bag",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_011_bag.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_011_bag.png",
+  "changed_share": 0.1762,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "settings",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_012_settings.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_012_settings.png",
+  "changed_share": 0.1723,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "whats-new-book",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_013_whats-new-book.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_013_whats-new-book.png",
+  "changed_share": 0.0365,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-market",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_014_shop-market.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_014_shop-market.png",
+  "changed_share": 0.1747,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-pets",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_015_shop-pets.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_015_shop-pets.png",
+  "changed_share": 0.1894,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-beach",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_016_shop-beach.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_016_shop-beach.png",
+  "changed_share": 0.2699,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "house-paint",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_017_house-paint.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_017_house-paint.png",
+  "changed_share": 0.0783,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "big-house",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_018_big-house.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_018_big-house.png",
+  "changed_share": 0.3201,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "mailbox-menu",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_019_mailbox-menu.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_019_mailbox-menu.png",
+  "changed_share": 0.2218,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "party-time",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_020_party-time.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_020_party-time.png",
+  "changed_share": 0.2101,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "party-invitation",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_021_party-invitation.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_021_party-invitation.png",
+  "changed_share": 0.0412,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-card",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_022_dance-card.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_022_dance-card.png",
+  "changed_share": 0.035,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-pizza",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_023_tutorial-pizza.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_023_tutorial-pizza.png",
+  "changed_share": 0.0042,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-hair",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_024_tutorial-hair.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_024_tutorial-hair.png",
+  "changed_share": 0.0042,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-photo",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_025_tutorial-photo.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_025_tutorial-photo.png",
+  "changed_share": 0.0042,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-pose-card",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_026_photo-pose-card.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_026_photo-pose-card.png",
+  "changed_share": 0.2427,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-shoot",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_027_photo-shoot.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_027_photo-shoot.png",
+  "changed_share": 0.1034,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-result",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_028_photo-result.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_028_photo-result.png",
+  "changed_share": 0.0817,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-hud",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_029_dance-hud.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_029_dance-hud.png",
+  "changed_share": 0.0094,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-square-fountain",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_030_town-square-fountain.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_030_town-square-fountain.png",
+  "changed_share": 0.029,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-pet-show-stage",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_031_town-pet-show-stage.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_031_town-pet-show-stage.png",
+  "changed_share": 0.0256,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-flower-corner",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_032_town-flower-corner.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_032_town-flower-corner.png",
+  "changed_share": 0.0321,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-duck-pond",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_033_town-duck-pond.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_033_town-duck-pond.png",
+  "changed_share": 0.0503,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-school-front",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_034_town-school-front.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_034_town-school-front.png",
+  "changed_share": 0.0286,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-east-shops",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_035_town-east-shops.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_035_town-east-shops.png",
+  "changed_share": 0.0058,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-treepark-gate",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_036_town-treepark-gate.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_036_town-treepark-gate.png",
+  "changed_share": 0.0233,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-apartments",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_037_town-apartments.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_037_town-apartments.png",
+  "changed_share": 0.009,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-market",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_038_inside-market.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_038_inside-market.png",
+  "changed_share": 0.0498,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-pets",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_039_inside-pets.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_039_inside-pets.png",
+  "changed_share": 0.054,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-flowers",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_040_inside-flowers.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_light_iphone-landscape-light_040_inside-flowers.png",
+  "changed_share": 0.0391,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-messages",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_001_phone-messages.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_001_phone-messages.png",
+  "changed_share": 0.2844,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-chat-rosie",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_002_phone-chat-rosie.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_002_phone-chat-rosie.png",
+  "changed_share": 0.2887,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-jobs",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_003_phone-jobs.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_003_phone-jobs.png",
+  "changed_share": 0.2891,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-friends",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_004_phone-friends.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_004_phone-friends.png",
+  "changed_share": 0.2891,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-quests",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_005_phone-quests.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_005_phone-quests.png",
+  "changed_share": 0.3042,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-skills",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_006_phone-skills.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_006_phone-skills.png",
+  "changed_share": 0.2904,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-pets",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_007_phone-pets.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_007_phone-pets.png",
+  "changed_share": 0.2891,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-furniture",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_008_phone-furniture.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_008_phone-furniture.png",
+  "changed_share": 0.2922,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-calendar",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_009_phone-calendar.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_009_phone-calendar.png",
+  "changed_share": 0.2948,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "big-map",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_010_big-map.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_010_big-map.png",
+  "changed_share": 0.1383,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "bag",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_011_bag.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_011_bag.png",
+  "changed_share": 0.1808,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "settings",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_012_settings.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_012_settings.png",
+  "changed_share": 0.2022,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "whats-new-book",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_013_whats-new-book.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_013_whats-new-book.png",
+  "changed_share": 0.0396,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-market",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_014_shop-market.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_014_shop-market.png",
+  "changed_share": 0.1681,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-pets",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_015_shop-pets.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_015_shop-pets.png",
+  "changed_share": 0.197,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-beach",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_016_shop-beach.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_016_shop-beach.png",
+  "changed_share": 0.2909,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "house-paint",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_017_house-paint.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_017_house-paint.png",
+  "changed_share": 0.0701,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "big-house",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_018_big-house.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_018_big-house.png",
+  "changed_share": 0.3717,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "mailbox-menu",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_019_mailbox-menu.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_019_mailbox-menu.png",
+  "changed_share": 0.2152,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "party-time",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_020_party-time.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_020_party-time.png",
+  "changed_share": 0.2016,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "party-invitation",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_021_party-invitation.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_021_party-invitation.png",
+  "changed_share": 0.0408,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-card",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_022_dance-card.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_022_dance-card.png",
+  "changed_share": 0.0387,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-pizza",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_023_tutorial-pizza.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_023_tutorial-pizza.png",
+  "changed_share": 0.0118,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-hair",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_024_tutorial-hair.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_024_tutorial-hair.png",
+  "changed_share": 0.0105,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-photo",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_025_tutorial-photo.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_025_tutorial-photo.png",
+  "changed_share": 0.0116,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-pose-card",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_026_photo-pose-card.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_026_photo-pose-card.png",
+  "changed_share": 0.2399,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-shoot",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_027_photo-shoot.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_027_photo-shoot.png",
+  "changed_share": 0.1145,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-result",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_028_photo-result.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_028_photo-result.png",
+  "changed_share": 0.0904,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-hud",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_029_dance-hud.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_029_dance-hud.png",
+  "changed_share": 0.0094,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-square-fountain",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_030_town-square-fountain.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_030_town-square-fountain.png",
+  "changed_share": 0.025,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-pet-show-stage",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_031_town-pet-show-stage.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_031_town-pet-show-stage.png",
+  "changed_share": 0.0164,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-flower-corner",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_032_town-flower-corner.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_032_town-flower-corner.png",
+  "changed_share": 0.082,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-duck-pond",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_033_town-duck-pond.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_033_town-duck-pond.png",
+  "changed_share": 0.0544,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-school-front",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_034_town-school-front.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_034_town-school-front.png",
+  "changed_share": 0.0431,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-east-shops",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_035_town-east-shops.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_035_town-east-shops.png",
+  "changed_share": 0.0535,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-treepark-gate",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_036_town-treepark-gate.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_036_town-treepark-gate.png",
+  "changed_share": 0.0142,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-apartments",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_037_town-apartments.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_037_town-apartments.png",
+  "changed_share": 0.0863,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-market",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_038_inside-market.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_038_inside-market.png",
+  "changed_share": 0.0441,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-pets",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_039_inside-pets.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_039_inside-pets.png",
+  "changed_share": 0.0407,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-flowers",
+  "prof": "iphone-landscape",
+  "theme": "dark",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_040_inside-flowers.png",
+  "ref": "stage3-p7/shots/s3_iphone-landscape_dark_iphone-landscape-dark_040_inside-flowers.png",
+  "changed_share": 0.0396,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-messages",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_001_phone-messages.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_001_phone-messages.png",
+  "changed_share": 0.3558,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-chat-rosie",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_002_phone-chat-rosie.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_002_phone-chat-rosie.png",
+  "changed_share": 0.3697,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-jobs",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_003_phone-jobs.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_003_phone-jobs.png",
+  "changed_share": 0.371,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-friends",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_004_phone-friends.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_004_phone-friends.png",
+  "changed_share": 0.3697,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-quests",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_005_phone-quests.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_005_phone-quests.png",
+  "changed_share": 0.3733,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-skills",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_006_phone-skills.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_006_phone-skills.png",
+  "changed_share": 0.3673,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-pets",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_007_phone-pets.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_007_phone-pets.png",
+  "changed_share": 0.3674,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-furniture",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_008_phone-furniture.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_008_phone-furniture.png",
+  "changed_share": 0.3667,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-calendar",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_009_phone-calendar.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_009_phone-calendar.png",
+  "changed_share": 0.3654,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "big-map",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_010_big-map.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_010_big-map.png",
+  "changed_share": 0.0958,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "bag",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_011_bag.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_011_bag.png",
+  "changed_share": 0.259,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "settings",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_012_settings.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_012_settings.png",
+  "changed_share": 0.2617,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "whats-new-book",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_013_whats-new-book.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_013_whats-new-book.png",
+  "changed_share": 0.1523,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-market",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_014_shop-market.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_014_shop-market.png",
+  "changed_share": 0.2664,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-pets",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_015_shop-pets.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_015_shop-pets.png",
+  "changed_share": 0.3399,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-beach",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_016_shop-beach.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_016_shop-beach.png",
+  "changed_share": 0.3957,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "house-paint",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_017_house-paint.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_017_house-paint.png",
+  "changed_share": 0.0312,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "big-house",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_018_big-house.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_018_big-house.png",
+  "changed_share": 0.1003,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "mailbox-menu",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_019_mailbox-menu.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_019_mailbox-menu.png",
+  "changed_share": 0.0653,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "party-time",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_020_party-time.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_020_party-time.png",
+  "changed_share": 0.0185,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "party-invitation",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_021_party-invitation.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_021_party-invitation.png",
+  "changed_share": 0.018,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-card",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_022_dance-card.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_022_dance-card.png",
+  "changed_share": 0.0194,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-pizza",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_023_tutorial-pizza.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_023_tutorial-pizza.png",
+  "changed_share": 0.0037,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-hair",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_024_tutorial-hair.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_024_tutorial-hair.png",
+  "changed_share": 0.0038,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-photo",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_025_tutorial-photo.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_025_tutorial-photo.png",
+  "changed_share": 0.0014,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-pose-card",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_026_photo-pose-card.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_026_photo-pose-card.png",
+  "changed_share": 0.3664,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-shoot",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_027_photo-shoot.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_027_photo-shoot.png",
+  "changed_share": 0.0404,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-result",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_028_photo-result.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_028_photo-result.png",
+  "changed_share": 0.1728,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-hud",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_029_dance-hud.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_029_dance-hud.png",
+  "changed_share": 0.0001,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-square-fountain",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_030_town-square-fountain.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_030_town-square-fountain.png",
+  "changed_share": 0.0267,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-pet-show-stage",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_031_town-pet-show-stage.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_031_town-pet-show-stage.png",
+  "changed_share": 0.0246,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-flower-corner",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_032_town-flower-corner.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_032_town-flower-corner.png",
+  "changed_share": 0.0226,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-duck-pond",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_033_town-duck-pond.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_033_town-duck-pond.png",
+  "changed_share": 0.0723,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-school-front",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_034_town-school-front.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_034_town-school-front.png",
+  "changed_share": 0.0169,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-east-shops",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_035_town-east-shops.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_035_town-east-shops.png",
+  "changed_share": 0.0637,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-treepark-gate",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_036_town-treepark-gate.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_036_town-treepark-gate.png",
+  "changed_share": 0.0146,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-apartments",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_037_town-apartments.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_037_town-apartments.png",
+  "changed_share": 0.0864,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-market",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_038_inside-market.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_038_inside-market.png",
+  "changed_share": 0.0238,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-pets",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_039_inside-pets.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_039_inside-pets.png",
+  "changed_share": 0.0109,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-flowers",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3_pc-1366_light_pc-1366-light_040_inside-flowers.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_light_pc-1366-light_040_inside-flowers.png",
+  "changed_share": 0.0615,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-messages",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_001_phone-messages.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_001_phone-messages.png",
+  "changed_share": 0.3557,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-chat-rosie",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_002_phone-chat-rosie.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_002_phone-chat-rosie.png",
+  "changed_share": 0.3521,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-jobs",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_003_phone-jobs.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_003_phone-jobs.png",
+  "changed_share": 0.3512,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-friends",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_004_phone-friends.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_004_phone-friends.png",
+  "changed_share": 0.3497,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-quests",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_005_phone-quests.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_005_phone-quests.png",
+  "changed_share": 0.3584,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-skills",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_006_phone-skills.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_006_phone-skills.png",
+  "changed_share": 0.3505,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-pets",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_007_phone-pets.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_007_phone-pets.png",
+  "changed_share": 0.3532,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-furniture",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_008_phone-furniture.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_008_phone-furniture.png",
+  "changed_share": 0.3516,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "phone-calendar",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_009_phone-calendar.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_009_phone-calendar.png",
+  "changed_share": 0.3486,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "big-map",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_010_big-map.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_010_big-map.png",
+  "changed_share": 0.0761,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "bag",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_011_bag.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_011_bag.png",
+  "changed_share": 0.2435,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "settings",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_012_settings.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_012_settings.png",
+  "changed_share": 0.2499,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "whats-new-book",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_013_whats-new-book.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_013_whats-new-book.png",
+  "changed_share": 0.1363,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-market",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_014_shop-market.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_014_shop-market.png",
+  "changed_share": 0.245,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-pets",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_015_shop-pets.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_015_shop-pets.png",
+  "changed_share": 0.2512,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "shop-beach",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_016_shop-beach.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_016_shop-beach.png",
+  "changed_share": 0.384,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "house-paint",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_017_house-paint.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_017_house-paint.png",
+  "changed_share": 0.0488,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "big-house",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_018_big-house.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_018_big-house.png",
+  "changed_share": 0.1393,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "mailbox-menu",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_019_mailbox-menu.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_019_mailbox-menu.png",
+  "changed_share": 0.088,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "party-time",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_020_party-time.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_020_party-time.png",
+  "changed_share": 0.0509,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "party-invitation",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_021_party-invitation.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_021_party-invitation.png",
+  "changed_share": 0.0512,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-card",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_022_dance-card.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_022_dance-card.png",
+  "changed_share": 0.0507,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-pizza",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_023_tutorial-pizza.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_023_tutorial-pizza.png",
+  "changed_share": 0.0033,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-hair",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_024_tutorial-hair.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_024_tutorial-hair.png",
+  "changed_share": 0.0037,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "tutorial-photo",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_025_tutorial-photo.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_025_tutorial-photo.png",
+  "changed_share": 0.0035,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-pose-card",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_026_photo-pose-card.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_026_photo-pose-card.png",
+  "changed_share": 0.3634,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-shoot",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_027_photo-shoot.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_027_photo-shoot.png",
+  "changed_share": 0.0278,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "photo-result",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_028_photo-result.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_028_photo-result.png",
+  "changed_share": 0.1925,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-hud",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_029_dance-hud.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_029_dance-hud.png",
+  "changed_share": 0.0007,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-square-fountain",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_030_town-square-fountain.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_030_town-square-fountain.png",
+  "changed_share": 0.0152,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-pet-show-stage",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_031_town-pet-show-stage.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_031_town-pet-show-stage.png",
+  "changed_share": 0.0189,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-flower-corner",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_032_town-flower-corner.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_032_town-flower-corner.png",
+  "changed_share": 0.0617,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-duck-pond",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_033_town-duck-pond.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_033_town-duck-pond.png",
+  "changed_share": 0.0522,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-school-front",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_034_town-school-front.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_034_town-school-front.png",
+  "changed_share": 0.0153,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-east-shops",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_035_town-east-shops.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_035_town-east-shops.png",
+  "changed_share": 0.0932,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-treepark-gate",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_036_town-treepark-gate.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_036_town-treepark-gate.png",
+  "changed_share": 0.0303,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "town-apartments",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_037_town-apartments.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_037_town-apartments.png",
+  "changed_share": 0.0199,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-market",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_038_inside-market.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_038_inside-market.png",
+  "changed_share": 0.0736,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-pets",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_039_inside-pets.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_039_inside-pets.png",
+  "changed_share": 0.0003,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "inside-flowers",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "s3_pc-1366_dark_pc-1366-dark_040_inside-flowers.png",
+  "ref": "stage3-p7/shots/s3_pc-1366_dark_pc-1366-dark_040_inside-flowers.png",
+  "changed_share": 0.0281,
+  "verdict": "CHANGED"
+ }
+]
