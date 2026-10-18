@@ -621,7 +621,10 @@ function flat(g,w,d,c,x,y,z,o={}){const m=new THREE.Mesh(new THREE.PlaneGeometry
 function disc(g,r,c,x,y,z,o={}){const m=new THREE.Mesh(new THREE.CircleGeometry(r,o.seg||28),o.mat||mat(c));m.rotation.x=-Math.PI/2;m.position.set(x,y,z);g.add(m);return m;}
 function prismGeo(len,base,height,t=0){const s=new THREE.Shape(),b=base/2+t*1.8;s.moveTo(-b,-t);s.lineTo(b,-t);s.lineTo(0,height+t*1.8);s.closePath();const g=new THREE.ExtrudeGeometry(s,{depth:len+2*t,bevelEnabled:false});g.rotateY(Math.PI/2);g.translate(-(len/2+t),0,0);return g;}
 function starGeo(r,t,d){const s=new THREE.Shape();for(let i=0;i<10;i++){const a=Math.PI/2+i*Math.PI/5,q=(i%2?r*.45:r)+t,x=Math.cos(a)*q,y=Math.sin(a)*q;if(i)s.lineTo(x,y);else s.moveTo(x,y);}s.closePath();const g=new THREE.ExtrudeGeometry(s,{depth:d+2*t,bevelEnabled:false});g.translate(0,0,-(d/2+t));return g;}
-function starOn(g,x,y,z,r,c){for(const ry of[0,Math.PI/2]){const m=new THREE.Mesh(starGeo(r,0,r*.22),mat(c||'#ffd45c'));m.position.set(x,y,z);m.rotation.y=ry;g.add(m);hull(g,starGeo(r,r*.1,r*.22),m,{});}}   /* ⭐ two crossed flat stars: a star from every side (run 4, stage 3) */
+/* the holiday tree's outline: its three cones' radius at a height (the furniture's own size; the town's big tree is it scaled up) */
+function xmasProf(y){let r=0;for(const [cy,cr,ch] of [[.25,.5,.7],[.65,.4,.6],[1.0,.28,.5]])if(y>=cy&&y<=cy+ch)r=Math.max(r,cr*(1-(y-cy)/ch));return r;}
+const STARM=new THREE.MeshBasicMaterial({color:'#ffd45c',fog:false});   /* ⭐ a star shines by itself (run 4, stage 3: the tree's star was dark at night) */
+function starOn(g,x,y,z,r,c){for(const ry of[0,Math.PI/2]){const m=new THREE.Mesh(starGeo(r,0,r*.22),c?mat(c):STARM);m.position.set(x,y,z);m.rotation.y=ry;g.add(m);hull(g,starGeo(r,r*.1,r*.22),m,{});}}   /* ⭐ two crossed flat stars: a star from every side (run 4, stage 3) */
 function prism(g,len,base,height,c,x,y,z,o={}){const m=place(g,new THREE.Mesh(prismGeo(len,base,height),o.mat||mat(c)),o,x,y,z);if(o.ol!==false)hull(g,prismGeo(len,base,height,o.ol||OT),m,o);return m;}
 
 /* ---- merge all static meshes of a group into one mesh per material (few draw calls on iPad) ---- */
@@ -1324,7 +1327,7 @@ const FURN={
   discofloor:{n:'Disco floor',i:'🪩',p:350,w:2.4,d:2.4,r4:1,flat:1,b(g){const C=['#ff4d8d','#7cc8ff','#ffd45c','#5fd4b0','#b79cff','#ff8a6b'],M=C.map(c=>toon({color:c,emissive:new THREE.Color(c),emissiveIntensity:.3}));for(let i=0;i<6;i++)for(let j=0;j<6;j++){const m=box(g,.38,.03,.38,null,-1.0+i*.4,0,-1.0+j*.4,{mat:M[(i+j)%6],ol:false});m.userData.tile=(i+j)%6;}box(g,2.4,.02,2.4,'#2e2347',0,0,0,{ol:.015});}},
   discoball:{n:'Disco ball',i:'🪩',p:300,w:.9,d:.5,r4:1,use:'lamp',b(g){cyl(g,.2,.24,.05,'#2e2347',0,0,0,{seg:14});cyl(g,.025,.025,2.65,'#c8c8d8',0,.05,0,{seg:8,ol:.01});box(g,.56,.03,.03,'#c8c8d8',.27,2.68,0,{ol:false});cyl(g,.01,.01,.17,'#c8c8d8',.54,2.51,0,{seg:4,ol:false});
     const M=toon({map:discoTex(),emissive:new THREE.Color('#b9c6ff'),emissiveIntensity:.25});const b=sph(g,.36,null,.54,2.15,0,{mat:M,ws:18,hs:14,ol:.014});b.userData.shade=1;b.userData.ball=1;for(let i=0;i<14;i++){const a=i*2.4,y=2.15+Math.sin(i*1.7)*.22,r=Math.sqrt(Math.max(0,.1225-(y-2.15)*(y-2.15)));sph(g,.04,['#ff4d8d','#7cc8ff','#ffd45c','#5fd4b0'][i%4],.54+Math.cos(a)*r,y,Math.sin(a)*r,{ws:5,hs:4,ol:false});}   /* (run 4, stage 3: bigger and higher, above the dancers' heads) */}},
-  xmastree:{n:'Holiday tree',i:'🎄',p:300,w:1.0,d:1.0,b(g){cyl(g,.06,.06,.3,'#8c6137',0,0,0,{seg:6});for(const [y,r,h] of [[.25,.5,.7],[.65,.4,.6],[1.0,.28,.5]])cone(g,r,h,'#4fae64',0,y,0,{seg:10});starOn(g,0,1.6,0,.12);for(let i=0;i<10;i++){const a=i*2.4,y=.35+i*.1,r=.42-i*.03;sph(g,.045,['#ff6b6b','#ffd45c','#7cc8ff','#ff9ec4'][i%4],Math.cos(a)*r,y,Math.sin(a)*r,{ws:6,hs:5,ol:false});}}},
+  xmastree:{n:'Holiday tree',i:'🎄',p:300,w:1.0,d:1.0,b(g){cyl(g,.06,.06,.3,'#8c6137',0,0,0,{seg:6});for(const [y,r,h] of [[.25,.5,.7],[.65,.4,.6],[1.0,.28,.5]])cone(g,r,h,'#4fae64',0,y,0,{seg:10});starOn(g,0,1.6,0,.12);for(let i=0;i<10;i++){const a=i*2.4,y=.35+i*.1,r=xmasProf(y)+.035;sph(g,.045,['#ff6b6b','#ffd45c','#7cc8ff','#ff9ec4'][i%4],Math.cos(a)*r,y,Math.sin(a)*r,{ws:6,hs:5,ol:false});}}},
   beanbag:{n:'Beanbag',i:'💺',p:100,w:.9,d:.9,cols:['#ff9ec4','#b79cff','#7cc8ff','#ffd45c','#5fd4b0'],use:'sit',b(g,c){sph(g,.45,c,0,.25,0,{s:[1,.6,1],ws:14,hs:10});sph(g,.3,c,0,.42,-.18,{s:[1.2,.8,.7],ws:12,hs:8});}},
   bunkbed:{n:'Bunk bed',i:'🛏️',p:450,w:1.2,d:2.1,cols:['#ff9ec4','#8fd3ff','#b79cff','#7fdcb5'],use:'sleep',b(g,c){for(const [x,z] of [[-.55,-1],[.55,-1],[-.55,1],[.55,1]])box(g,.08,1.8,.08,'#c98f5e',x,0,z,{ol:.012});for(const y of[.25,1.15]){box(g,1.1,.12,2.0,'#c98f5e',0,y,0);box(g,1.0,.15,1.9,'#ffffff',0,y+.12,0,{ol:.01});box(g,1.02,.08,1.3,c,0,y+.27,.3,{ol:.01});box(g,.5,.1,.3,'#ffffff',0,y+.27,-.75,{ol:.01});}for(let i=0;i<4;i++)box(g,.3,.04,.04,'#c98f5e',.42,.45+i*.25,1.05,{ol:false});}},
   bonsai:{n:'Bonsai tree',i:'🌳',p:90,w:.6,d:.6,b(g){box(g,.45,.15,.35,'#7cc8ff',0,0,0);cyl(g,.04,.06,.35,'#8c6137',0,.15,0,{rz:.3,seg:6});sph(g,.18,'#4fae64',.1,.5,0,{s:[1.3,.6,1],ws:10,hs:6});sph(g,.12,'#5fbf74',-.1,.42,.05,{s:[1.2,.6,1],ws:8,hs:6});}},
@@ -8420,7 +8423,7 @@ function santaBuild(L,G,XT){const p=makePerson({skin:'#ffe0c2',hair:'#ffffff',st
 function santaCoins(d){return Math.round(10+(d.getDate()-1)*290/30);}
 function santaTalk(){const d=realDate(),key=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();SFX.talk();
   if(S.santa===key){toast('🎅 “Ho ho ho! You had your coins today. Come back tomorrow for a few more!”',3.6);return;}
-  const n=santaCoins(d);S.santa=key;S.coins+=n;SFX.coin();SFX.yay();floatText('🪙 +'+n,P.x-Math.sin(P.yaw)*1.4,1.8,P.z-Math.cos(P.yaw)*1.4,{h:.6});
+  const n=santaCoins(d);S.santa=key;S.coins+=n;SFX.coin();SFX.yay();popText('+'+n+' 🪙','coin');
   toast('🎅 “Ho ho ho! Merry Christmas! Here are '+n+' coins for you 🪙 Come again tomorrow!”',4);qEvent('santa');change();}
 /* 💗 February: a heart fountain at the holiday spot, hearts on sticks, pink petals drifting over the corner */
 function valentineBuild(L,G,st,glows){const [x,z]=HOL_SPOT,PK='#ff9ec4',RD='#ff4d8d';
@@ -8456,12 +8459,12 @@ function eggHuntBuild(L,G){const list=eggSpots(eggYear());HOL.eggs=list.map(([i,
   for(const e of HOL.eggs)inter(L,{x:e.x,z:e.z,r:1.6,icon:'🥚',label:()=>'Pick up the egg ('+eggState().f.length+'/25)',when:()=>!eggFound(e.i),act:()=>eggGet(e.i),hol:1});
   eggsRebuild();
   const m=makePet('bunny','#ffffff'),b=m.root;b.scale.setScalar(2.1);const bx=-16.6,bz=-12.7;   /* (a step aside from the blossom tree: its crown sat on the bunny's head like a hat; run 4, stage 3) */b.position.set(bx,supportAt(bx,bz),bz);b.rotation.y=.3;G.add(b);HOL.bunny=b;HOL.bunnyXZ=[L.ox+bx,L.oz+bz];holPiece('easter bunny',bx,bz,b.position.y);HOL.n++;
-  const bw=new THREE.Group();bw.position.set(0,.5,.12);bw.rotation.set(0,0,-.2);m.head.add(bw);bowShape(bw,.7,'#ffd45c',{ol:.006});
+  const bw=new THREE.Group();bw.position.set(0,.31,.1);bw.rotation.set(0,0,-.2);m.head.add(bw);bowShape(bw,.7,'#ffd45c',{ol:.006});
   inter(L,{x:bx,z:bz,r:2.3,icon:'🐰',label:'Talk to the Easter Bunny',act:bunnyTalk,obj:b,hol:1});}
 function eggsRebuild(){const G=HOL.g;if(!G||!HOL.eggs)return;if(HOL.eggG){G.remove(HOL.eggG);HOL.eggG.traverse(o=>{if(o.geometry)o.geometry.dispose();});}
   const g=new THREE.Group();HOL.eggG=g;G.add(g);const PC=['#ffb3c7','#bfe6ff','#fff1b8','#c9f2e3','#e6dbff','#ffd9b8'];let n=0;
   for(const e of HOL.eggs){if(eggFound(e.i))continue;const y=supportAt(e.x,e.z),c=PC[e.i%6];n++;
-    for(let k=0;k<6;k++){const a=k/6*TAU;cone(g,.1,.18,'#6fcf7a',e.x+Math.cos(a)*.24,y,e.z+Math.sin(a)*.24,{seg:5,ol:false});}   /* the nest */
+    for(let k=0;k<8;k++){const a=k/8*TAU;sph(g,.1,k%2?'#e2c27a':'#cfa95e',e.x+Math.cos(a)*.23,y+.05,e.z+Math.sin(a)*.23,{s:[1.35,.55,1],ry:-a,ws:6,hs:4,ol:false});}   /* the nest: straw tufts in a ring (run 4, stage 3: green cones read as spikes) */
     sph(g,.27,c,e.x,y+.33,e.z,{s:[1,1.3,1],ws:10,hs:8,ol:.014});cyl(g,.28,.28,.08,'#ffc93c',e.x,y+.3,e.z,{seg:14,ol:false});cyl(g,.21,.21,.07,'#ffc93c',e.x,y+.54,e.z,{seg:12,ol:false});}   /* (run 4, stage 3: the white shine ball bulged out of the egg) */   /* 🥚 bigger, golden-banded and nested, so a hunt egg never looks like a decoration (run 4, stage 3) */
   bake(g,true);HOL.eggN=n;}
 function eggGet(i){const st=eggState();if(st.f.indexOf(i)>=0)return;st.f.push(i);SFX.pop();SFX.coin();const e=HOL.eggs&&HOL.eggs.find(q=>q.i===i);if(e)floatText('🥚 '+st.f.length+'/25',e.x,1.2,e.z,{h:.6});
@@ -8496,12 +8499,12 @@ function fwBuild(){if(FW.m)return;const B=6,N=90,P2=new Float32Array(B*N*3),Dd=n
   const m=new THREE.ShaderMaterial({uniforms:{tm:{value:0},c:{value:FW.c},t0:{value:FW.t0},pr:{value:Math.min(2,window.devicePixelRatio||1)}},
     vertexShader:`uniform float tm,pr;uniform vec3 c[6];uniform float t0[6];attribute vec3 dir,col;attribute float bi;varying vec3 vc;varying float va;
       void main(){int b=int(bi+.5);float age=(tm-t0[b])/2.0;vc=col;if(age<0.0||age>1.0){gl_Position=vec4(2.0,2.0,2.0,1.0);gl_PointSize=0.0;va=0.0;return;}
-      vec3 p=c[b]+dir*age*(1.0-.35*age);p.y-=4.0*age*age;va=1.0-age*age;vec4 mv=modelViewMatrix*vec4(p,1.0);gl_PointSize=clamp(260.0/max(1.0,-mv.z),2.0,7.0)*pr*(1.0-.5*age);gl_Position=projectionMatrix*mv;}`,
+      vec3 p=c[b]+dir*age*(1.0-.35*age);p.y-=4.0*age*age;va=1.0-age*age;vec4 mv=modelViewMatrix*vec4(p,1.0);gl_PointSize=clamp(360.0/max(1.0,-mv.z),2.5,9.0)*pr*(1.0-.5*age);gl_Position=projectionMatrix*mv;}`,
     fragmentShader:`varying vec3 vc;varying float va;void main(){vec2 q=gl_PointCoord-.5;float d=dot(q,q);if(d>.25)discard;gl_FragColor=vec4(vc+.35*(1.0-d*4.0),va*.95);}`,
     transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false});
   const pts=new THREE.Points(g,m);pts.frustumCulled=false;pts.visible=false;scene.add(pts);FW.m=pts;}
 function fwTick(dt){const on=FW.want&&!!CUR&&CUR.type!=='in';if(!on){if(FW.m)FW.m.visible=false;return;}fwBuild();FW.m.visible=true;FW.t+=dt;FW.m.material.uniforms.tm.value=FW.t;
-  if(FW.t>=FW.next){FW.k=(FW.k+1)%6;const a=rand(0,TAU),d=rand(40,70);FW.c.set([P.x+Math.cos(a)*d,rand(26,40),P.z+Math.sin(a)*d],FW.k*3);FW.t0[FW.k]=FW.t;FW.next=FW.t+rand(1.4,2.6);FW.n++;
+  if(FW.t>=FW.next){FW.k=(FW.k+1)%6;const a=Math.atan2(-Math.cos(P.yaw),-Math.sin(P.yaw))+rand(-1.05,1.05),d=rand(34,58);FW.c.set([P.x+Math.cos(a)*d,rand(24,36),P.z+Math.sin(a)*d],FW.k*3);FW.t0[FW.k]=FW.t;FW.next=FW.t+rand(.8,1.5);   /* (run 4, stage 3: where you look and more often: most bursts went off behind you) */FW.n++;
     if(cool('fw',.9))tone(rand(70,110),.18,'sine',.035);}}
 const CONF={m:null,op:0};
 function confBuild(){if(CONF.m)return;const n=560,H=14,W=24,pos=new Float32Array(n*3),spd=new Float32Array(n),ph=new Float32Array(n),col=new Float32Array(n*3),r=seeded(77),cols=[[1,.42,.42],[1,.83,.36],[.49,.78,1],[.37,.83,.69],[.72,.61,1],[1,.62,.77]];
@@ -8588,7 +8591,7 @@ function holBuild(h){const L=LOC.city,G=new THREE.Group(),st=new THREE.Group();G
     const egg=(x,z,i)=>{const c=PC[i%6],e=new THREE.Group();e.position.set(x,supportAt(x,z),z);e.rotation.y=r()*TAU;st.add(e);holPiece('egg',x,z,e.position.y-.009);sph(e,.13,c,0,.16,0,{s:[1,1.3,1],ws:9,hs:7,ol:.012});cyl(e,.135,.135,.05,PC[(i+2)%6],0,.14,0,{seg:12,ol:false});for(let k=0;k<4;k++){const a=k/4*TAU;sph(e,.025,PC[(i+4)%6],Math.cos(a)*.125,.23,Math.sin(a)*.125,{ws:5,hs:4,ol:false});}HOL.n++;};
     let i=0;for(const [x,z] of [[-35,14],[-33,17.5],[-30.5,11.5],[-13,16.5],[-11,19],[-12.5,29.5],[-10.5,31],[-15,33],[-34,34],[-32,31.5],[-36,27.5],[-19,36.5],[-24,13],[-18,13.5],[-25.5,34],[-28,36.5]])egg(x,z,i++);
     for(const [x,z] of [[-21,-11],[-13,-11],[-15.5,-19],[-20.5,-21.5],[-12,-21],[-22,-15.5],[-18.3,-13.3]])egg(x,z,i++);   /* 🌸 the Flower Corner garden */
-    for(const [x,z,ry,c] of [[-26.5,11.8,.6,'#ffffff'],[-17.2,12.2,-.5,'#ffc9dc'],[-33.3,30.8,2.2,'#f8f5f0']]){const m=makePet('bunny',c),b=m.root;b.scale.setScalar(1.7);b.position.set(x,supportAt(x,z),z);b.rotation.y=ry;st.add(b);holPiece('bunny',x,z,b.position.y);const bw=new THREE.Group();bw.position.set(0,.5,.12);bw.rotation.set(0,0,-.2);m.head.add(bw);bowShape(bw,.6,PC[(i++)%6],{ol:.006});HOL.n++;}
+    for(const [x,z,ry,c] of [[-26.5,11.8,.6,'#ffffff'],[-17.2,12.2,-.5,'#ffc9dc'],[-33.3,30.8,2.2,'#f8f5f0']]){const m=makePet('bunny',c),b=m.root;b.scale.setScalar(1.7);b.position.set(x,supportAt(x,z),z);b.rotation.y=ry;st.add(b);holPiece('bunny',x,z,b.position.y);const bw=new THREE.Group();bw.position.set(0,.31,.1);bw.rotation.set(0,0,-.2);m.head.add(bw);bowShape(bw,.6,PC[(i++)%6],{ol:.006});HOL.n++;}
     garland(st,-38.0,1.9,8.3,-24.2,8.3,PC);garland(st,-19.8,1.9,8.3,-8.3,8.3,PC);garland(st,-84.6,3.7,-4.45,-84.6,4.45,PC);HOL.n+=3;
     eggHuntBuild(L,G);}   /* 🥚 run 4, job 11: the Easter Bunny and the 25 hunt eggs */
   bake(st,true,64);if(glows.length)G.add(glowMesh(glowGeo(glows)));}   /* (64 m chunks: fewer pieces with Halloween on, within the agreed town limit) */
