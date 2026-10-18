@@ -476,7 +476,7 @@ body.shoot #moveBtns,body.shoot #tasks,body.shoot #pad,body.shoot #job,body.shoo
     <div id="stats">
       <div class="chip" title="Coins"><span class="e">🪙</span><b id="coins">0</b></div>
       <div class="chip" title="Tummy"><span class="e">🍎</span><span class="bar"><i id="food"></i></span></div>
-      <div class="chip" title="Time"><span class="e" id="sunIc">☀️</span><b id="clock">8:00</b><span class="day" id="dayN">Mon</span></div>
+      <div class="chip" title="Time"><span class="e" id="sunIc">☀️</span><b id="clock">08:00</b><span class="day" id="dayN">Mon</span></div>
     </div>
     <div id="tasks" hidden></div>
     <div id="nav" hidden><span id="navArrow">⬆️</span><b id="navTxt"></b><button class="btn x" id="navX" aria-label="Stop showing the way">✕</button></div>
@@ -857,7 +857,7 @@ function notePlace(){const n=$('note');if(n.hidden)return;n.style.left='';n.styl
 addEventListener('resize',()=>setTimeout(()=>{toastFit();notePlace();try{cardMore();}catch(e){}},80));
 /* 🧹 glitch fixes, pass 1 (screens): the styles of the fixes below (the page's first 498 lines stay as they are) */
 {const st=document.createElement('style');st.textContent='.pop{white-space:normal;width:max-content;max-width:92vw;text-align:center;line-height:1.1;font-size:clamp(26px,min(10vw,11vh),60px)}.pop.slam{font-size:clamp(34px,min(14vw,15vh),80px)}'
-  +'#moreHint{position:absolute;z-index:3;width:46px;height:46px;border-radius:50%;background:var(--paper);border:3px solid var(--line);box-shadow:0 3px 0 var(--soft);font-size:21px;line-height:40px;text-align:center;pointer-events:none;animation:moreBob .9s ease-in-out infinite alternate}@keyframes moreBob{to{transform:translateY(-6px)}}'
+  +'#moreBand{position:absolute;z-index:2;height:58px;background:linear-gradient(to bottom,rgba(255,250,253,0),var(--paper) 70%);pointer-events:none}#moreBand[hidden]{display:none}#moreHint{position:absolute;z-index:3;width:46px;height:46px;border-radius:50%;background:var(--paper);border:3px solid var(--line);box-shadow:0 3px 0 var(--soft);font-size:21px;line-height:40px;text-align:center;pointer-events:none;animation:moreBob .9s ease-in-out infinite alternate}@keyframes moreBob{to{transform:translateY(-6px)}}'
   +'.crsave.more::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:30px;background:linear-gradient(to bottom,transparent,var(--paper));pointer-events:none}.crsave.more::after{content:"⬇️";position:absolute;right:14px;bottom:calc(100% + 4px);width:34px;height:34px;border-radius:50%;background:var(--paper);border:3px solid var(--line);font-size:15px;line-height:28px;text-align:center;pointer-events:none;animation:moreBob .9s ease-in-out infinite alternate}'
   +'.psj div{color:#3d2c5e;font-size:15px;line-height:1.2}.psrow.me,.psrow.cur{color:#3d2c5e}.ph-row .hearts .off{color:#3d2c5e}'
   +'#knockCard{width:min(400px,92vw)}body:has(#note:not([hidden])) #knockCard{top:calc(env(safe-area-inset-top,0px) + 240px)}body:has(#note:not([hidden])) .pop{top:48%}   /* while a message card is up at the top, the knock card and the coin pop keep under it (run 4, stage 3) */#knockCard .kc-b{flex-wrap:wrap}#knockCard .kc-b .btn{white-space:nowrap}'
@@ -1727,6 +1727,10 @@ function colC(L,x,z,r){L.cols.push({cx:L.ox+x,cz:L.oz+z,cr:r});}
 function inter(L,o){o.x+=L.ox;o.z+=L.oz;L.inter.push(o);return o;}
 /* the big lake: solid water, except the wooden pier (a list of walkable strips) */
 const LAKEW=[];
+/* 🦆 a duck's face and feathers: a wide flat orange bill, round dark eyes with a shine, wings a shade darker and a little upturned tail; one piece per duck (run 4, stage 3: from the path the ducks read as faceless blobs and the white one as a snowman) */
+function duckDress(d,c){const w=c==='#f7f2ec'?'#e3d9cb':'#f2c94c';sph(d,.055,'#ff9a3c',0,.315,.275,{s:[1.25,.42,1.55],ws:10,hs:6,ol:.012});
+  for(const s of[-1,1]){sph(d,.026,INK,s*.058,.358,.245,{ws:8,hs:6,ol:false});sph(d,.009,'#ffffff',s*.06,.368,.266,{ws:6,hs:4,ol:false});sph(d,.12,w,s*.135,.17,-.03,{s:[.42,.62,1.15],ws:10,hs:6,ol:.012});}
+  cone(d,.07,.13,c,0,.2,-.25,{rx:-Math.PI/2+.65,center:true,seg:6,ol:.012});bake(d,false);}
 function duckEyes(d){for(const s of[-1,1]){box(d,.03,.04,.012,INK,s*.062,.35,.255,{ry:s*.35,ol:false});box(d,.012,.014,.006,'#ffffff',s*.062+.006,.362,.262,{ry:s*.35,ol:false});}}
 function lakeOut(x,z,r,c){const dx=x-c.cx,dz=z-c.cz,m=r+c.cr;if(Math.abs(dx)>m||Math.abs(dz)>m)return null;const d=Math.hypot(dx,dz);if(d>=m)return null;
   let best=null,bc=1e9;
@@ -2146,7 +2150,7 @@ function buildCity(){
    bench(st,59.8,64.6,Math.PI*.75);colC(L,59.8,64.6,.7);inter(L,{x:61.4,z:61.4,r:2.4,icon:'🦆',label:'Feed the ducks',act:()=>feedDucks(1)});
    {const [x,z]=at(6.1,0);inter(L,{x,z,r:1.7,icon:'🦆',label:'Feed the ducks',act:()=>feedDucks(1)});}
    for(let k=0;k<3;k++){const d=new THREE.Group();L.dyn.add(d);const c=k===1?'#f7f2ec':'#ffe27a';sph(d,.17,c,0,.15,0,{s:[1,.75,1.35],ws:12,hs:8,ol:.02});sph(d,.1,c,0,.33,.17,{ws:10,hs:8,ol:.02});
-     cone(d,.045,.11,'#ff9a3c',0,.31,.3,{rx:Math.PI/2,center:true,seg:6,ol:.012});duckEyes(d);L.ducks.push({g:d,a:k*2.1,r:2.5+k*1.6,sp:.18+k*.05,cx:lx,cz:lz});}}
+     duckDress(d,c);L.ducks.push({g:d,a:k*2.1,r:2.5+k*1.6,sp:.18+k*.05,cx:lx,cz:lz});}}
   // things to do in the new districts
   inter(L,{x:-25,z:-58.2,r:2.2,icon:'🏫',label:'Go into Cozy Town School',act:()=>{qEvent('school');enter('school');}});
   for(const h of HOUSES){const a=h.ry;
@@ -2167,7 +2171,7 @@ function buildCity(){
     for(const [dx,dz] of [[-.8,.3],[.4,.9],[.7,-.6]]){disc(st,.26,'#5fbf74',px+dx,.045,pz+dz,{seg:12});sph(st,.06,'#ff9ec4',px+dx+.05,.08,pz+dz,{ws:8,hs:6,ol:.01});}}
   colC(L,px,pz,2.2);L.pondC=L.cols[L.cols.length-1];inter(L,{x:33.9,z:-38.3,r:2.3,icon:'🦆',label:'Feed the ducks',act:()=>feedDucks(0)});bench(st,32.6,-36.4,Math.PI/2+.4);colC(L,32.6,-36.4,.7);
   for(let k=0;k<2;k++){const d=new THREE.Group();L.dyn.add(d);sph(d,.17,k?'#f7f2ec':'#ffe27a',0,.15,0,{s:[1,.75,1.35],ws:12,hs:8,ol:.02});sph(d,.1,k?'#f7f2ec':'#ffe27a',0,.33,.17,{ws:10,hs:8,ol:.02});
-    cone(d,.045,.11,'#ff9a3c',0,.31,.3,{rx:Math.PI/2,center:true,seg:6,ol:.012});duckEyes(d);L.ducks.push({g:d,a:k*Math.PI,r:.9+k*.35,sp:.32+k*.1});}
+    duckDress(d,k?'#f7f2ec':'#ffe27a');L.ducks.push({g:d,a:k*Math.PI,r:.9+k*.35,sp:.32+k*.1});}
   /* 🏖️ the gate to the beach, at the east end of the big road (just to look at now: the 🚌 Beach Bus takes you there) */
   {const GX=79.4;for(const s of[-1,1]){box(st,.3,3.9,.3,'#ffffff',GX,0,s*3.3,{ol:.03});sph(st,.28,'#ffd45c',GX,4.15,s*3.3,{ws:10,hs:8});colC(L,GX,s*3.3,.25);}
    box(st,.24,.95,7.0,'#2b8fc4',GX,3.0,0,{ol:.03});flat(st,4,7.2,'#f6dfa9',81.6,.045,0);flat(st,14,4.6,'#f6dfa9',90.6,.045,0);
@@ -3999,7 +4003,7 @@ class Friend{
         else if(this.loc===CUR.id&&Math.hypot(P.x-this.x,P.z-this.z)<.95){this.moving=false;}
         else{const s=Math.min(d,(this.mode==='going'?1.6:1.35)*dt);this.x+=dx/d*s;this.z+=dz/d*s;this.face=Math.atan2(dx,dz);this.moving=true;}}
     }
-    this.g.visible=this.loc===CUR.id&&Math.hypot(this.x-camera.position.x,this.z-camera.position.z)<48&&!((PHO.on||DANCE.on||DANCE.res)&&this.mode==='follow');   /* (a following friend waits out of a photo shoot and a dance-off, run 4 stage 3) */this.g.position.set(this.x,hopY(this,dt)+brAt(this.loc,this.x,this.z),this.z);this.g.rotation.y=angLerp(this.g.rotation.y,this.face,Math.min(1,dt*8));
+    const dcam=Math.hypot(this.x-camera.position.x,this.z-camera.position.z);this.g.visible=this.loc===CUR.id&&dcam<48&&dcam>(this.fan&&FAN.on?1:.55)&&!((PHO.on||DANCE.on||DANCE.res)&&this.mode==='follow');   /* (a friend on its way round you that comes right up to the camera waits unseen for that moment: run 4, stage 3) */   /* (a following friend waits out of a photo shoot and a dance-off, run 4 stage 3) */this.g.position.set(this.x,hopY(this,dt)+brAt(this.loc,this.x,this.z),this.z);this.g.rotation.y=angLerp(this.g.rotation.y,this.face,Math.min(1,dt*8));
     animPerson(this.p,dt,this.moving);this.target.x=this.x;this.target.z=this.z;this.tag.visible=Math.hypot(P.x-this.x,P.z-this.z)>1.3;
   }
 }
@@ -4062,7 +4066,7 @@ function nearMe(e,n,front){const sd=n%2?-1:1,b=P.yaw+Math.PI,f=fOff(front?n-1:n)
    into view. While you walk they follow as before (behind you). Doors, stairs and the bus work as before. A spot is never on the road,
    in water, in furniture or behind a wall (the straight way from you to it is free) */
 const FAN={on:false,yaw:0,turnT:0,loc:''};
-function fanHalf(){const a=innerWidth/innerHeight,hf=Math.atan(Math.tan(camera.fov*Math.PI/360)*a);return Math.min(.62,hf*.78);}   /* how far to the side the camera still shows (a phone held upright is narrow) */
+function fanHalf(){const a=innerWidth/innerHeight,hf=Math.atan(Math.tan(camera.fov*Math.PI/360)*a);return Math.min(.52,hf*(a>1?.62:.75));}   /* (run 4, stage 3: the friend at the end stood half under the screen's edge and the buttons) */   /* how far to the side the camera still shows (a phone held upright is narrow) */
 function fanSpots(n){const h=fanHalf(),out=[];for(let i=0;i<n;i++)out.push([n>1?-h+2*h*i/(n-1):0,i%2?3.1:2.6]);
   for(let r=3.1;r<=4.3;r+=.3){let ok=true;for(let i=1;i<n;i++){const [a1,r1]=out[i-1],[a2,r2]=out[i];if(Math.hypot(Math.sin(a1)*r1-Math.sin(a2)*r2,Math.cos(a1)*r1-Math.cos(a2)*r2)<1.2)ok=false;}if(ok)break;for(let i=1;i<n;i+=2)out[i][1]=r;}
   return out;}
@@ -4070,10 +4074,10 @@ function fanSpots(n){const h=fanHalf(),out=[];for(let i=0;i<n;i++)out.push([n>1?
    from you), not on the road, not in water, and at least 1.15 m from the spots already given. On a narrow pavement the fan becomes a row
    along the pavement (left, right, further away). As a last resort: 1.8 m in front */
 function fanAssign(){const fr=FRIEND_ACTORS.filter(f=>f.mode==='follow'&&f.loc===CUR.id),n=fr.length,h=fanHalf(),base=P.yaw+Math.PI,rd=CUR.id==='city'&&!onRoad(P.x,P.z),want=fanSpots(n),got=[];
-  const ok=(x,z)=>{const q=collideXZ(x,z,.3,CUR);if(Math.hypot(q[0]-x,q[1]-z)>.05)return false;if(rd&&onRoad(x,z))return false;for(const g of got)if(Math.hypot(g[0]-x,g[1]-z)<1.5)return false;return fLine(P.x,P.z,x,z);};
-  const hid=(x,z)=>{const bx=Math.atan2(x-P.x,z-P.z);return got.some(g=>{const da=Math.atan2(g[0]-P.x,g[1]-P.z)-bx;return Math.abs(Math.atan2(Math.sin(da),Math.cos(da)))<.24;})?.6:0;};   /* a spot straight behind another friend as you look costs a little more (run 4, stage 3) */
+  const ok=(x,z)=>{const q=collideXZ(x,z,.3,CUR);if(Math.hypot(q[0]-x,q[1]-z)>.05)return false;if(rd&&onRoad(x,z))return false;for(const g of got)if(Math.hypot(g[0]-x,g[1]-z)<1.3)return false;return fLine(P.x,P.z,x,z);};
+  const hid=(x,z)=>{const bx=Math.atan2(x-P.x,z-P.z),r1=Math.hypot(x-P.x,z-P.z);return got.some(g=>{const da=Math.atan2(g[0]-P.x,g[1]-P.z)-bx,r2=Math.hypot(g[0]-P.x,g[1]-P.z);return Math.abs(Math.atan2(Math.sin(da),Math.cos(da)))<.3/Math.min(r1,r2)+.15/Math.max(r1,r2);})?2.2:0;};   /* a spot straight behind another friend as you look: only when no other free spot is left (run 4, stage 3: it cost a little more, and friends still hid behind each other) */
   fr.forEach((f,k)=>{const [wa,wr]=want[Math.min(k,want.length-1)];let best=null,bs=1e9;
-    for(let a=-h;a<=h+1e-6;a+=.1)for(let r=2.4;r<=5.2;r+=.4){let sc=Math.abs(a-wa)*2+Math.abs(r-wr)*.6;if(sc>=bs)continue;const x=P.x+Math.sin(base+a)*r,z=P.z+Math.cos(base+a)*r;if(ok(x,z)){sc+=hid(x,z);if(sc<bs){best=[x,z];bs=sc;}}}
+    for(let i=0;i<=10;i++)for(let r=2.4;r<=5.2;r+=.4){const a=-h+h*i/5;let sc=Math.abs(a-wa)*2+Math.abs(r-wr)*.6;if(sc>=bs)continue;const x=P.x+Math.sin(base+a)*r,z=P.z+Math.cos(base+a)*r;if(ok(x,z)){sc+=hid(x,z);if(sc<bs){best=[x,z];bs=sc;}}}
     for(let r=2.0;r>=1.2&&!best;r-=.4)for(let a=-h;a<=h+1e-6&&!best;a+=.2){const x=P.x+Math.sin(base+a)*r,z=P.z+Math.cos(base+a)*r;if(ok(x,z))best=[x,z];}
     if(!best)best=collideXZ(P.x+Math.sin(base+wa)*1.8,P.z+Math.cos(base+wa)*1.8,.3,CUR);
     got.push(best);f.fan=best;f.fanStk=0;});}
@@ -4121,6 +4125,7 @@ const TOWNFOLK=[{skin:'#f5cfb0',hair:'#3d2c5e',style:'short',top:'#7cc8ff',botto
 const HELLO=['Hello there!','What a lovely day!','Have you tried the cocoa at the Café?','Hi! Welcome to Cozy Town!','The fountain looks so pretty today.','I love the flowers in the park!','Good to see you!','Did you go down the slide yet? So fast!'];
 const SIT_LINES=['I love watching the fountain.','Shh, my book is getting exciting!','The water sounds so relaxing.','Lovely day for sitting in the park.'];
 const WALKERS=[];
+function wkBlocked(w,ux,uz){const px=P.x-w.x,pz=P.z-w.z,pd=Math.hypot(px,pz);return pd<.95||pd<1.7&&(px*ux+pz*uz)/pd>.55;}   /* you are right next to me, or a step ahead on my way */
 class Walker{
   constructor(look,node,owl){this.p=bakePerson(makePerson(look));this.g=this.p.root;scene.add(this.g);this.home=node;this.node=node;this.x=WP[node][0];this.z=WP[node][1];this.prev=-1;this.wait=rand(0,4);this.face=0;this.moving=false;this.loc='city';this.r=.3;this.state='home';
     this.nt=0;this.nk=0;this.ld=99;this.wv=0;   /* 👀 noticing you: time left, how much (0…1, eased), your last distance, wave cooldown */
@@ -4146,9 +4151,9 @@ class Walker{
     else{const n=WP[this.node],dx=n[0]-this.x,dz=n[1]-this.z,d=Math.hypot(dx,dz);
       if(d<.15){if(this.state==='going'){if(this.node===this.home){this.state='home';this.g.visible=false;return;}this.prev=this.node;this.node=NEXT[this.node][this.home];}
         else{const nb=NEIGH[this.node].filter(k=>k!==this.prev);this.prev=this.node;this.node=nb.length?pick(nb):pick(NEIGH[this.node]);if(Math.random()<(PAUSE.has(this.prev)?.55:.15))this.wait=rand(2,7);}}
-      else if(CUR.id==='city'&&Math.hypot(P.x-this.x,P.z-this.z)<.95)this.moving=false;
-      else{const s=Math.min(d,(this.state==='going'?1.5:1.25)*(1-.58*e)*(this.slow?.45:1)*dt);this.x+=dx/d*s;this.z+=dz/d*s;this.face=Math.atan2(dx,dz);this.moving=true;}}   /* noticing you: 42% speed; someone right in front walking the same way: slower */
-    const far=Math.hypot(this.x-camera.position.x,this.z-camera.position.z)>48;this.g.visible=CUR.id==='city'&&!far&&!ptInShot(this.x,this.z);this.g.position.set(this.x,0,this.z);   /* (a passer-by between the camera and the family steps out of a photo shoot: run 4, stage 3) */
+      else if(CUR.id==='city'&&wkBlocked(this,dx/d,dz/d)){this.moving=false;this.blk=(this.blk||0)+dt;if(this.blk>1.6&&this.prev>=0){const n0=this.node;this.node=this.prev;this.prev=n0;this.blk=0;}}   /* you stand on my way: I stop a step before you and, after a moment, walk back the other way (run 4, stage 3: a passer-by waited 0.9 m in front of the camera for as long as you stood still) */
+      else{const s=Math.min(d,(this.state==='going'?1.5:1.25)*(1-.58*e)*(this.slow?.45:1)*dt);this.x+=dx/d*s;this.z+=dz/d*s;this.face=Math.atan2(dx,dz);this.moving=true;this.blk=0;}}   /* noticing you: 42% speed; someone right in front walking the same way: slower */
+    const dcam=Math.hypot(this.x-camera.position.x,this.z-camera.position.z),far=dcam>48;this.g.visible=CUR.id==='city'&&!far&&dcam>1&&!ptInShot(this.x,this.z);   /* (a passer-by right at the camera, where their face would fill the screen, waits unseen for that moment; run 4, stage 3) */this.g.position.set(this.x,0,this.z);   /* (a passer-by between the camera and the family steps out of a photo shoot: run 4, stage 3) */
     /* 👀 turning to you: walking, the body turns a little (it still walks along its path); standing, all the way. The head turns the rest
        (angLerp(x,a,1)-x = the smallest turn from x to a) */
     const a=e>0?Math.atan2(P.x-this.x,P.z-this.z):0,fy=e<=0?this.face:this.moving?this.face+clamp(angLerp(this.face,a,1)-this.face,-.6,.6)*e:angLerp(this.face,a,e);
@@ -5398,7 +5403,7 @@ function zzMorning(){standUp();S.hunger=Math.max(S.hunger,40);toast('Good mornin
 function zzScreen(on){let el=$('zzScr');
   if(!on){if(el&&!el.hidden){el.hidden=true;document.body.classList.remove('zz');}return;}
   if(!el){el=document.createElement('div');el.id='zzScr';el.hidden=true;$('hud').appendChild(el);
-    el.innerHTML='<div class="zzc"><div class="zzz" aria-hidden="true"><span>💤</span><span>💤</span><span>💤</span></div><div class="zt"></div><div class="zs">Sleeping until 7:00 🌙</div><div class="zb"><button class="btn butter" id="zzUp">🌅 Wake up</button></div></div>';
+    el.innerHTML='<div class="zzc"><div class="zzz" aria-hidden="true"><span>💤</span><span>💤</span><span>💤</span></div><div class="zt"></div><div class="zs">Sleeping until 07:00 🌙</div><div class="zb"><button class="btn butter" id="zzUp">🌅 Wake up</button></div></div>';
     $('zzUp').onclick=()=>{audioInit();SFX.tap();standUp();};}
   const t=clockStr(S.time)+' · '+wdName().slice(0,3),z=el.querySelector('.zt');if(z.textContent!==t)z.textContent=t;
   if(el.hidden){el.hidden=false;document.body.classList.add('zz');}}
@@ -5761,9 +5766,10 @@ function openPanel(html,o={}){const p=$('panel'),fresh=p.hidden;p.classList.togg
 function cardMore(){const c=$('card');if($('panel').hidden)return;const m=!c.classList.contains('phonecard')&&/auto|scroll/.test(getComputedStyle(c).overflowY)&&c.scrollHeight-c.clientHeight-c.scrollTop>30,f=c.querySelector('.crsave');
   if(f){f.classList.toggle('more',m);c.classList.remove('more');}else c.classList.toggle('more',m);
   let a=$('moreHint');if(!a){a=document.createElement('div');a.id='moreHint';a.setAttribute('aria-hidden','true');a.textContent='⬇️';$('panel').appendChild(a);}
-  a.hidden=!m||!!f;if(a.hidden)return;const r=c.getBoundingClientRect(),p=$('panel').getBoundingClientRect(),below=visH()-r.bottom>=54,right=innerWidth-r.right>=54;
-  if(!below&&!right&&!KB.on&&!c.dataset.mh&&r.height>300){c.dataset.mh='1';c.style.maxHeight=Math.round(r.height-2*(54-(visH()-r.bottom)))+'px';return cardMore();}   /* (run 4, stage 3: no room beside or under a tall card on an upright phone: the card gets a little shorter, so the arrow sits under it, never on its words) */   /* run 4, stage 3: outside the card when there is room (under it, else beside it), so it never sits on a button or a word; only on a phone held upright on the bottom edge, in the middle */
-  if(below){a.style.left=Math.round((r.left+r.right)/2-23-p.left)+'px';a.style.top=Math.round(r.bottom+4-p.top)+'px';}else if(right){const mb=boxOf($('moveBtns')),hx=r.right+4,top=mb&&hx+46>mb.left&&hx<mb.right?Math.min(r.bottom-54,mb.top-54):r.bottom-54;a.style.left=Math.round(hx-p.left)+'px';a.style.top=Math.round(top-p.top)+'px';}   /* (never on the run or jump button) */else{a.style.left=Math.round(r.right-52-p.left)+'px';a.style.top=Math.round(Math.min(r.bottom-24,visH()-50)-p.top)+'px';}}   /* (no room anywhere: the bottom right corner, over the card's padding) */   /* (run 4, stage 3: the arrow is 46 px and sits on the card's bottom edge, under its words and buttons, never on them) */
+  let b=$('moreBand');if(!b){b=document.createElement('div');b.id='moreBand';b.setAttribute('aria-hidden','true');$('panel').appendChild(b);}b.hidden=a.hidden=!m||!!f;if(a.hidden)return;
+  const r=c.getBoundingClientRect(),p=$('panel').getBoundingClientRect(),R=parseFloat(getComputedStyle(c).borderBottomLeftRadius)||0;
+  b.style.left=Math.round(r.left+3-p.left)+'px';b.style.width=Math.round(r.width-6)+'px';b.style.top=Math.round(r.bottom-61-p.top)+'px';b.style.borderRadius=`0 0 ${Math.max(0,R-3)}px ${Math.max(0,R-3)}px`;
+  a.style.left=Math.round((r.left+r.right)/2-23-p.left)+'px';a.style.top=Math.round(r.bottom-54-p.top)+'px';}   /* run 4, stage 3: the ⬇️ sits inside the card, on a soft fade over its bottom (beside or under the card critics read it as a loose button, and a row cut by the card's edge with no fade as a mistake); it never takes a tap */
 $('card').addEventListener('scroll',cardMore,{passive:true});if(window.ResizeObserver)new ResizeObserver(()=>{try{cardMore();}catch(e){}}).observe($('card'));
 function closePanel(){const p=$('panel');if(p.hidden)return;p.hidden=true;UI.open=false;UI.lock=false;const f=UI.onClose;UI.onClose=null;if(f)f();try{toastPlace();}catch(e){}}   /* (a message placed round the card moves to its own spot when the card goes: run 4, stage 3) */
 $('panel').addEventListener('pointerdown',e=>{if(e.target===$('panel')&&!UI.lock)closePanel();});
@@ -6343,11 +6349,11 @@ function renderPhone(){if(PH.app==='map'){openMap();return;}if(MAPV.on)mapOff();
     else if(a==='job'){body=hd('💼 Job')+jobPhone();}
     else if(a==='furn'){body=hd('🛋️ Furniture')+furnPhone();setTimeout(thumbFill,0);}
     else if(a==='msg'){const C=PH.chat&&CHATS[PH.chat];body=(C?`<div class="ph-hd"><button class="btn ph-back" data-a="chat:" aria-label="Back to chats">‹</button><h3 class="chh"><span class="cav hcav" style="background:${C.c}">${C.av}</span>${C.h||C.n.split(' · ')[0]}</h3><span class="ph-coins">🪙 ${S.coins}</span></div>`:hd('💬 Messages'))+msgPhone();}
-    else if(a==='cal'){body=hd('📅 Calendar')+calBody();}
+    else if(a==='cal'){body=hd('🗓️ Calendar')+calBody();}
     else if(a==='skills'){body=hd('⭐ Skills')+'<p class="ph-sub">Do things in town to level up your skills!</p>'+Object.keys(SKILLS).map(k=>{const s=sk(k),K=SKILLS[k],need=xpNeed(s.lv),pct=s.lv>=MAXLV?100:Math.round(s.xp/need*100);
       return`<div class="qcard"><div class="qtop"><span class="qi">${K.i}</span><div style="flex:1"><div class="qt">${K.n}</div><div class="qd">${K.how}</div></div><div class="sklv">Level<b>${s.lv}</b></div></div><div class="qfoot"><span class="qprog" style="max-width:none"><i style="width:${pct}%"></i></span><span class="qn">${s.lv>=MAXLV?'Max!':s.xp+'/'+need}</span></div></div>`;}).join('');}
     else{body=hd('🐾 Pets')+(S.pets.map(d=>`<div class="ph-row"><span>${PET_TYPES[petKind(d)].icon} ${esc(d.name)}</span><span class="hearts">${hearts(clamp(Math.round(d.happy/20),0,5))}</span></div>`).join('')||'<p class="ph-sub">Visit the pet shop to adopt a pet!</p>');}}
-  openPanel(`<div class="phone" role="dialog" aria-label="Phone"><div class="ph-status"><span>${clockStr(S.time)}</span><span>🪙 ${S.coins}</span></div><div class="ph-screen">${body}</div><button class="ph-home" data-a="close" aria-label="Close phone"></button></div>`,{cls:'phonecard',onClose:()=>{PH.app=null;PH.chat=null;PH.jobs=false;}});
+  openPanel(`<div class="phone" role="dialog" aria-label="Phone"><div class="ph-status"><span>${clockStr(S.time)}</span><span>${PH.app?"":"🪙 "+S.coins}</span></div><div class="ph-screen">${body}</div><button class="ph-home" data-a="close" aria-label="Close phone"></button></div>`,{cls:'phonecard',onClose:()=>{PH.app=null;PH.chat=null;PH.jobs=false;}});
   if(PH.app==='msg'&&PH.chat){const sc=document.querySelector('#card .ph-screen');if(sc){sc.scrollTop=sc.scrollHeight;const q=PH.jobs&&[...sc.querySelectorAll('.bub.them')].pop(),hd=sc.querySelector('.ph-hd');if(q)sc.scrollTop+=q.getBoundingClientRect().top-sc.getBoundingClientRect().top-(hd?hd.offsetHeight:0)-6;}}}   /* (the job cards: from Rosie's question down, so on a short screen the first jobs are in view; run 4, stage 3) */
 ACT.phapp=a=>{PH.app=a||null;PH.chat=null;PH.jobs=false;renderPhone();};
 ACT.nav=id=>setNav(id);
@@ -7186,7 +7192,7 @@ function psRefresh(){if(CUT&&CUT.show){PSX.dirty=true;return;}PSX.dirty=false;fo
   PSX.rv.forEach((R,i)=>{const m=makePet(R.type,R.col);addOutfit(m,{outfit:Object.assign({},R.outfit)});m.root.visible=false;scene.add(m.root);
     const tg=label(R.name,.2);tg.position.y=petTagY(R.type);m.root.add(tg);const r={R,m,tg,busy:false};PSX.rivals.push(r);psHome(r,i);});}
 function psHome(r,i){const pd=PS.pad[i],m=r.m;m.root.position.set(pd[0],PS.top+.08,pd[1]);m.root.rotation.set(0,psRot(i),0);m.b.rotation.set(0,0,0);m.b.position.set(0,0,0);if(m.head)m.head.rotation.x=0;m.legs[0].rotation.x=0;r.busy=false;}
-function psDay(){psRefresh();if(S&&isShowDay())setTimeout(()=>{if(S&&PLAYING&&psLeft())toast(`🏆 It's Pet Show day! The show is in the park from ${PS_ON}:00 to ${PS_OFF}:00. Dress up your pet!`,4.6);},4800);}
+function psDay(){psRefresh();if(S&&isShowDay())setTimeout(()=>{if(S&&PLAYING&&psLeft())toast(`🏆 It's Pet Show day! The show is in the park from ${clockStr(PS_ON)} to ${clockStr(PS_OFF)}. Dress up your pet!`,4.6);},4800);}
 function psUpdate(dt){const on=!!(S&&CUR&&CUR.id==='city'&&(psOpen()||CUT&&CUT.show||UI.open&&PSX.pc&&UI.onClose===PSX.pc));PSX.on=on;
   for(const pl of PSX.plates)pl.visible=on;
   const judging=!!(CUT&&CUT.show&&/^r?(jin|judge)$/.test(CUT.stage));
@@ -7206,7 +7212,7 @@ function openShow(){if(!S)return;
   if(!isShowDay()){const n=daysToShow();SFX.talk();toast(`🏆 The Pet Show is every Saturday! Today is ${wdName()}, so it's in ${n} day${n>1?'s':''}. Get your pet ready!`,4.8);return;}
   if(showDone()){toast(`🏆 You already did today's show! Come back next Saturday.`,4);return;}
   if(S.time<PS_ON){SFX.talk();toast(`🏆 The Pet Show starts at ${PS_ON}:00! The judges are on their way. Dress up your pet! 🎀`,4.6);return;}
-  if(S.time>=PS_OFF){SFX.talk();toast(`🏆 Today's Pet Show is over (${PS_ON}:00 to ${PS_OFF}:00). The next one is next Saturday!`,4.6);return;}
+  if(S.time>=PS_OFF){SFX.talk();toast(`🏆 Today's Pet Show is over (${clockStr(PS_ON)} to ${clockStr(PS_OFF)}). The next one is next Saturday!`,4.6);return;}
   if(!S.pets.length){SFX.no();toast('You need a pet for the Pet Show! Adopt one at the 🐾 Pet Shop.',4);return;}
   const here=PET_ACTORS.filter(p=>p.loc==='city'&&Math.hypot(p.x-P.x,p.z-P.z)<18);
   if(!here.length){SFX.no();toast('Bring a pet to the park! Tip: ⚙️ Settings → 🐾 Bring my pets to me',4.8);return;}
@@ -7620,7 +7626,7 @@ function calHolidayLine(){const d=realDate();let t='';   /* 🎉 the month's hol
   else if(HOL.cur==='xmas')t='🎄 Christmas month! The big tree and Santa are at the Flower Corner. Santa has coins for you once a day!'+(nyeFireworks(d)?' 🎆 Fireworks tonight from 19:00!':'');
   return t?`<p class="ph-sub hol">${t}</p>`:'';}
 function calBody(){const i0=wdIdx(),n=daysToShow();   /* 🕰️ the week: weekday names only, no day numbers (run 4) */
-  let h=`<p class="ph-sub"><b>Today is ${wdName()}!</b> ${isShowDay()?(showDone()?'You did the 🏆 Pet Show today. The next one is next Saturday!':S.time>=PS_OFF?'Today\'s 🏆 Pet Show is over. The next one is next Saturday!':`🏆 It's Pet Show day! Bring your pet to the park from ${PS_ON}:00 to ${PS_OFF}:00!`):`🏆 Pet Show in ${n} day${n>1?'s':''}: on Saturday, ${PS_ON}:00 to ${PS_OFF}:00, in the park.`}</p>`;   /* ("Today is…" comes first, above the week: on a short screen it was below the fold; run 4, stage 3) */
+  let h=`<p class="ph-sub"><b>Today is ${wdName()}!</b> ${isShowDay()?(showDone()?'You did the 🏆 Pet Show today. The next one is next Saturday!':S.time>=PS_OFF?'Today\'s 🏆 Pet Show is over. The next one is next Saturday!':`🏆 It's Pet Show day! Bring your pet to the park from ${clockStr(PS_ON)} to ${clockStr(PS_OFF)}!`):`🏆 Pet Show in ${n} day${n>1?'s':''}: on Saturday, ${clockStr(PS_ON)} to ${clockStr(PS_OFF)}, in the park.`}</p>`;   /* ("Today is…" comes first, above the week: on a short screen it was below the fold; run 4, stage 3) */
   h+='<div class="cal">';
   for(let i=0;i<7;i++){h+=`<div class="cd${i===i0?' today':''}${i===5?' show':''}"><b>${WDAYS[i].slice(0,3)}</b><span>${i===i0?(nightF(S.time)>.5?'🌙':'☀️'):i<i0?'✔':'<em>○</em>'}</span><i>${i===i0?'⭐':''}${i===5?'🏆':''}</i></div>`;}
   h+='</div>'+calHolidayLine();
@@ -7747,14 +7753,14 @@ function jobPhone(){let h;
     h+=`<div class="row"><button class="btn butter" data-a="nav:pizza">📍 Show me the Pizzeria</button><button class="btn sky" data-a="dotpick">🎨 Dot color</button></div>`;}
   if(S.job==='designer'){const d=ds(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${DS_MAX}</b> clients<br>💰 <b>${DS_PAY(0)}–${DS_PAY(3)} 🪙</b> a room: more ⭐ = more coins! Some clients want two rooms.</p>`;
     if(o){const T=dsTheme(o),H=HOUSE(o.h),W=dsWho(o);h+=`<div class="qcard"><div class="qtop"><span class="qi">${T.e}</span><div><div class="qt">${esc(W.nm)}: ${esc(dsThemeOf(o,0).n)}${o.r2?' and '+esc(dsThemeOf(o,1).n):''}</div><div class="qd">At the <b>${esc(H.n)}</b>${o.flat?', flat <b>'+o.flat+'</b>':''}. Follow the dot on your map!</div></div></div></div>`;}
-    else h+=`<p class="ph-sub">${d.done>=DS_MAX?'🌟 All done for today! More clients tomorrow.':!isDaytime()?workAt()+' Clients message you from 8:00 to 20:00.':'🎨 A client will message you soon!'}</p>`;
+    else h+=`<p class="ph-sub">${d.done>=DS_MAX?'🌟 All done for today! More clients tomorrow.':!isDaytime()?workAt()+' Clients message you from 08:00 to 20:00.':'🎨 A client will message you soon!'}</p>`;
     h+=`<div class="row"><button class="btn sky" data-a="dotpick">🎨 Dot color</button><button class="btn white" data-a="dtutgo">📖 Tips</button></div>`;}
   if(S.job==='teacher'){const d=tc(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${TC_MAX}</b> classes taught<br>💰 <b>${TC_PAY(1)}–${TC_PAY(3)} 🪙</b> a class: more ⭐ = more coins!</p>`;
     if(o){const S0=SUBJ[o.subj];h+=`<div class="qcard"><div class="qtop"><span class="qi">${S0.i}</span><div><div class="qt">Teach the ${S0.n} class</div><div class="qd">Go to <b>Cozy Town School</b>. In the hallway, it's ${tcDoor(S0)}.</div></div></div></div>`;}
-    else h+=`<p class="ph-sub">${d.done>=TC_MAX?'🌟 All classes done today! More tomorrow.':!isDaytime()?workAt()+' Classes are from 8:00 to 20:00.':'📱 Mrs. Maple will message you when a class needs you.'}</p>`;
+    else h+=`<p class="ph-sub">${d.done>=TC_MAX?'🌟 All classes done today! More tomorrow.':!isDaytime()?workAt()+' Classes are from 08:00 to 20:00.':'📱 Mrs. Maple will message you when a class needs you.'}</p>`;
     h+=`<div class="row"><button class="btn butter" data-a="nav:school">📍 Show me the school</button><button class="btn sky" data-a="phchat:dr">💬 Messages</button></div>`;}
   if(S.job==='hair'){const d=hs();h+=`<p class="ph-sub">Today: <b>${d.done} / ${HS_MAX}</b> customers<br>💰 <b>${HS_PAY[1]}–${HS_PAY[5]} 🪙</b> a customer: more ⭐ = more coins!</p>
-    <p class="ph-sub">${d.done>=HS_MAX?'🌟 All customers done today! More tomorrow.':!isDaytime()?workAt()+' The salon is open from 8:00 to 20:00.':'✂️ Go to the Hair Salon on the west road. Customers come in and sit in your chair!'}</p>
+    <p class="ph-sub">${d.done>=HS_MAX?'🌟 All customers done today! More tomorrow.':!isDaytime()?workAt()+' The salon is open from 08:00 to 20:00.':'✂️ Go to the Hair Salon on the west road. Customers come in and sit in your chair!'}</p>
     <div class="row"><button class="btn butter" data-a="nav:salon">📍 Show me the salon</button><button class="btn white" data-a="hstutgo">📖 Tips</button></div>`;}
   return h+`<p class="ph-sub" style="margin-top:14px">Want a different job? Message Rosie!</p><div class="row"><button class="btn white" data-a="phchat:ro">💬 Message Rosie</button></div>`;}
 
