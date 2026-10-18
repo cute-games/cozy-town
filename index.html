@@ -2889,10 +2889,11 @@ function buildFountain(st,L,fx,fz){
   const c2=new THREE.Mesh(new THREE.CylinderGeometry(2.13,2.18,1.15,56,1,true),CURTAIN);c2.position.set(fx,1.72-.575,fz);L.dyn.add(c2);
   const jet=new THREE.Mesh(new THREE.CylinderGeometry(.05,.1,1.1,10,1,true),JET);jet.position.set(fx,3.9+.55,fz);L.dyn.add(jet);
   const dropM=new THREE.MeshBasicMaterial({color:'#e9f9ff'});
-  const drops=[];for(let i=0;i<34;i++){const m=new THREE.Mesh(new THREE.SphereGeometry(.05,6,5),dropM);L.dyn.add(m);drops.push({m,x:0,y:-9,z:0,vx:0,vy:0,vz:0});}
+  const dropI=new THREE.InstancedMesh(new THREE.SphereGeometry(.05,6,5),dropM,34);dropI.frustumCulled=false;L.dyn.add(dropI);const drops=[];for(let i=0;i<34;i++){dropI.setMatrixAt(i,_dm.makeTranslation(0,-9,0));drops.push({i,x:0,y:-9,z:0,vx:0,vy:0,vz:0});}   /* 💧 the 34 drops are one instanced mesh: one draw instead of 34 (run 4, stage 3: the town's drawing work stays inside the agreed limit) */
   const rings=[];for(let i=0;i<12;i++){const m=new THREE.Mesh(new THREE.RingGeometry(.16,.24,28),new THREE.MeshBasicMaterial({color:'#ffffff',transparent:true,opacity:0,depthWrite:false}));m.rotation.x=-Math.PI/2;L.dyn.add(m);rings.push({m,t:9,y:.61});}
-  FTN={fx,fz,drops,rings,rt:0};
+  FTN={fx,fz,drops,rings,rt:0,dropI};
 }
+const _dm=new THREE.Matrix4();
 function ftnRing(x,y,z){const r=FTN.rings.find(q=>q.t>=1);if(!r)return;r.t=0;r.y=y;r.m.position.set(x,y,z);}
 function updFountain(dt){if(!FTN)return;const {fx,fz}=FTN;
   CURTAIN.map.offset.y+=dt*1.7;JET.map.offset.y-=dt*2.6;
@@ -2901,7 +2902,8 @@ function updFountain(dt){if(!FTN)return;const {fx,fz}=FTN;
     d.vy-=7*dt;d.x+=d.vx*dt;d.y+=d.vy*dt;d.z+=d.vz*dt;
     const rr=Math.hypot(d.x-fx,d.z-fz),floor=rr<1?3.17:rr<2.05?1.72:.6;
     if(d.vy<0&&d.y<=floor){if(Math.random()<.35)ftnRing(d.x,floor+.01,d.z);d.y=-9;}
-    d.m.position.set(d.x,d.y,d.z);}
+    FTN.dropI.setMatrixAt(d.i,_dm.makeTranslation(d.x,d.y,d.z));}
+  FTN.dropI.instanceMatrix.needsUpdate=true;
   FTN.rt-=dt;if(FTN.rt<=0){FTN.rt=.12;const a=Math.random()*TAU;ftnRing(fx+Math.cos(a)*2.2,.61,fz+Math.sin(a)*2.2);if(Math.random()<.5){const b=Math.random()*TAU;ftnRing(fx+Math.cos(b)*1.12,1.73,fz+Math.sin(b)*1.12);}}
   for(const r of FTN.rings){if(r.t>=1){r.m.visible=false;continue;}r.t+=dt*.9;r.m.visible=true;const s=1+r.t*4;r.m.scale.set(s,s,s);r.m.material.opacity=.7*(1-r.t);}
 }
