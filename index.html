@@ -3977,7 +3977,7 @@ class Friend{
         else if(this.loc===CUR.id&&Math.hypot(P.x-this.x,P.z-this.z)<.95){this.moving=false;}
         else{const s=Math.min(d,(this.mode==='going'?1.6:1.35)*dt);this.x+=dx/d*s;this.z+=dz/d*s;this.face=Math.atan2(dx,dz);this.moving=true;}}
     }
-    this.g.visible=this.loc===CUR.id&&Math.hypot(this.x-camera.position.x,this.z-camera.position.z)<48;this.g.position.set(this.x,hopY(this,dt)+brAt(this.loc,this.x,this.z),this.z);this.g.rotation.y=angLerp(this.g.rotation.y,this.face,Math.min(1,dt*8));
+    this.g.visible=this.loc===CUR.id&&Math.hypot(this.x-camera.position.x,this.z-camera.position.z)<48&&!(PHO.on&&this.mode==='follow');   /* (a following friend waits out of a photo shoot, run 4 stage 3) */this.g.position.set(this.x,hopY(this,dt)+brAt(this.loc,this.x,this.z),this.z);this.g.rotation.y=angLerp(this.g.rotation.y,this.face,Math.min(1,dt*8));
     animPerson(this.p,dt,this.moving);this.target.x=this.x;this.target.z=this.z;this.tag.visible=Math.hypot(P.x-this.x,P.z-this.z)>1.3;
   }
 }
@@ -4076,7 +4076,7 @@ class Pet{
     else if(this.loc===CUR.id){this.wt-=dt;if(this.wt<=0){this.wt=rand(2,6);const a=rand(0,TAU),r=rand(0,1.6),c=fromSave(this.loc,d.sx,d.sz);[this.tx,this.tz]=collideXZ(c[0]+Math.cos(a)*r,c[1]+Math.sin(a)*r,.6,CUR);[this.x,this.z]=collideXZ(this.x,this.z,this.r,CUR);}   /* 🛋️ never a wander spot inside the furniture */
       const dx=this.tx-this.x,dz=this.tz-this.z,dd=Math.hypot(dx,dz);if(dd>.1){const s=Math.min(dd,1.1*dt),ox=this.x,oz=this.z;[this.x,this.z]=collideXZ(this.x+dx/dd*s,this.z+dz/dd*s,this.r,CUR);this.face=Math.atan2(dx,dz);this.moving=true;if(Math.hypot(this.x-ox,this.z-oz)<s*.3)this.wt=Math.min(this.wt,.4);}else this.moving=false;}
     d.happy=Math.max(0,d.happy-dt/HOUR*2);d.loc=this.loc;[d.x,d.z]=toSave(this.loc,this.x,this.z);
-    this.g.visible=this.loc===CUR.id;this.g.position.set(this.x,hopY(this,dt)+brAt(this.loc,this.x,this.z),this.z);this.g.rotation.y=angLerp(this.g.rotation.y,this.face,Math.min(1,dt*8));
+    this.g.visible=this.loc===CUR.id&&!(PHO.on&&this.loc==='city');   /* 🐾 your pets wait out of a photo shoot (run 4, stage 3) */this.g.position.set(this.x,hopY(this,dt)+brAt(this.loc,this.x,this.z),this.z);this.g.rotation.y=angLerp(this.g.rotation.y,this.face,Math.min(1,dt*8));
     animPet(this.m,dt,this.moving,d.stay?1:this.spd);this.target.x=this.x;this.target.z=this.z;this.tag.visible=Math.hypot(P.x-this.x,P.z-this.z)>1.3;}
 }
 function addPetActor(d){const p=new Pet(d);PET_ACTORS.push(p);return p;}
