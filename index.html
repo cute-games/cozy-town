@@ -6127,7 +6127,8 @@ const mapWP=(sx,sy)=>[MAPV.cx+(sx-MAPV.W/2)/MAPV.s,MAPV.cz+(sy-MAPV.H/2)/MAPV.s]
 function mapSmin(){const B=mapB();return Math.min(MAPV.W/(B.x2-B.x1),MAPV.H/(B.z2-B.z1));}
 function mapComfy(){return clamp(Math.min(MAPV.W,MAPV.H)/85,mapSmin(),MAP_SMAX);}   /* about 85 m across: comfy to read */
 function mapClampV(){const B=mapB(),s=MAPV.s=clamp(MAPV.s,mapSmin(),MAP_SMAX),hw=MAPV.W/2/s,hh=MAPV.H/2/s;   /* you can't lose the town */
-  MAPV.cx=B.x2-B.x1<=2*hw?(B.x1+B.x2)/2:clamp(MAPV.cx,B.x1+hw,B.x2-hw);MAPV.cz=B.z2-B.z1<=2*hh?(B.z1+B.z2)/2:clamp(MAPV.cz,B.z1+hh,B.z2-hh);}
+  const bp=((($('mpCard')||{}).offsetHeight||0)+16)/s;   /* (the town's bottom row can scroll up above the card at the bottom: run 4, stage 3) */
+  MAPV.cx=B.x2-B.x1<=2*hw?(B.x1+B.x2)/2:clamp(MAPV.cx,B.x1+hw,B.x2-hw);MAPV.cz=B.z2-B.z1+bp<=2*hh?(B.z1+B.z2+bp)/2:clamp(MAPV.cz,B.z1+hh,B.z2-hh+bp);}
 function mapHome(z){const me=mapMe();if(z||MAPV.s<mapComfy())MAPV.s=mapComfy();MAPV.cx=me.x;MAPV.cz=me.z;mapClampV();}
 function mapShow(fit){if(!NAV||!MAPV.W)return;const me=mapMe(),G=NAV.goal||NAV.door,[gx,gy]=mapSP(G[0],G[1]),pad=clamp(MAPV.W*.15,40,70),bot=Math.max(80,(($('mpCard')||{}).offsetHeight||0)+26);   /* the place is off the screen (or picked from the list): show you and the place */
   if(!fit&&gx>pad&&gx<MAPV.W-pad&&gy>pad&&gy<MAPV.H-bot)return;
