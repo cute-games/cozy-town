@@ -3265,7 +3265,7 @@ function buildCafe(){
 function clothesRack(g,x,z,cols){box(g,.08,1.6,.08,'#c8cde0',x-1.3,0,z,{ol:.012});box(g,.08,1.6,.08,'#c8cde0',x+1.3,0,z,{ol:.012});cyl(g,.03,.03,2.7,'#c8cde0',x,1.55,z,{rz:Math.PI/2,center:true,seg:6,ol:.01});
   cols.forEach((c,i)=>{const sx=x-1.05+i*.35,sz=z+(i%2?.04:-.04);box(g,.28,.44,.05,c,sx,1.02,sz,{ol:.012});box(g,.4,.12,.05,c,sx,1.34,sz,{ol:.012});cyl(g,.006,.006,.1,'#c8cde0',sx,1.45,sz,{seg:4,ol:false});});}
 function buildClothesShop(){
-  const L=makeLoc('clothes','in',900,0,[-6,-4.5,6,4.5]);const sh=new THREE.Group(),pr=new THREE.Group(),rk=new THREE.Group();L.g.add(sh,pr,rk);   /* rk: the racks by the back wall cast no shadow (run 4, stage 3: the shirts' soft shadows smeared the wall like dirt) */
+  const L=makeLoc('clothes','in',900,0,[-6,-4.5,6,4.5]);const sh=new THREE.Group(),pr=new THREE.Group();L.g.add(sh,pr);const rk=sh;   /* the racks by the back wall are baked with the walls, without shadows (run 4, stage 3: the shirts' soft shadows smeared the wall like dirt; same number of pieces) */
   shell(L,sh,12,9,3.3,mat('#ffe3ef'),toon({map:floorTex('dark')}),'#fff4f8');
   doorAt(sh,0,4.5-.02,Math.PI,null,true,true);windowIn(sh,-6+.02,1.0,0,Math.PI/2,'#b79cff');
   clothesRack(rk,-3.6,-3.9,['#ff9ec4','#ffd45c','#7cc8ff','#5fd4b0','#b79cff','#ff6b6b','#ffffff']);clothesRack(rk,0,-3.9,['#2e2347','#7cc8ff','#ffffff','#ff9ec4','#ffd45c','#5fd4b0','#b79cff']);clothesRack(rk,3.6,-3.9,['#ff6b6b','#b79cff','#ffd45c','#ffffff','#5fd4b0','#ff9ec4','#7cc8ff']);
@@ -3278,7 +3278,7 @@ function buildClothesShop(){
   cyl(pr,.04,.05,1.7,'#c98f5e',-5.3,0,3.3,{seg:6});for(const [y,c] of [[1.75,'#ff6b6b'],[1.45,'#7cc8ff'],[1.15,'#ffd45c']])sph(pr,.14,c,-5.3+.12,y,3.3,{s:[1,.6,1],ws:10,hs:6,ol:.012});colC(L,-5.3,3.3,.35);
   box(pr,1.6,.5,.45,'#ffffff',-5.6,0,-1.6);for(let i=0;i<4;i++)box(pr,.16,.1,.28,['#ff7aa8','#ffffff','#ffd45c','#7cc8ff'][i],-6.1+i*.33,.5,-1.6,{ol:.01});col(L,-6,-1.85,-4.8,-1.35);
   box(pr,2.6,1.0,.8,'#b79cff',3.6,0,3.0-.9);box(pr,2.7,.08,.9,'#ffffff',3.6,1.0,2.1);col(L,2.25,1.65,4.95,2.55);
-  bake(sh,false);bake(pr,true);bake(rk,false);
+  bake(sh,false);bake(pr,true);
   inter(L,{x:0,z:3.8,r:1.9,icon:'🚪',label:'Go outside',act:()=>exitTo('clothes')});
   for(const [x,z] of [[-3.6,-3.0],[0,-3.0],[3.6,-3.0],[-5.4,-1.0]])inter(L,{x,z,r:1.9,icon:'👗',label:'Shop for clothes',act:openClothes});
   inter(L,{x:5.0,z:.5,r:1.8,icon:'🪞',label:'Try on clothes',act:()=>openCreator('edit')});
