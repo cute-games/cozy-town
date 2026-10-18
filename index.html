@@ -681,7 +681,7 @@ function tagFit(r,sc,cam){const u=this.userData,e=this.matrixWorld.elements,c=ca
   this.material.opacity=d<1.4?clamp((d-.95)/.45,0,1):1;}
 /* 🏠 a house's name label on Friends Lane: it fades out far away (with many friends online the far labels piled up)
    and slides down from under the HUD (the clock, the buttons, the map column) onto its house */
-function laneTagR(r,sc,cam){const e=this.matrixWorld.elements,c=cam.matrixWorld.elements,d=Math.hypot(e[12]-c[12],e[13]-c[13],e[14]-c[14]);
+function laneTagR(r,sc,cam){const e=this.matrixWorld.elements,c=cam.matrixWorld.elements,d=Math.hypot(e[12]-c[12],e[14]-c[14]);   /* (along the ground: a six-floor house's tag hangs 24 m up and faded out from anywhere the whole house shows; run 4, stage 3) */
   this.material.opacity=clamp((34-d)/8,0,1);hudDodge(this,cam);}
 const HUDK={f:-1,r:[]},_hv=new THREE.Vector3(),_hw=new THREE.Vector3();
 function hudRects(){const f=renderer.info.render.frame;if(HUDK.f===f)return HUDK.r;HUDK.f=f;const R=HUDK.r;R.length=0;   /* (looked up once per drawn frame) */
@@ -2685,6 +2685,7 @@ function updBus(dt){if(!BUS.g)return;const p=S&&CUR?(CUR.id==='city'?'park':CUR.
     else if(u-BUS.ui>30&&!inView(BUS.pos[0],BUS.pos[1],5))BUS.ui=u;else{BUS.v=Math.min(12,BUS.v+6*dt);BUS.ui=Math.min(u,BUS.ui+BUS.v*dt);}}
   else BUS.ui=u;
   const b=busXZ(p,BUS.ui);BUS.pos=b;BUS.g.position.set(b[0],0,b[1]);BUS.g.rotation.y=b[2];BUS.g.visible=true;BUS.loc=T.loc;BUS.s=c.s;BUS.orm.emissiveIntensity=.25*(1-nightF(S.time));
+  if(T.loc===CUR.id&&!(P.sit&&P.sit.bus)&&!CLIMB){const bs=[],c=(busSolids(bs),bs[0]);if(c&&pushOut(P.x,P.z,.3,c)){const t=(P.x-c.cx)*c.ux+(P.z-c.cz)*c.uz,w=c.hw+.32;[P.x,P.z]=collideXZ(c.cx+t*c.ux-w*c.uz,c.cz+t*c.uz+w*c.ux,.3,CUR);}}   /* the bus came to stand where you stand (it was already at the stop when you came, or it jumped ahead out of view): you step out on its door side, the pavement (run 4, stage 3: the view was inside the bus) */
   if(fresh&&p==='park'&&Math.abs(BUS.ui)<.5)busCarGap(b);
   const stop=u===0&&Math.abs(BUS.ui)<.05;if(stop&&!BUS.stop){BUS.dot.wave=1.6;if(Math.hypot(P.x-b[0],P.z-b[1])<30&&!BUS.ride)SFX.honk();}BUS.stop=stop;
   BUS.dk=clamp(BUS.dk+(stop&&!BUS.hold?dt:-dt)*1.7,0,1);BUS.door.position.x=2.2-1.02*BUS.dk*BUS.dk*(3-2*BUS.dk);busSurf(dt,p==='beach'&&stop,fresh);
@@ -2939,7 +2940,7 @@ function shell(L,g,W,D,H,wallMat,floorMat,ceil,into,gap){const T=into||L.g;
   const t=.3,ws=gap?D/2-gap:D,wz=gap?[-(gap+ws/2),gap+ws/2]:[0];box(g,W+2*t,H,t,null,0,0,-D/2-t/2,{mat:wallMat,ol:false});box(g,W+2*t,H,t,null,0,0,D/2+t/2,{mat:wallMat,ol:false});
   for(const z of wz)box(g,t,H,ws,null,-W/2-t/2,0,z,{mat:wallMat,ol:false});if(gap)box(g,t,H-2.6,2*gap,null,-W/2-t/2,2.6,0,{mat:wallMat,ol:false});box(g,t,H,D,null,W/2+t/2,0,0,{mat:wallMat,ol:false});
   const bb='#ffffff';box(g,W,.14,.06,bb,0,0,-D/2+.03,{ol:.02});box(g,W,.14,.06,bb,0,0,D/2-.03,{ol:.02});for(const z of wz)box(g,.06,.14,ws,bb,-W/2+.03,0,z,{ol:.02});box(g,.06,.14,D,bb,W/2-.03,0,0,{ol:.02});
-  cyl(g,.42,.3,.16,'#ffffff',0,H-.16,0,{seg:16,ol:false});sph(g,.22,null,0,H-.2,0,{mat:GLOW,ol:false,ws:12,hs:8});   /* (no dark outline round the ceiling lamp: from below, near the door, it showed as black wedges; run 4, stage 3) */
+  cyl(g,.035,.035,.2,'#b9a6cf',0,H-.2,0,{seg:6,ol:false});cyl(g,.2,.42,.2,'#ffc6d9',0,H-.4,0,{seg:16,ol:false});cyl(g,.44,.44,.04,'#e48aab',0,H-.42,0,{seg:16,ol:false});sph(g,.16,null,0,H-.42,0,{mat:GLOW,ol:false,ws:12,hs:8});   /* a pink lamp shade with a darker rim on a short stem (no dark outline: from below, near the door, it showed as black wedges; run 4, stage 3: white on the cream ceiling it read as a faint smudge) */
   col(L,-W/2-1,-D/2-1,W/2+1,-D/2);col(L,-W/2-1,D/2,W/2+1,D/2+1);col(L,-W/2-1,-D/2,-W/2,D/2);col(L,W/2,-D/2,W/2+1,D/2);
 }
 function drawScore(){const L=LOC.city;if(!L||!L.score)return;const m=fbBoard()?{l:FB.sc[0],r:FB.sc[1]}:(typeof S!=='undefined'&&S&&S.match)||{l:0,r:0},{c,t}=L.score,x=c.getContext('2d'),W=c.width,H=c.height;
@@ -3886,7 +3887,7 @@ function hardEvent(type,amt){if(!S||!S.hard)return;for(const k in HARD){const st
 function hardCheck(){if(!S||!S.hard)return;let hit=false;for(const k in HARD){const st=S.hard[k];if(!st||st.s!=='on')continue;const H=hq(k);if(!H||!H.prog)continue;st.n=Math.min(H.n,H.prog());if(st.n>=H.n){st.s='ready';hit=true;hardDone(H);}}
   if(hit){saveLocal();if(CSAVE.ref){CSAVE.dirty=true;clearTimeout(CSAVE.tm);CSAVE.tm=setTimeout(cloudFlush,4000);}if(PH.app==='quest'&&!$('panel').hidden)renderPhone();}}
 const QCACHE={};
-const SOME=new Set(['flour','milk','cheese','honey','popcorn','candy','chocolate','tea','eggs','grapes','cherries','bread','corn','pet food','cat food','bunny & hamster food','pet treats','pancakes','hot cocoa','lemonade','pumpkin soup','fruit salad','garden salad']);
+const SOME=new Set(['flour','milk','cheese','honey','popcorn','candy','chocolate','tea','eggs','grapes','cherries','bread','corn','pet food','cat food','bunny & hamster food','pet treats','pancakes','hot cocoa','lemonade','pumpkin soup','fruit salad','garden salad','flowers','herb pots','building blocks','candles','drawers']);   /* (the furniture names that are many things: "Put some herb pots in your house", not "a herb pots"; run 4, stage 3) */
 const aAn=n=>{const l=n.toLowerCase();return(SOME.has(l)?'some ':/^[aeiou]/.test(l)?'an ':'a ')+l;};
 const onePl=K=>K.pl==='pumpkin'?'a pumpkin':K.pl;
 function shopOf(id){for(const k in SHOPS){const s=SHOPS[k];if((s.items||[]).includes(id)||(s.furn||[]).includes(id))return s.title;}return'shop';}
@@ -4873,7 +4874,7 @@ function laneHouse(lp,o){const C=LOC.city;for(const c of [...lp.g.children])lp.g
   lp.gdKey=o.k===laneMe()?'':(o.gd||'');if(lp.gdKey)for(const row of lp.gdKey.split(';').slice(0,40)){const [i,seed,sg]=row.split(','),pl=YARD_ALL[+i];if(!pl||!SEEDS[seed])continue;const [x,z]=lotPt(lp.j,pl[1],pl[2]),pot=+i>=6;   /* 🌱 a friend's garden: their soil and crops at the same spots as in a yard (their presence says what grows; old versions send nothing); pots too (run 4, item 22) */
     if(pot){cyl(hg,.26,.2,.3,'#c9805a',x,0,z,{seg:10,ol:.015});}else box(hg,1.8,.16,1.2,'#b07a52',x,0,z,{ol:.02});const cg=new THREE.Group();cg.position.set(x,pot?.34:.16,z);cg.rotation.y=lp.s<0?0:Math.PI;if(pot)cg.scale.setScalar(.55);hg.add(cg);buildCrop(cg,seed,clamp(+sg|0,0,3));}
   bake(hg,true);lp.g.add(hg);C.cols.push(lp.col);
-  const tg=label('🏠 '+o.nm,.9+.16*(fl-1));tg.position.set(lp.hx,big?opt.h+3.9:7.9,lp.hz);   /* (a taller house has a bigger name sign) */tg.onBeforeRender=laneTagR;lp.g.add(tg);}
+  const tg=label('🏠 '+o.nm,.9+.16*(fl-1));tg.position.set(lp.hx,big?opt.h+3.9:7.9,lp.hz+(big?opt.face*(opt.d/2+.35):0));   /* (a taller house has a bigger name sign; run 4, stage 3: in front of its pointed front roof, which hid it from the lane) */tg.onBeforeRender=laneTagR;lp.g.add(tg);}
 function laneTick(dt){LANE.t+=dt;if(LANE.t>=1){LANE.t=0;laneRefresh();}visTick(dt);}
 function laneIcon(j){const o=LANE.own[j];return o&&o.k===laneMe()?'🏠':'🔔';}
 function laneLabel(j){const o=LANE.own[j];if(!o)return'';if(o.k===laneMe())return'Go inside your house';
