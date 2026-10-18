@@ -7810,6 +7810,7 @@ function startGame(){if(S){awResume();return;}   /* back from the away title: th
   for(const d of S.pets)addPetActor(d);
   for(const f of FRIEND_ACTORS)f.wake();
   spawnLitter();gardenInit();for(const w of WALKERS)w.init();
+  if(HOL.cur==='easter'&&HOL.eggs)eggsRebuild();   /* 🥚 the eggs were drawn for the title's town before the save was read: draw them again without the ones this player already found (run 4, stage 3, G4-001) */
   S.outfits=S.outfits||[];if(S.wardrobe)for(const k of Object.keys(S.wardrobe)){const C=CLOTHES[k];if(C&&(C.hat||C.gl)){if(!S.outfits.some(v=>v.k===k))S.outfits.push({k,c:C.cols[0]});delete S.wardrobe[k];}}
   delete S.mpcode;drawScore();mpConnect();bdInit();
   psRefresh();S.hard=S.hard||{};hardMigrate();if(!S.q||S.q.day!==S.day)qNewDay(!!st);else{if(!S.q.used)S.q.used=S.q.list.slice();S.q.list=S.q.list.filter(k=>getQ(k));updPhoneBadge();}
@@ -8334,7 +8335,7 @@ const EGG_SPOTS=[[-33.5,12.2],[-30.2,17.8],[-24.6,16.4],[-19.2,18.6],[-12.6,22.4
   [-27.6,-55.2],[-20.4,-55.4],[-32.6,-55.6],[-24.6,55.4],[-20.2,56.2],[-30.4,56.8],[-90.2,6.6],[-104.4,-6.6],[-118.6,6.4],[-91.4,-6.8],[-105.2,6.8],[-119.4,-6.4]];
 function eggYear(){return realDate().getFullYear();}
 function eggSpots(y){const r=seeded(y*977+5),a=EGG_SPOTS.map((p,i)=>[i,p]);for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a.slice(0,25);}
-function eggState(){const y=eggYear();if(!S.egg||S.egg.y!==y)S.egg={y,f:[]};return S.egg;}
+function eggState(){const y=eggYear();if(!S)return{y,f:[]};if(!S.egg||S.egg.y!==y)S.egg={y,f:[]};return S.egg;}   /* 🥚 the title's town is decorated before any save is read: then no egg is found yet (run 4, stage 3, G4-001) */
 function eggFound(i){return eggState().f.indexOf(i)>=0;}
 function eggHuntBuild(L,G){const list=eggSpots(eggYear());HOL.eggs=list.map(([i,[x,z]])=>{const q=collideXZ(x,z,.3,L);return{i,x:q[0],z:q[1]};});
   for(const e of HOL.eggs)inter(L,{x:e.x,z:e.z,r:1.6,icon:'🥚',label:()=>'Pick up the egg ('+eggState().f.length+'/25)',when:()=>!eggFound(e.i),act:()=>eggGet(e.i),hol:1});
