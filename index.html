@@ -879,9 +879,9 @@ function hairFor(h,L){
   box(h,.54,.14,.48,c,0,.37,0);
   if(L.swoop){box(h,.34,.1,.07,c,-.09,.3,.215,{rz:-.2,ol:false});box(h,.24,.08,.07,c,.14,.34,.215,{rz:.12,ol:false});}
   else box(h,.52,.08,.07,c,0,.32,.215,{ol:false});
-  if(s==='bob'){box(h,.08,.28,.46,c2,-.27,.12,-.01);box(h,.08,.28,.46,c2,.27,.12,-.01);box(h,.56,.1,.5,c2,0,.1,-.02,{ol:false});}
+  if(s==='bob'){box(h,.08,.28,.46,c2,-.27,.12,-.02);box(h,.08,.28,.46,c2,.27,.12,-.02);box(h,.56,.1,.29,c2,0,.1,-.125,{ol:false});}   /* the bob's hem wraps round the back only, never over the face; the side panels sit a hair behind the face so they don't flicker on it */
   else if(s==='short'||s==='curly'||len==='short'){box(h,.06,.2,.42,c2,-.27,.22,-.02);box(h,.06,.2,.42,c2,.27,.22,-.02);}
-  else{box(h,.08,.34,.46,c2,-.27,.06,-.01);box(h,.08,.34,.46,c2,.27,.06,-.01);}
+  else{box(h,.08,.34,.46,c2,-.27,.06,-.02);box(h,.08,.34,.46,c2,.27,.06,-.02);}
   box(h,.54,.4,.08,c2,0,.08,-.25);
   if(s==='long'||(len==='long'&&s!=='bun'&&s!=='short'&&s!=='bob'&&s!=='long')){box(h,.56,.42,.1,c2,0,-.3,-.25);box(h,.1,.36,.26,c2,-.27,-.28,-.08);box(h,.1,.36,.26,c2,.27,-.28,-.08);}
   if(s==='ponytail'){sph(h,.07,'#ff7aa8',0,.36,-.31,{ol:.015});box(h,.15,.38,.13,c,0,-.04,-.36,{rx:.22});}
