@@ -3317,6 +3317,7 @@ function clawAdd(K,x,z,gold){const c=gold?'#ffcf3f':pick(['#ff7aa8','#7cc8ff','#
   g.add(new THREE.Mesh(new THREE.SphereGeometry(.085,12,6,0,TAU,Math.PI/2,Math.PI/2),mat(gold?'#fff1b8':'#ffffff')));
   const b=new THREE.Mesh(new THREE.TorusGeometry(.085,.009,4,16),mat(gold?'#e0a92a':'#e8e3f2'));b.rotation.x=Math.PI/2;g.add(b);
   if(gold){const s=new THREE.Mesh(new THREE.OctahedronGeometry(.032,0),mat('#ffffff'));s.scale.set(.6,1.5,.6);s.position.set(0,.13,0);g.add(s);}
+  bake(g,false);   /* one piece per capsule (run 4, stage 3: three or four each; their number is random, so the Toy Store's count swung by up to 9 pieces between two loads) */
   g.rotation.set(rand(-.5,.5),rand(0,TAU),rand(-.5,.5));g.position.set(x,K.fy,z);K.g.add(g);const cap={g,x,z,y:K.fy,gold:!!gold,col:c};K.caps.push(cap);return cap;}
 function clawSpot(K){for(let k=0;k<300;k++){const x=K.mx+rand(-.37,.37),z=K.mz+rand(-.43,.43);if(x>K.mx+.12&&z>K.mz+.15)continue;if(K.caps.every(c=>Math.hypot(c.x-x,c.z-z)>.175))return[x,z];}return null;}
 function clawFill(K){for(let i=0;K.caps.length<14&&i<20;i++){const s=clawSpot(K);if(!s)break;clawAdd(K,s[0],s[1],i<2);}}
