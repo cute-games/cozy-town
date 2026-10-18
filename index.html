@@ -1655,7 +1655,7 @@ function buildingIn(g,o){
     if(o.gable)prism(p,.95,2.1,.5,o.roof,0,2.62,.47,{ry:Math.PI/2,ol:.03});else box(p,2.3,.16,1.0,o.door.glass?trim:o.door.c,0,2.62,.5,{ol:.03});
     for(const s of[-1,1])box(p,.1,.36,.42,'#ffffff',s*.9,2.26,.21,{ol:.012});}
   if(o.shop){const p=new THREE.Group();p.position.set(x,0,fz);p.rotation.y=ry;g.add(p);
-    const ww=(w-2.2)/2-.45;
+    const ww=Math.min((w-2.2)/2-.45,w/2-1.8);   /* the frame and sill end 3 cm short of the corner post (run 4, stage 3: they ran 7 to 22 cm into it, and its side, seen almost edge-on, flickered through the glass as a dashed line) */
     for(const s of[-1,1]){const cx=s*(1.1+.25+ww/2);box(p,ww+.2,2.0,.14,'#ffffff',cx,.55,.02);box(p,ww,1.8,.08,null,cx,.65,.09,{mat:WINM,ol:false});box(p,ww+.3,.12,.35,'#ffffff',cx,.45,.12,{ol:.02});
       /* 🌼 a flower box on each shop window sill */
       box(p,ww-.1,.2,.22,'#e3a96f',cx,.57,.2,{ol:.015});box(p,ww-.2,.07,.16,'#6fd884',cx,.77,.2,{ol:false});const n=Math.max(3,Math.round(ww/.5));for(let i=0;i<n;i++)sph(p,.14,SHOP_FLOWERS[(i+(s>0?2:0))%5],cx-ww/2+(i+.5)*ww/n,.95,.22,{ws:6,hs:4,ol:.012});}
