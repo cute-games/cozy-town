@@ -2043,7 +2043,7 @@ function buildCity(){
     for(let i=0;i<10;i++){const z=20.1+i*.44;cone(st,.13,.26,['#ff4d6d','#ffd45c','#7cc8ff','#7fdcb5','#b79cff'][i%5],-37.74,3.42,z,{rz:Math.PI,center:true,seg:3,ol:false,s:[.6,1,1]});}
     box(st,.03,.03,4.3,'#3d2c5e',-37.74,3.55,SZ,{ol:false});
     for(const [bx,z] of[[-34.6,19.95],[-34.6,24.05]]){box(st,.015,1.5,.015,'#ffffff',bx,TOP,z,{ol:false});   /* (run 4, stage 3: the balloons at the stage's front corners, never in front of the sign) */for(const [dx,dy,dz,c] of [[0,2.15,0,'#ff7aa8'],[.12,1.95,.14,'#ffd45c'],[-.1,1.98,-.12,'#7cc8ff']])sph(st,.17,c,bx+dx,dy,z+dz,{s:[1,1.18,1],ws:10,hs:8,ol:.015});}
-    const sg=signPlane('🏆 Pet Show',3.0,.8,'#ffd45c','#3d2c5e');sg.position.set(-37.82,2.62,SZ);sg.rotation.y=Math.PI/2;L.g.add(sg);   /* 2 cm in front of the stage's back wall (run 4, job 5: it was flush with it) */
+    const sg=signPlane('🏆 Pet Show',2.8,.8,'#ffd45c','#3d2c5e');   /* (2.8 m: clear of the pillars, which stand 1.45 m from the middle) */sg.position.set(-37.82,2.62,SZ);sg.rotation.y=Math.PI/2;L.g.add(sg);   /* 2 cm in front of the stage's back wall (run 4, job 5: it was flush with it) */
     const sg2=signPlane('Every Saturday!',1.9,.38,'#ffffff','#ff4d8d');sg2.position.set(-37.82,1.98,SZ);sg2.rotation.y=Math.PI/2;L.g.add(sg2);
     box(st,.7,.74,3.3,'#ffffff',-32.75,0,SZ);box(st,.05,.62,3.34,'#ff4d6d',-33.12,.1,SZ,{ol:.015});box(st,.06,.06,3.36,'#ffd45c',-33.12,.7,SZ,{ol:false});
     for(const z of[21.05,22,22.95]){box(st,.44,.44,.44,'#9a6a43',-32.02,0,z);box(st,.48,.07,.48,'#ff9ec4',-32.02,.44,z,{ol:.012});box(st,.07,.62,.48,'#9a6a43',-31.76,.5,z);}
@@ -2506,7 +2506,7 @@ function busShelter(L,st,x,z,ry){const g=new THREE.Group();g.position.set(x,0,z)
   box(g,3.7,2.2,.14,'#fff6e8',0,0,.55);box(g,3.72,.16,.16,M,0,0,.55,{ol:.015});box(g,3.72,.28,.16,'#ffc4a3',0,1.9,.55,{ol:.015});
   for(const sd of[-1,1]){box(g,.1,1.5,1.2,'#cfe9ff',sd*1.8,.45,-.02,{ol:.02});box(g,.12,.45,1.24,M,sd*1.8,0,-.02,{ol:.015});cyl(g,.07,.07,2.25,M,sd*1.8,0,-.62,{seg:8,ol:.015});}
   cyl(g,.85,.85,4.1,'#ffc4a3',0,2.3,-.02,{rz:Math.PI/2,center:true,s:[.34,1,1],seg:18});bench(g,0,.24,Math.PI);
-  box(g,2.5,.5,.06,'#ffffff',0,2.57,0,{ol:.02});cyl(g,.05,.06,2.95,'#5a5f8c',2.2,0,-.66,{seg:8,ol:.012});cyl(g,.3,.3,.07,M,2.2,2.86,-.66,{rx:Math.PI/2,center:true,seg:20,ol:.02});
+  box(g,2.5,.5,.06,'#ffffff',0,2.57,0,{ol:.02});cyl(g,.05,.06,2.86,'#5a5f8c',2.2,0,-.6,{seg:8,ol:.012});   /* (the pole behind the round sign and ending in it: it ran across the sign's picture; run 4, stage 3) */cyl(g,.3,.3,.07,M,2.2,2.86,-.66,{rx:Math.PI/2,center:true,seg:20,ol:.02});
   box(g,1.7,1.06,.04,'#ff8a6b',0,.97,.49,{ol:.015});
   {const cv=document.createElement('canvas');cv.width=512;cv.height=512;const tx=new THREE.CanvasTexture(cv);tx.anisotropy=4;   /* one picture for the 3 signs: the timetable, the roof sign, the round stop sign */
    const P2=[],U=[],I=[],quad=(x,y,z,w,h,v0,v1,u1)=>{const n=P2.length/3;P2.push(x+w/2,y-h/2,z,x-w/2,y-h/2,z,x-w/2,y+h/2,z,x+w/2,y+h/2,z);U.push(0,v0,u1,v0,u1,v1,0,v1);I.push(n,n+1,n+2,n,n+2,n+3);};   /* (they face the front) */
@@ -8277,7 +8277,7 @@ function ptSetup(){const d=pt(),o=d.o;if(!o||o.st!=='go')return;const K=PT_KINDS
   if(o.pet){const pm=makePet(o.pet,PET_TYPES[o.pet].cols[0]);scene.add(pm.root);const m={p:pm,root:pm.root,nm:PET_TYPES[o.pet].name,pose:'sit',t:0,kind:'pet'};PHO.group.push(m);}
   PHO.on=1;document.body.classList.add('shoot');$('ptvf').hidden=false;ptPlace(o.bg);ptAside(true);SFX.pop();toast('📸 Pose everyone, frame them, then Snap!',3.6);change();jobHud(true);}
 function ptPlace(bg){const o=pt().o,Sp=ptSpotOf(o),B=Sp.bgs.find(b=>b.id===bg)||Sp.bgs[0];PHO.bg=B.id;const n=PHO.group.length,sx=Math.cos(B.face),sz=-Math.sin(B.face);
-  PHO.group.forEach((m,i)=>{const k=i-(n-1)/2,x=B.g[0]+sx*k*.85,z=B.g[1]+sz*k*.85;m.x=x;m.z=z;m.y=groundY(x,z);m.root.position.set(x,m.y,z);m.root.rotation.y=B.face;m.face=B.face;if(m.tg){m.tg.x=x;m.tg.z=z;}});ptBar();}
+  PHO.group.forEach((m,i)=>{const k=i-(n-1)/2,x=B.g[0]+sx*k*1.0,z=B.g[1]+sz*k*1.0;   /* (1 m apart: waving arms went into the next head; run 4, stage 3) */m.x=x;m.z=z;m.y=groundY(x,z);m.root.position.set(x,m.y,z);m.root.rotation.y=B.face;m.face=B.face;if(m.tg){m.tg.x=x;m.tg.z=z;}});ptBar();}
 function ptNextBg(){const o=pt().o,Sp=ptSpotOf(o);if(!PHO.on||!Sp)return;const i=Sp.bgs.findIndex(b=>b.id===PHO.bg);ptPlace(Sp.bgs[(i+1)%Sp.bgs.length].id);SFX.tap();}   /* (the bar shows the background's name; run 4, stage 3: a toast with it sat on the family's legs) */
 /* the photo bar (bottom right, where the run and jump buttons are: those hide during a shoot) */
 function ptBar(){const o=pt().o,Sp=ptSpotOf(o),bar=$('ptbar');if(!PHO.on||!Sp){bar.hidden=true;bar.innerHTML='';return;}const B=Sp.bgs.find(b=>b.id===PHO.bg)||Sp.bgs[0];
