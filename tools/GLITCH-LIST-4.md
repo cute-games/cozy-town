@@ -4,6 +4,8 @@ How it was made: the PHOTOGRAPHER scripts (shots4.py and shots4b.py in the check
 
 Pass 1 in numbers: 494 pictures (392 + 32 holiday and job pictures + 69 of the kit's own + the Easter retake), 486 viewed, 294 marks. 139 marks were the photographer's own mistakes and were set aside before the double-checker (the dance panel left on screen between the phone and PC pictures, a camera spot with a passer-by, a tree, a post or a wall right in front of it, a picture taken before a 2-second check had run or in an empty test room); they are listed in the kit's scratch (stage3-marks/marks-aside.txt) and the spots were fixed for pass 2. Of the 155 marks that went to the double-checker, 123 were kept and 32 dropped; the kept ones are grouped below by their cause (one glitch, many pictures).
 
+Pass 2 in numbers: every picture again on the fixed file, 585 taken (394 + 32 holiday and job pictures + a 119-picture retake of the fixed camera spots + 40 of the kit's own after the fixes); the change-spotter compared each with pass 1's picture of the same spot and passed 418 changed or new ones to eleven viewers, who marked 162 things. 51 marks were the photographer's own mistakes and were set aside (a tree trunk at the fountain spot, the camera inside a counter or against a passer-by, a picture taken mid-fade or with the snap flash on); five double-checkers kept 87 of the other 111 and dropped 24; grouped by cause they are the entries G4-034 to G4-063 below (the second critic round's lines were fixed in the same batch).
+
 How bad: 1 small, 2 clear, 3 broken. Status: fixed / open / not a glitch.
 
 | ID | place | device | what's wrong | how bad | picture | status |
@@ -41,8 +43,38 @@ How bad: 1 small, 2 clear, 3 broken. Status: fixed / open / not a glitch.
 | G4-031 | October: the little ghosts | iPad | A little ghost drifted right into the camera and filled a third of the view for a moment. (viewer marks M-143) | 1 | [before](pictures-4/stage3-glitches/G4-031-before.webp) | open |
 | G4-032 | the park by the food truck | iPad | Flat yellow bars seemed to stick out of the truck's wheels. (viewer marks M-147) | 1 | [before](pictures-4/stage3-glitches/G4-032-before.webp) | not a glitch |
 | G4-033 | cards and the phone on a short screen | iPhone sideways (and the Pet Shop card on iPad) | A tall card, a tutorial card or the phone covers the HUD chips and buttons behind it. (viewer marks M-039, M-067, M-070, M-071, M-072, M-084, M-085, M-086, M-088, M-089, M-090, M-091, M-092, M-093, M-096, M-098, M-100, M-102, M-104) | 1 | [before](pictures-4/stage3-glitches/G4-033-before.webp) · [after](pictures-4/stage3-glitches/G4-033-after.webp) | not a glitch |
+| G4-034 | the cards' scroll-down arrow | every device | The ⬇ arrow of a long card sat on the card's bottom edge and still covered the end of the last visible row: 'Move my ga…', 'Show me the ti…', 'Bring my pets to me', the end of the colour slider, a shop tile's price. (viewer marks M-007, M-011, M-028, M-035, M-058, M-060, M-066, M-067, M-070, M-074, M-075, M-076, M-077, M-086 of pass 2) | 2 | [before](pictures-4/stage3-glitches/G4-034-before.webp) · [after](pictures-4/stage3-glitches/G4-034-after.webp) | fixed |
+| G4-035 | the phone: Rosie's chat and the job list | every device | Earlier bubbles and job cards scrolled under the chat header and showed through it (it was 94% white) and beside it; a long title ('Photo booking') was cut without an ellipsis. (viewer marks M-006, M-010, M-027, M-034, M-049, M-065, M-069, M-073, M-105 of pass 2) | 2 | [before](pictures-4/stage3-glitches/G4-035-before.webp) · [after](pictures-4/stage3-glitches/G4-035-after.webp) | fixed |
+| G4-036 | the party invitation and the dance-off card | iPhone upright | The cards were drawn over the corner map and the top of the notepad: a sliver of map and "Write here!" poked out at their edges. (viewer marks M-013, M-014, M-037, M-038 of pass 2) | 2 | [before](pictures-4/stage3-glitches/G4-036-before.webp) · [after](pictures-4/stage3-glitches/G4-036-after.webp) | fixed |
+| G4-037 | the photographer job: the frame | iPhone upright | The dashed frame ran straight through the apple chip and down the side of the chips. (viewer marks M-016, M-017, M-040, M-041 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-037-before.webp) · [after](pictures-4/stage3-glitches/G4-037-after.webp) | fixed |
+| G4-038 | the photographer job: the joystick | iPhone upright | The joystick ring sat under the photo bar (the bar spans the width on an upright phone), so a child could not walk to frame the photo. (viewer marks M-018, M-106 of pass 2) | 2 | [before](pictures-4/stage3-glitches/G4-038-before.webp) · [after](pictures-4/stage3-glitches/G4-038-after.webp) | fixed |
+| G4-039 | the photographer job: the pose card | iPhone sideways | The pose card was taller than the screen: the Hug and Sit tiles ran off the bottom with no scroll hint. (viewer marks M-061, M-068 of pass 2) | 2 | [before](pictures-4/stage3-glitches/G4-039-before.webp) · [after](pictures-4/stage3-glitches/G4-039-after.webp) | fixed |
+| G4-040 | the photographer job: the result card | iPhone sideways and upright | The result card ran off the bottom of a sideways phone (the Bye! button on the edge); on an upright phone the '+120 🪙' pop was half behind the card; in the kit's pictures the '🏞️ the hedge' toast was still drawn over the card. (viewer marks M-063, M-042, M-109 of pass 2) | 2 | [before](pictures-4/stage3-glitches/G4-040-before.webp) · [after](pictures-4/stage3-glitches/G4-040-after.webp) | fixed |
+| G4-041 | the phone on a short screen | iPhone sideways | The dimmed clock chip and the chat button peeked out above the phone's top edge. (viewer marks M-047, M-048, M-050, M-051, M-052, M-053, M-054, M-055, M-056 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-041-before.webp) · [after](pictures-4/stage3-glitches/G4-041-after.webp) | fixed |
+| G4-042 | the park: the food truck | every device | The Halloween bunting (and the Valentine garland) hung across the front of the food truck: its pennants looked stuck to the truck's body, 'pink and yellow slivers and a purple one across the wheel'. (viewer marks M-021, M-079, M-090, M-096 of pass 2) | 2 | [before](pictures-4/stage3-glitches/G4-042-before.webp) · [after](pictures-4/stage3-glitches/G4-042-after.webp) | fixed |
+| G4-043 | the Flower Corner in October | every device | The spooky path's purple discs ran beside the garden's white stepping stones for the first 6 m: a double row, 'floating stones'. (viewer marks M-043, M-064 of pass 2) | 2 | [before](pictures-4/stage3-glitches/G4-043-before.webp) · [after](pictures-4/stage3-glitches/G4-043-after.webp) | fixed |
+| G4-044 | the spooky path at night | iPad | The little path lamps were plain dark cubes with no glow after 18:00. (viewer marks M-084 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-044-before.webp) · [after](pictures-4/stage3-glitches/G4-044-after.webp) | fixed |
+| G4-045 | the Easter hunt eggs | every device | A plain white ball (meant as a shine) bulged out of the egg between its two gold bands. (viewer marks M-080 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-045-before.webp) · [after](pictures-4/stage3-glitches/G4-045-after.webp) | fixed |
+| G4-046 | the Christmas tree at night | iPad | The tree's night glows sat inside the branches, so they showed as bright yellow, cyan and pink chevron slivers poking out of the lower branches. (viewer marks M-081, M-088 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-046-before.webp) · [after](pictures-4/stage3-glitches/G4-046-after.webp) | fixed |
+| G4-047 | inside the fire station | every device | The 'Fire Station' sign's right end lay over the bell's red plate. (viewer marks M-004, M-026 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-047-before.webp) · [after](pictures-4/stage3-glitches/G4-047-after.webp) | fixed |
+| G4-048 | the grandmas' speech bubbles | iPad | A grandma's own head still covered the middle of her bubble from a low angle. (viewer marks M-032 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-048-before.webp) · [after](pictures-4/stage3-glitches/G4-048-after.webp) | fixed |
+| G4-049 | the photographer job: the shoot | every device | A passer-by walked between the camera and the family and hid them. (viewer marks M-008 of pass 2) | 2 | [before](pictures-4/stage3-glitches/G4-049-before.webp) · [after](pictures-4/stage3-glitches/G4-049-after.webp) | fixed |
+| G4-050 | the kit's own pictures (N25 and N37) | iPad and iPhone sideways | The kit took its result picture while the snap flash was on (washed out) and its Tree Park pictures mid-fade (a dark veil). (viewer marks M-104, M-108, M-111, M-092, M-093 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-050-before.webp) · [after](pictures-4/stage3-glitches/G4-050-after.webp) | fixed |
+| G4-051 | the photographer job: the bus pill | iPhone sideways and PC | The 'Next bus' pill sat across the frame's top-left corner. (viewer marks M-107, M-110 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-051-before.webp) · [after](pictures-4/stage3-glitches/G4-051-after.webp) | fixed |
+| G4-052 | the Pet Shop's 'New in' tiles | iPhone upright | The colour dot of a long name wrapped onto a line of its own. (viewer marks M-036 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-052-before.webp) · [after](pictures-4/stage3-glitches/G4-052-after.webp) | fixed |
+| G4-053 | settings | iPhone upright | 'Fast' wrapped alone under 'Slow' and the 'Show me the tips' buttons broke into two lines. (viewer marks M-012 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-053-before.webp) · [after](pictures-4/stage3-glitches/G4-053-after.webp) | fixed |
+| G4-054 | the park: the butterflies and the stage pennants | every device | The park's butterflies flying low over the grass read as flat shards or 'two red sheets' dropped by the stage; the stage's end pennants stuck out past its posts. (viewer marks M-001, M-071, M-078 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-054-before.webp) · [after](pictures-4/stage3-glitches/G4-054-after.webp) | fixed |
+| G4-055 | the photographer (not the game) | iPad, iPhone upright | Two camera spots were bad: the bakery spot stood inside the counter, the dance-card spot was left wherever the previous picture ended (against a fence). (viewer marks M-003, M-015 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-055-before.webp) · [after](pictures-4/stage3-glitches/G4-055-after.webp) | not a glitch |
+| G4-056 | the clock chip in the kit's pictures | iPad | The chip said ☀️ while rain streaks fell, 🌧️ under a clear sky, and ☀️ 10:00 at dusk. (viewer marks M-091, M-095, M-097 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-056-before.webp) · [after](pictures-4/stage3-glitches/G4-056-after.webp) | not a glitch |
+| G4-057 | the notepad on a sideways phone | iPhone sideways | The small notepad is 104 × 68 px there and its 'Write here!' hint about 11 px. (viewer marks M-098 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-057-before.webp) | not a glitch |
+| G4-058 | the friends who follow you, in October | iPad | Halloween ghosts drifted between the camera and the friends and hid one; one friend stood in line behind another. (viewer marks M-101, M-102 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-058-before.webp) · [after](pictures-4/stage3-glitches/G4-058-after.webp) | not a glitch |
+| G4-059 | a pet's name tag | iPad | The 'Waffles' tag was partly behind the witch hat's pompom of the player's own costume. (viewer marks M-083 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-059-before.webp) · [after](pictures-4/stage3-glitches/G4-059-after.webp) | not a glitch |
+| G4-061 | the Toy Store's sign | PC | '🧸 Toy Store' sits left of the middle of its long white board (the right 40% is blank). (viewer marks M-072 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-061-before.webp) · [after](pictures-4/stage3-glitches/G4-061-after.webp) | open |
+| G4-062 | inside the Market | iPhone upright | An orange strip with a crisp dark edge ran down the floor from the player to the bottom of the screen. (viewer marks M-046 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-062-before.webp) · [after](pictures-4/stage3-glitches/G4-062-after.webp) | open |
+| G4-063 | the Pet Shop upstairs | iPad | No pen in view had a name sign on its fence. (viewer marks M-005 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-063-before.webp) · [after](pictures-4/stage3-glitches/G4-063-after.webp) | not a glitch |
+| G4-060 | cards over the HUD | iPad, iPhone sideways | The Clothing store card covered the time chip; the big map's 'Tap a place' bar lies over the bottom row of the map. (viewer marks M-085, M-099 of pass 2) | 1 | [before](pictures-4/stage3-glitches/G4-060-before.webp) · [after](pictures-4/stage3-glitches/G4-060-after.webp) | not a glitch |
 
-33 entries: 29 fixed, 3 not a glitch, 1 open.
+63 entries: 50 fixed, 10 not a glitch, 3 open.
 
 ## Each one in full
 
@@ -272,4 +304,214 @@ How bad: 1 small, 2 clear, 3 broken. Status: fixed / open / not a glitch.
 - What's wrong: A tall card, a tutorial card or the phone covers the HUD chips and buttons behind it. (viewer marks M-039, M-067, M-070, M-071, M-072, M-084, M-085, M-086, M-088, M-089, M-090, M-091, M-092, M-093, M-096, M-098, M-100, M-102, M-104)
 - Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 1)
 - Fix: By design: a card or the phone takes the screen while it is open (the HUD behind is dimmed and cannot be tapped); on a 390-px-tall screen there is no room beside it.
+
+### G4-034 (fixed, how bad 2): the cards' scroll-down arrow
+- Device: every device
+- What's wrong: The ⬇ arrow of a long card sat on the card's bottom edge and still covered the end of the last visible row: 'Move my ga…', 'Show me the ti…', 'Bring my pets to me', the end of the colour slider, a shop tile's price. (viewer marks M-007, M-011, M-028, M-035, M-058, M-060, M-066, M-067, M-070, M-074, M-075, M-076, M-077, M-086 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: The arrow sits outside the card when there is room (under it, else beside it); only on an upright phone it stays on the bottom edge, in the right corner over the padding.
+- Fix check: pass 3 pictures of settings, the shops and the colour card.
+
+### G4-035 (fixed, how bad 2): the phone: Rosie's chat and the job list
+- Device: every device
+- What's wrong: Earlier bubbles and job cards scrolled under the chat header and showed through it (it was 94% white) and beside it; a long title ('Photo booking') was cut without an ellipsis. (viewer marks M-006, M-010, M-027, M-034, M-049, M-065, M-069, M-073, M-105 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: The header is solid white, spans the whole phone screen width and a long title ends in …
+- Fix check: pass 3 phone pictures.
+
+### G4-036 (fixed, how bad 2): the party invitation and the dance-off card
+- Device: iPhone upright
+- What's wrong: The cards were drawn over the corner map and the top of the notepad: a sliver of map and "Write here!" poked out at their edges. (viewer marks M-013, M-014, M-037, M-038 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: While one of the cards is up on an upright phone, the corner map and the notepad hide.
+- Fix check: pass 3 upright-phone card pictures.
+
+### G4-037 (fixed, how bad 1): the photographer job: the frame
+- Device: iPhone upright
+- What's wrong: The dashed frame ran straight through the apple chip and down the side of the chips. (viewer marks M-016, M-017, M-040, M-041 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: On an upright phone the frame starts 150 px down, under the three chips (the hint toast moves under it).
+- Fix check: pass 3 upright-phone shoot pictures.
+
+### G4-038 (fixed, how bad 2): the photographer job: the joystick
+- Device: iPhone upright
+- What's wrong: The joystick ring sat under the photo bar (the bar spans the width on an upright phone), so a child could not walk to frame the photo. (viewer marks M-018, M-106 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: During a shoot on an upright phone the joystick moves up above the bar.
+- Fix check: pass 3.
+
+### G4-039 (fixed, how bad 2): the photographer job: the pose card
+- Device: iPhone sideways
+- What's wrong: The pose card was taller than the screen: the Hug and Sit tiles ran off the bottom with no scroll hint. (viewer marks M-061, M-068 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: On a short sideways screen the pose card scrolls inside the screen (44-px pose buttons, tighter rows).
+- Fix check: pass 3 sideways-phone pose-card picture.
+
+### G4-040 (fixed, how bad 2): the photographer job: the result card
+- Device: iPhone sideways and upright
+- What's wrong: The result card ran off the bottom of a sideways phone (the Bye! button on the edge); on an upright phone the '+120 🪙' pop was half behind the card; in the kit's pictures the '🏞️ the hedge' toast was still drawn over the card. (viewer marks M-063, M-042, M-109 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: On a short sideways screen the card keeps side margins and a smaller photo (24% of the height); the coin pop floats higher while a bottom card is up; the background toast clears the moment the photo is taken.
+- Fix check: pass 3 result pictures; N25 passes.
+
+### G4-041 (fixed, how bad 1): the phone on a short screen
+- Device: iPhone sideways
+- What's wrong: The dimmed clock chip and the chat button peeked out above the phone's top edge. (viewer marks M-047, M-048, M-050, M-051, M-052, M-053, M-054, M-055, M-056 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: On a screen under 500 px tall the chips and the chat button hide while the phone is open.
+- Fix check: pass 3 sideways-phone phone pictures.
+
+### G4-042 (fixed, how bad 2): the park: the food truck
+- Device: every device
+- What's wrong: The Halloween bunting (and the Valentine garland) hung across the front of the food truck: its pennants looked stuck to the truck's body, 'pink and yellow slivers and a purple one across the wheel'. (viewer marks M-021, M-079, M-090, M-096 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: Both garlands now start east of the truck (x −32.2 instead of −38).
+- Fix check: N23 and N32 pass; pass 3 truck pictures.
+
+### G4-043 (fixed, how bad 2): the Flower Corner in October
+- Device: every device
+- What's wrong: The spooky path's purple discs ran beside the garden's white stepping stones for the first 6 m: a double row, 'floating stones'. (viewer marks M-043, M-064 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: The purple trail starts where the white stones end and winds 21.9 m deeper into the corner (its 6 scare spots follow it).
+- Fix check: N19 passes; pass 3 Flower Corner pictures.
+
+### G4-044 (fixed, how bad 1): the spooky path at night
+- Device: iPad
+- What's wrong: The little path lamps were plain dark cubes with no glow after 18:00. (viewer marks M-084 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: The lamp glass is a self-lit material: it reads as a lamp by night and by day.
+- Fix check: pass 3 spooky path picture.
+
+### G4-045 (fixed, how bad 1): the Easter hunt eggs
+- Device: every device
+- What's wrong: A plain white ball (meant as a shine) bulged out of the egg between its two gold bands. (viewer marks M-080 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: The ball is gone; the gold bands stay.
+- Fix check: pass 3 Easter egg picture.
+
+### G4-046 (fixed, how bad 1): the Christmas tree at night
+- Device: iPad
+- What's wrong: The tree's night glows sat inside the branches, so they showed as bright yellow, cyan and pink chevron slivers poking out of the lower branches. (viewer marks M-081, M-088 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: The 24 glows sit on the tree's surface (the cone radius at each height plus 14 cm).
+- Fix check: pass 3 December night picture.
+
+### G4-047 (fixed, how bad 1): inside the fire station
+- Device: every device
+- What's wrong: The 'Fire Station' sign's right end lay over the bell's red plate. (viewer marks M-004, M-026 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: The bell (plate, rod, bell and its button) moved 50 cm to the right.
+- Fix check: pass 3 fire station picture.
+
+### G4-048 (fixed, how bad 1): the grandmas' speech bubbles
+- Device: iPad
+- What's wrong: A grandma's own head still covered the middle of her bubble from a low angle. (viewer marks M-032 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: The bubble floats 10 cm higher and is drawn over everything (no depth test), like a comic bubble.
+- Fix check: N24 passes; pass 3.
+
+### G4-049 (fixed, how bad 2): the photographer job: the shoot
+- Device: every device
+- What's wrong: A passer-by walked between the camera and the family and hid them. (viewer marks M-008 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: A townsperson who comes within 3 m of the line from the camera to the family steps out of the picture (hidden) until the shoot ends.
+- Fix check: pass 3 shoot pictures.
+
+### G4-050 (fixed, how bad 1): the kit's own pictures (N25 and N37)
+- Device: iPad and iPhone sideways
+- What's wrong: The kit took its result picture while the snap flash was on (washed out) and its Tree Park pictures mid-fade (a dark veil). (viewer marks M-104, M-108, M-111, M-092, M-093 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: The kit waits 700 ms after the snap and 900 ms after entering the park (cozy-check-v6.zip updated).
+- Fix check: the N25 and N37 pictures of the next run.
+
+### G4-051 (fixed, how bad 1): the photographer job: the bus pill
+- Device: iPhone sideways and PC
+- What's wrong: The 'Next bus' pill sat across the frame's top-left corner. (viewer marks M-107, M-110 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: The bus pill hides during a shoot.
+- Fix check: pass 3.
+
+### G4-052 (fixed, how bad 1): the Pet Shop's 'New in' tiles
+- Device: iPhone upright
+- What's wrong: The colour dot of a long name wrapped onto a line of its own. (viewer marks M-036 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: The dot is glued to the last word (a non-breaking space).
+- Fix check: pass 3 pet shop card.
+
+### G4-053 (fixed, how bad 1): settings
+- Device: iPhone upright
+- What's wrong: 'Fast' wrapped alone under 'Slow' and the 'Show me the tips' buttons broke into two lines. (viewer marks M-012 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: On a screen under 430 px wide the settings rows use smaller buttons that do not wrap.
+- Fix check: pass 3 upright-phone settings picture.
+
+### G4-054 (fixed, how bad 1): the park: the butterflies and the stage pennants
+- Device: every device
+- What's wrong: The park's butterflies flying low over the grass read as flat shards or 'two red sheets' dropped by the stage; the stage's end pennants stuck out past its posts. (viewer marks M-001, M-071, M-078 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: The butterflies are a quarter smaller and fly 30 cm higher; the pennants hang inside the posts.
+- Fix check: pass 3 stage pictures.
+
+### G4-055 (not a glitch, how bad 1): the photographer (not the game)
+- Device: iPad, iPhone upright
+- What's wrong: Two camera spots were bad: the bakery spot stood inside the counter, the dance-card spot was left wherever the previous picture ended (against a fence). (viewer marks M-003, M-015 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: Photographer errors: the indoor spots were tried at three depths and set per room; every card picture now has a park backdrop.
+- Fix check: pass 3.
+
+### G4-056 (not a glitch, how bad 1): the clock chip in the kit's pictures
+- Device: iPad
+- What's wrong: The chip said ☀️ while rain streaks fell, 🌧️ under a clear sky, and ☀️ 10:00 at dusk. (viewer marks M-091, M-095, M-097 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: The kit forces the weather and the sky for those pictures and the change takes a few seconds (the rain fades out, the sky lerps); the chip follows the game's own weather. Nothing a player sees.
+- Fix check: —
+
+### G4-057 (not a glitch, how bad 1): the notepad on a sideways phone
+- Device: iPhone sideways
+- What's wrong: The small notepad is 104 × 68 px there and its 'Write here!' hint about 11 px. (viewer marks M-098 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: By design: the small pad is the button that opens the big pad; on a short screen it shrinks with the corner map (decided in night 3).
+- Fix check: —
+
+### G4-058 (not a glitch, how bad 1): the friends who follow you, in October
+- Device: iPad
+- What's wrong: Halloween ghosts drifted between the camera and the friends and hid one; one friend stood in line behind another. (viewer marks M-101, M-102 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: The ghosts drift on; the friends stand 1.2 m apart in a loose arc and one can be in line with another from the camera for a moment (N3 holds).
+- Fix check: —
+
+### G4-059 (not a glitch, how bad 1): a pet's name tag
+- Device: iPad
+- What's wrong: The 'Waffles' tag was partly behind the witch hat's pompom of the player's own costume. (viewer marks M-083 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: The own hat sits on the camera; a pet right behind the player can put its tag behind the brim for a moment. Not changed.
+- Fix check: —
+
+### G4-061 (open, how bad 1): the Toy Store's sign
+- Device: PC
+- What's wrong: '🧸 Toy Store' sits left of the middle of its long white board (the right 40% is blank). (viewer marks M-072 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: Not changed yet: the sign text is centred by its measured ink, so the check machine measures the 🧸 wider than it draws it (its fallback emoji font). To look at on a real device before changing the sign builder (it is shared by every shop).
+- Fix check: —
+
+### G4-062 (open, how bad 1): inside the Market
+- Device: iPhone upright
+- What's wrong: An orange strip with a crisp dark edge ran down the floor from the player to the bottom of the screen. (viewer marks M-046 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: Not understood from one picture: it lies where the two fruit stands' shadows meet on the check-tile floor. To look at on a device.
+- Fix check: —
+
+### G4-063 (not a glitch, how bad 1): the Pet Shop upstairs
+- Device: iPad
+- What's wrong: No pen in view had a name sign on its fence. (viewer marks M-005 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: The signs hang on the wall above each pen (2.3 m up, '🐰 Rabbits' and so on), not on the fences; the "should look like" line said fences and is corrected.
+- Fix check: N28 passes.
+
+### G4-060 (not a glitch, how bad 1): cards over the HUD
+- Device: iPad, iPhone sideways
+- What's wrong: The Clothing store card covered the time chip; the big map's 'Tap a place' bar lies over the bottom row of the map. (viewer marks M-085, M-099 of pass 2)
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 2)
+- Fix: By design (see G4-016 and G4-033).
+- Fix check: —
 
