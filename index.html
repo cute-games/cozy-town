@@ -43,7 +43,7 @@ button{font-family:inherit}
 .chip{display:inline-flex;align-items:center;gap:6px;height:42px;padding:0 14px 0 10px;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:999px;box-shadow:0 4px 0 var(--soft);font-weight:800;font-size:19px;white-space:nowrap}
 .chip .e{font-size:21px;line-height:1}
 .bar{display:inline-block;width:62px;height:13px;border-radius:99px;background:var(--paper2);border:2px solid var(--line);overflow:hidden}
-.bar i{display:block;height:100%;width:50%;background:var(--mint);transition:width .4s}
+.bar i{display:block;height:100%;width:50%;background:var(--mint);transition:width .4s}.coinbar{height:14px;margin:6px 2px 0;border-radius:99px;background:var(--paper2);border:2px solid var(--line);overflow:hidden}.coinbar i{display:block;height:100%;background:var(--butter)}
 .bar i.low{background:var(--coral)}
 .day{font-weight:600;font-size:15px;opacity:.8}
 #tasks{pointer-events:auto;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:18px;box-shadow:0 4px 0 var(--soft);padding:6px 14px 8px;max-width:min(330px,100%);font-size:16px;line-height:1.3;cursor:pointer}
@@ -86,7 +86,7 @@ button{font-family:inherit}
 #toast{position:fixed;z-index:30;pointer-events:none;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 200px);transform:translate(-50%,12px);opacity:0;transition:opacity .2s,transform .2s;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:18px;box-shadow:0 4px 0 var(--soft);padding:8px 16px;font-weight:700;font-size:19px;max-width:min(520px,calc(100vw - 32px));text-align:center;width:max-content}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 #panel{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 14px) calc(env(safe-area-inset-right,0px) + 14px) calc(env(safe-area-inset-bottom,0px) + 14px) calc(env(safe-area-inset-left,0px) + 14px);background:rgba(46,35,71,.3)}
-#panel.bottom{align-items:flex-end;background:transparent}@media (max-width:600px),(max-height:500px){body:has(#panel:not([hidden]):not(.bottom):not(.side)) :is(#stats,#topbtns,#bChat,#left,#joy,#moveBtns,#busTip){visibility:hidden}}   /* (run 4, stage 3: on a phone a card takes the screen; the HUD pieces it would cut in half wait under it) */@media (min-height:600px){#panel:not(.bottom):not(.side):not(:has(#card.phonecard)){padding-top:calc(env(safe-area-inset-top,0px) + 72px)}}   /* (a tall card starts under the HUD's top row: run 4, stage 3) */
+#panel.bottom{align-items:flex-end;background:transparent}@media (orientation:landscape) and (max-height:500px){body:not(.shoot):not(.dancing) #panel.bottom{padding-left:calc(env(safe-area-inset-left,0px) + 126px)}}   /* (run 4, stage 3: the card ran into the corner map and the notepad) */@media (max-width:600px),(max-height:500px){body:has(#panel:not([hidden]):not(.bottom):not(.side)) :is(#stats,#topbtns,#bChat,#left,#joy,#moveBtns,#busTip){visibility:hidden}}   /* (run 4, stage 3: on a phone a card takes the screen; the HUD pieces it would cut in half wait under it) */@media (min-height:600px){#panel:not(.bottom):not(.side):not(:has(#card.phonecard)){padding-top:calc(env(safe-area-inset-top,0px) + 72px)}}   /* (a tall card starts under the HUD's top row: run 4, stage 3) */
 .card{position:relative;width:min(620px,100%);max-height:100%;overflow:auto;-webkit-overflow-scrolling:touch;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:26px;box-shadow:0 8px 0 var(--soft);padding:18px 18px 22px}
 #panel.bottom .card{overflow:visible;margin-bottom:8px}
 .hd{display:flex;align-items:center;gap:10px;margin-bottom:12px}
@@ -1654,7 +1654,7 @@ function buildingIn(g,o){
   /* 🚪 a little roof over the front door (shops have their awning) */
   if(o.door&&!o.shop){const p=new THREE.Group();p.position.set(o.door.x,0,fz+f*.02);p.rotation.y=ry;g.add(p);
     if(o.gable)prism(p,.95,2.1,.5,o.roof,0,2.62,.47,{ry:Math.PI/2,ol:.03});else box(p,2.3,.16,1.0,o.door.glass?trim:o.door.c,0,2.62,.5,{ol:.03});
-    for(const s of[-1,1])box(p,.1,.36,.42,'#ffffff',s*.9,2.26,.21,{ol:.012});}
+    for(const s of[-1,1])box(p,.1,.36,.42,'#ffffff',s*.9,2.26,.21,{ol:.012});if(o.gable){bake(p,false);p.userData.keep=1;}}   /* (run 4, stage 3: a house's little door roof and its brackets cast no shadow: on the wall they were dark smudges round the door) */
   if(o.shop){const p=new THREE.Group();p.position.set(x,0,fz);p.rotation.y=ry;g.add(p);
     const ww=Math.min((w-2.2)/2-.45,w/2-1.8);   /* the frame and sill end 3 cm short of the corner post (run 4, stage 3: they ran 7 to 22 cm into it, and its side, seen almost edge-on, flickered through the glass as a dashed line) */
     for(const s of[-1,1]){const cx=s*(1.1+.25+ww/2);box(p,ww+.2,2.0,.14,'#ffffff',cx,.55,.02);box(p,ww,1.8,.08,null,cx,.65,.09,{mat:WINM,ol:false});box(p,ww+.3,.12,.35,'#ffffff',cx,.45,.12,{ol:.02});
@@ -2973,15 +2973,16 @@ const UPZ=40;
 function homeFloors(){return S&&S.bighouse?clamp(2+(S.home.xf|0),2,6):1;}   /* floors you own: 1, or 2 + the extra floors bought (S.home.xf) */
 const flOf=(L,z)=>L&&L.fls&&L.fls.length>1?clamp(Math.round((z-L.oz)/UPZ),0,L.fls.length-1):0;   /* which floor a z is on */
 /* the stairs between two floors, in one floor's group: up=1 the flight going up from this floor, up=0 the flight arriving from below (local coordinates, both at the west doorway) */
-function stairsIn(g,up,W,H,wm,both){const n=12,sd=4.2/n,sr=H/n,x0=-W/2,t=.3,a=Math.atan2(H,4.2);
+function stairsIn(g,up,W,H,wm,both){const n=12,sd=4.2/n,sr=H/n,x0=-W/2,t=.3,a=Math.atan2(H,4.2),zc=both?(up?-UPG/2:UPG/2):0,zd=both?UPG:2*UPG,zr=both&&!up?UPG-.07:-UPG+.07;   /* a floor with stairs both ways: the way up on the left half of the doorway, the way down on the right, each under its own plate (run 4, stage 3: the flight up hid the flight down) */
   for(const k of[-1,1])box(g,4.2,H,t,null,x0-2.1,0,k*(UPG+t/2),{mat:wm,ol:false});box(g,t,H,2*UPG+2*t,null,x0-4.2-t/2,0,0,{mat:wm,ol:false});
-  for(let i=0;i<n-1+up;i++)box(g,sd,up?(i+1)*sr:H-(i+1)*sr,2*UPG,'#d9a46c',x0-(i+.5)*sd,up?0:-H,0,{ol:.012});
-  shaftAt(g,4.2,up?3.2:H,2*UPG,x0-2.1,up?H+1.6:-H/2,0,wm,up?'#f7eef2':'#8f6b4c',up);   /* 🪜 walls in the room's paint (repainting changes them too) */
-  if(!up)box(g,4.2,.1,2*UPG,'#f7eef2',x0-2.1,H,0,{ol:false});
+  for(let i=0;i<n-1+up;i++)box(g,sd,up?(i+1)*sr:H-(i+1)*sr,zd,'#d9a46c',x0-(i+.5)*sd,up?0:-H,zc,{ol:.012});
+  shaftAt(g,4.2,up?3.2:H,zd,x0-2.1,up?H+1.6:-H/2,zc,wm,up?'#f7eef2':'#8f6b4c',up);   /* 🪜 walls in the room's paint (repainting changes them too) */
+  if(!up)box(g,4.2,.1,zd,'#f7eef2',x0-2.1,H,zc,{ol:false});
+  if(both&&!up){box(g,4.2,H+.95,.1,null,x0-2.1,-H,0,{mat:wm,ol:false});box(g,4.2,.08,.16,'#ffffff',x0-2.1,.95,0,{ol:.01});}   /* the low wall between the two ways, a white rail on top */
   for(const k of[-1,1])box(g,.1,2.7,.1,'#ffffff',x0+.04,0,k*(UPG+.05),{ol:.015});box(g,.1,.1,2*UPG+.2,'#ffffff',x0+.04,2.6,0,{ol:.015});
-  box(g,Math.hypot(4.2,H),.07,.08,'#ffffff',x0-2.1,(up?H:-H)/2+.95,-UPG+.07,{rz:up?-a:a,center:true,ol:.01});for(const u of[.12,.5,.88])box(g,.07,.92,.07,'#ffffff',x0-u*4.2,up?u*H:-u*H,-UPG+.07,{ol:.01});   /* the rail's three posts (run 4, stage 3: it floated) */
+  box(g,Math.hypot(4.2,H),.07,.08,'#ffffff',x0-2.1,(up?H:-H)/2+.95,zr,{rz:up?-a:a,center:true,ol:.01});for(const u of[.12,.5,.88])box(g,.07,.92,.07,'#ffffff',x0-u*4.2,up?u*H:-u*H,zr,{ol:.01});   /* the rail's three posts (run 4, stage 3: it floated) */
   const pg=new THREE.Group();pg.userData.keep=1;g.add(pg);plate(pg,up?'⬆️ Upstairs':'⬇️ Downstairs','#ffffff','#3d2c5e',both?.84:1.0,.26,x0+.03,(2.6+H)/2,both?(up?-.44:.44):0,Math.PI/2,false,'⬇️ Downstairs');   /* (both plates in one letter size: run 4, stage 3) */
-  {const y=up?H:-H;box(g,.07,2.1,1.3,'#5fd4b0',x0-4.2+.04,y,0,{ol:.015});box(g,.09,.5,.5,'#bde9ff',x0-4.2+.05,y+1.35,0,{ol:.012});sph(g,.045,'#ffd45c',x0-4.2+.1,y+1.0,.42,{ws:6,hs:5,ol:false});plate(pg,up?'⬆️ Upstairs':'⬇️ Downstairs','#ffffff','#3d2c5e',1.22,.3,x0-4.2+.1,y+.72,0,Math.PI/2,false,'⬇️ Downstairs');}}   /* 🚪 the stairs end at a door with a window and a knob (run 4, stage 3: they ran into a flat wall) */   /* a floor with stairs both ways gets the two plates side by side */
+  {const y=up?H:-H,dw=both?.74:1.3;box(g,.07,2.1,dw,'#5fd4b0',x0-4.2+.04,y,zc,{ol:.015});box(g,.09,.5,both?.36:.5,'#bde9ff',x0-4.2+.05,y+1.35,zc,{ol:.012});sph(g,.045,'#ffd45c',x0-4.2+.1,y+1.0,zc+(both?.25:.42),{ws:6,hs:5,ol:false});plate(pg,up?'⬆️ Upstairs':'⬇️ Downstairs','#ffffff','#3d2c5e',both?.7:1.22,both?.24:.3,x0-4.2+.1,y+.72,zc,Math.PI/2,false,'⬇️ Downstairs');}}   /* 🚪 the stairs end at a door with a window and a knob (run 4, stage 3: they ran into a flat wall) */
 /* every floor of a house (yours or a friend's): its own group, baked on its own, with its doors (floor 0), windows and stairs; flag = the inter tag ('hdoor' / 'vdoor') */
 function houseFloors(L,n,W,D,H,wm,fm,wide,flag){const hw=W/2,hd=D/2,gx=wide?6.6:4.4,fls=[];
   for(let k=0;k<n;k++){const g=new THREE.Group(),sh=new THREE.Group();g.add(sh);g.position.set(0,0,UPZ*k);const F={k,g,sh,grid:null};fls.push(F);
@@ -3790,7 +3791,7 @@ function plotRefresh(rec){const st=S.garden[rec.pl.i]||{};rec.soilM.color.set(st
   const sg=plotStage(st),key=sg+':'+(st.seed||'');
   if(key!==rec.key){rec.key=key;while(rec.grp.children.length){const c=rec.grp.children[0];rec.grp.remove(c);c.traverse(o=>{if(o.geometry)o.geometry.dispose();});}if(sg>=0){buildCrop(rec.grp,st.seed,sg);bake(rec.grp,true);}}   /* one piece per bed (few draw calls: the garden is in view all down Friends Lane) */
   const lk=!plotOpen(rec.pl.i),need=lk?(rec.pl.lock?'🔒 Level '+plotGate(rec.pl.i):''):!st.seed?'':st.g>=1?'✨':st.w!==S.day?'💧':'';   /* 🔒 a row of locked pots says its level on a little plate (run 4, stage 3) */
-  if(need!==rec.iconK){rec.iconK=need;if(rec.icon){YARD.gin.remove(rec.icon);rec.icon=null;}if(need){const s=lk?label(need,.3):label(need,.42,{bg:null,bw:0,pad:4});s.position.set(rec.pl.x,lk?.8:rec.pl.pot?1.0:1.25,rec.pl.z);YARD.gin.add(s);rec.icon=s;}}
+  if(need!==rec.iconK){rec.iconK=need;if(rec.icon){YARD.gin.remove(rec.icon);rec.icon=null;}if(need){let s;if(lk){s=new THREE.Group();const t=label(need,.24);t.position.y=.72;s.add(t);cyl(s,.016,.02,.34,'#a87a52',0,.24,0,{seg:6,ol:false});s.position.set(rec.pl.x,0,rec.pl.z);}else{s=label(need,.34);s.position.set(rec.pl.x,rec.pl.pot?.82:1.0,rec.pl.z);}YARD.gin.add(s);rec.icon=s;}   /* (run 4, stage 3: the lock plate on a little stake in its pot, the 💧 in a small bubble right over the pot: both hung in the air) */}
   rec.target.icon=!plotOpen(rec.pl.i)?'🔒':!st.seed?'🌱':st.g>=1?'🧺':st.w!==S.day?'💧':'🌿';}
 function usePlot(rec){const st=S.garden[rec.pl.i]||(S.garden[rec.pl.i]={});
   if(!plotOpen(rec.pl.i)){SFX.no();toast('🔒 This pot opens at gardening level '+plotGate(rec.pl.i)+'. Plant, water and pick to level up! 🌱',3.2);return;}
@@ -5214,9 +5215,9 @@ const cozierLine=n=>`Your house got cozier! 🏡 ${n?`${n} thing${n>1?'s are':' 
 function openBigHouse(){const n=homeFloors();if(n>=6){toast('🏡 Six floors! Your house is as tall as it gets 🎉',3);return;}
   const need=10*n,lv=sk('decor').lv,ok=lv>=need&&S.coins>=BIG_PRICE;   /* 🏡 run 4, item 22: floor 2 at decorating 10, 3 at 20 … 6 at 50, the same price each time */
   openPanel(`<div class="hd"><h2>🏡 ${n===1?'Bigger house':'One more floor'}</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
-    <p class="ph-sub">${n===1?'Stairs up to a whole second floor to decorate! Your downstairs stays just as it is: nothing moves.':'Floor '+(n+1)+' of 6: the stairs go on up. Everything you have stays where it is.'}</p>
+    <p class="ph-sub"><b>Floor ${n+1} of 6!</b> ${n===1?'Stairs up to a whole second floor to decorate! Your downstairs stays just as it is: nothing moves.':'The stairs go on up. Everything you have stays where it is.'}</p>
     <div class="ph-row"><span>🛋️ Decorating level ${need}</span><span>${lv>=need?'✅':'level '+lv}</span></div>
-    <div class="ph-row"><span>🪙 ${BIG_PRICE} coins</span><span>${S.coins>=BIG_PRICE?'✅':S.coins+' / '+BIG_PRICE}</span></div>
+    <div class="ph-row"><span>🪙 ${BIG_PRICE} coins</span><span>${S.coins>=BIG_PRICE?'✅':S.coins+' / '+BIG_PRICE}</span></div>${S.coins<BIG_PRICE?`<div class="coinbar" aria-hidden="true"><i style="width:${Math.round(100*S.coins/BIG_PRICE)}%"></i></div>`:''}
     ${ok?`<div class="row" style="justify-content:center;margin-top:12px"><button class="btn mint" data-a="bighouse">🏡 ${n===1?'Buy it!':'Add the floor!'}</button></div>`
       :`<p class="ph-sub" style="margin-top:12px">${lv<need?'Put furniture in your house to level up Decorating 🛋️':'Keep saving your coins 🪙'}</p>`}`,{bottom:true});}
 /* 🎨 the outside of your house, any colour (run 4, item 23): 12 ready colours and a "pick any colour" slider; free; everyone sees it through the lane fields (hc) */
@@ -5224,16 +5225,17 @@ const HOUSE_COLS=[['#b79cff','Purple'],['#ffd6e0','Pink'],['#bfe6ff','Blue'],['#
 const houseCol=()=>S&&S.home&&HEX.test(S.home.col||'')?S.home.col:null;
 function openHousePaint(){const cur=houseCol();
   openPanel(`<div class="hd"><h2>🎨 House colour</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div><p class="note">Paint the outside of your house. Everyone on Friends Lane sees it!</p>
-    <div class="dots">${HOUSE_COLS.map(([c,n])=>`<button class="dotb${cur===c?' on':''}" data-a="hcol:${c}" aria-label="${n}"><i style="background:${c}"></i>${n}</button>`).join('')}</div>
+    <div class="dots">${HOUSE_COLS.map(([c,n])=>`<button class="dotb${houseColNow()===c?' on':''}" data-a="hcol:${c}" aria-label="${n}"><i style="background:${c}"></i>${n}</button>`).join('')}</div>
     <div class="opt" style="margin-top:10px"><span>Pick any colour</span><input type="range" id="hcHue" min="0" max="360" value="${Math.round(hexHue(houseColNow()))}" aria-label="Any colour" style="flex:1;min-width:140px"></div>
     <div class="opt"><span>Your house now</span><i id="hcNow" class="hcNow" style="background:${houseColNow()}" aria-hidden="true"></i></div>
-    <div class="row" style="justify-content:center;margin-top:8px"><button class="btn ${cur?'white':'mint'}" id="hcLane" data-a="hcol:">${cur?'↩️':'✅'} The lane's own colour</button></div>`,{cls:'setcard hpaint'});
+    <div class="row" style="justify-content:center;margin-top:8px"><button class="dotb lane${cur?'':' on'}" id="hcLane" data-a="hcol:" aria-label="The lane's own colour"><i style="background:${laneOwnCol()}"></i>🏡 The lane's own colour</button></div>`,{cls:'setcard hpaint'});   /* (run 4, stage 3: the colour the house has now is marked, the lane's own colour is a colour like the others, not a button with a tick that read as a status) */
   const sl=$('hcHue');if(sl)sl.addEventListener('input',()=>setHouseCol(hslHex(+sl.value,.72,.82)),{passive:true});}
 function hexHue(h){const r=parseInt(h.slice(1,3),16)/255,g=parseInt(h.slice(3,5),16)/255,b=parseInt(h.slice(5,7),16)/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;if(!d)return 0;let hu=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;return (hu*60+360)%360;}
 function hslHex(h,s,l){const c=(1-Math.abs(2*l-1))*s,x=c*(1-Math.abs((h/60)%2-1)),m=l-c/2;let r=0,g=0,b=0;if(h<60){r=c;g=x;}else if(h<120){r=x;g=c;}else if(h<180){g=c;b=x;}else if(h<240){g=x;b=c;}else if(h<300){r=x;b=c;}else{r=c;b=x;}return'#'+[r,g,b].map(v=>Math.round((v+m)*255).toString(16).padStart(2,'0')).join('');}
-function houseColNow(){return houseCol()||LANE_PAL[hashStr((S.name||'').toLowerCase())%LANE_PAL.length][0];}   /* the colour the house shows right now (yours, or the lane's own for your name) */
+function laneOwnCol(){return LANE_PAL[hashStr((S.name||'').toLowerCase())%LANE_PAL.length][0];}
+function houseColNow(){return houseCol()||laneOwnCol();}   /* the colour the house shows right now (yours, or the lane's own for your name) */
 function setHouseCol(c){if(c&&!HEX.test(c))return;if(c)S.home.col=c;else delete S.home.col;change();laneRefresh(true);const sw=$('hcNow');if(sw)sw.style.background=houseColNow();
-  const on=document.querySelector('#card .dotb.on');if(on)on.classList.remove('on');const b=c&&document.querySelector(`#card [data-a="hcol:${c}"]`);if(b)b.classList.add('on');const lb=$('hcLane');if(lb){lb.className='btn '+(c?'white':'mint');lb.textContent=(c?'↩️':'✅')+" The lane's own colour";}const sl=$('hcHue');if(sl&&document.activeElement!==sl)sl.value=Math.round(hexHue(houseColNow()));}
+  const now=houseColNow();for(const b of document.querySelectorAll('#card .dotb'))b.classList.toggle('on',b.id==='hcLane'?!c:b.dataset.a==='hcol:'+now);const sl=$('hcHue');if(sl&&document.activeElement!==sl)sl.value=Math.round(hexHue(houseColNow()));}
 function setFloor(k){if(FLOOR_M.map)FLOOR_M.map.dispose();FLOOR_M.map=floorTex(k);FLOOR_M.map.repeat.set(HOMEW/2,HOMED/2);FLOOR_M.needsUpdate=true;}
 let tvT=0,tvLast=-1;
 function useFurn(rec,fx,fz){const F=FURN[furnOf(rec.it)];
