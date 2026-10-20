@@ -476,7 +476,7 @@ body.shoot #moveBtns,body.shoot #tasks,body.shoot #pad,body.shoot #job,body.shoo
     <div id="stats">
       <div class="chip" title="Coins"><span class="e">🪙</span><b id="coins">0</b></div>
       <div class="chip" title="Tummy"><span class="e">🍎</span><span class="bar"><i id="food"></i></span></div>
-      <div class="chip" title="Time"><span class="e" id="sunIc">☀️</span><b id="clock">08:00</b><span class="day" id="dayN">Mon</span></div>
+      <div class="chip" title="Time"><span class="e" id="sunIc">☀️</span><b id="clock">8:00</b><span class="day" id="dayN">Mon</span></div>
     </div>
     <div id="tasks" hidden></div>
     <div id="nav" hidden><span id="navArrow">⬆️</span><b id="navTxt"></b><button class="btn x" id="navX" aria-label="Stop showing the way">✕</button></div>
@@ -3692,7 +3692,7 @@ const KF=[[0,'#0f1538','#2a2c66',.26,.4,'#8b94ff','#3a3560','#a9b8ff'],[5,'#0f15
 const _c1=new THREE.Color(),_c2=new THREE.Color(),SUND=new THREE.Vector3();
 function nightF(h){if(h<5||h>=20.5)return 1;if(h<7)return 1-(h-5)/2;if(h>18.5)return(h-18.5)/2;return 0;}
 const isNight=()=>S.time>=21.5||S.time<7;
-function clockStr(h){const H=Math.floor(h),M=Math.floor((h-H)*6)*10;return (H<10?'0':'')+H+':'+(M<10?'0':'')+M;}   /* 01:30 like 22:00 (run 4, stage 3) */
+function clockStr(h){const H=Math.floor(h),M=Math.floor((h-H)*6)*10;return H+':'+(M<10?'0':'')+M;}   /* one hour digit before 10:00, like "9:40 Wed" (the owner's 17 Oct list; run 4, after stage 3) */
 function updSky(){
   const h=S?S.time:clockNow().time;let i=0;while(i<KF.length-2&&KF[i+1][0]<=h)i++;   /* 🕰️ the title shows the real time of day too (run 4) */
   const a=KF[i],b=KF[i+1],t=clamp((h-a[0])/(b[0]-a[0]),0,1);
@@ -5408,7 +5408,7 @@ function zzMorning(){standUp();S.hunger=Math.max(S.hunger,40);toast('Good mornin
 function zzScreen(on){let el=$('zzScr');
   if(!on){if(el&&!el.hidden){el.hidden=true;document.body.classList.remove('zz');}return;}
   if(!el){el=document.createElement('div');el.id='zzScr';el.hidden=true;$('hud').appendChild(el);
-    el.innerHTML='<div class="zzc"><div class="zzz" aria-hidden="true"><span>💤</span><span>💤</span><span>💤</span></div><div class="zt"></div><div class="zs">Sleeping until 07:00 🌙</div><div class="zb"><button class="btn butter" id="zzUp">🌅 Wake up</button></div></div>';
+    el.innerHTML='<div class="zzc"><div class="zzz" aria-hidden="true"><span>💤</span><span>💤</span><span>💤</span></div><div class="zt"></div><div class="zs">Sleeping until 7:00 🌙</div><div class="zb"><button class="btn butter" id="zzUp">🌅 Wake up</button></div></div>';
     $('zzUp').onclick=()=>{audioInit();SFX.tap();standUp();};}
   const t=clockStr(S.time)+' · '+wdName().slice(0,3),z=el.querySelector('.zt');if(z.textContent!==t)z.textContent=t;
   if(el.hidden){el.hidden=false;document.body.classList.add('zz');}}
@@ -7758,14 +7758,14 @@ function jobPhone(){let h;
     h+=`<div class="row"><button class="btn butter" data-a="nav:pizza">📍 Show me the Pizzeria</button><button class="btn sky" data-a="dotpick">🎨 Dot color</button></div>`;}
   if(S.job==='designer'){const d=ds(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${DS_MAX}</b> clients<br>💰 <b>${DS_PAY(0)}–${DS_PAY(3)} 🪙</b> a room: more ⭐ = more coins! Some clients want two rooms.</p>`;
     if(o){const T=dsTheme(o),H=HOUSE(o.h),W=dsWho(o);h+=`<div class="qcard"><div class="qtop"><span class="qi">${T.e}</span><div><div class="qt">${esc(W.nm)}: ${esc(dsThemeOf(o,0).n)}${o.r2?' and '+esc(dsThemeOf(o,1).n):''}</div><div class="qd">At the <b>${esc(H.n)}</b>${o.flat?', flat <b>'+o.flat+'</b>':''}. Follow the dot on your map!</div></div></div></div>`;}
-    else h+=`<p class="ph-sub">${d.done>=DS_MAX?'🌟 All done for today! More clients tomorrow.':!isDaytime()?workAt()+' Clients message you from 08:00 to 20:00.':'🎨 A client will message you soon!'}</p>`;
+    else h+=`<p class="ph-sub">${d.done>=DS_MAX?'🌟 All done for today! More clients tomorrow.':!isDaytime()?workAt()+' Clients message you from 8:00 to 20:00.':'🎨 A client will message you soon!'}</p>`;
     h+=`<div class="row"><button class="btn sky" data-a="dotpick">🎨 Dot color</button><button class="btn white" data-a="dtutgo">📖 Tips</button></div>`;}
   if(S.job==='teacher'){const d=tc(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${TC_MAX}</b> classes taught<br>💰 <b>${TC_PAY(1)}–${TC_PAY(3)} 🪙</b> a class: more ⭐ = more coins!</p>`;
     if(o){const S0=SUBJ[o.subj];h+=`<div class="qcard"><div class="qtop"><span class="qi">${S0.i}</span><div><div class="qt">Teach the ${S0.n} class</div><div class="qd">Go to <b>Cozy Town School</b>. In the hallway, it's ${tcDoor(S0)}.</div></div></div></div>`;}
-    else h+=`<p class="ph-sub">${d.done>=TC_MAX?'🌟 All classes done today! More tomorrow.':!isDaytime()?workAt()+' Classes are from 08:00 to 20:00.':'📱 Mrs. Maple will message you when a class needs you.'}</p>`;
+    else h+=`<p class="ph-sub">${d.done>=TC_MAX?'🌟 All classes done today! More tomorrow.':!isDaytime()?workAt()+' Classes are from 8:00 to 20:00.':'📱 Mrs. Maple will message you when a class needs you.'}</p>`;
     h+=`<div class="row"><button class="btn butter" data-a="nav:school">📍 Show me the school</button><button class="btn sky" data-a="phchat:dr">💬 Messages</button></div>`;}
   if(S.job==='hair'){const d=hs();h+=`<p class="ph-sub">Today: <b>${d.done} / ${HS_MAX}</b> customers<br>💰 <b>${HS_PAY[1]}–${HS_PAY[5]} 🪙</b> a customer: more ⭐ = more coins!</p>
-    <p class="ph-sub">${d.done>=HS_MAX?'🌟 All customers done today! More tomorrow.':!isDaytime()?workAt()+' The salon is open from 08:00 to 20:00.':'✂️ Go to the Hair Salon on the west road. Customers come in and sit in your chair!'}</p>
+    <p class="ph-sub">${d.done>=HS_MAX?'🌟 All customers done today! More tomorrow.':!isDaytime()?workAt()+' The salon is open from 8:00 to 20:00.':'✂️ Go to the Hair Salon on the west road. Customers come in and sit in your chair!'}</p>
     <div class="row"><button class="btn butter" data-a="nav:salon">📍 Show me the salon</button><button class="btn white" data-a="hstutgo">📖 Tips</button></div>`;}
   return h+`<p class="ph-sub" style="margin-top:14px">Want a different job? Message Rosie!</p><div class="row"><button class="btn white" data-a="phchat:ro">💬 Message Rosie</button></div>`;}
 
