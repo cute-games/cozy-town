@@ -1,0 +1,3 @@
+s3_pc-1366_light_pc-1366-light_038_town-flower-corner.png | pc-1366 light, city: the Flower Corner gate from the square | a friend (Rosie) stands at the right screen edge, half hidden behind the near lamp post; the edge cuts her name tag so it reads only "sie" | 1
+s3_pc-1366_dark_pc-1366-dark_015_whats-new-book-p3.png | pc-1366 dark, title's What's new book page 3 (Holidays all year) | a big close-up grey/peach object with a pink stripe (a sign or a person right in front of the camera) and a white fence corner fill the left third of the February picture; at its top-left a white label is cut by the picture edge and reads only "ce." | 2
+count: 2

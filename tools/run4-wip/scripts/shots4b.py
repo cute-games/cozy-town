@@ -2,7 +2,7 @@
 the sleep screen, job steps (the hairstylist's customer card, a delivery on the way), and two ZZTEST players together.
 usage: python3 shots4b.py OUTDIR [tags]   (tags: a comma list of set tags, and "two" for the two-player part; default all)"""
 import asyncio, json, os, sys
-KIT = '/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/kit6/cozycheck'; sys.path.insert(0, KIT)
+KIT = '/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/kit6/cozycheck'; sys.path.insert(0, KIT)
 from harness import Run
 from crawl import INSTR
 from checks import start_from_save
@@ -50,7 +50,7 @@ SETS = [
    ('holiday-school-front', "__goto('city');__setClock(null,12);wxForce('sun');__run(200);" + look(-25, -47, -25, -58, .08) + WALK, 'the school front on 1 Sep: balloons and the banner'),
    ('holiday-school-inside', "__goto('school');__setClock(null,12);", 'inside the school on 1 Sep')]),
  ('halloween-night', '2026-10-20T19:30:00', 'dark', [
-   ('halloween-spooky-gate', "__goto('city');__setClock(null,19.5);wxForce('sun');__run(30);" + look(-17, -1.0, -17, -9, .05), 'the spooky path gate after 18:00'),
+   ('halloween-spooky-gate', "__goto('city');__setClock(null,19.5);wxForce('sun');__run(30);" + look(-17, -1.0, -17, -9, .05) + WALK, 'the spooky path gate after 18:00'),   # (pass 9: your pets a step behind you, as in the town views)
    ('halloween-spooky-inside', "__goto('city');" + look(-17.2, -12.0, -19.6, -15.9, -.05), 'on the spooky path (it starts where the stepping stones end)'),
    ('halloween-ghosts-square', "__goto('city');" + look(-22, 9.0, -22, 19, .1) + WALK, 'the square at night with the little ghosts'),
    ('halloween-ghosts-lane', "__goto('city');" + look(-80, 9, -97, 9.4, .05), 'Friends Lane at night in October'),
@@ -59,7 +59,7 @@ SETS = [
    ('job-sleep-screen', BED, 'in bed at 22:00: the sleep screen', None, None, 1400),
    ('job-hair-card', HAIR, "the hairstylist's customer card at the salon", "()=>!!(HS.cust&&HS.cust.sat)", "()=>{const t=LOC.salon.inter.find(t=>t.hs);if(t){P.x=t.x;P.z=t.z;t.act();const c=HS.cust;if(c){const dx=c.x-t.x,dz=c.z-t.z,d=Math.hypot(dx,dz)||1;P.x=t.x-dx/d*.9+dz/d*.9;P.z=t.z-dz/d*.9-dx/d*.9;[P.x,P.z]=collideXZ(P.x,P.z,.3,CUR);P.yaw=Math.atan2(-(c.x-P.x),-(c.z-P.z));P.pitch=-.08;}}}"),
    ('job-delivery-way', DLV + "dl().wait=1e9;if(!dl().o)newOrder();pickUp();toastOff();", 'a pizza delivery on the way: the job box and the corner map', "()=>!!(dl().o&&dl().o.st==='carry')", None),   # (pass 6: the order is made and picked up; pass 5 never started one)
-   ('job-delivery-note', "dl().o=null;newOrder();", 'the delivery message', "()=>!$('note').hidden||!!document.querySelector('#toast.show')", None)]),
+   ('job-delivery-note', "closePanel();dl().o=null;newOrder();", 'the delivery message', "()=>!$('note').hidden||!!document.querySelector('#toast.show')", None)]),
 ]
 
 async def shoot(g, name, js, note, themap, prof, theme, waitfor=None, then=None, keep_note=False, extra=0):
@@ -100,8 +100,8 @@ async def main():
         s1 = json.loads(json.dumps(save)); s2 = json.loads(json.dumps(save)); s2['name'] = 'ZZTEST-Two'
         A = await run.open(fb, 'web', 'ipad-landscape', 'light', 'two-A', save=s1); await start_from_save(A); await A.ev(INSTR); await A.ev(CLEAN); await A.step(4)
         B = await run.open(fb, 'web', 'pc-1366', 'light', 'two-B', save=s2); await start_from_save(B); await B.ev(INSTR); await B.ev(CLEAN); await B.ev("()=>{S.name='ZZTEST-Two';}"); await B.step(4)
-        await A.ev("()=>{__goto('city');__setClock(null,12);wxForce('sun');" + look(-16, 14, -16, 9, .02) + "}")
-        await B.ev("()=>{__goto('city');__setClock(null,12);wxForce('sun');" + look(-14.8, 9.2, -16, 14, .02) + "}")
+        await A.ev("()=>{__goto('city');__setClock(null,12);wxForce('sun');" + look(-23.2, 7.6, -20.2, 9.8, .02) + "}")   # (pass 9: both on the open square; the PC view was boxed in by a tree and the Ideas Board)
+        await B.ev("()=>{__goto('city');__setClock(null,12);wxForce('sun');" + look(-20.2, 9.8, -23.2, 7.6, .02) + "}")
         for _ in range(30):
             await A.step(6); await B.step(6); await asyncio.sleep(.12)
         seen = await A.ev("()=>[...MP.peers.values()].map(p=>({nm:p.nm,x:p.x,z:p.z,v:p.v}))")

@@ -1,0 +1,2 @@
+s3_iphone-portrait_light_iphone-portrait-light_010_big-map.png | iphone-portrait light, the big map (city) | place names at the map's edges are cut down to stray letters: an "n" twice at the left edge and a "D" at the right edge | 1
+count: 1

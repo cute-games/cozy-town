@@ -1,0 +1,8 @@
+s3_pc-1366_dark_pc-1366-dark_016_whats-new-book-p4.png | pc-1366 dark theme, title's What's new book page 4 (Pet Shop upstairs) | the big picture cuts the fourth animal sign at its right edge, so it reads only "Cap…" | 1
+s3_pc-1366_dark_pc-1366-dark_017_whats-new-book-p5.png | pc-1366 dark theme, title's What's new book page 5 (photographer) | the last line "Your tutorials are pictures now ❓" ends in a big red ❓, so the news reads like a question | 1
+s3_pc-1366_dark_pc-1366-dark_018_whats-new-book-p6.png | pc-1366 dark theme, title's What's new book page 6 (Tree Park) | the emoji after "ride the zip lines" wraps onto a line of its own | 1
+s3_pc-1366_dark_pc-1366-dark_019_whats-new-book-p7.png | pc-1366 dark theme, title's What's new book page 7 (parties) | the two dancer emoji are split: 🕺 ends "a dance-off for two!" and 💃 sits alone on the next line | 1
+s3_pc-1366_dark_pc-1366-dark_020_shop-market.png | pc-1366 dark theme, Market shop card | the round ⬇️ scroll button sits on the bottom row and covers the bottom corners of the Lemon and Honey cards | 1
+s3_pc-1366_dark_pc-1366-dark_021_shop-pets.png | pc-1366 dark theme, Pet Shop card | the round ⬇️ scroll button sits on the bottom row and covers the bottom corners of the Frisbee and Yarn ball cards | 1
+s3b_ipad-landscape_light_easter-light_001_holiday-easter-bunny.png | ipad-landscape light theme, Flower Corner in the Easter month, green house on the left | the house wall left of the blue-shuttered window is pale with faint vertical streaks (like the old noon wall streaks); in easter-light_002, same view ten minutes later, that wall is flat dark grey-green | 1
+count: 7

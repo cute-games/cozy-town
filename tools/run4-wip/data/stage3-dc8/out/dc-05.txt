@@ -1,0 +1,15 @@
+M-061 | KEEP | pets crowd bottom of view, Waffles cut off by edge, toast hides middle tag and clips "Waffles"
+M-062 | DROP | floating scroll hint by design, only touches card corners, no text or price hidden
+M-063 | KEEP | two conflicting orders at once (Iris flat 34 vs Mr. Bolt flat 32), confusing
+M-064 | KEEP | view boxed in by big brown trunk/crown and board, other player only through a gap
+M-065 | KEEP | gold "Perfect +15" and sparkle run into the score bar's bottom edge (minor)
+M-066 | KEEP | own dancer (left) shows back of head, host dancer faces camera
+M-067 | KEEP | mirror ball hangs in mid-air beside the pole, no string or arm (minor)
+M-068 | KEEP | online toast covers chat and phone buttons, only bottom edges peek out
+M-069 | KEEP | card and "Max" tab cover Max in the chair, tab over his face
+M-070 | KEEP | horizontal light/dark streaks clearly visible on big orange and yellow crowns
+M-071 | DROP | reads as a ghost peeking from behind/in the fountain, not clearly broken
+M-072 | KEEP | person's back fills centre down to bottom edge, hides the fountain
+M-073 | KEEP | lamp pole down the middle hides player, chick toy and hand float beside it
+M-074 | KEEP | same pole hides player, ball and racket float beside it
+M-075 | KEEP | same pole hides player, frisbee and hand float beside it
