@@ -1,7 +1,7 @@
 """Run 4 finish: the data of the glitch list from pass 8 on (read by mkglitches5.py). One entry per cause; the marks are
 'p8:M-001' (pass 8, stage3-dc8). Later passes are added to DC and PASS as they come."""
-DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13'}
-PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13'}
+DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13', 'p14': 'stage3-dc14'}
+PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13', 'p14': 'pass 14'}
 AFTER_SETS = ['stage3-p9', 'stage3-p9b', 'stage3-p9c']   # newest first: the after picture of a fixed spot comes from pass 9
 KIT_SETS = ['stage3-kit9']
 PROBES = {   # spots whose after picture is a probe taken right after the fix (a pass-9 picture replaces it when there is one)
@@ -42,6 +42,7 @@ F7 = ' (patch_f7.py)'
 F8 = ' (patch_f8.py)'
 F9 = ' (patch_f9.py)'
 F10 = ' (patch_f10.py)'
+F11 = ' (patch_f11.py)'
 FRAME = "The photographer's framing, not the game: "
 ENTRIES = [
  ('168', ['p8:M-001'], 'October: the park fountain', 'iPad', 'A white ghost hung inside the fountain, between its top and middle bowls.', 1, 'fixed',
@@ -277,4 +278,20 @@ ENTRIES = [
   "The photographer's spot (set aside so in passes 11 and 12); the list's scroll hint (G4-034); pass 12's double-checkers dropped the salon's sign (M-025).", '—'),
  ('281', ['p13:M-016', 'p13:M-020', 'p13:M-022', 'p13:M-026', 'p13:M-027', 'p13:M-028', 'p13:M-029'], "the check's own staging", 'iPad', "Crates at the edge of the check's photo shoot; the Ideas Board in front of N16's camera; a townsperson's back in N21's; a post, a lamp post, a door at the camera; a friend partly behind another.", 1, 'not a glitch',
   "Each check takes its pictures where its test stands (set aside so since stage 3); N21 puts you right behind a tall townsperson (G4-260); four friends in a fan, one can be partly behind another for a moment (pass 11's double-checkers dropped it).", '—'),
+ ('282', ['p14:M-004', 'p14:M-006'], "the salon card's last word", 'iPad', 'The customer\'s words wrapped so the last emoji and the closing quote stood alone on a line ("💕”", "✨”").', 1, 'fixed',
+  'The last word keeps to the word before it (the space between them cannot break), so an emoji and the closing quote never start a line alone' + F11 + '.', 'pictures of the salon card; pass 15 pictures.'),
+ ('283', ['p14:M-005'], "the job box's distance", 'iPad', 'The job box broke its line before "· 86 m", the second line starting with the dot.', 1, 'fixed',
+  'The distance keeps to the place before it in the photographer\'s, the hairstylist\'s, the teacher\'s, the designer\'s and the pizza job box, so a line never starts with "·"' + F11 + '.', 'pictures of the job box; pass 15 pictures.'),
+ ('284', ['p14:M-007'], 'the photo shoot at the Duck Pond', 'iPad', 'A thin dark strip at the bottom-right corner, under Snap.', 1, 'not a glitch',
+  "A bush 1 m from the camera, just below the screen's bottom edge: the black outline round every thing is 2 cm bigger than the thing, so the bush's outline shows at the edge a step before the bush does. Traced by replaying the check's shoot with its booking: no page element there; the pixels are that bush's outline.", '—'),
+ ('285', ['p14:M-003'], "the phone's jobs on a sideways iPhone", 'iPhone sideways', 'Three job cards filled the phone screen; the other two (the Hairstylist, the Photographer) showed no part above its foot.', 1, 'open',
+  "The cards are as tall as their pictures, and the second row starts right at the screen's foot; the foot fades while there is more below (G4-263) and the list scrolls. Not changed: written down for the owner (section 5c).", ''),
+ ('286', ['p14:M-001', 'p14:M-002'], 'your friends in a shop', 'iPad, dark theme', "A friend half off the screen's edge in the toy shop; one with her back to you at the bakery's counter, her head in front of the menu's last lines.", 1, 'not a glitch',
+  "Your friends follow you into a shop and stand round you (the narrower fan, run 4 finish): seen from the door, one can be at the view's edge or at the counter in front of the menu, as anyone in the shop would; they move on with you.", '—'),
+ ('287', ['p14:M-011', 'p14:M-012'], "the designer's reveal", 'iPad', 'A see-through "Knock knock!" over the room.', 1, 'not a glitch',
+  'The reveal starts with the client\'s knock: "Knock knock! 🚪" rises over the room and fades (the check\'s pictures catch it fading).', '—'),
+ ('288', ['p14:M-014', 'p14:M-015'], 'decided before', 'iPhone sideways', "The hair card over the customer; an orange pet with a white wing half off the screen's bottom-left corner.", 1, 'not a glitch',
+  "On a sideways phone the hair card fills the screen's height (G4-194); your pets at your heels (G4-205).", '—'),
+ ('289', ['p14:M-010', 'p14:M-013', 'p14:M-016'], "the check's own staging", 'iPad, PC', 'Two grandmas right in front of N6\'s camera; "The Food truck is closed now" at noon; a tree in front of N25\'s camera at the Flower Corner.', 1, 'not a glitch',
+  "N6 looks at the grandmas' bench from right behind them; N9 tries the truck at 21:00 and then turns the clock to noon, its \"closed\" toast still up for the day picture; N25 stands straight in front of the group at the nearest distance where everyone fits: at the hedge a pavement tree is at the frame's left, in front of nobody (five stars; a player can step aside).", '—'),
 ]

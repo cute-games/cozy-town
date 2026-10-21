@@ -1,0 +1,4 @@
+s3_ipad-landscape_dark_ipad-landscape-dark_049_big-map.png | ipad-landscape dark, the big map in town | place names are cut off at the map's edges: "e Station" and "othes Shop" on the left, "Duck Po" on the right (its duck icon half cut too), and a dot on the top edge shows no name | 1
+s3_ipad-landscape_dark_ipad-landscape-dark_049_big-map.png | ipad-landscape dark, the big map in town | the "Tap a place to see the way there!" bar lies over the bottom of the map and hides the Hair Salon; its name sticks out cut in the thin strip under the bar as "air Salon" | 1
+s3_ipad-landscape_dark_ipad-landscape-dark_052_whats-new-book.png | ipad-landscape dark, the What's new book page 1, opened in town | the book card covers most of the corner map and the notepad (only thin strips peek out at its left edge) and the top of the joystick ring; the same on pages 3 to 7 (054, 055, 056, 057, 058) | 1
+count: 3

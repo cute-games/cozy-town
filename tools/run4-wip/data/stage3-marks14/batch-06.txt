@@ -1,0 +1,5 @@
+s3_iphone-portrait_light_iphone-portrait-light_039_town-duck-pond.png | iphone-portrait light, the duck pond in town | the notepad card under the corner map covers the left end of the pond's stone ring (the bench beside the pond is not in sight) | 1
+s3_iphone-portrait_light_iphone-portrait-light_040_town-school-front.png | iphone-portrait light, the school front | the notepad card covers the start of the school's big pink sign, so it reads "ozy Town School" | 2
+s3_iphone-portrait_light_iphone-portrait-light_041_town-east-shops.png | iphone-portrait light, the Toy Store (east shops) | the notepad card covers most of the Toy Store's name sign, only "ore" shows | 2
+s3_iphone-portrait_light_iphone-portrait-light_042_town-treepark-gate.png | iphone-portrait light, the Tree Park gate | the notepad card covers the left end of the gate's beam and the left post's mint knob | 1
+count: 4

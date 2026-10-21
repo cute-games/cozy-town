@@ -1,0 +1,2 @@
+s3_pc-1366_dark_pc-1366-dark_010_big-map.png | pc-1366 dark theme, the big map (city) | place names cut off at the map's edges: only "en" of a name shows at the left edge (left of the Fire Station block), and one stray letter peeks out at the right edge beside the "Tap a place to see the way there!" bar | 1
+count: 1

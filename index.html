@@ -1892,7 +1892,7 @@ const hsAsk=c=>{const s=c.want.style,how=s==='straight'||s==='curly'?' and '+s:s
 function hsPic(c){if(c.pic)return c.pic;let url='';try{const sc=shotScene(),p=makePerson(hsLookOf(c,c.want));sc.add(p.root);p.root.updateMatrixWorld(true);const v=new THREE.Vector3();p.head.getWorldPosition(v);
     const cam=new THREE.PerspectiveCamera(30,1,.05,20);cam.position.set(v.x+.05,v.y+.42,v.z+1.95);cam.lookAt(v.x,v.y+.3,v.z);url=offShot(sc,cam,220,220,0xfff0f6);}catch(e){console.warn(e);}c.pic=url;return url;}
 function hsCard(){const c=HS.cust;if(!c||!c.sat||c.leaving)return;const h=c.hair;if(!(UI.open&&document.querySelector('#card [data-a="hsdone"]'))){HS.look=1.2;popDrop();}   /* 👀 a fresh card: the view turns to the customer (run 4 finish) */
-  openPanel(`<div class="who" style="--c:#ff9ec4">✂️ ${esc(c.name)}</div><div class="hsrow"><img class="hspic" alt="The hair ${esc(c.name)} wants" src="${hsPic(c)}"><p class="line">“${esc(hsAsk(c))}”<br><small>Now: <b>${hsLenN(h.len)}</b>, <b>${hsStyleN(h.style)}</b>, <b>${hsColN(h.col)}</b></small></p></div>
+  openPanel(`<div class="who" style="--c:#ff9ec4">✂️ ${esc(c.name)}</div><div class="hsrow"><img class="hspic" alt="The hair ${esc(c.name)} wants" src="${hsPic(c)}"><p class="line">“${esc(hsAsk(c)).replace(/ (\S+)$/,'\u00a0$1')}”<br><small>Now: <b>${hsLenN(h.len)}</b>, <b>${hsStyleN(h.style)}</b>, <b>${hsColN(h.col)}</b></small></p></div>
     <div class="hsgrid">${HS_STYLES.map(([k,n,i])=>`<button class="btn ${h.style===k?'mint':'white'}" data-a="hscomb:${k}">${i} ${n}</button>`).join('')}</div>
     <div class="swrow hsw">${HS_COLS.map(([k,n])=>`<button class="sw ${h.col===k?'on':''}" style="background:${k}" data-a="hsdye:${k}" aria-label="${n}"></button>`).join('')}</div>
     <div class="row hsdo"><button class="btn butter" data-a="hscut" ${h.len==='short'?'disabled':''}>✂️ Cut shorter</button><button class="btn mint" data-a="hsdone">✅ Done!</button><button class="btn white" data-a="close" aria-label="Later">✕</button></div>`,{bottom:true});}
@@ -6848,12 +6848,12 @@ function jobHud(force){const el=$('job'),job=!!(PLAYING&&S&&(S.job==='delivery'|
   if(S.job==='photo'){const d=pt(),o=d.o;let h;   /* 📸 the photographer (run 4, job 15) */
     if(!o)h=d.done>=PT_MAX?`🌟 All ${PT_MAX} photos done today!`:!isDaytime()?workAt():`📸 Waiting for a booking… <small>(${d.done}/${PT_MAX})</small>`;
     else if(PHO.on)h=PHO.group.every(m=>m.pose)?`📸 Frame everyone and <b>Snap</b>!`:`📸 Tap each person for a pose <small>(${PHO.group.filter(m=>m.pose).length}/${PHO.group.length})</small>`;
-    else{const Sp=ptSpotOf(o),tg=jobTarget(),m=CUR.id==='city'&&tg?' <span class="nw">· '+Math.round(Math.hypot(tg.x-P.x,tg.z-P.z))+' m</span>':'';h=`📸 → <b>${esc(Sp.n)}</b>${m} <small>${PT_KINDS[o.kind].i} ${esc(PT_KINDS[o.kind].n)} · ${d.done}/${PT_MAX}</small>`;}
+    else{const Sp=ptSpotOf(o),tg=jobTarget(),m=CUR.id==='city'&&tg?'\u00a0<span class="nw">· '+Math.round(Math.hypot(tg.x-P.x,tg.z-P.z))+' m</span>':'';h=`📸 → <b>${esc(Sp.n)}</b>${m} <small>${PT_KINDS[o.kind].i} ${esc(PT_KINDS[o.kind].n)} · ${d.done}/${PT_MAX}</small>`;}
     if(force||h!==jobHud.last){$('jobTxt').innerHTML=h;jobHud.last=h;}
     $('jobTxt').classList.remove('late','rare');const mh=CUR.id!=='city';if($('mmBtn').hidden!==mh)$('mmBtn').hidden=mh;return;}
   if(S.job==='hair'){const d=hs(),c=HS.cust;let h;   /* ✂️ the hairstylist (job 15) */
     if(CUR.id==='salon')h=c?(c.sat?`✂️ <b>${esc(c.name)}</b> is in your chair!`:c.leaving?`👋 Bye, ${esc(c.name)}!`:`✂️ ${esc(c.name)} is coming in…`):d.done>=HS_MAX?`🌟 All ${HS_MAX} customers done today!`:!isDaytime()?workAt():`✂️ Waiting for a customer… <small>(${d.done}/${HS_MAX})</small>`;
-    else{const tg=jobTarget(),m=CUR.id==='city'&&tg?' <span class="nw">· '+Math.round(Math.hypot(tg.x-P.x,tg.z-P.z))+' m</span>':'';h=`✂️ → <b>Hair Salon</b>${m} <small>(${d.done}/${HS_MAX})</small>`;}
+    else{const tg=jobTarget(),m=CUR.id==='city'&&tg?'\u00a0<span class="nw">· '+Math.round(Math.hypot(tg.x-P.x,tg.z-P.z))+' m</span>':'';h=`✂️ → <b>Hair Salon</b>${m} <small>(${d.done}/${HS_MAX})</small>`;}
     if(force||h!==jobHud.last){$('jobTxt').innerHTML=h;jobHud.last=h;}
     $('jobTxt').classList.remove('late','rare');const mh=CUR.id!=='city';if($('mmBtn').hidden!==mh)$('mmBtn').hidden=mh;return;}
   if(S.job==='teacher'){const d=tc(),o=d.o;let h;
@@ -6861,7 +6861,7 @@ function jobHud(force){const el=$('job'),job=!!(PLAYING&&S&&(S.job==='delivery'|
       if(id==='cl_'+o.subj)h=`📚 Sit at your desk to start the <b>${S0.n}</b> class!`;
       else if(id.startsWith('cl_'))h=`📚 Wrong room! Your class is <b>${S0.i} ${S0.n}</b>`;
       else if(id==='school')h=`📚 Find the <b>${S0.i} ${S0.n}</b> room!`;
-      else{const tg=jobTarget(),m=CUR.id==='city'&&tg?' <span class="nw">· '+Math.round(Math.hypot(tg.x-P.x,tg.z-P.z))+' m</span>':'';h=`📚 → <b>School</b> · ${S0.i} ${S0.n} class${m}`;}}
+      else{const tg=jobTarget(),m=CUR.id==='city'&&tg?'\u00a0<span class="nw">· '+Math.round(Math.hypot(tg.x-P.x,tg.z-P.z))+' m</span>':'';h=`📚 → <b>School</b> · ${S0.i} ${S0.n} class${m}`;}}
     else if(d.done>=TC_MAX)h=`🌟 All ${TC_MAX} classes done today!`;
     else if(!isDaytime())h=workAt();
     else h=`📚 Waiting for a message from school… <small>(${d.done}/${TC_MAX})</small>`;
@@ -6870,7 +6870,7 @@ function jobHud(force){const el=$('job'),job=!!(PLAYING&&S&&(S.job==='delivery'|
   if(S.job==='designer'){const d=ds(),o=d.o;let h;
     if(o){const H=HOUSE(o.h),T=dsTheme(o);
       if(CUR.id==='client'){const R=DROOM[T.room];h=`${o.r2?`<small>Room ${(o.ri|0)+1}/2</small> `:''}${T.e} <b>${esc(T.n)}</b><div class="tm">🪑 ${dsItems().length} <small>(${R.cnt[0]}–${R.cnt[1]})</small></div>`;}
-      else{const tg=jobTarget(),m=CUR.id==='city'&&tg?' <span class="nw">· '+Math.round(Math.hypot(tg.x-P.x,tg.z-P.z))+' m</span>':'',inA=CUR.id.startsWith('apt');
+      else{const tg=jobTarget(),m=CUR.id==='city'&&tg?'\u00a0<span class="nw">· '+Math.round(Math.hypot(tg.x-P.x,tg.z-P.z))+' m</span>':'',inA=CUR.id.startsWith('apt');
         h=inA&&APT.b===o.h?`🎨 Find flat <b>${o.flat}</b>!`:inA?`🎨 Wrong building! → <b>${esc(H.n)}</b>`:`🎨 → <b>${esc(H.n)}</b>${o.flat?' · flat '+o.flat:''}${m}`;}}
     else if(d.done>=DS_MAX)h=`🌟 All ${DS_MAX} rooms done today!`;
     else if(!isDaytime())h=workAt();
@@ -6878,7 +6878,7 @@ function jobHud(force){const el=$('job'),job=!!(PLAYING&&S&&(S.job==='delivery'|
     if(force||h!==jobHud.last){$('jobTxt').innerHTML=h;jobHud.last=h;}
     $('jobTxt').classList.remove('late','rare');const mh=CUR.id!=='city';if($('mmBtn').hidden!==mh)$('mmBtn').hidden=mh;return;}
   const d=dl(),o=d.o,inPz=CUR.id==='pizza';let h;
-  if(o&&o.st==='carry'){const H=HOUSE(o.h),late=o.left<=0,T=dlTarget(),m=CUR.id==='city'?' <span class="nw">· '+Math.round(Math.hypot(T.x-P.x,T.z-P.z))+' m</span>':'';
+  if(o&&o.st==='carry'){const H=HOUSE(o.h),late=o.left<=0,T=dlTarget(),m=CUR.id==='city'?'\u00a0<span class="nw">· '+Math.round(Math.hypot(T.x-P.x,T.z-P.z))+' m</span>':'';
     const inA=CUR.id.startsWith('apt'),where=!o.flat?`🍕 → <b>${esc(H.n)}</b>${m}`:inA&&APT.b===o.h?'🍕 Find the right door! <small class="nw">(flat number: 📱 Messages)</small>':inA?`🍕 Wrong building! → <b>${esc(H.n)}</b>`:`🍕 → <b>${esc(H.n)}</b>${m} <small class="nw">· flat number in 📱</small>`;
     h=`<div>${o.r?'<span class="rt">⭐ RARE</span> ':''}${where}</div><div class="tm">${late?'⏰ Late! Hurry!':'⏱️ '+mmss(o.left)+(o.lim>=1800?' <small>no rush 😌</small>':'')}</div>`;}
   else if(o)h=(o.r?'<span class="rt">⭐ RARE</span> ':'')+(inPz?'📩 Pick up the pizza from <b>Chef Blaze</b>!':'📩 New order! Go to the <b>Pizzeria</b>&nbsp;🍕'+(CUR.id==='beach'?' <small class="nw">· 🚌 bus first</small>':''));

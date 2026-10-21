@@ -1,0 +1,18 @@
+kit14-n37-ipad-landscape-treepark-gate.png | ipad-landscape, Tree Park gate | the friends crowd the bottom edge right in front of the camera, all cut off by the screen edge: Clover is hidden behind Waffles (only her ears and name tag show, the Waffles tag on top of her ears) and Mochi sits under the run button | 2
+kit14-n37-ipad-landscape-treepark-easy-first-deck.png | ipad-landscape, Tree Park first deck | a big yellow star hangs in mid-air over the bridge to the next deck, touching nothing (no star in the Tree Park look) | 1
+kit14-n4-walkers-walkers-give-way.png | ipad-landscape, Flower Corner gate | the camera is pressed against the Flower Corner sign: the pink board fills the left half of the view with its text cut off at the left edge and the fence fills the bottom, so the walkers can hardly be seen | 2
+kit14-n41-bus-A-bus-pill.png | ipad-landscape, street by the Market | the camera stands right behind a street lamp whose post splits the whole view down the middle, top to bottom | 1
+kit14-n6-grandmas-grandmas-day.png | ipad-landscape, duck pond bench | the two grandmas are jammed together right in front of the camera, one grey head covering the other's face and their bodies hidden under the toast; no ducks or crumbs in view and a building wall fills the left third | 2
+kit14-n6-grandmas-grandmas-day.png | ipad-landscape, duck pond bench | the friends pile up at the bottom edge, overlapping each other and cut off (Mochi shows only a crown and a wing), and Mochi's name tag sits on the joystick | 2
+kit14-n8-designer-designer-room-1.png | ipad-landscape, designer room 1 (Forest living room) | a faint see-through "Knock knock!" text hangs over the sofa back in the middle of the room | 1
+kit14-n8-designer-designer-room-2.png | ipad-landscape, designer room 2 (Beautiful bedroom) | a big grey see-through "Knock knock!" text hangs across the middle of the room over the bunk bed | 1
+kit14-n9-food-food-truck.png | ipad-landscape, food truck in the park | the toast says "The Food truck is closed now. It opens at 8:00" with a moon while the clock shows 12:00 Sun in bright daylight and food sits in the open window | 1
+kit14-n13-iphone-landscape-hair-card.png | iphone-landscape, hair salon | the hair card hides the client in the chair; only the top of her brown hair peeks over the card | 1
+kit14-n13-iphone-landscape-hair-before-done.png | iphone-landscape, hair salon | a friend (orange, with a white wing) is jammed into the bottom-left corner right in front of the camera, half off the screen | 1
+kit14-n26-map-iphone-landscape-corner-map-iphone-landscape.png | iphone-landscape, Flower Corner gate at night | the joystick sits in the middle of the lower screen over the open gate and path, not in the bottom-left corner where it is on the other iPhone pictures | 2
+kit14-n26-map-iphone-portrait-big-map-iphone-portrait.png | iphone-portrait, big map | two place labels are cut off by the map's left edge ("...on" and "...lon") | 1
+kit14-n25-pc-1366-photo-shoot-pc-1366.png | pc-1366, photo shoot by the Flower Corner | a tree stands right in front of the camera: its big yellow crown covers the top-left of the photo frame and its trunk runs down through the frame next to Oscar | 2
+kit14-n25-pc-1366-photo-result-pc-1366.png | pc-1366, photo result card | the snapped photo has the tree trunk and crown filling its left part, yet it is praised "Just beautiful! Five stars!" | 1
+kit14-n26-map-pc-1366-big-map-pc-1366.png | pc-1366, big map Places list | the down-arrow scroll hint sits on the edges of the faded "Beach" and "Bus stop" buttons | 1
+kit14-n26-map-pc-1366-big-map-pc-1366.png | pc-1366, big map | at the map's left edge a place label is cut to "...ne" next to a short stray pink bar across the road | 1
+count: 17

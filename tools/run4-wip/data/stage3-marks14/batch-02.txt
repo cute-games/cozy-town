@@ -1,0 +1,4 @@
+s3_ipad-landscape_light_ipad-landscape-light_049_big-map.png | ipad-landscape light, the big map (city) | place labels are cut off by the map's edges ("e Station", "othes Shop", "Duck Po"), and "air Salon" peeks out in a thin strip under the "Tap a place" hint bar | 1
+s3_ipad-landscape_light_ipad-landscape-light_056_whats-new-book-p5.png | ipad-landscape light, What's new book page 5 (city) | a passer-by's speech bubble sticks out past the book's right edge with its text cut ("ek," / ".") | 1
+s3_ipad-landscape_light_ipad-landscape-light_062_house-paint.png | ipad-landscape light, house colour card (city) | the grandma's speech bubble sticks out from behind the card's right edge with its first line cut ("hree days a week,") | 1
+count: 3
