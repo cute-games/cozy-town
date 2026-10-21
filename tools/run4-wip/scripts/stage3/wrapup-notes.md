@@ -1,0 +1,12 @@
+### Notes at the owner's wrap-up (18 Oct 2026)
+- Live: from 18 Oct 2026, run 4 stages 1 to 3: on GitHub (main, index.html, stamp 2026101802, md5 8425c145) and in the Claude version (the artifact "Cozy Town", md5 579a3449), merged and published after the save tests at the owner's word. The rest of the final check was stopped and is NOT VERIFIED: the walk-through (C2, C2b), the device tests (C1, C3, C4, C5, T1 to T4, K1) and the night-3 and run-4 lines on the final file (section 2, stage 3 end). The two players in the test room (D1 to D3) passed; two real players stay NOT VERIFIED.
+- Finished and pushed: stages 1 and 2 (branches claude/run-4-s1, claude/run-4-s2; PRs #4, #5) and stage 3 up to its seventh pass and fifth critic round (branch claude/run-4-s3: the game with stamp 2026101802, the rollback copy, the glitch list G4-001 to G4-167, this report).
+- Dated backups before the update, both private artifacts read back byte for byte: "PRE-RUN 4 LIVE — Cozy Town backup 2026-10-18 (GitHub file, night 3)" (md5 709bf763, the same file as tools/prerun4-index.html) and "Cozy Town BACKUP 2026-10-18 — Claude version before run 4" (md5 fd84696c).
+- Open, kept on the branch claude/run-4-wip (tools/run4-wip/README.md says how to pick each up):
+  - S3-L, pass 7: 9 of its 13 viewer batches never ran (the spend limit); its 15 kept marks are fixed, not yet seen by a later pass.
+  - S3-N, pass 8: stopped after 71 pictures, none looked at; "loop until one full pass finds nothing new" is not met.
+  - Critic round 6, the last: not run (section 4 says where each loop stands).
+  - Friends around you: walking round you was dropped (it broke N3); the narrower fan and the spot rules are in, not yet seen by a critic.
+  - Ducks: the new faces, not yet seen by a viewer or a critic.
+  - Clock format: times read "09:40 Wed"; the plan's example was "9:40 Wed". The owner decides.
+- To carry on: check out claude/run-4-wip, read tools/run4-wip/README.md, run pass 8 and critic round 6, then the full check and the stage-3 pull request (or a follow-up one if this stage is merged).

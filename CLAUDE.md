@@ -24,3 +24,22 @@ A three.js toon game for kids in one file, `index.html` (GitHub Pages serves `ma
 - Bump `COZY_BUILD` once at the end of each stage (date + counter, always bigger than the live stamp).
 - Never push to `main`: changes go in through pull requests the owner merges, or a merge the owner asked for after the full check passed.
 - Run nothing heavy next to a check: on a busy machine N13 and N15 fail on timing alone.
+
+## Glitch loop rules (agreed with the owner 21 Oct; they replace "loop until one full pass finds nothing new" from pass 20, after pass 19)
+1. Re-check only what changed. Scripted kit checks still run in full every pass. One full picture pass at the end.
+2. 4-5 viewers per pass, each with its own focus (dark mode, iPad touch, shops/people, lighting/objects, text/UI). Rotate the focus each pass.
+3. Viewers and first checkers: Sonnet or Opus at Medium. Decisions and game edits: Opus Max. Opus Max confirms every mark before an edit.
+4. Stop when 2 passes in a row have no fix above minor, or after 3 passes. Then do one full final pass. Leftover minor marks go into the report and IDEA's PAGE as a visible list.
+5. Repeat checks (counts, positions, distances, mark filter) run as plain scripts, not agents.
+6. Start a fresh chat once the context passes about 300k.
+The final check is unchanged.
+
+How they apply (checked against the real files, 21 Oct):
+- What changed = the spots of the last pass's fixes: each fix's probe views (`views_fN.py` with `probe_views.py`), on the screen where the mark was seen and one other screen shape, light and dark for cards; at most about 40 pictures, so every viewer sees all of them. `shots8.py`, `shots4b.py` and `shots4c.py` take no subset: their views build on each other (big-house uses house-paint's camera; the photo views follow one another). A pass with no fixes leaves nothing to re-check.
+- Kit checks in full = all 41 lines of the night3 and run4 stages (N1 to N41, about 21 minutes), as in every pass so far. The whole kit, with its crawls and the 10-screen sweep (106 lines, hours), is the final check.
+- Viewers: each looks at every picture of its set and reports what is wrong in its focus, and anything broken (grade 3) whatever its focus. With 4 viewers, the focus left out rotates. In a full pass one focus covers 120 to 340 pictures (pass 18: text/UI 342, iPad 233, dark 213, lighting/objects 161, shops/people 120) and a viewer used 140k to 265k tokens for 38 pictures, so in the full final pass each focus runs in batches of at most 40, each picture with the focus it belongs to.
+- Models: viewers and first checkers run as Sonnet at medium effort. The main session (Opus at max) decides, edits, and opens every mark's picture itself before an edit; if it runs on another model, an Opus-max sub-agent confirms. NIGHT-PLAN-4's "Opus at max for important work" still holds for decisions and edits.
+- Minor = grade 1 on the plan's scale (1 small, 2 clear, 3 broken), set in the glitch entry when the mark is decided. A kit line that fails (not on timing) is above minor. The count starts at pass 20: stop after two passes in a row with no fix above minor, or after pass 22; then the full final pass. The recorded grades show no fix above minor since pass 13, so counting earlier passes would end the loop at once.
+- In the full final pass a mark above minor is fixed and re-checked like a pass; minor ones are not fixed. Every leftover minor mark (grade 1, not fixed, the open ones too) goes into `tools/RUN-4-REPORT.md` and as a list section in IDEA's PAGE (the owner's doc, written through the docs connector).
+- The mark filter (`dcfilterN.py`) and the counts, positions and distances (`views_f*.py`) are scripts already.
+- Fresh chat: the session cannot read its own context size, so it hands off at a pass boundary, after a commit. On this branch: the kit as used (`cozy-check-v6.zip`, rebuilt 21 Oct with the finish's kit fixes), the prompts and "should look like" lines (`tools/run4-wip/scripts/stage3/`), the scripts (`tools/run4-wip/scripts/`; 70 carry the old session's scratchpad path, replace it first), the records (`tools/run4-wip/data/`) and the report drafts (`tools/run4-wip/data/finish-drafts/`). `RUN-4-REPORT.md` section 0 is brought up to date at the end; until then the drafts say where things stand.
