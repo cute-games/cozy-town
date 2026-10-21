@@ -1,0 +1,1298 @@
+[
+ {
+  "name": "kit13-n26-map-android-tablet-portrait-corner-map-android-tablet-portrait",
+  "prof": "android-tablet-portrait",
+  "theme": "light",
+  "file": "kit13-n26-map-android-tablet-portrait-corner-map-android-tablet-portrait.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n26-map-android-tablet-portrait-corner-map-android-tablet-portrait.png",
+  "changed_share": 0.7285,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n26-map-android-tablet-portrait-big-map-android-tablet-portrait",
+  "prof": "android-tablet-portrait",
+  "theme": "light",
+  "file": "kit13-n26-map-android-tablet-portrait-big-map-android-tablet-portrait.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n26-map-android-tablet-portrait-big-map-android-tablet-portrait.png",
+  "changed_share": 0.0454,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n13-ipad-landscape-hair-card",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n13-ipad-landscape-hair-card.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n13-ipad-landscape-hair-card.png",
+  "changed_share": 0.0396,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n13-ipad-landscape-hair-stars",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n13-ipad-landscape-hair-stars.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n13-ipad-landscape-hair-stars.png",
+  "changed_share": 0.0186,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n15-A-sleep-screen",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n15-A-sleep-screen.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n15-A-sleep-screen.png",
+  "changed_share": 0.0017,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n25-ipad-landscape-photo-shoot-ipad-landscape",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n25-ipad-landscape-photo-shoot-ipad-landscape.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n25-ipad-landscape-photo-shoot-ipad-landscape.png",
+  "changed_share": 0.7048,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n37-ipad-landscape-treepark-start",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n37-ipad-landscape-treepark-start.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n37-ipad-landscape-treepark-start.png",
+  "changed_share": 0.179,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n9-food-food-truck-shop",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n9-food-food-truck-shop.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n9-food-food-truck-shop.png",
+  "changed_share": 0.0063,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n1-holidays-holiday-halloween-day",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n1-holidays-holiday-halloween-day.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n1-holidays-holiday-halloween-day.png",
+  "changed_share": 0.5395,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n1-holidays-holiday-halloween-night",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n1-holidays-holiday-halloween-night.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n1-holidays-holiday-halloween-night.png",
+  "changed_share": 0.0233,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n1-holidays-spooky-path",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n1-holidays-spooky-path.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n1-holidays-spooky-path.png",
+  "changed_share": 0.0741,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n1-holidays-holiday-christmas",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n1-holidays-holiday-christmas.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n1-holidays-holiday-christmas.png",
+  "changed_share": 0.4972,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n1-holidays-holiday-easter",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n1-holidays-holiday-easter.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n1-holidays-holiday-easter.png",
+  "changed_share": 0.4707,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n1-holidays-holiday-valentine",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n1-holidays-holiday-valentine.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n1-holidays-holiday-valentine.png",
+  "changed_share": 0.4741,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n1-holidays-holiday-plain-day",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n1-holidays-holiday-plain-day.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n1-holidays-holiday-plain-day.png",
+  "changed_share": 0.4767,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n10-season-autumn-season-autumn",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n10-season-autumn-season-autumn.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n10-season-autumn-season-autumn.png",
+  "changed_share": 0.1217,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n10-season-spring-season-spring",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n10-season-spring-season-spring.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n10-season-spring-season-spring.png",
+  "changed_share": 0.1271,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n10-season-summer-season-summer",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n10-season-summer-season-summer.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n10-season-summer-season-summer.png",
+  "changed_share": 0.0211,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n10-season-winter-season-winter",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n10-season-winter-season-winter.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n10-season-winter-season-winter.png",
+  "changed_share": 0.0226,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n10-weather-weather-sunny",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n10-weather-weather-sunny.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n10-weather-weather-sunny.png",
+  "changed_share": 0.0402,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n10-weather-weather-cloudy",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n10-weather-weather-cloudy.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n10-weather-weather-cloudy.png",
+  "changed_share": 0.0601,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n10-weather-weather-rain",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n10-weather-weather-rain.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n10-weather-weather-rain.png",
+  "changed_share": 0.1436,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n10-weather-weather-snow",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n10-weather-weather-snow.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n10-weather-weather-snow.png",
+  "changed_share": 0.2404,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n11-old-old-version-sees-breed-as-puppy",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n11-old-old-version-sees-breed-as-puppy.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n11-old-old-version-sees-breed-as-puppy.png",
+  "changed_share": 0.0062,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n11-pets-pet-pomchi",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n11-pets-pet-pomchi.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n11-pets-pet-pomchi.png",
+  "changed_share": 0.0106,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n11-pets-pet-pug",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n11-pets-pet-pug.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n11-pets-pet-pug.png",
+  "changed_share": 0.0295,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n11-pets-pet-sausage",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n11-pets-pet-sausage.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n11-pets-pet-sausage.png",
+  "changed_share": 0.0267,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n11-pets-pet-capybara",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n11-pets-pet-capybara.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n11-pets-pet-capybara.png",
+  "changed_share": 0.0346,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n11-pets-pet-duck",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n11-pets-pet-duck.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n11-pets-pet-duck.png",
+  "changed_share": 0.0426,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n11-pets-pet-owl",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n11-pets-pet-owl.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n11-pets-pet-owl.png",
+  "changed_share": 0.041,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n12-save-f2cdd53-rich-house-after-save-f2cdd53-rich",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n12-save-f2cdd53-rich-house-after-save-f2cdd53-rich.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n12-save-f2cdd53-rich-house-after-save-f2cdd53-rich.png",
+  "changed_share": 0.0463,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n12-save-f2cdd53-rich-house-upstairs-after-save-f2cdd53-rich",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n12-save-f2cdd53-rich-house-upstairs-after-save-f2cdd53-rich.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n12-save-f2cdd53-rich-house-upstairs-after-save-f2cdd53-rich.png",
+  "changed_share": 0.0479,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n12-save-live-web-rich-house-after-save-live-web-rich",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n12-save-live-web-rich-house-after-save-live-web-rich.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n12-save-live-web-rich-house-after-save-live-web-rich.png",
+  "changed_share": 0.0548,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n12-save-live-web-rich-house-upstairs-after-save-live-web-rich",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n12-save-live-web-rich-house-upstairs-after-save-live-web-rich.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n12-save-live-web-rich-house-upstairs-after-save-live-web-rich.png",
+  "changed_share": 0.0455,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n12-save-prenight3-bighouse-house-after-save-prenight3-bighouse",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n12-save-prenight3-bighouse-house-after-save-prenight3-bighouse.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n12-save-prenight3-bighouse-house-after-save-prenight3-bighouse.png",
+  "changed_share": 0.0344,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n12-save-prenight3-bighouse-house-upstairs-after-save-prenight3-bighouse",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n12-save-prenight3-bighouse-house-upstairs-after-save-prenight3-bighouse.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n12-save-prenight3-bighouse-house-upstairs-after-save-prenight3-bighouse.png",
+  "changed_share": 0.053,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n12-save-prenight3-upstairs-house-after-save-prenight3-upstairs",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n12-save-prenight3-upstairs-house-after-save-prenight3-upstairs.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n12-save-prenight3-upstairs-house-after-save-prenight3-upstairs.png",
+  "changed_share": 0.0358,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n12-save-prenight3-upstairs-house-upstairs-after-save-prenight3-upstairs",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n12-save-prenight3-upstairs-house-upstairs-after-save-prenight3-upstairs.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n12-save-prenight3-upstairs-house-upstairs-after-save-prenight3-upstairs.png",
+  "changed_share": 0.0519,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n12-upgrade-house-new-upstairs",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n12-upgrade-house-new-upstairs.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n12-upgrade-house-new-upstairs.png",
+  "changed_share": 0.9969,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n13-ipad-landscape-hair-job-card",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n13-ipad-landscape-hair-job-card.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n13-ipad-landscape-hair-job-card.png",
+  "changed_share": 0.1554,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n13-ipad-landscape-hair-tutorial",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n13-ipad-landscape-hair-tutorial.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n13-ipad-landscape-hair-tutorial.png",
+  "changed_share": 0.0008,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n13-ipad-landscape-hair-before-done",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n13-ipad-landscape-hair-before-done.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n13-ipad-landscape-hair-before-done.png",
+  "changed_share": 0.09,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n15-A-one-clock-A",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n15-A-one-clock-A.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n15-A-one-clock-A.png",
+  "changed_share": 0.5195,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n15-A-phone-calendar-no-day-numbers",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n15-A-phone-calendar-no-day-numbers.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n15-A-phone-calendar-no-day-numbers.png",
+  "changed_share": 0.062,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n16-sky-sky-cloudy-12",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n16-sky-sky-cloudy-12.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n16-sky-sky-cloudy-12.png",
+  "changed_share": 0.123,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n16-sky-sky-cloudy-23",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n16-sky-sky-cloudy-23.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n16-sky-sky-cloudy-23.png",
+  "changed_share": 0.0208,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n16-sky-sky-rain-12",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n16-sky-sky-rain-12.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n16-sky-sky-rain-12.png",
+  "changed_share": 0.0275,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n16-sky-sky-rain-23",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n16-sky-sky-rain-23.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n16-sky-sky-rain-23.png",
+  "changed_share": 0.025,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n16-sky-sky-snow-12",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n16-sky-sky-snow-12.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n16-sky-sky-snow-12.png",
+  "changed_share": 0.0272,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n16-sky-sky-snow-23",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n16-sky-sky-snow-23.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n16-sky-sky-snow-23.png",
+  "changed_share": 0.0264,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n17-upd-after-update-title",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n17-upd-after-update-title.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n17-upd-after-update-title.png",
+  "changed_share": 0.9054,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n17-upd-older-version-tag",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n17-upd-older-version-tag.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n17-upd-older-version-tag.png",
+  "changed_share": 0.8417,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n18-A-same-A-lane",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n18-A-same-A-lane.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n18-A-same-A-lane.png",
+  "changed_share": 0.2428,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n18-A-stairs-view-home",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n18-A-stairs-view-home.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n18-A-stairs-view-home.png",
+  "changed_share": 0.0,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n19-halloween-oct1-day",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n19-halloween-oct1-day.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n19-halloween-oct1-day.png",
+  "changed_share": 0.5447,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n19-halloween-oct31-night",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n19-halloween-oct31-night.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n19-halloween-oct31-night.png",
+  "changed_share": 0.005,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n19-halloween-nov1",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n19-halloween-nov1.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n19-halloween-nov1.png",
+  "changed_share": 0.0198,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n19-costume-mirror",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n19-costume-mirror.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n19-costume-mirror.png",
+  "changed_share": 0.0082,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n19-spooky-path-scare",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n19-spooky-path-scare.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n19-spooky-path-scare.png",
+  "changed_share": 0.0282,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n20-A-valentine-fountain",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n20-A-valentine-fountain.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n20-A-valentine-fountain.png",
+  "changed_share": 0.0337,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n20-A-easter-bunny",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n20-A-easter-bunny.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n20-A-easter-bunny.png",
+  "changed_share": 0.1056,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n20-A-december-tree-santa",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n20-A-december-tree-santa.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n20-A-december-tree-santa.png",
+  "changed_share": 0.5159,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n21-newyear-fireworks",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n21-newyear-fireworks.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n21-newyear-fireworks.png",
+  "changed_share": 0.0208,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n21-newyear-party-hats-confetti",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n21-newyear-party-hats-confetti.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n21-newyear-party-hats-confetti.png",
+  "changed_share": 0.4141,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n22-school-school-balloons",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n22-school-school-balloons.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n22-school-school-balloons.png",
+  "changed_share": 0.0557,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n22-school-school-hall-balloons",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n22-school-school-hall-balloons.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n22-school-school-hall-balloons.png",
+  "changed_share": 0.0493,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n23-signs-sign-beach",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n23-signs-sign-beach.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n23-signs-sign-beach.png",
+  "changed_share": 0.7856,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n23-signs-sign-pet-show",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n23-signs-sign-pet-show.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n23-signs-sign-pet-show.png",
+  "changed_share": 0.8149,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n23-signs-sign-food-truck",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n23-signs-sign-food-truck.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n23-signs-sign-food-truck.png",
+  "changed_share": 0.8956,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n23-signs-sign-spooky",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n23-signs-sign-spooky.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n23-signs-sign-spooky.png",
+  "changed_share": 0.7876,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n23-signs-sign-history-class",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n23-signs-sign-history-class.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n23-signs-sign-history-class.png",
+  "changed_share": 0.0007,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n24-grandmas-A-grandmas-pond",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n24-grandmas-A-grandmas-pond.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n24-grandmas-A-grandmas-pond.png",
+  "changed_share": 0.0199,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n24-grandmas-A-grandma-at-a-place",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n24-grandmas-A-grandma-at-a-place.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n24-grandmas-A-grandma-at-a-place.png",
+  "changed_share": 0.0623,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n25-ipad-landscape-photo-result-ipad-landscape",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n25-ipad-landscape-photo-result-ipad-landscape.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n25-ipad-landscape-photo-result-ipad-landscape.png",
+  "changed_share": 0.5542,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n25-ipad-landscape-photo-chat-ipad-landscape",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n25-ipad-landscape-photo-chat-ipad-landscape.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n25-ipad-landscape-photo-chat-ipad-landscape.png",
+  "changed_share": 0.583,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n26-map-ipad-landscape-corner-map-ipad-landscape",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n26-map-ipad-landscape-corner-map-ipad-landscape.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n26-map-ipad-landscape-corner-map-ipad-landscape.png",
+  "changed_share": 0.8538,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n26-map-ipad-landscape-big-map-ipad-landscape",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n26-map-ipad-landscape-big-map-ipad-landscape.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n26-map-ipad-landscape-big-map-ipad-landscape.png",
+  "changed_share": 0.0952,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n27-trash-trash-peel",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n27-trash-trash-peel.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n27-trash-trash-peel.png",
+  "changed_share": 0.8073,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n27-trash-trash-can",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n27-trash-trash-can.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n27-trash-trash-can.png",
+  "changed_share": 0.7765,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n28-petshop-petshop-downstairs",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n28-petshop-petshop-downstairs.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n28-petshop-petshop-downstairs.png",
+  "changed_share": 0.0932,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n28-petshop-petshop-upstairs",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n28-petshop-petshop-upstairs.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n28-petshop-petshop-upstairs.png",
+  "changed_share": 0.0382,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n29-pond-pond-no-bridge",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n29-pond-pond-no-bridge.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n29-pond-pond-no-bridge.png",
+  "changed_share": 0.7123,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n3-friends-friends-in-view-1",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n3-friends-friends-in-view-1.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n3-friends-friends-in-view-1.png",
+  "changed_share": 0.4729,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n3-friends-friends-after-turn-1",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n3-friends-friends-after-turn-1.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n3-friends-friends-after-turn-1.png",
+  "changed_share": 0.2704,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n3-friends-friends-in-view-2",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n3-friends-friends-in-view-2.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n3-friends-friends-in-view-2.png",
+  "changed_share": 0.3653,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n3-friends-friends-after-turn-2",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n3-friends-friends-after-turn-2.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n3-friends-friends-after-turn-2.png",
+  "changed_share": 0.2967,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n30-sky-clouds-day",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n30-sky-clouds-day.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n30-sky-clouds-day.png",
+  "changed_share": 0.0713,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n30-sky-clouds-grey",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n30-sky-clouds-grey.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n30-sky-clouds-grey.png",
+  "changed_share": 0.0318,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n30-sky-clouds-night",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n30-sky-clouds-night.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n30-sky-clouds-night.png",
+  "changed_share": 0.0006,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n30-sky-leaves-park",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n30-sky-leaves-park.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n30-sky-leaves-park.png",
+  "changed_share": 0.0923,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n31-trees-wall-12",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n31-trees-wall-12.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n31-trees-wall-12.png",
+  "changed_share": 0.0139,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n31-trees-wall-11-5",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n31-trees-wall-11-5.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n31-trees-wall-11-5.png",
+  "changed_share": 0.0305,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n31-trees-wall-12-5",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n31-trees-wall-12-5.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n31-trees-wall-12-5.png",
+  "changed_share": 0.0526,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n31-trees-wall-9",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n31-trees-wall-9.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n31-trees-wall-9.png",
+  "changed_share": 0.0464,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n31-trees-wall-15",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n31-trees-wall-15.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n31-trees-wall-15.png",
+  "changed_share": 0.0498,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n31-trees-wall-17-5",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n31-trees-wall-17-5.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n31-trees-wall-17-5.png",
+  "changed_share": 0.0521,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n32-truck-truck-front-left",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n32-truck-truck-front-left.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n32-truck-truck-front-left.png",
+  "changed_share": 0.0212,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n32-truck-truck-cab",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n32-truck-truck-cab.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n32-truck-truck-cab.png",
+  "changed_share": 0.0342,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n32-truck-truck-evening",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n32-truck-truck-evening.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n32-truck-truck-evening.png",
+  "changed_share": 0.0057,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n35-notepad-notepad-off",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n35-notepad-notepad-off.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n35-notepad-notepad-off.png",
+  "changed_share": 0.2769,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n35-notepad-notepad-on",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n35-notepad-notepad-on.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n35-notepad-notepad-on.png",
+  "changed_share": 0.7284,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n36-A-new-furniture-in-the-house",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n36-A-new-furniture-in-the-house.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n36-A-new-furniture-in-the-house.png",
+  "changed_share": 0.1656,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n37-ipad-landscape-treepark-gate",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n37-ipad-landscape-treepark-gate.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n37-ipad-landscape-treepark-gate.png",
+  "changed_share": 0.2997,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n37-ipad-landscape-treepark-easy-first-deck",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n37-ipad-landscape-treepark-easy-first-deck.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n37-ipad-landscape-treepark-easy-first-deck.png",
+  "changed_share": 0.185,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n37-ipad-landscape-treepark-finish",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n37-ipad-landscape-treepark-finish.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n37-ipad-landscape-treepark-finish.png",
+  "changed_share": 0.3772,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n38-delivery-tutorial-delivery-step-1",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n38-delivery-tutorial-delivery-step-1.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n38-delivery-tutorial-delivery-step-1.png",
+  "changed_share": 0.0012,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n38-delivery-tutorial-delivery-step-2",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n38-delivery-tutorial-delivery-step-2.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n38-delivery-tutorial-delivery-step-2.png",
+  "changed_share": 0.002,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n38-hair-tutorial-hair-step-1",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n38-hair-tutorial-hair-step-1.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n38-hair-tutorial-hair-step-1.png",
+  "changed_share": 0.0082,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n38-hair-tutorial-hair-step-2",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n38-hair-tutorial-hair-step-2.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n38-hair-tutorial-hair-step-2.png",
+  "changed_share": 0.0089,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n39-A-dance-off",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n39-A-dance-off.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n39-A-dance-off.png",
+  "changed_share": 0.0337,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n39-A-dance-result",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n39-A-dance-result.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n39-A-dance-result.png",
+  "changed_share": 0.0006,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n4-walkers-walkers-give-way",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n4-walkers-walkers-give-way.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n4-walkers-walkers-give-way.png",
+  "changed_share": 0.4194,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n41-bus-A-bus-pill",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n41-bus-A-bus-pill.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n41-bus-A-bus-pill.png",
+  "changed_share": 0.7888,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n5-benches-bench-sit",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n5-benches-bench-sit.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n5-benches-bench-sit.png",
+  "changed_share": 0.4875,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n6-grandmas-grandmas-day",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n6-grandmas-grandmas-day.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n6-grandmas-grandmas-day.png",
+  "changed_share": 0.0272,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n7-kitchen-kitchen-snap",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n7-kitchen-kitchen-snap.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n7-kitchen-kitchen-snap.png",
+  "changed_share": 0.0332,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n8-designer-designer-room-1",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n8-designer-designer-room-1.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n8-designer-designer-room-1.png",
+  "changed_share": 0.2501,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n8-designer-designer-room-2",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n8-designer-designer-room-2.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n8-designer-designer-room-2.png",
+  "changed_share": 0.0973,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n9-food-food-truck",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "kit13-n9-food-food-truck.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n9-food-food-truck.png",
+  "changed_share": 0.0107,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n13-iphone-landscape-hair-card",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "kit13-n13-iphone-landscape-hair-card.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n13-iphone-landscape-hair-card.png",
+  "changed_share": 0.0644,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n13-iphone-landscape-hair-stars",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "kit13-n13-iphone-landscape-hair-stars.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n13-iphone-landscape-hair-stars.png",
+  "changed_share": 0.0186,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n13-iphone-landscape-hair-job-card",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "kit13-n13-iphone-landscape-hair-job-card.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n13-iphone-landscape-hair-job-card.png",
+  "changed_share": 0.1224,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n13-iphone-landscape-hair-tutorial",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "kit13-n13-iphone-landscape-hair-tutorial.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n13-iphone-landscape-hair-tutorial.png",
+  "changed_share": 0.0059,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n13-iphone-landscape-hair-before-done",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "kit13-n13-iphone-landscape-hair-before-done.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n13-iphone-landscape-hair-before-done.png",
+  "changed_share": 0.0676,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n25-iphone-landscape-photo-shoot-iphone-landscape",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "kit13-n25-iphone-landscape-photo-shoot-iphone-landscape.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n25-iphone-landscape-photo-shoot-iphone-landscape.png",
+  "changed_share": 0.0971,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n25-iphone-landscape-photo-result-iphone-landscape",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "kit13-n25-iphone-landscape-photo-result-iphone-landscape.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n25-iphone-landscape-photo-result-iphone-landscape.png",
+  "changed_share": 0.0908,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n26-map-iphone-landscape-corner-map-iphone-landscape",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "kit13-n26-map-iphone-landscape-corner-map-iphone-landscape.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n26-map-iphone-landscape-corner-map-iphone-landscape.png",
+  "changed_share": 0.6856,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n26-map-iphone-landscape-big-map-iphone-landscape",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "kit13-n26-map-iphone-landscape-big-map-iphone-landscape.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n26-map-iphone-landscape-big-map-iphone-landscape.png",
+  "changed_share": 0.0973,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n26-map-iphone-portrait-corner-map-iphone-portrait",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "kit13-n26-map-iphone-portrait-corner-map-iphone-portrait.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n26-map-iphone-portrait-corner-map-iphone-portrait.png",
+  "changed_share": 0.7353,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n26-map-iphone-portrait-big-map-iphone-portrait",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "kit13-n26-map-iphone-portrait-big-map-iphone-portrait.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n26-map-iphone-portrait-big-map-iphone-portrait.png",
+  "changed_share": 0.1791,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n15-B-one-clock-B",
+  "prof": "pc-1366",
+  "theme": "dark",
+  "file": "kit13-n15-B-one-clock-B.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n15-B-one-clock-B.png",
+  "changed_share": 0.5454,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n18-B-same-B-visits-A",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "kit13-n18-B-same-B-visits-A.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n18-B-same-B-visits-A.png",
+  "changed_share": 0.0,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n18-B-same-B-lane",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "kit13-n18-B-same-B-lane.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n18-B-same-B-lane.png",
+  "changed_share": 0.2276,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n25-pc-1366-photo-shoot-pc-1366",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "kit13-n25-pc-1366-photo-shoot-pc-1366.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n25-pc-1366-photo-shoot-pc-1366.png",
+  "changed_share": 0.5892,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n25-pc-1366-photo-result-pc-1366",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "kit13-n25-pc-1366-photo-result-pc-1366.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n25-pc-1366-photo-result-pc-1366.png",
+  "changed_share": 0.4195,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n26-map-pc-1366-corner-map-pc-1366",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "kit13-n26-map-pc-1366-corner-map-pc-1366.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n26-map-pc-1366-corner-map-pc-1366.png",
+  "changed_share": 0.7717,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n26-map-pc-1366-big-map-pc-1366",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "kit13-n26-map-pc-1366-big-map-pc-1366.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n26-map-pc-1366-big-map-pc-1366.png",
+  "changed_share": 0.0813,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n39-B-party-invitation",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "kit13-n39-B-party-invitation.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n39-B-party-invitation.png",
+  "changed_share": 0.0324,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n5-B-bench-other-player-sits",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "kit13-n5-B-bench-other-player-sits.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n5-B-bench-other-player-sits.png",
+  "changed_share": 0.5188,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n13-pc-1920-hair-card",
+  "prof": "pc-1920",
+  "theme": "light",
+  "file": "kit13-n13-pc-1920-hair-card.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n13-pc-1920-hair-card.png",
+  "changed_share": 0.0397,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n13-pc-1920-hair-stars",
+  "prof": "pc-1920",
+  "theme": "light",
+  "file": "kit13-n13-pc-1920-hair-stars.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n13-pc-1920-hair-stars.png",
+  "changed_share": 0.0358,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n13-pc-1920-hair-job-card",
+  "prof": "pc-1920",
+  "theme": "light",
+  "file": "kit13-n13-pc-1920-hair-job-card.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n13-pc-1920-hair-job-card.png",
+  "changed_share": 0.0531,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "kit13-n13-pc-1920-hair-tutorial",
+  "prof": "pc-1920",
+  "theme": "light",
+  "file": "kit13-n13-pc-1920-hair-tutorial.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n13-pc-1920-hair-tutorial.png",
+  "changed_share": 0.0028,
+  "verdict": "SAME"
+ },
+ {
+  "name": "kit13-n13-pc-1920-hair-before-done",
+  "prof": "pc-1920",
+  "theme": "light",
+  "file": "kit13-n13-pc-1920-hair-before-done.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit12/shots/kit12-n13-pc-1920-hair-before-done.png",
+  "changed_share": 0.1436,
+  "verdict": "CHANGED"
+ }
+]

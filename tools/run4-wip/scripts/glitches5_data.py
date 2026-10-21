@@ -1,7 +1,7 @@
 """Run 4 finish: the data of the glitch list from pass 8 on (read by mkglitches5.py). One entry per cause; the marks are
 'p8:M-001' (pass 8, stage3-dc8). Later passes are added to DC and PASS as they come."""
-DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12'}
-PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12'}
+DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13'}
+PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13'}
 AFTER_SETS = ['stage3-p9', 'stage3-p9b', 'stage3-p9c']   # newest first: the after picture of a fixed spot comes from pass 9
 KIT_SETS = ['stage3-kit9']
 PROBES = {   # spots whose after picture is a probe taken right after the fix (a pass-9 picture replaces it when there is one)
@@ -41,6 +41,7 @@ F6 = ' (patch_f6.py)'
 F7 = ' (patch_f7.py)'
 F8 = ' (patch_f8.py)'
 F9 = ' (patch_f9.py)'
+F10 = ' (patch_f10.py)'
 FRAME = "The photographer's framing, not the game: "
 ENTRIES = [
  ('168', ['p8:M-001'], 'October: the park fountain', 'iPad', 'A white ghost hung inside the fountain, between its top and middle bowls.', 1, 'fixed',
@@ -258,4 +259,22 @@ ENTRIES = [
   "A shopper looking at the shelves (pass 11's double-checkers dropped it; the keeper stands at the right); your own shadow (G4-146); the corner map is a button: tap it to change your dot's colour (since job 7); your pets at your heels (G4-205), their tags seen through the see-through joystick.", '—'),
  ('272', ['p12:M-018', 'p12:M-019', 'p12:M-020', 'p12:M-022', 'p12:M-027', 'p12:M-028', 'p12:M-029', 'p12:M-031', 'p12:M-032'], "the check's own staging", 'iPad', "A friend walking by right in front of the fountain picture; the lamp post in each new pet's picture; the Halloween gate's signs at the screen's edges, one behind the notepad; the camera at the sky after a pick-up.", 1, 'not a glitch',
   "N10 puts you at the fountain in one step, on a walking way (a friend walked by 1.4 m ahead); N11 photographs each new pet by the same lamp post (G4-260); N19 looks at the gate from a fixed spot, the HUD where it always is (its lines count the pieces by code); N27 looks up after each pick-up (G4-260).", '—'),
+ ('273', ['p13:M-015', 'p13:M-021', 'p13:M-024'], "the clock chip's rain", 'iPad, Android tablet', 'The chip showed 🌧️ while no rain fell, the scene still in sunshine (just after the weather turned).', 1, 'fixed',
+  'The chip shows rain or snow once it can be seen: the streaks fade in from rain level 0.3 to 1 and the chip turned at 0.3, with nothing falling yet; it turns at 0.55 now (the streaks a third in)' + F10 + '.', 'a check by script of the chip at each rain level; pass 14 pictures.'),
+ ('274', ['p13:M-023'], 'a photo shoot that never ended', 'iPad', "After a photo job the corner map and the notepad were gone in town, with the phone's Photos chat open.", 2, 'fixed',
+  "Only the result card's Bye ended a shoot; opening the phone or the bag over the result card left it on: the map, the notepad and the job box hidden and only the shoot's own buttons working, until you left town. Once its result card is gone, however it goes, the shoot ends as with Bye" + F10 + '.', 'a check by script: a shoot, then the phone over its result card (the shoot on before, ended after); the Bye path unchanged; N25 passes.'),
+ ('275', ['p13:M-014'], 'quests', 'PC', '"Snack time: Eat some flour"; "Buy 3 different treats" with flour among them.', 1, 'fixed',
+  "A day's new quests never ask you to eat raw flour or eggs, and a shopping spree's treats are never flour or eggs (400 such snack quests and 66 such sprees in 200 days before, none after); an old day's quests stay as they were" + F10 + '.', 'a check by script of 200 days of quests.'),
+ ('276', ['p13:M-025'], "the Pet Shop's owl", 'iPad', 'The owl hung in the air in front of the wall, with its back to the room.', 1, 'fixed',
+  'The owl kept to its perch\'s height but walked the whole pen, in the air most of the time; it keeps to the perch now and turns to the room when it stops' + F10 + '.', 'a check by script over 1500 frames: always on the perch line; pass 14 pictures.'),
+ ('277', ['p13:M-001', 'p13:M-003'], 'the park garland at the bus stop', 'iPad', "A holiday garland ran into the bus shelter under its roof.", 1, 'fixed',
+  "The double-checker dropped both marks: from the front the string is behind the shelter's back wall. From the park side it ran along the back wall, through the roof's rim (the shelter came in run 4; the garland was older); it hangs in two pieces now, either side of the shelter, at every holiday" + F10 + '.', 'pictures from the front and the park side; N1 passes.'),
+ ('278', ['p13:M-007', 'p13:M-008', 'p13:M-011', 'p13:M-012'], 'two ducks, a bird', 'iPhone sideways, PC', 'One duck on the pond, with a yellow head on a white body; a dark stick at the top of a photo.', 1, 'not a glitch',
+  "Two ducks one behind the other from that spot: they keep 80 cm apart (0.78 m at the nearest over 1200 frames), and from there the yellow one's head lies on the white one; one of the town's birds flying over, edge-on with its wings up.", '—'),
+ ('279', ['p13:M-032'], 'the salon floor', 'PC 1920', 'The floor near the camera looked soft, the far tiles sharp.', 1, 'open',
+  "Each room's floor is a 256-pixel picture repeated over the room (about 64 pixels a metre): near the camera on a big screen it softens. A bigger picture costs memory on phones; not changed, written down.", ''),
+ ('280', ['p13:M-005', 'p13:M-010', 'p13:M-019'], 'decided before', 'iPhone upright, PC, iPad', "The upright phone's Pet Show picture boxed in by the truck, the fence and the pennants; the places list's ⬇️; the salon's sign under the round buttons.", 1, 'not a glitch',
+  "The photographer's spot (set aside so in passes 11 and 12); the list's scroll hint (G4-034); pass 12's double-checkers dropped the salon's sign (M-025).", '—'),
+ ('281', ['p13:M-016', 'p13:M-020', 'p13:M-022', 'p13:M-026', 'p13:M-027', 'p13:M-028', 'p13:M-029'], "the check's own staging", 'iPad', "Crates at the edge of the check's photo shoot; the Ideas Board in front of N16's camera; a townsperson's back in N21's; a post, a lamp post, a door at the camera; a friend partly behind another.", 1, 'not a glitch',
+  "Each check takes its pictures where its test stands (set aside so since stage 3); N21 puts you right behind a tall townsperson (G4-260); four friends in a fan, one can be partly behind another for a moment (pass 11's double-checkers dropped it).", '—'),
 ]

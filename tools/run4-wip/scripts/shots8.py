@@ -115,7 +115,7 @@ async def main():
                         for name, js2, note in OUTDOOR[:8]:
                             js3 = js2.split(';', 1)[1] if js2.startswith("__goto('city');") else None
                             if not js3: continue
-                            await g.ev("(js)=>{try{eval(js);}catch(e){}}", js3.replace("__setClock(null,11);wxForce('sun');", '')); await g.step(6)
+                            await g.ev("(js)=>{try{eval(js);}catch(e){}}", js3.replace("__setClock(null,11);wxForce('sun');", '') + ";for(const c of CARS)if(Math.hypot(c.x-P.x,c.z-P.z)<16){c.d+=c.total/2;carPlace(c);}"); await g.step(6)   # (pass 13: a car passing 2 m in front of the school spot at night filled the picture; the cars near a spot drive on, as WALK does by day)
                             p = await g.shot(f'{name}-{tag}', both=False)
                             themap.append(dict(name=f'{name}-{tag}', prof=prof, theme=theme, note=note + f' at {tag}', file=os.path.basename(p) if p else None))
                 print(prof, theme, 'errors', g.errors[:3], flush=True); await run.close(g)

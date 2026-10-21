@@ -1,0 +1,4 @@
+# Run 4 finish, pass 13: how far is the photographer's school-front spot (-26.2, -45.2) from each car's way, and from a car's body as it passes?
+JS = """(()=>{__goto('city');const sx=-26.2,sz=-45.2,out=[];CARS.forEach((c,i)=>{const d0=c.d;let best=[99,0],body=99;for(let d=0;d<c.total;d+=.1){c.d=d;carPlace(c);const yw=c.ty,f=Math.sin(yw),g=Math.cos(yw),dx=sx-c.x,dz=sz-c.z,al=dx*f+dz*g,lat=dx*g-dz*f;
+  const k=Math.hypot(dx,dz);if(k<best[0])best=[k,d];const gb=Math.hypot(Math.max(0,Math.abs(lat)-.85),Math.max(0,Math.abs(al)-1.7));if(gb<body)body=gb;}c.d=d0;carPlace(c);if(best[0]<6)out.push('car '+i+(c.owl?' (night)':'')+': its way passes '+best[0].toFixed(2)+' m from the spot; its body '+body.toFixed(2)+' m');});return out.join('\\n')||'no car within 6 m';})()"""
+VIEWS = [('school-spot', JS)]

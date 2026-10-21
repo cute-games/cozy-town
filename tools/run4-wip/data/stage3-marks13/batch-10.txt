@@ -1,0 +1,5 @@
+s3_pc-1366_light_pc-1366-light_033_photo-shoot.png | pc-1366 light, photo shoot at the fountain | a dark stick shape (a bird close to the camera, wings up, seen edge-on) hangs at the top middle inside the dashed photo frame and ends up in the snapped photo | 1
+s3_pc-1366_light_pc-1366-light_034_photo-result.png | pc-1366 light, photo result card over the fountain square | the photo on the card has that dark stick hanging from its top edge; in the scene another dark stick (a bird) pokes out from under the coin chip at the top left | 1
+s3_pc-1366_light_pc-1366-light_038_town-flower-corner.png | pc-1366 light, Flower Corner gate from the square | friend Rosie stands right in front of the "Spooky path" signs: her head and name tag hide their left part (the "Sp" and the start of "after 18:00") | 1
+s3_pc-1366_dark_pc-1366-dark_005_phone-quests.png | pc-1366 dark, phone quests | quest words are odd for a kid: "Snack time: Eat some flour", and "Buy 3 different treats" counts flour as a treat | 1
+count: 4

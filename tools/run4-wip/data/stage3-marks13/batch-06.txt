@@ -1,0 +1,6 @@
+s3_iphone-portrait_light_iphone-portrait-light_040_town-school-front.png | iphone-portrait light, city: the school front | the notepad covers the left end of the pink "Cozy Town School" wall sign (its "C" is hidden) | 1
+s3_iphone-portrait_light_iphone-portrait-light_041_town-east-shops.png | iphone-portrait light, city: the Toy Store | the notepad covers the Toy Store's name sign, only "ore" can be read | 2
+s3_iphone-portrait_light_iphone-portrait-light_042_town-treepark-gate.png | iphone-portrait light, city: the Tree Park gate | the notepad covers the left end of the "Tree Park" beam and the top of the left post (its mint knob is hidden) | 1
+s3_iphone-portrait_dark_iphone-portrait-dark_010_big-map.png | iphone-portrait dark, the big map | place names are cut by the map's edges: a lone "n" at the left edge (twice) and a label cut off right of "Finn" | 1
+s3_iphone-portrait_dark_iphone-portrait-dark_013_whats-new-book.png | iphone-portrait dark, the What's new book (page 1, same on pages 3 to 7) | a light-blue browser-style focus ring around the ▶ next button ("Let's play!" on page 7), not in the game's colours | 1
+count: 5

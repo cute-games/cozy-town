@@ -1,0 +1,4 @@
+M-025 | KEEP | wall shows under owl's feet, floats above rail, back turned
+M-026 | KEEP | big slanted blue post fills right edge, roof corner top right
+M-027 | KEEP | Rosie's bun covers right side of Theo's face
+M-028 | KEEP | lamp post splits view in middle, lamp head cut at top

@@ -3569,10 +3569,10 @@ function buildPetShop(){
     for(const x of[x0,x1])for(const z of[z0,z1])box(pu,.14,.5,.14,'#ffffff',x,0,z,{ol:.02});
     col(L,x0-.08,Z+z0-.08,x1+.08,Z+z1+.08);
     const s=signPlane(PET_TYPES[type].icon+' '+PET_TYPES[type].many,Math.min(2.6,x1-x0-.3),.5,c,'#3d2c5e');s.position.set((x0+x1)/2,2.95,z1<0?-D/2+.06:D/2-.06);   /* (run 4, stage 3: above the windows, which hid them) */if(z1>0)s.rotation.y=Math.PI;fls[1].g.add(s);   /* (run 4, stage 3: the upstairs group is already 40 m along; the signs added 40 m again and hung outside the room) */
-    L.pens.push(Object.assign({type,kinds,x0:x0+.4,x1:x1-.4,z0:Z+z0+.4,z1:Z+z1-.4},o.y?{y:o.y}:{},o.swim?{swim:1}:{}));};
+    L.pens.push(Object.assign({type,kinds,x0:x0+.4,x1:x1-.4,z0:Z+z0+.4,z1:Z+z1-.4},o.y?{y:o.y}:{},o.pz!==undefined?{pz:Z+o.pz}:{},o.swim?{swim:1}:{}));};   /* (run 4 finish: pz: the line of the perch a bird keeps to) */
   pen('dog',['dog','pug','pomchi','sausage'],-6.7,-2.1,-4.9,-1.9,'#ffd45c');pen('cat',['cat','cat'],-1.7,1.1,-4.9,-1.9,'#ff9ec4');pen('bunny',['bunny','bunny'],1.5,4.1,-4.9,-1.9,'#b79cff');pen('capybara',['capybara'],4.5,6.7,-4.9,-1.9,'#c9a24a');
   pen('duck',['duck','duck'],-6.7,-3.5,1.9,4.9,'#7cc8ff',{floor:'#9fd8f2',swim:1});disc(pu,1.1,'#7cc8ff',-5.1,.05,3.4,{seg:20});   /* 🦆 a little pond */
-  pen('owl',['owl'],-3.1,-.5,1.9,4.9,'#9a6a43',{y:.95});{box(pu,.12,.95,.12,'#9a6a43',-2.9,0,3.4,{ol:.015});box(pu,.12,.95,.12,'#9a6a43',-.7,0,3.4,{ol:.015});box(pu,2.3,.08,.1,'#b07a52',-1.8,.9,3.4,{ol:.012});}   /* 🦉 a perch */
+  pen('owl',['owl'],-3.1,-.5,1.9,4.9,'#9a6a43',{y:.95,pz:3.4});{box(pu,.12,.95,.12,'#9a6a43',-2.9,0,3.4,{ol:.015});box(pu,.12,.95,.12,'#9a6a43',-.7,0,3.4,{ol:.015});box(pu,2.3,.08,.1,'#b07a52',-1.8,.9,3.4,{ol:.012});}   /* 🦉 a perch */
   {box(pu,2.6,.8,2.0,'#c98f5e',1.3,0,3.4);box(pu,2.4,.04,1.8,'#ffe7a3',1.3,.8,3.4,{ol:false});const cg=toon({color:'#cfeeff',transparent:true,opacity:.16});box(pu,2.45,.55,1.85,null,1.3,.8,3.4,{mat:cg,ol:false});   /* no dark outline hull round the glass */
    const wh=new THREE.Mesh(new THREE.TorusGeometry(.18,.03,6,16),mat('#ff7aa8'));wh.position.set(2.1,1.02,3.0);pu.add(wh);col(L,-.1,Z+2.3,2.7,Z+4.5);
    const s2=signPlane('🐹 Hamsters',1.6,.4,'#ffd45c','#3d2c5e');s2.position.set(1.3,1.72,2.4);fls[1].g.add(s2);L.pens.push({type:'hamster',x0:.3,x1:2.3,z0:Z+2.7,z1:Z+4.1,y:.82});}   /* 🐹 the hamsters' table */
@@ -3941,7 +3941,8 @@ function genQuest(k){try{const p=k.split(':'),kind=p[0],a=p[1];
 /* 🪙 a quest never costs much more than it pays: "Buy a …" only for everyday things (20 🪙 or less: food, pet food and toys), "Put a … in your
    house" only for furniture already waiting in 📦 My stuff. old = the way it was before (a saved game's first day after loading keeps exactly the
    quests the older version gave it) */
-const qCheap=k=>{const p=k.split(':'),a=p[1];if(p[0]==='buy'){const it=itemInfo(a)||FURN[a];return!!it&&(it.p||0)<=20;}
+const RAWF=['flour','eggs'];   /* 🥚 for cooking, not for snacking (run 4 finish: "Snack time: Eat some flour") */
+const qCheap=k=>{const p=k.split(':'),a=p[1];if(p[0]==='eat'&&RAWF.includes(a)||p[0]==='trk'&&a==='spree'&&(p[2]||'').split('|').some(x=>RAWF.includes(x)))return false;if(p[0]==='buy'){const it=itemInfo(a)||FURN[a];return!!it&&(it.p||0)<=20;}
   if(p[0]==='place')return!!S&&!!S.home&&(S.home.store||[]).some(it=>furnOf(it)===a);return true;};
 function questCandidates(r,old){const ok=k=>{const Q=getQ(k);return !!Q&&(!Q.need||Q.need())&&(old||qCheap(k));};
   const foods=[...new Set([...SHOPS.market.items,...SHOPS.cafe.items,...SHOPS.bakery.items,...SHOPS.icecream.items,...SHOPS.truck.items])];
@@ -5173,17 +5174,17 @@ function buildActors(){
   {const ct=LOC.pizza.inter.find(t=>t.label==='Talk to Chef Blaze');if(ct){ct.icon=()=>dlWaiting()?'🍕':'💬';ct.label=()=>dlWaiting()?'Pick up the pizza':'Talk to Chef Blaze';}}
   const L=LOC.pets;
   L.pens.forEach((pen,i)=>{const kinds=pen.kinds||[pen.type,pen.type];kinds.forEach((t,k)=>{const col2=PET_TYPES[t].cols[t===pen.type&&k>0?1:0];const m=makePet(t,col2);scene.add(m.root);
-    const a={m,t,col:col2,x:L.ox+rand(pen.x0,pen.x1),z:L.oz+rand(pen.z0,pen.z1-(pen.y?0:.45)),tx:0,tz:0,wt:0,pen,face:0,moving:false};
-    const o=PEN.find(b=>b.pen===pen);for(let n=0;n<8&&o&&Math.hypot(o.x-a.x,o.z-a.z)<1;n++){a.x=L.ox+rand(pen.x0,pen.x1);a.z=L.oz+rand(pen.z0,pen.z1-(pen.y?0:.45));}a.tx=a.x;a.tz=a.z;   /* the two start apart */
+    const a={m,t,col:col2,x:L.ox+rand(pen.x0,pen.x1),z:pen.pz!==undefined?L.oz+pen.pz:L.oz+rand(pen.z0,pen.z1-(pen.y?0:.45)),tx:0,tz:0,wt:0,pen,face:0,moving:false};
+    const o=PEN.find(b=>b.pen===pen);for(let n=0;n<8&&o&&Math.hypot(o.x-a.x,o.z-a.z)<1;n++){a.x=L.ox+rand(pen.x0,pen.x1);a.z=pen.pz!==undefined?L.oz+pen.pz:L.oz+rand(pen.z0,pen.z1-(pen.y?0:.45));}a.tx=a.x;a.tz=a.z;   /* the two start apart */
     a.target={x:0,z:0,r:3.9,icon:'💗',label:()=>'Adopt '+anA(PET_TYPES[t].name),act:()=>openAdopt(t,col2),obj:m.root};PEN.push(a);});});
 }
 function updatePen(dt){for(const a of PEN){a.wt-=dt;const os=PEN.filter(b=>b!==a&&b.pen===a.pen),fr=a.pen.y?0:.45;   /* 🐶 not nose-first at the front fence, and never inside another one (run 4, stage 3: any of them, not only the first; 85 cm between them, a kitten's length) */
-  if(a.wt<=0){a.wt=rand(1.5,5);const L=LOC.pets,sm=a.pen.y?0:.25;for(let k=0;k<8;k++){a.tx=L.ox+rand(a.pen.x0+sm,a.pen.x1-sm);a.tz=L.oz+rand(a.pen.z0,a.pen.z1-fr);if(os.every(o=>Math.hypot(a.tx-o.tx,a.tz-o.tz)>1.05))break;}}
+  if(a.wt<=0){a.wt=rand(1.5,5);const L=LOC.pets,sm=a.pen.y?0:.25;for(let k=0;k<8;k++){a.tx=L.ox+rand(a.pen.x0+sm,a.pen.x1-sm);a.tz=a.pen.pz!==undefined?L.oz+a.pen.pz:L.oz+rand(a.pen.z0,a.pen.z1-fr);if(os.every(o=>Math.hypot(a.tx-o.tx,a.tz-o.tz)>1.05))break;}}
   const dx=a.tx-a.x,dz=a.tz-a.z,d=Math.hypot(dx,dz);if(d>.08){const s=Math.min(d,.9*dt),nx=a.x+dx/d*s,nz=a.z+dz/d*s;
     if(!a.pen.y&&os.some(o=>{const e=Math.hypot(nx-o.x,nz-o.z);return e<.85&&e<Math.hypot(a.x-o.x,a.z-o.z);})){a.moving=false;a.wt=Math.min(a.wt,.3);}
     else{a.x=nx;a.z=nz;a.face=Math.atan2(dx,dz);a.moving=true;}}else a.moving=false;
   if(!a.pen.y){const L=LOC.pets;for(const o of os){const ex=a.x-o.x,ez=a.z-o.z,e=Math.hypot(ex,ez);if(e<.85&&e>1e-4){const k=(.85-e)/2;a.x=clamp(a.x+ex/e*k,L.ox+a.pen.x0,L.ox+a.pen.x1);a.z=clamp(a.z+ez/e*k,L.oz+a.pen.z0,L.oz+a.pen.z1);}}}
-  a.m.root.position.set(a.x,(a.pen.y||0)-(a.pen.swim?.12:0),a.z);a.m.root.rotation.y=angLerp(a.m.root.rotation.y,a.face,.12);animPet(a.m,dt,a.moving&&!a.pen.swim);a.target.x=a.x;a.target.z=a.z;}}   /* 🦆 in their water the ducks swim: low in it, legs under the surface, no waddle (run 4 finish: they stood on it on orange legs) */
+  if(a.pen.pz!==undefined&&!a.moving)a.face=Math.PI;   /* 🦉 a perched owl faces the room (run 4 finish: it walked the pen in the air and stopped facing the wall) */a.m.root.position.set(a.x,(a.pen.y||0)-(a.pen.swim?.12:0),a.z);a.m.root.rotation.y=angLerp(a.m.root.rotation.y,a.face,.12);animPet(a.m,dt,a.moving&&!a.pen.swim);a.target.x=a.x;a.target.z=a.z;}}   /* 🦆 in their water the ducks swim: low in it, legs under the surface, no waddle (run 4 finish: they stood on it on orange legs) */
 function spawnLitter(){
   for(const l of LITTER)LOC.city.dyn.remove(l.g);LITTER=[];
   if(S.litter.day!==S.day)S.litter={day:S.day,got:[]};
@@ -7665,7 +7666,7 @@ function calHolidayLine(){const d=realDate();let t='';   /* 🎉 the month's hol
   else if(HOL.cur==='easter')t=`🐰 Easter month! The bunny hid 25 eggs around town. You found ${eggState().f.length} of 25.`;
   else if(HOL.cur==='xmas')t='🎄 Christmas month! The big tree and Santa are at the Flower Corner. Santa has coins for you once a day!'+(nyeFireworks(d)?' 🎆 Fireworks tonight from 19:00!':'');
   return t?`<p class="ph-sub hol">${t}</p>`:'';}
-function skyIc(){const n=nightF(S.time)>.5;return WX.rain>.3?'🌧️':WX.snow>.3?'🌨️':WX.sky>.5?(n?'🌙':'☁️'):n?'🌙':'☀️';}   /* the sky as the clock chip shows it (the calendar's today too) */
+function skyIc(){const n=nightF(S.time)>.5;return WX.rain>.55?'🌧️':WX.snow>.55?'🌨️':WX.sky>.5?(n?'🌙':'☁️'):n?'🌙':'☀️';}   /* the sky as the clock chip shows it (the calendar's today too) */
 function calBody(){const i0=wdIdx(),n=daysToShow();   /* 🕰️ the week: weekday names only, no day numbers (run 4) */
   let h=`<p class="ph-sub"><b>Today is ${wdName()}!</b> ${isShowDay()?(showDone()?'You did the 🏆 Pet Show today. The next one is next Saturday!':S.time>=PS_OFF?'Today\'s 🏆 Pet Show is over. The next one is next Saturday!':`🏆 It's Pet Show day! Bring your pet to the park from ${clockStr(PS_ON)} to ${clockStr(PS_OFF)}!`):`🏆 Pet Show in ${n} day${n>1?'s':''}: on Saturday, ${clockStr(PS_ON)} to ${clockStr(PS_OFF)}, in the park.`}</p>`;   /* ("Today is…" comes first, above the week: on a short screen it was below the fold; run 4, stage 3) */
   h+='<div class="cal">';
@@ -8434,16 +8435,16 @@ ACT.ptsnap=()=>{if(!PHO.on||CUT||fading)return;const d=pt(),o=d.o;if(!o)return;c
   const W=WHO[o.who[0]],nm=W?W.nm:'Your client',why=[];if(sc.cut)why.push('someone was cut off');if(sc.hid)why.push('someone was hidden behind something');if(sc.back)why.push('someone was not facing you');if(sc.unposed)why.push('someone had no pose');if(!sc.fill&&!sc.cut)why.push('we are a bit small in the picture');if(!sc.bgOk)why.push('we wanted '+ptSpotOf(o).bgs.find(b=>b.id===o.bg).n+' behind us');
   const line=sc.st===5?pick(['Perfect! We love it! 😍','Wow, what a photo! Thank you! 💕','Just beautiful! Five stars! ✨']):sc.st>=3?'Thank you! Nice photo! 😊'+(why.length?' (Next time: '+why.join(', ')+'.)':''):'Thanks! Hmm… '+why.join(', ')+'. 😅';
   addMsg('pc','pc',line,{t2:'📸 From '+nm,img:o.id});
-  openPanel(`<div class="who" style="--c:#ffd45c">📸 ${esc(nm)}</div>${pic?`<img class="ptpic" src="${pic}" alt="The photo">`:''}<p class="line">${esc(line).replace(/ (\S+)$/,'\u00a0$1')}</p><p class="earn">${starsHalf5(sc.st)}<br>You got <b>${pay} 🪙</b>!</p><div class="row"><button class="btn mint" data-a="ptbye">👋 Bye!</button></div>`,{bottom:true,lock:true,cls:'ptres'});
+  openPanel(`<div class="who" style="--c:#ffd45c">📸 ${esc(nm)}</div>${pic?`<img class="ptpic" src="${pic}" alt="The photo">`:''}<p class="line">${esc(line).replace(/ (\S+)$/,'\u00a0$1')}</p><p class="earn">${starsHalf5(sc.st)}<br>You got <b>${pay} 🪙</b>!</p><div class="row"><button class="btn mint" data-a="ptbye">👋 Bye!</button></div>`,{bottom:true,lock:true,cls:'ptres'});PHO.res=1;
   $('ptvf').hidden=true;$('ptbar').hidden=true;toastOff();for(const q of PHO.group)if(q.lab)q.lab.visible=false;   /* 📸 the photo is taken: the frame, the bar and the background toast go, the result card has the screen (run 4, stage 3) */
   change();jobHud(true);};
-ACT.ptbye=()=>{closePanel();ptClear();const d=pt();d.o=null;d.wait=rand(18,40);change();jobHud(true);setTimeout(()=>{if(PLAYING)toast(d.done>=PT_MAX?`🌟 That's ${PT_MAX} photos today! Great job! More bookings tomorrow.`:'📸 Nice work! The next booking will come soon.',3.4);},400);};
+ACT.ptbye=()=>{if(document.querySelector('#card [data-a="ptbye"]'))closePanel();ptClear();const d=pt();d.o=null;d.wait=rand(18,40);change();jobHud(true);setTimeout(()=>{if(PLAYING)toast(d.done>=PT_MAX?`🌟 That's ${PT_MAX} photos today! Great job! More bookings tomorrow.`:'📸 Nice work! The next booking will come soon.',3.4);},400);};
 function ptInFan(x,z){if(!FAN.on||!CUR||FAN.loc!==CUR.id)return false;const cx=camera.position.x,cz=camera.position.z;for(const f of FRIEND_ACTORS){if(!f.fan||f.loc!==CUR.id)continue;const dx=f.fan[0]-cx,dz=f.fan[1]-cz,L2=dx*dx+dz*dz||1,u=((x-cx)*dx+(z-cz)*dz)/L2;if(u>.08&&u<.92&&Math.hypot(x-(cx+dx*u),z-(cz+dz*u))<.7)return true;}return false;}   /* 👫 between you and a friend standing round you? A passer-by there steps out of view, like out of a photo (run 4 finish: one stood in front of Luna and Theo) */
 function ptInShot(x,z){if(!PHO.on||!PHO.group.length)return false;const m=PHO.group[0],cx=camera.position.x,cz=camera.position.z,dx=m.x-cx,dz=m.z-cz,L2=dx*dx+dz*dz||1;const u=clamp(((x-cx)*dx+(z-cz)*dz)/L2,-.4,1.4);return Math.hypot(x-(cx+dx*u),z-(cz+dz*u))<3;}   /* within 3 m of the line from the camera to the family? */
 function ptAside(on){for(const w of PET_ACTORS)if(w.loc==='city'||!on)w.g.visible=!on;for(const f of FRIEND_ACTORS)if(f.mode==='follow'||!on)f.g.visible=!on;}   /* 🐾 your pets and the friends who follow you wait out of the picture during a shoot (run 4, stage 3: they photobombed every photo) */
-function ptClear(){ptAside(false);for(const m of PHO.group){scene.remove(m.root);m.root.traverse(o=>{if(o.geometry&&!o.userData.keep)o.geometry.dispose();});}PHO.group=[];PHO.on=0;PHO.zoom=1;PHO.bg=null;if(LOC.city)LOC.city.inter=LOC.city.inter.filter(t=>!t.pt);
+function ptClear(){ptAside(false);for(const m of PHO.group){scene.remove(m.root);m.root.traverse(o=>{if(o.geometry&&!o.userData.keep)o.geometry.dispose();});}PHO.group=[];PHO.on=0;PHO.res=0;PHO.zoom=1;PHO.bg=null;if(LOC.city)LOC.city.inter=LOC.city.inter.filter(t=>!t.pt);
   document.body.classList.remove('shoot');$('ptvf').hidden=true;ptBar();if(UI.open&&document.querySelector('#card [data-a="ptbye"],#card [data-a^="ptpose"]'))closePanel();}
-function ptTick(dt){const d=pt();ptInters();if(S.job!=='photo'){if(PHO.on||PHO.group.length)ptClear();return;}
+function ptTick(dt){const d=pt();ptInters();if(PHO.on&&PHO.res&&!(UI.open&&document.querySelector('#card [data-a="ptbye"]'))){ACT.ptbye();return;}   /* 📸 the result card went another way (the phone or the bag opened over it): the shoot ends as with Bye (run 4 finish: it stayed on, the map and the notepad hidden) */if(S.job!=='photo'){if(PHO.on||PHO.group.length)ptClear();return;}
   if(!d.o&&d.done<PT_MAX&&!CUT&&isDaytime()&&CUR&&CUR.id==='city'){d.wait-=dt;if(d.wait<=0)ptNew();}
   if(PHO.on){if(CUR.id!=='city'){ptClear();if(d.o)d.o.st='go';}else{ptAnim(dt);tagsApart(PHO.group.filter(m=>m.lab&&m.lab.visible).map(m=>({tag:m.lab})));}}   /* (the family's name tags step apart on screen) */
   if(d.o&&d.o.st==='shoot'&&!PHO.on)d.o.st='go';   /* (a shoot that was cut short, e.g. by a reload: set it up again) */
@@ -8473,7 +8474,7 @@ function valentineBuild(L,G,st,glows){const [x,z]=HOL_SPOT,PK='#ff9ec4',RD='#ff4
   for(let i=0;i<10;i++){const a=i/10*TAU;sph(st,.05,'#bfe9ff',x+Math.cos(a)*.45,.95+(i%2)*.18,z+Math.sin(a)*.45,{ws:6,hs:5,ol:false});}   /* water drops */
   {const c={cx:L.ox+x,cz:L.oz+z,cr:1.3};L.cols.push(c);HOL.cols.push(c);}holPiece('heart fountain',x,z,0);HOL.n++;glows.push([x,1.5,z,1.6,[1,.45,.7]]);
   for(const [hx,hz] of [[-21,-9.4],[-13,-9.4],[-22.3,-16],[-12.1,-15.8]]){heartShape(st,.22,RD,hx,1.1,hz,0);cyl(st,.03,.03,1.0,'#ffffff',hx,0,hz,{seg:6,ol:.01});holPiece('heart',hx,hz,0);HOL.n++;}   /* hearts on sticks by the mounds and bushes */
-  garland(st,-32.2,1.9,8.3,-24.2,8.3,[PK,RD,'#ffffff']);garland(st,-19.8,1.9,8.3,-8.3,8.3,[PK,RD,'#ffffff']);HOL.n+=2;
+  garland(st,-32.2,1.9,8.3,-24.2,8.3,[PK,RD,'#ffffff']);garland(st,-19.8,1.9,8.3,-18.6,8.3,[PK,RD,'#ffffff']);garland(st,-13.8,1.9,8.3,-8.3,8.3,[PK,RD,'#ffffff']);HOL.n+=3;   /* (run 4 finish: in two pieces, either side of the park's bus shelter: it ran along the shelter's back, its string through the roof's rim) */
   HOL.petals=petalCloud();HOL.petals.position.set(-17,0,-16);G.add(HOL.petals);}
 /* a heart standing up: two round lobes and a turned square for the point (s = size, ry = which way it faces) */
 function heartShape(g,s,c,x,y,z,ry){const q=new THREE.Group();q.position.set(x,y,z);q.rotation.y=ry;g.add(q);const o={ol:.012};
@@ -8592,7 +8593,7 @@ function holBuild(h){const L=LOC.city,G=new THREE.Group(),st=new THREE.Group();G
     for(const [x,z,ry] of HOL_DOORS){const fx=Math.sin(ry),fz=Math.cos(ry),px=x+fx*.75+Math.cos(ry)*.85,pz=z+fz*.75-Math.sin(ry)*.85;pumpkin(st,px,pz,ry,1);glows.push([px,.3,pz,.5,[.9,.42,.08]],[px,supportAt(px,pz)+.03,pz,1.5,1.5,[.5,.23,.05]]);}
     for(const lp of L.lane||[]){const ry=lp.ry,px=lp.sx+Math.cos(ry)*.55,pz=lp.sz-Math.sin(ry)*.55;pumpkin(st,px,pz,ry,.8);glows.push([px,.26,pz,.42,[.9,.42,.08]],[px,supportAt(px,pz)+.03,pz,1.3,1.3,[.5,.23,.05]]);}   /* 🏡 by every sign on Friends Lane */
     for(const [x,z] of [[-84.6,-4.45],[-84.6,4.45]]){pumpkin(st,x+.55,z,Math.PI/2,1.1);glows.push([x+.55,.32,z,.55,[.9,.42,.08]],[x+.55,supportAt(x+.55,z)+.03,z,1.6,1.6,[.5,.23,.05]]);}
-    const OP=['#ff8a2b','#8a4de0'];garland(st,-32.2,1.9,8.3,-24.2,8.3,OP);   /* (run 4, stage 3: it starts east of the food truck; it used to hang across the truck's front) */garland(st,-19.8,1.9,8.3,-8.3,8.3,OP);garland(st,-84.6,3.7,-4.45,-84.6,4.45,OP);garland(st,-37.8,3.9,19.85,-37.8,24.15,OP);HOL.n+=4;   /* the stage's garland hangs from the post tops: its pendants used to hang over the Pet Show sign (run 4, job 5) */
+    const OP=['#ff8a2b','#8a4de0'];garland(st,-32.2,1.9,8.3,-24.2,8.3,OP);   /* (run 4, stage 3: it starts east of the food truck; it used to hang across the truck's front) */garland(st,-19.8,1.9,8.3,-18.6,8.3,OP);garland(st,-13.8,1.9,8.3,-8.3,8.3,OP);garland(st,-84.6,3.7,-4.45,-84.6,4.45,OP);garland(st,-37.8,3.9,19.85,-37.8,24.15,OP);HOL.n+=5;   /* (run 4 finish: in two pieces, either side of the park's bus shelter: it ran along the shelter's back, its string through the roof's rim) */   /* the stage's garland hangs from the post tops: its pendants used to hang over the Pet Show sign (run 4, job 5) */
     for(const [x,z] of [[-30,-8.3],[-24,-8.3]])garland(st,x-2.6,2.0,z,x+2.6,z,OP);
     /* 🕸️ cobwebs in corners: the Pet Show stage, the lane gate, the bus shelter */
     {const c=document.createElement('canvas');c.width=c.height=96;const x=c.getContext('2d');x.strokeStyle='rgba(255,255,255,.85)';x.lineWidth=2.2;for(let i=0;i<6;i++){x.beginPath();x.moveTo(0,0);const a=i/5*Math.PI/2;x.lineTo(Math.cos(a)*96,Math.sin(a)*96);x.stroke();}
@@ -8625,7 +8626,7 @@ function holBuild(h){const L=LOC.city,G=new THREE.Group(),st=new THREE.Group();G
     for(const H of HOUSES){if(isApt(H.id))continue;const fx=Math.sin(H.ry),fz=Math.cos(H.ry),x=H.x+fx*.14,z=H.z+fz*.14,w=new THREE.Group();w.position.set(x,1.95,z);w.rotation.y=H.ry;st.add(w);holPiece('wreath',x,z,0,[[x,1.95,z]]);
       const t=new THREE.Mesh(new THREE.TorusGeometry(.3,.07,7,18),mat('#2f7a4a'));w.add(t);for(let i=0;i<6;i++){const a=i/6*TAU;sph(w,.035,i%2?'#ff4d4d':'#ffd45c',Math.cos(a)*.3,Math.sin(a)*.3,.04,{ws:6,hs:5,ol:false});}bowShape(w,.9,'#ff3b4d',{ol:false});w.children[w.children.length-1].position.set(0,.33,.03);HOL.n++;}
     for(const [x,z,ry] of HOL_DOORS){const fx=Math.sin(ry),fz=Math.cos(ry),w=new THREE.Group();w.position.set(x+fx*.1,2.0,z+fz*.1);w.rotation.y=ry;st.add(w);holPiece('wreath',x+fx*.1,z+fz*.1,0,[[x+fx*.1,2.0,z+fz*.1]]);const t=new THREE.Mesh(new THREE.TorusGeometry(.26,.06,7,18),mat('#2f7a4a'));w.add(t);sph(w,.07,'#ff3b4d',0,-.26,.03,{ws:8,hs:6,ol:false});HOL.n++;}
-    garland(st,-38.0,1.9,8.3,-24.2,8.3,['#ff4d6d','#5fd4b0','#ffd45c']);garland(st,-19.8,1.9,8.3,-8.3,8.3,['#ff4d6d','#5fd4b0','#ffd45c']);HOL.n+=2;}
+    garland(st,-38.0,1.9,8.3,-24.2,8.3,['#ff4d6d','#5fd4b0','#ffd45c']);garland(st,-19.8,1.9,8.3,-18.6,8.3,['#ff4d6d','#5fd4b0','#ffd45c']);garland(st,-13.8,1.9,8.3,-8.3,8.3,['#ff4d6d','#5fd4b0','#ffd45c']);HOL.n+=3;}   /* (run 4 finish: in two pieces, either side of the park's bus shelter: it ran along the shelter's back, its string through the roof's rim) */
   else if(h==='valentine'){valentineBuild(L,G,st,glows);}   /* 💗 run 4, job 11 */
   else if(h==='easter'){
     const PC=['#ffb3c7','#bfe6ff','#fff1b8','#c9f2e3','#e6dbff','#ffd9b8'],r=seeded(17);
@@ -8633,7 +8634,7 @@ function holBuild(h){const L=LOC.city,G=new THREE.Group(),st=new THREE.Group();G
     let i=0;for(const [x,z] of [[-35,14],[-33,17.5],[-30.5,11.5],[-13,16.5],[-11,19],[-12.5,29.5],[-10.5,31],[-15,33],[-34,34],[-32,31.5],[-36,27.5],[-19,36.5],[-24,13],[-18,13.5],[-25.5,34],[-28,36.5]])egg(x,z,i++);
     for(const [x,z] of [[-21,-11],[-13,-11],[-15.5,-19],[-20.5,-21.5],[-12,-21],[-22,-15.5],[-18.3,-13.3]])egg(x,z,i++);   /* 🌸 the Flower Corner garden */
     for(const [x,z,ry,c] of [[-26.5,11.8,.6,'#ffffff'],[-17.2,12.2,-.5,'#ffc9dc'],[-33.3,30.8,2.2,'#f8f5f0']]){const m=makePet('bunny',c),b=m.root;b.scale.setScalar(1.7);b.position.set(x,supportAt(x,z),z);b.rotation.y=ry;st.add(b);holPiece('bunny',x,z,b.position.y);const bw=new THREE.Group();bw.position.set(0,.31,.1);bw.rotation.set(0,0,-.2);m.head.add(bw);bowShape(bw,.6,PC[(i++)%6],{ol:.006});HOL.n++;}
-    garland(st,-38.0,1.9,8.3,-24.2,8.3,PC);garland(st,-19.8,1.9,8.3,-8.3,8.3,PC);garland(st,-84.6,3.7,-4.45,-84.6,4.45,PC);HOL.n+=3;
+    garland(st,-38.0,1.9,8.3,-24.2,8.3,PC);garland(st,-19.8,1.9,8.3,-18.6,8.3,PC);garland(st,-13.8,1.9,8.3,-8.3,8.3,PC);garland(st,-84.6,3.7,-4.45,-84.6,4.45,PC);HOL.n+=4;   /* (run 4 finish: in two pieces, either side of the park's bus shelter: it ran along the shelter's back, its string through the roof's rim) */
     eggHuntBuild(L,G);}   /* 🥚 run 4, job 11: the Easter Bunny and the 25 hunt eggs */
   bake(st,true,64);if(glows.length)G.add(glowMesh(glowGeo(glows)));}   /* (64 m chunks: fewer pieces with Halloween on, within the agreed town limit) */
 const HOL_BULB_COLS=['#ff4d6d','#ffd45c','#7cc8ff','#5fd4b0'],BULB_PALE=new THREE.Color('#fff8e8');   /* (a bulb that is off goes pale, never dark: dark ones read as holes; run 4, stage 3) */

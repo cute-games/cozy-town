@@ -1,0 +1,4 @@
+M-013 | DROP | normal occlusion by a friend; "Spooky path" and "after 18:00" still readable
+M-014 | KEEP | quests really say "Eat some flour" and count flour as a treat
+M-015 | KEEP | rain chip and grey sky but no rain streaks; N10 rain shot shows clear streaks
+M-016 | KEEP | big white block and crates fill frame's bottom-left, hide part of Zoe; tag over "Pet Show"
