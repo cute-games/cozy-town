@@ -1,4 +1,4 @@
-### Run 4 finish (20 Oct 2026): the open items of tools/run4-wip/README.md, done alone
+### Run 4 finish (20 and 21 Oct 2026): the open items of tools/run4-wip/README.md, done alone
 
 The owner's words: "Finish run 4 … do every open item in it, alone. First the full final check on the live game. Clock: show "9:40 Wed" (one
 hour digit), as the 17 Oct list says. Same rules as NIGHT-PLAN-4.md. End with a pull request. Never stop to ask."
@@ -562,3 +562,15 @@ byte for byte). It ran in blocks, nothing heavy beside it:
 Last state of every line on the live game (`tools/run4-wip/final-check-2026-10-20-live.txt`, every line as printed): all PASS but C5;
 C1-WK not run (no Safari engine here) and G not verified (real devices), as on 18 Oct. The only real failure of the live game: C5 (fixed in
 this pull request, f2).
+
+#### The final stage (21 Oct)
+- Version stamp 2026102101 (bigger than the live 2026101802); `tools/prerun4-rollback.html` restamped 2026102150 (the starting file but the
+  stamp, checked by a diff).
+- The full check on the final file (`qcheck4.sh FINAL … --full`, 69 min, nothing beside it): 103 PASS, 1 FAIL: A2, only because the
+  backup's title said "read back 2026-10-20" (the kit wants today's date). The backup (private artifact 761umD3PEycuWELrQwkHzk) was read
+  back on 21 Oct, byte for byte `tools/prerun4-index.html` (md5 709bf763), and the files stage rerun alone with it: A1, A2, F1, F3a, F5
+  PASS. Last state: every line PASS; C1-WK not run (no Safari engine), F2 and F3 not run (not published or uploaded yet), G not verified
+  (real devices). As printed: section 2 and `tools/run4-wip/final-check-2026-10-21-final.txt`.
+- 55 online-part lines (`strip_online.py`); index.html 1,597,427 bytes (under 1.8 MB).
+- Setting up the fresh container of 21 Oct: the Python package playwright had to be installed, at 1.56.0 to match the Chromium in the
+  environment.

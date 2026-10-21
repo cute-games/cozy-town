@@ -3,7 +3,7 @@ glitches.json entries: id, place, device, what, bad (1-3), found_by, fix, before
 after (optional), crop (optional [x0,y0,x1,y1]), status (fixed / open / not a glitch), check (what the fix check saw).
 usage: python3 glitchlist.py [--critic CRITIC.md]"""
 import json, os, subprocess, sys
-S = '/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad'
+S = '/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad'
 REPO = '/home/user/cozy-town'; PICS = os.path.join(REPO, 'tools', 'pictures-4', 'stage3-glitches'); os.makedirs(PICS, exist_ok=True)
 G = json.load(open(os.path.join(S, 'glitches.json'), encoding='utf-8'))
 head = open(os.path.join(S, 'stage3', 'GLITCH-LIST-4-head.md'), encoding='utf-8').read().rstrip('\n') + '\n'

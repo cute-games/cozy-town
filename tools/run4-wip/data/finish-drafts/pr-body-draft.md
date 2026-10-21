@@ -17,7 +17,7 @@ Run 4, finished: every open item of `tools/run4-wip/README.md`, done alone on 20
 - Critic round 6, the last: photographer 7, parties 8, holiday spot 7, house floors and colour 8, one clock 7. Where each loop stands: `tools/run4-wip/data/critic-scores.md`.
 
 ## Checks on the final file
-PLACEHOLDER (the full check with --full, stamp PLACEHOLDER; `strip_online.py` finds all 55 online-part lines; index.html PLACEHOLDER MB).
+The whole kit with `--full` on the final file (stamp 2026102101, md5 1f3d8b84, 69 min, nothing beside it): 103 PASS, 1 FAIL: A2, only the date in the backup's title ("read back 2026-10-20"); the backup was read back today, byte for byte, and the files stage rerun alone: A1, A2, F1, F3a, F5 PASS. C1-WK not run (no Safari engine), F2 and F3 not run (not published yet), G not verified (real devices). `strip_online.py` finds all 55 online-part lines; index.html 1.60 MB (under 1.8). Every line as printed: `tools/run4-wip/final-check-2026-10-21-final.txt`.
 
 ## For the owner
 - Your pets keep close at your heels, so from your eyes they stand at the bottom of the screen and one can be behind another for a moment (G4-205, G4-222): left as it is, written down.

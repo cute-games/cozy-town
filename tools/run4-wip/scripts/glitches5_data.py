@@ -2,8 +2,8 @@
 'p8:M-001' (pass 8, stage3-dc8). Later passes are added to DC and PASS as they come."""
 DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13', 'p14': 'stage3-dc14', 'p15': 'stage3-dc15', 'p16': 'stage3-dc16', 'p17': 'stage3-dc17', 'p18': 'stage3-dc18', 'p19': 'stage3-dc19', 'p20': 'stage3-dc20', 'p21': 'stage3-dc21', 'p22': 'stage3-dc22', 'p23': 'stage3-dc23', 'p24': 'stage3-dc24', 'p25': 'stage3-dc25'}
 PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13', 'p14': 'pass 14', 'p15': 'pass 15', 'p16': 'pass 16', 'p17': 'pass 17', 'p18': 'pass 18', 'p19': 'pass 19', 'p20': 'pass 20', 'p21': 'pass 21', 'p22': 'pass 22', 'p23': 'pass 23 (the full final pass)', 'p24': 'pass 24', 'p25': 'pass 25'}
-AFTER_SETS = ['stage3-p9', 'stage3-p9b', 'stage3-p9c']   # newest first: the after picture of a fixed spot comes from pass 9
-KIT_SETS = ['stage3-kit9']
+AFTER_SETS = ['stage3-p23', 'stage3-p23b', 'stage3-p23c']   # newest first: the after picture of a fixed spot comes from pass 9
+KIT_SETS = ['stage3-kit23']
 PROBES = {   # spots whose after picture is a probe taken right after the fix (a pass-9 picture replaces it when there is one)
     'kit8-n12-save-prenight3-upstairs-house-upstairs-after-save-prenight3-upstairs.png': 'probe-f5/shots/pf5_ipad-landscape_light_pf5-rug_001_rug-up.png',
     'kit8-n12-save-live-web-rich-house-after-save-live-web-rich.png': 'probe-f5/shots/pf5_ipad-landscape_light_pf5-tags_001_tags-home.png',
@@ -20,7 +20,7 @@ PROBES = {   # spots whose after picture is a probe taken right after the fix (a
 }
 FOUND_BY = {'327': 'the kit (N25, pass 20)'}
 BEFORE = {}
-AFTER = {}
+AFTER = {'327': '/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21/shots/pv_ipad-landscape_light_pv-r21-ipad-landscape_003_photo-chat-r21-ipad-landscape.png', '328': '/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21/shots/pv_iphone-landscape_light_pv-r21-iphone-landscape_004_pond-bubble-r21-iphone-landscape.png', '331': '/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r22/shots/pv_iphone-landscape_light_pv-r22-iphone-landscape_003_photo-chat-r22-iphone-landscape.png', '334': '/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r25k/shots/p25kit_ipad-landscape_light_n8-designer_002_designer-room-2.png', '335': '/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r25d/shots/pv_iphone-portrait_dark_pv-r25d-iphone-portrait_001_pond-bubble-upright-r25d-iphone-portrait.png', '340': '/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r25d/shots/pv_iphone-portrait_dark_pv-r25d-iphone-portrait_002_flower-bubble-r25d-iphone-portrait.png'}   # (run 4 finish: this session's fixes, their re-check pictures)
 KNOWN = []
 UPDATES = {
     'G4-340': {'check': "the Flower Corner probe after (`views_f19.py`); pass 25: the whole bubble on the screen on an upright iPhone, light and dark, no mark about it; the kit 40 of 41 (N15 on its own timing, then 2 of 3 alone PASS)."},
