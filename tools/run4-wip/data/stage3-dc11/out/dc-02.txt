@@ -1,0 +1,6 @@
+M-007 | DROP | pastel goods clearly visible, shelves look full; pastel style, not faded
+M-008 | KEEP | back wall is dusty pink, house is lavender in 038; shade cannot shift lavender to pink
+M-009 | DROP | world bubble in dimmed scene behind the open book, like the map peeking out left; normal
+M-010 | DROP | picture readable, signs legible; pale floor is the shop's real floor; page 7 just as soft
+M-011 | DROP | same dimmed world bubble behind the open book; normal overlap, not a glitch
+M-012 | DROP | dimmed world bubble cut off by the open book; normal overlap, not a glitch

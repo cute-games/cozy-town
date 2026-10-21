@@ -1,0 +1,6 @@
+M-025 | KEEP | notepad sits over two front townsfolk's heads, their hats hidden
+M-026 | DROP | brief "Perfect" hit popup over dancers is normal; crown only partly covered
+M-027 | KEEP | toast covers chat and phone buttons, their rims peek out below
+M-028 | DROP | party hats are the birthday-photo look (3 friends, no confetti), not a New Year leak
+M-029 | KEEP | no spooky path in view, camera faces the street, dark object cut at bottom edge
+M-030 | KEEP | grandma's back fills the centre and blocks the fountain

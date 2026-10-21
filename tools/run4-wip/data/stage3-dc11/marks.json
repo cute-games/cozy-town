@@ -1,0 +1,346 @@
+[
+ {
+  "id": "M-001",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_019_town-ducks-close.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_ipad-landscape_light_ipad-landscape-light_019_town-ducks-close.png",
+  "where": "ipad-landscape light, duck pond close-up after feeding",
+  "what": "both ducks face the camera head-on, so their new wings and little tails cannot be seen (from the front the bodies are plain round blobs); the picture does not show what it is meant to show",
+  "bad": "1"
+ },
+ {
+  "id": "M-002",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_052_whats-new-book.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_ipad-landscape_light_ipad-landscape-light_052_whats-new-book.png",
+  "where": "ipad-landscape light, What's new book page 1, same on pages 2 to 7 (053 to 058), city",
+  "what": "the book card is laid over the corner map, the notepad and the top of the joystick ring without hiding or dimming them, so cut slivers of the map and the notepad stick out along its left edge (the big map hides the top-left HUD, the book does not)",
+  "bad": "1"
+ },
+ {
+  "id": "M-003",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_001_town-square-fountain.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_ipad-landscape_dark_ipad-landscape-dark_001_town-square-fountain.png",
+  "where": "ipad-landscape dark, the park from the square, the fountain (city, 11:10, sun)",
+  "what": "the \"You are online! Friends who play will show up here.\" toast is a see-through grey box with white text over the pale yellow ground: low contrast, looks washed out (maybe caught mid-fade; the light-theme toasts are white with dark text)",
+  "bad": "1"
+ },
+ {
+  "id": "M-004",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_002_town-pet-show-stage.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_ipad-landscape_dark_ipad-landscape-dark_002_town-pet-show-stage.png",
+  "where": "ipad-landscape dark, city: Pet Show stage and food truck corner",
+  "what": "the food truck is mostly off the right screen edge: its Food truck sign and awning are cut off, only part of its side and one wheel show, so the food truck half of the shot cannot be judged",
+  "bad": "1"
+ },
+ {
+  "id": "M-005",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_017_treepark-hard-decks.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_ipad-landscape_dark_ipad-landscape-dark_017_treepark-hard-decks.png",
+  "where": "ipad-landscape dark, treepark: first deck of the hard path",
+  "what": "a small smeared, dashed red patch sits inside the orange tree crown up and right of the star (something red poking through the leaves; looks like flicker)",
+  "bad": "1"
+ },
+ {
+  "id": "M-006",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_019_town-ducks-close.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_ipad-landscape_dark_ipad-landscape-dark_019_town-ducks-close.png",
+  "where": "ipad-landscape dark, city: the two pond ducks up close after feeding",
+  "what": "both ducks face the camera head-on, so their wings and tails (asked for in this shot) cannot be seen; only the faces show",
+  "bad": "1"
+ },
+ {
+  "id": "M-007",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_021_inside-pets.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_ipad-landscape_dark_ipad-landscape-dark_021_inside-pets.png",
+  "where": "ipad-landscape dark, Pet Shop downstairs",
+  "what": "the goods on the left and middle shelves are very pale, washed-out squares that barely show against the white shelves, so those shelves look faded and half empty next to the bright right shelf",
+  "bad": "1"
+ },
+ {
+  "id": "M-008",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_039_lane-my-garden.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_ipad-landscape_dark_ipad-landscape-dark_039_lane-my-garden.png",
+  "where": "ipad-landscape dark, city: my garden behind the house",
+  "what": "the big blank wall behind the garden (where the back of my house should be) is dusty pink-grey, not the purple my six-floor house is painted in shot 038",
+  "bad": "2"
+ },
+ {
+  "id": "M-009",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_054_whats-new-book-p3.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_ipad-landscape_dark_ipad-landscape-dark_054_whats-new-book-p3.png",
+  "where": "ipad-landscape dark, What's new book page 3 (city)",
+  "what": "the empty right end of a townsperson's speech bubble sticks out from behind the book's right edge (a lilac strip beside the book, level with the title)",
+  "bad": "1"
+ },
+ {
+  "id": "M-010",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_055_whats-new-book-p4.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_ipad-landscape_dark_ipad-landscape-dark_055_whats-new-book-p4.png",
+  "where": "ipad-landscape dark, What's new book page 4 (city)",
+  "what": "the big Pet Shop upstairs picture is blurry and pale (soft fence edges, fuzzy sign text, a washed-out white floor filling the lower half), unlike the sharp pictures on the other pages",
+  "bad": "1"
+ },
+ {
+  "id": "M-011",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_055_whats-new-book-p4.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_ipad-landscape_dark_ipad-landscape-dark_055_whats-new-book-p4.png",
+  "where": "ipad-landscape dark, What's new book page 4 (city)",
+  "what": "the empty right end of a townsperson's speech bubble sticks out from behind the book's right edge (lilac strip)",
+  "bad": "1"
+ },
+ {
+  "id": "M-012",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_056_whats-new-book-p5.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_ipad-landscape_dark_ipad-landscape-dark_056_whats-new-book-p5.png",
+  "where": "ipad-landscape dark, What's new book page 5 (city)",
+  "what": "a townsperson's speech bubble sticks out from behind the book's right edge with its text cut to \"ek,\" / \".\"",
+  "bad": "1"
+ },
+ {
+  "id": "M-013",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_057_whats-new-book-p6.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_ipad-landscape_dark_ipad-landscape-dark_057_whats-new-book-p6.png",
+  "where": "ipad-landscape dark, What's new book page 6 (city)",
+  "what": "the same speech bubble sticks out from behind the book's right edge with its text cut to \"ek,\" / \".\"",
+  "bad": "1"
+ },
+ {
+  "id": "M-014",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_058_whats-new-book-p7.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_ipad-landscape_dark_ipad-landscape-dark_058_whats-new-book-p7.png",
+  "where": "ipad-landscape dark, What's new book page 7 (city)",
+  "what": "the same speech bubble sticks out from behind the book's right edge with its text cut to \"ek,\" / \".\"",
+  "bad": "1"
+ },
+ {
+  "id": "M-015",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_010_big-map.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_iphone-portrait_dark_iphone-portrait-dark_010_big-map.png",
+  "where": "iphone-portrait, dark theme, the big map (city, 11:20)",
+  "what": "the three friends' house boxes (north of the Spooky path pumpkin, west of it, and above the Market apple, each with its lilac, pink or yellow dot) are blank with no names; the builder's tools/pictures-4/after-big-map-iphone.png shows \"Luna\", \"Rosie\" and \"Finn\" on these same boxes (this pass's light-theme iphone big map is blank too, so it is not only the dark theme)",
+  "bad": "1"
+ },
+ {
+  "id": "M-016",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_044_inside-market.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_iphone-portrait_dark_iphone-portrait-dark_044_inside-market.png",
+  "where": "iphone-portrait dark, inside the market",
+  "what": "the shopkeeper behind the counter faces the shelves with their back to us: only the back of a black-haired head shows, no face",
+  "bad": "1"
+ },
+ {
+  "id": "M-017",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_010_big-map.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_iphone-landscape_light_iphone-landscape-light_010_big-map.png",
+  "where": "iphone-landscape light, city: big map",
+  "what": "a pink map dot sits on the first letter of the \"Spooky path\" label, so it reads \"pooky path\"",
+  "bad": "1"
+ },
+ {
+  "id": "M-018",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_031_tutorial-photo.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_iphone-landscape_light_iphone-landscape-light_031_tutorial-photo.png",
+  "where": "iphone-landscape light, photographer tutorial step 1 (city)",
+  "what": "in the picture panel the caption \"Ding! A booking: read it!\" sits at the bottom-left, not centred like the hairstylist tutorial's caption (030); the \ud83d\udc46 hand almost touches the end of the caption and the right side of the panel is empty, so the panel looks lopsided",
+  "bad": "1"
+ },
+ {
+  "id": "M-019",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_038_town-flower-corner.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_iphone-landscape_light_iphone-landscape-light_038_town-flower-corner.png",
+  "where": "iphone-landscape light, town: Flower Corner gate (same in 036, 037, 039 to 046)",
+  "what": "the move joystick ring stands in the bottom middle of the screen (in the photo shot 033 it was bottom-left) and lies over the open gate and the stepping stones; in the other town and shop views it covers the fountain rim (036), the pond's front stones (039), the Toy Store door and its pumpkin (041), the Tree Park gate's left post and the path (042) and the fruit crates (044)",
+  "bad": "2"
+ },
+ {
+  "id": "M-020",
+  "file": "s3_pc-1366_light_pc-1366-light_019_whats-new-book-p7.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_pc-1366_light_pc-1366-light_019_whats-new-book-p7.png",
+  "where": "pc-1366 light, title's What's new book page 7",
+  "what": "the page dots sit about 20 px left of the card's middle on this last page (on page 6 they are centred): the wider \"Let's play!\" button pushes them, so the dots jump sideways when you turn to the last page",
+  "bad": "1"
+ },
+ {
+  "id": "M-021",
+  "file": "s3_pc-1366_light_pc-1366-light_044_inside-market.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_pc-1366_light_pc-1366-light_044_inside-market.png",
+  "where": "pc-1366 light, inside the market",
+  "what": "a big round-edged dark shadow with nothing visible casting it lies across the front of the fruit stand and the fronts of its crates",
+  "bad": "1"
+ },
+ {
+  "id": "M-022",
+  "file": "s3_pc-1366_dark_pc-1366-dark_024_big-house.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11/shots/s3_pc-1366_dark_pc-1366-dark_024_big-house.png",
+  "where": "pc-1366 dark theme, bigger house card by the Beach Bus stop (place city)",
+  "what": "a strolling grandma is right against the camera: the back of her grey head and mint cardigan, cut by the left screen edge, fill the left quarter of the view (camera almost inside her; she is gone in the next shot from the same spot)",
+  "bad": "2"
+ },
+ {
+  "id": "M-023",
+  "file": "s3b_ipad-landscape_dark_newyear-night-dark_001_holiday-newyear-fireworks.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11b/shots/s3b_ipad-landscape_dark_newyear-night-dark_001_holiday-newyear-fireworks.png",
+  "where": "ipad-landscape dark, over the park on 30 Dec at 22:10",
+  "what": "the fireworks hardly read as fireworks: one white smudge on a cloud and a thin spray of pale pink-grey dots, no bright coloured bursts high over the town",
+  "bad": "2"
+ },
+ {
+  "id": "M-024",
+  "file": "s3b_ipad-landscape_dark_newyear-night-dark_001_holiday-newyear-fireworks.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11b/shots/s3b_ipad-landscape_dark_newyear-night-dark_001_holiday-newyear-fireworks.png",
+  "where": "ipad-landscape dark, park on 30 Dec at 22:10",
+  "what": "the toast in the middle says \"The football friends are at the field until 19:00. Come and play!\" while the clock shows 22:10",
+  "bad": "1"
+ },
+ {
+  "id": "M-025",
+  "file": "s3b_ipad-landscape_light_newyear-day-light_001_holiday-newyear-hats.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11b/shots/s3b_ipad-landscape_light_newyear-day-light_001_holiday-newyear-hats.png",
+  "where": "ipad-landscape light, bus stop on 31 Dec",
+  "what": "the notepad covers the heads of two of the three townsfolk in front, so their party hats are hidden (only a yellow hat tip peeks out at the left edge); just one hat shows",
+  "bad": "2"
+ },
+ {
+  "id": "M-026",
+  "file": "s3c_iphone-portrait_light_dance-A_001_dance-two-portrait.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11c/shots/s3c_iphone-portrait_light_dance-A_001_dance-two-portrait.png",
+  "where": "iphone-portrait light, dance-off in the house",
+  "what": "the big \"Perfect +15\" text lies across both dancers' heads and hides most of the left dancer's crown",
+  "bad": "1"
+ },
+ {
+  "id": "M-027",
+  "file": "kit11-n26-map-android-tablet-portrait-big-map-android-tablet-portrait.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit11/shots/kit11-n26-map-android-tablet-portrait-big-map-android-tablet-portrait.png",
+  "where": "android-tablet-portrait light, big map open",
+  "what": "the \"You are online!\" toast is drawn on top of the chat and phone round buttons at the top and hides them",
+  "bad": "2"
+ },
+ {
+  "id": "M-028",
+  "file": "kit11-n25-ipad-landscape-photo-shoot-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit11/shots/kit11-n25-ipad-landscape-photo-shoot-ipad-landscape.png",
+  "where": "ipad-landscape light, photo shoot by the duck pond",
+  "what": "Ben, Mia and Leo wear the striped New Year party hats in an autumn scene (orange and yellow trees, no confetti); the hats should only be on 31 Dec and 1 Jan",
+  "bad": "2"
+ },
+ {
+  "id": "M-029",
+  "file": "kit11-n1-holidays-spooky-path.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit11/shots/kit11-n1-holidays-spooky-path.png",
+  "where": "ipad-landscape light, Flower Corner at 19:30",
+  "what": "the \"spooky path\" shot looks out over the hedge at the street: no purple path, lamps or spooky signs in view, only a dark shape with a pink block cut off by the bottom edge",
+  "bad": "2"
+ },
+ {
+  "id": "M-030",
+  "file": "kit11-n10-season-winter-season-winter.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit11/shots/kit11-n10-season-winter-season-winter.png",
+  "where": "ipad-landscape light, park at noon",
+  "what": "a grandma stands right in front of the camera with her back to it; her grey hair and cardigan fill the middle of the picture and hide the fountain",
+  "bad": "2"
+ },
+ {
+  "id": "M-031",
+  "file": "kit11-n11-pets-pet-duck.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit11/shots/kit11-n11-pets-pet-duck.png",
+  "where": "ipad-landscape, pavement by the Flower Corner (pet duck)",
+  "what": "the duck sits right at the foot of a dark lamppost: the pole comes down from the top edge straight into its head and splits the picture in two (the duck may be standing inside the post)",
+  "bad": "1"
+ },
+ {
+  "id": "M-032",
+  "file": "kit11-n11-pets-pet-owl.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit11/shots/kit11-n11-pets-pet-owl.png",
+  "where": "ipad-landscape, pavement by the Flower Corner (pet owl)",
+  "what": "the same dark lamppost pole comes down from the top edge straight into the owl's head (the owl may be standing inside the post)",
+  "bad": "1"
+ },
+ {
+  "id": "M-033",
+  "file": "kit11-n21-newyear-party-hats-confetti.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit11/shots/kit11-n21-newyear-party-hats-confetti.png",
+  "where": "ipad-landscape, pavement by the park on New Year (snow)",
+  "what": "no striped party hat shows on the townsperson in front, only a grey lump above the hair that pokes into the tree crown",
+  "bad": "2"
+ },
+ {
+  "id": "M-034",
+  "file": "kit11-n25-ipad-landscape-photo-chat-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit11/shots/kit11-n25-ipad-landscape-photo-chat-ipad-landscape.png",
+  "where": "ipad-landscape, phone Photos chat after the Duck Pond shoot",
+  "what": "Ben asked for \"the bench behind us\", but the photo shows a plain blue wall behind the three and no bench, yet it was praised \"Wow, what a photo!\" with five stars",
+  "bad": "1"
+ },
+ {
+  "id": "M-035",
+  "file": "kit11-n27-trash-trash-peel.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit11/shots/kit11-n27-trash-trash-peel.png",
+  "where": "ipad-landscape, by the park in the rain (banana peel)",
+  "what": "the camera is tilted up at the rainy sky: no pavement, banana peel or sparkle in the picture, and a tree crown fills the left edge",
+  "bad": "2"
+ },
+ {
+  "id": "M-036",
+  "file": "kit11-n27-trash-trash-can.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit11/shots/kit11-n27-trash-trash-can.png",
+  "where": "ipad-landscape, by the brick apartments in the rain (can)",
+  "what": "the camera is tilted up at the rainy sky: no pavement, can or sparkle in the picture, only clouds and the building seen from below",
+  "bad": "2"
+ },
+ {
+  "id": "M-037",
+  "file": "kit11-n3-friends-friends-after-turn-1.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit11/shots/kit11-n3-friends-friends-after-turn-1.png",
+  "where": "ipad-landscape, pavement by the park (after a turn)",
+  "what": "Theo stands half behind Rosie (her hair bun covers his side); Luna, Theo and Rosie bunch up in the middle instead of a loose arc",
+  "bad": "1"
+ },
+ {
+  "id": "M-038",
+  "file": "kit11-n3-friends-friends-in-view-2.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit11/shots/kit11-n3-friends-friends-in-view-2.png",
+  "where": "ipad-landscape, town pavement by the Flower Corner",
+  "what": "the pet Mochi stands hidden behind Finn: only a scrap of it shows by his legs and its name tag is cut to \"chi\" by Finn's body",
+  "bad": "2"
+ },
+ {
+  "id": "M-039",
+  "file": "kit11-n3-friends-friends-after-turn-2.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit11/shots/kit11-n3-friends-friends-after-turn-2.png",
+  "where": "ipad-landscape, pavement by the Flower Corner",
+  "what": "the pet Waffles stands right against the camera: its head and purple hat fill the bottom-right corner under the run button, cut by the bottom edge, and its name tag sits on Rosie's dress",
+  "bad": "1"
+ },
+ {
+  "id": "M-040",
+  "file": "kit11-n31-trees-wall-11-5.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit11/shots/kit11-n31-trees-wall-11-5.png",
+  "where": "ipad-landscape, apartment block's light-blue east wall at 11:30",
+  "what": "the shadows under the window sills are drawn as fine vertical stripes (streaks), clearest under the top-floor windows; at 12:00 the same wall is clean",
+  "bad": "1"
+ },
+ {
+  "id": "M-041",
+  "file": "kit11-n25-iphone-landscape-photo-shoot-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit11/shots/kit11-n25-iphone-landscape-photo-shoot-iphone-landscape.png",
+  "where": "iphone-landscape, photographer job at the Pet Show stage",
+  "what": "two pets (Sir Barkley in a top hat, Lady Fluffington in a flowered straw hat) stand right against the camera: they fill the left quarter of the view, cut by the screen edges and under the joystick, and reach into the photo frame; Sir Barkley's name tag is hidden behind the \"Everyone is posed!\" chip",
+  "bad": "2"
+ },
+ {
+  "id": "M-042",
+  "file": "kit11-n25-iphone-landscape-photo-result-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit11/shots/kit11-n25-iphone-landscape-photo-result-iphone-landscape.png",
+  "where": "iphone-landscape, photographer result card",
+  "what": "the pet name tag \"Sir Barkley\" is cut by the left screen edge at the top left, and the snapped photo has a slice of the pets along its left edge",
+  "bad": "1"
+ },
+ {
+  "id": "M-043",
+  "file": "kit11-n26-map-pc-1366-big-map-pc-1366.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit11/shots/kit11-n26-map-pc-1366-big-map-pc-1366.png",
+  "where": "pc-1366, big Map, bottom of the Places list",
+  "what": "the last row (Beach, Bus stop) is faded like switched-off buttons with the down-arrow hint sitting on both buttons' edges, and under it the top edge of one more button pokes out sharp at the panel's bottom edge",
+  "bad": "1"
+ }
+]

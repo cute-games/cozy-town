@@ -1,7 +1,7 @@
 """Run 4 finish: the data of the glitch list from pass 8 on (read by mkglitches5.py). One entry per cause; the marks are
 'p8:M-001' (pass 8, stage3-dc8). Later passes are added to DC and PASS as they come."""
-DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10'}
-PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10'}
+DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11'}
+PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11'}
 AFTER_SETS = ['stage3-p9', 'stage3-p9b', 'stage3-p9c']   # newest first: the after picture of a fixed spot comes from pass 9
 KIT_SETS = ['stage3-kit9']
 PROBES = {   # spots whose after picture is a probe taken right after the fix (a pass-9 picture replaces it when there is one)
@@ -30,12 +30,14 @@ UPDATES = {
     'G4-165': {'check': 'N26 passes; pass 8 pictures: not seen again.'}, 'G4-166': {'check': 'N25 passes; pass 8 pictures: not seen again.'},
     'G4-220': {'check': "pass 10 pictures: the message still lay over the school's sign: f6's style rule did not take, the game places its messages itself; f7 places it (G4-235)."},
     'G4-208': {'check': 'pass 9 pictures; pass 10: once more, with the message coming after the pop (G4-229).'},
+    'G4-231': {'check': 'a check by script; N24 passes; pass 11: on the PC (a slow screen) a grandma still passed 1.5 m from the camera: G4-249.'},
 }
 F5 = ' (patch_f5.py)'
 F3 = ' (patch_f3.py)'
 F4 = ' (patch_f4.py)'
 F6 = ' (patch_f6.py)'
 F7 = ' (patch_f7.py)'
+F8 = ' (patch_f8.py)'
 FRAME = "The photographer's framing, not the game: "
 ENTRIES = [
  ('168', ['p8:M-001'], 'October: the park fountain', 'iPad', 'A white ghost hung inside the fountain, between its top and middle bowls.', 1, 'fixed',
@@ -204,4 +206,29 @@ ENTRIES = [
   FRAME + 'the photographer picks the pizza up in the street; in the game Chef Blaze hands it over in the pizzeria, where the timer waits for his card (pass 11 closes the card).', '—'),
  ('248', ['p10:M-046', 'p10:M-047', 'p10:M-048', 'p10:M-049', 'p10:M-051'], "the check's own staging", 'iPad', 'A townsperson\'s back filling the middle of the fountain pictures; a faded "And the winner is…" over a new pet; the whole picture dimmed after the stairs.', 1, 'not a glitch',
   "The check puts you at the fountain in one step, onto a townsperson's way (the one walking off was 1.4 m ahead; a child walking there meets them coming, and they stop 2.4 m away); N11 runs each pet's Pet Show in fast game time, and the show's drum message fades in real time; N12 takes its upstairs picture as the stairs' 0.4 s fade ends.", '—'),
+ # ---- pass 11 (the file with f7; 103 marks, 60 set aside with their reason, 43 double-checked, 27 kept) ----
+ ('249', ['p11:M-022'], 'a grandma walking by (after G4-231)', 'PC', "At the Beach Bus stop a grandma still passed right at the camera: her head and cardigan filled the left quarter (the light-theme picture and the December picture showed the same; the filter set those two aside under a wrong reason).", 2, 'fixed',
+  "Her step aside followed the drawn frames, so on a slow screen (the PC pictures) it lagged and she passed 1.5 m from you; it follows the clock now, and keeps 2.4 m, like a passer-by" + F8 + '.', 'a check by script with frames 50 ms and 200 ms apart: 2.37 m and 2.4 m at the closest (before: 2.06 m and 1.79 m); N24 passes; pass 12 pictures.'),
+ ('250', ['p11:M-015', 'p11:M-017'], 'the big map', 'iPhone, iPad, PC', "Your friends' dots had no names (the builder's picture shows Luna, Rosie and Finn); Rosie's dot lay on the S of \"Spooky path\".", 1, 'fixed',
+  "A friend's name was tested against its own dot with the air round it (stage 3), so every side touched the dot and no name was ever drawn; it is tested against the others only. A place's name a friend's dot lies on is drawn again over the dot" + F8 + '.', 'a probe of the map: Theo, Rosie and Luna by their dots; pass 12 pictures.'),
+ ('251', ['p11:M-020'], "the What's new book", 'PC', 'On the last page the page dots sat 21 px left of the middle: the wider "Let\'s play!" button pushed them.', 1, 'fixed',
+  'The footer is three columns, the dots in the middle one' + F8 + '.', 'a probe of pages 6 and 7: the dots at the same place; pass 12 pictures.'),
+ ('252', ['p11:M-024'], 'a message after the clock jumped', 'iPad', 'At 22:10 the message said "The football friends are at the field until 19:00. Come and play!".', 1, 'fixed',
+  'It had waited for its turn while the clock jumped (in the game: a night in bed); a waiting message is dropped once the game clock has moved half an hour or a day since' + F8 + '.', 'a check by script: queued at 14:03, the clock to 22:06: not shown (before: shown).'),
+ ('253', ['p11:M-027'], 'a message over the big map', 'Android tablet (upright)', 'The "You are online!" message lay on the chat and phone buttons.', 1, 'fixed',
+  'With a big card open and no free spot beside it, a message goes up in the top row, left of the round buttons' + F8 + '.', 'a check by script on the tablet: the message clear of the buttons and the card.'),
+ ('254', ['p11:M-023'], "New Year's fireworks", 'iPad', 'The fireworks hardly read as fireworks: a thin spray of pale dots and a white smudge.', 2, 'fixed',
+  'Bigger sparks (up to 16 px), 130 to a burst, in their own colours: added up, sparks lying on each other made a young burst a white blob; they fade in over the first moment and stay bright longer' + F8 + '.', 'probes at three moments; N21 passes; pass 12 pictures.'),
+ ('255', ['p11:M-034'], "the photographer's stars", 'iPad', 'Ben asked for "the bench behind us"; the photo showed a blue wall and no bench and still got the full score.', 1, 'fixed',
+  'Only the school sign had a point to check whether the background is in the photo; every other background counted as in. Each now has one: 2 m behind where the group stands, 1 m up' + F8 + '.', 'a check by script: from the front 5 stars, from behind the group the bench no longer counts; N25 passes.'),
+ ('256', ['p11:M-041', 'p11:M-042'], 'a photo shoot at the Pet Show stage', 'iPhone sideways', 'Two judges sat right beside the camera, cut by the screen edge, one reaching into the photo; a judge\'s name tag cut at the edge of the result.', 2, 'fixed',
+  'The judges step out of a photo shoot like anyone else' + F8 + '.', 'a probe of the shoot on a Saturday; N25 passes; pass 12 pictures.'),
+ ('257', ['p11:M-005', 'p11:M-040'], 'shadows (G4-088 again)', 'iPad', "Soft dark dots on a Tree Park crown; fine stripes under the apartments' window sills at 11:30.", 1, 'open',
+  "The same as G4-088 and G4-244: the sun's shadow map (2048 px over 60 m), written down in stage 3.", ''),
+ ('258', ['p11:M-038', 'p11:M-039'], 'your pets (G4-205 again)', 'iPad', 'Mochi behind Finn, its tag cut to "chi"; Waffles\' hatted head at the bottom edge, its tag on Rosie\'s dress.', 1, 'open',
+  'The same as G4-205: not changed, written down for the owner (section 5c).', ''),
+ ('259', ['p11:M-002', 'p11:M-008', 'p11:M-019', 'p11:M-021', 'p11:M-025', 'p11:M-043'], 'decided before', 'iPad, PC, iPhone sideways', "The book over the corner map and the notepad; the garden's back wall not the house's purple; the joystick in from the edge on a sideways phone; a round shadow on the market's fruit stand; the iPad's notepad over two townsfolk's heads; the map's places list fading at its foot under the ⬇️ hint.", 1, 'not a glitch',
+  "A card over the dimmed HUD (G4-033, G4-060); the photographer's garden spot repaints the house on purpose (G4-223); where the owner put the joystick (commit 0f5939f); your own shadow (G4-146); the HUD stays where it is, and the photographer's New Year row stands left of the middle; the list's scroll hint (G4-034).", '—'),
+ ('260', ['p11:M-029', 'p11:M-030', 'p11:M-031', 'p11:M-032', 'p11:M-033', 'p11:M-035', 'p11:M-036'], "the check's own staging", 'iPad', "The spooky path's picture facing the street; a grandma's back filling the fountain picture; a lamp post coming down into a new pet's head; a townsperson's hat hidden in a low tree crown right at the camera; the camera tilted at the sky after a pick-up.", 1, 'not a glitch',
+  "N1 photographs from a fixed spot; N10's camera stands 2.7 m behind the grandmas' park stop, where one stood facing the fountain; N11 photographs each new pet by the same lamp post; N21 puts you in one step right behind a tall townsperson under a street tree; N27 looks up after each pick-up (the check counts the litter by code).", '—'),
 ]

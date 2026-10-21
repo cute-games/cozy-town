@@ -1,0 +1,6 @@
+M-013 | DROP | a townsperson's 3D bubble in the town behind the book, only partly covered like the minimap and note
+M-014 | DROP | same town bubble behind the book; normal overlap
+M-015 | KEEP | friend names missing on all maps (builder's shot has Luna/Rosie/Finn); index.html ~6255: the new padding always hits the friend's own dot, so no name draws
+M-016 | DROP | that is a shopper browsing the shelves (back-row spots face them by design); keeper Mr. Bun stands at the right
+M-017 | KEEP | Rosie's pink dot really covers most of the "S" of "Spooky path"
+M-018 | DROP | caption readable, nothing overlaps or is cut; left vs centred is only style
