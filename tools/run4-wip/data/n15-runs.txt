@@ -1,0 +1,15 @@
+# N15 "One clock" on the f13 file (md5 9e76e1c2) and the f12 file (md5 43dddb98), 21 Oct, nothing else running; each run alone except the first (the whole night3 + run4 kit run)
+# the line compares two test players set 1 s apart: each reading must be within 10 game minutes
+p17kit (f13, the whole kit run): FAIL: two devices 1 s apart: 10:00: A 10:00 Tue cloudy / B 10:14 Tue cloudy DIFFERENT; 22:30: A 22:31 Tue rain / B 22:33 Tue rain; +3 d 14:00: A 14:00 Fri cloudy / B 14:02 Fri cloudy
+p17n15 (f13, N15 alone): FAIL: two devices 1 s apart: 10:00: A 10:00 Thu cloudy / B 10:15 Thu cloudy DIFFERENT; 22:30: A 22:31 Thu sunny / B 22:33 Thu sunny; +3 d 14:00: A 14:00 Sun sunny / B 14:02 Sun sunny
+p17n15f12 (f12, N15 alone): PASS: two devices 1 s apart: 10:00: A 10:12 Thu cloudy / B 10:14 Thu cloudy; 22:30: A 22:31 Thu sunny / B 22:33 Thu sunny; +3 d 14:00: A 14:00 Sun sunny / B 14:02 Sun sunny
+n15x1f13 (f13, N15 alone): PASS: two devices 1 s apart: 10:00: A 10:00 Fri cloudy / B 10:02 Fri cloudy; 22:30: A 22:31 Fri sunny / B 22:33 Fri sunny; +3 d 14:00: A 14:00 Mon sunny / B 14:02 Mon sunny
+n15x1f12 (f12, N15 alone): PASS: two devices 1 s apart: 10:00: A 10:13 Fri cloudy / B 10:15 Fri cloudy; 22:30: A 22:31 Fri sunny / B 22:33 Fri sunny; +3 d 14:00: A 14:00 Mon sunny / B 14:02 Mon sunny
+n15x2f13 (f13, N15 alone): PASS: two devices 1 s apart: 10:00: A 10:10 Fri cloudy / B 10:12 Fri cloudy; 22:30: A 22:31 Fri sunny / B 22:33 Fri sunny; +3 d 14:00: A 14:00 Mon sunny / B 14:02 Mon sunny
+n15x2f12 (f12, N15 alone): PASS: two devices 1 s apart: 10:00: A 10:14 Fri cloudy / B 10:16 Fri cloudy; 22:30: A 22:31 Fri sunny / B 22:33 Fri sunny; +3 d 14:00: A 14:00 Mon sunny / B 14:02 Mon sunny
+# replayed with the kit's own set-up (probe_n15.py: manual frames, WRAP, the day-58 save on an iPad as A, the day-1 save on a PC as B), on each file:
+#   f13: A's clock moved only by its stepped frames (0.6 s: 10:00) while one step of B's in the third round took 8.6 s of real time, so B read 10:14
+#   f12: the same: B's third-round step 9.3 s of real time, A 10:00, B 10:15 (the line would fail on both files)
+# so the first sample depends on whether the long step falls before or after A's last steps: the line's own timing, not the file.
+# timed each of B's frames (probe_n15b.py, f13): 0 to 4 ms each, every step 0.01 s, and no long pause in that replay (the two players 2 minutes
+# apart): the 8.6 and 9.3 s pauses above were outside the game's frames (the browser or the test's driver), not a stall of the game.
