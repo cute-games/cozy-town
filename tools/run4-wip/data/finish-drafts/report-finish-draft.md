@@ -372,7 +372,7 @@ not fit, sent on too), 17 double-checked, 12 kept: G4-301 to G4-309, `tools/run4
   none after).
 - A far grandma's bubble: old drawn over everything at any distance (a far one floated over the bus shelter with nobody under it) → new drawn
   over everything only within 10 m and while it can be read; further, a wall in front of her hides it (a photo family's tags the same).
-The kit's night3 and run4 lines on the f14 file (md5 854e060c): KIT18.
+The kit's night3 and run4 lines on the f14 file (md5 854e060c): 41 of 41 PASS (N15 among them).
 
 Not glitches, known or written down (G4-306 to G4-309): the steps of the sun's shadow map on a Tree Park crown (G4-294 again), the
 photographer's start spot at the pond's bench not looking for the background (section 5c), Armchair and Beanbag sharing 💺, the ⬇️ in its fade
@@ -382,6 +382,29 @@ For pass 18: the filter (`dcfilter18.py`) sets aside pass 17's decisions and dro
 ducks' rule read the "pad" of "ipad" as a lily pad (every iPad duck mark went on), the camera-spot rule took a person right against the camera
 for the camera against a post, the edge-bubble rule took a tiny far bubble for one cut at the screen's edge. On pass 17's marks it keeps exactly
 the 6 that f14 fixed.
+
+**Pass 18, the full pass on the file with f14**: the kit's own pictures (night3 + run4: 41 of 41 PASS), the photographer's three scripts, 14
+viewer batches: 75 marks; 58 set aside with their reason (`dcfilter18.py`; 3 of them under a reason that did not fit, sent on too), 20
+double-checked, 15 kept: G4-310 to G4-316, `tools/run4-wip/data/stage3-dc18/`. None of f14's fixes came back.
+
+**f15 (11 edits), from pass 18's kept marks** (checks by script before and after, `views_f15*.py`):
+- Cooking quests: old "Cook cheese sandwich on your stove" → new "Cook a cheese sandwich", "Cook some pancakes" (all 12 recipes, and a recipe
+  quest's last step).
+- A shop's "New in!" row: old one piece could come twice in colours a child cannot tell apart on its little picture ("Grape" and "Violet" dog
+  houses; 16 to 463 of 3000 rows per shop) → new never (none).
+- A design client's line: old "the Apartments behind the Pet Shop, flat 11, near the Pet Shop" → new a building whose name says where it is gets
+  no "near"; the coloured houses keep theirs.
+- A photo shoot's start: old when no spot had a clear view the camera stayed where you stood (on a sideways iPhone everyone's feet were below the
+  frame), and a grandma counted as in the way although she steps out of a shoot (one in front of the family failed every spot) → new she no
+  longer counts, and with no clear spot the camera takes the nearest where everyone fits.
+The kit's night3 and run4 lines on the f15 file (md5 26b602a7): KIT19.
+
+Not glitches or decided before (G4-314 to G4-316): a New Year burst just above a cloud's top (drawn in front of it), the placing grid while you
+decorate, a yellow piece just below the view on a visit, an older chat bubble under the header, someone passing close on an upright phone, the
+bush outline at the pond's spot, the sideways hair card, N20's and N30's camera spots.
+
+For pass 19: the filter (`dcfilter19.py`) sets aside pass 18's decisions and drops, and four rules take the words pass 18's viewers used. On
+pass 18's marks it keeps exactly the 4 that f15 fixed.
 
 #### Decisions made alone (run 4 finish)
 - The kit, never weaker (every change in `cozy-check-v6.zip`, listed in its README-KIT.md and here, old → new):

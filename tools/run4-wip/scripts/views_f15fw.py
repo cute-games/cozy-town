@@ -1,0 +1,8 @@
+# Run 4 finish, pass 18 M-006: the New Year fireworks over the park (shots4b's view): how far is each burst and each cloud in view, and what hides the burst?
+def look(x, z, tx, tz, pitch=0.0): return f"P.x={x};P.z={z};P.yaw=Math.atan2(-({tx}-P.x),-({tz}-P.z));P.pitch={pitch};"
+FW1 = "__goto('city');__setClock(null,21.6);wxForce('sun');" + look(-16, 12.5, -22, 30, .5) + "updateCamera(0);__run(420);"
+INFO = r"""(()=>{camera.updateMatrixWorld();const cp=camera.position,out=[];for(let k=0;k<6;k++){const age=(FW.t-FW.t0[k])/2;if(age<0||age>1)continue;const c=new THREE.Vector3(FW.c[k*3],FW.c[k*3+1],FW.c[k*3+2]),d=c.distanceTo(cp),v=c.clone().project(camera);
+    out.push('burst '+k+' age '+age.toFixed(2)+' at '+[c.x,c.y,c.z].map(q=>q.toFixed(0)).join(',')+' dist '+d.toFixed(1)+' screen '+((v.x+1)/2*innerWidth).toFixed(0)+','+((1-v.y)/2*innerHeight).toFixed(0)+(Math.abs(v.x)<1&&Math.abs(v.y)<1&&v.z<1?' IN VIEW':''));}
+  for(const c of clouds){const p=new THREE.Vector3();c.getWorldPosition(p);const v=p.clone().project(camera);if(Math.abs(v.x)<1.2&&Math.abs(v.y)<1.2&&v.z<1)out.push('cloud at '+[p.x,p.y,p.z].map(q=>q.toFixed(0)).join(',')+' dist '+p.distanceTo(cp).toFixed(1)+' scale '+c.scale.x.toFixed(2)+' screen '+((v.x+1)/2*innerWidth).toFixed(0)+','+((1-v.y)/2*innerHeight).toFixed(0));}
+  out.push('camera near '+camera.near+' far '+camera.far+' sortObjects '+renderer.sortObjects+' FW renderOrder '+(FW.m&&FW.m.renderOrder)+' outside parent '+(outside.parent===scene)+' outside pos '+[outside.position.x,outside.position.y,outside.position.z].map(q=>q.toFixed(1)).join(','));return out.join('\n');})()"""
+VIEWS = [('fw-park', FW1), ('fw-park-info', INFO)]

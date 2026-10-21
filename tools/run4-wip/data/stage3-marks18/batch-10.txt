@@ -1,0 +1,5 @@
+s3_pc-1366_light_pc-1366-light_039_town-duck-pond.png | pc-1366 light, the duck pond | the two ducks overlap: the small white duck sits right on the yellow duck's back, as if stacked on it or swimming through it | 2
+s3_pc-1366_light_pc-1366-light_044_inside-market.png | pc-1366 light, inside the market | a big curved dark patch sweeps across the front of the fruit stand, like a stray round shadow with nothing visible casting it | 1
+s3_pc-1366_dark_pc-1366-dark_010_big-map.png | pc-1366 dark, the big map, place list | the ⬇️ "more below" arrow under the place list is tiny (about 22 px, a bare emoji without the round button the shop, bag and settings use) and sits on the edge of the faded Bus stop tile | 1
+s3_pc-1366_dark_pc-1366-dark_010_big-map.png | pc-1366 dark, the big map | place labels cut at the map's edges: a stray "…en" at the left edge, "Hair Salon" peeking out under the hint bar at the bottom, a lone "c" at the right edge | 1
+count: 4

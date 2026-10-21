@@ -1,7 +1,7 @@
 """Run 4 finish: the data of the glitch list from pass 8 on (read by mkglitches5.py). One entry per cause; the marks are
 'p8:M-001' (pass 8, stage3-dc8). Later passes are added to DC and PASS as they come."""
-DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13', 'p14': 'stage3-dc14', 'p15': 'stage3-dc15', 'p16': 'stage3-dc16', 'p17': 'stage3-dc17'}
-PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13', 'p14': 'pass 14', 'p15': 'pass 15', 'p16': 'pass 16', 'p17': 'pass 17'}
+DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13', 'p14': 'stage3-dc14', 'p15': 'stage3-dc15', 'p16': 'stage3-dc16', 'p17': 'stage3-dc17', 'p18': 'stage3-dc18'}
+PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13', 'p14': 'pass 14', 'p15': 'pass 15', 'p16': 'pass 16', 'p17': 'pass 17', 'p18': 'pass 18'}
 AFTER_SETS = ['stage3-p9', 'stage3-p9b', 'stage3-p9c']   # newest first: the after picture of a fixed spot comes from pass 9
 KIT_SETS = ['stage3-kit9']
 PROBES = {   # spots whose after picture is a probe taken right after the fix (a pass-9 picture replaces it when there is one)
@@ -46,6 +46,7 @@ F11 = ' (patch_f11.py)'
 F12 = ' (patch_f12.py)'
 F13 = ' (patch_f13.py)'
 F14 = ' (patch_f14.py)'
+F15 = ' (patch_f15.py)'
 FRAME = "The photographer's framing, not the game: "
 ENTRIES = [
  ('168', ['p8:M-001'], 'October: the park fountain', 'iPad', 'A white ghost hung inside the fountain, between its top and middle bowls.', 1, 'fixed',
@@ -337,4 +338,18 @@ ENTRIES = [
   "A shop's list shows each piece's emoji, and there is no beanbag emoji; Bed and Bunk bed share 🛏️ the same way. The names under them tell them apart (the New in tiles show the piece itself).", '—'),
  ('309', ['p17:M-006', 'p17:M-010', 'p17:M-013'], 'decided before', 'iPhone sideways, iPad', "The ⬇️ over two tiles' corners on the Market card; N27's camera tipped up at the sky after a pick-up; the coin, food and clock chips gone while a photo's +120 popped.", 1, 'not a glitch',
   "A card that scrolls shows the ⬇️ in a soft fade over its foot, inside the card (section 1, after round 5; the same on the Pet Shop card was dropped by its double-checker, M-007); N27 looks up after each pick-up (G4-260); on a short sideways screen the chips step aside during a shoot (G4-235).", '—'),
+ ('310', ['p18:M-003'], 'the phone: quests', 'iPhone upright', 'A cooking quest read "Cook cheese sandwich on your stove".', 1, 'fixed',
+  'A cooking quest takes "a" or "some" like the other quests: "Cook a cheese sandwich", "Cook some pancakes", also the last step of a recipe quest' + F15 + '.', 'a check by script of all 12 recipes\' quests and two recipe quests\' last steps, before and after (`views_f15.py`); pass 19 pictures.'),
+ ('311', ['p18:M-002'], 'a shop card: New in!', 'iPad, dark theme', '"Grape dog house" and "Violet dog house" side by side looked like one item twice.', 1, 'fixed',
+  'A "New in!" row never shows one piece twice in two colours a child cannot tell apart on its little picture (Grape and Violet, Lilac and Orchid, Lemon and Butter...); it already never showed the exact same one twice' + F15 + '.', 'a check by script of 3000 new rows in each of the five shops: one piece twice in look-alike colours in 16 to 463 rows per shop before, none after.'),
+ ('312', ['p18:M-013'], "the designer's new client", 'iPad', 'The card said "I live in the Apartments behind the Pet Shop, flat 11, near the Pet Shop".', 1, 'fixed',
+  'A client whose building\'s name says where it is ("Apartments behind the Pet Shop", "Big apartments by the flowers", "Tall building behind the Market", "Apartments by the park") says no "near" after it; the coloured houses keep theirs ("the Blue house, near the Lake")' + F15 + '.', "a check by script of 300 new clients: every building's line before and after (`views_f15.py`)."),
+ ('313', ['p18:M-018'], "the photographer's first view of a shoot", 'iPhone sideways', "Everyone's feet were below the photo frame at the shoot's start.", 1, 'fixed',
+  "At the start of a shoot the camera looks for a spot with a clear view where everyone fits; when none passed, it stayed where you stood, and from there the feet were out of the frame. A grandma counted as in the way although she steps out of a shoot (the park stop of the grandmas is at the fountain background: one 1.5 m in front of the family failed every spot); she no longer counts, and when no spot has a clear view the camera takes the nearest where everyone fits" + F15 + '.', "a check by script on a sideways iPhone with a grandma 1.5 m in front of the family and with a wall in front of it: the camera left where it was before (the feet at 326 px, the frame's foot at 304), a spot where everyone fits after (the feet at 294 px; `views_f15b.py`); pass 19 pictures."),
+ ('314', ['p18:M-006', 'p18:M-014', 'p18:M-015'], 'a burst on a cloud, lines on a floor, a yellow bar', 'iPad, PC', "A New Year burst resting on a cloud; thin lilac lines across a client room's wooden floor; a yellow bar at the bottom-right corner of a visit to a friend's house.", 1, 'not a glitch',
+  "The bursts go off 34 to 58 m away and the clouds are over 100 m away, so a burst is drawn in front of a cloud (a probe shows a burst's sparks over one); the burst in the picture is whole, just above a cloud's top. The lines are the placing grid, which shows while you decorate (the Furniture, Move and Remove bar was up). The bar is a yellow piece in that house just below the view (no page element there: `views_f15n18.py`).", '—'),
+ ('315', ['p18:M-001', 'p18:M-004', 'p18:M-007', 'p18:M-010', 'p18:M-011', 'p18:M-020'], 'decided before', 'iPad, iPhone upright, iPhone sideways', "An older chat bubble cut under the header; a person close by at the left edge of an upright phone's view; a dark bar at the bottom-right of N25's pond shoot; the customer's head above the hair card on a sideways phone.", 1, 'not a glitch',
+  "An older bubble under the header, as in any chat (pass 13's double-checkers); someone passing 1.3 m or more from you is drawn, and on the narrow upright view one close beside you fills the edge (G4-171, G4-300); the outline of a bush just below the screen at the pond's spot (G4-284); on a sideways phone the hair card fills the screen's height (G4-194, G4-288).", '—'),
+ ('316', ['p18:M-009', 'p18:M-012'], "the check's own staging", 'iPad', "A white gate post at the edge of N20's February picture; N30's camera down in the fountain's pool.", 1, 'not a glitch',
+  "N20 takes its holiday pictures from the Flower Corner's gate; N30 stands where its leaves test stands (G4-260).", '—'),
 ]

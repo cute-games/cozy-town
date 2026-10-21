@@ -3914,7 +3914,7 @@ function hardCheck(){if(!S||!S.hard)return;let hit=false;for(const k in HARD){co
 const QCACHE={};
 const SOME=new Set(['flour','milk','cheese','honey','popcorn','candy','chocolate','tea','eggs','grapes','cherries','bread','corn','pet food','cat food','bunny & hamster food','pet treats','pancakes','hot cocoa','lemonade','pumpkin soup','fruit salad','garden salad','flowers','herb pots','building blocks','candles','drawers']);   /* (the furniture names that are many things: "Put some herb pots in your house", not "a herb pots"; run 4, stage 3) */
 const PAIR=new Set(['fairy wings','bunny ears','cat ears','headphones','glasses','sunglasses','heart glasses','pet sunglasses']);   /* (run 4 finish: "Buy a fairy wings" read wrong) */
-['fries','noodles','dumplings'].forEach(n=>SOME.add(n));
+['fries','noodles','dumplings','chocolate cookies','hot chocolate'].forEach(n=>SOME.add(n));   /* (run 4 finish: the recipes cooked in a quest: "Cook some chocolate cookies") */
 const aAn=n=>{const l=n.toLowerCase();return(PAIR.has(l)?'a pair of ':SOME.has(l)?'some ':/^[aeiou]/.test(l)?'an ':'a ')+l;};
 const onePl=K=>K.pl==='pumpkin'?'a pumpkin':K.pl;
 function shopOf(id){for(const k in SHOPS){const s=SHOPS[k];if((s.items||[]).includes(id)||(s.furn||[]).includes(id))return s.title;}return'shop';}
@@ -3922,7 +3922,7 @@ function getQ(k){return QUESTS[k]||(k in QCACHE?QCACHE[k]:(QCACHE[k]=genQuest(k)
 function genQuest(k){try{const p=k.split(':'),kind=p[0],a=p[1];
   if(kind==='buy'){const it=itemInfo(a)||FURN[a];return it?{i:it.i,t:'Shopping trip',d:'Buy '+aAn(it.n)+' at the '+shopOf(a),n:1,r:8+Math.min(14,Math.round((it.p||4)/3)),ev:k}:null;}
   if(kind==='eat'){const it=FOODS[a];return it?{i:it.i,t:'Snack time',d:'Eat '+aAn(it.n),n:1,r:10,ev:k}:null;}
-  if(kind==='cook'){const R=RECIPES.find(x=>x.id===a);if(!R)return null;const I=recipeInfo(R);return{i:I.i,t:'Chef time',d:'Cook '+I.n.toLowerCase()+' on your stove',n:1,r:22,ev:k};}
+  if(kind==='cook'){const R=RECIPES.find(x=>x.id===a);if(!R)return null;const I=recipeInfo(R);return{i:I.i,t:'Chef time',d:'Cook '+aAn(I.n)+' on your stove',n:1,r:22,ev:k};}
   if(kind==='chat'){const f=FRIENDS.find(x=>x.id===a);return f?{i:'💬',t:'Say hello',d:'Chat with '+f.name,n:1,r:10,ev:k}:null;}
   if(kind==='gift'){const f=FRIENDS.find(x=>x.id===a);return f?{i:'🎁',t:'Surprise!',d:'Give '+f.name+' a present',n:1,r:20,ev:k}:null;}
   if(kind==='find'){const pl=PLACES.find(x=>x.id===a);return pl?{i:pl.i,t:'Explorer',d:'Find '+theN(pl)+' with your 🗺️ map',n:1,r:12,ev:k}:null;}
@@ -3933,7 +3933,7 @@ function genQuest(k){try{const p=k.split(':'),kind=p[0],a=p[1];
   if(kind==='wear'){const C=CLOTHES[a];return C?{i:C.i,t:'Fashion show',d:'Wear your '+C.n.toLowerCase(),n:1,r:12,ev:k,need:()=>owns(a)}:null;}
   if(kind==='hi')return{i:'👋',t:'Friendly face',d:'Say hi to '+a+' people in town',n:+a,r:8+(+a)*3,ev:'hi'};
   if(kind==='trk'){const sub=p[1],arg=p[2];
-    if(sub==='recipe'){const R=RECIPES.find(x=>x.id===arg),I=recipeInfo(R);return{i:I.i,t:'Little chef: '+I.n,d:'Shop for it, then cook it!',r:40,steps:Object.keys(R.need).map(it=>({d:'Buy '+aAn(itemInfo(it).n),ev:'buy:'+it,n:1})).concat([{d:'Cook '+I.n.toLowerCase(),ev:'cook:'+arg,n:1}])};}
+    if(sub==='recipe'){const R=RECIPES.find(x=>x.id===arg),I=recipeInfo(R);return{i:I.i,t:'Little chef: '+I.n,d:'Shop for it, then cook it!',r:40,steps:Object.keys(R.need).map(it=>({d:'Buy '+aAn(itemInfo(it).n),ev:'buy:'+it,n:1})).concat([{d:'Cook '+aAn(I.n),ev:'cook:'+arg,n:1}])};}
     if(sub==='friend'){const f=FRIENDS.find(x=>x.id===arg);return{i:'💗',t:'A day with '+f.name,d:'Be a super friend!',r:45,steps:[{d:'Chat with '+f.name,ev:'chat:'+arg,n:1},{d:'Give '+f.name+' a present',ev:'gift:'+arg,n:1},{d:'Hang out with '+f.name,ev:'hang:'+arg,n:1}]};}
     if(sub==='grow'){const K=SEEDS[arg];return{i:K.i,t:'Grow '+onePl(K),d:'From a seed to a harvest!',r:50,steps:[{d:'Buy '+K.n.toLowerCase()+' seeds',ev:'buy:seed_'+arg,n:1},{d:'Plant them',ev:'plant:'+arg,n:1},{d:'Water your garden',ev:'waterplot',n:1},{d:'Pick your '+K.pl,ev:'harvest:'+arg,n:1}]};}
     if(sub==='tour'){const ids=arg.split('|');return{i:'🗺️',t:'Town tour',d:'Visit 3 places with your map',r:40,steps:ids.map(id=>{const pl=PLACES.find(x=>x.id===id);return{d:'Find '+theN(pl)+' '+pl.i,ev:'find:'+id,n:1};})};}
@@ -4346,7 +4346,7 @@ function granNode(x,z){let b=0,bd=1e9;for(let i=0;i<WP.length;i++){const d=Math.
 function granBuild(L){for(const s of GRAN_STOPS){const n=s.near||s.via;s.node=granNode(n[0],n[1]);if(s.at)s.spot=s.at.slice();else{const [nx,nz]=WP[s.node],dx=s.look[0]-nx,dz=s.look[1]-nz,d=Math.hypot(dx,dz)||1;s.spot=[nx+dx/d*.9,nz+dz/d*.9];}
     s.face=Math.atan2(s.look[0]-s.spot[0],s.look[1]-s.spot[1]);}
   GRAN.bench=BENCHES.find(b=>b.loc==='city'&&Math.hypot(b.x-32.6,b.z+36.4)<.8)||null;if(GRAN.bench)for(let i=0;i<2;i++)GRAN.bench.sit[i]=()=>granSeat(i);   /* a seat is taken while a grandma sits on it */
-  for(let i=0;i<3;i++){const look=GRAN_LOOKS[i],p=bakePerson(makePerson(look));p.root.visible=false;L.g.add(p.root);
+  for(let i=0;i<3;i++){const look=GRAN_LOOKS[i],p=bakePerson(makePerson(look));p.root.visible=false;p.root.userData.aside=1;L.g.add(p.root);
     const q={i,p,look,x:0,z:0,on:false,sitting:false,seat:0,nod:0,turn:0,bub:null,bubT:0,bi:-1,fi:-1,yaw:0};q.target={x:0,z:0,r:2.2,icon:'👋',label:'Say hi',obj:p.root,act:()=>granHi(q)};GRAN.g.push(q);}}
 function buildGrandmas(L,st){for(const [hx,hz,ry] of [[13,-57.25,0],[25,-57.25,0],[37,-57.25,0],[13,57.25,Math.PI],[25,57.25,Math.PI],[37,57.25,Math.PI]]){const bx=hx+3.4;bench(st,bx,hz,ry);colC(L,bx,hz,.8);}   /* the six benches by the town houses stay, two seats each */
   granBuild(L);}
@@ -5947,6 +5947,7 @@ ACT.buy=(id,b)=>{if(shutBuy(SHOP))return;const sh=SHOPS[SHOP],F=(sh.furn&&sh.fur
 const NEWCOLS=[['#ff8fab','Bubblegum'],['#ff6f61','Coral'],['#ffa45c','Mango'],['#ffe066','Lemon'],['#c5e86c','Lime'],['#6ee7b7','Mint'],['#4dd4c6','Teal'],['#7dd3fc','Sky'],['#3b82f6','Ocean'],['#a78bfa','Grape'],['#e9b8ff','Lilac'],['#f0abfc','Orchid'],
   ['#ffc4a8','Peach'],['#fde68a','Butter'],['#9ff0d0','Seafoam'],['#e8ecf3','Cloud'],['#334155','Midnight'],['#c2843a','Caramel'],['#ff3d9a','Hot pink'],['#8b5cf6','Violet'],['#22c55e','Leaf'],['#ef4444','Cherry'],['#fbbf24','Sunny'],['#94a3b8','Silver']];
 const colName=c=>{const f=NEWCOLS.find(x=>x[0]===c);return f?f[1]:'Special';};
+const colNear=(a,b)=>{if(a===b)return true;const h=c=>/^#[0-9a-f]{6}$/i.test(c)?[1,3,5].map(i=>parseInt(c.slice(i,i+2),16)):null,p=h(a),q=h(b);return!!p&&!!q&&Math.hypot(p[0]-q[0],p[1]-q[1],p[2]-q[2])<90;};   /* two colours that look the same on a little picture (run 4 finish: "Grape" and "Violet") */
 const NEWIN_SHOPS={clothes:1,toys:1,flowers:1,pets:1,home:1};let NEWPOP=null;
 /* a "New in!" thing costs today's price (one saved before the coins balance keeps its old number in the save, but costs the same as in the shop) */
 const NI_COLP={top:40,bottom:35,shoes:30},niP=it=>(it.kind==='furn'?FURN[it.k]&&FURN[it.k].p:it.kind==='hat'?CLOTHES[it.k]&&CLOTHES[it.k].p:NI_COLP[it.k])||it.p;
@@ -5958,7 +5959,7 @@ function niMake(sh,avoid){
         if(!variants(key).some(v=>v.c===c))it={kind:'hat',k:key,c,n:colName(c)+' '+C.n.toLowerCase(),i:C.i,p:C.p};}
       else{const sl=pick(['top','bottom','shoes']),c=pick(NEWCOLS)[0];if(!lookOpts(sl).includes(c))it={kind:'col',k:sl,c,n:colName(c)+' '+{top:'sweater',bottom:'pants',shoes:'shoes'}[sl],i:{top:'👚',bottom:'👖',shoes:'👟'}[sl],p:NI_COLP[sl]};}}
     else{const pool=niFurnPool(sh);if(!pool.length)return null;const t=pick(pool),F=FURN[t],c=pick(NEWCOLS)[0];if(!F.cols.includes(c))it={kind:'furn',k:t,c,n:colName(c)+' '+F.n.toLowerCase(),i:F.i,p:F.p};}
-    if(it&&!(avoid||[]).some(a=>a&&a.k===it.k&&a.c===it.c))return it;}
+    if(it&&!(avoid||[]).some(a=>a&&a.k===it.k&&colNear(a.c,it.c)))return it;}
   return null;}
 function newIn(sh){S.newin=S.newin||{};let L=S.newin[sh];if(!Array.isArray(L))L=S.newin[sh]=[];
   for(let i=0;i<3;i++){const it=L[i];if(!it||(it.kind==='hat'&&variants(it.k).some(v=>v.c===it.c))||(it.kind==='col'&&lookOpts(it.k).includes(it.c))||(it.kind==='furn'&&!FURN[it.k]))L[i]=niMake(sh,L);}
@@ -7072,7 +7073,7 @@ function dsNew(n){const d=ds(),H=pick(HOUSES.filter(h=>h.id!==d.last)),T=pick(DT
   if(n==null)n=Math.random()<1/3?2:1;const T2=n>1?pick(DTHEMES.filter(t=>t.room!==T.room)):null;   /* 🚪 about 1 in 3 clients wants two rooms, never more */
   const flat=isApt(H.id)?(1+Math.floor(Math.random()*3))*10+1+Math.floor(Math.random()*5):0;
   const o={h:H.id,th:T.id,w:Math.floor(Math.random()*resList(H.id).length),items:[]};if(flat)o.flat=flat;if(T2){o.r2={th:T2.id,items:[]};o.ri=0;}d.o=o;d.last=H.id;d.lt=T2?T2.id:T.id;
-  const W=dsWho(o),np=H.id==='nb'?null:nearPlace(H);
+  const W=dsWho(o),np=/ (by|behind) the /.test(H.n)?null:nearPlace(H);   /* (run 4 finish: a name that says where it is gets no "near": "the Apartments behind the Pet Shop, flat 11, near the Pet Shop") */
   const x=`Hi! I'm ${W.nm} 😊 I live in the ${H.n}${flat?', flat '+flat:''}${np?', near '+theN(np):''}. Can you make me ${aN(T.n.toLowerCase())}${T2?' and '+aN(T2.n.toLowerCase()):''}? ${T.ask}${T2?' And the other room: '+T2.ask:''} ${T.e}${T2?T2.e:''}`;
   addMsg('cl','cl',x,{t2:'🎨 New client: '+W.nm});SFX.ding();try{if(navigator.vibrate)navigator.vibrate([120,80,120]);}catch(e){}
   showNote('🎨 New client!',x,false,'🎨','cl');change();jobHud(true);dcardUpd(true);}
@@ -8393,7 +8394,7 @@ const PT_RC=new THREE.Raycaster();
 function ptPts(m,h){const r=m.root,v=new THREE.Vector3(),sx=Math.cos(m.face||0),sz=-Math.sin(m.face||0),w2=m.kind==='pet'?.25:.45;
   return [[0,0],[0,h],[-w2,h*.8],[w2,h*.8]].map(([k,dy])=>v.set(r.position.x+sx*k,r.position.y+dy,r.position.z+sz*k).project(camera).clone());}
 function ptBgIn(B,F){const at=B&&(B.at||(B.g?[B.g[0]-Math.sin(B.face||0)*2,1,B.g[1]-Math.cos(B.face||0)*2]:null));if(!at)return true;const v=new THREE.Vector3(at[0],at[1],at[2]).project(camera);   /* (run 4 finish: a background with no point of its own: 2 m behind where the group stands, 1 m up; only the school sign had one, so the bench was "in" a photo of a blue wall) */return v.z<1&&v.x>F.x1&&v.x<F.x2&&v.y>F.y1&&v.y<F.y2;}   /* the background's middle is inside the frame */
-function ptSolid(o,own){for(let q=o;q;q=q.parent){if(q===own)return false;if(q.visible===false)return false;}return !o.isSprite&&!!o.material&&!o.material.transparent&&o.material.side!==THREE.BackSide;}   /* a thing the camera cannot see through (not a name tag, glass or an outline) */
+function ptSolid(o,own){for(let q=o;q;q=q.parent){if(q===own)return false;if(q.visible===false||q.userData.aside)return false;}   /* (run 4 finish: nor a grandma, who steps out of a shoot) */return !o.isSprite&&!!o.material&&!o.material.transparent&&o.material.side!==THREE.BackSide;}   /* a thing the camera cannot see through (not a name tag, glass or an outline) */
 /* nothing between the camera and anyone's chest or head */
 function ptView(g){const C=camera.position,objs=[CUR.g,...g.map(k=>k.root)];PT_RC.camera=camera;
   for(const m of g){const h=m.kind==='pet'?.6:1.75*(m.p.b?m.p.b.scale.x:1),r=m.root;
@@ -8409,9 +8410,10 @@ function ptFits(F){let minx=1,maxx=-1,miny=1,maxy=-1;for(const m of PHO.group){c
    with the row cut off). You can still walk and zoom from there */
 function ptCamGo(B){const g=PHO.group;if(!PHO.on||!g.length||!CUR||CUR.id!=='city')return false;const n=g.length,cx=g.reduce((a,m)=>a+m.x,0)/n,cz=g.reduce((a,m)=>a+m.z,0)/n,F=ptFrame(),
     tv=Math.tan(BASEFOV*PHO.zoom*Math.PI/360),aim=Math.atan(tv*(F.y1+.42*(F.y2-F.y1))),keep=[P.x,P.z,P.yaw,P.pitch];camera.fov=BASEFOV*PHO.zoom;camera.updateProjectionMatrix();
-  for(let d=3.4;d<8.05;d+=.3)for(const da of[0,.2,-.2,.4,-.4]){const a=B.face+da,x=cx+Math.sin(a)*d,z=cz+Math.cos(a)*d,q=collideXZ(x,z,.3,CUR);if(Math.hypot(q[0]-x,q[1]-z)>.05)continue;
+  let fb=null;for(let d=3.4;d<8.05;d+=.3)for(const da of[0,.2,-.2,.4,-.4]){const a=B.face+da,x=cx+Math.sin(a)*d,z=cz+Math.cos(a)*d,q=collideXZ(x,z,.3,CUR);if(Math.hypot(q[0]-x,q[1]-z)>.05)continue;
     P.x=x;P.z=z;P.yaw=a;P.pitch=clamp(Math.atan2(.95-1.5,d)-aim,-.3,.05);updateCamera(0);camera.updateMatrixWorld();
-    if(ptFits(F)&&ptBgIn(B,F)&&ptView(g))return true;}
+    if(ptFits(F)&&ptBgIn(B,F)){if(ptView(g))return true;if(!fb)fb=[P.x,P.z,P.yaw,P.pitch];}}
+  if(fb){[P.x,P.z,P.yaw,P.pitch]=fb;updateCamera(0);camera.updateMatrixWorld();return true;}   /* (run 4 finish: no spot with a clear view: the nearest where everyone fits; the camera stayed where you stood and the feet were out of the frame) */
   [P.x,P.z,P.yaw,P.pitch]=keep;updateCamera(0);camera.updateMatrixWorld();return false;}
 function ptHid(m,h){const r=m.root,vis=o=>{for(let q=o;q;q=q.parent)if(q.visible===false)return false;return true;},own=o=>{for(let q=o;q;q=q.parent)if(q===r)return true;return false;};   /* 🌳 someone the photo cannot see: a tree, a post or another of them between the camera and both their chest and their head (run 4, stage 3: a trunk hid one of the family and the photo still got five stars) */
   const objs=[CUR.g,...PHO.group.filter(k=>k!==m).map(k=>k.root)],C=camera.position;let n=0;PT_RC.camera=camera;
