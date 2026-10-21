@@ -1,0 +1,290 @@
+[
+ {
+  "name": "holiday-valentine-from-gate",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_valentine-light_001_holiday-valentine-from-gate.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_valentine-light_001_holiday-valentine-from-gate.png",
+  "changed_share": 0.0056,
+  "verdict": "SAME"
+ },
+ {
+  "name": "holiday-valentine-inside",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_valentine-light_002_holiday-valentine-inside.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_valentine-light_002_holiday-valentine-inside.png",
+  "changed_share": 0.0099,
+  "verdict": "SAME"
+ },
+ {
+  "name": "holiday-valentine-phone-calendar",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_valentine-light_003_holiday-valentine-phone-calendar.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_valentine-light_003_holiday-valentine-phone-calendar.png",
+  "changed_share": 0.0081,
+  "verdict": "SAME"
+ },
+ {
+  "name": "holiday-easter-bunny",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_easter-light_001_holiday-easter-bunny.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_easter-light_001_holiday-easter-bunny.png",
+  "changed_share": 0.0167,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "holiday-easter-bunny-talk",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_easter-light_002_holiday-easter-bunny-talk.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_easter-light_002_holiday-easter-bunny-talk.png",
+  "changed_share": 0.0159,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "holiday-easter-egg",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_easter-light_003_holiday-easter-egg.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_easter-light_003_holiday-easter-egg.png",
+  "changed_share": 0.0113,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "holiday-easter-corner",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_easter-light_004_holiday-easter-corner.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_easter-light_004_holiday-easter-corner.png",
+  "changed_share": 0.0127,
+  "verdict": "SAME"
+ },
+ {
+  "name": "holiday-christmas-tree",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_christmas-light_001_holiday-christmas-tree.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_christmas-light_001_holiday-christmas-tree.png",
+  "changed_share": 0.0077,
+  "verdict": "SAME"
+ },
+ {
+  "name": "holiday-christmas-santa",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_christmas-light_002_holiday-christmas-santa.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_christmas-light_002_holiday-christmas-santa.png",
+  "changed_share": 0.0039,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "holiday-christmas-santa-talk",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_christmas-light_003_holiday-christmas-santa-talk.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_christmas-light_003_holiday-christmas-santa-talk.png",
+  "changed_share": 0.0042,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "holiday-christmas-park",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_christmas-light_004_holiday-christmas-park.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_christmas-light_004_holiday-christmas-park.png",
+  "changed_share": 0.026,
+  "verdict": "SAME"
+ },
+ {
+  "name": "holiday-christmas-tree-night",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3b_ipad-landscape_dark_christmas-night-dark_001_holiday-christmas-tree-night.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_dark_christmas-night-dark_001_holiday-christmas-tree-night.png",
+  "changed_share": 0.0234,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "holiday-christmas-lane-night",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3b_ipad-landscape_dark_christmas-night-dark_002_holiday-christmas-lane-night.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_dark_christmas-night-dark_002_holiday-christmas-lane-night.png",
+  "changed_share": 0.0001,
+  "verdict": "SAME"
+ },
+ {
+  "name": "holiday-newyear-fireworks",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3b_ipad-landscape_dark_newyear-night-dark_001_holiday-newyear-fireworks.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_dark_newyear-night-dark_001_holiday-newyear-fireworks.png",
+  "changed_share": 0.0426,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "holiday-newyear-fireworks-2",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3b_ipad-landscape_dark_newyear-night-dark_002_holiday-newyear-fireworks-2.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_dark_newyear-night-dark_002_holiday-newyear-fireworks-2.png",
+  "changed_share": 0.0286,
+  "verdict": "SAME"
+ },
+ {
+  "name": "holiday-newyear-hats",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_newyear-day-light_001_holiday-newyear-hats.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_newyear-day-light_001_holiday-newyear-hats.png",
+  "changed_share": 0.2232,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "holiday-newyear-hats-stage",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_newyear-day-light_002_holiday-newyear-hats-stage.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_newyear-day-light_002_holiday-newyear-hats-stage.png",
+  "changed_share": 0.0125,
+  "verdict": "SAME"
+ },
+ {
+  "name": "holiday-newyear-hats-close",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_newyear-day-light_003_holiday-newyear-hats-close.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_newyear-day-light_003_holiday-newyear-hats-close.png",
+  "changed_share": 0.0196,
+  "verdict": "SAME"
+ },
+ {
+  "name": "holiday-school-front",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_school-light_001_holiday-school-front.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_school-light_001_holiday-school-front.png",
+  "changed_share": 0.0206,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "holiday-school-inside",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_school-light_002_holiday-school-inside.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_school-light_002_holiday-school-inside.png",
+  "changed_share": 0.0015,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "halloween-spooky-gate",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3b_ipad-landscape_dark_halloween-night-dark_001_halloween-spooky-gate.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_dark_halloween-night-dark_001_halloween-spooky-gate.png",
+  "changed_share": 0.01,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "halloween-spooky-inside",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3b_ipad-landscape_dark_halloween-night-dark_002_halloween-spooky-inside.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_dark_halloween-night-dark_002_halloween-spooky-inside.png",
+  "changed_share": 0.0094,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "halloween-ghosts-square",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3b_ipad-landscape_dark_halloween-night-dark_003_halloween-ghosts-square.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_dark_halloween-night-dark_003_halloween-ghosts-square.png",
+  "changed_share": 0.014,
+  "verdict": "SAME"
+ },
+ {
+  "name": "halloween-ghosts-lane",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3b_ipad-landscape_dark_halloween-night-dark_004_halloween-ghosts-lane.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_dark_halloween-night-dark_004_halloween-ghosts-lane.png",
+  "changed_share": 0.0033,
+  "verdict": "SAME"
+ },
+ {
+  "name": "halloween-clothes-costumes",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "file": "s3b_ipad-landscape_dark_halloween-night-dark_005_halloween-clothes-costumes.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_dark_halloween-night-dark_005_halloween-clothes-costumes.png",
+  "changed_share": 0.0931,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "job-sleep-screen",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_jobs-light_001_job-sleep-screen.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_jobs-light_001_job-sleep-screen.png",
+  "changed_share": 0.0106,
+  "verdict": "SAME"
+ },
+ {
+  "name": "job-hair-card",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_jobs-light_002_job-hair-card.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_jobs-light_002_job-hair-card.png",
+  "changed_share": 0.1068,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "job-delivery-way",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_jobs-light_003_job-delivery-way.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_jobs-light_003_job-delivery-way.png",
+  "changed_share": 0.1022,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "job-delivery-note",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_jobs-light_004_job-delivery-note.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_jobs-light_004_job-delivery-note.png",
+  "changed_share": 0.0321,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "two-players-ipad",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_two-A_001_two-players-ipad.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_two-A_001_two-players-ipad.png",
+  "changed_share": 0.0514,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "two-players-pc",
+  "prof": "pc-1366",
+  "theme": "light",
+  "file": "s3b_pc-1366_light_two-B_001_two-players-pc.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_pc-1366_light_two-B_001_two-players-pc.png",
+  "changed_share": 0.0334,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "two-players-friends-list",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "file": "s3b_ipad-landscape_light_two-A_002_two-players-friends-list.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_light_two-A_002_two-players-friends-list.png",
+  "changed_share": 0.0618,
+  "verdict": "CHANGED"
+ }
+]

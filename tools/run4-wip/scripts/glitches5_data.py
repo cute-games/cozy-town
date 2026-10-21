@@ -1,7 +1,7 @@
 """Run 4 finish: the data of the glitch list from pass 8 on (read by mkglitches5.py). One entry per cause; the marks are
 'p8:M-001' (pass 8, stage3-dc8). Later passes are added to DC and PASS as they come."""
-DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13', 'p14': 'stage3-dc14', 'p15': 'stage3-dc15', 'p16': 'stage3-dc16', 'p17': 'stage3-dc17', 'p18': 'stage3-dc18'}
-PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13', 'p14': 'pass 14', 'p15': 'pass 15', 'p16': 'pass 16', 'p17': 'pass 17', 'p18': 'pass 18'}
+DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13', 'p14': 'stage3-dc14', 'p15': 'stage3-dc15', 'p16': 'stage3-dc16', 'p17': 'stage3-dc17', 'p18': 'stage3-dc18', 'p19': 'stage3-dc19'}
+PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13', 'p14': 'pass 14', 'p15': 'pass 15', 'p16': 'pass 16', 'p17': 'pass 17', 'p18': 'pass 18', 'p19': 'pass 19'}
 AFTER_SETS = ['stage3-p9', 'stage3-p9b', 'stage3-p9c']   # newest first: the after picture of a fixed spot comes from pass 9
 KIT_SETS = ['stage3-kit9']
 PROBES = {   # spots whose after picture is a probe taken right after the fix (a pass-9 picture replaces it when there is one)
@@ -47,6 +47,7 @@ F12 = ' (patch_f12.py)'
 F13 = ' (patch_f13.py)'
 F14 = ' (patch_f14.py)'
 F15 = ' (patch_f15.py)'
+F16 = ' (patch_f16.py)'
 FRAME = "The photographer's framing, not the game: "
 ENTRIES = [
  ('168', ['p8:M-001'], 'October: the park fountain', 'iPad', 'A white ghost hung inside the fountain, between its top and middle bowls.', 1, 'fixed',
@@ -352,4 +353,24 @@ ENTRIES = [
   "An older bubble under the header, as in any chat (pass 13's double-checkers); someone passing 1.3 m or more from you is drawn, and on the narrow upright view one close beside you fills the edge (G4-171, G4-300); the outline of a bush just below the screen at the pond's spot (G4-284); on a sideways phone the hair card fills the screen's height (G4-194, G4-288).", '—'),
  ('316', ['p18:M-009', 'p18:M-012'], "the check's own staging", 'iPad', "A white gate post at the edge of N20's February picture; N30's camera down in the fountain's pool.", 1, 'not a glitch',
   "N20 takes its holiday pictures from the Flower Corner's gate; N30 stands where its leaves test stands (G4-260).", '—'),
+ ('317', ['p19:M-003'], 'a photo shoot: a raised arm', 'iPad, PC', "Mia's raised arm went straight up through her pigtail.", 1, 'fixed',
+  "A raised arm in a pose (wave, peace sign) leans a little forward, so it passes in front of the hair, not through it (straight up, it ran through a pigtail's ball at the side of the head)" + F16 + '.', "pictures of the shoot from the front and from Mia's side, before and after (`views_f16.py`); pass 20's re-check."),
+ ('318', ['p19:M-004'], "the photographer's thank-you card", 'iPad', 'The photo on the card was soft: faces and name tags fuzzy.', 1, 'fixed',
+  'The card shows a sharp copy of the photo (it was made 400 px across for the whole screen and blown up about four times); the copy kept in your phone stays small, as before' + F16 + '.', "pictures of the card, before and after (`views_f16.py`); pass 20's re-check."),
+ ('319', ['p19:M-005'], 'inside a shop', 'iPad, dark theme', "A shopper walking past stood right at the camera in the Toy Store: a head and a body filled the left sixth of the view.", 1, 'fixed',
+  'A shopper on its way stops a step before you (G4-304), which beside you can be 0.95 m; within 1.3 m of the camera it now waits unseen for that moment, like a passer-by in town and a friend (G4-171)' + F16 + '.', "a probe with a shopper put 0.8 m beside you on its way: filling half the view before, not drawn after (`views_f16.py`); pass 20's re-check."),
+ ('320', ['p19:M-013'], 'the dance-off on a sideways phone', 'iPhone sideways', "The score bar sat on the dancers' crowns and hid the mirror ball.", 1, 'fixed',
+  'On a short sideways screen the chips and buttons above the bar are hidden for the round, so the bar now sits at the top: the dancers and the ball show under it' + F16 + '.', "a real two-phone dance-off, before and after (`shots4c_f.py`); pass 20's re-check."),
+ ('321', ['p19:M-014'], "1 September: the school's banner", 'iPad', 'The end of the "School party today!" banner covered the front of the little roof over the door.', 1, 'fixed',
+  'The banner hangs 27 cm higher, clear of the little roof from the street and from near the door' + F16 + '.', "pictures from the street and from near the door on 1 September, before and after (`views_f16b.py`); pass 20's re-check."),
+ ('322', ['p19:M-020', 'p19:M-021'], "a grandma's bubble at the duck pond", 'iPad, light and dark theme', 'Her bubble ran under the corner map: "eding the ducks is the best part of my day."', 2, 'fixed',
+  "A speech bubble (a grandma's, another player's, a football friend's) slides sideways, still over its speaker, to stay clear of the map and notepad column, the buttons and the screen's edges" + F16 + '.', "a probe with a two-line bubble by the pond, before and after (`views_f16.py`): under the map before, clear of it after; pass 20's re-check."),
+ ('323', ['p19:M-022'], 'a butterfly at the camera', 'iPad', "A big gold block with a dark top hung in the air by the Easter bunny's bubble: a butterfly 1.3 m from the camera, its two flat wings.", 1, 'fixed',
+  'Butterflies keep 2.2 m from the camera (1.3 m before), so a close one still reads as a butterfly' + F16 + ".", "pictures at the yard's flower beds, before and after (`views_f16.py`); pass 20's re-check."),
+ ('324', ['p19:M-017', 'p19:M-018'], 'the hair job on a sideways phone', 'iPhone sideways', "A big orange striped thing with a white ear filled the bottom-left corner under the hair card.", 1, 'open',
+  "Found with probes: it is your cat Mochi, 2 m to your left. When the card opens the view turns to the customer and looks down, and the wide sideways view stretches what is at its edge. The same open question as your pets at your heels (G4-205): written down for the owner.", ''),
+ ('325', ['p19:M-002', 'p19:M-015'], 'a shopper and butterflies', 'iPad', "A shopper facing you in the bakery, in front of Mrs. Crumb; purple and yellow pieces in a tree crown behind the food truck.", 1, 'not a glitch',
+  "A shopper walking from the counter towards the door crosses between you and Mrs. Crumb for a moment, like anyone in a shop (probes of the bakery from the door: the shoppers at their spots leave her in view); the pieces are the park's butterflies flying in front of the crown, the same as pass 19's N5 sky (dropped by its double-checker).", '—'),
+ ('326', ['p19:M-001', 'p19:M-006', 'p19:M-011', 'p19:M-016'], 'decided before', 'iPad, iPhone sideways', "The two ducks one behind the other after you feed them; your pets' tags over the pens upstairs in the Pet Shop; a townsperson close at the left edge by the Christmas tree; an older chat bubble cut under the header.", 1, 'not a glitch',
+  "The ducks keep 80 cm apart and from your spot one can be behind the other (G4-278); your pets at your heels and their tags, open for the owner (G4-205); someone passing 1.3 m or more from you is drawn (G4-171, G4-300); an older bubble under the header, as in any chat (pass 13's double-checkers).", '—'),
 ]

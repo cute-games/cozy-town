@@ -1,0 +1,178 @@
+[
+ {
+  "id": "M-001",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_019_town-ducks-close.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p19/shots/s3_ipad-landscape_light_ipad-landscape-light_019_town-ducks-close.png",
+  "where": "ipad-landscape light, town: the duck pond after feeding",
+  "what": "the two ducks stop in one straight line in front of you, the white one right behind the yellow one, so the white duck looks like it sits on the yellow duck's head; the white duck's body, wings and tail are hidden and no tail shows on either duck",
+  "bad": "1"
+ },
+ {
+  "id": "M-002",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_027_inside-bakery.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p19/shots/s3_ipad-landscape_light_ipad-landscape-light_027_inside-bakery.png",
+  "where": "ipad-landscape light, inside the bakery",
+  "what": "a friend (brown hair, coral dress) stands in the middle of the view right in front of the counter, hiding Mrs. Crumb and most of the \"Fresh today\" prices",
+  "bad": "1"
+ },
+ {
+  "id": "M-003",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_072_photo-shoot.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p19/shots/s3_ipad-landscape_light_ipad-landscape-light_072_photo-shoot.png",
+  "where": "ipad-landscape light theme, photo shoot at the fountain",
+  "what": "Mia's raised arm goes straight up through the right side of her hair and her right hair bun (the sleeve and the bun overlap)",
+  "bad": "1"
+ },
+ {
+  "id": "M-004",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_073_photo-result.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p19/shots/s3_ipad-landscape_light_ipad-landscape-light_073_photo-result.png",
+  "where": "ipad-landscape light theme, photo result card",
+  "what": "the snapped photo is stretched to nearly the full card width and looks soft and blurry: the name tags and faces in it are fuzzy (the builder's line says a small landscape picture)",
+  "bad": "1"
+ },
+ {
+  "id": "M-005",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_026_inside-toys.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p19/shots/s3_ipad-landscape_dark_ipad-landscape-dark_026_inside-toys.png",
+  "where": "ipad-landscape dark, inside the Toy Store",
+  "what": "a person stands right against the camera on the left: a huge cut-off brown-haired head and mint body fill the left sixth of the view",
+  "bad": "1"
+ },
+ {
+  "id": "M-006",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_034_inside-pets-upstairs.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p19/shots/s3_ipad-landscape_dark_ipad-landscape-dark_034_inside-pets-upstairs.png",
+  "where": "ipad-landscape dark, Pet Shop upstairs",
+  "what": "the name tags of the following pets (\"Mochi\", \"Clover\") sit over the Kittens and Bunnies pens and half hide the orange kitten and a brown bunny",
+  "bad": "1"
+ },
+ {
+  "id": "M-007",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_040_town-school-front.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p19/shots/s3_iphone-portrait_light_iphone-portrait-light_040_town-school-front.png",
+  "where": "iphone-portrait light, town: the school front (11:00, sun)",
+  "what": "the notepad panel covers the start of the school's front banner, which reads \"ozy Town School\"",
+  "bad": "1"
+ },
+ {
+  "id": "M-008",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_034_photo-result.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p19/shots/s3_iphone-portrait_dark_iphone-portrait-dark_034_photo-result.png",
+  "where": "iphone-portrait dark, photo result card",
+  "what": "the dark V-shaped specks end up in the finished photo (two in its sky) and more hang in the sky behind the card (falling leaves showing dark, not orange and yellow)",
+  "bad": "1"
+ },
+ {
+  "id": "M-009",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_036_town-square-fountain.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p19/shots/s3_iphone-portrait_dark_iphone-portrait-dark_036_town-square-fountain.png",
+  "where": "iphone-portrait dark, the park from the square, fountain",
+  "what": "two dark brown specks (a V and a stick) hang high in the open sky above the plaza (falling leaves showing dark, not orange and yellow)",
+  "bad": "1"
+ },
+ {
+  "id": "M-010",
+  "file": "s3_pc-1366_dark_pc-1366-dark_039_town-duck-pond.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p19/shots/s3_pc-1366_dark_pc-1366-dark_039_town-duck-pond.png",
+  "where": "pc-1366, dark theme: the duck pond in the park (place city, 11:00, sun)",
+  "what": "the small centre aim ring sits right on the white duck's eye, so the new duck face (dark eye with a shine) can't be seen; the yellow duck just behind it faces away, so neither duck's face shows",
+  "bad": "1"
+ },
+ {
+  "id": "M-011",
+  "file": "s3b_ipad-landscape_dark_christmas-night-dark_001_holiday-christmas-tree-night.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p19b/shots/s3b_ipad-landscape_dark_christmas-night-dark_001_holiday-christmas-tree-night.png",
+  "where": "ipad-landscape, dark theme: the Christmas tree at the Flower Corner at night (place city, 21:40, snow)",
+  "what": "a townsperson in grey stands right against the camera at the left edge: a huge half-cut face and body fill the left fifth of the picture (under the joystick) and hide most of the \"Flower Corner\" sign, only \"Corner\" shows",
+  "bad": "2"
+ },
+ {
+  "id": "M-012",
+  "file": "s3b_ipad-landscape_light_school-light_002_holiday-school-inside.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p19b/shots/s3b_ipad-landscape_light_school-light_002_holiday-school-inside.png",
+  "where": "ipad-landscape (light theme), school hall, 1 Sep",
+  "what": "both balloon bunches throw big dark grey smudges down the cream wall behind them (from the balloons to the floor); they look like dirty streaks, not balloon shadows",
+  "bad": "1"
+ },
+ {
+  "id": "M-013",
+  "file": "s3c_iphone-landscape_light_dance-B_001_dance-two-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p19c/shots/s3c_iphone-landscape_light_dance-B_001_dance-two-landscape.png",
+  "where": "iphone-landscape (light theme), dance-off in the house, guest's view",
+  "what": "the score bar sits right on the dancers' heads: it clips the right dancer's crown and hides the mirror ball (only its pole and base show between the dancers)",
+  "bad": "1"
+ },
+ {
+  "id": "M-014",
+  "file": "kit19-n22-school-school-balloons.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit19/shots/kit19-n22-school-school-balloons.png",
+  "where": "ipad-landscape, school front (1 Sep)",
+  "what": "the right end of the red \"\ud83c\udf88 School party today! \ud83c\udf88\" banner is drawn over the grey canopy above the door and cuts into it",
+  "bad": "1"
+ },
+ {
+  "id": "M-015",
+  "file": "kit19-n9-food-food-truck.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit19/shots/kit19-n9-food-food-truck.png",
+  "where": "ipad-landscape, orange tree behind the truck's cab",
+  "what": "purple and yellow flat pieces (garland flags or wrong-coloured leaves) sit inside the lower part of the tree crown",
+  "bad": "1"
+ },
+ {
+  "id": "M-016",
+  "file": "kit19-n13-iphone-landscape-hair-job-card.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit19/shots/kit19-n13-iphone-landscape-hair-job-card.png",
+  "where": "iphone-landscape, phone chat with Rosie",
+  "what": "the top message \"Yay! Which job do you want? Pick one!\" is cut in half under the chat header and hard to read",
+  "bad": "1"
+ },
+ {
+  "id": "M-017",
+  "file": "kit19-n13-iphone-landscape-hair-stars.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit19/shots/kit19-n13-iphone-landscape-hair-stars.png",
+  "where": "iphone-landscape, hair salon, stars card",
+  "what": "a big orange object with pink stripes and a white bow (the player's own head or tool, right at the camera) is cut off in the bottom-left corner",
+  "bad": "1"
+ },
+ {
+  "id": "M-018",
+  "file": "kit19-n13-iphone-landscape-hair-before-done.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit19/shots/kit19-n13-iphone-landscape-hair-before-done.png",
+  "where": "iphone-landscape, hair salon, style card",
+  "what": "the same big orange pink-striped object with a white bow fills the bottom-left corner, cut by both edges, pressed against the camera",
+  "bad": "1"
+ },
+ {
+  "id": "M-019",
+  "file": "kit19-n5-B-bench-other-player-sits.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit19/shots/kit19-n5-B-bench-other-player-sits.png",
+  "where": "pc-1366, sitting on the Flower Corner bench",
+  "what": "a big blue block, a purple flake and yellow blocks hang in the sky above the tree tops, with small coloured specks all over the sky: not the small orange and yellow leaves falling from the crowns, looks like stray confetti",
+  "bad": "2"
+ },
+ {
+  "id": "M-020",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_004_town-duck-pond.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p19/shots/s3_ipad-landscape_light_ipad-landscape-light_004_town-duck-pond.png",
+  "where": "ipad-landscape light, town: the duck pond",
+  "what": "the grandma's speech bubble runs under the corner map, so its first word is cut off (\"eding the ducks is the best part of my day.\")",
+  "bad": "2"
+ },
+ {
+  "id": "M-021",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_004_town-duck-pond.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p19/shots/s3_ipad-landscape_dark_ipad-landscape-dark_004_town-duck-pond.png",
+  "where": "ipad-landscape dark, town: the duck pond",
+  "what": "the grandma's speech bubble runs under the corner map, so its first letters are hidden and the line reads \"eding the ducks is the / best part of my day.\"",
+  "bad": "2"
+ },
+ {
+  "id": "M-022",
+  "file": "kit19-n20-A-easter-bunny.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit19/shots/kit19-n20-A-easter-bunny.png",
+  "where": "ipad-landscape, Flower Corner by the stepping stones (Easter month)",
+  "what": "a big gold block with a dark purple top hangs in the air top left, pressed against the bunny's speech bubble (looks like a leaf right in front of the camera)",
+  "bad": "1"
+ }
+]

@@ -6,13 +6,13 @@ Run 4, finished: every open item of `tools/run4-wip/README.md`, done alone on 20
 ## The game (each change a patch in `tools/run4-wip/scripts/`)
 - **Clock** (f1): "9:40 Wed", "Sleeping until 7:00", "from 8:00 to 20:00", as the 17 Oct list says.
 - **C5** (f2): the dance-off's arrow buttons have the same corners as every button.
-- **Pass 8's 92 kept marks** (f3, f4, f5), **pass 9's 37** (f6) and **pass 10's 41** (f7), each fixed from its cause or written down with the reason it is not a glitch: glitch list G4-168 to GLASTID (`tools/GLITCH-LIST-4.md`). Among them: grandmas walk round you instead of through the camera (on your device only; the shared day plan is unchanged), friends out for a walk and passers-by give way and keep out of your friends' circle, far name tags too small to read fade out, the clock chip shows the sky you see.
+- **The glitch passes' kept marks**, each fixed from its cause or written down with the reason it is not a glitch: glitch list G4-168 to GLASTID (`tools/GLITCH-LIST-4.md`). Pass 8: 92 kept (f3, f4, f5); pass 9: 37 (f6); 10: 41 (f7); 11: 27 (f8); 12: 29 (f9); 13: 21 (f10); 14: 14 (f11); 15: 13 (f12); 16: 8 (f13); 17: 12 (f14); 18: 15 (f15); 19: 16 (f16)PASSTAIL. Among them: grandmas walk round you instead of through the camera (on your device only; the shared day plan is unchanged), friends out for a walk, passers-by and shoppers give way a step before you, far name tags too small to read fade out and a far grandma's bubble no longer shows through walls, the clock chip shows the sky you see, a photo shoot starts from a spot where everyone fits, the photo on the thank-you card is sharp, speech bubbles slide clear of the corner map, quest and client texts read right.
 - **Friends around you**: an arc over the free part of the view (its ends nearer, its middle further back) so every face shows; N3 passes.
 - **Ducks**: the new faces seen (bigger eyes with a shine); fed ducks each swim to a spot of their own and turn to you.
 - Two new pictures in the What's new book (February, the Pet Shop upstairs).
 
 ## The loops
-- GLITCH HUNTER: pass 8 (the full pass S3-N, in place of pass 7's nine batches that never ran), then passes 9, 10, PASSESLINE.
+- GLITCH HUNTER: pass 8 (the full pass S3-N, in place of pass 7's nine batches that never ran), then passes 9 to LASTPASS, until LASTPASSLINE.
 - Critic round 6, the last: photographer 7, parties 8, holiday spot 7, house floors and colour 8, one clock 7. Where each loop stands: `tools/run4-wip/data/critic-scores.md`.
 
 ## Checks on the final file

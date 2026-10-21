@@ -1,0 +1,3 @@
+M-016 | KEEP | top message line sliced through letters by header
+M-017 | KEEP | big orange bow object cut off, jammed at camera corner
+M-018 | KEEP | same cut-off orange object at camera, corner

@@ -15,7 +15,7 @@ ASIDE = [
   'KIT STAGING: N12 looks at each old house from the spot the check stands on'),
  (r'^kit\d+-n15-A-phone-calendar.*(wall|window)',
   'KIT STAGING: N15 opens the phone where the bed test left you, by the bedroom wall'),
- (r'^kit\d+-n(3|4|19|20|21|24|27|29|30|41)-.*(camera (sits|stands|is) (inside|right (up )?against|right behind|wedged)|camera tilted|camera right behind|wedged against|no (duck )?pond in the picture|street-lamp post stands right in front|right up against the|house wall fills|shelter\) right at the camera|board \(bus stop shelter\)|cut off by the (right|left) screen edge and (its lower part|covered)|camera (is )?(squeezed|jammed) against|camera inside the fountain|no duck pond, ducks or bench in view|street lamp stands right in front of the camera)',   # (pass 9: the same staging in other words)
+ (r'^kit\d+-n(3|4|19|20|21|24|27|29|30|41)-.*(camera (sits|stands|is) (inside|right (up )?against|right behind|wedged)|camera tilted|camera right behind|wedged against|no (duck )?pond in the picture|street-lamp post stands right in front|right up against the|house wall fills|shelter\) right at the camera|board \(bus stop shelter\)|cut off by the (right|left) screen edge and (its lower part|covered)|camera (is )?(squeezed|jammed) against|camera inside the fountain|no duck pond, ducks or bench in view|street lamp stands right in front of the camera|camera (sits on|is pressed against|(again )?points up)|pond is not in the picture|lamp post right in front of the camera|tree trunk right beside the camera|camera stands inside the fountain)',   # (pass 9: the same staging in other words)
   'KIT STAGING: the check takes its pictures where its test stands (tilted at the sky after a pick-up, inside the fountain, against a sign, a gate post or a lamp post); its own lines measure what they check'),
  (r'^kit\d+-n20-A-december.*(Easter bunny.s bubble|Happy Easter)',
   'KIT TIMING: the kit jumps from March to December in one page; the Easter Bunny\'s words from a second before were still on screen'),
@@ -105,7 +105,23 @@ ASIDE = [
   'KIT STAGING (G4-225): N24\'s camera stands where its check stands, under the bus message'),
  (r'^kit\d+-n12-save-prenight3-bighouse.*(bed|bunk)',
   'not a glitch (G4-226): the two beds stand 70 cm apart side by side; from the stairs one is seen behind the other'),
- (r'(ZZTEST|Cozy Kid)', 'test name'),
+ (r'white ring.{0,80}(exact |dead )?(centre|center|middle) of the (picture|screen|view)|stray white ring|(same|small) (stray )?white ring at the|white centre dot|centre dot sits',
+  'by design: the little ring at the middle of the screen is the aim dot, it shows what the use button acts on (since night 1)'),
+ (r'cut down to just "|by the map.s (left|right|top|bottom) (frame|edge)|at the map.s (right|left|top|bottom) edge|cut off by the map.s|map window.s edges|map.s frame|labels? at the map.s (left|right) edge',
+  'not a glitch: the big map is wider than its frame and scrolls; names at its edge are cut like the map'),
+ (r'^s3_iphone-portrait.*notepad (HUD |box |card |panel )?sits over',
+  'DECIDED, not a glitch (section 9c): on an upright phone the fixed HUD (the notepad under the corner map, the pet buttons, the action pill) can cover part of a sign while you walk'),
+ (r'^s3_iphone-landscape.*joystick.{0,40}(sits?|covers?|overlaps?|over the|in the (lower )?middle)',
+  'DECIDED, not a glitch: on a sideways phone the joystick stands where the owner put it (300 px in, commit 0f5939f); only during a photo shoot it moves to the edge'),
+ (r'^kit\d+-n20-A-easter.*(pastel|no nests?|golden)',
+  'not a glitch (G4-201): the small pastel eggs are the corner\'s spring decorations, by design ("so no decorative egg looks like one")'),
+ (r'^kit\d+-n20-.*(autumn|orange leaves|leaves tumbling|full autumn)',
+  'KIT STAGING (G4-225): the check jumps from October to the other months in one page, so October\'s season stays (a game started in that month has its own trees)'),
+ (r'^kit\d+-n12-.*right against the camera',
+  'KIT STAGING: N12 looks at each old house from the spot the check stands on'),
+ (r'((toast|"You are online!"|Beach Bus toast|"Cat costume[^"]*" toast|message) (lies|sits|runs|covers|hides)|toast .{0,30}(across|over the|covers|hides))',
+  'not a glitch (pass 9: M-034, M-045 dropped): a message shows for a few seconds over the town; the picture caught it (messages keep clear of the HUD and the cards, not of the town)'),
+ (r'^(?!.*(still there|stands right|figure)).*(ZZTEST|Cozy Kid)', 'test name'),
 ]
 D = sys.argv[1]; keep, aside = [], []
 for d in sys.argv[1:]:

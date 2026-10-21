@@ -3,6 +3,7 @@
 A three.js toon game for kids in one file, `index.html` (GitHub Pages serves `main`). The owner plans each run in a `NIGHT-PLAN-*.md` file at the root; the run's report is in `tools/` (`RUN-4-REPORT.md` for run 4, its section "0. Progress" is where a restarted session picks up).
 
 ## Status (18 Oct 2026, after the owner's wrap-up)
+- Run 4 finish (21 Oct): in progress on the branch `claude/run-4-finish`, not merged; a fresh session picks up from `tools/run4-wip/HANDOFF.md`.
 - Live: run 4 stages 1 to 3 (stamp 2026101802) on GitHub `main` and in the Claude version (the artifact "Cozy Town"), merged and published after the save tests. The rest of that final check was stopped: the walk-through (C2, C2b), the device tests (C1, C3, C4, C5, T1 to T4, K1) and the night-3 and run-4 lines on the final file are NOT VERIFIED (the report, section 2, stage 3 end).
 - Backups made before the update (private artifacts, read back byte for byte): "PRE-RUN 4 LIVE — Cozy Town backup 2026-10-18 (GitHub file, night 3)" and "Cozy Town BACKUP 2026-10-18 — Claude version before run 4".
 - Run 4 pull requests: #4 "Run 4, stage 1", #5 "Run 4, stage 2", #6 "Run 4, stage 3" (all three merged into `main` on 18 Oct).

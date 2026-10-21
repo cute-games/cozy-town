@@ -1,0 +1,2 @@
+s3_pc-1366_dark_pc-1366-dark_010_big-map.png | pc-1366, dark theme, the big map (city) | the "Tap a place to see the way there!" bar lies over the bottom of the map: the Hair Salon pin is hidden under it and its "Hair Salon" label peeks out below the bar, squeezed and clipped by the map's bottom edge; another place label at the map's left edge is cut to "en" | 1
+count: 1

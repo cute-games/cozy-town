@@ -1,0 +1,3 @@
+s3_ipad-landscape_light_ipad-landscape-light_072_photo-shoot.png | ipad-landscape light theme, photo shoot at the fountain | Mia's raised arm goes straight up through the right side of her hair and her right hair bun (the sleeve and the bun overlap) | 1
+s3_ipad-landscape_light_ipad-landscape-light_073_photo-result.png | ipad-landscape light theme, photo result card | the snapped photo is stretched to nearly the full card width and looks soft and blurry: the name tags and faces in it are fuzzy (the builder's line says a small landscape picture) | 1
+count: 2

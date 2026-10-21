@@ -1,0 +1,3 @@
+s3_pc-1366_dark_pc-1366-dark_039_town-duck-pond.png | pc-1366, dark theme: the duck pond in the park (place city, 11:00, sun) | the small centre aim ring sits right on the white duck's eye, so the new duck face (dark eye with a shine) can't be seen; the yellow duck just behind it faces away, so neither duck's face shows | 1
+s3b_ipad-landscape_dark_christmas-night-dark_001_holiday-christmas-tree-night.png | ipad-landscape, dark theme: the Christmas tree at the Flower Corner at night (place city, 21:40, snow) | a townsperson in grey stands right against the camera at the left edge: a huge half-cut face and body fill the left fifth of the picture (under the joystick) and hide most of the "Flower Corner" sign, only "Corner" shows | 2
+count: 2

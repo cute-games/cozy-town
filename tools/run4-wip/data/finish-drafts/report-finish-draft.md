@@ -397,7 +397,7 @@ double-checked, 15 kept: G4-310 to G4-316, `tools/run4-wip/data/stage3-dc18/`. N
 - A photo shoot's start: old when no spot had a clear view the camera stayed where you stood (on a sideways iPhone everyone's feet were below the
   frame), and a grandma counted as in the way although she steps out of a shoot (one in front of the family failed every spot) → new she no
   longer counts, and with no clear spot the camera takes the nearest where everyone fits.
-The kit's night3 and run4 lines on the f15 file (md5 26b602a7): KIT19.
+The kit's night3 and run4 lines on the f15 file (md5 26b602a7): 41 of 41 PASS.
 
 Not glitches or decided before (G4-314 to G4-316): a New Year burst just above a cloud's top (drawn in front of it), the placing grid while you
 decorate, a yellow piece just below the view on a visit, an older chat bubble under the header, someone passing close on an upright phone, the
@@ -405,6 +405,35 @@ bush outline at the pond's spot, the sideways hair card, N20's and N30's camera 
 
 For pass 19: the filter (`dcfilter19.py`) sets aside pass 18's decisions and drops, and four rules take the words pass 18's viewers used. On
 pass 18's marks it keeps exactly the 4 that f15 fixed.
+
+**Pass 19, the last full pass under the old rules, on the file with f15**: the kit's own pictures (night3 + run4: 41 of 41 PASS), the
+photographer's three scripts, 14 viewer batches: 74 marks; 55 set aside with their reason (`dcfilter19.py`; 3 of them under a reason that did
+not fit, sent on too), 22 double-checked, 16 kept: G4-317 to G4-326, `tools/run4-wip/data/stage3-dc19/`. None of f15's fixes came back.
+
+**f16 (13 edits), from pass 19's kept marks** (probes and pictures before and after, `views_f16*.py`, a real two-phone dance-off `shots4c_f.py`):
+- A raised arm in a photo pose: old straight up, it went through Mia's pigtail → new it leans a little forward, in front of the hair (wave,
+  peace sign).
+- The photo on the thank-you card: old made 400 px across for the whole screen and blown up about four times (soft faces and tags) → new a
+  sharp copy on the card; the phone keeps the small one, as before.
+- A shopper on its way: old it could stop 0.95 m beside you (a head and a body filled the left sixth of the Toy Store's view) → new within
+  1.3 m of the camera it waits unseen for that moment, like a passer-by and a friend.
+- The dance-off on a short sideways screen: old the score bar sat 64 px down, on the dancers' crowns and over the mirror ball → new at the top
+  (the chips and buttons above it are hidden for the round).
+- The school party banner (1 September): old its end covered the front of the little roof over the door → new 27 cm higher, clear of it.
+- Speech bubbles: old a grandma's bubble ran under the corner map ("eding the ducks is the best part of my day.") → new a speech bubble
+  (a grandma's, another player's, a football friend's) slides sideways, still over its speaker, clear of the map and notepad column, the
+  buttons and the screen's edges.
+- Butterflies: old they came within 1.3 m of the camera, where two flat wings read as a big gold block in the air → new they keep 2.2 m.
+The kit's night3 and run4 lines on the f16 file (md5 d30bebcd): KIT20.
+
+Not glitches, decided before or open (G4-324 to G4-326): your cat Mochi stretched at the corner of a sideways phone when the hair card turns the
+view (found by hiding each part in turn while drawing; with the pets question, for the owner), a shopper crossing in front of Mrs. Crumb,
+butterflies in front of a crown, the fed ducks one behind the other, your pets' tags, someone close at the edge of the view, an older chat
+bubble under the header.
+
+For pass 20: the filter (`dcfilter20.py`) sets aside pass 19's decisions and drops, and three rules take the words pass 19's viewers used. On
+pass 19's marks it keeps exactly the 8 that f16 fixed. From pass 20 the loop follows the owner's rules of 21 Oct (`CLAUDE.md`, "Glitch loop
+rules"): NEWRULESLINE
 
 #### Decisions made alone (run 4 finish)
 - The kit, never weaker (every change in `cozy-check-v6.zip`, listed in its README-KIT.md and here, old → new):
