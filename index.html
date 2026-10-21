@@ -707,9 +707,10 @@ function hudDodge(s,cam){s.center.y=.5;s.material.depthTest=true;if(s.material.o
   if(dn>Math.max(h*2.5,H*.22))s.material.opacity=0;else if(dn>0){s.center.y=.5+dn/h;s.material.depthTest=false;}}   /* (moved down onto its house: drawn on top of it; too far under the HUD: not shown) */
 /* 💬 a speech bubble slides sideways, still over its speaker (who stays inside it, at worst near its end), to stay clear of the map and notepad
    column, the buttons and the screen's edges (run 4 finish: a grandma's bubble ran under the corner map: "eding the ducks is the best part of my day.") */
-function bubDodge(s,cam){s.center.x=.5;if(s.material.opacity<=0)return;const R=hudRects();
+function bubDodge(s,cam){const u=s.userData;if(u.cy0===undefined)u.cy0=s.center.y;s.center.x=.5;s.center.y=u.cy0;if(s.material.opacity<=0)return;const R=hudRects();
   _hv.setFromMatrixPosition(s.matrixWorld);const z=-_hw.copy(_hv).applyMatrix4(cam.matrixWorldInverse).z;if(z<.2)return;_hv.project(cam);
-  const W=innerWidth,H=innerHeight,f=H/(2*Math.tan(cam.fov*Math.PI/360)),h=s.scale.y*f/z,w=s.scale.x*f/z,x=(_hv.x+1)/2*W,y=(1-_hv.y)/2*H,t=y-h*(1-s.center.y),bt=y+h*s.center.y;
+  const W=innerWidth,H=innerHeight,f=H/(2*Math.tan(cam.fov*Math.PI/360)),h=s.scale.y*f/z,w=s.scale.x*f/z,x=(_hv.x+1)/2*W,y=(1-_hv.y)/2*H;let t=y-h*(1-s.center.y),bt=y+h*s.center.y;
+  for(const b of R)if(b.left<-1e3&&t<b.bottom+4){const dn=Math.min(h,b.bottom+4-t);s.center.y=u.cy0+dn/h;t+=dn;bt+=dn;}   /* (run 4 finish: below the top row too: on a sideways phone a bubble ran under the clock chip and the buttons) */
   let lo=6,hi=W-6;for(const b of R)if(b.left>-1e3&&t<b.bottom&&bt>b.top){if(b.left<x)lo=Math.max(lo,b.right+6);else hi=Math.min(hi,b.left-6);}   /* (the top row's band is not a side: it stays as it is) */
   let cx=.5;if(x-w/2<lo)cx=(x-lo)/w;else if(x+w/2>hi)cx=1-(hi-x)/w;s.center.x=clamp(cx,.05,.95);}
 /* 🔤 run 4, job 5 (item 7), the root cause of off-centre and cut-off signs: the text was placed by measureText, but a colour emoji (iPad) can draw wider than it
@@ -8442,7 +8443,7 @@ ACT.ptsnap=()=>{if(!PHO.on||CUT||fading)return;const d=pt(),o=d.o;if(!o)return;c
   let pic='',big='';try{const a=camera.aspect||1.6,w=a>=1?960:Math.round(960*a),h=clamp(Math.round(w/a),150,1800);offShot(scene,camera,w,h,0x9fd8ff);const vf=boxOf($('ptvf'));let sx=0,sy=0,sw=w,sh=h;if(vf){sx=clamp(vf.left/innerWidth*w,0,w-8);sy=clamp(vf.top/innerHeight*h,0,h-8);sw=Math.min(w-sx,vf.width/innerWidth*w);sh=Math.min(h-sy,vf.height/innerHeight*h);}
     const cut=(mw,mh,q)=>{const k=Math.min(1,mw/sw,mh/sh),cv=document.createElement('canvas');cv.width=Math.max(8,Math.round(sw*k));cv.height=Math.max(8,Math.round(sh*k));cv.getContext('2d').drawImage(THR.cv,sx,sy,sw,sh,0,0,cv.width,cv.height);return cv.toDataURL('image/jpeg',q);};
     pic=cut(320,400,.7);big=cut(760,900,.86);}catch(e){}   /* (run 4 finish: the card shows a sharp copy, the phone keeps the small one: the photo was 400 px across for the whole screen, then blown up about four times on the card) */   /* the picture is what the dashed frame shows (run 4, stage 3: it was the whole screen) */
-  S.ptPics=(S.ptPics||[]).filter(p=>p&&p.id);S.ptPics.push({id:o.id,u:pic});while(S.ptPics.length>4)S.ptPics.shift();
+  S.ptPics=(S.ptPics||[]).filter(p=>p&&p.id);S.ptPics.push({id:o.id,u:pic});if(pic){PT_DEC=new Image();PT_DEC.src=pic;}   /* (run 4 finish: the phone's copy decoded now, ready when the phone opens: the card shows the sharp one) */while(S.ptPics.length>4)S.ptPics.shift();
   SFX.pop();ptFlash();S.coins+=pay;d.done++;S.ptTotal=(S.ptTotal||0)+1;PHO.last={stars:sc.st,pay,sc};o.st='done';hardEvent('photo',1);qEvent('photo');addXP('friends',3);popText('+'+pay+' 🪙','coin');if(sc.st>=4)setTimeout(()=>SFX.yay(),300);
   const W=WHO[o.who[0]],nm=W?W.nm:'Your client',why=[];if(sc.cut)why.push('someone was cut off');if(sc.hid)why.push('someone was hidden behind something');if(sc.back)why.push('someone was not facing you');if(sc.unposed)why.push('someone had no pose');if(!sc.fill&&!sc.cut)why.push('we are a bit small in the picture');if(!sc.bgOk)why.push('we wanted '+ptSpotOf(o).bgs.find(b=>b.id===o.bg).n+' behind us');
   const line=sc.st===5?pick(['Perfect! We love it! 😍','Wow, what a photo! Thank you! 💕','Just beautiful! Five stars! ✨']):sc.st>=3?'Thank you! Nice photo! 😊'+(why.length?' (Next time: '+why.join(', ')+'.)':''):'Thanks! Hmm… '+why.join(', ')+'. 😅';
@@ -8464,6 +8465,7 @@ function ptTick(dt){const d=pt();ptInters();if(PHO.on&&PHO.res&&!(UI.open&&docum
 const PT_TUT=[{t:'Photographer 📸',x:'A booking comes as a message.',pic:'f1'},{t:'Go there 🗺️',x:'Follow the dot to the place.',pic:'f2'},{t:'Poses 🧍',x:'Pick a background, tap each person for a pose.',pic:'f3'},{t:'Snap! 📸',x:'Everyone in, nobody cut off.',pic:'f4'}];
 function ptTutStart(){if(TUT||!PLAYING)return;if(UI.open)closePanel();TUT={i:0,pt:1,steps:PT_TUT};$('tut').hidden=false;tutShow();}
 $('ptbar').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;e.stopPropagation();const [k,...r]=b.dataset.a.split(':');if(ACT[k])ACT[k](r.join(':'));});
+let PT_DEC=null;
 function ptImg(id){const p=(S&&S.ptPics||[]).find(q=>q.id===id);return p&&p.u?`<img class="mimg" src="${p.u}" alt="The photo">`:'<span class="mimg none">📷</span>';}
 /* ===== 🎅💗🐰 run 4, job 11: the other holidays at the Flower Corner (the holiday spot of job 4), New Year and the school party ===== */
 const HOL_SPOT=[-19.6,-12.6];   /* the holiday spot inside the Flower Corner: the big tree in December, the heart fountain in February; clear of the stepping stones, the mounds and the bushes */

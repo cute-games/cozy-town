@@ -1,0 +1,3 @@
+M-013 | KEEP | bubble text cut off under clock chip and top bar
+M-014 | KEEP | bubble first line hidden under clock chip, words unreadable
+M-015 | KEEP | speech bubble covered by clock chip and buttons

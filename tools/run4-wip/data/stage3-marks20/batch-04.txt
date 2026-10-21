@@ -1,0 +1,2 @@
+pv_ipad-landscape_dark_pv-r20d-ipad-landscape_005_toys-shopper-r20d-ipad-landscape.png | ipad-landscape dark, inside the Toy Store | the shopper stands right at the camera on the right edge (face and torso big, cut off by the screen edge, partly behind the Say hi button), not "beside you" | 1
+count: 1

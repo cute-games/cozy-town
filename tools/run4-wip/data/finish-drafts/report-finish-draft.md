@@ -424,7 +424,7 @@ not fit, sent on too), 22 double-checked, 16 kept: G4-317 to G4-326, `tools/run4
   (a grandma's, another player's, a football friend's) slides sideways, still over its speaker, clear of the map and notepad column, the
   buttons and the screen's edges.
 - Butterflies: old they came within 1.3 m of the camera, where two flat wings read as a big gold block in the air → new they keep 2.2 m.
-The kit's night3 and run4 lines on the f16 file (md5 d30bebcd): KIT20.
+The kit's night3 and run4 lines on the f16 file (md5 d30bebcd): 40 of 41 PASS; N25 FAIL ("the photo in the phone chat", on all three screens: G4-327, fixed in f17) (pass 20).
 
 Not glitches, decided before or open (G4-324 to G4-326): your cat Mochi stretched at the corner of a sideways phone when the hair card turns the
 view (found by hiding each part in turn while drawing; with the pets question, for the owner), a shopper crossing in front of Mrs. Crumb,
@@ -434,6 +434,24 @@ bubble under the header.
 For pass 20: the filter (`dcfilter20.py`) sets aside pass 19's decisions and drops, and three rules take the words pass 19's viewers used. On
 pass 19's marks it keeps exactly the 8 that f16 fixed. From pass 20 the loop follows the owner's rules of 21 Oct (`CLAUDE.md`, "Glitch loop
 rules"): NEWRULESLINE
+
+**Pass 20, the first under the owner's rules of 21 Oct** (re-check only what changed): the kit's night3 and run4 lines in full on the f16 file
+(40 of 41 PASS, N25 FAIL), then 26 pictures of f16's spots only (`pass20.sh`), five viewers by focus, `dcfilter20.py`, six first checkers: 12 viewer marks, 6 of them
+set aside under a reason that did not fit and sent on too; 18 double-checked, 17 kept: G4-327 to G4-330, `tools/run4-wip/data/stage3-dc20/`.
+(Setting up the fresh container: the Python package playwright 1.56.0 matches the Chromium in the environment; a newer one looks for another.)
+
+**f17 (4 edits), from pass 20** (probes before and after, `views_f17.py`; N25 alone):
+- The photo in your phone's chat (the kit's N25): old since f16 the card showed the sharp copy, so the phone's small copy was first decoded
+  when the phone opened and had no size at that moment (N25 FAIL on all three screens) → new it is decoded at the snap; N25 PASS twice.
+- Speech bubbles: old a bubble kept clear of the map column and the buttons sideways only; on a sideways phone a grandma's bubble by the pond
+  ran under the clock chip and the top buttons ("ducks is the ... of my day.") → new it also stays below the top row (down at most its own
+  height, then sideways as before).
+
+Left open, grade 1 (G4-329): a group member's name tag peeking out behind the "Pose: Mia" label on a sideways phone. Not glitches (G4-330): the
+notepad's cream paper in the dark theme (by design); a shopper about 1.5 m from you at the right edge of the Toy Store (G4-171, G4-300).
+
+For pass 21: the filter (`dcfilter21.py`) sets aside pass 20's decisions and its one drop; the bubble and clock chip rules leave a speech bubble
+under the clock chip or the top buttons to the first checkers. On pass 20's marks it keeps exactly the 9 that f17 fixed.
 
 #### Decisions made alone (run 4 finish)
 - The kit, never weaker (every change in `cozy-check-v6.zip`, listed in its README-KIT.md and here, old → new):

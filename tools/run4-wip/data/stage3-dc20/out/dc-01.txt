@@ -1,0 +1,3 @@
+M-001 | KEEP | bubble's left end sits over the clock chip's lower part; chip text still readable
+M-002 | KEEP | shopper's head and body large at the right edge, cut off and partly behind "Say hi"
+M-003 | KEEP | a second pill is hidden behind "Pose: Mia", only an "e" shows

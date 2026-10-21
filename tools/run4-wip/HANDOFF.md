@@ -11,6 +11,10 @@ Same rules as NIGHT-PLAN-4.md. End with a pull request. Never stop to ask." On 2
 - Pass 19, the last under the old rules: 74 marks; 22 to 8 double-checkers, 16 kept; f16 (7 fixes, 13 edits) applied after probes before and after (`views_f16*.py`, a real two-phone dance-off `shots4c_f.py`); entries G4-317 to G4-326; the fix plan `tools/run4-wip/data/stage3-dc19/pass19-fixplan.md`; its section in `finish-drafts/report-finish-draft.md`. The kit has not run on the f16 file yet: pass 20 does that first (KIT20 in the report draft).
 - Next: pass 20, the first under the new rules: it re-checks only f16's spots (f16's seven fixes; `pass20.sh` takes the pictures (26: `views_f16.py` on iPad and sideways iPhone in light and on iPad in dark, `views_f16b.py` on 1 September on iPad and PC, the dance-off), lists them (`pv2json.py`, notes in `notes_f16.py`) and writes the five briefs (`viewfocus.py`)). Then the stop rule, the full final pass, the final
   stage (below).
+- Pass 20 (21 Oct, a fresh session): done. The kit on the f16 file: 40 of 41 PASS, N25 FAIL (the phone's copy of the photo, an f16 side
+  effect); 17 of 18 marks kept; f17 (`patch_f17.py`, 4 edits: N25's phone photo, a speech bubble below the top row) applied (md5 528fe0df,
+  1,596,650 bytes); G4-327 to G4-330; `stage3-dc20/pass20-fixplan.md`. Fixes above minor, so the clean-pass count starts at 21. Next: pass 21
+  (`p21kit.sh`, `pass21.sh`, `dcfilter21.py` ready). Set-up note: `pip install playwright==1.56.0` (it matches the Chromium in /opt/pw-browsers).
 - Not yet done (the final stage): the version stamp, the rollback copy, the full check on the final file, the glitch list, the report, the PR.
 
 ## Set up a fresh container (the scratchpad of the old session is gone)

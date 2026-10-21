@@ -3,7 +3,7 @@ entries pass 8 checked (UPDATES), and adds one entry per cause for the marks the
 "before" = the picture of the first mark; "after" = the newest picture of the same spot from a later pass (or a probe after the fix).
 usage: python3 mkglitches5.py   -> rewrites glitches.json"""
 import json, os, re, sys
-S = '/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad'
+S = '/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad'
 sys.path.insert(0, S)
 import glitches5_data as D   # DC (pass key -> double-check folder), PASS (pass key -> words), AFTER_SETS (newest first), KIT_SETS, PROBES, UPDATES, ENTRIES
 M = {}
@@ -59,7 +59,7 @@ for suf, marks, place, device, what, bad, status, fix, check in D.ENTRIES:
     after = next((after_of(m) for m in real if after_of(m)), None) if status == 'fixed' else None
     passes = sorted({D.PASS[m.split(':')[0]] for m in real})
     lab = ', '.join(m.split(':')[1] + ' (' + D.PASS[m.split(':')[0]] + ')' for m in marks)
-    out.append(dict(id='G4-' + suf, place=place, device=device, what=what + f" (viewer marks {lab})", bad=bad,
+    out.append(dict(id='G4-' + suf, place=place, device=device, what=what + (f" (viewer marks {lab})" if marks else ""), bad=bad,
                     found_by=D.FOUND_BY.get(suf, 'PHOTOVIEWER + DOUBLE-CHECKER (' + ', '.join(passes) + ')'), fix=fix, before=D.BEFORE.get(suf, before), after=D.AFTER.get(suf, after), status=status, check=check))
 kept = set()
 for k, d in D.DC.items():

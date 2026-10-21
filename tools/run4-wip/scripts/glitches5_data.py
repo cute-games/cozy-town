@@ -1,7 +1,7 @@
 """Run 4 finish: the data of the glitch list from pass 8 on (read by mkglitches5.py). One entry per cause; the marks are
 'p8:M-001' (pass 8, stage3-dc8). Later passes are added to DC and PASS as they come."""
-DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13', 'p14': 'stage3-dc14', 'p15': 'stage3-dc15', 'p16': 'stage3-dc16', 'p17': 'stage3-dc17', 'p18': 'stage3-dc18', 'p19': 'stage3-dc19'}
-PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13', 'p14': 'pass 14', 'p15': 'pass 15', 'p16': 'pass 16', 'p17': 'pass 17', 'p18': 'pass 18', 'p19': 'pass 19'}
+DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13', 'p14': 'stage3-dc14', 'p15': 'stage3-dc15', 'p16': 'stage3-dc16', 'p17': 'stage3-dc17', 'p18': 'stage3-dc18', 'p19': 'stage3-dc19', 'p20': 'stage3-dc20'}
+PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13', 'p14': 'pass 14', 'p15': 'pass 15', 'p16': 'pass 16', 'p17': 'pass 17', 'p18': 'pass 18', 'p19': 'pass 19', 'p20': 'pass 20'}
 AFTER_SETS = ['stage3-p9', 'stage3-p9b', 'stage3-p9c']   # newest first: the after picture of a fixed spot comes from pass 9
 KIT_SETS = ['stage3-kit9']
 PROBES = {   # spots whose after picture is a probe taken right after the fix (a pass-9 picture replaces it when there is one)
@@ -18,11 +18,13 @@ PROBES = {   # spots whose after picture is a probe taken right after the fix (a
     's3_iphone-landscape_light_iphone-landscape-light_029_tutorial-pizza.png': 'probe-f5b/shots/pf5_iphone-landscape_light_pf5-shortcards_005_tutorial-pizza.png',
     's3c_iphone-portrait_light_dance-A_002_dance-two-result-portrait.png': 'probe-f5b/shots/pf5_iphone-portrait_light_pf5-disco_001_disco.png',
 }
-FOUND_BY = {}
+FOUND_BY = {'327': 'the kit (N25, pass 20)'}
 BEFORE = {}
 AFTER = {}
 KNOWN = []
 UPDATES = {
+    'G4-318': {'check': "pictures of the card, before and after (`views_f16.py`); pass 20: the card sharp, but the kit's N25 failed on the phone's copy: G4-327."},
+    'G4-322': {'check': "a probe by the pond, before and after (`views_f16.py`); pass 20: on a sideways phone the bubble ran under the clock chip and the top buttons: G4-328."},
     'G4-031': {'status': 'fixed', 'fix': 'Fixed with G4-118: ghosts and bats glide round the camera (50db62c) and keep 3 m from it (9777d26); pass 8 saw no ghost at the camera.', 'check': 'pass 8 pictures.'},
     'G4-148': {'check': 'pass 8 pictures: not seen again.'},
     'G4-160': {'check': 'pass 8 pictures: not seen again.'}, 'G4-161': {'check': 'pass 8 pictures: not seen again.'},
@@ -48,6 +50,7 @@ F13 = ' (patch_f13.py)'
 F14 = ' (patch_f14.py)'
 F15 = ' (patch_f15.py)'
 F16 = ' (patch_f16.py)'
+F17 = ' (patch_f17.py)'
 FRAME = "The photographer's framing, not the game: "
 ENTRIES = [
  ('168', ['p8:M-001'], 'October: the park fountain', 'iPad', 'A white ghost hung inside the fountain, between its top and middle bowls.', 1, 'fixed',
@@ -373,4 +376,12 @@ ENTRIES = [
   "A shopper walking from the counter towards the door crosses between you and Mrs. Crumb for a moment, like anyone in a shop (probes of the bakery from the door: the shoppers at their spots leave her in view); the pieces are the park's butterflies flying in front of the crown, the same as pass 19's N5 sky (dropped by its double-checker).", '—'),
  ('326', ['p19:M-001', 'p19:M-006', 'p19:M-011', 'p19:M-016'], 'decided before', 'iPad, iPhone sideways', "The two ducks one behind the other after you feed them; your pets' tags over the pens upstairs in the Pet Shop; a townsperson close at the left edge by the Christmas tree; an older chat bubble cut under the header.", 1, 'not a glitch',
   "The ducks keep 80 cm apart and from your spot one can be behind the other (G4-278); your pets at your heels and their tags, open for the owner (G4-205); someone passing 1.3 m or more from you is drawn (G4-171, G4-300); an older bubble under the header, as in any chat (pass 13's double-checkers).", '—'),
+ ('327', [], "the photographer: the photo in your phone's chat", 'iPad, iPhone sideways, PC', "The kit's N25 failed on the f16 file: right after the thank-you card, the photo in the phone's chat had no size yet when the phone opened (it showed a moment later).", 2, 'fixed',
+  "Since f16 the card shows the sharp copy, so the phone's small copy was first decoded when the phone opened; it is decoded at the snap now, as when the card showed it" + F17 + '.', "N25 alone on the f17 file, twice: PASS (the photo in the chat on all three screens); pass 21's kit."),
+ ('328', ['p20:M-013', 'p20:M-014', 'p20:M-015', 'p20:M-016', 'p20:M-001', 'p20:M-006', 'p20:M-007', 'p20:M-017', 'p20:M-018'], "a grandma's bubble at the duck pond", 'iPhone sideways; iPad, light and dark theme', 'On a sideways phone her bubble ran under the clock chip and the top buttons: only "ducks is the ... of my day." could be read; on the iPad its corner lay on the clock chip.', 2, 'fixed',
+  "A speech bubble also stays below the top row (the coin, food and clock chips and the top buttons): it moves down, at most its own height, then slides sideways as before (f16 kept it clear of the map column and the buttons only)" + F17 + '.', "the pond probe on a sideways iPhone and an iPad, before and after (`views_f17.py`): under the chip before, the whole bubble below the top row after; pass 21's re-check."),
+ ('329', ['p20:M-003', 'p20:M-005', 'p20:M-011'], 'a photo shoot from the side', 'iPhone sideways', 'A white pill peeked out behind the "Pose: Mia" label at the right edge (only an "e" showed).', 1, 'open',
+  "Found with a probe: no page element lies there; it is the name tag of the group member standing at the screen's edge, under the action label. Small, left as it is (a tag pushed below the label would leave its person).", ''),
+ ('330', ['p20:M-004', 'p20:M-002', 'p20:M-008', 'p20:M-009', 'p20:M-010'], 'not a glitch, decided before', 'iPad, dark theme', "The notepad a cream lined paper in the dark theme; a shopper big at the right edge of the Toy Store, partly behind \"Say hi\".", 1, 'not a glitch',
+  "The notepad is a sheet of lined paper by design, its words readable in both themes; the shopper stands about 1.5 m from the camera (its head 150 px across), and someone 1.3 m or more from you is drawn (G4-171, G4-300).", '—'),
 ]

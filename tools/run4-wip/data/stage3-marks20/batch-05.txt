@@ -1,0 +1,6 @@
+pv_iphone-landscape_light_pv-r20-iphone-landscape_004_pond-bubble-r20-iphone-landscape.png | iphone-landscape, duck pond | the speech bubble sits behind the clock chip and the top-right buttons, so its first words are cut off (only "ducks is the ... of my day." can be read) | 2
+pv_ipad-landscape_light_pv-r20-ipad-landscape_004_pond-bubble-r20-ipad-landscape.png | ipad-landscape, duck pond | the speech bubble's top-left corner touches and partly covers the clock chip "11:00 Tue" | 1
+pv_ipad-landscape_dark_pv-r20d-ipad-landscape_004_pond-bubble-r20d-ipad-landscape.png | ipad-landscape dark, duck pond | the speech bubble's top-left corner touches and partly covers the clock chip "11:00 Tue" | 1
+pv_iphone-landscape_light_pv-r20-iphone-landscape_002_photo-side-r20-iphone-landscape.png | iphone-landscape, photo shoot side view, top right | the "Pose: Mia" pill overlaps another pill behind it (only a stray "e" shows) | 1
+s3c_iphone-portrait_light_dance-A_001_dance-two-portrait.png | iphone-portrait, dance-off | the arrow lane covers the lower part of the dancers' floor and feet, so the floor mat is mostly hidden behind the lane | 1
+count: 5
