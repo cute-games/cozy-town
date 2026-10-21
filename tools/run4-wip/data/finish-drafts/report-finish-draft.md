@@ -472,6 +472,18 @@ one first checker: 3 marks, 1 set aside (the phone's lit screen, G4-126), 1 kept
 **The stop rule** (counting from pass 20): pass 20 fixed two marks above minor (G4-327, G4-328, grade 2); passes 21 (one grade-1 fix) and 22
 (none) are two in a row with no fix above minor, and pass 22 is the cap. The loop stopped after pass 22.
 
+**Pass 23, the full final pass** (the f18 file): the photographer's three scripts and the kit's own pictures of pass 22's run, every picture
+(628) with the one focus it belongs to, 18 batches of at most 40, 18 viewers, `dcfilter23.py`, 6 first checkers: 28 marks, 16 double-checked,
+12 kept: G4-334 to G4-339, `tools/run4-wip/data/stage3-dc23/`. Two marks above minor, fixed in f19 and re-checked like a pass (pass 24):
+
+**f19 (3 edits), from pass 23** (probes before and after: `views_f19.py`; the kit's N8 with what is drawn read out):
+- The designer job's two-room orders: old room 2 drew room 1's furniture, and after a trip back your pieces in room 2 were gone from view
+  (the lists themselves were right) → new each room shows its own furniture. (Since stage 3.)
+- Speech bubbles on an upright phone: old a grandma's bubble lay half under the map and notepad column when she stood under it or off the
+  left edge → new such a bubble slides fully clear of the column, readable.
+
+Minor marks left as they are (grade 1): see the leftover list below.
+
 #### Decisions made alone (run 4 finish)
 - The kit, never weaker (every change in `cozy-check-v6.zip`, listed in its README-KIT.md and here, old → new):
   - N15's chip rule: old `^\d{1,2}:\d\d (Mon|…|Sun)$` → new the same with an optional "🏆 " before the weekday, as the two-device test above

@@ -1,0 +1,1 @@
+Pass 23 (the full final pass): 2 set-aside marks sent on as well: a grandma's bubble cut at the edge and behind the notepad on an upright phone (set aside under the rule about the HUD covering a sign) and the bag's dim empty hearts in the dark theme (set aside under a stairs-fade timing rule); neither reason fits.

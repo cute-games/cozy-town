@@ -1,0 +1,3 @@
+M-001 | KEEP | big dark purple box fills lower right, camera is inside an object
+M-002 | KEEP | cattails overlap grandma's body and look poked through her
+M-003 | KEEP | big white glare blobs beside tree look like stray flares, not bulbs

@@ -711,8 +711,8 @@ function bubDodge(s,cam){const u=s.userData;if(u.cy0===undefined)u.cy0=s.center.
   _hv.setFromMatrixPosition(s.matrixWorld);const z=-_hw.copy(_hv).applyMatrix4(cam.matrixWorldInverse).z;if(z<.2)return;_hv.project(cam);
   const W=innerWidth,H=innerHeight,f=H/(2*Math.tan(cam.fov*Math.PI/360)),h=s.scale.y*f/z,w=s.scale.x*f/z,x=(_hv.x+1)/2*W,y=(1-_hv.y)/2*H;let t=y-h*(1-s.center.y),bt=y+h*s.center.y;
   for(const b of R)if(b.left<-1e3&&t<b.bottom+4){const dn=Math.min(h,b.bottom+4-t);s.center.y=u.cy0+dn/h;t+=dn;bt+=dn;}   /* (run 4 finish: below the top row too: on a sideways phone a bubble ran under the clock chip and the buttons) */
-  let lo=6,hi=W-6;for(const b of R)if(b.left>-1e3&&t<b.bottom&&bt>b.top){if(b.left<x)lo=Math.max(lo,b.right+6);else hi=Math.min(hi,b.left-6);}   /* (the top row's band is not a side: it stays as it is) */
-  let cx=.5;if(x-w/2<lo)cx=(x-lo)/w;else if(x+w/2>hi)cx=1-(hi-x)/w;s.center.x=clamp(cx,.05,.95);}
+  let lo=6,hi=W-6;for(const b of R)if(b.left>-1e3&&t<b.bottom&&bt>b.top){if(b.left+b.right<W)lo=Math.max(lo,b.right+6);else hi=Math.min(hi,b.left-6);}   /* (the top row's band is not a side: it stays as it is) */
+  let cx=.5;if(x-w/2<lo)cx=(x-lo)/w;else if(x+w/2>hi)cx=1-(hi-x)/w;s.center.x=x<lo||x>hi?cx:clamp(cx,.05,.95);}   /* (run 4 finish: a speaker under the HUD column or off the edge: the bubble clears it all, readable) */
 /* 🔤 run 4, job 5 (item 7), the root cause of off-centre and cut-off signs: the text was placed by measureText, but a colour emoji (iPad) can draw wider than it
    measures, so "🏖 To the beach" or "🏰 Knights & castles" slid off centre or past the edge (the test machine had no colour emoji, so the checks never saw it).
    Now every sign, plate and label draws the text once on a scratch canvas, finds the pixels it REALLY covers (inkOf) and scales and centres by those */
@@ -7125,7 +7125,7 @@ let CLRET=null;const CLFLOORS={};
 function dsRoomSetup(){const o=S.ds&&S.ds.o,L=LOC.client;if(!o||!L)return;const T=dsTheme(o),R=DROOM[T.room],H=HOUSE(o.h);
   CL_WALL.color.set(R.wall);if(!CLFLOORS[R.floor]){CLFLOORS[R.floor]=floorTex(R.floor);CLFLOORS[R.floor].repeat.set(CLW/2,CLD/2);}CL_FLOOR.map=CLFLOORS[R.floor];CL_FLOOR.needsUpdate=true;
   L.leafM.color.set(H.dc);L.panM.color.set(shade(H.dc,.12));L.hinge.rotation.y=0;if(L.rdoor){const ri=o.ri|0;L.rdoor.visible=!!o.r2;L.rdoor.material.map=L.rdoorTex[ri];L.rdoor.material.needsUpdate=true;L.rdoor.position.x=ri?CLW-.03:-CLW+.03;L.rdoor.rotation.y=ri?-Math.PI/2:Math.PI/2;}
-  for(const u of[...CL_ITEMS.keys()])removeClItem(u);for(const it of o.items)addClItem(it);}
+  for(const u of[...CL_ITEMS.keys()])removeClItem(u);for(const it of dsItems())addClItem(it);}   /* (run 4 finish: each room its own furniture: room 2 showed room 1's) */
 function addClItem(it){const L=LOC.client,F=FURN[it.t];if(!F)return null;const g=buildFurn(it.t,it.c||undefined);g.position.set(L.ox+it.x,0,L.oz+it.z);g.rotation.y=it.r*Math.PI/2;
   g.traverse(o=>{if(o.isMesh&&o.material!==OL){o.castShadow=true;o.receiveShadow=true;}if(o.userData&&o.userData.shade&&o.material)o.material.emissiveIntensity=.6;});g.userData.u=it.u;L.items.add(g);
   const rec={it,g,col:null};if(!F.flat&&!F.hang){const R=fpRect(it.t,it.x,it.z,it.r);rec.col={x1:L.ox+R.x1,z1:L.oz+R.z1,x2:L.ox+R.x2,z2:L.oz+R.z2};L.dcols.push(rec.col);}

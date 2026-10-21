@@ -1,0 +1,3 @@
+M-007 | KEEP | grey ball sticks to the truck wall, looks stuck on
+M-008 | KEEP | speech bubble half hidden behind the corner map
+M-009 | DROP | shopper only cropped by the camera edge, normal in a shop view

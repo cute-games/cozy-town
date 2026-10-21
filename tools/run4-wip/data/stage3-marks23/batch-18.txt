@@ -1,0 +1,8 @@
+s3_pc-1366_dark_pc-1366-dark_045_inside-pets.png | pc-1366 dark, inside the pets | a person stands right against the camera at the left edge, cut off by the screen and overlapping the cat tree | 1
+s3_iphone-portrait_light_iphone-portrait-light_046_inside-flowers.png | iphone-portrait light, inside the flowers | two people stand overlapping each other (dark-haired and white-haired one merge into one blob) | 1
+kit23-n24-grandmas-A-grandmas-pond.png | ipad-landscape light, grandmas at the pond | the two grandmas on the bench overlap so one is half inside the other (grey bun back and a second face merged); cattails in front | 1
+kit23-n6-grandmas-grandmas-day.png | ipad-landscape light, grandmas at the pond | the two grandmas on the bench overlap, one half inside the other | 1
+kit23-n3-friends-friends-after-turn-2.png | ipad-landscape light, friends after turn 2 | Luna and Theo are partly hidden behind Finn and Rosie, not clearly in the loose arc | 1
+kit23-n3-friends-friends-in-view-2.png | ipad-landscape light, friends in view 2 | Rosie stands very close to the camera, filling the right side of the screen | 1
+s3b_ipad-landscape_light_two-A_002_two-players-friends-list.png | ipad-landscape light, friends list in town | a grandma/townsperson stands right against the camera at the left, huge and cut off by the screen edge | 1
+count: 7

@@ -1,0 +1,2 @@
+s3_ipad-landscape_dark_ipad-landscape-dark_050_bag.png | ipad-landscape dark, the bag, Friends and Pets heart rows | the empty hearts (Rosie's five, the grey ones of Waffles and Mochi) are dull grey-purple on the dark card and hard to tell from the card, so the heart count is hard to read | 1
+count: 1

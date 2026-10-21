@@ -21,6 +21,9 @@ Same rules as NIGHT-PLAN-4.md. End with a pull request. Never stop to ask." On 2
 - Pass 22: done. The kit on the f18 file 41 of 41 PASS; 3 marks, no fix (G4-333). The loop stopped (passes 21 and 22 clean; the cap).
   Next: the full final pass, pass 23 (`final23.sh`: the photographer's three scripts, the p22kit run's pictures, every picture listed,
   `viewfocus.py ... 23 5 ... --full`), `dcfilter23.py`; marks above minor fixed and re-checked like a pass, minor ones listed.
+- Pass 23, the full final pass: done (628 pictures, 18 viewers; 12 marks kept). Above minor, fixed in f19 (`patch_f19.py`, 3 edits; md5
+  16f28ff4): G4-334 (a two-room designer order's room 2 drew room 1's furniture, grade 3), G4-335 (bubbles under the HUD column on an upright
+  phone, grade 2). Minor, listed: G4-336 to G4-338, G4-329. Next: pass 24, the re-check of f19 (`p24kit.sh`, `pass24.sh`, `dcfilter24.py`).
 - Not yet done (the final stage): the version stamp, the rollback copy, the full check on the final file, the glitch list, the report, the PR.
 
 ## Set up a fresh container (the scratchpad of the old session is gone)
