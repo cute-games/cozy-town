@@ -1,0 +1,138 @@
+[
+ {
+  "id": "M-001",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_011_town-bus-stop.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p17/shots/s3_ipad-landscape_light_ipad-landscape-light_011_town-bus-stop.png",
+  "where": "ipad-landscape light, the bus stop at the park",
+  "what": "a garland string seems to cross the bus shelter: a thin line rises from the green bus-stop pole to behind the \"Beach Bus\" sign, lies on the roof right of the sign and drops to a post on the right, so the garland goes through the roof and sign instead of hanging between posts of its own",
+  "bad": "1"
+ },
+ {
+  "id": "M-002",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_017_treepark-hard-decks.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p17/shots/s3_ipad-landscape_light_ipad-landscape-light_017_treepark-hard-decks.png",
+  "where": "ipad-landscape light, Tree Park, first deck of the hard path",
+  "what": "small brown striped bits (a rail or cable) poke out through the big yellow tree crown, top right of centre",
+  "bad": "1"
+ },
+ {
+  "id": "M-003",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_004_town-duck-pond.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p17/shots/s3_ipad-landscape_dark_ipad-landscape-dark_004_town-duck-pond.png",
+  "where": "ipad-landscape dark, the duck pond",
+  "what": "the two ducks overlap in the middle of the pond: the yellow duck covers most of the white one and they read as one lump (check they are not inside each other)",
+  "bad": "1"
+ },
+ {
+  "id": "M-004",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_009_town-lake.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p17/shots/s3_ipad-landscape_dark_ipad-landscape-dark_009_town-lake.png",
+  "where": "ipad-landscape dark, the lake",
+  "what": "the bench on the right shore has its back to the lake: it faces the empty grass, not the water",
+  "bad": "1"
+ },
+ {
+  "id": "M-005",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_044_inside-market.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p17/shots/s3_iphone-portrait_dark_iphone-portrait-dark_044_inside-market.png",
+  "where": "iphone-portrait dark, inside the market",
+  "what": "the shopkeeper behind the counter shows only dark hair and a hat, no face: seems to stand with the back to the customer",
+  "bad": "1"
+ },
+ {
+  "id": "M-006",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_020_shop-market.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p17/shots/s3_iphone-landscape_dark_iphone-landscape-dark_020_shop-market.png",
+  "where": "iphone-landscape dark, Market shop card (city)",
+  "what": "the round \u2b07\ufe0f scroll button at the bottom middle is drawn over the lower corners of the Watermelon and Corn tiles",
+  "bad": "1"
+ },
+ {
+  "id": "M-007",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_021_shop-pets.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p17/shots/s3_iphone-landscape_dark_iphone-landscape-dark_021_shop-pets.png",
+  "where": "iphone-landscape dark, Pet Shop card (city)",
+  "what": "the round \u2b07\ufe0f scroll button at the bottom middle is drawn over the lower corners of the Lemon pet bed and Orchid dog house tiles",
+  "bad": "1"
+ },
+ {
+  "id": "M-008",
+  "file": "s3_pc-1366_dark_pc-1366-dark_021_shop-pets.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p17/shots/s3_pc-1366_dark_pc-1366-dark_021_shop-pets.png",
+  "where": "pc-1366 dark, city, Pet Shop card",
+  "what": "the Midnight cat tree picture is dark navy on the dark purple tile and is hard to make out",
+  "bad": "1"
+ },
+ {
+  "id": "M-009",
+  "file": "s3_pc-1366_dark_pc-1366-dark_029_tutorial-pizza.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p17/shots/s3_pc-1366_dark_pc-1366-dark_029_tutorial-pizza.png",
+  "where": "pc-1366 dark, city, pizza tutorial step 1",
+  "what": "a small white tip sticks out in the gap between the corner map and the notepad (it is not in the hair or photo tutorial shots), as if a label under the map is hidden behind the notepad",
+  "bad": "1"
+ },
+ {
+  "id": "M-010",
+  "file": "kit17-n27-trash-trash-can.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit17/shots/kit17-n27-trash-trash-can.png",
+  "where": "ipad-landscape, pavement by the Pet Shop",
+  "what": "camera points steeply up into the sky: no can in view, a tree crown's underside fills the top-left, and the \"+3 coins\" float and Rosie are cut off by the bottom edge (same framing as the builder's after-trash-soda-can.png)",
+  "bad": "2"
+ },
+ {
+  "id": "M-011",
+  "file": "kit17-n36-A-new-furniture-in-the-house.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit17/shots/kit17-n36-A-new-furniture-in-the-house.png",
+  "where": "ipad-landscape, house, Home shop",
+  "what": "Armchair and Beanbag have the same blue aeroplane-seat thumbnail (\ud83d\udcba), so the beanbag looks like the armchair",
+  "bad": "1"
+ },
+ {
+  "id": "M-012",
+  "file": "kit17-n25-iphone-landscape-photo-shoot-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit17/shots/kit17-n25-iphone-landscape-photo-shoot-iphone-landscape.png",
+  "where": "iphone-landscape, photo shoot by the duck pond",
+  "what": "the asked background \"the bench\" is almost all hidden behind Lily; half the frame is a plain grey wall",
+  "bad": "1"
+ },
+ {
+  "id": "M-013",
+  "file": "kit17-n25-iphone-landscape-photo-result-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit17/shots/kit17-n25-iphone-landscape-photo-result-iphone-landscape.png",
+  "where": "iphone-landscape, photo result card",
+  "what": "the coin, food and clock chips are missing at the top left while \"+120\" pops (on PC they show)",
+  "bad": "1"
+ },
+ {
+  "id": "M-014",
+  "file": "kit17-n18-B-same-B-lane.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit17/shots/kit17-n18-B-same-B-lane.png",
+  "where": "pc-1366, Flower Corner gate",
+  "what": "named for the lane but shows the start spot at the Flower Corner gate: no Friends Lane or houses in view",
+  "bad": "1"
+ },
+ {
+  "id": "M-015",
+  "file": "s3_pc-1366_light_pc-1366-light_045_inside-pets.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p17/shots/s3_pc-1366_light_pc-1366-light_045_inside-pets.png",
+  "where": "pc-1366 light theme, inside the Pet Shop at the door",
+  "what": "a person stands right against the camera at the left edge, cut in half: a giant half face and body fill the left side, and the yellow \u2b06 plate above them is cut off too",
+  "bad": "1"
+ },
+ {
+  "id": "M-016",
+  "file": "s3_pc-1366_light_pc-1366-light_046_inside-flowers.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p17/shots/s3_pc-1366_light_pc-1366-light_046_inside-flowers.png",
+  "where": "pc-1366 light theme, inside the Flower shop at the door",
+  "what": "a big yellow figure with purple on top stands right against the camera at the right edge, cut in half, behind the \"Play with Clover\" button",
+  "bad": "1"
+ },
+ {
+  "id": "M-017",
+  "file": "s3_pc-1366_dark_pc-1366-dark_024_big-house.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p17/shots/s3_pc-1366_dark_pc-1366-dark_024_big-house.png",
+  "where": "pc-1366 dark, city bus stop, behind the Bigger house card",
+  "what": "a far-off speech bubble over the bus shelter glass (\"The park is the heart of our town.\") is shrunk to about 6 px text and can't be read, and no speaker is visible. The same tiny bubble is in 025, 026, 027 and 028",
+  "bad": "1"
+ }
+]

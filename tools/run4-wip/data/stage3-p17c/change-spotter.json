@@ -1,0 +1,38 @@
+[
+ {
+  "name": "dance-two-portrait",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3c_iphone-portrait_light_dance-A_001_dance-two-portrait.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p16c/shots/s3c_iphone-portrait_light_dance-A_001_dance-two-portrait.png",
+  "changed_share": 0.1239,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-two-landscape",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3c_iphone-landscape_light_dance-B_001_dance-two-landscape.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p16c/shots/s3c_iphone-landscape_light_dance-B_001_dance-two-landscape.png",
+  "changed_share": 0.0584,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-two-result-portrait",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3c_iphone-portrait_light_dance-A_002_dance-two-result-portrait.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p16c/shots/s3c_iphone-portrait_light_dance-A_002_dance-two-result-portrait.png",
+  "changed_share": 0.0033,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-two-result-landscape",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3c_iphone-landscape_light_dance-B_002_dance-two-result-landscape.png",
+  "ref": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p16c/shots/s3c_iphone-landscape_light_dance-B_002_dance-two-result-landscape.png",
+  "changed_share": 0.0046,
+  "verdict": "CHANGED"
+ }
+]

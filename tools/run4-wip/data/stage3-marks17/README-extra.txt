@@ -1,0 +1,1 @@
+3 marks set aside under a reason that does not fit (a person is not a post; a 6 px bubble is about its size) were sent to the double-checkers too: the pc-1366 Pet Shop and Flower shop door pictures and the pc-1366 dark big-house picture

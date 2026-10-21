@@ -1,0 +1,5 @@
+s3_iphone-landscape_dark_iphone-landscape-dark_020_shop-market.png | iphone-landscape dark, Market shop card (city) | the round ⬇️ scroll button at the bottom middle is drawn over the lower corners of the Watermelon and Corn tiles | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_021_shop-pets.png | iphone-landscape dark, Pet Shop card (city) | the round ⬇️ scroll button at the bottom middle is drawn over the lower corners of the Lemon pet bed and Orchid dog house tiles | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_032_photo-pose-card.png | iphone-landscape dark, photo shoot at the fountain, Mia's pose card | the pose card covers the right end of the dashed photo frame: its right edge and both right corners are hidden | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_039_town-duck-pond.png | iphone-landscape dark, the duck pond (city) | the walk joystick ring sits in the lower middle of the screen (it is bottom-left in the photo shoot) and covers the pond's front stones; it also sits over the fountain rim (036), the Flower Corner stepping stones (038), the Toy Store door step (041) and the Tree Park gate's left post (042) | 1
+count: 4

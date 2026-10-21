@@ -1,0 +1,6 @@
+s3_ipad-landscape_dark_ipad-landscape-dark_002_town-pet-show-stage.png | ipad-landscape dark, the Pet Show stage and the food truck corner | the food truck is cut off by the right screen edge: its roof sign is off-screen (only a white corner shows), so the truck corner can't be seen | 1
+s3_ipad-landscape_dark_ipad-landscape-dark_004_town-duck-pond.png | ipad-landscape dark, the duck pond | the two ducks overlap in the middle of the pond: the yellow duck covers most of the white one and they read as one lump (check they are not inside each other) | 1
+s3_ipad-landscape_dark_ipad-landscape-dark_009_town-lake.png | ipad-landscape dark, the lake | the bench on the right shore has its back to the lake: it faces the empty grass, not the water | 1
+s3_ipad-landscape_dark_ipad-landscape-dark_020_inside-market.png | ipad-landscape dark, inside the market | the camera stands right against the fruit stand: its blank front fills the lower half of the screen, with a big hard-edged dark curved shadow across it like a stain | 1
+s3_ipad-landscape_dark_ipad-landscape-dark_039_lane-my-garden.png | ipad-landscape dark, my garden behind the house | the house wall behind the garden is a dull grey-pink, not the purple the house shows from the lane at the same time (038): the back wall may not take the paint | 1
+count: 5

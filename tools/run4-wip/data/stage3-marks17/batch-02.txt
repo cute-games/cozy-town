@@ -1,0 +1,2 @@
+s3_ipad-landscape_light_ipad-landscape-light_049_big-map.png | ipad-landscape light, the big map (city) | place names are cut off at the map's edges ("e Station", "othes Shop", "Duck Po"), and the "Tap a place" hint bar covers the bottom row of the map so only "air Salon" peeks out in the thin strip under it | 1
+count: 1

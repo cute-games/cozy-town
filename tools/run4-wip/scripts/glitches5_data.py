@@ -1,7 +1,7 @@
 """Run 4 finish: the data of the glitch list from pass 8 on (read by mkglitches5.py). One entry per cause; the marks are
 'p8:M-001' (pass 8, stage3-dc8). Later passes are added to DC and PASS as they come."""
-DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13', 'p14': 'stage3-dc14', 'p15': 'stage3-dc15', 'p16': 'stage3-dc16'}
-PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13', 'p14': 'pass 14', 'p15': 'pass 15', 'p16': 'pass 16'}
+DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13', 'p14': 'stage3-dc14', 'p15': 'stage3-dc15', 'p16': 'stage3-dc16', 'p17': 'stage3-dc17'}
+PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13', 'p14': 'pass 14', 'p15': 'pass 15', 'p16': 'pass 16', 'p17': 'pass 17'}
 AFTER_SETS = ['stage3-p9', 'stage3-p9b', 'stage3-p9c']   # newest first: the after picture of a fixed spot comes from pass 9
 KIT_SETS = ['stage3-kit9']
 PROBES = {   # spots whose after picture is a probe taken right after the fix (a pass-9 picture replaces it when there is one)
@@ -45,6 +45,7 @@ F10 = ' (patch_f10.py)'
 F11 = ' (patch_f11.py)'
 F12 = ' (patch_f12.py)'
 F13 = ' (patch_f13.py)'
+F14 = ' (patch_f14.py)'
 FRAME = "The photographer's framing, not the game: "
 ENTRIES = [
  ('168', ['p8:M-001'], 'October: the park fountain', 'iPad', 'A white ghost hung inside the fountain, between its top and middle bowls.', 1, 'fixed',
@@ -318,4 +319,22 @@ ENTRIES = [
   "The photographer's bus-stop spot stands beside a lamp post (pass 5): Luna, on her own walk in town, stood behind it from there; two ducks one behind the other from that spot (G4-278); N39's picture caught the card's 0.2 s pop-in (the card shows once per invitation; the line measures the card itself and passes).", '—'),
  ('300', ['p16:M-002', 'p16:M-003', 'p16:M-004'], 'decided before', 'iPhone upright, iPhone sideways', "A grandma's back filling the fountain view; the pose card over the photo frame's right end.", 1, 'not a glitch',
   "A grandma walks round you at least 2.1 m away (G4-231): on an upright phone someone 2 m in front fills the middle of the narrow view as she passes; a card over the scene and the HUD while it is open (G4-033, G4-060).", '—'),
+ ('301', ['p17:M-001'], 'October: the bus shelter at the park', 'iPad', 'A thin white line lay on the shelter\'s roof, as if a garland string ran through the roof and its sign.', 1, 'fixed',
+  "It was the shelter's two cobwebs, standing up through the roof (their middle at the roof's height); they hang in its front corners under the roof now, from the post to the side glass" + F14 + '.', "pictures of the photographer's bus-stop view and of both corners close, before and after (`views_f14.py`); pass 18 pictures."),
+ ('302', ['p17:M-004'], 'the lake', 'iPad', 'The bench by the lake faced the grass, side-on to the water.', 1, 'fixed',
+  'It faces the water now (it faced along the shore); its two seats turn with it' + F14 + '.', 'pictures from the town and from behind the bench, before and after; pass 18 pictures.'),
+ ('303', ['p17:M-008'], 'a shop card in the dark theme', 'PC, dark theme', "The Midnight cat tree's picture, dark navy, was hard to make out on the dark purple tile.", 1, 'fixed',
+  "In the dark theme a furniture picture (a shop's New in, the designer's list, the claw machine's prize) has a thin light edge" + F14 + '.', 'pictures of the Pet Shop card in the dark theme with a Midnight, a Cloud and a Hot pink cat tree new in, before and after (`views_f14dark.py`); pass 18 pictures.'),
+ ('304', ['p17:M-015', 'p17:M-016'], 'inside a shop, at the door', 'PC', 'A shopper stood right against the camera at the edge of the view: a giant half face (the Pet Shop), a big yellow figure (the Flower shop).', 1, 'fixed',
+  'A shopper walked on until 0.9 m from you and waited there for as long as you stood still; it stops a step before you when you stand on its way (2.4 m straight ahead, 1.7 m at an angle) and, after a moment, goes back, like a passer-by in town' + F14 + '.', 'a check by script in nine shops, 30 s each while you stand just inside the door (`views_f14.py`): a shopper within 1.2 m in front of you in 7 of the 9 before (for nearly all 30 s in the Pet Shop, the Flower shop, the Toy Store and the library; the nearest 0.80 m), in none after (the nearest 1.41 m, passing by); pass 18 pictures.'),
+ ('305', ['p17:M-017'], 'a grandma behind the bus shelter', 'PC', 'A tiny bubble, "The park is the heart of our town.", floated over the shelter\'s glass with nobody under it.', 1, 'fixed',
+  "A grandma's bubble (and a photo family's name tag) is drawn over everything only within 10 m and while it can be read (a line 15 px tall or more); further away a wall in front of her hides it, like any name tag" + F14 + '.', 'a check by script with a grandma at the park, 13 to 16 m away behind the shelter: her bubble over the shelter before, hidden by it after; 2.9 m away it is drawn over everything as before; pass 18 pictures.'),
+ ('306', ['p17:M-002'], "the Tree Park's crowns (G4-294 again)", 'iPad', 'Small brown striped bits on a big yellow crown by the first deck of the hard path.', 1, 'open',
+  "The same as G4-294: the steps of the sun's shadow map on the crown (written down in stage 3).", ''),
+ ('307', ['p17:M-012'], "the photographer's shoot at the pond's bench", 'iPhone sideways', 'The bench, the photo\'s background, was mostly behind Lily; a grey wall filled half the frame.', 1, 'open',
+  "The shoot's start spot stands straight in front of the family, back just far enough that everyone fits (round 5), and does not look for the background; a child turns or steps aside to frame it: written down for the owner (section 5c).", ''),
+ ('308', ['p17:M-011'], 'the Home shop: two pieces, one picture', 'iPad', 'Armchair and Beanbag showed the same blue seat 💺.', 1, 'not a glitch',
+  "A shop's list shows each piece's emoji, and there is no beanbag emoji; Bed and Bunk bed share 🛏️ the same way. The names under them tell them apart (the New in tiles show the piece itself).", '—'),
+ ('309', ['p17:M-006', 'p17:M-010', 'p17:M-013'], 'decided before', 'iPhone sideways, iPad', "The ⬇️ over two tiles' corners on the Market card; N27's camera tipped up at the sky after a pick-up; the coin, food and clock chips gone while a photo's +120 popped.", 1, 'not a glitch',
+  "A card that scrolls shows the ⬇️ in a soft fade over its foot, inside the card (section 1, after round 5; the same on the Pet Shop card was dropped by its double-checker, M-007); N27 looks up after each pick-up (G4-260); on a short sideways screen the chips step aside during a shoot (G4-235).", '—'),
 ]

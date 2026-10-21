@@ -433,7 +433,7 @@ body.shoot #moveBtns,body.shoot #tasks,body.shoot #pad,body.shoot #job,body.shoo
 .psrow{display:flex;align-items:center;gap:10px;padding:6px 4px;border-bottom:2px dashed #e2d9f2;opacity:.45}
 .psrow.on{opacity:1}.psrow.me{background:#fff3c4;border-radius:14px}
 .ni{position:relative}.ni .nbadge{position:absolute;top:4px;right:6px;background:#ff4d8d;color:#fff;font-size:11px;font-weight:900;border-radius:8px;padding:1px 6px}
-.ni .nimg{width:58px;height:58px;object-fit:contain}.nisub{font-weight:700;opacity:.85;font-size:14px}
+.ni .nimg{width:58px;height:58px;object-fit:contain}:root[data-theme="dark"] .nimg,:root[data-theme="dark"] img[data-th],:root[data-theme="dark"] img.fth{filter:drop-shadow(0 0 1.5px rgba(255,241,248,.8))}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .nimg,:root:not([data-theme="light"]) img[data-th],:root:not([data-theme="light"]) img.fth{filter:drop-shadow(0 0 1.5px rgba(255,241,248,.8))}}   /* (run 4 finish: in the dark theme a furniture picture has a thin light edge: the Midnight cat tree, dark navy, was lost on the dark purple tile) */.nisub{font-weight:700;opacity:.85;font-size:14px}
 .ni.nipop{animation:nipop .7s ease-out}@keyframes nipop{0%{transform:scale(.2) rotate(-8deg);opacity:0}60%{transform:scale(1.12) rotate(2deg);opacity:1}100%{transform:scale(1)}}
 #tchBar{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#fff;border:3px solid #3d2c5e;border-radius:18px;padding:8px 16px;font-weight:800;font-size:16px;color:#3d2c5e;z-index:30;white-space:nowrap;box-shadow:0 4px 0 #3d2c5e;max-width:94vw;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
 .cut.tch #pad{visibility:visible}
@@ -688,7 +688,8 @@ function label(text,h=.3,o){const s=spriteOf(textCanvas(text,o),h);if(h<=.45&&!(
 function tagFit(r,sc,cam){const u=this.userData,e=this.matrixWorld.elements,c=cam.matrixWorld.elements,d=Math.max(.05,Math.hypot(e[12]-c[12],e[13]-c[13],e[14]-c[14]));
   const nat=u.h0*innerHeight/(2*d*Math.tan((cam.fov||70)*Math.PI/360)),mx=clamp(Math.min(innerWidth,innerHeight)*.065,26,48)*(u.lines||1),k=nat>mx?mx/nat:1;
   if(k!==u.k){u.k=k;this.scale.set(u.w0*k,u.h0*k,1);this.updateMatrix();if(this.parent)this.matrixWorld.multiplyMatrices(this.parent.matrixWorld,this.matrix);}
-  this.material.opacity=Math.min(d<1.4?clamp((d-.95)/.45,0,1):1,clamp((nat/(u.lines||1)-11)/4,0,1));}
+  const ln=nat/(u.lines||1);this.material.opacity=Math.min(d<1.4?clamp((d-.95)/.45,0,1):1,clamp((ln-11)/4,0,1));
+  if(u.top===undefined)u.top=!this.material.depthTest;if(u.top)this.material.depthTest=d>10||ln<15;}   /* (run 4 finish: one drawn over everything, a grandma's bubble or a photo family's tag, is so only within 10 m and while it can be read: further, a wall in front hides it; a far grandma's bubble floated over the bus shelter, she stood behind it) */
 /* 🏠 a house's name label on Friends Lane: it fades out far away (with many friends online the far labels piled up)
    and slides down from under the HUD (the clock, the buttons, the map column) onto its house */
 function laneTagR(r,sc,cam){const e=this.matrixWorld.elements,c=cam.matrixWorld.elements,d=Math.hypot(e[12]-c[12],e[14]-c[14]);   /* (along the ground: a six-floor house's tag hangs 24 m up and faded out from anywhere the whole house shows; run 4, stage 3) */
@@ -2162,7 +2163,7 @@ function buildCity(){
    for(const [dx,dz] of [[-1.5,2],[2,-1],[1,3],[3,1.5]]){disc(st,.4,'#5fbf74',lx+dx,.045,lz+dz,{seg:12});sph(st,.08,'#ff9ec4',lx+dx+.1,.1,lz+dz,{ws:8,hs:6,ol:.01});}
    LAKEW.length=0;for(const [t0,t1,hw] of [[-1.2,4.5,.76],[4.5,7.1,1.3]]){const a=at(t0,0);LAKEW.push({ax:L.ox+a[0],az:L.oz+a[1],ux,uz,len:t1-t0,hw});}
    L.cols.push({lk:1,cx:L.ox+lx,cz:L.oz+lz,cr:7.9,walk:LAKEW});
-   bench(st,59.8,64.6,Math.PI*.75);colC(L,59.8,64.6,.7);inter(L,{x:61.4,z:61.4,r:2.4,icon:'🦆',label:'Feed the ducks',act:()=>feedDucks(1)});
+   bench(st,59.8,64.6,Math.atan2(9.2,4.4));colC(L,59.8,64.6,.7);   /* (run 4 finish: the bench faces the water; it faced along the shore) */inter(L,{x:61.4,z:61.4,r:2.4,icon:'🦆',label:'Feed the ducks',act:()=>feedDucks(1)});
    {const [x,z]=at(6.1,0);inter(L,{x,z,r:1.7,icon:'🦆',label:'Feed the ducks',act:()=>feedDucks(1)});}
    for(let k=0;k<3;k++){const d=new THREE.Group();L.dyn.add(d);const c=k===1?'#f7f2ec':'#ffe27a';sph(d,.17,c,0,.15,0,{s:[1,.75,1.35],ws:12,hs:8,ol:.02});sph(d,.1,c,0,.33,.17,{ws:10,hs:8,ol:.02});
      duckDress(d,c);L.ducks.push({g:d,a:k*2.1,r:2.5+k*1.6,sp:.18+k*.05,cx:lx,cz:lz});}}
@@ -5123,7 +5124,7 @@ class Shopper{
       const t=this.cfg.spots[this.next],tx=this.L.ox+t[0],tz=this.L.oz+t[1],dx=tx-this.x,dz=tz-this.z,d=Math.hypot(dx,dz);
       if(d<.1){this.i=this.next;this.next=-1;this.wait=rand(2,6);this.face=t[2]||this.face;
         if(this.i===this.cfg.buy){this.wait=4;if(here){floatText(pick(['🛍️','🪙','💕']),this.x,2.2,this.z,{h:.5});const k=KEEPERS.find(q=>q.L===this.L);if(k)k.p.wave=1.2;}}}
-      else if(here&&Math.hypot(P.x-this.x,P.z-this.z)<.9)this.moving=false;
+      else if(here&&wkBlocked(this,dx/d,dz/d)){this.moving=false;this.pb=(this.pb||0)+dt;if(this.pb>1.6){this.pb=0;this.next=this.i;}}   /* (run 4 finish: like a passer-by, a step before you and then back the other way; a shopper waited 0.9 m from the camera at the shop's door) */
       else{const sp=Math.min(d,1.1*dt),nx=this.x+dx/d*sp,nz=this.z+dz/d*sp,bl=SHOPPERS.some(o=>o!==this&&o.L===this.L&&Math.hypot(o.x-nx,o.z-nz)<.7&&Math.hypot(o.x-nx,o.z-nz)<Math.hypot(o.x-this.x,o.z-this.z));
         if(bl){this.moving=false;this.wait=rand(.5,1.2);this.blk=(this.blk||0)+1;if(this.blk>=3){this.blk=0;this.next=this.i;}}   /* 🛍️ someone in the way: wait, then go back */
         else{this.blk=0;this.x=nx;this.z=nz;this.face=Math.atan2(dx,dz);this.moving=true;}}}
@@ -7490,7 +7491,7 @@ function clawResult(){const C=CUT,K=C.K;
   if(C.res==='win'&&C.prize){const pr=C.prize,F=pr.furn&&FURN[pr.furn],img=F?thumb(pr.furn,pr.c):'',lines=[];
     if(F)lines.push(`${F.i} <b>${F.n}</b>! It's waiting in 📦 My stuff at home.`);if(pr.coins)lines.push(`🪙 <b>${pr.coins} coins</b>!`);if(pr.sk)lines.push(`${SKILLS[pr.sk].i} <b>${SKILLS[pr.sk].n} +1 level!</b>`);
     while(K.caps.length<14){const s=clawSpot(K);if(!s)break;clawAdd(K,s[0],s[1],Math.random()<.12);}
-    openPanel(`<div class="hd"><h2>${pr.gold?'✨ GOLD CAPSULE! ✨':'🎉 You won!'}</h2><div class="chip">🪙 <b>${S.coins}</b></div></div>${img?`<div style="text-align:center"><img src="${img}" alt="" style="width:110px;height:110px;object-fit:contain"></div>`:''}<p class="line" style="text-align:center">${lines.join('<br>')}</p>
+    openPanel(`<div class="hd"><h2>${pr.gold?'✨ GOLD CAPSULE! ✨':'🎉 You won!'}</h2><div class="chip">🪙 <b>${S.coins}</b></div></div>${img?`<div style="text-align:center"><img class="fth" src="${img}" alt="" style="width:110px;height:110px;object-fit:contain"></div>`:''}<p class="line" style="text-align:center">${lines.join('<br>')}</p>
       <div class="row"><button class="btn butter" data-a="clawagain" ${S.coins<CLAW_COST?'disabled':''}>🕹️ Play again (${CLAW_COST} 🪙)</button><button class="btn white" data-a="clawdone">Done</button></div>`,{bottom:true,lock:true});return;}
   if(C.fell){K.caps.push(C.fell.c);C.fell.c.g.position.set(C.fell.c.x,K.fy,C.fell.c.z);C.fell=null;}
   const msg=C.res==='slip'?'😱 So close! It slipped out of the claw!':pick(['😅 Missed! Try to stop right above a capsule.','🙈 Nothing this time! Aim for the middle of a capsule.','😮 Almost! Watch the claw carefully.']);
@@ -8599,7 +8600,7 @@ function holBuild(h){const L=LOC.city,G=new THREE.Group(),st=new THREE.Group();G
     {const c=document.createElement('canvas');c.width=c.height=96;const x=c.getContext('2d');x.strokeStyle='rgba(255,255,255,.85)';x.lineWidth=2.2;for(let i=0;i<6;i++){x.beginPath();x.moveTo(0,0);const a=i/5*Math.PI/2;x.lineTo(Math.cos(a)*96,Math.sin(a)*96);x.stroke();}
       for(let r=16;r<96;r+=16){x.beginPath();for(let i=0;i<=10;i++){const a=i/10*Math.PI/2,k=r*(1-.08*(i%2));x.lineTo(Math.cos(a)*k,Math.sin(a)*k);}x.stroke();}
       const tx=new THREE.CanvasTexture(c),wm=new THREE.MeshBasicMaterial({map:tx,transparent:true,depthWrite:false,side:THREE.DoubleSide});wm.userData.hol=1;
-      const webs=[[-37.72,3.3,19.95,.95,.95,Math.PI/2],[-37.72,3.3,24.05,.95,.95,-Math.PI/2],[-84.3,4.3,-4.3,.9,.9,Math.PI/2],[-84.3,4.3,4.3,.9,.9,-Math.PI/2],[-14.5,2.3,7.45,.8,.8,0],[-17.9,2.3,7.45,.8,.8,0]];G.add(quadsMesh(webs,wm));HOL.n+=6;for(const w of webs)holPiece('cobweb',w[0],w[2],0,[[w[0],w[1],w[2]]]);}
+      const webs=[[-37.72,3.3,19.95,.95,.95,Math.PI/2],[-37.72,3.3,24.05,.95,.95,-Math.PI/2],[-84.3,4.3,-4.3,.9,.9,Math.PI/2],[-84.3,4.3,4.3,.9,.9,-Math.PI/2],[-14.8,1.65,7.05,.7,.7,Math.PI],[-17.6,1.65,7.05,.7,.7,0]];   /* (run 4 finish: the bus shelter's two webs hang in its front corners under the roof: they stood up through the roof, a white zig-zag on it) */G.add(quadsMesh(webs,wm));HOL.n+=6;for(const w of webs)holPiece('cobweb',w[0],w[2],0,[[w[0],w[1],w[2]]]);}
     /* 🦇 bats over the park and the lane gate, 👻 little friendly ghosts floating in the park (one mesh each) */
     const bat=()=>flockGeo(g=>{sph(g,.09,'#2e2347',0,0,0,{s:[1,.8,1.3],ws:7,hs:5,ol:false});for(const s of[-1,1]){box(g,.34,.02,.16,'#3d2c5e',s*.25,0,0,{ol:false});box(g,.12,.02,.1,'#3d2c5e',s*.44,0,-.04,{ol:false});}for(const s of[-1,1])cone(g,.03,.06,'#2e2347',s*.05,.09,.02,{seg:3,ol:false});});
     const bats=[];for(let i=0;i<9;i++){const park=i<6;bats.push({geo:bat(),x:park?-24+(i%3)*5:-80,y:5.5+i*.4,z:park?24+Math.floor(i/3)*3:(i-6)*2-2,ra:3+(i%4),sp:.5+(i%3)*.15,ph:i*1.3,ya:.5,wing:1,fl:14+i});}

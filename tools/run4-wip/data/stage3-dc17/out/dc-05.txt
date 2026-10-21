@@ -1,0 +1,3 @@
+M-013 | KEEP | chips really gone on iPhone card; PC, iPad and normal iPhone play show them
+M-014 | DROP | only shot name vs place; scene renders fine, houses do show, nothing a child sees
+M-015 | KEEP | giant half-cut person and cut-off yellow ⬆ plate really at left edge
