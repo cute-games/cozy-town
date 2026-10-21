@@ -15,6 +15,9 @@ Same rules as NIGHT-PLAN-4.md. End with a pull request. Never stop to ask." On 2
   effect); 17 of 18 marks kept; f17 (`patch_f17.py`, 4 edits: N25's phone photo, a speech bubble below the top row) applied (md5 528fe0df,
   1,596,650 bytes); G4-327 to G4-330; `stage3-dc20/pass20-fixplan.md`. Fixes above minor, so the clean-pass count starts at 21. Next: pass 21
   (`p21kit.sh`, `pass21.sh`, `dcfilter21.py` ready). Set-up note: `pip install playwright==1.56.0` (it matches the Chromium in /opt/pw-browsers).
+- Pass 21: done. The kit on the f17 file 41 of 41 PASS; 7 marks, 5 kept; f18 (`patch_f18.py`, 1 edit, grade 1: a chat opens at a tall newest
+  message's top) applied (md5 d93c5870); G4-331, G4-332. The first clean pass. Next: pass 22 (`p22kit.sh`, `pass22.sh`, `dcfilter22.py`), the
+  last loop pass; then the full final pass.
 - Not yet done (the final stage): the version stamp, the rollback copy, the full check on the final file, the glitch list, the report, the PR.
 
 ## Set up a fresh container (the scratchpad of the old session is gone)

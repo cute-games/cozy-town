@@ -1,0 +1,3 @@
+M-004 | KEEP | the photo's top is cut under the Photos header, though the people are still visible
+M-005 | DROP | the joystick is translucent and only overlaps the pond's edge; the duck is clearly visible
+M-006 | KEEP | the same cut-off photo as M-004 (duplicate), though more than "only feet" shows

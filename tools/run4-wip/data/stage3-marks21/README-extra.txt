@@ -1,0 +1,1 @@
+Pass 21: batch-04.txt written from viewer 4's reply (it gave its answer only as its reply). The 1 set-aside mark sent on as well: it names the phone screen staying light in the dark theme beside the notepad, which the notepad reason (G4-330) does not cover.

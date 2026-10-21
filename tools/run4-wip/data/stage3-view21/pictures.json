@@ -1,0 +1,86 @@
+[
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21/shots/pv_ipad-landscape_light_pv-r21-ipad-landscape_001_photo-shoot-r21-ipad-landscape.png",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "name": "photo-shoot",
+  "note": "a photo shoot at the fountain, everyone waving"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21/shots/pv_ipad-landscape_light_pv-r21-ipad-landscape_002_photo-result-r21-ipad-landscape.png",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "name": "photo-result",
+  "note": "the thank-you card after the snap: the photo on it sharp"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21/shots/pv_ipad-landscape_light_pv-r21-ipad-landscape_003_photo-chat-r21-ipad-landscape.png",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "name": "photo-chat",
+  "note": "your phone's chat with the customer right after the snap: the photo shows in the thank-you message"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21/shots/pv_ipad-landscape_light_pv-r21-ipad-landscape_004_pond-bubble-r21-ipad-landscape.png",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "name": "pond-bubble",
+  "note": "the duck pond: a two-line speech bubble by the bench, the whole bubble below the top row (the coin, food and clock chips and the top buttons) and clear of the corner map and the notepad, every word readable"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21/shots/pv_iphone-landscape_light_pv-r21-iphone-landscape_001_photo-shoot-r21-iphone-landscape.png",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "name": "photo-shoot",
+  "note": "a photo shoot at the fountain, everyone waving"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21/shots/pv_iphone-landscape_light_pv-r21-iphone-landscape_002_photo-result-r21-iphone-landscape.png",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "name": "photo-result",
+  "note": "the thank-you card after the snap: the photo on it sharp"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21/shots/pv_iphone-landscape_light_pv-r21-iphone-landscape_003_photo-chat-r21-iphone-landscape.png",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "name": "photo-chat",
+  "note": "your phone's chat with the customer right after the snap: the photo shows in the thank-you message"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21/shots/pv_iphone-landscape_light_pv-r21-iphone-landscape_004_pond-bubble-r21-iphone-landscape.png",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "name": "pond-bubble",
+  "note": "the duck pond: a two-line speech bubble by the bench, the whole bubble below the top row (the coin, food and clock chips and the top buttons) and clear of the corner map and the notepad, every word readable"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21d/shots/pv_ipad-landscape_dark_pv-r21d-ipad-landscape_001_photo-shoot-r21d-ipad-landscape.png",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "name": "photo-shoot",
+  "note": "a photo shoot at the fountain, everyone waving"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21d/shots/pv_ipad-landscape_dark_pv-r21d-ipad-landscape_002_photo-result-r21d-ipad-landscape.png",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "name": "photo-result",
+  "note": "the thank-you card after the snap: the photo on it sharp"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21d/shots/pv_ipad-landscape_dark_pv-r21d-ipad-landscape_003_photo-chat-r21d-ipad-landscape.png",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "name": "photo-chat",
+  "note": "your phone's chat with the customer right after the snap: the photo shows in the thank-you message"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21d/shots/pv_ipad-landscape_dark_pv-r21d-ipad-landscape_004_pond-bubble-r21d-ipad-landscape.png",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "name": "pond-bubble",
+  "note": "the duck pond: a two-line speech bubble by the bench, the whole bubble below the top row (the coin, food and clock chips and the top buttons) and clear of the corner map and the notepad, every word readable"
+ }
+]

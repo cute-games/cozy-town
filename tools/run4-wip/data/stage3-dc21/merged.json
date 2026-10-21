@@ -1,0 +1,79 @@
+[
+ {
+  "id": "M-001",
+  "file": "pv_iphone-landscape_light_pv-r21-iphone-landscape_004_pond-bubble-r21-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21/shots/pv_iphone-landscape_light_pv-r21-iphone-landscape_004_pond-bubble-r21-iphone-landscape.png",
+  "where": "iphone-landscape, duck pond, top-left corner map",
+  "what": "the little palette button on the corner map's lower-right edge is only about 28 px wide, smaller than a fingertip, and it sits on the map's edge so a thumb tap can hit the map instead",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "palette button about 28 px, sits on the map's lower-right edge",
+  "spot": "pond-bubble-r21-iphone-landscape"
+ },
+ {
+  "id": "M-002",
+  "file": "pv_ipad-landscape_dark_pv-r21d-ipad-landscape_004_pond-bubble-r21d-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21d/shots/pv_ipad-landscape_dark_pv-r21d-ipad-landscape_004_pond-bubble-r21d-ipad-landscape.png",
+  "where": "ipad-landscape dark, duck pond",
+  "what": "the two ducks sit stacked on each other (white duck's body overlaps the yellow duck, heads in a pile)",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "white duck sits on top of the yellow duck, heads piled",
+  "spot": "pond-bubble-r21d-ipad-landscape"
+ },
+ {
+  "id": "M-003",
+  "file": "pv_ipad-landscape_dark_pv-r21d-ipad-landscape_003_photo-chat-r21d-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21d/shots/pv_ipad-landscape_dark_pv-r21d-ipad-landscape_003_photo-chat-r21d-ipad-landscape.png",
+  "where": "ipad-landscape dark, behind the phone, right side of the park",
+  "what": "two townsfolk at the right edge stand overlapping each other (one in front of the other, bodies merged)",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "two townsfolk at the right edge overlap, bodies merged",
+  "spot": "photo-chat-r21d-ipad-landscape"
+ },
+ {
+  "id": "M-004",
+  "file": "pv_iphone-landscape_light_pv-r21-iphone-landscape_003_photo-chat-r21-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21/shots/pv_iphone-landscape_light_pv-r21-iphone-landscape_003_photo-chat-r21-iphone-landscape.png",
+  "where": "iphone-landscape, light, phone Photos chat",
+  "what": "the photo in the thank-you message is scrolled up under the white Photos header, so its top half is cut off and the photo is not fully readable",
+  "bad": "2",
+  "verdict": "KEEP",
+  "dc": "the photo's top is cut under the Photos header, though the people are still visible",
+  "spot": "photo-chat-r21-iphone-landscape"
+ },
+ {
+  "id": "M-005",
+  "file": "pv_iphone-landscape_light_pv-r21-iphone-landscape_004_pond-bubble-r21-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21/shots/pv_iphone-landscape_light_pv-r21-iphone-landscape_004_pond-bubble-r21-iphone-landscape.png",
+  "where": "iphone-landscape, light, duck pond",
+  "what": "the on-screen joystick sits over the pond and hides one duck and part of the pond, the subject of the picture",
+  "bad": "1",
+  "verdict": "DROP",
+  "dc": "the joystick is translucent and only overlaps the pond's edge; the duck is clearly visible",
+  "spot": "pond-bubble-r21-iphone-landscape"
+ },
+ {
+  "id": "M-006",
+  "file": "pv_iphone-landscape_light_pv-r21-iphone-landscape_003_photo-chat-r21-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21/shots/pv_iphone-landscape_light_pv-r21-iphone-landscape_003_photo-chat-r21-iphone-landscape.png",
+  "where": "iphone-landscape, phone Photos app",
+  "what": "the phone is so tall for the short screen that the photo in the message is cut off under the header bar (only feet and fountain base show)",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "the same cut-off photo as M-004 (duplicate), though more than \"only feet\" shows",
+  "spot": "photo-chat-r21-iphone-landscape"
+ },
+ {
+  "id": "M-007",
+  "file": "pv_ipad-landscape_dark_pv-r21d-ipad-landscape_003_photo-chat-r21d-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r21d/shots/pv_ipad-landscape_dark_pv-r21d-ipad-landscape_003_photo-chat-r21d-ipad-landscape.png",
+  "where": "ipad-landscape, dark theme, phone Photos app and corner notepad",
+  "what": "the phone screen (pale pink/lilac gradient, white message card) and the notepad paper stay light-only in the dark theme, bright against the dark chips and phone body",
+  "bad": "1",
+  "verdict": "DROP",
+  "dc": "light phone screen and paper are the normal cartoon style, readable, not broken",
+  "spot": "photo-chat-r21d-ipad-landscape"
+ }
+]

@@ -1,0 +1,3 @@
+pv_iphone-landscape_light_pv-r21-iphone-landscape_003_photo-chat-r21-iphone-landscape.png | iphone-landscape, phone Photos app | the phone is so tall for the short screen that the photo in the message is cut off under the header bar (only feet and fountain base show) | 1
+pv_ipad-landscape_dark_pv-r21d-ipad-landscape_003_photo-chat-r21d-ipad-landscape.png | ipad-landscape, dark theme, phone Photos app and corner notepad | the phone screen (pale pink/lilac gradient, white message card) and the notepad paper stay light-only in the dark theme, bright against the dark chips and phone body | 1
+count: 2

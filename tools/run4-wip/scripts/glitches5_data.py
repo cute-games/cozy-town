@@ -1,7 +1,7 @@
 """Run 4 finish: the data of the glitch list from pass 8 on (read by mkglitches5.py). One entry per cause; the marks are
 'p8:M-001' (pass 8, stage3-dc8). Later passes are added to DC and PASS as they come."""
-DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13', 'p14': 'stage3-dc14', 'p15': 'stage3-dc15', 'p16': 'stage3-dc16', 'p17': 'stage3-dc17', 'p18': 'stage3-dc18', 'p19': 'stage3-dc19', 'p20': 'stage3-dc20'}
-PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13', 'p14': 'pass 14', 'p15': 'pass 15', 'p16': 'pass 16', 'p17': 'pass 17', 'p18': 'pass 18', 'p19': 'pass 19', 'p20': 'pass 20'}
+DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13', 'p14': 'stage3-dc14', 'p15': 'stage3-dc15', 'p16': 'stage3-dc16', 'p17': 'stage3-dc17', 'p18': 'stage3-dc18', 'p19': 'stage3-dc19', 'p20': 'stage3-dc20', 'p21': 'stage3-dc21'}
+PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13', 'p14': 'pass 14', 'p15': 'pass 15', 'p16': 'pass 16', 'p17': 'pass 17', 'p18': 'pass 18', 'p19': 'pass 19', 'p20': 'pass 20', 'p21': 'pass 21'}
 AFTER_SETS = ['stage3-p9', 'stage3-p9b', 'stage3-p9c']   # newest first: the after picture of a fixed spot comes from pass 9
 KIT_SETS = ['stage3-kit9']
 PROBES = {   # spots whose after picture is a probe taken right after the fix (a pass-9 picture replaces it when there is one)
@@ -23,6 +23,8 @@ BEFORE = {}
 AFTER = {}
 KNOWN = []
 UPDATES = {
+    'G4-327': {'check': "N25 alone on the f17 file, twice: PASS; pass 21's kit (41 of 41 PASS) and its picture of the phone's chat: the photo shows."},
+    'G4-328': {'check': "the pond probe before and after (`views_f17.py`); pass 21: the bubble below the top row on a sideways iPhone and an iPad, light and dark, no mark about it."},
     'G4-318': {'check': "pictures of the card, before and after (`views_f16.py`); pass 20: the card sharp, but the kit's N25 failed on the phone's copy: G4-327."},
     'G4-322': {'check': "a probe by the pond, before and after (`views_f16.py`); pass 20: on a sideways phone the bubble ran under the clock chip and the top buttons: G4-328."},
     'G4-031': {'status': 'fixed', 'fix': 'Fixed with G4-118: ghosts and bats glide round the camera (50db62c) and keep 3 m from it (9777d26); pass 8 saw no ghost at the camera.', 'check': 'pass 8 pictures.'},
@@ -51,6 +53,7 @@ F14 = ' (patch_f14.py)'
 F15 = ' (patch_f15.py)'
 F16 = ' (patch_f16.py)'
 F17 = ' (patch_f17.py)'
+F18 = ' (patch_f18.py)'
 FRAME = "The photographer's framing, not the game: "
 ENTRIES = [
  ('168', ['p8:M-001'], 'October: the park fountain', 'iPad', 'A white ghost hung inside the fountain, between its top and middle bowls.', 1, 'fixed',
@@ -384,4 +387,8 @@ ENTRIES = [
   "Found with a probe: no page element lies there; it is the name tag of the group member standing at the screen's edge, under the action label. Small, left as it is (a tag pushed below the label would leave its person).", ''),
  ('330', ['p20:M-004', 'p20:M-002', 'p20:M-008', 'p20:M-009', 'p20:M-010'], 'not a glitch, decided before', 'iPad, dark theme', "The notepad a cream lined paper in the dark theme; a shopper big at the right edge of the Toy Store, partly behind \"Say hi\".", 1, 'not a glitch',
   "The notepad is a sheet of lined paper by design, its words readable in both themes; the shopper stands about 1.5 m from the camera (its head 150 px across), and someone 1.3 m or more from you is drawn (G4-171, G4-300).", '—'),
+ ('331', ['p21:M-004', 'p21:M-006'], "the photographer: your phone's chat", 'iPhone sideways', "The chat opened at the foot of the thank-you message, so the top of its photo lay under the Photos header.", 1, 'fixed',
+  "A chat opens at its newest message; when that one is taller than the screen (a photo on a short sideways phone) it now opens at the message's top, the fade at the foot showing there is more" + F18 + '.', "the chat probe before and after (`views_f18.py`): the photo's top 56 px under the header before, 42 px below it after; pass 22's re-check."),
+ ('332', ['p21:M-001', 'p21:M-002', 'p21:M-003'], 'not a glitch, decided before', 'iPhone sideways; iPad, dark theme', "A palette badge on the corner map about 28 px across; the two ducks one on the other by the pond; two townsfolk at the right edge one in front of the other.", 1, 'not a glitch',
+  "The palette badge is drawn in the map's own picture (a probe found no page element there): the whole map is the one tap target; the fed ducks keep 80 cm apart and from your spot one can be behind the other (G4-278); two townsfolk at different distances, one in front of the other, as anyone in a crowd.", '—'),
 ]

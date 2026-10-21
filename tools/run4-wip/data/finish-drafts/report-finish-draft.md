@@ -453,6 +453,18 @@ notepad's cream paper in the dark theme (by design); a shopper about 1.5 m from 
 For pass 21: the filter (`dcfilter21.py`) sets aside pass 20's decisions and its one drop; the bubble and clock chip rules leave a speech bubble
 under the clock chip or the top buttons to the first checkers. On pass 20's marks it keeps exactly the 9 that f17 fixed.
 
+**Pass 21** (the f17 file): the kit's night3 and run4 lines 41 of 41 PASS; 12 pictures of f17's spots (`pass21.sh`), five viewers, `dcfilter21.py`,
+three first checkers: 7 marks, all double-checked (one sent on from the set-aside list), 5 kept: G4-331, G4-332. f17's fixes held (the photo
+in the phone's chat; the bubble below the top row, no mark about it).
+
+**f18 (1 edit), from pass 21** (probe before and after, `views_f18.py`):
+- A chat opening: old at the foot of the newest message, so on a sideways phone the thank-you photo's top lay under the Photos header → new
+  when the newest message is taller than the screen it opens at its top (the fade at the foot shows there is more).
+Grade 1 (minor): pass 21 is the first clean pass under the stop rule.
+
+Not glitches (G4-332): a palette badge on the corner map (part of the map's picture; the whole map is the tap target), the fed ducks one behind
+the other (G4-278), two townsfolk one in front of the other.
+
 #### Decisions made alone (run 4 finish)
 - The kit, never weaker (every change in `cozy-check-v6.zip`, listed in its README-KIT.md and here, old → new):
   - N15's chip rule: old `^\d{1,2}:\d\d (Mon|…|Sun)$` → new the same with an optional "🏆 " before the weekday, as the two-device test above
