@@ -491,6 +491,10 @@ room 2 and the pond bubble held.
 **f20 (1 edit), from pass 24**: old a bubble that slid clear of the column but was wider than the space beside it ran past the screen's edge
 → new it is drawn smaller to fit. Re-checked like a pass (pass 25).
 
+**Pass 25, the re-check of f20** (the f20 file): the kit 40 of 41 PASS, N15 on its own timing (its first sample only; alone on the same file:
+PASS, FAIL the same way, PASS); 10 pictures, five viewers, one first checker: 4 marks kept, all decided before (G4-341). f20 and f19 held. No fix:
+the full final pass is done.
+
 #### Decisions made alone (run 4 finish)
 - The kit, never weaker (every change in `cozy-check-v6.zip`, listed in its README-KIT.md and here, old → new):
   - N15's chip rule: old `^\d{1,2}:\d\d (Mon|…|Sun)$` → new the same with an optional "🏆 " before the weekday, as the two-device test above

@@ -13,3 +13,9 @@ n15x2f12 (f12, N15 alone): PASS: two devices 1 s apart: 10:00: A 10:14 Fri cloud
 # so the first sample depends on whether the long step falls before or after A's last steps: the line's own timing, not the file.
 # timed each of B's frames (probe_n15b.py, f13): 0 to 4 ms each, every step 0.01 s, and no long pause in that replay (the two players 2 minutes
 # apart): the 8.6 and 9.3 s pauses above were outside the game's frames (the browser or the test's driver), not a stall of the game.
+# N15 on the f20 file (md5 93eb8d2a), 21 Oct
+p25kit (f20, the whole kit run): FAIL: two devices 1 s apart: 10:00: A 10:00 Thu cloudy / B 10:16 Thu cloudy DIFFERENT; 22:30: A 22:31 Thu cloudy / B 22:33 Thu cloudy; +3 d 14:00: A 14:00 Sun sunny / B 14:02 Sun sunny
+p25n15x1 (f20, N15 alone): PASS: two devices 1 s apart: 10:00: A 10:16 Fri sunny / B 10:18 Fri sunny; 22:30: A 22:31 Fri sunny / B 22:33 Fri sunny; +3 d 14:00: A 14:00 Mon sunny / B 14:02 Mon sunny
+p25n15x2 (f20, N15 alone): FAIL: two devices 1 s apart: 10:00: A 10:00 Fri sunny / B 10:17 Fri sunny DIFFERENT; 22:30: A 22:31 Fri sunny / B 22:33 Fri sunny; +3 d 14:00: A 14:00 Mon sunny / B 14:02 Mon sunny
+p25n15x3 (f20, N15 alone): PASS: two devices 1 s apart: 10:00: A 10:14 Fri sunny / B 10:15 Fri sunny; 22:30: A 22:31 Fri sunny / B 22:33 Fri sunny; +3 d 14:00: A 14:00 Mon sunny / B 14:02 Mon sunny
+# the same as on f12 and f13: only the first sample, the second player read a long step later; f20 changes speech bubbles only.

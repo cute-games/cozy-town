@@ -41,13 +41,6 @@ def after_of(ref):
     return a if a and a != m['path'] else None
 old = json.load(open(f'{S}/glitches.json', encoding='utf-8'))
 out = [g for g in old if int(g['id'].split('-')[1]) < 168]
-by = {g['id']: g for g in out}
-for gid, upd in D.UPDATES.items():
-    g = by[gid]
-    for k, v in upd.items():
-        if k == 'after_spot': g['after'] = v if v and os.path.exists(v) else g.get('after')
-        elif k == 'what_add': g['what'] = re.sub(r' \(viewer marks (.*)\)$', lambda mm: ' (viewer marks ' + mm.group(1) + ', ' + v + ')', g['what']) if '(viewer marks' in g['what'] else g['what'] + f' (viewer marks {v})'
-        else: g[k] = v
 used = set()
 for suf, marks, place, device, what, bad, status, fix, check in D.ENTRIES:
     real = [m for m in marks if m in M]; used |= set(marks)
@@ -61,6 +54,14 @@ for suf, marks, place, device, what, bad, status, fix, check in D.ENTRIES:
     lab = ', '.join(m.split(':')[1] + ' (' + D.PASS[m.split(':')[0]] + ')' for m in marks)
     out.append(dict(id='G4-' + suf, place=place, device=device, what=what + (f" (viewer marks {lab})" if marks else ""), bad=bad,
                     found_by=D.FOUND_BY.get(suf, 'PHOTOVIEWER + DOUBLE-CHECKER (' + ', '.join(passes) + ')'), fix=fix, before=D.BEFORE.get(suf, before), after=D.AFTER.get(suf, after), status=status, check=check))
+# (run 4 finish, 21 Oct: the updates come after the new entries are built, so an entry from G4-168 on can be updated too)
+by = {g['id']: g for g in out}
+for gid, upd in D.UPDATES.items():
+    g = by[gid]
+    for k, v in upd.items():
+        if k == 'after_spot': g['after'] = v if v and os.path.exists(v) else g.get('after')
+        elif k == 'what_add': g['what'] = re.sub(r' \(viewer marks (.*)\)$', lambda mm: ' (viewer marks ' + mm.group(1) + ', ' + v + ')', g['what']) if '(viewer marks' in g['what'] else g['what'] + f' (viewer marks {v})'
+        else: g[k] = v
 kept = set()
 for k, d in D.DC.items():
     p = f'{S}/{d}/merged.json'

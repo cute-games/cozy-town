@@ -26,6 +26,8 @@ Same rules as NIGHT-PLAN-4.md. End with a pull request. Never stop to ask." On 2
   phone, grade 2). Minor, listed: G4-336 to G4-338, G4-329. Next: pass 24, the re-check of f19 (`p24kit.sh`, `pass24.sh`, `dcfilter24.py`).
 - Pass 24 (the re-check of f19): the kit 41 of 41 PASS; G4-340 (the Flower Corner bubble past the right edge on an upright phone, grade 2)
   fixed in f20 (`patch_f20.py`, md5 93eb8d2a). Next: pass 25, the re-check of f20 (`p25kit.sh`, `pass25.sh`, `dcfilter25.py`).
+- Pass 25 (the re-check of f20): the kit 40 of 41, N15 on its timing (alone: PASS, FAIL, PASS); 4 marks, decided before (G4-341). No fix:
+  the full final pass is done. Next: the final stage (below). `mkglitches5.py` now applies UPDATES after building the new entries.
 - Not yet done (the final stage): the version stamp, the rollback copy, the full check on the final file, the glitch list, the report, the PR.
 
 ## Set up a fresh container (the scratchpad of the old session is gone)

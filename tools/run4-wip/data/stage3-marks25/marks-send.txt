@@ -1,0 +1,4 @@
+p25kit_ipad-landscape_light_n8-designer_001_designer-room-1.png | ipad-landscape, light theme, designer room 1 | a faint "Knock knock!" text sits see-through over the sofa and is half hidden, looks like a leftover | 1
+p25kit_ipad-landscape_light_n8-designer_001_designer-room-1.png | ipad-landscape, designer room 1 floor | thin lilac/purple horizontal lines run across the wooden floor (not along the plank seams), look like flicker stripes | 1
+p25kit_ipad-landscape_light_n8-designer_002_designer-room-2.png | ipad-landscape, designer room 2 floor | same thin lilac horizontal stripes across the floor, off the plank lines | 1
+p25kit_ipad-landscape_light_n8-designer_001_designer-room-1.png | ipad-landscape, light, designer room 1, on the pink sofa | a faint, washed-out "Knock knock!" text sits across the top of the sofa and its edge is cut off by the sofa and the aim ring, hard to read | 1
