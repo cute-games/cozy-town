@@ -1,0 +1,7 @@
+M-015 | KEEP | basket rod clearly sticks out of the lamp bulb
+M-016 | DROP | ordinary photo crop at the picture edge, "Capybara" still readable
+M-017 | KEEP | palette emoji sits alone on a third line
+M-018 | KEEP | the two kids' heads and bodies overlap, they look merged
+M-019 | KEEP | yellow-shirt kid stands well out in the car lane, girl on the kerb
+M-020 | KEEP | holiday is on (balloons and party banner outside) but the hall has none
+M-021 | KEEP | pizza emoji alone on the second line of the job box

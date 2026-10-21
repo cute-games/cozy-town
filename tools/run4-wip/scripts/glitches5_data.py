@@ -1,7 +1,7 @@
 """Run 4 finish: the data of the glitch list from pass 8 on (read by mkglitches5.py). One entry per cause; the marks are
 'p8:M-001' (pass 8, stage3-dc8). Later passes are added to DC and PASS as they come."""
-DC = {'p8': 'stage3-dc8'}
-PASS = {'p8': 'pass 8'}
+DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9'}
+PASS = {'p8': 'pass 8', 'p9': 'pass 9'}
 AFTER_SETS = ['stage3-p9', 'stage3-p9b', 'stage3-p9c']   # newest first: the after picture of a fixed spot comes from pass 9
 KIT_SETS = ['stage3-kit9']
 PROBES = {   # spots whose after picture is a probe taken right after the fix (a pass-9 picture replaces it when there is one)
@@ -32,6 +32,7 @@ UPDATES = {
 F5 = ' (patch_f5.py)'
 F3 = ' (patch_f3.py)'
 F4 = ' (patch_f4.py)'
+F6 = ' (patch_f6.py)'
 FRAME = "The photographer's framing, not the game: "
 ENTRIES = [
  ('168', ['p8:M-001'], 'October: the park fountain', 'iPad', 'A white ghost hung inside the fountain, between its top and middle bowls.', 1, 'fixed',
@@ -124,4 +125,35 @@ ENTRIES = [
   '"room 1 of 2" goes on a line of its own under the title' + F3 + '.', 'N8 passes; pass 9 pictures.'),
  ('211', ['p8:M-116'], 'a photo shoot by the food truck', 'iPhone sideways', '"Pick up the litter" and its big button sat inside the dashed photo frame.', 2, 'fixed',
   'While a shoot is on only its own buttons show' + F5 + '.', 'N25 passes; pass 9 pictures.'),
+ # ---- pass 9 (the file with f3, f4, f5 and the two new book pictures; 112 marks, 57 set aside with their reason, 55 double-checked, 37 kept) ----
+ ('212', ['p9:M-005'], 'the phone: calendar', 'iPad', "In Saturday's tile the ⭐ and the 🏆 sat to the left, one under the other, not under the day.", 1, 'fixed',
+  "The tile's last line is centred, so they sit under the day" + F6 + '.', 'pass 10 pictures.'),
+ ('213', ['p9:M-008'], 'the Pet Shop card', 'iPad', '"Buy one and something new pops up!" beside "✨ New in!" was tiny (12 px, faint).', 1, 'fixed',
+  '14 px, bolder and darker' + F6 + '.', 'pass 10 pictures.'),
+ ('214', ['p9:M-017', 'p9:M-021'], "the phone's furniture page, the delivery job box", 'PC, iPad', 'An emoji stood alone on the last line: 🎨 after "free!", 🍕 after "Pizzeria".', 1, 'fixed',
+  'A no-break space ties each emoji to its word' + F6 + '.', 'pass 10 pictures.'),
+ ('215', ['p9:M-012'], "the What's new book, page 4", 'iPad', 'The Pet Shop upstairs picture was soft and pale: its lower third an empty floor, the Capybaras sign cut at its edge.', 1, 'fixed',
+  'A new picture, a step nearer: the four pens with their animals and all four signs whole (bookswap.py, bookshots7.py).', 'pass 10 pictures.'),
+ ('216', ['p9:M-015'], 'inside the flower shop', 'iPhone upright', "From the door the middle hanging basket's rod came straight out of the ceiling lamp's bulb.", 1, 'fixed',
+  'That basket hangs 1.5 m to the right, clear of the lamp and of the shop sign' + F6 + '.', 'a probe from the door; pass 10 pictures.'),
+ ('217', ['p9:M-020', 'p9:M-035'], '1 September: the school hall', 'iPad', 'No balloons in sight as you come in: f5 had moved the back two bunches by the lockers (G4-187), out of the view from the door.', 2, 'fixed',
+  'The back two stand between the posters and the side doors, the 🌈 and 🚀 posters 65 cm nearer the middle door: seen as you come in, clear of the posters and the doors' + F6 + '.', 'N22 passes; a probe; pass 10 pictures.'),
+ ('218', ['p9:M-030', 'p9:M-054', 'p9:M-055'], 'the hair salon', 'iPad, PC', 'Big words ("Ava sits down!", "Ben comes in!") lay across the customer\'s face once the view turned to them (G4-194).', 2, 'fixed',
+  'When the hair card opens at once, its tab names who sat down, so "… sits down!" pops only when the card cannot open; as the view turns to the face, big words still on the screen or waiting go' + F6 + '.', 'N13 passes; a probe; pass 10 pictures.'),
+ ('219', ['p9:M-049', 'p9:M-051'], 'the hair card', 'iPhone sideways', 'The card covered the end of the job pill: "Ben is in your ch".', 1, 'fixed',
+  'Under a bottom card on a short screen the job pill waits out of sight, like the HUD pieces such a card would touch' + F6 + '.', 'N13 passes; pass 10 pictures.'),
+ ('220', ['p9:M-052'], 'a photo shoot at the school', 'iPhone sideways', 'The "Everyone is posed!" message lay over the school\'s name board, the background the booking asked for.', 1, 'fixed',
+  "On a short sideways screen the shoot's messages sit at the top, above the viewfinder" + F6 + '.', 'N25 passes; pass 10 pictures.'),
+ ('221', ['p9:M-040', 'p9:M-043'], 'friends round you (after G4-203)', 'iPad', 'After a turn on a narrow pavement Theo stood half behind Luna and Rosie walked past right at the camera; in the other pictures Finn\'s face showed beside Luna\'s hair.', 2, 'fixed',
+  'The friends stand on an arc over the free part of the view: its two ends nearer (2.8 m), its middle further back (up to 4.6 m), so each face shows between the two in front; every order of filling it is tried (24 for four friends) and a face behind another\'s head costs most; a friend on the way to a spot waits unseen within 1.3 m of the camera, like a passer-by' + F6 + '.', 'N3 passes; a probe of the check\'s two stops and turns; pass 10 pictures.'),
+ ('222', ['p9:M-028', 'p9:M-041', 'p9:M-044', 'p9:M-046', 'p9:M-048'], 'your pets (G4-205 again)', 'iPad', 'Your pets at your heels at the bottom edge: a name tag cut at the edge or under the joystick, one pet behind another, three in one clump.', 2, 'open',
+  'The same as G4-205: not changed, written down for the owner (section 5c).', ''),
+ ('223', ['p9:M-009', 'p9:M-010', 'p9:M-018', 'p9:M-019'], "the photographer's own staging", 'iPad, PC', 'A car right at the camera (the school front in rain); the garden\'s back wall pink after the house was painted purple; two shoppers inside each other; a posed townsperson on the road at New Year.', 1, 'not a glitch',
+  FRAME + 'the school-front spot stood 30 cm into the road (pass 10: on the pavement); the garden spot repaints the house in the lane\'s own colour on purpose (a plain one-storey house); the photographer had moved a shopper to the spot another one was walking to (the game keeps two shoppers off one spot; pass 10 checks both); the New Year shot puts three townsfolk in a row 3.6 m ahead and one landed on the road (pass 10 keeps the row off it).', '—'),
+ ('224', ['p9:M-011', 'p9:M-038', 'p9:M-053'], 'the big map', 'iPad, iPhone sideways', 'Place names cut at the map\'s edges; under the "👆 Tap a place" tip only the end of a name showed ("air Salon").', 1, 'not a glitch',
+  'The map is wider than its frame and scrolls (stage 3); the tip fades away after 4 seconds, and the town\'s bottom row scrolls up above it (stage 3).', '—'),
+ ('225', ['p9:M-022', 'p9:M-023', 'p9:M-024', 'p9:M-025', 'p9:M-026', 'p9:M-027', 'p9:M-032', 'p9:M-036'], "the check's own staging", 'iPad', 'A pink thing half sunk in the park fountain at Christmas; play feedback (words, toys, a hand) piled on the Spooky path sign; a "🥚 18/25" floating over the scene under "All 25!"; grandmas behind a message, ducks under the buttons.', 1, 'not a glitch',
+  "An autumn leaf at the end of its fall (the check jumps from October to December in one page, so autumn's leaves still fall; a December game has none); N11 feeds and plays with each new pet in one go, so both games' feedback rises at once; each egg's \"n/25\" rises where it was found and the check picks up all 25 at once; N24's camera stands where its check stands, under the bus message.", '—'),
+ ('226', ['p9:M-029'], 'your house upstairs, an old save', 'iPad', 'The purple bed seemed pushed into the bunk bed.', 1, 'not a glitch',
+  'They stand 70 cm apart side by side (a probe from the side); from the stairs one is seen behind the other.', '—'),
 ]

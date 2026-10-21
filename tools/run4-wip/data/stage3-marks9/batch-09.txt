@@ -1,0 +1,5 @@
+s3_iphone-landscape_dark_iphone-landscape-dark_016_whats-new-book-p4.png | iphone-landscape dark, title's What's new book page 4 (Pet Shop upstairs) | the big picture's right edge cuts the right-hand pen sign ("Capybara...") in half, so that sign's text is cut off | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_020_shop-market.png | iphone-landscape dark, Market shop card | the round down-arrow scroll button at the bottom middle sits on top of the bottom corners of the Watermelon and Corn tiles (button overlapping the cards) | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_021_shop-pets.png | iphone-landscape dark, Pet Shop card | the round down-arrow scroll button at the bottom middle sits on top of the bottom corners of the Peach dog house and Bubblegum dog house tiles (button overlapping the cards) | 1
+s3_pc-1366_light_pc-1366-light_008_phone-furniture.png | pc-1366 light, phone Furniture page | the palette emoji at the end of the intro text ("...everything is free!") wraps onto a third line all by itself | 1
+count: 4

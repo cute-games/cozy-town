@@ -1,0 +1,7 @@
+M-001 | DROP | the scoreboard stands 4-7 m behind the street tree: only hidden from this angle, not inside the crown
+M-002 | DROP | the white bits under the roof are the corner cobwebs; the garland runs out of sight behind the back wall
+M-003 | DROP | fed ducks are sent about 2 m from you, which is mid-pond on this little pond; bill to bill looks natural
+M-004 | DROP | the garden shot resets the house to default pink (only 038 paints it purple), so a pink back wall is right
+M-005 | KEEP | star and trophy clearly sit left of centre in the Sat tile; a real wrap/alignment bug, not the font
+M-006 | DROP | the big map can be dragged: labels cut at its edges or under the hint bar are normal map cropping
+M-007 | DROP | as soft as page 5's picture; the pale floor is how the room really looks (034); the cut sign is just framing

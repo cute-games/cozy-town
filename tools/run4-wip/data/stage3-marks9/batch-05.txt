@@ -1,0 +1,2 @@
+s3_iphone-portrait_light_iphone-portrait-light_004_phone-friends.png | iphone-portrait light, the phone: friends (city) | the phone's status bar says 11:00 but the shot is listed at 11:10; the same lag shows in 009 calendar (status bar 11:10, shot 11:20), 025 mailbox (top-bar clock 11:40, shot 11:50) and 031 photo tutorial (top-bar clock 11:50, shot 12:00): the first shot after each 10-minute clock step still shows the old time and the next shots are right, so the clock display trails the step for a moment (may be only the shot's timing) | 1
+count: 1

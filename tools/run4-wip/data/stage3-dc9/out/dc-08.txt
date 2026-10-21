@@ -1,0 +1,6 @@
+M-050 | DROP | normal chat scroll, older bubble scrolled under header, newest fully shown
+M-051 | KEEP | hair card covers pill, text cut to "Ben is in your ch"
+M-052 | KEEP | banner covers the spot between the two sign posts while framing
+M-053 | KEEP | hint bar hides names of the paw and tree places
+M-054 | KEEP | caption sits over top of Ben's hair, "comes in" while already seated
+M-055 | KEEP | caption runs right across Ben's face and new hair
