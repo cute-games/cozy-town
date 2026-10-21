@@ -465,6 +465,13 @@ Grade 1 (minor): pass 21 is the first clean pass under the stop rule.
 Not glitches (G4-332): a palette badge on the corner map (part of the map's picture; the whole map is the tap target), the fed ducks one behind
 the other (G4-278), two townsfolk one in front of the other.
 
+**Pass 22** (the f18 file): the kit's night3 and run4 lines 41 of 41 PASS; 9 pictures of f18's spot (`pass22.sh`), five viewers, `dcfilter22.py`,
+one first checker: 3 marks, 1 set aside (the phone's lit screen, G4-126), 1 kept (G4-333: two townsfolk one in front of the other, not a glitch),
+1 dropped. No fix. f18 held (the chat opens at the thank-you photo's top).
+
+**The stop rule** (counting from pass 20): pass 20 fixed two marks above minor (G4-327, G4-328, grade 2); passes 21 (one grade-1 fix) and 22
+(none) are two in a row with no fix above minor, and pass 22 is the cap. The loop stopped after pass 22.
+
 #### Decisions made alone (run 4 finish)
 - The kit, never weaker (every change in `cozy-check-v6.zip`, listed in its README-KIT.md and here, old → new):
   - N15's chip rule: old `^\d{1,2}:\d\d (Mon|…|Sun)$` → new the same with an optional "🏆 " before the weekday, as the two-device test above

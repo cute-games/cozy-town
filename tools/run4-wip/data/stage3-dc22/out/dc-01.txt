@@ -1,0 +1,2 @@
+M-001 | KEEP | two figures at the right edge overlap, bodies merged beside the crates
+M-002 | DROP | the scroll fade at the foot of a short landscape screen is normal; the photo is mostly visible

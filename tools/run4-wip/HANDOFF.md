@@ -18,6 +18,9 @@ Same rules as NIGHT-PLAN-4.md. End with a pull request. Never stop to ask." On 2
 - Pass 21: done. The kit on the f17 file 41 of 41 PASS; 7 marks, 5 kept; f18 (`patch_f18.py`, 1 edit, grade 1: a chat opens at a tall newest
   message's top) applied (md5 d93c5870); G4-331, G4-332. The first clean pass. Next: pass 22 (`p22kit.sh`, `pass22.sh`, `dcfilter22.py`), the
   last loop pass; then the full final pass.
+- Pass 22: done. The kit on the f18 file 41 of 41 PASS; 3 marks, no fix (G4-333). The loop stopped (passes 21 and 22 clean; the cap).
+  Next: the full final pass, pass 23 (`final23.sh`: the photographer's three scripts, the p22kit run's pictures, every picture listed,
+  `viewfocus.py ... 23 5 ... --full`), `dcfilter23.py`; marks above minor fixed and re-checked like a pass, minor ones listed.
 - Not yet done (the final stage): the version stamp, the rollback copy, the full check on the final file, the glitch list, the report, the PR.
 
 ## Set up a fresh container (the scratchpad of the old session is gone)
