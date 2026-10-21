@@ -1,0 +1,4 @@
+s3_ipad-landscape_dark_ipad-landscape-dark_049_big-map.png | ipad-landscape dark, the big map (city) | the "Tap a place to see the way there!" bar sits on the map and hides the Hair Salon pin; its cut-off name "air Salon" pokes out under the bar. Other place names are cut off at the map's edges ("e Station", "othes Shop", "Duck Po"), and the friend dot at the top edge has no name | 1
+s3_ipad-landscape_dark_ipad-landscape-dark_051_settings.png | ipad-landscape dark, settings card over the city (grandma at the right edge) | the grandma's "Hee hee!" speech bubble runs off the right screen edge; only "Hee he" shows | 1
+s3_ipad-landscape_dark_ipad-landscape-dark_084_town-pet-show-stage-rain.png | ipad-landscape dark, the Pet Show stage in rain | a big white ghost floats right in front of the Pet Show sign and hides most of the words "Pet Show" (at night in 076 a ghost also covers the sign's left end) | 1
+count: 3

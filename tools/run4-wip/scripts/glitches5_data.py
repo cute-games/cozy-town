@@ -1,7 +1,7 @@
 """Run 4 finish: the data of the glitch list from pass 8 on (read by mkglitches5.py). One entry per cause; the marks are
 'p8:M-001' (pass 8, stage3-dc8). Later passes are added to DC and PASS as they come."""
-DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11'}
-PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11'}
+DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12'}
+PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12'}
 AFTER_SETS = ['stage3-p9', 'stage3-p9b', 'stage3-p9c']   # newest first: the after picture of a fixed spot comes from pass 9
 KIT_SETS = ['stage3-kit9']
 PROBES = {   # spots whose after picture is a probe taken right after the fix (a pass-9 picture replaces it when there is one)
@@ -31,6 +31,8 @@ UPDATES = {
     'G4-220': {'check': "pass 10 pictures: the message still lay over the school's sign: f6's style rule did not take, the game places its messages itself; f7 places it (G4-235)."},
     'G4-208': {'check': 'pass 9 pictures; pass 10: once more, with the message coming after the pop (G4-229).'},
     'G4-231': {'check': 'a check by script; N24 passes; pass 11: on the PC (a slow screen) a grandma still passed 1.5 m from the camera: G4-249.'},
+    'G4-251': {'check': "pass 12: on an upright phone the last page's wider button lay on the dots (the three even columns were narrower than it): G4-261."},
+    'G4-223': {'check': "pass 12: a car stood at the photographer's delivery spot, and walking up to a car's middle brings your eyes as near: G4-262."},
 }
 F5 = ' (patch_f5.py)'
 F3 = ' (patch_f3.py)'
@@ -38,6 +40,7 @@ F4 = ' (patch_f4.py)'
 F6 = ' (patch_f6.py)'
 F7 = ' (patch_f7.py)'
 F8 = ' (patch_f8.py)'
+F9 = ' (patch_f9.py)'
 FRAME = "The photographer's framing, not the game: "
 ENTRIES = [
  ('168', ['p8:M-001'], 'October: the park fountain', 'iPad', 'A white ghost hung inside the fountain, between its top and middle bowls.', 1, 'fixed',
@@ -231,4 +234,28 @@ ENTRIES = [
   "A card over the dimmed HUD (G4-033, G4-060); the photographer's garden spot repaints the house on purpose (G4-223); where the owner put the joystick (commit 0f5939f); your own shadow (G4-146); the HUD stays where it is, and the photographer's New Year row stands left of the middle; the list's scroll hint (G4-034).", '—'),
  ('260', ['p11:M-029', 'p11:M-030', 'p11:M-031', 'p11:M-032', 'p11:M-033', 'p11:M-035', 'p11:M-036'], "the check's own staging", 'iPad', "The spooky path's picture facing the street; a grandma's back filling the fountain picture; a lamp post coming down into a new pet's head; a townsperson's hat hidden in a low tree crown right at the camera; the camera tilted at the sky after a pick-up.", 1, 'not a glitch',
   "N1 photographs from a fixed spot; N10's camera stands 2.7 m behind the grandmas' park stop, where one stood facing the fountain; N11 photographs each new pet by the same lamp post; N21 puts you in one step right behind a tall townsperson under a street tree; N27 looks up after each pick-up (the check counts the litter by code).", '—'),
+ ('261', ['p12:M-003', 'p12:M-006'], "the What's new book on an upright phone", 'iPhone upright', 'On the last page the wide "Let\'s play!" button lay on the page dots and hid the last three, this page\'s pink one among them (since f8, G4-251).', 2, 'fixed',
+  'The footer\'s side columns are at least as wide as their buttons: the dots stay in the middle where they fit and move aside where they do not, never under a button' + F9 + '.', 'a footer probe on 4 screens, every page; pass 13 pictures.'),
+ ('262', ['p12:M-015', 'p12:M-016'], 'a car right at the camera', 'iPad', "The delivery picture showed no town: a flat green field and a dark band across the middle. A mint car stood at the photographer's spot on the road; its cabin was 15 cm from the camera and its roof edge 2 cm above eye height.", 3, 'fixed',
+  "A car is one box for you to bump into, like the bus: your eyes stay 30 cm from its body and half a metre from its cabin (its two round ends let you walk up to 15 cm from the cabin's side, as at the photographer's spot)" + F9 + "; the photographer's delivery spot keeps out of a car standing there too, as walking would (shots4b.py).", 'a check by script round a car (eyes to the cabin: 0 before, 0.50 m after); pass 13 pictures.'),
+ ('263', ['p12:M-008', 'p12:M-010'], "the phone's screen", 'iPhone sideways', 'A muddy grey band along the foot of every phone page, also with nothing to scroll.', 1, 'fixed',
+  "The fade at the screen's foot shows only while there is more below (it let the dark phone through on every page)" + F9 + '.', 'a check by script of three phone pages; pass 13 pictures.'),
+ ('264', ['p12:M-011'], "the bag's counts", 'iPhone sideways, dark theme', 'The "×3" under each thing was small, light and hard to read.', 1, 'fixed',
+  'The counts are a size bigger, bold and nearly solid' + F9 + '.', 'pictures of the bag before and after; pass 13 pictures.'),
+ ('265', ['p12:M-036'], "the dance-off's crouch", 'iPad', "In the crouch the dancer's legs ended flat on the tiles: the shoes had sunk into the dance floor.", 2, 'fixed',
+  'The body goes down and the legs slide up into it, so the shoes stay on the floor (they went down 23 cm with the body)' + F9 + '.', 'a check by script of the lowest shoe point through the move (-0.23 m before, within 1 cm after); pass 13 pictures.'),
+ ('266', ['p12:M-017'], 'the dance-off on an upright phone', 'iPhone upright', "The host's dancer leaned out of the picture (crown, head and arm cut by the left edge).", 1, 'fixed',
+  'In a room too small for the view to stand 5.6 m back (a plain house: 4.3 m) the view widens until both dancers and their lean fit, up to 95°; a sideways screen keeps its view' + F9 + '.', 'the two-phone dance-off on the fixed file; pass 13 pictures.'),
+ ('267', ['p12:M-021', 'p12:M-023'], "the owl's and the duck's outfits", 'iPad', "A new owl's cape stood flat out of its back and its collar hung off its front; on the duck a box sat loose on its back.", 2, 'fixed',
+  "The owl and the duck wear their outfits on their own bodies (they borrowed the cat's and the bunny's sizes): the owl's cape and backpack lie on its upright back, the collar and scarf go round both birds' necks, the bow tie sits under the beak (the duck's was inside its chest); a cat, dog, bunny or hamster looks exactly as before" + F9 + '.', 'pictures of both birds in every back and neck piece, from the front and the back; the cat and the bunny unchanged pixel for pixel; pass 13 pictures.'),
+ ('268', ['p12:M-033'], 'the little pictures of glowing furniture', 'iPad', 'The "Seafoam neon sign" in the Home shop showed white tubes, not seafoam.', 1, 'fixed',
+  "In a little picture a glowing piece glows less, so its own colour shows (the neon sign's tubes, the lamp shades and the lanterns came out nearly white); the pieces in the room glow as before" + F9 + '.', 'every lamp-type piece in each colour before and after; pass 13 pictures.'),
+ ('269', ['p12:M-034', 'p12:M-035'], "the job tutorials' pictures", 'iPad', 'Pizza, "Follow the dot": the hand right of the dot pointed away from it. Hairstylist: the picture\'s words were the line under it again ("Make the hair like the picture").', 1, 'fixed',
+  'The hand points at the dot (👈); the hair pictures say what they show ("The picture = the new hair", "A match = stars and coins") under the same lines as before' + F9 + '.', 'the tutorial pictures before and after; N38 passes.'),
+ ('270', ['p12:M-001', 'p12:M-002'], "the photographer's framing", 'iPad', "Two dark posts behind a tree by the football field ran up into its crown; the garden picture's lower half was the garden fence.", 1, 'not a glitch',
+  FRAME + "the posts hold the field's scoreboard, which stands 8 m behind that pavement tree: from this one spot its board is behind the crown (from the field it shows); the garden spot stands on the lane outside the garden's fence, so its rails are in front of the first pots.", '—'),
+ ('271', ['p12:M-004', 'p12:M-012', 'p12:M-024', 'p12:M-037'], 'decided before', 'iPhone upright, PC, iPad', "A grey-haired figure in the market with her back to you; a dark half-round on the fruit stand; a small 🎨 at the corner map's foot; Mochi's tag at the joystick.", 1, 'not a glitch',
+  "A shopper looking at the shelves (pass 11's double-checkers dropped it; the keeper stands at the right); your own shadow (G4-146); the corner map is a button: tap it to change your dot's colour (since job 7); your pets at your heels (G4-205), their tags seen through the see-through joystick.", '—'),
+ ('272', ['p12:M-018', 'p12:M-019', 'p12:M-020', 'p12:M-022', 'p12:M-027', 'p12:M-028', 'p12:M-029', 'p12:M-031', 'p12:M-032'], "the check's own staging", 'iPad', "A friend walking by right in front of the fountain picture; the lamp post in each new pet's picture; the Halloween gate's signs at the screen's edges, one behind the notepad; the camera at the sky after a pick-up.", 1, 'not a glitch',
+  "N10 puts you at the fountain in one step, on a walking way (a friend walked by 1.4 m ahead); N11 photographs each new pet by the same lamp post (G4-260); N19 looks at the gate from a fixed spot, the HUD where it always is (its lines count the pieces by code); N27 looks up after each pick-up (G4-260).", '—'),
 ]

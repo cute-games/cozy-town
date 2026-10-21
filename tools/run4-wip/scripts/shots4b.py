@@ -19,7 +19,7 @@ RESET = "()=>{$('note').hidden=true;const t=$('toast');if(t)t.classList.remove('
 BED = ("__setClock(null,22.0);__goto('home');__run(2);if(![...HOME_ITEMS.values()].some(r=>FURN[r.it.t].use==='sleep')){S.home.items.push({u:'zzbed',t:'bed',c:'#ff9ec4',x:-4.6,z:-3.85,r:0});rebuildHome();}"
        "const rec=[...HOME_ITEMS.values()].find(r=>FURN[r.it.t].use==='sleep');if(rec){P.x=rec.g.position.x+1;P.z=rec.g.position.z;rec.inter.act();__run(40);}")
 HAIR = "S.hsTut=1;setJob('hair');closePanel();__goto('salon');__setClock(null,12);"
-DLV = "S.tutDone=1;setJob('delivery');closePanel();__goto('city');__setClock(null,12);const dd=DOORS.pizza.city;P.x=dd[0]+Math.sin(dd[2]+Math.PI)*6;P.z=dd[1]+Math.cos(dd[2]+Math.PI)*6;P.yaw=dd[2];P.pitch=.05;[P.x,P.z]=collideXZ(P.x,P.z,.3,CUR);"
+DLV = "S.tutDone=1;setJob('delivery');closePanel();__goto('city');__setClock(null,12);const dd=DOORS.pizza.city;P.x=dd[0]+Math.sin(dd[2]+Math.PI)*6;P.z=dd[1]+Math.cos(dd[2]+Math.PI)*6;P.yaw=dd[2];P.pitch=.05;[P.x,P.z]=collideXZ(P.x,P.z,.3,CUR,solids());"   # (pass 12: out of a car standing there too, as walking would keep you; the town was one flat colour and a dark band)
 # a set: tag, the faked real date, theme, spots (name, js, note[, wait-for js[, then js]])
 SETS = [
  ('valentine', '2026-02-14T12:00:00', 'light', [

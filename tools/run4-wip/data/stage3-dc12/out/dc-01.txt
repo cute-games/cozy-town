@@ -1,0 +1,5 @@
+M-001 | KEEP | two dark posts behind the tree vanish into its crown, their top is hidden
+M-002 | KEEP | big white fence fills the lower half, front pots and Level 40 pot hidden
+M-003 | KEEP | only 4 of 7 dots show beside "Let's play!", pink current dot hidden
+M-004 | KEEP | shopkeeper shows only the back of her grey head, no face
+M-005 | DROP | basket is cut by the edge, its holder may be off-screen, hardly noticeable
