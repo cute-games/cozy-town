@@ -1,7 +1,7 @@
 """Run 4 finish: the data of the glitch list from pass 8 on (read by mkglitches5.py). One entry per cause; the marks are
 'p8:M-001' (pass 8, stage3-dc8). Later passes are added to DC and PASS as they come."""
-DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13', 'p14': 'stage3-dc14'}
-PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13', 'p14': 'pass 14'}
+DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13', 'p14': 'stage3-dc14', 'p15': 'stage3-dc15'}
+PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13', 'p14': 'pass 14', 'p15': 'pass 15'}
 AFTER_SETS = ['stage3-p9', 'stage3-p9b', 'stage3-p9c']   # newest first: the after picture of a fixed spot comes from pass 9
 KIT_SETS = ['stage3-kit9']
 PROBES = {   # spots whose after picture is a probe taken right after the fix (a pass-9 picture replaces it when there is one)
@@ -43,6 +43,7 @@ F8 = ' (patch_f8.py)'
 F9 = ' (patch_f9.py)'
 F10 = ' (patch_f10.py)'
 F11 = ' (patch_f11.py)'
+F12 = ' (patch_f12.py)'
 FRAME = "The photographer's framing, not the game: "
 ENTRIES = [
  ('168', ['p8:M-001'], 'October: the park fountain', 'iPad', 'A white ghost hung inside the fountain, between its top and middle bowls.', 1, 'fixed',
@@ -294,4 +295,18 @@ ENTRIES = [
   "On a sideways phone the hair card fills the screen's height (G4-194); your pets at your heels (G4-205).", '—'),
  ('289', ['p14:M-010', 'p14:M-013', 'p14:M-016'], "the check's own staging", 'iPad, PC', 'Two grandmas right in front of N6\'s camera; "The Food truck is closed now" at noon; a tree in front of N25\'s camera at the Flower Corner.', 1, 'not a glitch',
   "N6 looks at the grandmas' bench from right behind them; N9 tries the truck at 21:00 and then turns the clock to noon, its \"closed\" toast still up for the day picture; N25 stands straight in front of the group at the nearest distance where everyone fits: at the hedge a pavement tree is at the frame's left, in front of nobody (five stars; a player can step aside).", '—'),
+ ('290', ['p15:M-003', 'p15:M-010'], "a quest's steps", 'iPhone upright, PC', 'A long step wrapped under its ○, and "Ice / Cream Shop" was split over two lines.', 1, 'fixed',
+  "A long step wraps under its own words now, and the shop's name keeps together" + F12 + '.', 'pictures of a quest card on an upright iPhone, a sideways one and a PC (each step\'s words start at the same place on every line); pass 16 pictures.'),
+ ('291', ['p15:M-007'], 'the photo frame on a touch screen held sideways', 'iPhone sideways (and iPad)', 'The dashed photo frame sat right of the middle: the family you faced stood left of its middle, in the photo too.', 1, 'fixed',
+  "The frame's left edge kept off the joystick (stage 3) and its right edge stayed near the screen's edge, so its middle was 70 to 76 px right of the camera's; it keeps the same space on both sides now: whom you face is in the middle of the frame and of the photo" + F12 + '.', "a check by script of the frame's middle against the family's (498 and 422 before, 422 and 422 after; five stars before and after); pictures of the shoot and the result card; pass 16 pictures."),
+ ('292', ['p15:M-015'], 'the clock chip on a cloudy night', 'iPad', 'A grey night sky with no stars while the clock chip showed 🌙.', 1, 'fixed',
+  'Clouds hide the moon and the stars (f3), but the chip showed 🌙 at night whatever the sky; under a grey night sky it shows ☁️ now, as by day (a clear night 🌙, rain 🌧️)' + F12 + '.', 'a check by script of the chip on a cloudy, a clear and a rainy night and a cloudy noon.'),
+ ('293', ['p15:M-009'], "the path through the Tree Park's gate", 'PC', 'The path through the gate stopped in a straight edge in the grass a few steps past it.', 1, 'fixed',
+  'Its far end is round now' + F12 + '.', 'pictures from the town side of the gate; pass 16 pictures.'),
+ ('294', ['p15:M-001'], "the Tree Park's crowns", 'iPad', 'A small row of brown saw-tooth marks on a yellow crown.', 1, 'open',
+  "Traced by script: nothing stands between that point and the sun; the marks are the steps of the sun's shadow map (2048 pixels over 60 m, 3 cm each) on the crown, as in G4-088 and G4-257 (written down in stage 3).", ''),
+ ('295', ['p15:M-002', 'p15:M-006', 'p15:M-013', 'p15:M-014'], 'a duck, a shop, two holiday views', 'iPad, iPhone upright', "A grey lump on the pond at night; a chef's hat on the market's oranges; the Christmas tree's star cut by the screen's top; a firework burst at the screen's edge beside an older one's grey dots.", 1, 'not a glitch',
+  "The white duck from behind in the night light (its face is on its front); from the market's door on an upright phone the fruit stand stands between the camera and the keeper behind it; the photographer frames Santa at eye level, with the tall tree's star above the screen's top (the same view's other picture was dropped by its double-checker, M-012); the bursts fill the sky round the town, so one can be at the screen's edge, and an older burst's sparks fade (G4-254).", '—'),
+ ('296', ['p15:M-004', 'p15:M-011', 'p15:M-016'], 'decided before', 'iPhone upright, PC, iPad', "The notepad over the Toy Store's sign on an upright phone; a dark half-circle on the fruit stand; townsfolk in party hats with their backs to N21's camera.", 1, 'not a glitch',
+  "On an upright phone the fixed HUD can cover part of a sign (section 9c); your own shadow (G4-146, G4-271); N21 puts you right behind a townsperson (G4-260, G4-281).", '—'),
 ]

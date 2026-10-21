@@ -1,0 +1,3 @@
+M-007 | KEEP | family clearly left of the frame's middle, result photo (034) off-centre too
+M-008 | DROP | text is centred over the door; steep angle and the tree hiding the board's left end make it look off
+M-009 | KEEP | path clearly dead-ends in the grass a few steps past the gate

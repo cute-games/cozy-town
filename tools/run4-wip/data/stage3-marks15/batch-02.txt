@@ -1,0 +1,2 @@
+s3_ipad-landscape_light_ipad-landscape-light_049_big-map.png | iPad landscape, the big map (city) | place labels are cut off at the map's edges ("e Station", "othes Shop", "Duck Po") and the Hair Salon label shows only "Ha", half hidden under the "Tap a place to see the way there!" hint bar | 1
+count: 1

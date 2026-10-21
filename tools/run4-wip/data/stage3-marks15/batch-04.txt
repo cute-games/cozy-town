@@ -1,0 +1,3 @@
+s3_ipad-landscape_dark_ipad-landscape-dark_049_big-map.png | ipad-landscape dark, the big map (city) | place labels are cut off at the map's edges: "e Station", "othes Shop", "Duck Po"; the Hair Salon label is hidden under the "Tap a place" hint bar, so only "Ha" shows | 1
+s3_ipad-landscape_dark_ipad-landscape-dark_078_town-duck-pond-night.png | ipad-landscape dark, the duck pond at night | the second duck (right of the yellow one, under the centre dot) looks like a grey faceted lump, a stone with a ball on top; no bill, eyes or tail can be seen | 1
+count: 2

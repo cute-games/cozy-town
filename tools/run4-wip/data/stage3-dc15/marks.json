@@ -1,0 +1,130 @@
+[
+ {
+  "id": "M-001",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_017_treepark-hard-decks.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p15/shots/s3_ipad-landscape_light_ipad-landscape-light_017_treepark-hard-decks.png",
+  "where": "ipad-landscape light, Tree Park: first deck of the hard path",
+  "what": "a small row of brown saw-tooth marks sits on the yellow tree crown at the top right (right of the star), like a flicker/shadow stripe or something poking through the leaves",
+  "bad": "1"
+ },
+ {
+  "id": "M-002",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_078_town-duck-pond-night.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p15/shots/s3_ipad-landscape_dark_ipad-landscape-dark_078_town-duck-pond-night.png",
+  "where": "ipad-landscape dark, the duck pond at night",
+  "what": "the second duck (right of the yellow one, under the centre dot) looks like a grey faceted lump, a stone with a ball on top; no bill, eyes or tail can be seen",
+  "bad": "1"
+ },
+ {
+  "id": "M-003",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_005_phone-quests.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p15/shots/s3_iphone-portrait_light_iphone-portrait-light_005_phone-quests.png",
+  "where": "iphone-portrait light, phone: quests (Shopping spree card)",
+  "what": "the third task wraps badly: \"Ice / Cream Shop\" is split over two lines and \"Cream Shop\" starts under the round tick circle instead of under the words (no hanging indent)",
+  "bad": "1"
+ },
+ {
+  "id": "M-004",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_041_town-east-shops.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p15/shots/s3_iphone-portrait_light_iphone-portrait-light_041_town-east-shops.png",
+  "where": "iphone-portrait light, town: the Toy Store and the east shops",
+  "what": "the notepad card under the corner map covers the left part of the Toy Store sign, only \"ore\" can be read",
+  "bad": "2"
+ },
+ {
+  "id": "M-005",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_042_town-treepark-gate.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p15/shots/s3_iphone-portrait_light_iphone-portrait-light_042_town-treepark-gate.png",
+  "where": "iphone-portrait light, town: the Tree Park gate",
+  "what": "the camera is right up against a pink shop's side wall, which fills the right fifth of the view from top to bottom",
+  "bad": "1"
+ },
+ {
+  "id": "M-006",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_044_inside-market.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p15/shots/s3_iphone-portrait_dark_iphone-portrait-dark_044_inside-market.png",
+  "where": "iphone-portrait dark, inside the market",
+  "what": "the shopkeeper is hidden behind the orange crate: only the white chef's hat shows, sitting on the oranges like a loose hat",
+  "bad": "1"
+ },
+ {
+  "id": "M-007",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_033_photo-shoot.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p15/shots/s3_iphone-landscape_dark_iphone-landscape-dark_033_photo-shoot.png",
+  "where": "iphone-landscape, dark theme, the photo shoot at the fountain (city)",
+  "what": "the dashed white photo frame is shifted to the right (about x 185 to 810 of 844) while the family stands at the screen centre, so Mia, Leo and Zoe stand left of the frame's middle with empty plaza on the right; the photo on the result card (034) shows them off-centre the same way",
+  "bad": "1"
+ },
+ {
+  "id": "M-008",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_041_town-east-shops.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p15/shots/s3_iphone-landscape_dark_iphone-landscape-dark_041_town-east-shops.png",
+  "where": "iphone-landscape, dark theme, the Toy Store front (city, east shops)",
+  "what": "the \"\ud83e\uddf8 Toy Store\" text sits toward the left end of its white sign board above the awning, leaving a wide empty strip on its right, so it is not in the middle of the board",
+  "bad": "1"
+ },
+ {
+  "id": "M-009",
+  "file": "s3_pc-1366_light_pc-1366-light_042_town-treepark-gate.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p15/shots/s3_pc-1366_light_pc-1366-light_042_town-treepark-gate.png",
+  "where": "pc-1366 light, town: Tree Park gate in the woods",
+  "what": "the earth path through the gate stops in a hard straight edge a few steps past the posts and leads nowhere into the grass",
+  "bad": "1"
+ },
+ {
+  "id": "M-010",
+  "file": "s3_pc-1366_dark_pc-1366-dark_005_phone-quests.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p15/shots/s3_pc-1366_dark_pc-1366-dark_005_phone-quests.png",
+  "where": "pc-1366 dark, phone: Quest (Daily), \"Shopping spree\" card",
+  "what": "the third task wraps badly: \"Cream Shop\" drops to its own line starting under the \u25cb bullet instead of under the text, splitting the name \"Ice / Cream Shop\"",
+  "bad": "1"
+ },
+ {
+  "id": "M-011",
+  "file": "s3_pc-1366_dark_pc-1366-dark_044_inside-market.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p15/shots/s3_pc-1366_dark_pc-1366-dark_044_inside-market.png",
+  "where": "pc-1366 dark theme, inside the market",
+  "what": "odd shading: a big hard-edged darker half-circle lies across the plain front of the fruit stand right in front of the camera",
+  "bad": "1"
+ },
+ {
+  "id": "M-012",
+  "file": "s3b_ipad-landscape_light_christmas-light_002_holiday-christmas-santa.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p15b/shots/s3b_ipad-landscape_light_christmas-light_002_holiday-christmas-santa.png",
+  "where": "ipad-landscape, light theme, Santa by the Christmas tree at the Flower Corner (12:10 Sun)",
+  "what": "the top of the tree is cut off: the yellow star sticks out past the top screen edge and only its lower half shows",
+  "bad": "1"
+ },
+ {
+  "id": "M-013",
+  "file": "s3b_ipad-landscape_light_christmas-light_003_holiday-christmas-santa-talk.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p15b/shots/s3b_ipad-landscape_light_christmas-light_003_holiday-christmas-santa-talk.png",
+  "where": "ipad-landscape, light theme, Santa's words at the Flower Corner (12:10 Sun)",
+  "what": "same framing: the tree's star is cut off by the top screen edge",
+  "bad": "1"
+ },
+ {
+  "id": "M-014",
+  "file": "s3b_ipad-landscape_dark_newyear-night-dark_001_holiday-newyear-fireworks.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p15b/shots/s3b_ipad-landscape_dark_newyear-night-dark_001_holiday-newyear-fireworks.png",
+  "where": "ipad-landscape, dark theme, sky over the park fountain (22:10 Sun, 30 Dec)",
+  "what": "the fireworks are pushed against the right edge: the big orange-pink burst is cut off by the screen edge and an older burst hangs as a ring of dull grey dots, the rest of the frame is empty sky",
+  "bad": "1"
+ },
+ {
+  "id": "M-015",
+  "file": "kit15-n1-holidays-holiday-halloween-night.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit15/shots/kit15-n1-holidays-holiday-halloween-night.png",
+  "where": "ipad-landscape, light theme, park fountain on an October night (19:30 Fri)",
+  "what": "the night sky is a flat dull grey with no stars and the whole scene has a murky grey-brown cast, while the clock chip shows only \ud83c\udf19 and no cloud sign (the 19:40 Halloween shots have a purple starry sky)",
+  "bad": "1"
+ },
+ {
+  "id": "M-016",
+  "file": "kit15-n21-newyear-party-hats-confetti.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit15/shots/kit15-n21-newyear-party-hats-confetti.png",
+  "where": "ipad-landscape, park by the apartment block, New Year",
+  "what": "the friends in party hats are bunched right in front of the camera with their backs to us, overlapping (the dark-haired one half hidden behind the other two): no faces, hats seen from behind, and they block the middle of the view",
+  "bad": "2"
+ }
+]

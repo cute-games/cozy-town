@@ -1,0 +1,12 @@
+s3_pc-1366_dark_pc-1366-dark_010_big-map.png | pc-1366 dark theme, the big map (city) | two place labels are cut off by the map frame: a lone "en" at the left edge (left of the Fire Station) and a lone "C" at the right edge just past the hint bar | 1
+s3_pc-1366_dark_pc-1366-dark_012_settings.png | pc-1366 dark theme, settings (city) | the round ⬇️ scroll button sits inside the Notepad row, squeezed against the "✏️ On" button and lower than it, so it reads as a third Notepad button | 1
+s3_pc-1366_dark_pc-1366-dark_013_whats-new-book.png | pc-1366 dark theme, What's new book page 1 (city) | the book card's left edge lies over the corner map (its right column cut off) and the notepad (its "1/1" hidden) | 1
+s3_pc-1366_dark_pc-1366-dark_015_whats-new-book-p3.png | pc-1366 dark theme, What's new book page 3 (city) | the book card's left edge lies over the corner map (its right column cut off) and the notepad (its "1/1" hidden) | 1
+s3_pc-1366_dark_pc-1366-dark_016_whats-new-book-p4.png | pc-1366 dark theme, What's new book page 4 (city) | the book card's left edge lies over the corner map (its right column cut off) and the notepad (its "1/1" hidden) | 1
+s3_pc-1366_dark_pc-1366-dark_017_whats-new-book-p5.png | pc-1366 dark theme, What's new book page 5 (city) | the book card's left edge lies over the corner map (its right column cut off) and the notepad (its "1/1" hidden) | 1
+s3_pc-1366_dark_pc-1366-dark_018_whats-new-book-p6.png | pc-1366 dark theme, What's new book page 6 (city) | the book card's left edge lies over the corner map (its right column cut off) and the notepad (its "1/1" hidden) | 1
+s3_pc-1366_dark_pc-1366-dark_019_whats-new-book-p7.png | pc-1366 dark theme, What's new book page 7 (city) | the book card's left edge lies over the corner map (its right column cut off) and the notepad (its "1/1" hidden) | 1
+s3_pc-1366_dark_pc-1366-dark_020_shop-market.png | pc-1366 dark theme, the Market shop card (city) | the round ⬇️ scroll button overlaps the bottom corners of the Lemon and Honey tiles | 1
+s3_pc-1366_dark_pc-1366-dark_021_shop-pets.png | pc-1366 dark theme, the Pet Shop card (city) | the round ⬇️ scroll button overlaps the bottom corners of the Frisbee and Yarn ball tiles | 1
+s3_pc-1366_dark_pc-1366-dark_044_inside-market.png | pc-1366 dark theme, inside the market | odd shading: a big hard-edged darker half-circle lies across the plain front of the fruit stand right in front of the camera | 1
+count: 11
