@@ -1,7 +1,7 @@
 """Run 4 finish: the data of the glitch list from pass 8 on (read by mkglitches5.py). One entry per cause; the marks are
 'p8:M-001' (pass 8, stage3-dc8). Later passes are added to DC and PASS as they come."""
-DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13', 'p14': 'stage3-dc14', 'p15': 'stage3-dc15'}
-PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13', 'p14': 'pass 14', 'p15': 'pass 15'}
+DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13', 'p14': 'stage3-dc14', 'p15': 'stage3-dc15', 'p16': 'stage3-dc16'}
+PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13', 'p14': 'pass 14', 'p15': 'pass 15', 'p16': 'pass 16'}
 AFTER_SETS = ['stage3-p9', 'stage3-p9b', 'stage3-p9c']   # newest first: the after picture of a fixed spot comes from pass 9
 KIT_SETS = ['stage3-kit9']
 PROBES = {   # spots whose after picture is a probe taken right after the fix (a pass-9 picture replaces it when there is one)
@@ -44,6 +44,7 @@ F9 = ' (patch_f9.py)'
 F10 = ' (patch_f10.py)'
 F11 = ' (patch_f11.py)'
 F12 = ' (patch_f12.py)'
+F13 = ' (patch_f13.py)'
 FRAME = "The photographer's framing, not the game: "
 ENTRIES = [
  ('168', ['p8:M-001'], 'October: the park fountain', 'iPad', 'A white ghost hung inside the fountain, between its top and middle bowls.', 1, 'fixed',
@@ -309,4 +310,12 @@ ENTRIES = [
   "The white duck from behind in the night light (its face is on its front); from the market's door on an upright phone the fruit stand stands between the camera and the keeper behind it; the photographer frames Santa at eye level, with the tall tree's star above the screen's top (the same view's other picture was dropped by its double-checker, M-012); the bursts fill the sky round the town, so one can be at the screen's edge, and an older burst's sparks fade (G4-254).", '—'),
  ('296', ['p15:M-004', 'p15:M-011', 'p15:M-016'], 'decided before', 'iPhone upright, PC, iPad', "The notepad over the Toy Store's sign on an upright phone; a dark half-circle on the fruit stand; townsfolk in party hats with their backs to N21's camera.", 1, 'not a glitch',
   "On an upright phone the fixed HUD can cover part of a sign (section 9c); your own shadow (G4-146, G4-271); N21 puts you right behind a townsperson (G4-260, G4-281).", '—'),
+ ('297', ['p16:M-005'], 'the ducks and the lily flowers', 'iPhone sideways', "The white duck sat on a lily pad, the pad's pink flower poking out at the duck's chest.", 1, 'fixed',
+  "The little pond's ducks keep 34 cm from each lily flower; and a duck pushed aside by the other (they keep 80 cm apart) no longer swims on straight at its old goal across a flower: a step into water it may not use ends that swim" + F13 + '.', "a check by script over 6000 frames and 6 feedings: a duck's middle within 34 cm of a flower in 368 duck-frames before, none after (the nearest 0.34 m); the ducks still swim (47 m and 46 m in 5 minutes) and come to you when fed; pass 17 pictures."),
+ ('298', ['p16:M-007'], "a duck's eyes", 'PC, dark theme', "The white duck's far eye showed as a white ring past its head's outline, like a googly eye.", 1, 'fixed',
+  "The eyes sit a little deeper and their shine on their top, both inside the head's outline: from behind and from the side a shine stuck out past the outline (from 1148 of 1440 view directions, now none; `eyegeo2.py`)" + F13 + '.', 'pictures of both ducks from the front, the side and behind; pass 17 pictures.'),
+ ('299', ['p16:M-001', 'p16:M-006', 'p16:M-009'], 'a friend behind a post, two ducks, the invitation card', 'iPad, PC', "Luna half behind a lamp post beside the camera at the bus stop; the white duck behind the yellow one, its head over the yellow one's; N39's invitation card pale and see-through.", 1, 'not a glitch',
+  "The photographer's bus-stop spot stands beside a lamp post (pass 5): Luna, on her own walk in town, stood behind it from there; two ducks one behind the other from that spot (G4-278); N39's picture caught the card's 0.2 s pop-in (the card shows once per invitation; the line measures the card itself and passes).", '—'),
+ ('300', ['p16:M-002', 'p16:M-003', 'p16:M-004'], 'decided before', 'iPhone upright, iPhone sideways', "A grandma's back filling the fountain view; the pose card over the photo frame's right end.", 1, 'not a glitch',
+  "A grandma walks round you at least 2.1 m away (G4-231): on an upright phone someone 2 m in front fills the middle of the narrow view as she passes; a card over the scene and the HUD while it is open (G4-033, G4-060).", '—'),
 ]

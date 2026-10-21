@@ -1,0 +1,2 @@
+s3_ipad-landscape_light_ipad-landscape-light_049_big-map.png | ipad-landscape light theme, the big map (city, 11:20) | place names are cut off by the map's frame: "e Station" and "othes Shop" at the left edge, "Duck Po" at the top right, and "Ha..." at the bottom left under the "Tap a place" tip bar | 1
+count: 1

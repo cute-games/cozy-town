@@ -1,0 +1,74 @@
+[
+ {
+  "id": "M-001",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_064_mailbox-menu.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p16/shots/s3_ipad-landscape_dark_ipad-landscape-dark_064_mailbox-menu.png",
+  "where": "ipad-landscape dark, city by the Beach Bus stop",
+  "what": "Luna stands right behind the lamp post next to the camera: the post hides half of her and cuts her name tag to \"Lu\" (she is half behind the same post in 063 and 065 to 067 too)",
+  "bad": "1"
+ },
+ {
+  "id": "M-002",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_036_town-square-fountain.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p16/shots/s3_iphone-portrait_light_iphone-portrait-light_036_town-square-fountain.png",
+  "where": "iphone-portrait light, the park from the square, the fountain",
+  "what": "a big townsperson seen from behind (grey hair with a bun, pink cardigan, brown shoes; looks like a grandma) stands right against the camera and fills the middle of the picture, hiding most of the fountain",
+  "bad": "2"
+ },
+ {
+  "id": "M-003",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_036_town-square-fountain.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p16/shots/s3_iphone-portrait_dark_iphone-portrait-dark_036_town-square-fountain.png",
+  "where": "iphone-portrait dark, the square by the fountain",
+  "what": "a big figure seen from behind (grey block head with a white bun, pink cardigan, brown legs) is right in front of the camera, filling the lower middle of the screen and hiding the middle of the fountain",
+  "bad": "2"
+ },
+ {
+  "id": "M-004",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_032_photo-pose-card.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p16/shots/s3_iphone-landscape_light_iphone-landscape-light_032_photo-pose-card.png",
+  "where": "iphone-landscape, light theme, photo shoot at the fountain with the pose card open",
+  "what": "the pose card sits over the right end of the dashed photo frame: the frame's top dashed line runs along the card's top border, and the frame's right side and corner disappear under the card",
+  "bad": "1"
+ },
+ {
+  "id": "M-005",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_039_town-duck-pond.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p16/shots/s3_iphone-landscape_dark_iphone-landscape-dark_039_town-duck-pond.png",
+  "where": "iphone-landscape dark, city: the duck pond",
+  "what": "the two ducks are bunched on top of each other (the white duck overlaps the yellow one, no water between them) and the white duck sits right on a lily pad, its pink flower poking out at the duck's chest",
+  "bad": "1"
+ },
+ {
+  "id": "M-006",
+  "file": "s3_pc-1366_light_pc-1366-light_039_town-duck-pond.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p16/shots/s3_pc-1366_light_pc-1366-light_039_town-duck-pond.png",
+  "where": "pc-1366 light, the duck pond (city, 11:00)",
+  "what": "the two ducks are bunched on top of each other: the white duck sits right behind the yellow one with its body hidden and only its head popping up behind the yellow duck's head, so they read as one two-headed duck instead of two ducks paddling apart",
+  "bad": "1"
+ },
+ {
+  "id": "M-007",
+  "file": "s3_pc-1366_dark_pc-1366-dark_039_town-duck-pond.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p16/shots/s3_pc-1366_dark_pc-1366-dark_039_town-duck-pond.png",
+  "where": "pc-1366 dark theme, city, duck pond",
+  "what": "the white duck's eye looks like a big white googly eye (white circle, black ring, black pupil) on its white head, not a dark eye with a shine; the yellow duck has a small dark eye, so the two new duck faces don't match",
+  "bad": "1"
+ },
+ {
+  "id": "M-008",
+  "file": "kit16-n19-halloween-oct1-day.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit16/shots/kit16-n19-halloween-oct1-day.png",
+  "where": "ipad-landscape, Flower Corner from the north road, 1 Oct day",
+  "what": "the spooky sign right of the gate is cut by the right screen edge and covered by \"Play with Clover\" and the bunny button; the \ud83c\udf38 Flower Corner sign left of the gate is hidden under the notepad",
+  "bad": "1"
+ },
+ {
+  "id": "M-009",
+  "file": "kit16-n39-B-party-invitation.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit16/shots/kit16-n39-B-party-invitation.png",
+  "where": "pc-1366, Flower Corner gate, invitation card under the top bar",
+  "what": "the party invitation card is pale and see-through (the sky and the building show through it), so its words and its two buttons (\"I'll come!\", \"Not this time\") are faint and hard to read; the line asks for a white card",
+  "bad": "2"
+ }
+]

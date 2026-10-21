@@ -1741,7 +1741,7 @@ function inter(L,o){o.x+=L.ox;o.z+=L.oz;L.inter.push(o);return o;}
 const LAKEW=[];
 /* 🦆 a duck's face and feathers: a wide flat orange bill, round dark eyes with a shine, wings a shade darker and a little upturned tail; one piece per duck (run 4, stage 3: from the path the ducks read as faceless blobs and the white one as a snowman) */
 function duckDress(d,c){const w=c==='#f7f2ec'?'#e3d9cb':'#f2c94c';sph(d,.055,'#ff9a3c',0,.315,.275,{s:[1.25,.42,1.55],ws:10,hs:6,ol:.012});
-  for(const s of[-1,1]){sph(d,.034,INK,s*.06,.36,.248,{ws:8,hs:6,ol:false});sph(d,.012,'#ffffff',s*.066,.374,.274,{ws:6,hs:4,ol:false});sph(d,.12,w,s*.135,.17,-.03,{s:[.42,.62,1.15],ws:10,hs:6,ol:.012});}
+  for(const s of[-1,1]){sph(d,.034,INK,s*.05,.355,.235,{ws:8,hs:6,ol:false});sph(d,.012,'#ffffff',s*.058,.379,.245,{ws:6,hs:4,ol:false});   /* (run 4 finish: the eyes sit a little deeper and the shine on their top, both inside the head's outline: from behind and from the side a shine stuck out past the outline like a googly eye) */sph(d,.12,w,s*.135,.17,-.03,{s:[.42,.62,1.15],ws:10,hs:6,ol:.012});}
   cone(d,.07,.13,c,0,.2,-.25,{rx:-Math.PI/2+.65,center:true,seg:6,ol:.012});bake(d,false);}
 function duckEyes(d){for(const s of[-1,1]){box(d,.03,.04,.012,INK,s*.062,.35,.255,{ry:s*.35,ol:false});box(d,.012,.014,.006,'#ffffff',s*.062+.006,.362,.262,{ry:s*.35,ol:false});}}
 function lakeOut(x,z,r,c){const dx=x-c.cx,dz=z-c.cz,m=r+c.cr;if(Math.abs(dx)>m||Math.abs(dz)>m)return null;const d=Math.hypot(dx,dz);if(d>=m)return null;
@@ -4493,8 +4493,8 @@ function updateCars(dt){const inCity=CUR.id==='city',peds=[],h=S?S.time:12;if(in
     if(block==='player'){c.honk-=dt;if(c.honk<=0){c.honk=3.5;if(Math.hypot(P.x-c.x,P.z-c.z)<12)SFX.honk();}}else c.honk=Math.min(c.honk,.6);
     c.d+=c.v*dt;carPlace(c);c.yaw=angLerp(c.yaw,c.ty,Math.min(1,dt*7));c.g.position.set(c.x,0,c.z);c.g.rotation.y=c.yaw;c.g.visible=inCity&&Math.hypot(c.x-camera.position.x,c.z-camera.position.z)<80;}}
 /* ---- ducks ---- */
-const PONDS=[{x:36.2,z:-36.2,r:1.45},{x:69,z:69,r:6.4,dock:LAKEW}];
-function duckOk(i,x,z){const p=PONDS[i];if(Math.hypot(x-p.x,z-p.z)>p.r)return false;   /* 🌉 ducks swim under the bridge only in its high middle */
+const PONDS=[{x:36.2,z:-36.2,r:1.45,pads:[[-.75,.3],[.45,.9],[.75,-.6]]},{x:69,z:69,r:6.4,dock:LAKEW}];   /* (run 4 finish: pads: the little pond's lily flowers, a duck keeps 34 cm from each: one sat on a flower, the bud through its chest) */
+function duckOk(i,x,z){const p=PONDS[i];if(Math.hypot(x-p.x,z-p.z)>p.r)return false;if(p.pads)for(const [fx,fz] of p.pads)if(Math.hypot(x-p.x-fx,z-p.z-fz)<.34)return false;   /* 🌉 ducks swim under the bridge only in its high middle */
   if(p.dock)for(const w of p.dock){const qx=x-w.ax,qz=z-w.az,t=qx*w.ux+qz*w.uz,s=-qx*w.uz+qz*w.ux;if(t>-.5&&t<w.len+.5&&Math.abs(s)<w.hw+.45)return false;}return true;}
 function duckLine(i,x0,z0,x1,z1){const n=Math.max(1,Math.ceil(Math.hypot(x1-x0,z1-z0)/.25));for(let k=1;k<=n;k++){const t=k/n;if(!duckOk(i,x0+(x1-x0)*t,z0+(z1-z0)*t))return false;}return true;}
 /* send a duck somewhere it can really swim to: straight there, or round the end of the pier */
@@ -4505,7 +4505,7 @@ function updDucks(dt,tt){for(const d of LOC.city.ducks){if(d.pond===undefined){d
   const pd=PONDS[d.pond];if(d.fed>0)d.fed-=dt;
   if(d.wait>0)d.wait-=dt;else{const gx=d.via?d.via[0]:d.tx,gz=d.via?d.via[1]:d.tz,dx=gx-d.x,dz=gz-d.z,dist=Math.hypot(dx,dz);
     if(dist<.08){if(d.via)d.via=null;else if(d.fed>0){d.wait=.6;d.face=Math.atan2(P.x-d.x,P.z-d.z);}else{d.wait=rand(.5,3);for(let k=0;k<12;k++){const a=rand(0,TAU),r=Math.sqrt(Math.random())*pd.r;if(duckGo(d,pd.x+Math.cos(a)*r,pd.z+Math.sin(a)*r))break;}}}
-    else{const sp=Math.min(dist,(d.fed>0?1.0:.35)*dt);d.x+=dx/dist*sp;d.z+=dz/dist*sp;d.face=Math.atan2(dx,dz);}}
+    else{const sp=Math.min(dist,(d.fed>0?1.0:.35)*dt),nx=d.x+dx/dist*sp,nz=d.z+dz/dist*sp;if(duckOk(d.pond,nx,nz)||!duckOk(d.pond,d.x,d.z)){d.x=nx;d.z=nz;d.face=Math.atan2(dx,dz);}else{d.tx=d.x;d.tz=d.z;d.via=null;}}}   /* (run 4 finish: a duck pushed aside by the other swam on straight at its old goal, across a lily flower: a step into water it may not use ends the swim there) */
   for(const e of LOC.city.ducks)if(e!==d&&e.pond===d.pond&&e.x!==undefined){const sx=d.x-e.x,sz=d.z-e.z,sd=Math.hypot(sx,sz);if(sd<.8&&sd>1e-4){const k=(.8-sd)/2,nx=d.x+sx/sd*k,nz=d.z+sz/sd*k;if(duckOk(d.pond,nx,nz)){d.x=nx;d.z=nz;}else{const ex=e.x-sx/sd*k*2,ez=e.z-sz/sd*k*2;if(duckOk(e.pond,ex,ez)){e.x=ex;e.z=ez;}}}}   /* 🦆 two ducks never swim into each other: 80 cm, a duck with its head (run 4, stage 3; at the pond's edge the other one moves) */
   d.g.position.set(d.x,.02+Math.sin(tt*3+d.x)*.02,d.z);d.g.rotation.y=angLerp(d.g.rotation.y,d.face,Math.min(1,dt*5));}}
 function feedDucks(i){const k=['bread','bagel','croissant','pretzel'].find(b=>S.bag[b]>0);if(!k){SFX.no();toast('The ducks would love some 🍞 bread! Get some at the Market or the Bakery.',3.4);return;}

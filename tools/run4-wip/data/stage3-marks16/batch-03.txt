@@ -1,0 +1,5 @@
+s3_ipad-landscape_dark_ipad-landscape-dark_034_inside-pets-upstairs.png | iPad landscape (dark), Pet Shop upstairs | the player's pets Mochi and Clover stand right in front of the camera and their big name tags lie over the pens; the "Clover" tag hides the brown bunny in the Bunnies pen (only its ears show) | 1
+s3_ipad-landscape_dark_ipad-landscape-dark_039_lane-my-garden.png | iPad landscape (dark), my garden behind the house | the camera stands right against the white garden fence: its rails and posts fill the lower half of the picture and hide most of the near row of pots | 1
+s3_ipad-landscape_dark_ipad-landscape-dark_039_lane-my-garden.png | iPad landscape (dark), my garden behind the house | the house's back wall above the garden is plain grey-pink, but 038 (same time) shows the house painted purple: the back wall seems not to take the house colour (unless the test reset the paint) | 1
+s3_ipad-landscape_dark_ipad-landscape-dark_042_phone-jobs.png | iPad landscape (dark), phone: Rosie's job list | the chat is scrolled so the first (mint) bubble is cut off under the header: only a thin sliver shows, with its "Fri · 11:00" time cut in half | 1
+count: 4

@@ -1,0 +1,3 @@
+M-007 | KEEP | white duck's eye is a big ringed googly eye, yellow duck's a small dark dot; mismatch visible
+M-008 | DROP | camera stands at the gate, so gate-post signs cut at edges/under HUD is normal framing, not a glitch
+M-009 | KEEP | card clearly see-through (sky and building show through), button labels faint and hard to read

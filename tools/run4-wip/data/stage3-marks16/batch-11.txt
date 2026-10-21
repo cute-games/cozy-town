@@ -1,0 +1,6 @@
+s3_pc-1366_dark_pc-1366-dark_012_settings.png | pc-1366 dark theme, city, Settings card | the round ⬇️ scroll button sits inside the last row (Notepad), squeezed between the label and the "✏️ On" button (about 12 px from it), and that row is half faded so Notepad, On and Last page all look greyed out | 1
+s3_pc-1366_dark_pc-1366-dark_013_whats-new-book.png | pc-1366 dark theme, city, What's new book page 1 (same on pages 2 to 7: files 014 to 019) | the wide book card overlaps the corner map and the notepad: the map's right edge and the right part of the notepad are cut off under the card's left edge, and the scene is not dimmed, so it looks like a collision | 1
+s3_pc-1366_dark_pc-1366-dark_020_shop-market.png | pc-1366 dark theme, city, Market shop card | the round ⬇️ scroll button overlaps the bottom corners of the Lemon and Honey tiles | 1
+s3_pc-1366_dark_pc-1366-dark_021_shop-pets.png | pc-1366 dark theme, city, Pet Shop card | the round ⬇️ scroll button overlaps the bottom corners of the Frisbee and Yarn ball tiles | 1
+s3_pc-1366_dark_pc-1366-dark_039_town-duck-pond.png | pc-1366 dark theme, city, duck pond | the white duck's eye looks like a big white googly eye (white circle, black ring, black pupil) on its white head, not a dark eye with a shine; the yellow duck has a small dark eye, so the two new duck faces don't match | 1
+count: 5
