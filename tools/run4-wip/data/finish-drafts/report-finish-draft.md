@@ -433,7 +433,7 @@ bubble under the header.
 
 For pass 20: the filter (`dcfilter20.py`) sets aside pass 19's decisions and drops, and three rules take the words pass 19's viewers used. On
 pass 19's marks it keeps exactly the 8 that f16 fixed. From pass 20 the loop follows the owner's rules of 21 Oct (`CLAUDE.md`, "Glitch loop
-rules"): NEWRULESLINE
+rules"): re-check only what changed (each fix's probe views on the screen where its mark was seen and one other shape, light and dark), the kit's night3 and run4 lines in full every pass, five viewers each with its own focus (rotated), viewers and first checkers on Sonnet at medium, every decision and edit here with the mark's picture opened; stop after two passes in a row with no fix above minor or after pass 22; then one full picture pass, its marks above minor fixed and re-checked like a pass, the minor ones listed (below).
 
 **Pass 20, the first under the owner's rules of 21 Oct** (re-check only what changed): the kit's night3 and run4 lines in full on the f16 file
 (40 of 41 PASS, N25 FAIL), then 26 pictures of f16's spots only (`pass20.sh`), five viewers by focus, `dcfilter20.py`, six first checkers: 12 viewer marks, 6 of them
@@ -494,6 +494,24 @@ room 2 and the pond bubble held.
 **Pass 25, the re-check of f20** (the f20 file): the kit 40 of 41 PASS, N15 on its own timing (its first sample only; alone on the same file:
 PASS, FAIL the same way, PASS); 10 pictures, five viewers, one first checker: 4 marks kept, all decided before (G4-341). f20 and f19 held. No fix:
 the full final pass is done.
+
+#### Leftover minor marks (grade 1, not fixed)
+The owner's rules of 21 Oct: in the full final pass a mark above minor is fixed and re-checked; minor ones (grade 1) are not. Every grade-1
+glitch still open after the finish (the earlier passes' open ones too), each with its entry in `tools/GLITCH-LIST-4.md`:
+
+| entry | where | what | why it stays |
+|---|---|---|---|
+| G4-088, G4-257 | sun shadows (iPad) | faint stripes and saw-tooth edges in the sun's shadows (fountain basin, window sills, eaves) | the steps of the sun's shadow map (2048 px over 60 m); a sharper map costs four times the memory |
+| G4-244, G4-294, G4-306 | the Tree Park's crowns (iPad) | a short row of soft dark dots or brown saw-tooth bits on a big crown | the same shadow-map steps on a crown |
+| G4-245, G4-258 | your pets (iPad) | your pets' big tags in front of the Pet Shop's upstairs pens; Mochi behind Finn, its tag cut | your pets at your heels (G4-205), for the owner |
+| G4-279 | the salon floor (PC 1920) | the floor near the camera soft, the far tiles sharp | each room's floor is a 256-pixel picture; a bigger one costs memory on phones |
+| G4-285 | the phone's jobs (sideways iPhone) | three job cards fill the phone screen; the other two show no part above its foot | the fade at the foot says the list goes on (G4-263) |
+| G4-307 | the photographer's shoot at the pond's bench (sideways iPhone) | the bench, the photo's background, mostly behind the family; a grey wall in half the frame | the shoot's start spot does not look for the background; a child turns or steps aside |
+| G4-324 | the hair job (sideways iPhone) | your cat Mochi stretched at the corner when the hair card turns the view | your pets at your heels (G4-205), for the owner |
+| G4-329 | a photo shoot from the side (sideways iPhone) | a group member's name tag peeks out behind the "Pose: Mia" label | pushed below the label, a tag would leave its person |
+| G4-336 | the food truck (iPad) | a small grey ball on the truck's side by the awning's end | the truck's evening lamp, unlit by day, with no bracket |
+| G4-337 | the Christmas tree at night (iPad, dark) | two of the tree's lights glow big and white, like a flare | small |
+| G4-338 | the photographer's close duck view (iPad) | a big dark box at the right edge of the view by the blue house | something by the house's corner at that fixed camera spot; small |
 
 #### Decisions made alone (run 4 finish)
 - The kit, never weaker (every change in `cozy-check-v6.zip`, listed in its README-KIT.md and here, old → new):

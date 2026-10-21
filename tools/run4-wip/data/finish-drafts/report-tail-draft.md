@@ -1,9 +1,9 @@
 === 3c add ===
-- Run 4 finish: the glitch pictures of passes 8 to LASTPASS (G4-168 on) are in tools/pictures-4/stage3-glitches/ like the rest; the photographer's pictures of those passes were not kept (their maps are in tools/run4-wip/data/stage3-p8* to stage3-pLASTPASS*).
+- Run 4 finish: the pictures of passes 8 to 19 stayed in the first finish session's scratch folder, which is gone; their entries (G4-168 to G4-326) are in tools/GLITCH-LIST-4.md without a before picture, and the fixed ones carry an after picture from the full final pass (pass 23). From G4-327 on (passes 20 to 25) each entry has its pictures, in tools/pictures-4/stage3-glitches/ like the rest. The photographer's pictures of the passes were not kept (their maps are in tools/run4-wip/data/stage3-p8* to stage3-p23*).
 
 === 4 add (after the table; the table gets round 6) ===
 - Run 4 finish: round 6, the last the plan allows, saw pass 9's pictures (the file with f3 to f5): photographer job 7, parties and the dance game 8, holiday spot 7, house floors and colour 8, one clock 7. No loop besides the Tree park reached three 8s in a row; the loops end here. What each critic said, what was fixed for it in f6 (not scored again) and where each loop is stuck: tools/run4-wip/data/critic-scores.md.
-- The glitch list after the finish: GLITCHCOUNT.
+- The glitch list after the finish: 341 entries (G4-001 to G4-341): 256 fixed, 68 not a glitch, 17 open (15 of them grade 1, listed in section 1's leftover list; G4-205 and G4-222, your pets at your heels, grade 2, for the owner).
 
 === 5c add ===
 - Run 4 finish (21 Oct): every item open at the wrap-up is done (tools/run4-wip/README.md). Left as they are, each written down:
@@ -19,7 +19,7 @@
 - Run 4 finish, to try for real: the friends around you after you stop and after you turn round on a narrow pavement (all four faces should show: an arc, the middle two further back); feeding the ducks at the small pond (each duck swims up and looks at you); the clock chip "9:40 Wed" on a phone and a tablet at the same moment; a hair customer sitting down (no big words on their face).
 
 === 8 add ===
-- Run 4 finish: tools/prerun4-rollback.html restamped ROLLBACKSTAMP (above the finish's STAMP), as before: put live as index.html, it takes every player back to the night-3 game by itself.
+- Run 4 finish: tools/prerun4-rollback.html restamped 2026102150 (above the finish's 2026102101), as before: put live as index.html, it takes every player back to the night-3 game by itself.
 
 === 9c add ===
 - Run 4 finish: the decisions made alone are in section 1's "Run 4 finish" part ("Decisions made alone (run 4 finish)"): the kit's fixes (never weaker), the friends' arc, the toasts during a shoot, the stairs' arrow, the photo booking's words, the not-glitches with their reasons, and leaving the pets at your heels for the owner.

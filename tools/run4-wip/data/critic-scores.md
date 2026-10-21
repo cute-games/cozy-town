@@ -2,12 +2,12 @@
 
 | part | round 1 | round 2 | round 3 | round 4 | round 5 | round 6 |
 |---|---|---|---|---|---|---|
-| photographer job | 7 | 6 | 6 | 6 | 7 | |
-| tree park | 7 | 7 | 8 | 8 | 8 (done: three 8s in a row) | |
-| parties and the dance game | 6 | 6 | 7 | 7 | 8 | |
-| holiday spot | 6 | 7 | 7 | 8 | 7 | |
-| house floors and colour | 6 | 7 | 7 | 7 | 7 | |
-| one clock | 6 | 6 | 7 | 6 | 6 | |
+| photographer job | 7 | 6 | 6 | 6 | 7 | 7 |
+| tree park | 7 | 7 | 8 | 8 | 8 (done: three 8s in a row) | (done) |
+| parties and the dance game | 6 | 6 | 7 | 7 | 8 | 8 |
+| holiday spot | 6 | 7 | 7 | 8 | 7 | 7 |
+| house floors and colour | 6 | 7 | 7 | 7 | 7 | 8 |
+| one clock | 6 | 6 | 7 | 6 | 6 | 7 |
 
 ## What the critics said
 
@@ -59,3 +59,18 @@
   - Holiday spot (6, 7, 7, 8, 7): fireworks that nobody saw, Santa's coins, the tree's star and baubles (all changed after round 5), and the months no picture showed yet (Valentine's, other months, the October shop).
   - House floors and colour (6, 7, 7, 7, 7): the stairs both ways, the garden plates, the door smudges, the colour card (all changed after round 5).
   - One clock (6, 6, 7, 6, 6): the friends around you (hiding behind each other, the one at the screen's edge), the ducks' faces, the times in words, the calendar header and the coins in the phone (all changed after round 5). The friends walking round you to the front was tried and dropped (it broke N3); they walk straight to their spots as before.
+
+### Round 6, the last (pictures of pass 9 and the kit's own, on the file with f3 to f5; 20 Oct, run 4 finish)
+- Photographer job, 7: the "Everyone is posed!" message over the school sign the booking asked for, on a sideways phone (the shoot's messages sit above the viewfinder on a short sideways screen, f6); the PC "bench" photo without the bench yet five stars (not changed); Rosie's job list on a sideways phone shows three jobs with no scroll hint (not changed); the result card hugs the left on iPad and PC (not changed); "Mia and Leo will be waiting there!" from Mia (now "Leo and I", f6).
+- Parties and the dance game, 8: the dancers too close and the mirror ball at head height; no "You" mark on your dancer; arrows sliding past the pink line; the result card one small line; floor spots like paint stains (not changed).
+- Holiday spot, 7: weak fireworks (one small burst behind the notepad, one grey); a grandma's bubble under the notepad; a garden ghost on the first lamp; pumpkins hard to spot; the heart fountain against the tree; Santa's boots (not changed).
+- House floors and colour, 8: the garden's front pots behind the near fence (the photographer's spot outside the fence; not changed); the one-storey house's shadow band under the roof and its name sign above the roof (not changed); the picked colour and the lane's own colour both yellow (a coincidence of the two colours; not changed); the stairs' button showed a ladder (now the plate's ⬆️ or ⬇️, f6); the ground floor lamp, the curtains, a wordy card (not changed).
+- One clock, 7: a friend partly behind Luna in all four friend pictures and Rosie at the camera after a turn (the friends stand on an arc now, f6); the ducks without eyes, facing each other after feeding (bigger eyes with a shine, each its own spot, turned to you, f6); the calendar's today ☀️ under a grey sky (the chip's sky now, f6); the weekday small and pale (bold and dark now, f6); 21:30 Sat without 🏆 (by design: the 🏆 shows until the show is over at 20:00; the viewers' line says so now); the "Good night!" bubble under the sleep card (not changed).
+
+## Where each loop stands (20 Oct, run 4 finish: the critic loops end here)
+Round 6 was the last round the plan allows. A part is done after three 8s in a row: only the Tree park got there (rounds 3 to 5). The other five end here; every point above marked f6 was fixed after round 6 and has not been scored again.
+- Photographer job (7, 6, 6, 6, 7, 7): stuck on the result card's layout on wide screens, a background missing from a photo that still gets five stars, and the job list's scroll hint on a sideways phone.
+- Parties and the dance game (6, 6, 7, 7, 8, 8): two 8s in a row; stuck on the dancers' spacing and the mirror ball's height, a mark for your own dancer and a bigger result card.
+- Holiday spot (6, 7, 7, 8, 7, 7): stuck on the fireworks (size and colour), speech bubbles under the notepad, a ghost on a lamp and the pumpkins' size.
+- House floors and colour (6, 7, 7, 7, 7, 8): stuck on the garden's front pots behind the fence, the small house's shadow band and name sign, and the colour card's two yellow buttons.
+- One clock (6, 6, 7, 6, 6, 7): its points of round 6 (the friends' arc, the ducks, the calendar's sky, the weekday) were fixed in f6 and seen by pass 10's viewers, not by a critic.
