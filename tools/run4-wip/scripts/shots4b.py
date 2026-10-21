@@ -58,7 +58,7 @@ SETS = [
  ('jobs', '2026-10-20T12:00:00', 'light', [
    ('job-sleep-screen', BED, 'in bed at 22:00: the sleep screen', None, None, 1400),
    ('job-hair-card', HAIR, "the hairstylist's customer card at the salon", "()=>!!(HS.cust&&HS.cust.sat)", "()=>{const t=LOC.salon.inter.find(t=>t.hs);if(t){P.x=t.x;P.z=t.z;t.act();const c=HS.cust;if(c){const dx=c.x-t.x,dz=c.z-t.z,d=Math.hypot(dx,dz)||1;P.x=t.x-dx/d*.9+dz/d*.9;P.z=t.z-dz/d*.9-dx/d*.9;[P.x,P.z]=collideXZ(P.x,P.z,.3,CUR);P.yaw=Math.atan2(-(c.x-P.x),-(c.z-P.z));P.pitch=-.08;}}}"),
-   ('job-delivery-way', DLV + "dl().wait=1e9;if(!dl().o)newOrder();pickUp();toastOff();", 'a pizza delivery on the way: the job box and the corner map', "()=>!!(dl().o&&dl().o.st==='carry')", None),   # (pass 6: the order is made and picked up; pass 5 never started one)
+   ('job-delivery-way', DLV + "dl().wait=1e9;if(!dl().o)newOrder();pickUp();closePanel();toastOff();", 'a pizza delivery on the way: the job box and the corner map', "()=>!!(dl().o&&dl().o.st==='carry')", None),   # (pass 6: the order is made and picked up; pass 5 never started one; pass 11: Chef Blaze's card is closed, as on the way: in the pizzeria the timer waits for it, in the street it ran under it)
    ('job-delivery-note', "closePanel();dl().o=null;newOrder();", 'the delivery message', "()=>!$('note').hidden||!!document.querySelector('#toast.show')", None)]),
 ]
 

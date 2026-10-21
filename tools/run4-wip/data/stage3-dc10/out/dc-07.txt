@@ -1,0 +1,8 @@
+M-049 | KEEP | whole screen and HUD dimmed; other upstairs shots are clear
+M-050 | DROP | sign still readable; HUD over the 3D scene is normal
+M-051 | KEEP | a person's head and back fill the centre, fountain hidden
+M-052 | KEEP | sun icon but grey overcast sky; kit9 sunny shot here is blue
+M-053 | KEEP | tiny white text label clearly sits on the face
+M-054 | DROP | plain cream party hat still reads fine; style, not a glitch
+M-055 | DROP | shapes are butterflies (wings, dark body), sunny only, not flags
+M-056 | DROP | duck just at frame edge under the buttons; normal HUD overlap

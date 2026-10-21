@@ -15,7 +15,7 @@ async def main():
     async with Run('pv', OUT) as run:
         for prof in PROFS.split(','):
             fb = fake_date_build(open(FILE, 'rb').read(), DATE)
-            g = await run.open(fb, 'web', prof, 'light', 'pv-' + TAG + '-' + prof, save=json.loads(json.dumps(save))); await start_from_save(g); await g.ev(INSTR)
+            g = await run.open(fb, 'web', prof, os.environ.get('PV_THEME', 'light'), 'pv-' + TAG + '-' + prof, save=json.loads(json.dumps(save))); await start_from_save(g); await g.ev(INSTR)
             await g.ev("()=>{S.name='Cozy Kid';const st=document.createElement('style');st.textContent='#toast{display:none!important}';document.head.appendChild(st);}"); await g.step(4)
             for name, js in VIEWS:
                 r = await g.ev("(js)=>{try{const v=eval(js);return v===undefined?null:v;}catch(e){return 'ERR '+e;}}", js); await g.step(12); await g.wait(500); await g.step(4)

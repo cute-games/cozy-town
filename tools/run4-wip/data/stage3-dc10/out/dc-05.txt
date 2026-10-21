@@ -1,0 +1,8 @@
+M-033 | KEEP | "+120" and coin visibly cut by card top edge
+M-034 | KEEP | sign text clearly off-centre, big empty gap right (even allowing for angle)
+M-035 | KEEP | two kids overlap at left edge, third hidden behind buttons
+M-036 | KEEP | giant dark shoes and green hem stick out under card
+M-037 | KEEP | giant grandma head/back fills left third of screen
+M-038 | DROP | normal side card over empty frame corner, nothing lost
+M-039 | DROP | normal popup over map/notepad, nothing needed hidden
+M-040 | KEEP | huge grey head with glasses pokes above card mid-view

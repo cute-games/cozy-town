@@ -1,0 +1,8 @@
+M-025 | DROP | the phone's intended soft fade at the screen bottom, nothing hidden
+M-026 | DROP | cards read in full, only edges in the soft fade (same as G4-163 after picture); ❓ shows only under your current job, none here
+M-027 | DROP | the phone's intended soft fade at the screen bottom, nothing hidden
+M-028 | DROP | list goes on below, the second step still reads in the soft fade
+M-029 | DROP | normal "more below" peek of the next card under the soft fade
+M-030 | DROP | normal "more below" peek of the next pet row under the soft fade
+M-031 | DROP | the phone's intended soft fade at the screen bottom, nothing hidden
+M-032 | KEEP | Halloween sentence visibly stops at "and the" in the fade (G4-163 fix meant it to read in full)

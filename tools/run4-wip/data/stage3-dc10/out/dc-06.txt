@@ -1,0 +1,8 @@
+M-041 | KEEP | grandma's huge head and cardigan block left third, stepped outline visible
+M-042 | DROP | ordinary HUD overlap from camera angle, hats not broken (third hat shows)
+M-043 | KEEP | near-black dot almost invisible on dark purple card
+M-044 | KEEP | timer reads 0:44 while card says it starts on close
+M-045 | KEEP | sun icon but whole sky grey overcast
+M-046 | KEEP | huge figure right against camera hides fountain
+M-047 | KEEP | same huge figure hides fountain in snow
+M-048 | KEEP | faded mouse/sparkle "winner" pop-up floats over Twig, fence and sign

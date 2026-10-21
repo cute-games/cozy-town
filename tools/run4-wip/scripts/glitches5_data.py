@@ -1,7 +1,7 @@
 """Run 4 finish: the data of the glitch list from pass 8 on (read by mkglitches5.py). One entry per cause; the marks are
 'p8:M-001' (pass 8, stage3-dc8). Later passes are added to DC and PASS as they come."""
-DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9'}
-PASS = {'p8': 'pass 8', 'p9': 'pass 9'}
+DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10'}
+PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10'}
 AFTER_SETS = ['stage3-p9', 'stage3-p9b', 'stage3-p9c']   # newest first: the after picture of a fixed spot comes from pass 9
 KIT_SETS = ['stage3-kit9']
 PROBES = {   # spots whose after picture is a probe taken right after the fix (a pass-9 picture replaces it when there is one)
@@ -28,11 +28,14 @@ UPDATES = {
     'G4-160': {'check': 'pass 8 pictures: not seen again.'}, 'G4-161': {'check': 'pass 8 pictures: not seen again.'},
     'G4-163': {'check': 'pass 8 pictures: not seen again.'}, 'G4-164': {'check': 'pass 8 pictures: not seen again.'},
     'G4-165': {'check': 'N26 passes; pass 8 pictures: not seen again.'}, 'G4-166': {'check': 'N25 passes; pass 8 pictures: not seen again.'},
+    'G4-220': {'check': "pass 10 pictures: the message still lay over the school's sign: f6's style rule did not take, the game places its messages itself; f7 places it (G4-235)."},
+    'G4-208': {'check': 'pass 9 pictures; pass 10: once more, with the message coming after the pop (G4-229).'},
 }
 F5 = ' (patch_f5.py)'
 F3 = ' (patch_f3.py)'
 F4 = ' (patch_f4.py)'
 F6 = ' (patch_f6.py)'
+F7 = ' (patch_f7.py)'
 FRAME = "The photographer's framing, not the game: "
 ENTRIES = [
  ('168', ['p8:M-001'], 'October: the park fountain', 'iPad', 'A white ghost hung inside the fountain, between its top and middle bowls.', 1, 'fixed',
@@ -156,4 +159,49 @@ ENTRIES = [
   "An autumn leaf at the end of its fall (the check jumps from October to December in one page, so autumn's leaves still fall; a December game has none); N11 feeds and plays with each new pet in one go, so both games' feedback rises at once; each egg's \"n/25\" rises where it was found and the check picks up all 25 at once; N24's camera stands where its check stands, under the bus message.", '—'),
  ('226', ['p9:M-029'], 'your house upstairs, an old save', 'iPad', 'The purple bed seemed pushed into the bunk bed.', 1, 'not a glitch',
   'They stand 70 cm apart side by side (a probe from the side); from the stairs one is seen behind the other.', '—'),
+ # ---- pass 10 (the file with f6; 159 marks, 96 set aside with their reason, 63 double-checked, 41 kept) ----
+ ('227', ['p10:M-063'], "the hair salon: a customer's wish", 'PC', '"I\'d like my hair shoulder-length and bun" (clumsy words).', 1, 'fixed',
+  'The wish reads like a child would say it: "I\'d like brown hair, shoulder-length, in a bun, please!", "long and straight", "short, in pigtails"' + F7 + '.', 'a check of every style; N13 passes; pass 11 pictures.'),
+ ('228', ['p10:M-022', 'p10:M-033', 'p10:M-059'], 'the photo and hair result cards', 'iPhone sideways', 'The "+120 🪙" pop flew half behind the card\'s top edge.', 1, 'fixed',
+  'A coin pop is drawn over a card (it was drawn under it)' + F7 + '.', 'pass 11 pictures.'),
+ ('229', ['p10:M-058'], 'the designer job: a new client (after G4-208)', 'iPad', 'The "+20 🪙" pop lay on the "New client!" words that came a moment after it.', 1, 'fixed',
+  'When a message comes after a coin pop, the pop moves clear of it' + F7 + '.', 'N8 passes; pass 11 pictures.'),
+ ('230', ['p10:M-045', 'p10:M-052', 'p10:M-062'], 'the clock chip', 'iPad, PC, Android tablet', 'The chip showed ☀️ under a grey sky.', 1, 'fixed',
+  'The sky turns fully grey in the first 40 % of a weather change, the chip turned at 50 %; the chip shows the sky as you see it now: ☁️ once the sky is half grey, 🌧️ and 🌨️ as soon as rain or snow falls' + F7 + '.', 'a check of each sky; N16 and N18 pass; pass 11 pictures.'),
+ ('231', ['p10:M-036', 'p10:M-037', 'p10:M-040', 'p10:M-041'], 'a grandma walking by', 'PC', 'At the Beach Bus stop a grandma walked right through the camera: her head and cardigan filled a third of the screen, her shoes stuck out under a card.', 2, 'fixed',
+  "A grandma walks round you, at least 2.1 m away (a smooth step aside from 4.5 m before you to 4.5 m past you), and keeps her step while she stands; on your device only: her place in the day's plan stays the same on every device" + F7 + '.', 'a check of a grandma walking along the line you stand on: 2.06 m at the closest, never out of sight; N24 passes; pass 11 pictures.'),
+ ('232', ['p10:M-004', 'p10:M-005'], 'a friend out for a walk', 'iPad', 'Luna, out for a walk, stood 0.9 m in front of the camera, her back and hair filling a quarter of the view, for as long as you stood still.', 2, 'fixed',
+  'A friend out for a walk gives way like a passer-by: coming at you, she stops 2.4 m away and after a moment walks back; right at the camera (1.3 m) she waits unseen, like a friend who follows you' + F7 + '.', 'a check: she stops at 2.39 m and turns back; N3 passes; pass 11 pictures.'),
+ ('233', ['p10:M-057'], 'friends round you', 'iPad', 'After a turn a townsperson stood between you and your friends, hiding Luna and Theo.', 2, 'fixed',
+  'A passer-by never steps into the space between you and your friends round you, and one standing there when they gather steps out of view, as in a photo shoot; a passer-by coming straight at you stops 2.4 m away (1.7 m before); one walking away from you is never held' + F7 + '.', 'a check of the circle; N3 passes; pass 11 pictures.'),
+ ('234', ['p10:M-014', 'p10:M-016', 'p10:M-019', 'p10:M-021', 'p10:M-053'], 'name tags far away', 'iPad, iPhone', "The Pet Show judges' far name tags were tiny pills piled in a staircase; at New Year a far grandma's tiny bubble, drawn over everything, sat on a near face.", 1, 'fixed',
+  'A name tag or bubble too small to read (a line under 15 px tall) fades out, gone under 11 px' + F7 + '.', 'probes of the photo shoot and the stage; pass 11 pictures.'),
+ ('235', ['p10:M-061'], 'a photo shoot at the school (after G4-220)', 'iPhone sideways', 'The "Everyone is posed!" message still lay over the hanging school sign and Ben\'s tag; the big school sign was cut by the top edge, behind the coin, food and clock chips.', 2, 'fixed',
+  "On a short sideways screen the chips step aside during a shoot and the shoot's messages sit at the top left, in their place" + F7 + '.', 'N25 passes; a probe; pass 11 pictures.'),
+ ('236', ['p10:M-032'], 'the phone: calendar (after G4-163)', 'iPhone sideways', 'On a Saturday the Halloween line stopped at "…and the" in the phone\'s bottom fade.', 1, 'fixed',
+  "On a short sideways screen the week's tiles are lower, so the month's line shows in full above the fade" + F7 + '.', 'a probe on a Saturday; pass 11 pictures.'),
+ ('237', ['p10:M-015'], "the phone: Rosie's job list", 'iPhone upright', '"Photographer" touched both sides of its card.', 1, 'fixed',
+  'The job titles are a little smaller on the phone (13 px)' + F7 + '.', 'a probe; pass 11 pictures.'),
+ ('238', ['p10:M-043'], "the Clothes Shop's New in! row", 'iPad (dark)', "The Special cap's near-black colour dot had no ring and vanished on the dark card.", 1, 'fixed',
+  "A colour dot keeps its light ring when the device is in dark mode, not only when dark is picked in the settings (the book's page dots too)" + F7 + '.', 'a probe; pass 11 pictures.'),
+ ('239', ['p10:M-001'], "the Toy Store's corner post", 'iPad', 'A faint dashed line ran down the pink corner post, roof edge to pavement.', 1, 'fixed',
+  "Cause, found by switching the ink outlines off: the wall's ink shell ran 4 cm behind the post's face, too close for the depth test from across the street. The corner posts of every flat-roofed building stand 11 cm out from the wall, not 7" + F7 + '.', 'a probe of the same view: the line is gone.'),
+ ('240', ['p10:M-008'], 'the Toy Store and Hair Salon awnings', 'iPad', "The awning seemed to run on past the shop's far corner into thin air, off-centre.", 1, 'fixed',
+  'The awning is centred (20 cm over each end), but it reaches 1.4 m out from the wall, so seen from one end its open far end looked like a strip hanging past the corner; both ends are closed by a side valance now' + F7 + '.', 'probes from both ends; pass 11 pictures.'),
+ ('241', ['p10:M-003'], 'the duck pond', 'iPad', 'Broken dark-blue blotches on the water along the reeds.', 1, 'fixed',
+  "The reeds' 3.6 cm stems were too thin for the sun's shadow map; they cast no shadow now" + F7 + '.', 'a probe; pass 11 pictures.'),
+ ('242', ['p10:M-010'], 'the Tree Park: the star over your next deck', 'iPad', 'Seen half-way round, the turning star looked like a bell drawn through a star.', 1, 'fixed',
+  'It was two crossed stars turning; now one star faces you and sways a little' + F7 + '.', 'a probe; pass 11 pictures.'),
+ ('243', ['p10:M-012'], 'inside the Bakery', 'iPad', 'A shopper at the counter stood right in front of Mrs. Crumb as seen from the door: the two read as one stacked figure.', 1, 'fixed',
+  "The counter's right-hand spot (Bakery and Ice Cream Shop) is 85 cm further right, out of the line from the door to the shopkeeper" + F7 + '.', 'a probe from the door; pass 11 pictures.'),
+ ('244', ['p10:M-002'], 'the Tree Park: a tree crown', 'iPad', 'A short row of soft dark dots on a big orange crown.', 1, 'open',
+  "Found by switching each shadow caster off in turn: another orange crown's shadow, broken up by the sun's shadow map (2048 px over 60 m); the same as G4-088, written down in stage 3.", ''),
+ ('245', ['p10:M-013'], 'your pets (G4-205 again)', 'iPad', "Mochi and Clover with their big tags in front of the Pet Shop's upstairs pens.", 1, 'open',
+  'The same as G4-205: not changed, written down for the owner (section 5c).', ''),
+ ('246', ['p10:M-006', 'p10:M-009', 'p10:M-034', 'p10:M-035'], 'not glitches', 'iPad, iPhone sideways', "The fountain mottled at night; a house sign without a garland in October; the Toy Store's name off-centre on its board; two shoppers at the left edge of the Pet Shop, one behind the other, and one behind the buttons.", 1, 'not a glitch',
+  "The mottling is the water falling from the fountain's bowls (blue at night; the same sheets show in rain); the Halloween line's \"garlands on their posts\" means garlands hanging on posts of their own (no garland floats), the house signs have their pumpkins; the name sits in the middle of its board, above the door: measured, from where the camera stands the board's far half looks about half as long as its near half; the shoppers stand at their spots by the side shelves, at the edges of a wide view.", '—'),
+ ('247', ['p10:M-044'], "the photographer's own staging", 'iPad', "On a rare delivery the job box read 0:44 while Chef Blaze's card said the timer starts when you close it.", 1, 'not a glitch',
+  FRAME + 'the photographer picks the pizza up in the street; in the game Chef Blaze hands it over in the pizzeria, where the timer waits for his card (pass 11 closes the card).', '—'),
+ ('248', ['p10:M-046', 'p10:M-047', 'p10:M-048', 'p10:M-049', 'p10:M-051'], "the check's own staging", 'iPad', 'A townsperson\'s back filling the middle of the fountain pictures; a faded "And the winner is…" over a new pet; the whole picture dimmed after the stairs.', 1, 'not a glitch',
+  "The check puts you at the fountain in one step, onto a townsperson's way (the one walking off was 1.4 m ahead; a child walking there meets them coming, and they stop 2.4 m away); N11 runs each pet's Pet Show in fast game time, and the show's drum message fades in real time; N12 takes its upstairs picture as the stairs' 0.4 s fade ends.", '—'),
 ]
