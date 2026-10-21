@@ -1,0 +1,90 @@
+[
+ {
+  "id": "M-001",
+  "file": "pv_iphone-portrait_dark_pv-r24d-iphone-portrait_002_flower-bubble-r24d-iphone-portrait.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r24d/shots/pv_iphone-portrait_dark_pv-r24d-iphone-portrait_002_flower-bubble-r24d-iphone-portrait.png",
+  "where": "iphone-portrait, dark, Flower Corner gate",
+  "what": "grandma's speech bubble runs off the right screen edge, the last word \"Such\" is cut and the end of the sentence is not shown",
+  "bad": "2",
+  "verdict": "KEEP",
+  "dc": "bubble runs off right edge, no right border",
+  "spot": "flower-bubble-r24d-iphone-portrait"
+ },
+ {
+  "id": "M-002",
+  "file": "pv_iphone-portrait_light_pv-r24-iphone-portrait_002_flower-bubble-r24-iphone-portrait.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r24/shots/pv_iphone-portrait_light_pv-r24-iphone-portrait_002_flower-bubble-r24-iphone-portrait.png",
+  "where": "iphone-portrait, light, Flower Corner gate",
+  "what": "grandma's speech bubble runs off the right screen edge, the last word \"Such\" is cut and the end of the sentence is not shown",
+  "bad": "2",
+  "verdict": "KEEP",
+  "dc": "bubble runs off right edge, no right border",
+  "spot": "flower-bubble-r24-iphone-portrait"
+ },
+ {
+  "id": "M-003",
+  "file": "pv_iphone-portrait_dark_pv-r24d-iphone-portrait_002_flower-bubble-r24d-iphone-portrait.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r24d/shots/pv_iphone-portrait_dark_pv-r24d-iphone-portrait_002_flower-bubble-r24d-iphone-portrait.png",
+  "where": "iphone-portrait, dark, Flower Corner gate",
+  "what": "grandma's speech bubble runs off the right screen edge, the word \"Such\" is cut and the bubble's right end is missing",
+  "bad": "2",
+  "verdict": "KEEP",
+  "dc": "bubble runs off right edge, right end missing",
+  "spot": "flower-bubble-r24d-iphone-portrait"
+ },
+ {
+  "id": "M-004",
+  "file": "pv_iphone-portrait_light_pv-r24-iphone-portrait_002_flower-bubble-r24-iphone-portrait.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r24/shots/pv_iphone-portrait_light_pv-r24-iphone-portrait_002_flower-bubble-r24-iphone-portrait.png",
+  "where": "iphone-portrait, light, Flower Corner gate",
+  "what": "same: grandma's speech bubble runs off the right screen edge, \"Such\" cut",
+  "bad": "2",
+  "verdict": "KEEP",
+  "dc": "bubble runs off right edge",
+  "spot": "flower-bubble-r24-iphone-portrait"
+ },
+ {
+  "id": "M-005",
+  "file": "pv_iphone-portrait_dark_pv-r24d-iphone-portrait_002_flower-bubble-r24d-iphone-portrait.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r24d/shots/pv_iphone-portrait_dark_pv-r24d-iphone-portrait_002_flower-bubble-r24d-iphone-portrait.png",
+  "where": "iphone-portrait, dark, Flower Corner gate",
+  "what": "the grandma's speech bubble runs off the right screen edge (its right end and rounded corner are cut off, the text sits at the very edge)",
+  "bad": "2",
+  "verdict": "KEEP",
+  "dc": "right end and corner cut off",
+  "spot": "flower-bubble-r24d-iphone-portrait"
+ },
+ {
+  "id": "M-006",
+  "file": "pv_iphone-portrait_light_pv-r24-iphone-portrait_002_flower-bubble-r24-iphone-portrait.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r24/shots/pv_iphone-portrait_light_pv-r24-iphone-portrait_002_flower-bubble-r24-iphone-portrait.png",
+  "where": "iphone-portrait, light, Flower Corner gate",
+  "what": "the grandma's speech bubble runs off the right screen edge (its right end and rounded corner are cut off, the text sits at the very edge)",
+  "bad": "2",
+  "verdict": "KEEP",
+  "dc": "right end and corner cut off",
+  "spot": "flower-bubble-r24-iphone-portrait"
+ },
+ {
+  "id": "M-007",
+  "file": "pv_iphone-portrait_dark_pv-r24d-iphone-portrait_002_flower-bubble-r24d-iphone-portrait.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r24d/shots/pv_iphone-portrait_dark_pv-r24d-iphone-portrait_002_flower-bubble-r24d-iphone-portrait.png",
+  "where": "iphone-portrait, dark, Flower Corner gate",
+  "what": "grandma's speech bubble runs off the right screen edge, the word \"Such\" is cut and the bubble has no right border",
+  "bad": "2",
+  "verdict": "KEEP",
+  "dc": "no right border, runs off edge",
+  "spot": "flower-bubble-r24d-iphone-portrait"
+ },
+ {
+  "id": "M-008",
+  "file": "pv_iphone-portrait_light_pv-r24-iphone-portrait_002_flower-bubble-r24-iphone-portrait.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r24/shots/pv_iphone-portrait_light_pv-r24-iphone-portrait_002_flower-bubble-r24-iphone-portrait.png",
+  "where": "iphone-portrait, light, Flower Corner gate",
+  "what": "grandma's speech bubble runs off the right screen edge, the word \"Such\" is cut and the bubble has no right border",
+  "bad": "2",
+  "verdict": "KEEP",
+  "dc": "no right border, runs off edge",
+  "spot": "flower-bubble-r24-iphone-portrait"
+ }
+]

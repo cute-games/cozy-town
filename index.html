@@ -712,7 +712,9 @@ function bubDodge(s,cam){const u=s.userData;if(u.cy0===undefined)u.cy0=s.center.
   const W=innerWidth,H=innerHeight,f=H/(2*Math.tan(cam.fov*Math.PI/360)),h=s.scale.y*f/z,w=s.scale.x*f/z,x=(_hv.x+1)/2*W,y=(1-_hv.y)/2*H;let t=y-h*(1-s.center.y),bt=y+h*s.center.y;
   for(const b of R)if(b.left<-1e3&&t<b.bottom+4){const dn=Math.min(h,b.bottom+4-t);s.center.y=u.cy0+dn/h;t+=dn;bt+=dn;}   /* (run 4 finish: below the top row too: on a sideways phone a bubble ran under the clock chip and the buttons) */
   let lo=6,hi=W-6;for(const b of R)if(b.left>-1e3&&t<b.bottom&&bt>b.top){if(b.left+b.right<W)lo=Math.max(lo,b.right+6);else hi=Math.min(hi,b.left-6);}   /* (the top row's band is not a side: it stays as it is) */
-  let cx=.5;if(x-w/2<lo)cx=(x-lo)/w;else if(x+w/2>hi)cx=1-(hi-x)/w;s.center.x=x<lo||x>hi?cx:clamp(cx,.05,.95);}   /* (run 4 finish: a speaker under the HUD column or off the edge: the bubble clears it all, readable) */
+  let cx=.5;if(x-w/2<lo)cx=(x-lo)/w;else if(x+w/2>hi)cx=1-(hi-x)/w;const fr=x<lo||x>hi;
+  if(fr&&w>hi-lo&&hi-lo>40){const k=(hi-lo)/w;s.scale.x*=k;s.scale.y*=k;u.k=-1;s.updateMatrix();if(s.parent)s.matrixWorld.multiplyMatrices(s.parent.matrixWorld,s.matrix);cx=x<lo?(x-lo)/(hi-lo):1-(hi-x)/(hi-lo);}   /* (run 4 finish: wider than the space beside the column: drawn smaller to fit; a bubble ran past the screen's edge) */
+  s.center.x=fr?cx:clamp(cx,.05,.95);}   /* (run 4 finish: a speaker under the HUD column or off the edge: the bubble clears it all, readable) */
 /* 🔤 run 4, job 5 (item 7), the root cause of off-centre and cut-off signs: the text was placed by measureText, but a colour emoji (iPad) can draw wider than it
    measures, so "🏖 To the beach" or "🏰 Knights & castles" slid off centre or past the edge (the test machine had no colour emoji, so the checks never saw it).
    Now every sign, plate and label draws the text once on a scratch canvas, finds the pixels it REALLY covers (inkOf) and scales and centres by those */

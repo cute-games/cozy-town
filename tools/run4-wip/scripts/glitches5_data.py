@@ -1,7 +1,7 @@
 """Run 4 finish: the data of the glitch list from pass 8 on (read by mkglitches5.py). One entry per cause; the marks are
 'p8:M-001' (pass 8, stage3-dc8). Later passes are added to DC and PASS as they come."""
-DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13', 'p14': 'stage3-dc14', 'p15': 'stage3-dc15', 'p16': 'stage3-dc16', 'p17': 'stage3-dc17', 'p18': 'stage3-dc18', 'p19': 'stage3-dc19', 'p20': 'stage3-dc20', 'p21': 'stage3-dc21', 'p22': 'stage3-dc22', 'p23': 'stage3-dc23'}
-PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13', 'p14': 'pass 14', 'p15': 'pass 15', 'p16': 'pass 16', 'p17': 'pass 17', 'p18': 'pass 18', 'p19': 'pass 19', 'p20': 'pass 20', 'p21': 'pass 21', 'p22': 'pass 22', 'p23': 'pass 23 (the full final pass)'}
+DC = {'p8': 'stage3-dc8', 'p9': 'stage3-dc9', 'p10': 'stage3-dc10', 'p11': 'stage3-dc11', 'p12': 'stage3-dc12', 'p13': 'stage3-dc13', 'p14': 'stage3-dc14', 'p15': 'stage3-dc15', 'p16': 'stage3-dc16', 'p17': 'stage3-dc17', 'p18': 'stage3-dc18', 'p19': 'stage3-dc19', 'p20': 'stage3-dc20', 'p21': 'stage3-dc21', 'p22': 'stage3-dc22', 'p23': 'stage3-dc23', 'p24': 'stage3-dc24'}
+PASS = {'p8': 'pass 8', 'p9': 'pass 9', 'p10': 'pass 10', 'p11': 'pass 11', 'p12': 'pass 12', 'p13': 'pass 13', 'p14': 'pass 14', 'p15': 'pass 15', 'p16': 'pass 16', 'p17': 'pass 17', 'p18': 'pass 18', 'p19': 'pass 19', 'p20': 'pass 20', 'p21': 'pass 21', 'p22': 'pass 22', 'p23': 'pass 23 (the full final pass)', 'p24': 'pass 24'}
 AFTER_SETS = ['stage3-p9', 'stage3-p9b', 'stage3-p9c']   # newest first: the after picture of a fixed spot comes from pass 9
 KIT_SETS = ['stage3-kit9']
 PROBES = {   # spots whose after picture is a probe taken right after the fix (a pass-9 picture replaces it when there is one)
@@ -23,6 +23,8 @@ BEFORE = {}
 AFTER = {}
 KNOWN = []
 UPDATES = {
+    'G4-334': {'check': "the kit's N8 with a probe, before and after; pass 24: the kit 41 of 41 PASS, N8's room-2 picture with only room 2's pieces, no mark about it."},
+    'G4-335': {'check': "probes before and after (`views_f19.py`); pass 24: the pond bubble readable; the Flower Corner bubble ran past the right edge: G4-340."},
     'G4-331': {'check': "the chat probe before and after (`views_f18.py`); pass 22: the chat opens at the thank-you message's top on a sideways iPhone (a mark about the fade at its foot dropped by the first checker); the kit 41 of 41 PASS."},
     'G4-327': {'check': "N25 alone on the f17 file, twice: PASS; pass 21's kit (41 of 41 PASS) and its picture of the phone's chat: the photo shows."},
     'G4-328': {'check': "the pond probe before and after (`views_f17.py`); pass 21: the bubble below the top row on a sideways iPhone and an iPad, light and dark, no mark about it."},
@@ -56,6 +58,7 @@ F16 = ' (patch_f16.py)'
 F17 = ' (patch_f17.py)'
 F18 = ' (patch_f18.py)'
 F19 = ' (patch_f19.py)'
+F20 = ' (patch_f20.py)'
 FRAME = "The photographer's framing, not the game: "
 ENTRIES = [
  ('168', ['p8:M-001'], 'October: the park fountain', 'iPad', 'A white ghost hung inside the fountain, between its top and middle bowls.', 1, 'fixed',
@@ -407,4 +410,6 @@ ENTRIES = [
   "Something by the blue house's corner stands right at that camera spot (the photographer's fixed view). Small: left as it is, in the leftover list.", ''),
  ('339', ['p23:M-002', 'p23:M-005', 'p23:M-010', 'p23:M-011', 'p23:M-012'], 'not a glitch', 'iPad, iPhone upright, PC', "Cattails in front of a grandma on the pond bench; a brown slab at the corner of N22's school view; someone at the left edge in the Pet Shop; two shoppers one behind the other in the flower shop; N24's two grandmas one behind the other on their bench.", 1, 'not a glitch',
   "The cattails stand between you and the bench; N22's and N24's pictures come from the check's own camera spots (as N6's, G4-289); someone 1.3 m or more from you is drawn (G4-171, G4-300); two people at different distances, one in front of the other (G4-332).", '—'),
+ ('340', ['p24:M-001', 'p24:M-002', 'p24:M-003', 'p24:M-004', 'p24:M-005', 'p24:M-006', 'p24:M-007', 'p24:M-008'], "a grandma's bubble at the Flower Corner", 'iPhone upright, light and dark theme', 'Clear of the map column since f19, her bubble ran past the right edge of the screen ("Such" cut, no right border).', 2, 'fixed',
+  "The bubble (253 px) was wider than the space beside the column (234 px). A bubble that slides clear of the column and is wider than the space beside it is now drawn smaller to fit" + F20 + '.', "the Flower Corner probe on an upright iPhone, after (`views_f19.py`): the whole bubble on the screen beside the map; pass 25's re-check."),
 ]

@@ -484,6 +484,13 @@ one first checker: 3 marks, 1 set aside (the phone's lit screen, G4-126), 1 kept
 
 Minor marks left as they are (grade 1): see the leftover list below.
 
+**Pass 24, the re-check of f19** (the f19 file): the kit's night3 and run4 lines 41 of 41 PASS; 10 pictures of f19's spots, five viewers, one first
+checker: the Flower Corner bubble, clear of the map column now, ran past the right edge on an upright phone (G4-340, grade 2); the designer's
+room 2 and the pond bubble held.
+
+**f20 (1 edit), from pass 24**: old a bubble that slid clear of the column but was wider than the space beside it ran past the screen's edge
+→ new it is drawn smaller to fit. Re-checked like a pass (pass 25).
+
 #### Decisions made alone (run 4 finish)
 - The kit, never weaker (every change in `cozy-check-v6.zip`, listed in its README-KIT.md and here, old → new):
   - N15's chip rule: old `^\d{1,2}:\d\d (Mon|…|Sun)$` → new the same with an optional "🏆 " before the weekday, as the two-device test above

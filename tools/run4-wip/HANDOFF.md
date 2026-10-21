@@ -24,6 +24,8 @@ Same rules as NIGHT-PLAN-4.md. End with a pull request. Never stop to ask." On 2
 - Pass 23, the full final pass: done (628 pictures, 18 viewers; 12 marks kept). Above minor, fixed in f19 (`patch_f19.py`, 3 edits; md5
   16f28ff4): G4-334 (a two-room designer order's room 2 drew room 1's furniture, grade 3), G4-335 (bubbles under the HUD column on an upright
   phone, grade 2). Minor, listed: G4-336 to G4-338, G4-329. Next: pass 24, the re-check of f19 (`p24kit.sh`, `pass24.sh`, `dcfilter24.py`).
+- Pass 24 (the re-check of f19): the kit 41 of 41 PASS; G4-340 (the Flower Corner bubble past the right edge on an upright phone, grade 2)
+  fixed in f20 (`patch_f20.py`, md5 93eb8d2a). Next: pass 25, the re-check of f20 (`p25kit.sh`, `pass25.sh`, `dcfilter25.py`).
 - Not yet done (the final stage): the version stamp, the rollback copy, the full check on the final file, the glitch list, the report, the PR.
 
 ## Set up a fresh container (the scratchpad of the old session is gone)

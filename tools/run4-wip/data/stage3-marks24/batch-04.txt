@@ -1,0 +1,5 @@
+pv_iphone-portrait_dark_pv-r24d-iphone-portrait_002_flower-bubble-r24d-iphone-portrait.png | iphone-portrait, dark, Flower Corner gate | grandma's speech bubble runs off the right screen edge, the word "Such" is cut and the bubble has no right border | 2
+pv_iphone-portrait_light_pv-r24-iphone-portrait_002_flower-bubble-r24-iphone-portrait.png | iphone-portrait, light, Flower Corner gate | grandma's speech bubble runs off the right screen edge, the word "Such" is cut and the bubble has no right border | 2
+pv_iphone-portrait_dark_pv-r24d-iphone-portrait_001_pond-bubble-upright-r24d-iphone-portrait.png | iphone-portrait, dark, duck pond | the two ducks sit on top of each other and read as one blob | 1
+pv_iphone-portrait_light_pv-r24-iphone-portrait_001_pond-bubble-upright-r24-iphone-portrait.png | iphone-portrait, light, duck pond | the two ducks sit on top of each other and read as one blob | 1
+count: 4

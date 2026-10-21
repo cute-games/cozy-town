@@ -1,0 +1,3 @@
+pv_iphone-portrait_dark_pv-r24d-iphone-portrait_002_flower-bubble-r24d-iphone-portrait.png | iphone-portrait, dark, Flower Corner gate | the grandma's speech bubble runs off the right screen edge (its right end and rounded corner are cut off, the text sits at the very edge) | 2
+pv_iphone-portrait_light_pv-r24-iphone-portrait_002_flower-bubble-r24-iphone-portrait.png | iphone-portrait, light, Flower Corner gate | the grandma's speech bubble runs off the right screen edge (its right end and rounded corner are cut off, the text sits at the very edge) | 2
+count: 2
