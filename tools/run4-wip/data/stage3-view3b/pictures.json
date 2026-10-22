@@ -1,0 +1,222 @@
+[
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_light_valentine-light_003_holiday-valentine-phone-calendar.png",
+  "name": "holiday-valentine-phone-calendar",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "note": "the phone's calendar in February",
+  "loc": "city",
+  "open": true,
+  "time": "12:10",
+  "wx": "sun"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_light_easter-light_003_holiday-easter-egg.png",
+  "name": "holiday-easter-egg",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "note": "a hunt egg somewhere in town",
+  "loc": "city",
+  "open": false,
+  "time": "12:10",
+  "wx": "sun"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_light_christmas-light_002_holiday-christmas-santa.png",
+  "name": "holiday-christmas-santa",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "note": "Santa at the Flower Corner (the tree behind him)",
+  "loc": "city",
+  "open": false,
+  "time": "12:10",
+  "wx": "sun"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_light_christmas-light_003_holiday-christmas-santa-talk.png",
+  "name": "holiday-christmas-santa-talk",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "note": "Santa's words",
+  "loc": "city",
+  "open": false,
+  "time": "12:10",
+  "wx": "sun"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_light_christmas-light_004_holiday-christmas-park.png",
+  "name": "holiday-christmas-park",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "note": "the park in December (the big tree moved to the corner)",
+  "loc": "city",
+  "open": false,
+  "time": "12:10",
+  "wx": "sun"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_dark_christmas-night-dark_001_holiday-christmas-tree-night.png",
+  "name": "holiday-christmas-tree-night",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "note": "the Christmas tree at night in snow",
+  "loc": "city",
+  "open": false,
+  "time": "21:40",
+  "wx": "snow"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_dark_christmas-night-dark_002_holiday-christmas-lane-night.png",
+  "name": "holiday-christmas-lane-night",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "note": "my house on Friends Lane on a December night",
+  "loc": "city",
+  "open": false,
+  "time": "21:50",
+  "wx": "snow"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_dark_newyear-night-dark_001_holiday-newyear-fireworks.png",
+  "name": "holiday-newyear-fireworks",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "note": "fireworks over the park on 30 Dec",
+  "loc": "city",
+  "open": false,
+  "time": "22:10",
+  "wx": "sun"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_light_newyear-day-light_001_holiday-newyear-hats.png",
+  "name": "holiday-newyear-hats",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "note": "party hats and confetti on 31 Dec: townsfolk by the bus stop",
+  "loc": "city",
+  "open": false,
+  "time": "12:10",
+  "wx": "sun"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_light_newyear-day-light_002_holiday-newyear-hats-stage.png",
+  "name": "holiday-newyear-hats-stage",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "note": "party hats at the Pet Show corner",
+  "loc": "city",
+  "open": false,
+  "time": "12:10",
+  "wx": "sun"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_light_newyear-day-light_003_holiday-newyear-hats-close.png",
+  "name": "holiday-newyear-hats-close",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "note": "party hats close up at the fountain",
+  "loc": "city",
+  "open": false,
+  "time": "12:10",
+  "wx": "sun"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_light_school-light_001_holiday-school-front.png",
+  "name": "holiday-school-front",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "note": "the school front on 1 Sep: balloons and the banner",
+  "loc": "city",
+  "open": false,
+  "time": "12:10",
+  "wx": "sun"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_dark_halloween-night-dark_001_halloween-spooky-gate.png",
+  "name": "halloween-spooky-gate",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "note": "the spooky path gate after 18:00",
+  "loc": "city",
+  "open": false,
+  "time": "19:40",
+  "wx": "sun"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_dark_halloween-night-dark_002_halloween-spooky-inside.png",
+  "name": "halloween-spooky-inside",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "note": "on the spooky path (it starts where the stepping stones end)",
+  "loc": "city",
+  "open": false,
+  "time": "19:40",
+  "wx": "sun"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_dark_halloween-night-dark_003_halloween-ghosts-square.png",
+  "name": "halloween-ghosts-square",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "note": "the square at night with the little ghosts",
+  "loc": "city",
+  "open": false,
+  "time": "19:40",
+  "wx": "sun"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_dark_halloween-night-dark_005_halloween-clothes-costumes.png",
+  "name": "halloween-clothes-costumes",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "note": "the Clothes Shop card in October: the costumes",
+  "loc": "clothes",
+  "open": true,
+  "time": "19:30",
+  "wx": "sun"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_light_jobs-light_002_job-hair-card.png",
+  "name": "job-hair-card",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "note": "the hairstylist's customer card at the salon",
+  "loc": "salon",
+  "open": true,
+  "time": "12:00",
+  "wx": "sunny"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_light_jobs-light_003_job-delivery-way.png",
+  "name": "job-delivery-way",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "note": "a pizza delivery on the way: the job box and the corner map",
+  "loc": "city",
+  "open": false,
+  "time": "12:50",
+  "wx": "sunny"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_light_jobs-light_004_job-delivery-note.png",
+  "name": "job-delivery-note",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "note": "the delivery message",
+  "loc": "city",
+  "open": false,
+  "time": "12:50",
+  "wx": "sunny"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/stage3-p3b/shots/s3b_ipad-landscape_light_two-A_002_two-players-friends-list.png",
+  "name": "two-players-friends-list",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "note": "the friends list with the other player online",
+  "loc": "city",
+  "open": true,
+  "time": "12:10",
+  "wx": "sun"
+ }
+]

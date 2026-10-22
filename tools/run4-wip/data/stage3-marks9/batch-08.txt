@@ -1,0 +1,4 @@
+s3_iphone-landscape_dark_iphone-landscape-dark_011_bag.png | iphone-landscape, dark theme, the bag | the round ⬇️ scroll button floats on top of the second row of item tiles, over the edges of the 2nd and 3rd tiles | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_013_whats-new-book.png | iphone-landscape, dark theme, What's new book page 1 | a thin light-blue outline ring around the "Next ▶" button (looks like the browser's focus ring), not in the game's style | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_015_whats-new-book-p3.png | iphone-landscape, dark theme, What's new book page 3 | the same thin light-blue focus-style ring around the "Next ▶" button | 1
+count: 3

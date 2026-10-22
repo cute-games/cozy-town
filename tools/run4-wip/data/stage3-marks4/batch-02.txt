@@ -1,0 +1,8 @@
+s3_ipad-landscape_light_ipad-landscape-light_050_whats-new-book.png | ipad-landscape light, the title's What's new book page 1 (city, 11:30, sun) | the four cover pictures are rough screenshot crops. In the top-right one a name tag is cut to "ffles" at the left edge and a "the bench" tag is cut off at the corner. The other pictures have slivers of HUD buttons and the dance score bar poking in at their top edges | 1
+s3_ipad-landscape_light_ipad-landscape-light_063_photo-pose-card.png | ipad-landscape light, photographer's pose card at the fountain (city, 12:00, sun) | the pose card at the bottom right covers the right half of Zoe, one of the three people being posed for the photo | 2
+s3_ipad-landscape_light_ipad-landscape-light_068_town-pet-show-stage-night.png | ipad-landscape light, Pet Show stage and food truck corner at night | the food truck's red sign runs off the right screen edge and reads only "🍔 Food t" | 1
+s3_ipad-landscape_light_ipad-landscape-light_072_town-east-shops-night.png | ipad-landscape light, Toy Store and east shops at night | the pumpkin's orange glow at the shop door stops in a hard straight line on the pavement just below the step, so it looks like a lit rectangle instead of a soft glow | 1
+s3_ipad-landscape_light_ipad-landscape-light_076_town-pet-show-stage-rain.png | ipad-landscape light, Pet Show stage and food truck corner in rain | the food truck's red sign runs off the right screen edge and reads only "🍔 Food t" | 1
+s3_ipad-landscape_dark_ipad-landscape-dark_002_town-pet-show-stage.png | ipad-landscape dark, Pet Show stage and food truck corner (city, 11:10, sun) | the food truck's red sign runs off the right screen edge and reads only "🍔 Food t" | 1
+
+Count: 6 problems

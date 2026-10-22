@@ -1,0 +1,32 @@
+M-033 | KEEP | back-wall windows really uneven: ~150 px gap left, ~45 px gap right (cosmetic)
+M-034 | DROP | plain low-poly rail beam is the cartoon style; reads fine
+M-035 | KEEP | back button's top arc is cut flat by the phone status bar (~7 px); avatar and coin pill are fine
+M-036 | KEEP | ~36 px round cue button straddling the panel edge, small for a child's finger (minor)
+M-037 | KEEP | same tiny edge-straddling cue button
+M-038 | KEEP | same tiny edge-straddling cue button
+M-039 | KEEP | panel slices the time chip, only the sun icon peeks out (cosmetic; bag/settings/market do the same)
+M-040 | KEEP | same tiny edge-straddling cue button
+M-041 | KEEP | yellow party toast clearly sticks out behind the invitation card on both sides
+M-042 | KEEP | card's right edge hides the 🏞️ icon and the "−" button of the photo bar
+M-043 | KEEP | pets fill the foreground, Clover's tag over Zoe, Waffles' tag over Leo's legs
+M-044 | KEEP | dashed frame line visibly runs through the mini-map, job note and notepad (minor)
+M-045 | KEEP | same 🏞️ icon and "−" button hidden behind the result card
+M-046 | KEEP | balloons cover "Every" and part of "Pet"; trophy is actually still visible (minor, angle-dependent)
+M-047 | KEEP | back button's top is cut flat (~3 px), slight; Rosie/coin row is not clipped
+M-048 | DROP | map pans by drag, so labels clipped at the viewport edge is normal map behaviour
+M-049 | KEEP | "B⬇ng my pets to": arrow button hides "ri"
+M-050 | KEEP | plain blue native range slider, ~14 px thumb, off-palette
+M-051 | DROP | code offers at most 4 slots (tomorrow 9-12 at night) and the card ends below them; the 13:00 party is Mia's (an NPC), not the player's
+M-052 | KEEP | card covers the time chip, half the apple chip and the top of the mini-map (minor)
+M-053 | KEEP | same HUD overlap as M-052
+M-054 | KEEP | label truncated to "the fou…", unreadable for a child
+M-055 | KEEP | Mia's head and name tag hidden behind the note and notepad inside the frame
+M-056 | DROP | "📸 Mia" is the designed .who sticker tab (absolute, rotated, on the card corner)
+M-057 | KEEP | back button's top cut flat (~3 px), slight; coin pill is not clipped
+M-058 | KEEP | descriptions about 10 px font, tiny for a child (design nit)
+M-059 | DROP | same as M-048: pannable map, edge clipping is normal
+M-060 | KEEP | same "B⬇ng my pets to" overlap
+M-061 | KEEP | note's top edge cuts the palette badge roughly in half
+M-062 | KEEP | Mia hidden behind note/notepad; joystick ring drawn over Waffles' face
+M-063 | KEEP | "the fou…" truncation
+M-064 | KEEP | apple chip's top edge peeks out above the score bar

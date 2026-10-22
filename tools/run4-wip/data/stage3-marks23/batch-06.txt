@@ -1,0 +1,3 @@
+kit23-n8-designer-designer-room-2.png | ipad-landscape, designer job room 2 (forest living room) | the white fridge stands inside/on the pink armchair, the two pieces overlap and poke through each other | 2
+kit23-n9-food-food-truck.png | ipad-landscape, food truck in rain | a small grey round ball sits on the truck's left wall above the wheel, like a floating or stuck-on object | 1
+count: 2

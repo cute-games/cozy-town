@@ -1,0 +1,2 @@
+pv_iphone-landscape_light_pv-r21-iphone-landscape_004_pond-bubble-r21-iphone-landscape.png | iphone-landscape, duck pond, top-left corner map | the little palette button on the corner map's lower-right edge is only about 28 px wide, smaller than a fingertip, and it sits on the map's edge so a thumb tap can hit the map instead | 1
+count: 1

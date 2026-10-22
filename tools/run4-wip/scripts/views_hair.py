@@ -1,0 +1,1 @@
+VIEWS = [('hair-sits', 'closePanel();setJob(\'hair\');S.hsTut=1;S.intro=1;__goto(\'salon\');__setClock(null,11);HS.cust=null;HS.wait=0;__run(260);(document.querySelector(\'.pop\')?\'POP \'+document.querySelector(\'.pop\').textContent:\'no pop\')+\' card \'+!!document.querySelector(\'#card [data-a="hsdone"]\')')]

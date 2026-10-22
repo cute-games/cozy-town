@@ -1,0 +1,14 @@
+online True
+party {'id': 'mvhis12tytdh7', 'at': 1792551167142.8572}
+B note True
+A hears True
+B inside True
+B sees the floor True
+B card True
+dance on True
+A {'cam': {'x': 299.4, 'z': 4.3, 'dx': 0, 'dz': 1}, 'floor': {'x': 300, 'z': 0, 'fl': 0}, 'ox': 300, 'oz': 0, 'W': None, 'D': None, 'P': [299.4, 4.3, -0.14, -0.3], 'ride': {'kind': 'dance'}, 'cur': 'home', 'me': True, 'meXZ': [299.25, 0], 'note': False}
+B {'cam': {'x': 2700.6, 'z': 3.5, 'dx': 0, 'dz': 1}, 'floor': {'x': 2700, 'z': 0, 'fl': 0}, 'ox': 2700, 'oz': 0, 'W': 6, 'D': 5, 'P': [2700.6, 3.5, 0, -0.06], 'ride': {'kind': 'dance'}, 'cur': 'visit', 'me': True, 'meXZ': [2700.75, 0], 'note': True}
+result A True
+result B True
+errors [] []
+pictures 4 map at /tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p11c/map.json

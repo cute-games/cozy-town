@@ -1,0 +1,26 @@
+M-001 | KEEP | truck sign cut to "Food t" at the right edge, can't be read
+M-002 | DROP | toast covers only a thin middle band; the next deck is still clearly visible
+M-003 | KEEP | bell fills the view up close; "Finish" banner cut at the h
+M-004 | KEEP | mirrored orange chair arms poke up in both bottom corners
+M-005 | KEEP | curtain hides the "s" of Puppies; window hides nearly all of Bunnies
+M-006 | KEEP | giant yellow (Hamsters) sign right at the camera, cut by the edge and HUD, unreadable
+M-007 | KEEP | pink you-arrow is clipped by the corner map's left border
+M-008 | KEEP | pink you-arrow is clipped by the corner map's left border
+M-009 | KEEP | big grey wall and slab plus a dark-green block fill the left third
+M-010 | KEEP | corner map's top strip and left edge stick out behind the map panel's corner
+M-011 | DROP | the map can be dragged; labels clipped at its edge are normal
+M-012 | KEEP | rough crops: "ffles" tag, "the bench" tag cut at the corner, HUD and score-bar slivers
+M-013 | KEEP | pose card hides the right half of Zoe
+M-014 | KEEP | sign cut to "Food t" at the right edge
+M-015 | KEEP | glow stops in a hard straight line below the step (a lit rectangle)
+M-016 | KEEP | sign cut to "Food t" at the right edge
+M-017 | KEEP | sign cut to "Food t" at the right edge
+M-018 | KEEP | clear gap between the arrow's shaft and head (the gap is in the model too)
+M-019 | KEEP | clear gap between the arrow's shaft and head
+M-020 | KEEP | bell fills the view, deck barely visible, "Finish" cut at the h
+M-021 | KEEP | friend right at the camera hides the left of the counter and the menu pictures
+M-022 | KEEP | mirrored orange furniture corners in both bottom corners, "Sit down" showing
+M-023 | KEEP | curtain cuts it to "Puppie"; window hides nearly all of Bunnies
+M-024 | KEEP | pale see-through slab washes out the bottom-right and the pen fronts
+M-025 | KEEP | no name sign on the roof (builder line confirmed); name only on the yard sign
+M-026 | KEEP | pink you-arrow is clipped by the corner map's left border

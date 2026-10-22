@@ -1,0 +1,3 @@
+M-004 | KEEP | huge grey-pink block cut by left edge, clearly visible
+M-005 | DROP | ducks just close, white one seen from behind, still reads as duck
+M-006 | KEEP | burst sits right on cloud top, looks stuck to it (also in shot 2)

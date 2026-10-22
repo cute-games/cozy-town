@@ -1,0 +1,5 @@
+kit16-n30-sky-leaves-park.png | ipad-landscape, park, at the fountain | the camera is inside the fountain's basin, right under the bowl: the grey bowl fills most of the screen and the water's edge cuts across the bottom, so the park and the falling leaves (what the shot is for) cannot be seen | 2
+kit16-n9-food-food-truck.png | ipad-landscape, Food truck in the park, rain | the note says "The Food truck is closed now. It opens at 8:00" (with a moon) while the clock reads 12:00 Thu (midday) and the truck stands open with food on the counter | 1
+kit16-n39-B-party-invitation.png | pc-1366, Flower Corner gate, invitation card under the top bar | the party invitation card is pale and see-through (the sky and the building show through it), so its words and its two buttons ("I'll come!", "Not this time") are faint and hard to read; the line asks for a white card | 2
+kit16-n13-pc-1920-hair-job-card.png | pc-1920, Flower Corner, corner map top-left | a palette 🎨 (designer) badge sits on the corner map's bottom-right corner, half over its frame, while the job is the hair job (the chip under the map says ✂️ Hair Salon) | 1
+count: 4

@@ -1,0 +1,8 @@
+M-017 | DROP | soft shadow from something just off-screen; normal, a child would not notice
+M-018 | DROP | basket is cut by the screen edge; its hanging rod is at its centre, off-screen (other views show it)
+M-019 | KEEP | three far name tags clearly overlap into one unreadable white pile
+M-020 | DROP | only the top bar the tall card would touch is hidden; map and notepad fit beside it, nothing looks broken
+M-021 | KEEP | far name tags by the stage pile up unreadably inside the photo frame
+M-022 | KEEP | the big "+120" pop-up is cut in half by the card's top edge (clear on PC and portrait)
+M-023 | DROP | both ducks are there; the yellow one swims just behind the white one
+M-024 | DROP | bottom fade is the list's scroll hint; more chats below (same band on PC)

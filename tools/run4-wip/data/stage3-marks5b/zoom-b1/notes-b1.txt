@@ -1,0 +1,52 @@
+NOTES (batch 1) - judged so far
+
+kit5-n26 corner map (android tablet portrait): map top-left under bus chip, notepad under it, gate scene with ghosts. OK, no problem.
+kit5-n26 big map: toast "You are online!" sits on top of the chat + phone HUD buttons above the map panel (buttons half hidden). sev 1. Map label "p" cut at map left edge = normal map panning, skip.
+kit5-n15 sleep screen: dimmed on purpose, card + Wake up fine. OK.
+kit5-n25 photo shoot ipad: grandma's speech bubble "I planted roses here once." runs off the LEFT screen edge and the "Mrs. Lee" name tag overlaps the bubble's lower right. sev 2. Open gate leaf sticks up in front of Mrs. Lee's legs (small). Oscar's head shows a doubled left outline (maybe someone hidden behind him) - CHECK zoom.
+kit5-n37 treepark start: 3 signposts fine, decks, flags, ladders. OK.
+kit5-n15 one clock A: single clock chip, map with red dot, job box, Cupcake card. OK.
+kit5-n15 phone calendar: no day numbers, text fine, bottom scroll fade. OK.
+kit5-n19 oct1 day: gate open, ghosts, spooky signs cut at right edge (framing). OK.
+kit5-n19 oct31 night: a dark townsperson stands right in front of the camera, big black silhouette covers the middle of the view (path, bench). sev 2.
+kit5-n19 nov1: dark-haired townsperson right by the camera covers the right quarter (where spooky signs stood); purple one at left edge. sev 2.
+kit5-n19 costume mirror: Sweater color row is under scroll fade with down-arrow hint (by design). Avatar fine. OK.
+kit5-n19 spooky path scare: BOO monster fine; toast (skip). OK.
+kit5-n20 valentine fountain: heart fountain, heart posts, petals. OK.
+kit5-n20 easter bunny: bunny's speech box covers the bunny's lower-left body (sev 1?). "18/25" egg counter floats mid-scene on the building (check vs s3b). Purple slab top-right = bird, ok.
+kit5-n20 december tree santa: leftover Easter bunny speech ("All 25! ... Bunny costume") + "+300" popup over the tree/presents in a December picture. (note -> probably skip, maybe sev 1)
+kit5-n21 fireworks: NO firework bursts in the sky at all, only snow + clouds; tree's bottom right at camera with big blurry light glows. sev 2.
+kit5-n21 party hats confetti: townsperson's back right in front of the camera fills the middle of the picture. sev 2.
+kit5-n22 school balloons: blurry dark smudge/shadow halo around the school front doors. sev 1. (same in s3b school front)
+kit5-n22 school hall balloons: OK.
+kit5-n23 sign beach: ghost drifts over right post, text readable. OK.
+kit5-n23 sign pet show: spider web cards on post tops show straight white square edges; end pennants sink into the gold post tops. sev 1.
+kit5-n23 food truck: OK.
+kit5-n23 spooky sign: OK.
+
+s3c dance-B_002 result landscape (zoom only so far): white centre dot (reticle) sits on the right dancer's eye -> looks like a white ring eye. sev 1. Result card covers the right dancer's right half (check full).
+s3c dance-A_001 portrait (zooms only): host dancer cut by LEFT screen edge (half off screen). sev 2. Dance top bar sits right under HUD buttons (check touching). Arrow buttons ~62px, tinted not white (design, skip).
+s3b clothes costumes (zoom only): two identical "Special witch hat" cards, first one's colour dot is dark on the dark card (invisible). sev 1.
+s3b school front (zoom only): same blurry door shadow; a text box at bottom (check).
+s3b newyear hats (zoom only): striped hats ok.
+s3b easter egg (zoom only): small pastel blue egg on the grass near Ideas Board bench (builder said golden-banded eggs, not pastel) - check full.
+
+--- second pass (s3b full pictures) ---
+s3b easter 001 bunny: OK (toast over bunny body = toast, skip). pastel eggs are decoration, golden egg present.
+s3b easter 002 bunny talk: the speech box covers the bunny's face from the eyes down (only top half of eyes visible, nose+mouth hidden). sev 2.
+s3b easter 003 egg: golden-banded egg in a leaf nest, fine. Bench kid with pet bunny ok. OK.
+s3b easter 004 corner: a townsperson's huge face fills the LEFT HALF of the picture, camera right against their head. sev 3.
+s3b christmas 002 santa: star on the tree top cut by the top screen edge; several light balls + the white light string float in the air off the tree's right side/top. sev 1.
+s3b christmas 003 santa talk: the "+194" coin pop-up is huge and covers the top half of the tree. sev 1. (Santa face visible above the box, ok)
+s3b christmas night dark: Flower Corner sign board shows a dashed flicker line near its left end and a pink sliver with streaks poking through the right post. sev 1.
+s3b newyear hats: OK.
+s3b school front: blurry dark shadow smudge around the school doors. sev 1. (note box = note, skip)
+s3b halloween spooky gate: Flower Corner sign shows striped flicker strips at both board ends (left + right posts). sev 1. Pets in foreground, toast hides one pet name tag (toast, skip).
+s3b halloween spooky inside: OK.
+s3b clothes costumes: two identical "Special witch hat" cards, first colour dot dark-on-dark invisible. sev 1. The down-arrow scroll button floats outside the panel's right edge at the bottom corner. sev 1.
+s3b job hair card: hair-dye shelf runs behind the right pink curtain and pokes out over the window; left bottles cut by the curtain. sev 2.
+s3b job delivery way: not a delivery on the way: job box says "Go to the Pizzeria to start work", no target dot on the map, map corner badge is 🎨 (painter) not pizza. sev 2.
+s3b job delivery note: no delivery message on screen at all; same "Go to the Pizzeria to start work" box. sev 2.
+s3b two players ipad: no fountain in view (it is behind the camera, consistent with PC view). OK.
+s3b two players pc: tree trunk fills left third and back of Ideas Board fills right third right at the camera (cramped). maybe sev 1.
+s3b friends list: OK (last chip under scroll fade).

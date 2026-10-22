@@ -1,0 +1,8 @@
+M-001 | KEEP | faint dashes seen on right pillar edge and cornice end
+M-002 | KEEP | short dark dash row clearly on orange crown
+M-003 | KEEP | broken dark-blue blobs on water by reeds, not clean shadows
+M-004 | KEEP | huge olive/purple block fills left quarter, name tag cut off
+M-005 | KEEP | Luna's giant head and dress block the street view
+M-006 | KEEP | night basin mottled dark/light; same stone clean by day
+M-007 | DROP | far tags just small by distance, barely overlap; normal
+M-008 | KEEP | awning hangs past left corner over nothing, off-centre

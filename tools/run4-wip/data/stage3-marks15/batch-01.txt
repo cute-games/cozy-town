@@ -1,0 +1,3 @@
+s3_ipad-landscape_light_ipad-landscape-light_010_town-football.png | ipad-landscape light, town: west road by the football field | two dark posts stand right at the trunk of the big orange street tree (centre-left) and go up into its crown, so whatever they hold is buried in the leaves (only a small brown corner pokes out at the crown's right edge); looks like a sign or garland post planted inside the tree | 1
+s3_ipad-landscape_light_ipad-landscape-light_017_treepark-hard-decks.png | ipad-landscape light, Tree Park: first deck of the hard path | a small row of brown saw-tooth marks sits on the yellow tree crown at the top right (right of the star), like a flicker/shadow stripe or something poking through the leaves | 1
+count: 2

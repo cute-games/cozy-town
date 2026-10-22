@@ -1,0 +1,5 @@
+M-021 | KEEP | red-topped beige box juts off duck's back, not on its body
+M-022 | KEEP | thick dark post sprouts from owl's head to top edge, mid-screen
+M-023 | KEEP | empty red frame juts from owl's back, red ring hangs off front
+M-024 | KEEP | palette badge clashes with scissors job; n15 ties it to painter job, looks stale
+M-025 | DROP | ordinary HUD overlap on wall sign; "Hair Salon" still readable

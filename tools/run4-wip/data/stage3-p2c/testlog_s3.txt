@@ -1,0 +1,4 @@
+04:23:31 ACTION open test copy web build md5 031a3669 on ipad-landscape light as ipad-landscape-light
+04:25:20 UNDONE closed test copy web ipad-landscape light ipad-landscape-light: its saves and test data are thrown away
+04:25:20 ACTION open test copy web build md5 031a3669 on iphone-portrait light as iphone-portrait-light
+04:26:05 UNDONE closed test copy web iphone-portrait light iphone-portrait-light: its saves and test data are thrown away

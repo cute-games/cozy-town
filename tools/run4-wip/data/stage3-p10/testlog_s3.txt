@@ -1,0 +1,16 @@
+00:49:02 ACTION open test copy web build md5 73b819d9 on ipad-landscape light as ipad-landscape-light
+00:51:14 UNDONE closed test copy web ipad-landscape light ipad-landscape-light: its saves and test data are thrown away
+00:51:14 ACTION open test copy web build md5 73b819d9 on ipad-landscape dark as ipad-landscape-dark
+00:53:23 UNDONE closed test copy web ipad-landscape dark ipad-landscape-dark: its saves and test data are thrown away
+00:53:23 ACTION open test copy web build md5 73b819d9 on iphone-portrait light as iphone-portrait-light
+00:54:32 UNDONE closed test copy web iphone-portrait light iphone-portrait-light: its saves and test data are thrown away
+00:54:32 ACTION open test copy web build md5 73b819d9 on iphone-portrait dark as iphone-portrait-dark
+00:55:41 UNDONE closed test copy web iphone-portrait dark iphone-portrait-dark: its saves and test data are thrown away
+00:55:41 ACTION open test copy web build md5 73b819d9 on iphone-landscape light as iphone-landscape-light
+00:56:58 UNDONE closed test copy web iphone-landscape light iphone-landscape-light: its saves and test data are thrown away
+00:56:58 ACTION open test copy web build md5 73b819d9 on iphone-landscape dark as iphone-landscape-dark
+00:58:15 UNDONE closed test copy web iphone-landscape dark iphone-landscape-dark: its saves and test data are thrown away
+00:58:15 ACTION open test copy web build md5 73b819d9 on pc-1366 light as pc-1366-light
+00:59:43 UNDONE closed test copy web pc-1366 light pc-1366-light: its saves and test data are thrown away
+00:59:43 ACTION open test copy web build md5 73b819d9 on pc-1366 dark as pc-1366-dark
+01:01:08 UNDONE closed test copy web pc-1366 dark pc-1366-dark: its saves and test data are thrown away

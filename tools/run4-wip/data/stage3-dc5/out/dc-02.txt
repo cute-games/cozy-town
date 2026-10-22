@@ -1,0 +1,23 @@
+M-024 | KEEP | pond goes a deeper blue at night but is still much brighter than the dark sky, grass and stones, so it looks lit up (minor)
+M-025 | KEEP | a faint 1px dashed dark line really runs down inside the right window edge; edge artifact that will shimmer when moving (minor)
+M-026 | KEEP | dark dashed stripes clearly on the pink corner post and the right window edge; not rain, which is light streaks
+M-027 | KEEP | the text really says "Put a herb pots in your house"; a parent reading it aloud will notice
+M-028 | KEEP | the round down-arrow sits on the button and cuts its label to "Move my ga"
+M-029 | DROP | floating scroll hint only covers the empty corner of the Cheese card; name and price fully visible
+M-030 | DROP | floating scroll hint only covers the empty corner of the Pet treats card; nothing hidden
+M-031 | KEEP | Mia and Zoe stick out past the dashed frame to the screen edges, and the card hides everything below their chins
+M-032 | KEEP | big pale see-through lamp with no outline floats at top centre, looks like a ghost or glitch
+M-033 | KEEP | same pale ghost lamp shows as a yellow/pink blob behind the chat and phone buttons (smaller, still visible)
+M-034 | DROP | pale mint and white is just how the shop looks, and the portrait view is narrow; nothing broken
+M-035 | KEEP | same big faded see-through lamp at top centre, clashes with the crisp outlined basket below it
+M-036 | KEEP | same "Put a herb pots in your house" grammar slip in dark mode
+M-037 | KEEP | the down-arrow covers the button and cuts its label to "Move my ga"
+M-038 | KEEP | inactive dots are dark rings on the dark card (about 1.3:1 contrast), barely visible; fine in light mode
+M-039 | DROP | buttons are normal size, readable and easy to tap; same left-aligned layout as on iPad, just wrapped
+M-040 | KEEP | Mia and Zoe pushed outside the dashed frame and cut by the screen edges; the card hides their bodies
+M-041 | KEEP | big dark-outlined grey slab right at the camera blocks the left quarter of the view
+M-042 | KEEP | huge orange and purple pennants and the string hang right in front of the camera beside the stage
+M-043 | KEEP | same big washed-out see-through lamp at top centre
+M-044 | KEEP | same pale lamp blob behind the chat and phone buttons, partly hidden but visible
+M-045 | KEEP | same big washed-out see-through lamp above the hanging basket
+M-046 | DROP | ordinary scroll clipping under the header, all card text readable (the other jobs are just scrolled up)

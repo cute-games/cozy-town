@@ -1,0 +1,18 @@
+# Run 4, job 7 (item 10): the corner map for everyone in town, drawn the frame you move or turn; the big map never one flat colour. Exact-match edits for edit.py (NOT applied until job 6 is committed).
+import json
+E = []
+E.append(["function jobHud(force){const el=$('job'),on=!!(PLAYING&&S&&(S.job==='delivery'||S.job==='designer'||S.job==='teacher'||S.job==='hair'));if(el.hidden===on)el.hidden=!on;if(!on)return;",
+          "function jobHud(force){const el=$('job'),job=!!(PLAYING&&S&&(S.job==='delivery'||S.job==='designer'||S.job==='teacher'||S.job==='hair')),town=!!(PLAYING&&S&&CUR&&CUR.id==='city'),on=job||town;   /* 🗺️ the corner map is for everyone in town, job or not (run 4, item 10: without a job the whole box was hidden, map included) */\n  if(el.hidden===on)el.hidden=!on;const jt=$('jobTxt');if(jt.hidden!==!job)jt.hidden=!job;el.classList.toggle('nojob',!job);const mb=$('mmBtn'),al=job?'Your map. Tap to change the dot color':'Your map. Tap to open the big map';if(mb.getAttribute('aria-label')!==al)mb.setAttribute('aria-label',al);\n  if(!on)return;if(!job){if(mb.hidden!==!town)mb.hidden=!town;jobHud.last=null;return;}"])
+E.append(["#mmBtn[hidden]{display:none}\n", "#mmBtn[hidden]{display:none}\n#job.nojob .mmPal{display:none}\n"])
+E.append(["$('mmBtn').addEventListener('click',()=>{audioInit();openDot();});", "$('mmBtn').addEventListener('click',()=>{audioInit();if($('job').classList.contains('nojob'))openPhone('map');else openDot();});   /* without a job the corner map opens the big map (run 4, item 10) */"])
+E.append(["function jobTick(dt){\n  if(S.job==='delivery'&&!S.tutDone",
+          "function jobTick(dt){\n  jobT+=dt;if(jobT>.25){jobT=0;jobHud();}miniTick(dt);   /* 🗺️ the HUD box and the corner map for everyone, the map drawn the very frame you move or turn (run 4, item 10: it used to draw only inside the delivery and designer ticks, 14 times a second, and never for the teacher or the hairstylist, whose corner map stayed a green circle) */\n  if(S.job==='delivery'&&!S.tutDone"])
+E.append(["  if(HELD&&!CUT)HELD.visible=false;\n  jobT+=dt;if(jobT>.25){jobT=0;jobHud();}mmT+=dt;if(mmT>.07){mmT=0;drawMini();}}", "  if(HELD&&!CUT)HELD.visible=false;}"])
+E.append(["  jobT+=dt;if(jobT>.25){jobT=0;jobHud();}\n  mmT+=dt;if(mmT>.07){mmT=0;drawMini();}}\nfunction jobPhone(){", "}\nfunction jobPhone(){"])
+E.append(["function drawMini(){const cv=$('mm');if(!cv||$('job').hidden||$('mmBtn').hidden)return;",
+          "const MM={x:NaN,z:NaN,yaw:NaN,t:0};\nfunction miniTick(dt){if($('job').hidden||$('mmBtn').hidden)return;MM.t+=dt;if(P.x===MM.x&&P.z===MM.z&&P.yaw===MM.yaw&&MM.t<.07)return;MM.t=0;MM.x=P.x;MM.z=P.z;MM.yaw=P.yaw;drawMini();}   /* 🧭 the arrow turns the very frame you turn; the pulsing dot still beats 14 times a second */\nfunction drawMini(){const cv=$('mm');if(!cv||$('job').hidden||$('mmBtn').hidden)return;"])
+E.append(["mapPaint(B.getContext('2d'),b.x1,b.z1,k,bw,bh,{dark,u:dpr});MAPV.bv=b;}", "try{mapPaint(B.getContext('2d'),b.x1,b.z1,k,bw,bh,{dark,u:dpr});}catch(e){console.warn('map',e);}MAPV.bv=b;}   /* a slip in one layer never leaves the map one flat colour (run 4, item 10) */"])
+E.append(["function mmBase(){if(MMB)return MMB;const c=document.createElement('canvas');c.width=c.height=704;drawMapBase(c.getContext('2d'),704,{labels:false});MMB=c;return c;}",
+          "function mmBase(){if(MMB)return MMB;const c=document.createElement('canvas');c.width=c.height=704;try{drawMapBase(c.getContext('2d'),704,{labels:false});}catch(e){console.warn('map',e);}MMB=c;return c;}"])
+json.dump(E, open('/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/j7.json', 'w'), ensure_ascii=False)
+print(len(E), 'edits (not applied)')

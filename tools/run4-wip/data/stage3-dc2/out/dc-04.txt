@@ -1,0 +1,23 @@
+M-070 | KEEP | round ↓ button overlaps "Take me home" and hides the final "e"
+M-071 | KEEP | flat purple quads float beside the front wheel, one cuts into the tyre
+M-072 | KEEP | "🧸 Toy Store" sits left of centre, right ~40% of the long board is blank (other shop signs are centred)
+M-073 | KEEP | green "I want a new job!" bubble peeks above/behind the Rosie header, top clipped, text and "Fri · 3:10" half hidden
+M-074 | KEEP | ↓ button sits over the clipped third pet row and covers its right hearts (minor, floating button)
+M-075 | KEEP | same as M-070 in dark mode: ↓ button hides the "e" of "Take me home"
+M-076 | KEEP | ↓ button covers the right part of the soft-serve card in the clipped bottom row (minor)
+M-077 | KEEP | ↓ button covers the right part of the bell card in the clipped bottom row (minor)
+M-078 | KEEP | purple slab over the sign's top right hides "ow" of "Show"; flat pink/blue pieces float off the stage's left and right sides
+M-079 | KEEP | pink/yellow V slivers, a red zigzag and a purple sliver across the wheel sit on the truck front (pennants poking through); the roof-level disc is the model's own, the slivers are real
+M-080 | KEEP | plain white low-poly ball bulges out of the egg front between the gold bands, looks like a stray part
+M-081 | KEEP | sharp bright yellow/cyan/pink chevron bands follow the lower-left branch facets, unlike the round bulbs
+M-082 | DROP | camera stands between the two gate signs so they fall at the frame edges; placement, not the game
+M-083 | KEEP | witch-hat pompom is drawn over the "W" of the Waffles tag (label not on top / anchored too low); touching the pet button is just placement
+M-084 | KEEP | the small path posts carry plain dark cubes with no glow at night while the stones glow; reads as unlit lanterns (mild, intent unclear)
+M-085 | KEEP | the Clothing store card covers the time chip, only the moon's edge shows at its left
+M-086 | KEEP | ⬇ button covers "at" of "Witch hat" and part of the 90 🪙 price
+M-087 | DROP | nothing visibly wrong in the frame; job box says the job has not started so no delivery note is due; test-flow/timing, not a visible glitch
+M-088 | KEEP | same chevron streaks on the tree's lower-left branches, bright yellow/cyan/white bands
+M-089 | DROP | hats look fine (dotted cones with a ball on top); mismatch with a text description is not a visible problem
+M-090 | KEEP | pink pennant pair on the cab beside the window, yellow pair and two purple quads poking out of the back box
+M-091 | KEEP | chip reads ☀️ 18:20 while rain streaks fall from a grey sky (chip shows 🌧️ in other rainy shots)
+M-092 | KEEP | whole frame incl. HUD under a dark veil, max pixel 166-177/255 vs 255 in the sibling shot; fade overlay still on (or caught mid-fade)

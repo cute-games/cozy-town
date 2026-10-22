@@ -1,0 +1,7 @@
+s3_pc-1366_light_pc-1366-light_020_shop-market.png | pc-1366 light theme, city: the Market shop card | the round ⬇️ scroll button sits on top of the bottom corners of the Lemon and Honey tiles (a button over two item cards) | 1
+s3_pc-1366_light_pc-1366-light_021_shop-pets.png | pc-1366 light theme, city: the Pet Shop card | the round ⬇️ scroll button sits on top of the bottom corners of the Frisbee and Yarn ball tiles (a button over two item cards) | 1
+s3_pc-1366_light_pc-1366-light_037_town-pet-show-stage.png | pc-1366 light theme, city park: the Pet Show stage and the food truck corner | the food truck runs off the right screen edge: its roof sign is cut to "🍔 Fo", so the truck and its sign (the shot's subject) cannot be checked | 1
+s3_pc-1366_light_pc-1366-light_044_inside-market.png | pc-1366 light theme, inside the Market at the door | a big round dark shadow with nothing visible casting it lies across the front of the fruit stand, centred in front of the camera (looks like the hidden player's own shadow) | 1
+s3_pc-1366_light_pc-1366-light_045_inside-pets.png | pc-1366 light theme, inside the Pet Shop at the door | a person stands right against the camera at the left edge, cut in half: a giant half face and body fill the left side, and the yellow ⬆ plate above them is cut off too | 1
+s3_pc-1366_light_pc-1366-light_046_inside-flowers.png | pc-1366 light theme, inside the Flower shop at the door | a big yellow figure with purple on top stands right against the camera at the right edge, cut in half, behind the "Play with Clover" button | 1
+count: 6

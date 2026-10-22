@@ -26,6 +26,7 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 | 17. House parties and the dance game | yes | yes | N39 pass |
 | Stage 2 end: the stage-2 book (7 pages), version stamp 2026101801, counts before/after, full check (--full, night3 + run4), kit v6 zip, this report, PR "Run 4, stage 2" | yes | yes | full check + reruns: every line passes but C2b (the crawl does not ride the bus, so it never reaches the beach by playing; the same in the stage-1 full check; section 5b) |
 | 19. Stage 3: the GLITCH HUNTER pass (photographer, change-spotter, viewers, double-checker, reporter, fixer, fix-checker) and the critic loops; version stamp 2026101802; the rollback copy; full check; this report; PR "Run 4, stage 3" | partly: passes 1 to 7, five critic rounds, the stamp, the rollback copy, the counts and the full check; pass 8 and critic round 6 are open (the owner's wrap-up, 18 Oct; kept on the branch claude/run-4-wip) | yes | glitch list tools/GLITCH-LIST-4.md (167 entries: 142 fixed, 23 not a glitch, 2 open); critic loop: see section 4; full check: stopped by the owner after the save tests (18 Oct): every line that ran passes (files, counts, saves, the two players in the test room, the Claude version, the book); the walk-through, the device tests and the night-3 and run-4 lines did not run on the final file and are NOT VERIFIED |
+| Run 4 finish (20 and 21 Oct, branch claude/run-4-finish): the full final check on the live game; the clock "9:40 Wed"; C5; passes 8 to 25 with fixes f3 to f20; critic round 6 (the last); version stamp 2026102101; the rollback copy restamped; full check on the final file; kit v6 zip; this report; PR "Run 4, finished" | yes | yes | the live game: every line PASS but C5 (fixed); the final file: every line PASS (A2 after the backup was read back on 21 Oct, the files stage rerun alone); C1-WK, F2 and F3 not run, G not verified, as before (`tools/run4-wip/final-check-2026-10-21-final.txt`) |
 
 (filled in after every job; if the session restarts: undo any half-done job, carry on from the next one)
 
@@ -41,6 +42,15 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
   - Ducks: the new faces, not yet seen by a viewer or a critic.
   - Clock format: times read "09:40 Wed"; the plan's example was "9:40 Wed". The owner decides.
 - To carry on: check out claude/run-4-wip, read tools/run4-wip/README.md, run pass 8 and critic round 6, then the full check and the stage-3 pull request (or a follow-up one if this stage is merged).
+
+### Run 4 finish (20 and 21 Oct 2026): where things stand
+- The owner's words: "Finish run 4 … do every open item in it, alone. First the full final check on the live game. Clock: show "9:40 Wed" (one hour digit), as the 17 Oct list says. Same rules as NIGHT-PLAN-4.md. End with a pull request. Never stop to ask."
+- Done on the branch claude/run-4-finish (pull request #7 "Run 4, finished", not merged: the owner merges): every open item of the wrap-up (tools/run4-wip/README.md says how each ended). The live game is unchanged (stamp 2026101802) until the owner merges and publishes.
+- The live game's full check (20 Oct): every line PASS but C5, fixed here (`tools/run4-wip/final-check-2026-10-20-live.txt`).
+- The glitch passes: pass 8 (the full S3-N pass, 92 kept marks), pass 9 (37 kept), passes 10 to 19, then from pass 20 under the owner's loop rules of 21 Oct: pass 20 (2 fixes above minor), passes 21 and 22 with none above minor (the stop), the full final pass 23 (628 pictures; 2 fixes above minor) and its re-checks, passes 24 (1 fix) and 25 (none).
+- The critic loops ended at round 6 (the last the plan allows): the Tree park done; the other five where section 4 says.
+- Open for the owner: your pets at your heels (G4-205, G4-222); the salon floor softening near the camera on a big screen (G4-279); the phone's job list on a sideways iPhone (G4-285); the critics' last points not changed (section 5c); 15 small marks left as they are (grade 1), listed in section 1 ("Leftover minor marks") and in IDEA's PAGE.
+- If a session restarts: the branch holds everything; section 1's "Run 4 finish" part lists each change, section 2 the checks as printed.
 
 ## 1. Every change, old → new
 
@@ -233,6 +243,583 @@ Branches `claude/run-4-s1` (stage 1), `claude/run-4-s2` (stage 2, from s1), `cla
 - The What's new book: no new pages (stage 3 fixed things; it added nothing a child would look for); the dance page's picture was taken again with the drawn arrows.
 - Kit v6 lines touched: N37 finds the ladder button where the game put it (the signposts moved together); N39 reads the invitation card (it is the notification now, with the host's name and the two buttons) and, at the end of a round, checks that the view stays on the two dancers while the result card shows (old → new in section 5c). Two kit helpers changed, no check line: a tap waits for a popping-up phone or card around its button, and N15's sleep-screen picture waits for the screen to fade in (section 5c). None is weaker.
 - Full check (`--full`): stopped by the owner after the save tests (18 Oct): every line that ran passes (files, counts, saves, the two players in the test room, the Claude version, the book); the walk-through, the device tests and the night-3 and run-4 lines did not run on the final file and are NOT VERIFIED.
+
+### Run 4 finish (20 and 21 Oct 2026): the open items of tools/run4-wip/README.md, done alone
+
+The owner's words: "Finish run 4 … do every open item in it, alone. First the full final check on the live game. Clock: show "9:40 Wed" (one
+hour digit), as the 17 Oct list says. Same rules as NIGHT-PLAN-4.md. End with a pull request. Never stop to ask."
+Branch `claude/run-4-finish`, from `main` with the unfinished work of `claude/run-4-wip` (0138269). Every game change below is a patch script
+in `tools/run4-wip/scripts/` (patch_f1.py … ), applied with exact-match edits and a syntax check of every script block.
+
+**The clock (the owner's decision of 20 Oct)** (f1, a844bc9): old: "09:40 Wed", "Sleeping until 07:00", "from 08:00 to 20:00" (stage 3 had
+padded the hour) → new: "9:40 Wed", "Sleeping until 7:00", "from 8:00 to 20:00" (clockStr and every text stage 3 touched). The bus times and the
+"${DAY_ON}:00" texts were never padded.
+
+**C5 on the live game** (f2, 10ae96a): old: the dance-off's four arrow buttons had 20 px corners (since job 17) → new: 18 px like every white
+button. Stage 2's C5 rerun counted only the crawl's screens and never saw them; the full check of 20 Oct on the live file was the first.
+
+**Pass 8 (S3-N), the full GLITCH HUNTER pass on the file with the clock and button fixes** (it replaces pass 7's nine batches that never ran):
+the kit's own pictures (night3 + run4 on that file: every line PASS), the photographer's three scripts (456 + 32 + 4 pictures; the duck close-up
+added for the new faces), 17 viewer batches, 8 double-checkers: 118 marks, 92 KEEP, 26 DROP. Each kept mark, its cause and what was done:
+`tools/run4-wip/data/stage3/pass8-fixplan.md`; the glitch list entries G4-168 on.
+
+**f3 (27 edits), from pass 8's kept marks:**
+- Quests: old "Buy a fairy wings at the Pet shop" → new "Buy a pair of fairy wings at the Pet Shop" (a pair of wings, glasses, ears or headphones;
+  some fries, noodles or dumplings); the shop names in quests, cards and the friends list are the names on the buildings (Pet Shop, Flower Shop,
+  Toy Store, Ice Cream Shop, Clothes Shop).
+- Café, Bakery and Ice Cream chalkboards: old a fifth row sat on the bottom frame → new the rows are spaced to the board (48 px type from 5 rows).
+- Designer job wish card: old "Sunny living room · r…" → new the title on its line, "room 1 of 2" on a line of its own.
+- Hairstylist tutorial: old the bottom captions sat at x 250 and 230 of 420 → new centred.
+- What's new book: old an emoji alone on a line, "dance-" / "off", 🕺 / 💃 split, page 5 ending in a ❓ → new a non-breaking space before a
+  line's last emoji, "dance-off" and 🕺💃 never split, "Job tutorials are pictures now: tap ❓ on a job card to see one!".
+- Night sky: old stars and the moon shone between rain streaks → new they fade out with the grey sky in rain, snow and cloudy weather.
+- October ghosts: old one circled 1.2 m from the park fountain's middle (inside its bowls) → new 4 m from it.
+- 1 September: old the school banner ran behind the name board on its posts → new a shorter banner from the left balloons to the board.
+
+**f4 (4 edits), the grandmas:** old a long line was one pill running off the screen → new over 22 letters it wraps onto two lines (capped at
+two lines' height); old two grandmas on the pond bench could talk at once after a jump of the clock → new one starting to talk ends the
+bubble of any grandma within 3 m; old a grandma walking through the camera filled a third of the screen → new she is not drawn for that moment.
+
+**f5 (37 edits), the rest of pass 8's kept marks, each from its cause** (probes before and after each: the ducks, the rug, the tags, the
+garden plate, the hair card on iPad and a sideways iPhone, the disco ball, the short-screen cards, the tutorial, the friends after a turn,
+the two-phone dance-off, the designer's room, the light on ten views before and after):
+- Pet Shop upstairs: old the ducks stood on their water on orange legs (the whole pen is water) → new they swim, low in it, no waddle.
+- An upper floor's starter rug: old 4 cm high, a placed rug lay half under it → new flat (1 cm) under any rug you place.
+- Pets' name tags: old only the friends' tags stepped apart (indoors "Moch", only an "M") → new your pets' tags step apart with them.
+- Garden: old the 🔒 Level plate hung above its stake (the size cap shrank it round its middle) → new it is held at its bottom edge.
+- Hair salon: old the hair card covered the customer in the chair → new when the card opens the view turns to the customer, who shows above
+  it (on a phone on its side the card fills the screen's height: nothing can show above it there).
+- Dance-off: old the "✨ Perfect +15" ran into the score bar (upright phone) and its ✨ covered the left dancer's face (sideways phone, read as
+  "the guest's dancer faces away"; both dancers face the view: rotation 0 = asked 0) → new under the bar; at the bottom left on a sideways phone.
+- Disco ball: old a pale 3 cm arm and 1 cm string that did not show (the ball floated beside its pole) → new a thicker arm with an outline
+  and a dark string.
+- A card at the bottom of a short screen: old it ran under the round top buttons, the jump button poked out beside it → new the HUD pieces it
+  reaches over wait out of sight under it, as under a big card.
+- Job tutorials on a short screen: old the card covered the top row while it showed (the food chip cut in half, the clock hidden) → new with
+  nothing to point at, the row waits under it; a message with no free spot beside a tutorial waits until it closes.
+- The clock chip: old refreshed twice a second, so right after a jump of the clock it showed the old hour or weather ("11:30" at 12:30, the sun
+  under an evening sky, a cloud under a blue sky) → new refreshed at once after a jump of the clock or a change of weather.
+- Photo shoot: old the wave swung into the next person's hair; "Pick up the litter" and its big button sat in the photo frame → new a higher
+  wave; while a shoot is on only its own buttons show.
+- 1 September: old two balloon bunches stood in front of the school hall's 🌈 and 🚀 posters → new by the lockers.
+- Messages: old above a big card on a tablet the message lay on the chat and phone buttons → new the top row counts fully while it is in
+  sight (the message waits).
+- Clothes maker: old a 34 px ⬇️ "more below" → new 46 px like every other.
+- Decorating: old the aim ring was a 118 × 70 px ellipse hanging in the room (the big-button class gave it a button's padding: the designer's
+  "white ring over the sofa") → new a 28 px ring again.
+- The "+20 🪙" pop: old on the new client's message → new it keeps clear of the message card.
+- Shop cards: old a two-line name pushed its price down, the cut row's prices greyed by the 58 px fade → new prices on one line in a row;
+  a 40 px fade on short screens.
+- People at the camera: old a passer-by within 1–1.2 m or a grandma within 0.6 m filled the picture with a back or a cardigan → new not drawn
+  within 1.3 m for that moment (a grandma sitting by you on a bench stays).
+- Friends round you: old on a narrow pavement the fourth friend stood straight behind another, only a name tag showing → new a nearer spot at
+  the side first, and spots 1.22 m apart (the check asks 1.2; it was 1.3): all four faces show (the kit's N3 passes: 1.28 m and 1.25 m).
+- Light outdoors: old a face turned away from the sun still took cast shadows, and the baked pieces (most walls) never had the shade fix of
+  item 17 → new no cast shadow on such faces outdoors, and the baked pieces have the fix: the house's back in the garden is its own colour in
+  the shade (it was a dull grey), the apartment block at 12:30 is one tone (it had a lit strip and a soft seam), no pale streaks at 17:30 or on
+  the Tree Park's crowns. Indoors nothing changes (shown before and after on ten views).
+
+Not glitches (pass 8 marks the double-checkers kept, with the reason): M-073 to M-078, "a toy and a hand in mid-air beside a lamp pole":
+the toy is the game's play feedback (an emoji that rises over the pet and fades); the hand is a townsperson's arm behind the pole at the kit's
+N11 spot. M-091, "small pastel eggs, no golden-banded egg in a nest": those are the Flower Corner's spring decorations, by design ("so no
+decorative egg looks like one"); the check had picked up the hunt eggs near the bunny (18/25).
+
+The photographer's scripts for pass 9 (the marks that were the framing, not the game): the pond ducks are photographed after you feed them
+(they swim up; from a fixed spot they were small at the far rim behind the cattails); the school hall from nearer its door; your pets a step
+behind you indoors and at the October gate; an upright phone's room views a little lower (a ceiling lamp filled the top); the delivery
+message with the chef's card closed first; the two players on the open square (the PC view was boxed in by a tree and the Ideas Board).
+
+**Pass 9, the full pass on the file with f3 to f5 and the two new book pictures**: the kit's own pictures (night3 + run4: every line PASS),
+the photographer's three scripts, 15 viewer batches: 112 marks; 57 set aside with their reason (`dcfilter9.py`: decided earlier, the check's
+or the photographer's staging; pass 8's dropped ⬇️ hint over a tile gap), 55 double-checked (8 double-checkers), 37 kept. Each kept mark and
+what was done: glitch list entries G4-212 to G4-226, `tools/run4-wip/data/stage3-dc9/`.
+
+**f6 (27 edits), from pass 9's kept marks and the last critic round's clear points** (probes before and after each):
+- Calendar: old a Saturday's ⭐ and 🏆 sat to the left of its tile → new centred under the day. Old the today tile always ☀️ or 🌙 (under a
+  grey sky too) → new the clock chip's sky (skyIc()). The chip's weekday: old 600 weight at 80 % → new bold and dark.
+- The clock chip and the phone: old refreshed twice a second, so the first moment after the shown time stepped on ten minutes still said
+  the old time → new refreshed the moment it steps on.
+- Pet Shop card: old "Buy one and something new pops up!" 12 px at 70 % → new 14 px, bolder.
+- Old an emoji alone on the last line (the furniture page's 🎨, the delivery pill's 🍕) → new a no-break space before it.
+- Hair salon: old "Ava sits down!" lay across her face as the view turned to her (G4-194's turn), and under the check's fast clock "Ben comes
+  in!" did too → new when the card opens at once its tab names who sat down, so the big words pop only when it cannot; as the view turns to
+  a face, big words on the screen or still waiting go (popDrop()). Old on a sideways phone the hair card cut the job pill ("Ben is in your
+  ch") → new under a bottom card on a short screen the pill waits out of sight like the other HUD pieces it would touch.
+- Flower shop: old from the door the middle basket's rod came out of the ceiling lamp's bulb → new it hangs 1.5 m to the right.
+- 1 September, the school hall: old f5 had put the back balloons by the lockers, out of sight from the door → new between the posters and
+  the side doors, the 🌈 and 🚀 posters 65 cm nearer the middle door.
+- Ducks: old two fed ducks swam to the same spot and stayed bill to bill, facing each other → new each to a spot of its own (a metre
+  apart), and once there they turn to you; old eyes 2.6 cm with a 0.9 cm shine (no eyes seen from the bank) → new 3.4 cm, a 1.2 cm shine.
+- Friends round you: old a fan of near and far spots (2.6 / 3.1 m) over the whole width, filled one friend after the other: with a road or
+  a wall on one side the last friend stood half behind another (Finn's or Theo's face beside Luna's hair) → new an arc over the free part
+  of the view, its ends nearer (2.8 m) and its middle further back (up to 4.6 m), so each face shows between the two in front; every
+  order of filling it is tried (24 for four friends) and a face behind another's head costs most. A friend on the way to a spot waits
+  unseen within 1.3 m of the camera (it was 1 m), like a passer-by. The kit's N3: PASS.
+- Photo shoot on a short sideways screen: old the "Everyone is posed!" message lay over the background the booking asked for → new the
+  shoot's messages sit at the top, above the viewfinder.
+- Photo booking: old "Mia, Leo and Zoe will be waiting there!" from Mia → new "Leo, Zoe and I will be waiting there!" ("…, our kitten and I").
+- House stairs: old the use button showed a ladder 🪜 while the plates show ⬆️ Upstairs / ⬇️ Downstairs → new the plate's arrow.
+- The What's new book's Pet Shop picture: old soft, its lower third an empty floor, the Capybaras sign cut → new a step nearer: the four
+  pens with their animals and all four signs whole (bookswap.py).
+
+Not glitches (pass 9 marks the double-checkers kept, with the reason; G4-223 to G4-226): a car right at the camera (the photographer's
+school-front spot stood 30 cm into the road); the garden's back wall pink after the purple six-floor picture (the garden spot repaints the
+house in the lane's own colour on purpose); two shoppers inside each other (the photographer's own move of a shopper onto a spot another one
+was walking to; the game keeps two shoppers off one spot); a posed townsperson on the road (the photographer's New Year row); the big map's
+names at its edges and under the tip (the map scrolls; the tip fades after 4 s); a pink thing in the fountain at Christmas (an autumn
+leaf at the end of its fall: the check jumps from October to December in one page); pet feedback piled up (N11 feeds and plays in one go);
+"🥚 18/25" under "All 25!" (each egg's count rises where it was found; the check picks up all 25 at once); the beds of an old save "pushed
+together" (70 cm apart, side by side). Left open for the owner again: your pets at your heels (G4-222, as G4-205).
+
+The photographer's scripts for pass 10: the school front from the pavement (it stood 30 cm into the road); the Pet Show stage a step in
+through the park gate (its post filled an upright phone's view); a shopper moved off the camera goes only to a spot no one stands at or walks
+to; the New Year row of townsfolk shifts sideways until no one stands on the road. The viewers' line for the clock chip says what the game
+does since stage 3: the 🏆 shows on Saturdays until the Pet Show is over at 20:00.
+
+**Pass 10, the full pass on the file with f6**: the kit's own pictures (night3 + run4: every line PASS), the photographer's three scripts, 15
+viewer batches: 159 marks; 96 set aside with their reason (`dcfilter10.py`), 63 double-checked (8 double-checkers), 41 kept. Each kept mark
+and what was done: glitch list entries G4-227 to G4-248, `tools/run4-wip/data/stage3-dc10/`.
+
+**f7 (32 edits), from pass 10's kept marks** (probes before and after each; what a still picture cannot show was checked by script,
+`probe_f7js.py`: the grandma's way past you, a walking friend, the friends' circle, the chip's sky for each sky, every hair wish, the coin pop):
+- Grandmas: old a grandma walked through you (unseen only within 1.3 m of the camera): at the Beach Bus stop her head filled a third of the
+  screen, her shoes stuck out under a card → new she walks round you, at least 2.1 m away (a smooth step aside from 4.5 m before you to 4.5 m
+  past you), and keeps her step while she stands. Only on your device: her place in the day's plan, the one every device shares (and N24
+  compares), is unchanged. The check: walking along the very line you stand on, 2.06 m at the closest, never out of sight.
+- Friends out for a walk: old a friend stopped 0.95 m from you and stood there for as long as you stood still (Luna's back and hair filled a
+  quarter of the view) → new she gives way like a passer-by: coming straight at you she stops 2.4 m away and after a moment walks back; right
+  at the camera (1.3 m) she waits unseen, like a friend who follows you; only a friend you talk to may stand closer. The check: she stops at
+  2.39 m and turns back (before: 0.9 m, for good).
+- Passers-by: old one coming straight at you stopped 1.7 m away (with others pushing, 1.4 m: a face filled the view), and one within 0.95 m
+  was held there whichever way it walked → new 2.4 m when coming straight at you; one walking away from you is never held; none steps into
+  the space between you and your friends round you, and one standing there when they gather steps out of view, as in a photo shoot.
+- Name tags and bubbles: old far ones were tiny pills piled into unreadable stacks (the Pet Show judges from the fountain), and a far
+  grandma's bubble, drawn over everything, sat on a near face → new a tag or bubble whose line would be under 15 px tall fades, gone under
+  11 px (they shrink with distance; close up they were already capped at a button's height).
+- The clock chip: old ☀️ under a grey sky (the sky is fully grey 40 % into a weather change, the chip turned at 50 %) → new the sky as you
+  see it: ☁️ from half grey, 🌧️ or 🌨️ as soon as rain or snow falls; the chip changes the moment its sky does.
+- Coin pops: old drawn under a card (on a sideways phone the photo's and the haircut's "+120" half behind the result card's top edge) → new
+  over it; old a message coming a moment after a pop lay under it (the designer's "+20" on "New client!") → new the pop moves clear of it.
+- A photo shoot on a short sideways screen: old the messages still lay over the background the booking asked for (f6's style rule did not
+  take: the game places its messages itself) → new during a shoot the coin, food and clock chips step aside and the messages sit there.
+- Hair wishes: old "I'd like my hair shoulder-length and bun, in brown" → new "I'd like brown hair, shoulder-length, in a bun" ("long and
+  straight", "short, in pigtails").
+- The calendar on a short sideways screen: old on a Saturday the month's line stopped at "…and the" in the phone's bottom fade → new the
+  week's tiles are lower, so the line shows in full.
+- The phone's job list: old "Photographer" touched both sides of its card → new the titles 13 px.
+- Colour dots: old their light ring showed only with dark picked in the settings, so on a phone in dark mode a near-black dot vanished on
+  the dark card (the Clothes Shop's Special cap) → new in the device's dark mode too (the book's page dots too).
+- The Toy Store's corner post: old a faint dashed line from the roof to the pavement → new (the cause, found by switching the ink outlines
+  off: the wall's ink shell ran 4 cm behind the post's face, too close for the depth test from across the street) the corner posts of
+  every flat-roofed building stand 11 cm out from the wall, not 7.
+- Awnings: old seen from one end, the open far end looked like a strip in the air past the shop's corner → new both ends closed by a side
+  valance.
+- The duck pond: old the reeds' shadows broke into blotches on the water → new the 3.6 cm stems cast no shadow.
+- The Tree Park: old the star over your next deck was two crossed stars turning (half-way round, a bell drawn through a star) → new one star
+  that faces you and sways a little.
+- The Bakery and the Ice Cream Shop: old the counter's right-hand shopper stood right in front of the shopkeeper as seen from the door → new
+  that spot 85 cm further right.
+The kit's night3 and run4 lines on the f7 file (md5 cc68e9d6, before pass 11's pictures): 41 of 41 PASS, N3 (friends), N4 (walkers), N6 and
+N24 (grandmas: the same places on two devices), N13 (hair), N16 and N18 (sky, the same on two devices) and N25 (photo shoot) among them.
+
+Not glitches (pass 10 marks the double-checkers kept, with the reason; G4-246 to G4-248): the fountain mottled at night (the water falling
+from its bowls, blue at night; the same sheets show in rain); a house sign without a garland in October (the line means garlands hanging on
+posts of their own); the Toy Store's name off-centre on its board (measured: it sits in the middle, above the door; from the shop's end the
+board's far half looks about half as long as its near half); shoppers at the Pet Shop's screen edges (their spots by the side shelves); the
+delivery timer under Chef Blaze's card (the photographer picked the pizza up in the street; in the pizzeria the timer waits for the card);
+in the check's pictures a townsperson's back at the fountain (the check puts you there in one step, onto their way), the Pet Show's drum
+message fading over a new pet (N11 runs the show in fast game time) and a dimmed picture (taken as the stairs' fade ended). Written down
+again: a crown's soft dots (G4-244: the shadow map, as G4-088; found by switching each shadow caster off in turn) and your pets (G4-245, as
+G4-205).
+
+For pass 11: the photographer closes Chef Blaze's card on the delivery spot; the viewers' Halloween line, old "garlands on their posts" → new
+"garlands hanging between posts of their own (no garland floats in the air)" (pass 10's viewer read it as garlands on the house-sign posts);
+the filter (`dcfilter11.py`) sets aside pass 10's decisions, and its patterns for the check's pictures take two-digit sets (kit10's pictures
+had slipped past five of them).
+
+**Pass 11, the full pass on the file with f7**: the kit's own pictures (night3 + run4: 41 of 41 PASS), the photographer's three scripts, 15
+viewer batches: 103 marks; 60 set aside with their reason (`dcfilter11.py`), 43 double-checked, 27 kept: G4-249 to G4-260,
+`tools/run4-wip/data/stage3-dc11/`. (pass11.sh waited for good after the check: its wait looked for a "p11kit.sh" process, and the shell that
+started both carried that name; it was started on its own, and pass12.sh waits for the check itself.)
+
+**f8 (19 edits), from pass 11's kept marks** (probes before and after; checks by script, `probe_f8js.py`, `probe_f8toast*.py`):
+- Grandmas (after f7): old on the PC pictures one still passed 1.5 m from the camera: her step aside followed the drawn frames, so on a slow
+  screen it lagged → new it follows the clock, and keeps 2.4 m like a passer-by. The check, frames 50 and 200 ms apart: 2.37 m and 2.4 m at
+  the closest (before: 2.06 m and 1.79 m). Two of these pictures had been set aside by the filter as the photographer's camera spot (a wrong
+  reason); the pass-12 filter never sets a grandma at the camera aside.
+- The big map: old your friends' dots had no names since stage 3 (each name was tested against its own dot with the air round it, so every
+  side touched the dot) → new tested against the others only: Luna, Rosie and Theo by their dots again; a place's name a friend's dot lies on
+  is drawn again over the dot (Rosie's dot hid the S of "Spooky path").
+- The What's new book: old on the last page the dots sat 21 px left of the middle ("Let's play!" is wider) → new a three-column footer.
+- Messages: old a message that waited for its turn showed after the clock had jumped (at 22:10: "The football friends are at the field until
+  19:00") → new dropped once the game clock has moved half an hour or a day since. Old on an upright tablet with the big map open, the
+  "online" message lay on the chat and phone buttons → new up in the top row, left of the round buttons.
+- New Year's fireworks: old thin sprays of pale dots, a young burst a white smudge → new bigger sparks (up to 16 px), 130 to a burst, in
+  their own colours (added up, sparks lying on each other made a white blob), fading in over the first moment and bright for longer.
+- The photographer's stars: old only the school sign had a point to check that the background is in the photo, every other background
+  always counted as in (a photo of a blue wall for "the bench behind us" got the full score; the last critics had said so too) → new each
+  background has one, 2 m behind where the group stands, 1 m up. The check: from the front 5 stars; from behind the group the bench no
+  longer counts.
+- The Pet Show judges step out of a photo shoot like anyone else (two sat right beside the camera at the stage background).
+The kit's night3 and run4 lines on the f8 file (md5 c1ef5ec7): 41 of 41 PASS (N21 fireworks, N24 grandmas, N25 photographer among them).
+
+Not glitches or written down again (G4-257 to G4-260): shadows' dots and stripes (G4-088), your pets (G4-205), the book over the dimmed HUD,
+the garden's repainted wall, the joystick's place on a sideways phone, your own shadow on the market's stand, the iPad's notepad over two
+townsfolk's heads, the places list's scroll hint; in the check's pictures: the spooky path's picture facing the street, a grandma standing at
+her park stop 2.7 m in front of N10's camera, a lamp post above a new pet, a townsperson's hat inside a low tree crown right at the camera, the
+camera tilted after a pick-up.
+
+For pass 12: the filter (`dcfilter12.py`) sets aside pass 11's decisions; a grandma at the camera is never set aside as the photographer's spot.
+
+**Pass 12, the full pass on the file with f8**: the kit's own pictures (night3 + run4: 41 of 41 PASS), the photographer's three scripts, 15
+viewer batches: 96 marks; 59 set aside with their reason (`dcfilter12.py`), 37 double-checked, 29 kept: G4-261 to G4-272,
+`tools/run4-wip/data/stage3-dc12/`.
+
+**f9 (18 edits), from pass 12's kept marks** (probes before and after; checks by script, `probe_f9js.py`, `probe_petfit.py`,
+`probe_carcam.py`; the two-phone dance-off run on the fixed file):
+- The What's new book (after f8): old on an upright phone the last page's "Let's play!" lay on the page dots and hid three of them (f8's
+  three even columns were narrower than the button) → new each side column is at least as wide as its button; the dots stay in the middle
+  where they fit (every page on the iPad, the PC and a sideways phone) and sit 46 px left of it on an upright phone's last page, never under
+  a button.
+- Cars: old the delivery picture showed no town at all, a flat green field and a dark band: a car stood at the photographer's spot on the
+  road, its cabin 15 cm from the camera and its roof edge 2 cm above eye height. Walking up to a car's middle brought your eyes as near (each
+  car was two round ends) → new one box round each car, like the bus: the check by script from every side, eyes to the cabin 0 before (from
+  inside the car's middle the two ends pushed against each other), 0.50 m after; eyes to its body 0.69 m. The photographer's delivery spot
+  keeps out of a car standing there, as walking would (`shots4b.py`, old `collideXZ(P.x,P.z,.3,CUR)` → new `collideXZ(P.x,P.z,.3,CUR,solids())`).
+- The phone: old a muddy band along the foot of every page (its fade let the dark phone through, with nothing to scroll too) → new the fade
+  shows only while there is more below (friends: none; quests and calendar: there).
+- The bag: old the "×3" counts at 13 px, three quarters see-through → new 14 px, bold, nearly solid.
+- The dance-off: old in the crouch the dancer's shoes sank 23 cm into the floor (the legs went down with the body) → new the legs slide up
+  into the body, the shoes within 1 cm of the floor through the whole move. Old on an upright phone the host's dancer leaned out of the
+  picture: in a plain house the view stands 4.3 m back, not the 5.6 m it wants → new it widens until both dancers and their lean fit (77° in
+  a plain house, at most 95°; 70° as before when the room is deep enough, and on every sideways screen).
+- Pets: old a new owl's cape stood flat out of its back, its backpack hid inside it and its collar hung off its front; the duck's bow tie was
+  inside its chest (they borrowed the cat's and the bunny's sizes) → new their own: the owl's cape and backpack lie on its upright back, the
+  collar and scarf go round both birds' necks, the bow tie sits under the beak. A cat or a bunny in every piece: the same pixel for pixel.
+- The Home shop's little pictures: old a glowing piece came out nearly white (the "Seafoam neon sign" with white tubes; the pink, mint and
+  blue lamp shades; the lanterns) → new it glows less in its little picture, so its colour shows; in the room it glows as before.
+- Job tutorials: old in "Follow the dot" the hand right of the dot pointed away from it → new 👈. Old the hair pictures' words were the line
+  under them again → new "The picture = the new hair", "A match = stars and coins" (the lines stay).
+The kit's night3 and run4 lines on the f9 file (md5 0ded5b6f): 41 of 41 PASS (N11 pets, N13 hairstylist, N38 tutorials, N39 dance-off among them).
+
+Not glitches or written down again (G4-270 to G4-272): the football field's scoreboard 8 m behind a pavement tree, the garden fence in front
+of the photographer's garden spot; a shopper at the market's shelves, your own shadow on the fruit stand, the corner map's 🎨 (tap the map to
+change your dot's colour), your pets' tags behind the see-through joystick; in the check's pictures: a friend walking by N10's fountain spot,
+N11's lamp post, N19's fixed view of the gate, N27 looking up.
+
+For pass 13: the filter (`dcfilter13.py`) sets aside pass 12's decisions and drops, with the wordings pass 12 used for the known ones (on
+pass 12's own marks it keeps exactly the 14 that f9 fixed).
+
+**Pass 13, the full pass on the file with f9**: the kit's own pictures (night3 + run4: 41 of 41 PASS), the photographer's three scripts, 15
+viewer batches: 83 marks; 51 set aside with their reason (`dcfilter13.py`), 32 double-checked, 21 kept: G4-273 to G4-281,
+`tools/run4-wip/data/stage3-dc13/`. None of f9's fixes came back.
+
+**f10 (16 edits), from pass 13's kept marks** (checks by script before and after, `probe_f10js.py`; pictures of the garland):
+- The clock chip: old 🌧️ while nothing fell yet, the scene still in sunshine (the streaks fade in from rain level 0.3 to 1, the chip turned
+  at 0.3) → new rain and snow show on the chip from 0.55, the streaks a third in.
+- The photographer: old opening the phone or the bag over a photo's result card left the shoot on: the map, the notepad and the job box
+  hidden and only the shoot's own buttons working, until you left town (only the card's Bye ended it) → new once its result card is gone,
+  however it goes, the shoot ends as with Bye. The check: the phone over the result card, the shoot on before, over after; Bye as before.
+- Quests: old "Snack time: Eat some flour", flour among "3 different treats" (400 such snack quests and 66 such sprees in 200 days) → new
+  never raw flour or eggs to snack on or as treats, on new days; an old day's quests stay.
+- The Pet Shop's owl: old it walked its whole pen at perch height, in the air most of the time, and stopped facing the wall → new it keeps
+  to the perch and turns to the room.
+- The park's holiday garland (both marks dropped by the double-checker: from the front its string is behind the shelter's back wall): it
+  ran along the bus shelter's back, through its roof's rim (the shelter came in run 4) → new two pieces, either side of the shelter, at every
+  holiday.
+The kit's night3 and run4 lines on the f10 file (md5 d6313dcb): 41 of 41 PASS (N1 counts 103 Halloween pieces with the garland in two, N25 photographer, N28 Pet Shop: no animal outside its area).
+
+Not glitches or written down (G4-278 to G4-281): two ducks one behind the other from the pond's spot (80 cm apart at the nearest), a bird
+flying over edge-on, the salon floor softening near the camera on a big screen (256-pixel floor pictures, open), the photographer's Pet Show
+spot on an upright phone, the places list's scroll hint, the salon's sign under the round buttons; in the check's pictures: crates at the edge
+of its photo shoot, the Ideas Board before N16's camera, a townsperson's back in N21's, a post, a lamp post, a door at the camera, a friend
+partly behind another.
+
+For pass 14: the photographer's night and rain town views move the cars near a spot along, as its day views do (a car passing 2 m in front
+of the school spot filled the night picture); the filter (`dcfilter14.py`) sets aside pass 13's decisions and drops (on pass 13's own marks
+it keeps exactly the 8 that f10 fixed).
+
+**Pass 14, the full pass on the file with f10**: the kit's own pictures (night3 + run4: 41 of 41 PASS), the photographer's three scripts, 14
+viewer batches: 75 marks; 58 set aside with their reason (`dcfilter14.py`), 17 double-checked, 14 kept: G4-282 to G4-289,
+`tools/run4-wip/data/stage3-dc14/`. None of f10's fixes came back.
+
+**f11 (2 edits, the second in five job boxes), from pass 14's kept marks** (pictures of the salon card and the job box):
+- The salon card: old the customer's words wrapped so their last emoji and the closing quote stood alone on a line ("💕”", "✨”") → new the
+  last word keeps to the word before it.
+- The job box: old "Purple house" on one line, "· 86 m" starting the next → new the distance keeps to the place before it (the
+  photographer's, the hairstylist's, the teacher's, the designer's and the pizza job box).
+The kit's night3 and run4 lines on the f11 file (md5 ddef2182): 41 of 41 PASS (N8 designer, N13 hairstylist, N25 photographer among them).
+
+Not glitches or written down (G4-284 to G4-289): a dark strip at the iPad's bottom-right corner in the photo shoot at the Duck Pond (a bush
+just below the screen's edge: its outline, 2 cm bigger, shows a step before the bush does; traced by replaying the check's shoot with its
+booking), the phone's job list on a sideways iPhone (its second row starts right at the screen's foot, which fades while there is more;
+written down, section 5c), your friends in a shop at the view's edge or at the counter, the designer's reveal ("Knock knock! 🚪" rising and
+fading), the hair card on a sideways phone and your pets at your heels (decided before); in the check's pictures: the grandmas right in front
+of N6's camera, N9's "closed" toast still up at noon (it tries the truck at 21:00 first), a pavement tree at the left of N25's frame at the
+hedge (in front of nobody, five stars).
+
+For pass 15: the filter (`dcfilter15.py`) sets aside pass 14's decisions and drops (on pass 14's own marks it keeps exactly the 3 that f11
+fixed; on passes 12 and 13 it sets aside nothing more than `dcfilter14.py`).
+
+**Pass 15, the full pass on the file with f11**: the kit's own pictures (night3 + run4: 41 of 41 PASS), the photographer's three scripts, 15
+viewer batches: 94 marks; 78 set aside with their reason (`dcfilter15.py`), 16 double-checked, 13 kept: G4-290 to G4-296,
+`tools/run4-wip/data/stage3-dc15/`. None of f11's fixes came back.
+
+**f12 (5 edits), from pass 15's kept marks** (checks by script and pictures before and after, `views_f12.py`):
+- A quest's steps: old a long step wrapped under its ○ and "Ice / Cream Shop" was split over two lines → new a step wraps under its own
+  words and the shop's name keeps together.
+- The photo frame on a touch screen held sideways: old its left edge kept off the joystick and its right edge stayed, so its middle was 70 to
+  76 px right of the camera's: the family you faced stood left of the frame's middle, in the photo too → new the same space on both sides
+  (the frame's middle and the family's: 498 and 422 before, 422 and 422 after; five stars both times).
+- The clock chip: old 🌙 on a cloudy night while the clouds hid the moon and the stars → new ☁️ under a grey night sky (a clear night 🌙).
+- The path through the Tree Park's gate in town: old it stopped in a straight edge in the grass → new its far end is round.
+The kit's night3 and run4 lines on the f12 file (md5 43dddb98): 41 of 41 PASS (N15 one clock, N16 rain sky, N25 photographer, N37 Tree Park among them).
+
+Not glitches or written down (G4-294 to G4-296): saw-tooth marks on a Tree Park crown (traced: nothing between that point and the sun; the
+steps of the sun's shadow map, as G4-088 and G4-257), the white duck from behind at night, the market's keeper behind the fruit stand from
+the door on an upright phone, the photographer's Santa view with the tree's star above the screen's top, a firework burst at the screen's
+edge; decided before: the HUD over a sign on an upright phone, your own shadow, N21 right behind a townsperson.
+
+For pass 16: the filter (`dcfilter16.py`) sets aside pass 15's decisions and drops (on pass 15's own marks it keeps exactly the 5 that f12
+fixed; on passes 13 and 14 it sets aside nothing more than `dcfilter15.py`).
+
+**Pass 16, the full pass on the file with f12**: the kit's own pictures (night3 + run4: 41 of 41 PASS), the photographer's three scripts, 14
+viewer batches: 65 marks; 56 set aside with their reason (`dcfilter16.py`), 9 double-checked, 8 kept: G4-297 to G4-300,
+`tools/run4-wip/data/stage3-dc16/`. None of f12's fixes came back.
+
+**f13 (4 edits), from pass 16's kept marks** (checks by script and pictures before and after, `views_f13*.py`, `eyegeo2.py`):
+- The ducks and the lily flowers: old the white duck sat on a lily pad, the flower through its chest (a duck pushed aside by the other swam on
+  straight at its old goal across a flower) → new the little pond's ducks keep 34 cm from each flower, and a step into water a duck may not use
+  ends that swim (within 34 cm of a flower in 368 duck-frames of 14400 before, none after; the ducks still swim and come when fed).
+- A duck's eyes: old from behind and from the side the far eye's shine stuck out past the head's outline, a ring like a googly eye (from 1148
+  of 1440 view directions) → new the eyes sit a little deeper and their shine on their top, inside the outline (none).
+The kit's night3 and run4 lines on the f13 file (md5 9e76e1c2): 40 of 41 PASS; N15 failed on its first two-device sample (the second test player was read 14 game minutes after the first; its other two samples 2 minutes apart). N15 alone on the same file, nothing else running: failed once the same way, then passed twice; on the f12 file alone it passed three times. Replayed with the kit's own set-up on both files (`probe_n15.py`): on both, one of the second player's steps takes 8.6 to 9.3 s of real time, and the player read before it lags by that (A 10:00 against B 10:14 on both files); the game's own frames take 0 to 4 ms each, the pause is outside them (`probe_n15b.py`): the line's own timing, as CLAUDE.md warns for N15, not the file (`tools/run4-wip/data/n15-runs.txt`). The line stays as it is and runs again in the final check.
+
+Not glitches or decided before (G4-299, G4-300): Luna on her own walk behind the lamp post beside the photographer's bus-stop spot, two ducks
+one behind the other from the pond's spot, N39's picture catching the invitation card's pop-in, a grandma passing 2.1 m in front of an upright
+phone, the pose card over the photo frame.
+
+For pass 17: the filter (`dcfilter17.py`) sets aside pass 16's decisions and drops, and no longer reads "Pet Shop" as a pet (one mark got the
+pets' reason in pass 16; its twin was set aside as the photographer's spot).
+
+**Pass 17, the full pass on the file with f13**: the kit's own pictures (night3 + run4: 40 of 41 PASS, N15 its own timing, above), the
+photographer's three scripts, 14 viewer batches: 63 marks; 49 set aside with their reason (`dcfilter17.py`; 3 of them under a reason that did
+not fit, sent on too), 17 double-checked, 12 kept: G4-301 to G4-309, `tools/run4-wip/data/stage3-dc17/`. None of f13's fixes came back.
+
+**f14 (6 edits), from pass 17's kept marks** (checks by script and pictures before and after, `views_f14*.py`):
+- The bus shelter's cobwebs (October): old its two webs stood up through the roof, their middle at the roof's height (a white line on the roof,
+  read as a garland string through it) → new they hang in its front corners under the roof, from the post to the side glass.
+- The lake bench: old it faced along the shore, side-on to the water → new it faces the water (its two seats turn with it).
+- Furniture pictures in the dark theme: old the Midnight cat tree, dark navy, was lost on the dark purple tile → new a furniture picture (a
+  shop's New in, the designer's list, the claw machine's prize) has a thin light edge in the dark theme.
+- Shoppers at the door: old a shopper walked on to 0.9 m from you and waited there for as long as you stood still (a giant half face at the edge
+  of the view as you came in) → new it stops a step before you when you stand on its way (2.4 m straight ahead, 1.7 m at an angle) and after a
+  moment goes back, like a passer-by in town (a shopper within 1.2 m in front of you in 7 of 9 shops before, for nearly all of 30 s in four; in
+  none after).
+- A far grandma's bubble: old drawn over everything at any distance (a far one floated over the bus shelter with nobody under it) → new drawn
+  over everything only within 10 m and while it can be read; further, a wall in front of her hides it (a photo family's tags the same).
+The kit's night3 and run4 lines on the f14 file (md5 854e060c): 41 of 41 PASS (N15 among them).
+
+Not glitches, known or written down (G4-306 to G4-309): the steps of the sun's shadow map on a Tree Park crown (G4-294 again), the
+photographer's start spot at the pond's bench not looking for the background (section 5c), Armchair and Beanbag sharing 💺, the ⬇️ in its fade
+over two tiles' corners, N27's camera tipped up after a pick-up, the chips stepping aside during a shoot on a sideways phone.
+
+For pass 18: the filter (`dcfilter18.py`) sets aside pass 17's decisions and drops, and three rules no longer take what they were not for: the
+ducks' rule read the "pad" of "ipad" as a lily pad (every iPad duck mark went on), the camera-spot rule took a person right against the camera
+for the camera against a post, the edge-bubble rule took a tiny far bubble for one cut at the screen's edge. On pass 17's marks it keeps exactly
+the 6 that f14 fixed.
+
+**Pass 18, the full pass on the file with f14**: the kit's own pictures (night3 + run4: 41 of 41 PASS), the photographer's three scripts, 14
+viewer batches: 75 marks; 58 set aside with their reason (`dcfilter18.py`; 3 of them under a reason that did not fit, sent on too), 20
+double-checked, 15 kept: G4-310 to G4-316, `tools/run4-wip/data/stage3-dc18/`. None of f14's fixes came back.
+
+**f15 (11 edits), from pass 18's kept marks** (checks by script before and after, `views_f15*.py`):
+- Cooking quests: old "Cook cheese sandwich on your stove" → new "Cook a cheese sandwich", "Cook some pancakes" (all 12 recipes, and a recipe
+  quest's last step).
+- A shop's "New in!" row: old one piece could come twice in colours a child cannot tell apart on its little picture ("Grape" and "Violet" dog
+  houses; 16 to 463 of 3000 rows per shop) → new never (none).
+- A design client's line: old "the Apartments behind the Pet Shop, flat 11, near the Pet Shop" → new a building whose name says where it is gets
+  no "near"; the coloured houses keep theirs.
+- A photo shoot's start: old when no spot had a clear view the camera stayed where you stood (on a sideways iPhone everyone's feet were below the
+  frame), and a grandma counted as in the way although she steps out of a shoot (one in front of the family failed every spot) → new she no
+  longer counts, and with no clear spot the camera takes the nearest where everyone fits.
+The kit's night3 and run4 lines on the f15 file (md5 26b602a7): 41 of 41 PASS.
+
+Not glitches or decided before (G4-314 to G4-316): a New Year burst just above a cloud's top (drawn in front of it), the placing grid while you
+decorate, a yellow piece just below the view on a visit, an older chat bubble under the header, someone passing close on an upright phone, the
+bush outline at the pond's spot, the sideways hair card, N20's and N30's camera spots.
+
+For pass 19: the filter (`dcfilter19.py`) sets aside pass 18's decisions and drops, and four rules take the words pass 18's viewers used. On
+pass 18's marks it keeps exactly the 4 that f15 fixed.
+
+**Pass 19, the last full pass under the old rules, on the file with f15**: the kit's own pictures (night3 + run4: 41 of 41 PASS), the
+photographer's three scripts, 14 viewer batches: 74 marks; 55 set aside with their reason (`dcfilter19.py`; 3 of them under a reason that did
+not fit, sent on too), 22 double-checked, 16 kept: G4-317 to G4-326, `tools/run4-wip/data/stage3-dc19/`. None of f15's fixes came back.
+
+**f16 (13 edits), from pass 19's kept marks** (probes and pictures before and after, `views_f16*.py`, a real two-phone dance-off `shots4c_f.py`):
+- A raised arm in a photo pose: old straight up, it went through Mia's pigtail → new it leans a little forward, in front of the hair (wave,
+  peace sign).
+- The photo on the thank-you card: old made 400 px across for the whole screen and blown up about four times (soft faces and tags) → new a
+  sharp copy on the card; the phone keeps the small one, as before.
+- A shopper on its way: old it could stop 0.95 m beside you (a head and a body filled the left sixth of the Toy Store's view) → new within
+  1.3 m of the camera it waits unseen for that moment, like a passer-by and a friend.
+- The dance-off on a short sideways screen: old the score bar sat 64 px down, on the dancers' crowns and over the mirror ball → new at the top
+  (the chips and buttons above it are hidden for the round).
+- The school party banner (1 September): old its end covered the front of the little roof over the door → new 27 cm higher, clear of it.
+- Speech bubbles: old a grandma's bubble ran under the corner map ("eding the ducks is the best part of my day.") → new a speech bubble
+  (a grandma's, another player's, a football friend's) slides sideways, still over its speaker, clear of the map and notepad column, the
+  buttons and the screen's edges.
+- Butterflies: old they came within 1.3 m of the camera, where two flat wings read as a big gold block in the air → new they keep 2.2 m.
+The kit's night3 and run4 lines on the f16 file (md5 d30bebcd): 40 of 41 PASS; N25 FAIL ("the photo in the phone chat", on all three screens: G4-327, fixed in f17) (pass 20).
+
+Not glitches, decided before or open (G4-324 to G4-326): your cat Mochi stretched at the corner of a sideways phone when the hair card turns the
+view (found by hiding each part in turn while drawing; with the pets question, for the owner), a shopper crossing in front of Mrs. Crumb,
+butterflies in front of a crown, the fed ducks one behind the other, your pets' tags, someone close at the edge of the view, an older chat
+bubble under the header.
+
+For pass 20: the filter (`dcfilter20.py`) sets aside pass 19's decisions and drops, and three rules take the words pass 19's viewers used. On
+pass 19's marks it keeps exactly the 8 that f16 fixed. From pass 20 the loop follows the owner's rules of 21 Oct (`CLAUDE.md`, "Glitch loop
+rules"): re-check only what changed (each fix's probe views on the screen where its mark was seen and one other shape, light and dark), the kit's night3 and run4 lines in full every pass, five viewers each with its own focus (rotated), viewers and first checkers on Sonnet at medium, every decision and edit here with the mark's picture opened; stop after two passes in a row with no fix above minor or after pass 22; then one full picture pass, its marks above minor fixed and re-checked like a pass, the minor ones listed (below).
+
+**Pass 20, the first under the owner's rules of 21 Oct** (re-check only what changed): the kit's night3 and run4 lines in full on the f16 file
+(40 of 41 PASS, N25 FAIL), then 26 pictures of f16's spots only (`pass20.sh`), five viewers by focus, `dcfilter20.py`, six first checkers: 12 viewer marks, 6 of them
+set aside under a reason that did not fit and sent on too; 18 double-checked, 17 kept: G4-327 to G4-330, `tools/run4-wip/data/stage3-dc20/`.
+(Setting up the fresh container: the Python package playwright 1.56.0 matches the Chromium in the environment; a newer one looks for another.)
+
+**f17 (4 edits), from pass 20** (probes before and after, `views_f17.py`; N25 alone):
+- The photo in your phone's chat (the kit's N25): old since f16 the card showed the sharp copy, so the phone's small copy was first decoded
+  when the phone opened and had no size at that moment (N25 FAIL on all three screens) → new it is decoded at the snap; N25 PASS twice.
+- Speech bubbles: old a bubble kept clear of the map column and the buttons sideways only; on a sideways phone a grandma's bubble by the pond
+  ran under the clock chip and the top buttons ("ducks is the ... of my day.") → new it also stays below the top row (down at most its own
+  height, then sideways as before).
+
+Left open, grade 1 (G4-329): a group member's name tag peeking out behind the "Pose: Mia" label on a sideways phone. Not glitches (G4-330): the
+notepad's cream paper in the dark theme (by design); a shopper about 1.5 m from you at the right edge of the Toy Store (G4-171, G4-300).
+
+For pass 21: the filter (`dcfilter21.py`) sets aside pass 20's decisions and its one drop; the bubble and clock chip rules leave a speech bubble
+under the clock chip or the top buttons to the first checkers. On pass 20's marks it keeps exactly the 9 that f17 fixed.
+
+**Pass 21** (the f17 file): the kit's night3 and run4 lines 41 of 41 PASS; 12 pictures of f17's spots (`pass21.sh`), five viewers, `dcfilter21.py`,
+three first checkers: 7 marks, all double-checked (one sent on from the set-aside list), 5 kept: G4-331, G4-332. f17's fixes held (the photo
+in the phone's chat; the bubble below the top row, no mark about it).
+
+**f18 (1 edit), from pass 21** (probe before and after, `views_f18.py`):
+- A chat opening: old at the foot of the newest message, so on a sideways phone the thank-you photo's top lay under the Photos header → new
+  when the newest message is taller than the screen it opens at its top (the fade at the foot shows there is more).
+Grade 1 (minor): pass 21 is the first clean pass under the stop rule.
+
+Not glitches (G4-332): a palette badge on the corner map (part of the map's picture; the whole map is the tap target), the fed ducks one behind
+the other (G4-278), two townsfolk one in front of the other.
+
+**Pass 22** (the f18 file): the kit's night3 and run4 lines 41 of 41 PASS; 9 pictures of f18's spot (`pass22.sh`), five viewers, `dcfilter22.py`,
+one first checker: 3 marks, 1 set aside (the phone's lit screen, G4-126), 1 kept (G4-333: two townsfolk one in front of the other, not a glitch),
+1 dropped. No fix. f18 held (the chat opens at the thank-you photo's top).
+
+**The stop rule** (counting from pass 20): pass 20 fixed two marks above minor (G4-327, G4-328, grade 2); passes 21 (one grade-1 fix) and 22
+(none) are two in a row with no fix above minor, and pass 22 is the cap. The loop stopped after pass 22.
+
+**Pass 23, the full final pass** (the f18 file): the photographer's three scripts and the kit's own pictures of pass 22's run, every picture
+(628) with the one focus it belongs to, 18 batches of at most 40, 18 viewers, `dcfilter23.py`, 6 first checkers: 28 marks, 16 double-checked,
+12 kept: G4-334 to G4-339, `tools/run4-wip/data/stage3-dc23/`. Two marks above minor, fixed in f19 and re-checked like a pass (pass 24):
+
+**f19 (3 edits), from pass 23** (probes before and after: `views_f19.py`; the kit's N8 with what is drawn read out):
+- The designer job's two-room orders: old room 2 drew room 1's furniture, and after a trip back your pieces in room 2 were gone from view
+  (the lists themselves were right) → new each room shows its own furniture. (Since stage 3.)
+- Speech bubbles on an upright phone: old a grandma's bubble lay half under the map and notepad column when she stood under it or off the
+  left edge → new such a bubble slides fully clear of the column, readable.
+
+Minor marks left as they are (grade 1): see the leftover list below.
+
+**Pass 24, the re-check of f19** (the f19 file): the kit's night3 and run4 lines 41 of 41 PASS; 10 pictures of f19's spots, five viewers, one first
+checker: the Flower Corner bubble, clear of the map column now, ran past the right edge on an upright phone (G4-340, grade 2); the designer's
+room 2 and the pond bubble held.
+
+**f20 (1 edit), from pass 24**: old a bubble that slid clear of the column but was wider than the space beside it ran past the screen's edge
+→ new it is drawn smaller to fit. Re-checked like a pass (pass 25).
+
+**Pass 25, the re-check of f20** (the f20 file): the kit 40 of 41 PASS, N15 on its own timing (its first sample only; alone on the same file:
+PASS, FAIL the same way, PASS); 10 pictures, five viewers, one first checker: 4 marks kept, all decided before (G4-341). f20 and f19 held. No fix:
+the full final pass is done.
+
+#### Leftover minor marks (grade 1, not fixed)
+The owner's rules of 21 Oct: in the full final pass a mark above minor is fixed and re-checked; minor ones (grade 1) are not. Every grade-1
+glitch still open after the finish (the earlier passes' open ones too), each with its entry in `tools/GLITCH-LIST-4.md`:
+
+| entry | where | what | why it stays |
+|---|---|---|---|
+| G4-088, G4-257 | sun shadows (iPad) | faint stripes and saw-tooth edges in the sun's shadows (fountain basin, window sills, eaves) | the steps of the sun's shadow map (2048 px over 60 m); a sharper map costs four times the memory |
+| G4-244, G4-294, G4-306 | the Tree Park's crowns (iPad) | a short row of soft dark dots or brown saw-tooth bits on a big crown | the same shadow-map steps on a crown |
+| G4-245, G4-258 | your pets (iPad) | your pets' big tags in front of the Pet Shop's upstairs pens; Mochi behind Finn, its tag cut | your pets at your heels (G4-205), for the owner |
+| G4-279 | the salon floor (PC 1920) | the floor near the camera soft, the far tiles sharp | each room's floor is a 256-pixel picture; a bigger one costs memory on phones |
+| G4-285 | the phone's jobs (sideways iPhone) | three job cards fill the phone screen; the other two show no part above its foot | the fade at the foot says the list goes on (G4-263) |
+| G4-307 | the photographer's shoot at the pond's bench (sideways iPhone) | the bench, the photo's background, mostly behind the family; a grey wall in half the frame | the shoot's start spot does not look for the background; a child turns or steps aside |
+| G4-324 | the hair job (sideways iPhone) | your cat Mochi stretched at the corner when the hair card turns the view | your pets at your heels (G4-205), for the owner |
+| G4-329 | a photo shoot from the side (sideways iPhone) | a group member's name tag peeks out behind the "Pose: Mia" label | pushed below the label, a tag would leave its person |
+| G4-336 | the food truck (iPad) | a small grey ball on the truck's side by the awning's end | the truck's evening lamp, unlit by day, with no bracket |
+| G4-337 | the Christmas tree at night (iPad, dark) | two of the tree's lights glow big and white, like a flare | small |
+| G4-338 | the photographer's close duck view (iPad) | a big dark box at the right edge of the view by the blue house | something by the house's corner at that fixed camera spot; small |
+
+#### Decisions made alone (run 4 finish)
+- The kit, never weaker (every change in `cozy-check-v6.zip`, listed in its README-KIT.md and here, old → new):
+  - N15's chip rule: old `^\d{1,2}:\d\d (Mon|…|Sun)$` → new the same with an optional "🏆 " before the weekday, as the two-device test above
+    it already allowed: this test reads the chip on the day after the bed test's night, so a run started on a game Friday read the Saturday
+    Pet Show's 🏆 and failed with no day number shown. Every other part of the line is unchanged.
+  - The crawl parts (C2, C2b, C1's recipes): old they played at whatever hour the shared clock gave (a third of each game day is night, when
+    the shops, the salon and the clients are shut, so C2b missed them) → new each crawl part sets the game clock to 10:00 of the shared day
+    first and says so in the log, as K1 does at noon.
+  - C2b: old the beach (reached only by the Beach Bus, 3 days a week) was never reached, so C2b failed in every full check → new the town
+    part rides the bus once like a player: the clock is set to the next moment the bus stands at the park stop (said in the log), the crawler
+    walks to its door and uses the use button (up to three tries, people walk past the stop), stays on to the end, and crawls the place it
+    arrives in.
+  - The crawl finds a target again by its label and place (its list index drifts when people walk about: "Talk to Sir Barkley" had become
+    Zac's "1 vs 1"), and an entry recorded once is opened again by its label.
+  - C1's tours: old a thing that is only there on some days or hours (the Saturday Pet Show, a match by day, the bus) was looked for at the
+    tour's own hour ("thing not found") → new the tour meets it on the game day and hour the iPad crawl met it (`when` in the recipe; the
+    second fix: the exact day, not the next same weekday, since the bus timetable changes from week to week).
+  - The crawl's use button: old when it did not take the target from any of the six sides, the target was unreachable (in the 20 Oct
+    Saturday rerun a passer-by whose path runs 0.38 m from an apartment door took that door's button for a moment) → new the crawler waits
+    2 s of game time and tries the six sides once more before it says unreachable.
+- The clock chip, the shade fix, the friends' spacing (1.22 m; the check asks 1.2), the hair card turning the view, and the people not drawn
+  within 1.3 m of the camera: each is in the list above with its reason.
+- f14 narrows a stage-3 decision ("grandma speech bubbles and the photo families' name tags are drawn over everything"): they are drawn over
+  everything only within 10 m and while they can be read; further, a wall in front of the speaker hides them (G4-305: a far grandma's bubble
+  floated over the bus shelter with nobody under it).
+- Two kept marks judged not glitches (above), and one left open for the owner: your pets keep close at your heels, so from your eyes they
+  stand at the bottom of the screen and one can be behind another for a moment (G4-205).
+
+#### The full check on the live game (20 Oct)
+The live game = `main` as merged on 18 Oct (GitHub file md5 8425c145, its Claude form 579a3449, both read back on 20 Oct and equal to what the
+18 Oct check tested: F2, F3). Run with the kit v6 (`qcheck4.sh live20 … --full`; the backup argument is the 18 Oct GitHub-file backup, read back
+byte for byte). It ran in blocks, nothing heavy beside it:
+1. The whole check (66 min): 11 FAIL. N15 (the kit's chip rule met the Saturday 🏆: the run started on a game Friday); C2 (3 "unreachable"
+   that were the crawl's index drift onto Zac's football buttons; a probe reached all three judges); C2b (the beach: the crawl never rode the
+   bus); C1 on all 7 devices (the Saturday Pet Show entry and a daytime match looked for at another day or hour); C5 (the dance-off's arrow
+   buttons: 20 px corners against 18 px, a real one, fixed in the branch, f2).
+2. The run-4 lines again on the next game Friday (N15 with the kit's chip rule fixed): N15 PASS.
+3. The town crawl and the tours again with the crawl finding targets by label and the tours meeting time-bound things at the crawl's hour:
+   C2 PASS, C1 PASS ×7; C2b failed (the crawl ran at game night: salon, clients and beach shut).
+4. Again with the crawl at 10:00 and the bus ride: C2 PASS, C2b PASS (25 of 25 areas); C1 failed on 5 devices ("Get on the bus (free 🎟️)":
+   the tours looked for the bus on the next same weekday, another week with no bus).
+5. Again on a game Saturday with the exact day in the tours: C1 PASS ×7 (34 of 34 screens), C2b PASS; C2: one "Go inside" (an apartment door)
+   unreachable: a passer-by's path runs 0.38 m from that door (a probe at 80 moments found the door's button reachable every time); the crawl
+   now tries such a spot again a moment later.
+6. The town crawl and the tours once more with that retry (on a game Saturday at 10:00, 66 min): C2 PASS (808 taps in 25 areas, 385
+   screens), C2b PASS (25 of 25 areas), C1 PASS ×7 (34 of 34 screens each, light and dark).
+Last state of every line on the live game (`tools/run4-wip/final-check-2026-10-20-live.txt`, every line as printed): all PASS but C5;
+C1-WK not run (no Safari engine here) and G not verified (real devices), as on 18 Oct. The only real failure of the live game: C5 (fixed in
+this pull request, f2).
+
+#### The final stage (21 Oct)
+- Version stamp 2026102101 (bigger than the live 2026101802); `tools/prerun4-rollback.html` restamped 2026102150 (the starting file but the
+  stamp, checked by a diff).
+- The full check on the final file (`qcheck4.sh FINAL … --full`, 69 min, nothing beside it): 103 PASS, 1 FAIL: A2, only because the
+  backup's title said "read back 2026-10-20" (the kit wants today's date). The backup (private artifact 761umD3PEycuWELrQwkHzk) was read
+  back on 21 Oct, byte for byte `tools/prerun4-index.html` (md5 709bf763), and the files stage rerun alone with it: A1, A2, F1, F3a, F5
+  PASS. Last state: every line PASS; C1-WK not run (no Safari engine), F2 and F3 not run (not published or uploaded yet), G not verified
+  (real devices). As printed: section 2 and `tools/run4-wip/final-check-2026-10-21-final.txt`.
+- 55 online-part lines (`strip_online.py`); index.html 1,597,427 bytes (under 1.8 MB).
+- Setting up the fresh container of 21 Oct: the Python package playwright had to be installed, at 1.56.0 to match the Chromium in the
+  environment.
 
 ## 2. Check output per job, exactly as printed
 
@@ -1518,6 +2105,129 @@ done
 [partial run: some stages skipped by --only]
 ```
 
+### Run 4 finish: the full check on the final file (21 Oct; `--full`, the final block as printed), then the files stage alone after the backup's read-back
+```
+===== COZY TOWN FINAL CHECK =====
+2026-10-21 · check version 6 · update, full sweep for a big update
+live Claude fd84696cb6775f78d19c823aed4ab0f2 · new Claude a4b1918b9d43ce9122539ee8a7050780 · live GitHub 709bf763d51be0160c118e2f9249f9f6 · new GitHub 1f3d8b841e356cdfae745748fad7381a
+PASS | A1 newest live versions read right before the check | claude-form-of-github-live.html read on 2026-10-21, github-live.html read on 2026-10-21
+FAIL | A2 dated private backup of the live game | backup 709bf763d51be0160c118e2f9249f9f6 vs live GitHub 709bf763d51be0160c118e2f9249f9f6; title "PRE-RUN 4 LIVE — Cozy Town backup 2026-10-18 (GitHub file, night 3), private artifact 761umD3PEycuWELrQwkHzk, read back 2026-10-20 (byte for byte tools/prerun4-index.html)"
+PASS | F3a live GitHub version = live Claude version + web part, nothing else | 55 added lines in 2 places, no lines removed or changed
+PASS | F1 no ZZTEST test data in the file to publish | ZZTEST appears 0 times
+PASS | F5 no new outside addresses (same 3D library and font) | ['cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js', 'fonts.googleapis.com', 'fonts.googleapis.com/css2', 'fonts.gstatic.com']
+PASS | A3 everything in the live game is still in the new one, by name | 58 lists, 728 things before, 880 after; grew: {"areas": "25 -> 26", "places": "22 -> 23", "doors": "23 -> 24", "furniture": "61 -> 134", "furniture_for_sale": "39 -> 111", "hats": "19 -> 20", "clothes": "22 -> 27", "jobs": "4 -> 5", "phone_chats"
+PASS | E1 no more drawing work than before, area by area (more than 10% needs your OK); agreed more: city +15% pieces / +25% triangles, pets +100% pieces / +100% triangles | 27 areas, 1395 pieces, 1214267 triangles in total | for information, seen from 5 spots: city 138 draws; home 34 draws; market 13 draws; cafe 29 draws; school 43 draws
+PASS | B1 saved games from older versions load in the new one with nothing lost | 16 saves tried: save-71f43ad.json: name 'ZZTEST-71F43A', coins 120, furniture 3, pets 0; 0 differences; jumped once to the shared day of the one clock (run 4); new player id given (the save had none); a Friends Lane time given (the save had none); new version saves under the same key: yes | save-8a1982a.json: name 'ZZTEST-8A1982', coins 120, furniture 3, pets 0; 0 differences; jumped once to the shared day of the one clock (run 4); new player id given (the save had none); a Friends Lane time given (the save had none); new version saves under the same key: yes | save-a0c3ae3.json: name 'ZZTEST-A0C3AE', coins 120, furniture 3, pets 0; 0 differences; jumped once to the shared day of the one clock (run 4); new player id given (the save had none); a Friends Lane time given (the save had none); new version saves under the same key: yes | save-ea70306.json: name 'ZZTEST-EA7030', coins 120, furniture 3, pets 0; 0 differences; jumped once to the shared day of the one clock (run 4); new player id given (the save had none); a Friends Lane time given (the save had none); new version saves under the same key: yes | save-f2cdd53-rich.json: name 'ZZTEST-F2CDD5', coins 2345, furniture 7, pets 3; 0 differences; jumped once to the shared day of the one clock (run 4); a Friends Lane time given (the save had none); the big house shrank to 12x10 (the owner's decision 16 Oct), every piece kept; new version saves under the same key: yes | save-live-web-rich.json: name 'ZZTEST-LIVE-W', coins 3900, furniture 5, pets 3; 0 differences; jumped once to the shared day of the one clock (run 4); new player id given (the save had none); a Friends Lane time given (the save had none); the big house shrank to 12x10 (the owner's decision 16 Oct), every piece kept; new version saves under the same key: yes | save-prenight3-bighouse.json: name 'ZZTEST-BIGHOUSE', coins 3100, furniture 33, pets 0; 0 differences; jumped once to the shared day of the one clock (run 4); the big house shrank to 12x10 (the owner's decision 16 Oct), every piece kept; new version saves under the same key: yes | save-prenight3-designer.json: name 'ZZTEST-DESIGNER', coins 400, furniture 0, pets 0; 0 differences; jumped once to the shared day of the one clock (run 4); new version saves under the same key: yes | save-prenight3-pets.json: name 'ZZTEST-PETS', coins 900, furniture 0, pets 4; 0 differences; jumped once to the shared day of the one clock (run 4); new version saves under the same key: yes | save-prenight3-upstairs.json: name 'ZZTEST-UPSTAIRS', coins 2345, furniture 7, pets 0; 0 differences; jumped once to the shared day of the one clock (run 4); the big house shrank to 12x10 (the owner's decision 16 Oct), every piece kept; new version saves under the same key: yes | save-prerun4-bed.json: name 'ZZTEST-BED', coins 900, furniture 0, pets 4; 0 differences; jumped once to the shared day of the one clock (run 4); new version saves under the same key: yes | save-prerun4-day1.json: name 'ZZTEST-DAY1', coins 120, furniture 3, pets 0; 0 differences; jumped once to the shared day of the one clock (run 4); new version saves under the same key: yes | save-prerun4-day58.json: name 'ZZTEST-DAY58', coins 740, furniture 0, pets 4; 0 differences; jumped once to the shared day of the one clock (run 4); new version saves under the same key: yes | save-prerun4-lv10.json: name 'ZZTEST-LV10', coins 5200, furniture 0, pets 4; 0 differences; jumped once to the shared day of the one clock (run 4); new version saves under the same key: yes | save-prerun4-pets2.json: name 'ZZTEST-PETS2', coins 2400, furniture 0, pets 3; 0 differences; jumped once to the shared day of the one clock (run 4); new version saves under the same key: yes | fresh save made by the live version today: name 'ZZTEST-S', coins 120, furniture 3, pets 0; 0 differences; jumped once to the shared day of the one clock (run 4); new version saves under the same key: yes
+PASS | B2 the new version keeps the same save key | key cozytown-save-1
+PASS | D1 two players see each other, see each other walk, and chat (old + new version together) | A (old version, iPad) sees B: True; B (new version, PC) sees A: True; A saw B walk: True; chat tap ok, B saw: '⭐ ZZTEST-A: 👋 Hi!' + bubble
+PASS | D2 Friends Lane: each player gets a house | Friends Lane houses taken: A sees 2, B sees 2 (need 2 each)
+PASS | D3 visiting a friend's house works: knock, let in, go inside | B knocked from the phone (ok/ok/ok); ding-dong card on A: yes, tapped ok; B ended up in: visit
+PASS | C7 the Claude version starts, plays the opening and goes online (test room) | opening played: True; online: on
+PASS | W2 title says "Designed by Izabele 💗", on the screen, clear of the buttons and the version label (ipad-landscape) | text: 'Designed by Izabele 💗'; on screen: True; touches the version label: False; touches a button: False
+PASS | W1 What's new book: 7 pages with pictures; Next, Back, swipe, arrow keys, Escape, ✕, tap outside and Let's play! work; Next stays in the same spot (ipad-landscape) | 7 pages; Next's right edge 1089–1089 px, top 617–617 px; 10 controls tried
+PASS | W2 title says "Designed by Izabele 💗", on the screen, clear of the buttons and the version label (iphone-portrait) | text: 'Designed by Izabele 💗'; on screen: True; touches the version label: False; touches a button: False
+PASS | W1 What's new book: 7 pages with pictures; Next, Back, swipe, arrow keys, Escape, ✕, tap outside and Let's play! work; Next stays in the same spot (iphone-portrait) | 7 pages; Next's right edge 363–363 px, top 765–765 px; 10 controls tried
+PASS | W2 title says "Designed by Izabele 💗", on the screen, clear of the buttons and the version label (iphone-landscape) | text: 'Designed by Izabele 💗'; on screen: True; touches the version label: False; touches a button: False
+PASS | W1 What's new book: 7 pages with pictures; Next, Back, swipe, arrow keys, Escape, ✕, tap outside and Let's play! work; Next stays in the same spot (iphone-landscape) | 7 pages; Next's right edge 817–817 px, top 314–314 px; 10 controls tried
+PASS | W2 title says "Designed by Izabele 💗", on the screen, clear of the buttons and the version label (pc-1920) | text: 'Designed by Izabele 💗'; on screen: True; touches the version label: False; touches a button: False
+PASS | W1 What's new book: 7 pages with pictures; Next, Back, swipe, arrow keys, Escape, ✕, tap outside and Let's play! work; Next stays in the same spot (pc-1920) | 7 pages; Next's right edge 1459–1459 px, top 747–747 px; 10 controls tried
+PASS | N1 Holidays fill their month (run 4): Halloween 1-31 Oct, Valentine all February, Easter the month of Easter Sunday, Christmas 1-31 Dec, nothing in other months (faked dates); jump scares only on the spooky path after 18:00, once per night per spot, never in bed or in a scene | 25 Oct day: halloween (103 pieces), spooky path open False; 25 Oct 19:30: halloween, spooky path open True; spot 1: BOO 1 time(s) on the first visit, 1 after a second visit; scare allowed in bed: False, in a scene: False; 20 Dec: xmas (35 pieces); 28 Mar 2027: easter (31 pieces); 10 Feb 2027: valentine (8 pieces); 10 May: None (0 pieces) (21 s)
+PASS | N2 Rosie: zero sounds while chatting with her and when her messages arrive; other friends, the chef and clients still sound | open Rosie: 0 sounds; 💬 Chat with Rosie: 0 sounds (tap ok); Rosie's job message arrives: 0 sounds; rosieLater: 0 sounds; showNote for Rosie: 0 sounds; Theo: 2 sounds; the chef: 2; a client note + ding: 4 (7 s)
+PASS | N3 Friends and pets: after you stop, every following friend is in the camera's view, at least 1.2 m apart, none behind you; no pet overlaps you, a friend or another pet | stop 1: 4 friends, 4 in view in front, 1.24 m apart; 3 pets, closest gap 1.45 m; after turning round: 4 of 4 back in view; stop 2: 4 friends, 4 in view in front, 1.28 m apart; 3 pets, closest gap 0.80 m; after turning round: 4 of 4 back in view (29 s)
+PASS | N4 Walkers: over 3 game hours in town, no two walkers are ever closer than 0.5 m | 2572 frames (11:00 to 14:00), up to 24 walkers out, closest two walkers 0.64 m (12/21 at 33.6,5.6 h11.07) (17 s)
+PASS | N5 Benches: every bench has 2 working seats; eating from the bag works while sitting; two test players can't share a seat; the other player sees the sit pose | 24 benches in ['city', 'beach']; 45 seats sat on, 3 taken by someone sitting there; eating on a bench: still sitting True, ate True; two players: A sits on seat 1 of city:0; B sees A sitting (sit flag 1, legs -1.45); B's try for the same seat: seat 1 False, seat 2 True, toast 'Comfy! Move to stand up. You c' (42 s)
+PASS | N6 Grandmas (rewritten for run 4): the three are out in dry daytime and gone in rain, snow and at night; the duck-pond bench is full while two of them sit on it and free when they are gone, so you can sit | day (game clock 13:10): out [True, True, True], drawn (within 48 m of the camera) [False, False, True], sitting [True, True, False], pond bench taken [True, True]; night (game clock 4:30): out [False, False, False], drawn (within 48 m of the camera) [False, False, False], sitting [False, False, False], pond bench taken [False, False]; rain (game clock 13:10): out [False, False, False], drawn (within 48 m of the camera) [False, False, False], sitting [False, False, False], pond bench taken [False, False]; snow (game clock 13:10): out [False, False, False], drawn (within 48 m of the camera) [False, False, False], sitting [False, False, False], pond bench taken [False, False]; day again (game clock 13:10): out [True, True, True], drawn (within 48 m of the camera) [False, False, True], sitting [True, True, False], pond bench taken [True, True]; at night you can sit on the pond bench: True (16 s)
+PASS | N7 Kitchen: two kitchen pieces placed side by side touch (gap under 0.01 m) with fronts lined up; saved kitchens unchanged | fridge beside the stove: gap 0 m, fronts off by 0.001 m (snapped True); sink: gap 0 m, fronts off by 0 m (snapped True); far away: snapped False; against the wall: gap -0.001 m (snapped True); cupboards for sale: ['cupboard', 'cupboardn', 'drawers', 'cornercup', 'tallcup', 'wallcup'] in 5 colours; ghost by the stove: at -1.2,-4.649 valid True snapped True colour #22e07c; a saved kitchen with a gap after a reload: unchanged (29 s)
+PASS | N8 Designer: a 2-room order plays to the end and pays; a saved 1-room order still finishes | saved 1-room order (n2, 2 things): go tapped ok, review ended True after 30 rounds, paid 20 🪙, rooms today 0 -> 1; 2-room order (n1: natliv + unikids); message: "Hi! I'm Mia 😊 I live in the Pink house, near the Duck Pond. Can you ma"; room 1 has 2 things; 'All done?' with room 2 empty offers to call the client: False; room 2 (Unicorn play room) has 2 things, room 1 still 2; 2-room review: go tapped ok, ended True after 60 rounds, paid 70 🪙, done 1, client said '🙂 Mia gave you 0½ ⭐ for the forest living room and the unicorn play room. You go' (20 s)
+PASS | N9 Food: every new food can be bought, eaten (also on a bench) and shows its icon and name | 10 of 10 new foods eaten from the bag; food truck sells ['burger', 'fries', 'hotdog', 'taco']; the Market sells ['sushi', 'riceball', 'noodles', 'dumplings', 'lollipop', 'pudding']; truck: tap buy burger ok, you have 1; at 21:00: card opens False, bought False ('🌙 The Food truck is closed now. It opens'); taco on a bench: still sitting True, ate True; bag shows '🍣Sushi×2' (16 s)
+PASS | N10 Weather: two test players with the same clock see the same weather; each weather and season shows (faked); nothing falls indoors | two players, 5 clock times: same weather 5 of 5; seasons: ['spring', 'spring', 'summer', 'summer', 'autumn', 'autumn', 'winter', 'winter']; rain: lines True (indoors False), sky #6e7a8b, sun 0.28; snow: flakes True (indoors False), ground #e3f0ea; sunny: sky #4fb4ff, sun 0.56, no rain True; cloudy: sun 0.39; weather shares (% of blocks): {"autumn": {"rain": 30, "cloudy": 25, "sunny": 46}, "winter": {"snow": 35, "rain": 4, "cloudy": 29, "sunny": 32}, "spring": {"rain": 26, "sunny": 56, "cloudy": 19}, "summer": {"cloudy": 14, "rain": 16, "sunny": 70}, "xmas": {"snow": 60, "cloudy": 20, "sunny": 21}}; tree colours by season: spring: spring ['#9fe08a', '#b4ea8e', '#8fd97e', '#a6e68c']; summer: summer ['#7ed37a', '#6cc97c', '#93dc76']; autumn: autumn ['#ff9f43', '#ff6b4a', '#ffd45c', '#e8734a']; winter: winter ['#cfe8dc', '#dff2ea', '#b8dcc8', '#e8f4ee'] (80 s)
+PASS | N11 Pets: each new kind and breed can be adopted, follows, eats, plays, wears every outfit slot and does the Pet Show; an old version sees breeds as a puppy and does not crash on new kinds | pomchi: adopt True (saved as dog), follows True, fed True, played True, 4/4 outfit slots, tag 0.8, sound True, 4 colours, 6 names, Pet Show True (3) | pug: adopt True (saved as dog), follows True, fed True, played True, 4/4 outfit slots, tag 0.78, sound True, 4 colours, 6 names, Pet Show True (4) | sausage: adopt True (saved as dog), follows True, fed True, played True, 4/4 outfit slots, tag 0.72, sound True, 4 colours, 6 names, Pet Show True (3) | capybara: adopt True (saved as hamster), follows True, fed True, played True, 4/4 outfit slots, tag 1, sound True, 4 colours, 6 names, Pet Show True (2) | duck: adopt True (saved as bunny), follows True, fed True, played True, 4/4 outfit slots, tag 0.9, sound True, 4 colours, 6 names, Pet Show True (3) | owl: adopt True (saved as cat), follows True, fed True, played True, 4/4 outfit slots, tag 0.92, sound True, 4 colours, 6 names, Pet Show True (3) | old version: loads a save with a pug and a capybara: playing True, 2 pets shown as ['pug', 'capybara']; a friend's pug + capybara + unknown kind show as ['pug', 'capybara', 'capybara'] | new version shows a friend's pets as ['pug', 'capybara'] (45 s)
+PASS | N12 House: every old big-house save loads at the new size; every piece is placed (inside the walls, no overlaps) or in My stuff; the furniture count is the same before and after; a new upgrade adds the upstairs and moves nothing | save-prenight3-bighouse.json: 12x10 room, upstairs True, 33 placed + 10 in My stuff = 43 (before 43), outside the walls 0, overlaps 0, old layout kept True | save-prenight3-upstairs.json: 12x10 room, upstairs True, 7 placed + 0 in My stuff = 7 (before 7), outside the walls 0, overlaps 0, old layout kept True; the player (saved upstairs) starts at -3.4,0.0 in home | save-f2cdd53-rich.json: 12x10 room, upstairs True, 7 placed + 0 in My stuff = 7 (before 7), outside the walls 0, overlaps 0, old layout kept True | save-live-web-rich.json: 12x10 room, upstairs True, 5 placed + 0 in My stuff = 5 (before 5), outside the walls 0, overlaps 0, old layout kept True | a new upgrade: big True, furniture unchanged True, downstairs 12x10, upstairs True (half-width 6), coins left 100 | stairs up: floor 1 at -3.4,0.0 (78 s)
+PASS | N13 Hairstylist: one full customer plays from taking the job to the pay, on iPad, sideways iPhone and PC; a perfect match gets 5 stars | ipad-landscape: job taken True, tutorial True, customer sat after 118 frames, picture True, taps ['ok', 'ok', 'ok'] (all ok True), hair matches True, Done ok: 5 stars, paid 120 (coins 300 -> 420), customers today 1, customer left True | iphone-landscape: job taken True, tutorial True, customer sat after 118 frames, picture True, taps ['ok', 'ok', 'ok'] (all ok True), hair matches True, Done ok: 5 stars, paid 120 (coins 300 -> 420), customers today 1, customer left True | pc-1920: job taken True, tutorial True, customer sat after 118 frames, picture True, taps ['ok', 'ok'] (all ok True), hair matches True, Done ok: 5 stars, paid 120 (coins 300 -> 420), customers today 1, customer left True (56 s)
+PASS | N14 Smooth and light (rewritten for run 4): E1 within the run-4 limits given to the check (town up to 15% more pieces and 25% more triangles, measured with Halloween, rain and the ghosts on; pet shop up to double; every other area 10%; a new area at most the beach's size), measured against the starting file; index.html under 1.8 MB | index.html 1.60 MB; measured with Halloween halloween, rain True, butterflies True, birds True: 27 areas, 1523 pieces, 1225267 triangles; town 522 -> 559 pieces, 770726 -> 788323 triangles; limits city:0.15:0.25,pets:1.0:1.0 (23 s)
+PASS | N15 One clock: two players with saves on day 1 and day 58, device clocks 1 s apart, show the same time (within 10 game minutes), the same weekday and the same weather; no "Day" in any text; in bed you wait for 7:00, no skip; an old save jumps once, keeps everything (B1) and loads in under 1 s | the code writes a day number in 0 places; the day-58 save loaded in 102 ms and jumped once to the shared day (the clock's day); the day-1 save loaded in 79 ms and jumped to the same day: True; after the jump: coins 740 -> 740, furniture 0 of 0, pets 4 of 4, job designer with its order True, skills kept True, garden plants kept True ([['tomato', 1], ['carrot', 1], ['carrot', 1], ['carrot', 3]]); two devices 1 s apart: 10:00: A 10:00 Sun rain / B 10:02 Sun rain; 22:30: A 22:31 Sun rain / B 22:33 Sun rain; +3 d 14:00: A 14:00 Wed sunny / B 14:02 Wed sunny; in bed at 22:00: still in bed after 6 s True (clock 22:12, skipped False), sleep screen True says '💤💤💤22:10 · SunSleeping until 7:00 🌙🌅 Wak', Wake up button [143, 48] px; at 7:02: in bed False, screen False, toast "Good morning! It's Monday ☀️"; the clock chip says '9:40 Mon'; 'Day N' on the screen: nowhere (31 s)
+PASS | N16 Rain sky: in rain, snow and cloudy weather the sky top and bottom are grey, never bright blue, at 8:00, 12:00, 18:00 and 23:00 | cloudy 8:00 #9ba7b5/#d3dae2; cloudy 12:00 #9ba7b5/#d3dae2; cloudy 18:00 #9ba7b5/#d3dae2; cloudy 23:00 #181a28/#2b2f41; rain 8:00 #6e7a8b/#a9b2be; rain 12:00 #6e7a8b/#a9b2be; rain 18:00 #6e7a8b/#a9b2be; rain 23:00 #181b28/#2b2f42; snow 8:00 #aab4c1/#e4e9ef; snow 12:00 #aab4c1/#e4e9ef; snow 18:00 #aab4c1/#e4e9ef; snow 23:00 #181a28/#2a2f41; sunny 12:00 #4fb4ff sun True; a sunny-to-rain change (day 28203, block 5), minutes into the fading hour: +3 min rain False sky #52aef6, +12 min rain False sky #6191be, +21 min rain True sky #6d7b8d, +30 min rain True sky #6e7a8b, +39 min rain True sky #6e7a8b, +48 min rain True sky #6e7a8b, +57 min rain True sky #6e7a8b (21 s)
+PASS | N17 Updates: a newer file appears while playing -> the game saves and reloads by itself at the next calm moment, never inside a job, scene, class, show, bus ride, shoot, dance round or typing; never twice for one version; an older-version player shows "⏳ older version" | a newer file found while the phone was open: update started False (toast ''); during a scene: started False; calm: note '✨ Updating Cozy Town… your game is' then reload after 1800 ms; the page now runs version 2026102102 (title True, says '✨ Cozy Town is updated!'); the save made first has coins 777; tried this session: 1; a version already tried this session: found True, reloaded False, the button shows instead True; an old-version friend: seen True, marked old True, name tag '⭐ ZZTEST-OLDV · ⏳ older version', in the friends list True; the old version still sees the new player: {'found': True, 'av': True} (41 s)
+PASS | N18 Same for everyone: an iPad-size player and a PC-size player see the same time, weather, every house's floors and colour, every furniture piece (x, z, turn, floor) on visits, gardens, holiday pieces, ghosts, trash, grandmas; on every house's stairs no wall or window crosses the view | iPad and PC: time 14:18 / 14:18, Sunday / Sunday, weather sunny / sunny, holiday halloween with 103 / 103 pieces (same shapes True), trash spots 10 same True, Friends Lane lots (owner, floors, garden) same True, grandmas same True; B visits A (ok/ok/ok, let in True): in visit, room 12x10 (host 12x10), floors 2 (host 2), 33 of 33 pieces at the same x, z, turn and floor: True; stairs: 6 looks in A's house and 6 in B's visit, nearest wall or window 4.9 m (26 s)
+PASS | N19 Halloween: October 1 and 31 (day and night) show it, 1 Nov doesn't; costumes on sale only in October, wearable, seen by others, kept after; the spooky path at the Flower Corner at least 20% longer than the park's was, at least 5 scare kinds, each turns you to face it with a small shake and a soft sound only with sound on; ghosts all over town, none inside; every holiday piece touches the ground or a support (gap under 2 cm) | oct1-day: halloween (103 pieces, path open False); oct1-night: halloween (103 pieces, path open True); oct31-day: halloween (103 pieces, path open False); oct31-night: halloween (103 pieces, path open True); nov1: None (0 pieces, path open False); sep30: None (0 pieces, path open False); October shop: costumes for sale ['co_cat', 'co_dog', 'co_ghost', 'co_dino']; bought the cat costume for 160 🪙 (True); worn: look.co 'cat', 6 extra body parts over the clothes; mirror: costume row True ['None', '🐈 Cat costume'], tap on the worn costume takes it off (None), tap again puts it on ('cat'); 5 Nov: still for sale [], the bought one still in the wardrobe True, still worn 'cat'; the path: 21.91 m (the park's was 13.6 m), inside the Flower Corner True, 6 spots with 5 kinds ['ghost', 'skel', 'zombie', 'bats', 'pumpkin']; scares: ghost: popped True, stopped True, shake True, faced it (off by 0.01 rad), 2 sounds, again False, skel: popped True, stopped True, shake True, faced it (off by 0.01 rad), 0 sounds, again False, zombie: popped True, stopped True, shake True, faced it (off by 0.01 rad), 1 sounds, again False, bats: popped True, stopped True, shake True, faced it (off by 0.01 rad), 6 sounds, again False, pumpkin: popped True, stopped True, shake True, faced it (off by 0.01 rad), 2 sounds, again False, ghost: popped True, stopped True, shake True, faced it (off by 0.01 rad), 2 sounds, again False; ghosts: 56 all over town (40 over the streets, 8 in the park, 4 on Friends Lane, 4 at the Flower Corner), inside a building: 0; halloween: 47 pieces written down (13 hanging), floating or sunk: 0; christmas: 35 pieces written down (23 hanging), floating or sunk: 0; easter: 31 pieces written down (4 hanging), floating or sunk: 0; an old version reading a costume in presence: co None (the clothes stay #ffd45c) (22 s)
+PASS | N20 Holiday spot: February heart fountain and petals; in the Easter month the bunny and 25 eggs (all 25 -> bunny costume and 50 coins, once a year); December Christmas tree and Santa (10 coins on 1 Dec, 300 on 31 Dec, once per real day); other months the flower garden as before | 14 Feb: valentine, gate open True, pieces {'heart fountain': 1, 'heart': 4, 'garland': 3}, petals True; walking at the heart fountain stops 1.6 m from its middle; 10 Mar 2027: easter, bunny True, 25 hunt eggs (25 drawn, 25 to pick up), decorative eggs 23; a PC-size player two weeks later finds the 25 eggs at the same spots: True; in April 2026 (Easter 5 Apr) 11 of the spots differ; hunt: bunny first: '🐰 “Happy Easter! I hid 25 eggs all around town. Find them al'; egg 1 picked: 1 found (24 drawn), picked again: 1; all: 25 found, 0 drawn, 0 left to pick, coins from eggs 0; the bunny: costume True, +50 coins, done 2027; asked again: 50 coins in all; the costume draws (63 parts); in the shop as yours: True; next Easter (April 2028): a fresh hunt 0 of 25 found, the prize year still 2027; 1 Dec: xmas, tree at [[-19.6, -12.6]] (in the park: 0), presents 10, Santa True, gate open True; Santa's coins: 1 Dec 10, again that day 0, 16 Dec 155, 31 Dec 300; 10 May: holiday None, 0 pieces, gate open False; month edges: all right (38 s)
+PASS | N21 New Year: fireworks every game night 28 to 31 Dec; party hats on everyone and confetti on 31 Dec and 1 Jan; nothing on 2 Jan | fireworks [want, drawn, bursts in 4.5 s]: 27 Dec night: False False 0, 28 Dec night: True True 4, 28 Dec day: False False 0, 31 Dec night: True True 4, 1 Jan night: False False 0; party [hats on / hats, own hats hidden / own, confetti]: 30 Dec: 0/81 0/12 False, 31 Dec: 81/81 12/12 True, 1 Jan: 81/81 12/12 True, 2 Jan: 0/81 0/12 False; my own look gets a party hat True; a friend with a cap: cap shown False, party hat shown True; indoors: confetti False (fade 0) (17 s)
+PASS | N22 School: on 1 Sep balloons around and in the school; a teacher gives the globe once; nothing on 2 Sep | 1 Sep: party True, 13 balloon bunches (8 outside by the school: 8 within its front; in the hall True); the teacher: globes in My stuff 0 -> 1 after talking, 1 after talking again (year 2026); '👩‍🏫 “Happy first day of school! 🎈 Here is a little globe for your d'; the globe builds with 13 parts, in the shop False; 2 Sep: party False, balloons left False, a globe from the teacher 0; 1 Sep 2027: party True, a new globe 1 (year 2027) (15 s)
+PASS | N23 Signs: every sign's text centered (within 3% of the sign) and inside its box with a margin, with and without a colour emoji font; the four named signs clean; no post, roof, light or spike crosses any sign's text | 72 signs in 16 places; the worst off-centre 0.6% (limit 3%); crossed or coplanar: 0; '🏖 To the beach': off centre 0.3%, inside True, nothing crosses it True, nothing coplanar True; '🏰 Knights & castles': off centre 0.2%, inside True, nothing crosses it True, nothing coplanar True; '🏆 Pet Show': off centre 0.6%, inside True, nothing crosses it True, nothing coplanar True; 'Open after 18:00 🌙': off centre 0.0%, inside True, nothing crosses it True, nothing coplanar True; '🍔 Food truck': off centre 0.3%, inside True, nothing crosses it True, nothing coplanar True; measureText bent wider: 6 signs, worst off centre 0.6%, all inside True; measureText bent narrower: 6 signs, worst off centre 0.6%, all inside True (16 s)
+PASS | N24 Grandmas: exactly 3; none by the town houses; they sit on the duck-pond bench feeding the ducks at times, walk to places and talk about them; the same places for two players | 3 grandmas; plan for the real day 20746 has 1081 turns; 6 benches by the town houses, seats never held by a grandma: True; two devices, 8 moments: the same clock moment: the biggest difference in a grandma's place 0.03 m (the same turn and stop on both: True); clocks 1 s apart: 1.15 m (1 s of walking is 1.15 m); turn 545: at 76 s two sit 2, seats [0, 1, 0], the pond bench taken [True, True]; 8 s later: ducks fed 2, bubbles [False, False, False]; turn 546, grandma 2: a 56.8 m walk; 11.5 m along her path between 6 s and 16 s (11.5 m expected; 11.5 m as the crow flies), at 72 s standing at beach (arrived True); a speech bubble about the place, standing next to her: True; Say hi 4 times: 4 different lines, never the same twice in a row: True (23 s)
+PASS | N25 Photographer: one booking plays from the message to the pay on iPad, sideways iPhone and PC; a perfect photo gets 5 stars; a photo with someone cut off gets fewer | [ipad-landscape] tips card by itself: True (4 steps [['Photographer 📸', True, 6], ['Go there 🗺️', True, 6], ['Poses 🧍', True, 9], ['Snap! 📸', True, 5]]); booking: family at Cozy Park with fountain behind, for ['s3', 'ap3', 'n3']; message '📸 New booking: Mrs. Lee', the note '📸 New booking!', job box '📸 → Cozy Park · 17 m 👨‍👩‍👧 family photo · 0/4', map target {'x': -22, 'z': 11.6}; all 4 places and their backgrounds on walkable ground: True; at the spot the button says {'icon': '📸', 'label': 'Set up the photo'}; set up: 3 in the group (wanted 3), shoot on True, bar True, frame True, background fountain; bar: 5 buttons, smallest 50 px, overlaps [], run/jump buttons hidden True; next to s3: the button says {'label': 'Pose: Mrs. Lee', 'icon': '🧍'}; the pose card: 6 poses, tapped Wave -> wave (tap ok); the 🧍 card (3 rows) -> poses ['peace', 'smile', 'jump']; backgrounds: 3 to pick from, the button cycled ['fountain', 'flowers', 'stage'], the group stood at ['-21.0,15.0', '-28.0,14.4', '-33.6,20.4']; framed from 3.6 m: {'st': 5, 'cut': 0, 'hid': 0, 'back': 0, 'unposed': 0, 'fill': 1, 'bgOk': True, 'w': 0.8, 'h': 0.69}; zoom: fov 70 -> 57.4 (zoom 0.82) -> 70; snap: 5 stars, +120 coins, picture saved True (19415 chars), the thank-you message '📸 From Mrs. Lee' with the photo True, card with the photo True and Bye True; the photo shows in the phone chat: True; after Bye: shoot off True, group gone True, bar hidden True, done 1; second booking (pets at Flower Corner), turned so 1 of 3 is cut off: 3 stars, +60 coins, the message says 'Thank you! Nice photo! 😊 (Next time: someone was cut off.)'; after 4 photos no new booking True, the box says '🌟 All 4 photos done today!'; quitting the job clears the shoot True || [iphone-landscape] booking: family at Duck Pond with bench behind, for ['n1', 'n2', 'n3']; message '📸 New booking: Mia', the note '📸 New booking!', job box '📸 → Duck Pond · 58 m 👨‍👩‍👧 family photo · 0/4', map target {'x': 34.6, 'z': -31.4}; all 4 places and their backgrounds on walkable ground: True; at the spot the button says {'icon': '📸', 'label': 'Set up the photo'}; set up: 3 in the group (wanted 3), shoot on True, bar True, frame True, background bench; bar: 5 buttons, smallest 51 px, overlaps [], run/jump buttons hidden True; next to n1: the button says {'label': 'Pose: Mia', 'icon': '🧍'}; the pose card: 6 poses, tapped Wave -> wave (tap ok); the 🧍 card (3 rows) -> poses ['peace', 'smile', 'jump']; backgrounds: 2 to pick from, the button cycled ['bench', 'pond'], the group stood at ['33.6,-37.9', '35.2,-33.3']; framed from 3.6 m: {'st': 5, 'cut': 0, 'hid': 0, 'back': 0, 'unposed': 0, 'fill': 1, 'bgOk': True, 'w': 0.53, 'h': 0.69}; zoom: fov 70 -> 57.4 (zoom 0.82) -> 70; snap: 5 stars, +120 coins, picture saved True (13335 chars), the thank-you message '📸 From Mia' with the photo True, card with the photo True and Bye True; the photo shows in the phone chat: True; after Bye: shoot off True, group gone True, bar hidden True, done 1; second booking (pets at Cozy Town School), turned so 1 of 3 is cut off: 3 stars, +60 coins, the message says 'Thank you! Nice photo! 😊 (Next time: someone was cut off.)'; after 4 photos no new booking True, the box says '🌟 All 4 photos done today!'; quitting the job clears the shoot True || [pc-1366] booking: wedding at Flower Corner with hedge behind, for ['ap3', 'ap1']; message '📸 New booking: Oscar', the note '📸 New booking!', job box '📸 → Flower Corner · 1 m 💒 wedding photo · 0/4', map target {'x': -17, 'z': -3.6}; all 4 places and their backgrounds on walkable ground: True; at the spot the button says {'icon': '📸', 'label': 'Set up the photo'}; set up: 2 in the group (wanted 2), shoot on True, bar True, frame True, background hedge; bar: 5 buttons, smallest 50 px, overlaps [], run/jump buttons hidden True; next to ap3: the button says {'label': 'Pose: Oscar', 'icon': '🧍'}; the pose card: 6 poses, tapped Wave -> wave (tap ok); the 🧍 card (2 rows) -> poses ['peace', 'smile']; backgrounds: 2 to pick from, the button cycled ['hedge', 'gate'], the group stood at ['-20.3,-5.9', '-17.5,-6.1']; framed from 3.6 m: {'st': 5, 'cut': 0, 'hid': 0, 'back': 0, 'unposed': 0, 'fill': 1, 'bgOk': True, 'w': 0.42, 'h': 0.69}; zoom: fov 70 -> 57.4 (zoom 0.82) -> 70; snap: 5 stars, +120 coins, picture saved True (15639 chars), the thank-you message '📸 From Oscar' with the photo True, card with the photo True and Bye True; the photo shows in the phone chat: True; after Bye: shoot off True, group gone True, bar hidden True, done 1; second booking (pets at Duck Pond), turned so 1 of 3 is cut off: 3 stars, +60 coins, the message says 'Thank you! Nice photo! 😊 (Next time: someone was cut off.)'; after 4 photos no new booking True, the box says '🌟 All 4 photos done today!'; quitting the job clears the shoot True (57 s)
+PASS | N26 Map: the corner map and 📱 Map draw the town (never one flat colour) on every screen size; the facing arrow turns every frame you turn; the corner map shows wherever it should | ipad-landscape: no job: corner map shown True, job text hidden True, 233 colours on 162 px, label 'Your map. Tap to open the big map'; ipad-landscape: 5 turns in a row, each one frame: (drawn that frame, the arrow turned to the new facing, pink arrow pixels at your spot): [(1, True, 25), (1, True, 28), (1, True, 25), (1, True, 23), (1, True, 24)]; ipad-landscape: with the teacher, hair, delivery and designer jobs the box shows text and a drawn map; ipad-landscape: corner map hidden indoors True, back in town True; ipad-landscape: 📱 Map 806x646 css px, 191 colours, zoom 7.6; iphone-portrait: no job: corner map shown True, job text hidden True, 164 colours on 124 px, label 'Your map. Tap to open the big map'; iphone-portrait: 5 turns in a row, each one frame: (drawn that frame, the arrow turned to the new facing, pink arrow pixels at your spot): [(1, True, 10), (1, True, 11), (1, True, 12), (1, True, 14), (1, True, 14)]; iphone-portrait: with the teacher, hair, delivery and designer jobs the box shows text and a drawn map; iphone-portrait: corner map hidden indoors True, back in town True; iphone-portrait: 📱 Map 326x670 css px, 349 colours, zoom 3.84; iphone-landscape: no job: corner map shown True, job text hidden True, 161 colours on 120 px, label 'Your map. Tap to open the big map'; iphone-landscape: 5 turns in a row, each one frame: (drawn that frame, the arrow turned to the new facing, pink arrow pixels at your spot): [(1, True, 12), (1, True, 9), (1, True, 12), (1, True, 17), (1, True, 12)]; iphone-landscape: with the teacher, hair, delivery and designer jobs the box shows text and a drawn map; iphone-landscape: corner map hidden indoors True, back in town True; iphone-landscape: 📱 Map 784x280 css px, 299 colours, zoom 3.29; pc-1366: no job: corner map shown True, job text hidden True, 233 colours on 162 px, label 'Your map. Tap to open the big map'; pc-1366: 5 turns in a row, each one frame: (drawn that frame, the arrow turned to the new facing, pink arrow pixels at your spot): [(1, True, 25), (1, True, 28), (1, True, 25), (1, True, 23), (1, True, 24)]; pc-1366: with the teacher, hair, delivery and designer jobs the box shows text and a drawn map; pc-1366: corner map hidden indoors True, back in town True; pc-1366: 📱 Map 992x594 css px, 177 colours, zoom 6.99; android-tablet-portrait: no job: corner map shown True, job text hidden True, 233 colours on 162 px, label 'Your map. Tap to open the big map'; android-tablet-portrait: 5 turns in a row, each one frame: (drawn that frame, the arrow turned to the new facing, pink arrow pixels at your spot): [(1, True, 25), (1, True, 28), (1, True, 25), (1, True, 23), (1, True, 24)]; android-tablet-portrait: with the teacher, hair, delivery and designer jobs the box shows text and a drawn map; android-tablet-portrait: corner map hidden indoors True, back in town True; android-tablet-portrait: 📱 Map 736x1106 css px, 224 colours, zoom 8.66 (69 s)
+PASS | N27 Trash: only cans, paper, peels and cups; picking up still works | 10 pieces of trash out of 28 spots today, kinds {'peel': 2, 'cup': 4, 'paper': 3, 'can': 1}; picking one up: True (+3 coins, remembered); over 8 days the trash kinds are ['can', 'cup', 'paper', 'peel'] (16 s)
+PASS | N28 Pet shop: two floors; each kind in its own area upstairs, no kind in another's area; clothes and snacks on shelves downstairs; adopting and buying still work | 2 floors; 7 areas upstairs for ['bunny', 'capybara', 'cat', 'dog', 'duck', 'hamster', 'owl']; 14 animals; 60 s of wandering: 0 of 16800 animal-frames outside their own area; who lives where: [['dog', 'pug', 'pomchi', 'sausage'], ['cat', 'cat'], ['bunny', 'bunny'], ['capybara'], ['duck', 'duck'], ['owl'], ['hamster', 'hamster']]; downstairs: 3 shelf units along the back wall (snacks, toys, clothes), spots ['Upstairs to the animals', 'Downstairs to the shop', 'Go outside', 'Buy pet food, toys & clothes', 'Pet clothes']; buying a treat: +1 for 5 coins, the shop lists pet clothes True; stairs: up to floor 2 (z 40), down to floor 1; adopting a pug upstairs: card opens True, pets +1 (pug) (19 s)
+PASS | N29 Pond: no bridge; nobody can walk on the water | walking at the pond from four sides stops 2.5 m from its middle (the water's edge is 1.45 m); hand-rail tubes left: 0; ducks 2, Feed-the-ducks spots 3, walk strips through water 0, height over the pond 0 (14 s)
+PASS | N30 Sky: clouds soft (no outlines, no hard dark faces) by day and night; no orange specks above the trees; any leaves are leaf-shaped and near trees | clouds: 16 in the sky + 6 at the beach, 22 meshes, 0 not the cloud material, 0 outline hulls; by day top #ffffff bottom #dde4f0; day sky picture: 0.0% dark pixels in the sky band clear of the buttons (limit 0.3%); grey weather: top #d3d9e4 bottom #a9b2c2; night: top #9aa1c8 bottom #5d6489; leaves in the park: visible True, 90 of 90 dealt to 12 trees (216 round trees in town), highest start 3.05 m, farthest tree 19.2 m, not a tree: 0, leaf shape True, season autumn; beach: leaves visible False (trees near: 0); winter: leaves visible False (16 s)
+PASS | N31 Trees: no tree crown inside any building; no white smear on any wall | 216 round trees and 55 pines against 25 buildings' walls: 0 crowns inside a wall; the closest crown {'gap': 0.21, 'tree': [34.9, -30.2, 'tree'], 'building': '23,-31'}; wall at 12: steps>6 0.72% (limit 1.5), mean step 0.167 (limit .45; the streaked wall had 4.5% and .92), lum 207; wall at 11.5: steps>6 0.72% (limit 1.5), mean step 0.167 (limit .45; the streaked wall had 4.5% and .92), lum 207; wall at 12.5: steps>6 0.72% (limit 1.5), mean step 0.167 (limit .45; the streaked wall had 4.5% and .92), lum 207; wall at 9: steps>6 0.72% (limit 1.5), mean step 0.209 (limit .45; the streaked wall had 4.5% and .92), lum 231; wall at 15: steps>6 0.5% (limit 1.5), mean step 0.104 (limit .45; the streaked wall had 4.5% and .92), lum 170; wall at 17.5: steps>6 0.5% (limit 1.5), mean step 0.091 (limit .45; the streaked wall had 4.5% and .92), lum 151 (21 s)
+PASS | N32 Food trucks: no flicker (no two surfaces closer than 1 cm facing the same way); the sign and the burger picture clean | the truck at (-34.2, 11.8): 840 triangles in 150 facing directions, 466 close same-facing pairs looked at, 0 overlapping within 1 cm; food trucks in the game (by their sign): 1; the sign: off centre 0.3%, crossed [], coplanar 0; the burger picture on the sign (left 35%): 6462 coloured pixels besides the red board, 1688 white; (the live truck had 34 such pairs) (24 s)
+PASS | N33 Levels and garden: every skill reaches 50 and stops there; +6 seed spots at gardening 10/20/30/40/50; another player sees your plants | skills ['garden', 'cook', 'pets', 'friends', 'clean', 'sport', 'decor', 'music', 'read']: every one reaches {50} and stays there after more XP {50}; XP per level [10, 100, 490] (10 per level as before); level-up coins paid [500, 500, 500]…; yard spots 36 (30 pots), garden save slots 6; a spot's gardening level [beds, pots…] [1, 1, 10, 10, 20, 20, 30, 30, 40, 40, 50, 50]; spots open at level 1/9/10/19/20/49/50: [2, 2, 4, 4, 6, 10, 12] of 12 sampled; planting in pot 7 at level 10: carrot (panel True); a level-50 pot says '🔒 Gardening level 50'; presence gd '0,carrot,3;1,tomato,0;3,carrot,3;6,carrot,0'; a PC-size friend builds that lot: 22924 vertices without the garden, 30076 with it (the pot's carrot shows); the lane list carries the garden True (26 s)
+PASS | N34 House floors and colour: 2 floors at decorating 10 up to 6 at 50; the stairs work up and down on every floor; the outside shows the floors and the chosen colour, also for others; old saves keep every piece | an old big-house save: 2 floors, 33 pieces kept (16 upstairs, drawn 40 m along: [40]), 33 placed; buying floors [had, after a try one level short, after the level, coins left, floors built]: [[2, 2, 3, 0, 3], [3, 3, 4, 0, 4], [4, 4, 5, 0, 5], [5, 5, 6, 0, 6]]; at 6 floors: ['at 6', 6, 2500]; pieces still 33; up: floors [2, 3, 4, 5, 6] at z [40, 80, 120, 160, 200] (one floor drawn at a time True); down: floors [5, 4, 3, 2, 1]; a chair placed on floor 4 stands at z 121.5 (hidden from floor 1 True, shown on floor 4 True); outside: my name sign hangs at 23.7 m (6 floors: 23.7), presence floors 6 colour #bfe6ff, home presence n 6 with floors ['u', 'u2', 'u3', 'u4', 'u5'] (the chair rides in u3: True); a PC-size friend: the lane list gives Zed 4 floors in #bfe6ff; Zed's sign at 17.3 m (4 floors: 17.3) and 7.9 m with 1 floor (7.9); visiting a 6-floor host: 6 floors, pieces at z [1, 41, 81, 201]; in the visit: up to floor 2 then 3; an old upstairs save: 7 pieces kept (3 upstairs), 7 placed, you start inside the house True with 2 floors (45 s)
+PASS | N35 Notepad switch: off hides it, on brings it back with the notes kept | default: switch on True, notepad shown True; Settings has the switch: {'text': '✏️ On', 'w': 92.6875, 'h': 52}; after Off: shown False, switch 'Off', saved False, notes kept True; after On: shown True, notes kept True; with the designer card the notepad steps aside True and comes back True (15 s)
+PASS | N36 Furniture: at least 60 new pieces across every kind, each buyable, placeable, saved and seen by a visitor | 72 new pieces (r4), 54 with several colours; builds, fits its footprint, buyable and priced: 72 of 72; kinds covered: 13 of 13; in the shop's list 72, thumbnails drawn 6/6, in the designer's pool 72; placed in the house one by one: 72 (failed []); bought a loveseat from the catalog for 190 coins (placing False); 5 pieces saved and read back 5/5, in the home presence 5/5; a visitor builds the host's room: 38 pieces, parts [12, 9, 15, 6, 16, 5, 6, 3] (27 s)
+PASS | N37 Tree park: each of the three paths can be finished; zip lines work; signs readable; free; a fall puts you back on the last platform; on every device | [ipad-landscape] the gate: button ['🌲', 'Climb into the Tree Park'], on the map as Tree Park 🌲 at 75.6,-40.6; inside: treepark, coins 500 -> 500 (free), signs ['🟢 Easy path', '🏁 Finish', '🟡 Medium path', '🏁 Finish', '🔴 Hard path', '🏁 Finish'], 28 decks, 3 bridges, 3 zip lines, a gate back True; signs readable (ink inside, centred within 3%): 6 of 6; easy (7 decks): jump 0->1 gap 1 m dh 0, bridge 1->2, jump 2->3 gap 0.96 m dh 0, jump 3->4 gap 1.27 m dh 0.2, jump 4->5 gap 1 m dh 0, zip 5->6 2.3 s over 12.2 m; the bell: Ring the bell! -> finished True (+20 coins); medium (10 decks): jump 0->1 gap 1.4 m dh 0, jump 1->2 gap 1.05 m dh 0.3, jump 2->3 gap 1.8 m dh 0, bridge 3->4, jump 4->5 gap 1.6 m dh 0.3, jump 5->6 gap 1.45 m dh 0, jump 6->7 gap 1.6 m dh 0, zip 7->8 2.6 s over 13.8 m, jump 8->9 gap 1.4 m dh 0; the bell: Ring the bell! -> finished True (+30 coins); hard (11 decks): jump 0->1 gap 1.8 m dh 0, jump 1->2 gap 1.27 m dh 0.4, jump 2->3 gap 2 m dh 0, bridge 3->4, jump 4->5 gap 2.2 m dh 0.2, jump 5->6 gap 1.84 m dh 0, jump 6->7 gap 2.2 m dh 0.2, jump 7->8 gap 2.2 m dh 0.2, zip 8->9 3 s over 16.2 m, jump 9->10 gap 2 m dh 0; the bell: Ring the bell! -> finished True (+40 coins); the ⬆️ button makes you jump: True; a fall from deck 3: reached the ground True (lowest 0 m), picked up True, back on the deck True, falls counted 1, tummy still 89 (no harm); out through the gate (Back to town) -> {'cur': 'city', 'x': 71.6, 'z': -38}; weight: the park {'meshes': 53, 'tris': 42328} vs the beach {'meshes': 119, 'tris': 57885} || [iphone-portrait] the gate: button ['🌲', 'Climb into the Tree Park'], on the map as Tree Park 🌲 at 75.6,-40.6; inside: treepark, coins 500 -> 500 (free), signs ['🟢 Easy path', '🏁 Finish', '🟡 Medium path', '🏁 Finish', '🔴 Hard path', '🏁 Finish'], 28 decks, 3 bridges, 3 zip lines, a gate back True; signs readable (ink inside, centred within 3%): 6 of 6; easy (7 decks): jump 0->1 gap 1 m dh 0, bridge 1->2, jump 2->3 gap 0.96 m dh 0, jump 3->4 gap 1.27 m dh 0.2, jump 4->5 gap 1 m dh 0, zip 5->6 2.3 s over 12.2 m; the bell: Ring the bell! -> finished True (+20 coins); the ⬆️ button makes you jump: True; a fall from deck 3: reached the ground True (lowest 0 m), picked up True, back on the deck True, falls counted 1, tummy still 91 (no harm); out through the gate (Back to town) -> {'cur': 'city', 'x': 71.6, 'z': -38}; weight: the park {'meshes': 53, 'tris': 42328} vs the beach {'meshes': 119, 'tris': 57885} || [iphone-landscape] the gate: button ['🌲', 'Climb into the Tree Park'], on the map as Tree Park 🌲 at 75.6,-40.6; inside: treepark, coins 500 -> 500 (free), signs ['🟢 Easy path', '🏁 Finish', '🟡 Medium path', '🏁 Finish', '🔴 Hard path', '🏁 Finish'], 28 decks, 3 bridges, 3 zip lines, a gate back True; signs readable (ink inside, centred within 3%): 6 of 6; easy (7 decks): jump 0->1 gap 1 m dh 0, bridge 1->2, jump 2->3 gap 0.96 m dh 0, jump 3->4 gap 1.27 m dh 0.2, jump 4->5 gap 1 m dh 0, zip 5->6 2.3 s over 12.2 m; the bell: Ring the bell! -> finished True (+20 coins); the ⬆️ button makes you jump: True; a fall from deck 3: reached the ground True (lowest 0 m), picked up True, back on the deck True, falls counted 1, tummy still 91 (no harm); out through the gate (Back to town) -> {'cur': 'city', 'x': 71.6, 'z': -38}; weight: the park {'meshes': 53, 'tris': 42328} vs the beach {'meshes': 119, 'tris': 57885} || [pc-1366] the gate: button ['🌲', 'Climb into the Tree Park'], on the map as Tree Park 🌲 at 75.6,-40.6; inside: treepark, coins 500 -> 500 (free), signs ['🟢 Easy path', '🏁 Finish', '🟡 Medium path', '🏁 Finish', '🔴 Hard path', '🏁 Finish'], 28 decks, 3 bridges, 3 zip lines, a gate back True; signs readable (ink inside, centred within 3%): 6 of 6; easy (7 decks): jump 0->1 gap 1 m dh 0, bridge 1->2, jump 2->3 gap 0.96 m dh 0, jump 3->4 gap 1.27 m dh 0.2, jump 4->5 gap 1 m dh 0, zip 5->6 2.3 s over 12.2 m; the bell: Ring the bell! -> finished True (+20 coins); the Space key makes you jump: True; a fall from deck 3: reached the ground True (lowest 0 m), picked up True, back on the deck True, falls counted 1, tummy still 91 (no harm); out through the gate (Back to town) -> {'cur': 'city', 'x': 71.6, 'z': -38}; weight: the park {'meshes': 53, 'tris': 42328} vs the beach {'meshes': 119, 'tris': 57885} (64 s)
+PASS | N38 Tutorials: the hairstylist and pizza jobs show a picture tutorial the first time and from "?" | delivery: shows by itself 5 steps: 'Pizza delivery 🍕' picture True 5 words, 'Follow the dot 🗺️' picture True 9 words, 'Ring the bell 🚪' picture True 6 words, 'Be quick! ⚡' picture True 5 words, 'Let's go! 🛵' picture True 7 words; after the last step: gone True, remembered True; second time by itself: False; the job card has a ❓: True; ❓ brings it back: True || hair: shows by itself 4 steps: 'Hairstylist ✂️' picture True 6 words, 'The wish picture 🖼️' picture True 6 words, 'Cut, comb, dye' picture True 3 words, 'Done! ⭐' picture True 5 words; after the last step: gone True, remembered True; second time by itself: False; the job card has a ❓: True; ❓ brings it back: True (32 s)
+PASS | N39 Parties: host at the mailbox and pick a time; every online test player gets the note with the host's name and can accept or decline; with a disco floor and ball the dance game runs for two; hits make dance moves; the score bar slides smoothly (never jumps), even = middle with both faces; an old version doesn't crash | three players online together: True (A sees ['ZZTEST-GUESTB', 'ZZTEST-OLDC']); A at the mailbox: button 'Mailbox: mail or a party', menu mail True / party True, times offered ['☀️Today13:00', '☀️Today14:00', '☀️Today15:00', '☀️Today16:00'], picked -> party {'h': 13, 'future': True}; B gets the news: True; the card '🎉 A party!: ZZTEST-HOSTA is hosting a party today at 13:00!Go check it out?' with [["✅ I'll come!", 127, 48], ['🙅 Not this time', 159, 48]] (stage 3: the card is the notification; no second note behind it: True); B says yes: {'rsvp': 'yes', 'card': False}; A hears it: True; at party time B gets the way: True, way-finder ['party', "ZZTEST-HOSTA's party", [-97, 9.4]] = A's lane door [-97, 9.4, 0]: True; note 'ZZTEST-HOSTA's party is starting! Follow the arrow to their '; B knocks, A's door opens by itself: B inside True, A sees the guest True; A's disco floor lights up: {'lit': True, 'tiles': 36, 'ball': True}; B sees the floor and ball in A's house: True; A on the floor: the button ['🕺', 'Dance!', 1]; B gets the dance card: True '🕺 Dance-off!ZZTEST-HOSTA wants to dance with you!Press the arrows as t' [["💃 Let's dance!", 150, 48], ['🙅 Not now', 123, 48]]; the dance-off starts for both: True; A: countdown -3.4 s, view dance, on the left 1, 20 arrows, 2 faces ['You', 'ZZTEST-GUESTB'], bar 0.5 (even = middle), buttons [[62, 62], [62, 62], [62, 62], [62, 62]]; the round: A hit 20 (3 with the big buttons), B hit 20 (3 with the arrow keys); A's dancer moved on hits True; A saw B's dancer move True; the score bar on A over 548 frames: biggest step 0.025 (smooth), from 0.5 to 0.504 (range 0.5..0.575); the end: A's card True 'You 300 · ZZTEST-GUESTB 300' / '🤝 A tie! Great moves, both of you!You go', B's card True; the view stays on the dancers while the card shows True; after Done the view is back True (B: True); the old version C all along: before {'peers': 2, 'seesA': True, 'cur': 'city'}, after {'peers': 2, 'seesA': True, 'cur': 'city', 'playing': True}, page errors [] (46 s)
+PASS | N40 Smooth and light: E1 within the run-4 limits (town 15%/25% with Halloween, rain and ghosts on; pet shop up to double; home within 10% with 6 floors; the tree park within the beach's size; others 10%); index.html under 1.8 MB | index.html 1.60 MB; measured with Halloween halloween, rain True, butterflies True, birds True: 27 areas, 1531 pieces, 1225051 triangles; town 522 -> 568 pieces, 770726 -> 788107 triangles; limits city:0.15:0.25,pets:1.0:1.0 (27 s)
+PASS | N41 Bus: with the one clock the bus still comes 3 days a week and the pill shows the next bus with its weekday | bus days per week (6 weeks): [3, 3, 3, 3, 3, 3]; the two devices agree on every bus day and hour: True; 10 mornings at the park stop: 5 bus days, 5 without; a morning without a bus says e.g. 🚌 Next bus: Tue 9:20; a bus day says e.g. 🚌 Bus to the beach: 0:58 (22 s)
+PASS | K1 PC keyboard: walk with keys, P phone, B bag, M map, Escape closes, E uses | W key: moved 6.4 m in 1.5 s; phone: opens True, Escape closes True; bag: opens True, Escape closes True; map: opens True, Escape closes True; E on the market door goes in: True
+PASS | C2 every spot and button does something (iPad, finger taps) | 754 taps tested in 25 areas, 365 screens
+PASS | C2b every area is reached by playing | 25 of 25 areas
+PASS | C3 walking works (ipad-landscape) | joystick drag: moved 5.8 m in 1.5 s
+PASS | T1 teacher job plays from the school message to the end of class (ipad-landscape) | 3 classes: Math ended, History ended, Math ended
+PASS | T2 every goofing kid can be stopped, left and right (ipad-landscape) | left side 14 of 14 taps worked, right side 21 of 21
+PASS | T3 homework right and wrong buttons: at least 44 px, at least 12 px apart, never covered (ipad-landscape) | 14 papers; button size 58x52 px; smallest gap 16 px; covered taps: 0
+PASS | T4 homework questions are easy to read: dark text, at least 16 px (ipad-landscape) | 51 questions read
+PASS | T1 teacher job plays from the school message to the end of class (iphone-landscape) | 3 classes: English ended, Math ended, English ended
+PASS | T2 every goofing kid can be stopped, left and right (iphone-landscape) | left side 9 of 9 taps worked, right side 26 of 26
+PASS | T3 homework right and wrong buttons: at least 44 px, at least 12 px apart, never covered (iphone-landscape) | 14 papers; button size 52x44 px; smallest gap 16 px; covered taps: 0
+PASS | T4 homework questions are easy to read: dark text, at least 16 px (iphone-landscape) | 51 questions read
+PASS | T1 teacher job plays from the school message to the end of class (pc-1920) | 3 classes: History ended, Math ended, English ended
+PASS | T2 every goofing kid can be stopped, left and right (pc-1920) | left side 9 of 9 taps worked, right side 24 of 24
+PASS | T3 homework right and wrong buttons: at least 44 px, at least 12 px apart, never covered (pc-1920) | 14 papers; button size 58x52 px; smallest gap 16 px; covered taps: 0
+PASS | T4 homework questions are easy to read: dark text, at least 16 px (pc-1920) | 51 questions read
+PASS | C3 walking works (pc-1920) | W key: moved 6.4 m in 1.5 s
+PASS | C1 every screen opens (iphone-portrait, light and dark) | 34 of 34 screens, each in light and dark
+PASS | C3 walking works (iphone-portrait) | joystick drag: moved 5.8 m in 1.5 s
+PASS | C1 every screen opens (iphone-landscape, light and dark) | 34 of 34 screens, each in light and dark
+PASS | C3 walking works (iphone-landscape) | joystick drag: moved 5.8 m in 1.5 s
+PASS | C1 every screen opens (android-phone-portrait, light and dark) | 34 of 34 screens, each in light and dark
+PASS | C3 walking works (android-phone-portrait) | joystick drag: moved 5.8 m in 1.5 s
+PASS | C1 every screen opens (android-phone-landscape, light and dark) | 34 of 34 screens, each in light and dark
+PASS | C3 walking works (android-phone-landscape) | joystick drag: moved 5.8 m in 1.5 s
+PASS | C1 every screen opens (android-tablet-portrait, light and dark) | 34 of 34 screens, each in light and dark
+PASS | C3 walking works (android-tablet-portrait) | joystick drag: moved 5.8 m in 1.5 s
+PASS | C1 every screen opens (android-tablet-landscape, light and dark) | 34 of 34 screens, each in light and dark
+PASS | C3 walking works (android-tablet-landscape) | joystick drag: moved 5.8 m in 1.5 s
+PASS | C1 every screen opens (pc-1366, light and dark) | 34 of 34 screens, each in light and dark
+PASS | C3 walking works (pc-1366) | W key: moved 6.4 m in 1.5 s
+PASS | C4 nothing is cut off the screen | 0 problems
+PASS | C4 no buttons overlap | 0 problems
+PASS | C4 all text fits its box | 0 problems
+PASS | C4 every button is at least 44 px for a finger | 0 problems
+PASS | C4 text is readable in light and dark | 0 problems
+PASS | C5 the same kind of button looks the same everywhere | 38 kinds of button
+PASS | C6 zero errors in the browser log | 0 errors
+PASS | C8 test copies never reached the real internet | 0 outside requests stopped
+NOT RUN | C1-WK every screen in Safari's engine (iPhone, iPad) | NOT RUN: Safari's engine is not installed on this computer
+PASS | F6 every test action is logged and undone | 149 test actions, 149 undone
+PASS | F2a the tests used exactly the files to publish | files tested: ['01a11fd3ba4c758f14cbdb57561be330', '1f3d8b841e356cdfae745748fad7381a', '21eae93657e97f70f83b78f279788daa', '709bf763d51be0160c118e2f9249f9f6', '9eb078c3210712463e351b7879d25a6a', 'a4b1918b9d43ce9122539ee8a7050780', 'a8027586de70cb454c6e4ed60c43ad89', 'bf303055ffaba678a0abb4889891e6a8', 'd5f94c21bbed7f6f6925e31f8bdb1a9b', 'eb02ebe8dc4e40b67fa85ddc8589d377', 'fc91242a5e3386675a26240728e18052']; to publish: ['1f3d8b841e356cdfae745748fad7381a', 'a4b1918b9d43ce9122539ee8a7050780']
+NOT RUN | F2 published Claude version = tested file | NOT RUN: not published yet
+NOT RUN | F3 GitHub file after upload = new Claude version + same web part, same address | NOT RUN: not uploaded yet
+NOT VERIFIED | G real devices, sound, smoothness, two real players online | NOT VERIFIED: in the "Try it for real" notebook until ticked
+RESULT: 1 FAIL, 4 not run or not verified · 69 min of testing
+```
+The files stage alone (`--only files`), with the backup read back on 21 Oct (byte for byte tools/prerun4-index.html):
+```
+PASS | A1 newest live versions read right before the check | claude-form-of-github-live.html read on 2026-10-21, github-live.html read on 2026-10-21
+PASS | A2 dated private backup of the live game | backup 709bf763d51be0160c118e2f9249f9f6 vs live GitHub 709bf763d51be0160c118e2f9249f9f6; title "PRE-RUN 4 LIVE — Cozy Town backup 2026-10-18 (GitHub file, night 3), private artifact 761umD3PEycuWELrQw
+PASS | F3a live GitHub version = live Claude version + web part, nothing else | 55 added lines in 2 places, no lines removed or changed
+PASS | F1 no ZZTEST test data in the file to publish | ZZTEST appears 0 times
+PASS | F5 no new outside addresses (same 3D library and font) | ['cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js', 'fonts.googleapis.com', 'fonts.googleapis.com/css2', 'fonts.gstatic.com']
+```
+
 ## 3. Before and after pictures, and the "should look like" lines (stage 1)
 All in tools/pictures-4/ (the three before-pictures of the Flower Corner from the start of the run, the after-pictures named by job above). Every job's entry in section 1 carries its "should look like (BUILDER)" line; stage 3 checks against them:
 - Flower Corner: after-flower-corner-gate-open-october-night.png, after-flower-corner-spooky-path.png, after-flower-corner-gate-closed-november.png
@@ -1547,20 +2257,25 @@ All in tools/pictures-4/ (named by job; every job's entry in section 1 carries i
 - The critics' pictures are the same photographer pictures (their briefs name them); the critic scores are in section 4.
 - "Should look like" lines: unchanged from stages 1 and 2 (stage 3 fixed things against them; it built no new area).
 
+- Run 4 finish: the pictures of passes 8 to 19 stayed in the first finish session's scratch folder, which is gone; their entries (G4-168 to G4-326) are in tools/GLITCH-LIST-4.md without a before picture, and the fixed ones carry an after picture from the full final pass (pass 23). From G4-327 on (passes 20 to 25) each entry has its pictures, in tools/pictures-4/stage3-glitches/ like the rest. The photographer's pictures of the passes were not kept (their maps are in tools/run4-wip/data/stage3-p8* to stage3-p23*).
+
 ## 4. The glitch list and the critic loop scores
 - The glitch list: tools/GLITCH-LIST-4.md (167 entries: 142 fixed, 23 not a glitch, 2 open). How it was made is at the top of that file; every kept viewer mark is in exactly one entry; the photographer's own mistakes were set aside with their reason before the double-checker and the spots were fixed for the next pass.
 - The critic loop (the owner asked for it on 17 Oct): for each big change a fresh sub-agent each round saw only the pictures of that part and the builder's "should look like" line(s), never an earlier score, and gave one score from 1 to 10. Below 8: fix and go again; done after three scores of 8 or more in a row; a loop stops after 6 rounds.
 
 | part | round 1 | round 2 | round 3 | round 4 | round 5 | round 6 |
 |---|---|---|---|---|---|---|
-| photographer job | 7 | 6 | 6 | 6 | 7 | |
-| tree park | 7 | 7 | 8 | 8 | 8 (done: three 8s in a row) | |
-| parties and the dance game | 6 | 6 | 7 | 7 | 8 | |
-| holiday spot | 6 | 7 | 7 | 8 | 7 | |
-| house floors and colour | 6 | 7 | 7 | 7 | 7 | |
-| one clock | 6 | 6 | 7 | 6 | 6 | |
+| photographer job | 7 | 6 | 6 | 6 | 7 | 7 |
+| tree park | 7 | 7 | 8 | 8 | 8 (done: three 8s in a row) | (done) |
+| parties and the dance game | 6 | 6 | 7 | 7 | 8 | 8 |
+| holiday spot | 6 | 7 | 7 | 8 | 7 | 7 |
+| house floors and colour | 6 | 7 | 7 | 7 | 7 | 8 |
+| one clock | 6 | 6 | 7 | 6 | 6 | 7 |
 
 - What each round said and what was changed for it is in the kit's scratch (critic-scores.md) and in the pull request "Run 4, stage 3"; the fixes themselves are glitch entries or stage-3 changes in section 1.
+
+- Run 4 finish: round 6, the last the plan allows, saw pass 9's pictures (the file with f3 to f5): photographer job 7, parties and the dance game 8, holiday spot 7, house floors and colour 8, one clock 7. No loop besides the Tree park reached three 8s in a row; the loops end here. What each critic said, what was fixed for it in f6 (not scored again) and where each loop is stuck: tools/run4-wip/data/critic-scores.md.
+- The glitch list after the finish: 341 entries (G4-001 to G4-341): 256 fixed, 68 not a glitch, 17 open (15 of them grade 1, listed in section 1's leftover list; G4-205 and G4-222, your pets at your heels, grade 2, for the owner).
 
 ## 5. Glitches found and not fixed (stage 1)
 - The apartment block's east wall still shows a faint diagonal shade on its shadow side for about 10 game-minutes around 12:30 (mean pixel step .38 against .92 before and .05–.27 elsewhere): the shadow map at a near-edge-on sun. Barely visible; on the list for stage 3.
@@ -1590,6 +2305,12 @@ All in tools/pictures-4/ (named by job; every job's entry in section 1 carries i
 - Two kit v6 helper changes (no check line changed): (1) a tap now waits for the card or phone around a button to finish popping in, and has the page draw a real frame while it waits. Old: "a button that is still popping in: wait for its animation" (only the button's own animation). Why: with the game stepped by hand the page may not draw on its own, so the phone's 0.28 s pop-up could still be at its start (40 px low) when the button was measured and finished before the finger landed; on a busy machine N13's "I want a new job" tap twice landed on empty chat (iPad in one run, sideways iPhone in the next; it passed alone). Not weaker: the tap still has to land on the button and still reports a covered button. (2) N15's sleep-screen picture waits 1 s for the sleep screen to fade in (old: the picture was taken mid-fade).
 - The check's crawl (C2b) still does not ride the bus to the beach (as in stages 1 and 2); the beach is checked by the lines that go there directly.
 
+- Run 4 finish (21 Oct): every item open at the wrap-up is done (tools/run4-wip/README.md). Left as they are, each written down:
+  - Your pets keep close at your heels, so from your eyes they stand at the bottom of the screen and one can stand behind another for a moment (G4-205 in pass 8, G4-222 in pass 9). A change to where pets wait is the owner's call.
+  - The salon floor softens near the camera on a big screen: each room's floor is a 256-pixel picture repeated over the room (G4-279); a bigger picture costs memory on phones.
+  - The photographer's start spot stands straight in front of the family, back just far enough that everyone fits, and does not look for the background: at the pond's bench on a sideways phone the bench was mostly behind the family and a wall filled half the frame (G4-307, N25's picture in pass 17); a child turns or steps aside to frame it.
+  - The last critics' points not changed (the loops ended at round 6): the photographer's result layout was centred (f6) but its job list on a sideways phone shows no part of its second row (only the screen's foot fading while there is more below, G4-263, says the list goes on: G4-285) and a photo whose background is out of view still gets five stars; the dancers' spacing, the mirror ball's height, a mark for your own dancer and a bigger result card; bigger fireworks, speech bubbles under the notepad, a ghost by the first spooky-path lamp, bigger pumpkins; the garden's front pots behind the fence (seen from outside it), the small house's shadow band and its name sign above the roof; the "Good night!" bubble under the sleep card.
+
 ## 6. NOT VERIFIED (stage 1)
 - Real devices (iPad, iPhone, a PC with Safari/Chrome): everything here ran in headless Chromium at iPad, iPhone and PC sizes with a software renderer; WebKit was not installed.
 - Sound (the scare sounds, the talk and pop sounds) and how the scares feel to a child.
@@ -1613,6 +2334,8 @@ All in tools/pictures-4/ (named by job; every job's entry in section 1 carries i
 - How it feels: smoothness on an iPad, sound, the dance game's timing with two real players over Firebase, the photographer's photos as a child frames them.
 - Real holiday dates: every holiday was faked by replacing realDate() in the test copy.
 - The critics are sub-agents looking at pictures, not children or parents.
+
+- Run 4 finish: as in stage 3: real devices, sound, two real players online and Safari's engine (C1-WK) are not verified; the checks ran in headless Chromium.
 
 ## 7. Try it for real (stage 1)
 - [ ] Open the game on two devices at the same time: same time of day, weekday and weather on both; the clock pill shows no day number.
@@ -1652,12 +2375,16 @@ All in tools/pictures-4/ (named by job; every job's entry in section 1 carries i
 - Go up and down your stairs: a mint door with a round window and an ⬆️/⬇️ plate at each end; a rug and skirting upstairs.
 - Take a photo on an upright iPhone: the frame starts under the chips, the joystick is above the bar, the bar's buttons say Zoom and Pose.
 
+- Run 4 finish, to try for real: the friends around you after you stop and after you turn round on a narrow pavement (all four faces should show: an arc, the middle two further back); feeding the ducks at the small pond (each duck swims up and looks at you); the clock chip "9:40 Wed" on a phone and a tablet at the same moment; a hair customer sitting down (no big words on their face).
+
 ## 8. How to go back
 - tools/prerun4-rollback.html: made at the end of stage 3: the starting file (night 3, stamp 2026101701) with the stamp 2026101851, bigger than any stamp run 4 shipped, so putting it live makes every run-4 player's game go back by itself at the next calm moment. tools/prerun4-index.html is still the exact starting file (md5 709bf763d51be0160c118e2f9249f9f6), and reverting the pull request "Run 4, stage 1" restores main.
 
 - Stage 2: reverting the pull request "Run 4, stage 2" puts the stage-1 file back (stamp 2026101702); tools/prerun4-index.html is still the exact starting file. The rollback copy with the bigger stamp comes at the end of stage 3.
 
 - Stage 3: reverting the pull request "Run 4, stage 3" puts the stage-2 file back (stamp 2026101801).
+
+- Run 4 finish: tools/prerun4-rollback.html restamped 2026102150 (above the finish's 2026102101), as before: put live as index.html, it takes every player back to the night-3 game by itself.
 
 ## 9. Decisions made alone (stage 1)
 Listed per job in section 1 ("Decided alone"). The bigger ones: the one clock's epoch and day length (job 1); the automatic update at calm moments only (job 2); costumes drawn over the clothes, the spooky path at the Flower Corner with a gate (jobs 3, 4); signs centred by the pixels that show against their colour (job 5); the truck moved rather than the flower bed, the corner tree moved to the fence, the edge-on shadow rule (job 6); the corner map's tap opens the big map without a job (job 7); 80-second grandma turns anchored to the real UTC day (job 8); the bridge's own feeding spot went with it (job 9); the sideways slip for a friend or pet whose way is blocked by another, and measuring text at 48 px in main memory (stage 1 end).
@@ -1700,6 +2427,8 @@ Listed per job in section 1 ("Decided alone"). The bigger ones: six floors at de
 - The big map's tip ("Tap a place to see the way there!", "That's you!") fades away after four seconds and comes back with the next tip; the card of a place you picked stays until you close it. A friend's name on the map keeps a little air from every place name and icon, and takes another side of its dot when it has none.
 - On an upright phone, opening a pose card moves the camera back to the spot the shoot starts from (the one that frames the whole group), so the card sits under the people; on a sideways screen the camera stays where you stand.
 - The photographer's own step back on an upright phone stops 1.5 m short of the parked bus or a car: pass 7's "camera inside a box" was the camera half a metre from the side of the Beach Bus, its windows showing straight through (G4-162, not a glitch).
+
+- Run 4 finish: the decisions made alone are in section 1's "Run 4 finish" part ("Decisions made alone (run 4 finish)"): the kit's fixes (never weaker), the friends' arc, the toasts during a shoot, the stairs' arrow, the photo booking's words, the not-glitches with their reasons, and leaving the pets at your heels for the owner.
 
 ## 10. Firebase
 No new paths and no rule changes in stage 1: everything new that others see travels in optional presence fields (v, hm.W/D, gd, lk.co), which old versions ignore.

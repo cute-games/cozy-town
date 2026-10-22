@@ -1,0 +1,2 @@
+s3_iphone-portrait_light_iphone-portrait-light_041_town-east-shops.png | iphone-portrait, Toy Store front | the notepad card in the top-left covers the shop sign so only "ore" of "Toy Store" can be read | 1
+count: 1

@@ -1,0 +1,1 @@
+Pass 24: the 8 marks about the Flower Corner bubble running past the right edge were set aside as "a talking townsperson's bubble"; that reason does not fit the spot f19 changed: sent on (fixed in f20).

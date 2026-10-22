@@ -1,0 +1,3 @@
+M-004 | KEEP | notepad card hides the sign, only "ore" readable
+M-005 | DROP | just the shop wall beside the path, gate fully visible, nothing broken
+M-006 | KEEP | shopkeeper hidden, lone chef's hat sits on the oranges

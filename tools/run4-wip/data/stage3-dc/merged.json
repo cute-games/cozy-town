@@ -1,0 +1,1552 @@
+[
+ {
+  "id": "M-001",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_002_town-pet-show-stage.png",
+  "spot": "town-pet-show-stage",
+  "where": "ipad-landscape, the food truck corner",
+  "what": "flat coloured slivers (pink, purple, blue, yellow) float across the food truck's side panel, like squashed bunting or leaf particles seen edge-on",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "pink/purple/yellow/blue flat quads with black tips really float as streaks across the truck panel"
+ },
+ {
+  "id": "M-002",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_009_town-lake.png",
+  "spot": "town-lake",
+  "where": "ipad-landscape, the lake",
+  "what": "the grandma's speech bubble \"The lake is so peaceful.\" sits behind her head; the \"o\" of \"so\" is hidden by her hair (cut text)",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "grey hair covers the bubble, reads \"The lake is s…eaceful.\""
+ },
+ {
+  "id": "M-003",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_018_treepark-finish.png",
+  "spot": "treepark-finish",
+  "where": "ipad-landscape, Tree Park finish deck",
+  "what": "the tree crown right of the Finish sign is a murky dark olive (RGB ~131,112,46) while every other crown is bright; looks like a crown in full shadow or a wrong colour",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "crown is a flat dull olive (≈130,112,46) with no lit face next to bright faceted trees; reads dead"
+ },
+ {
+  "id": "M-004",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_030_inside-fire.png",
+  "spot": "inside-fire",
+  "where": "ipad-landscape, inside the fire station",
+  "what": "a plain yellow ball floats in mid-air in front of the back wall beside the Fire Station sign, touching nothing",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "outlined yellow sphere hovers beside the sign with an offset shadow, nothing holds it"
+ },
+ {
+  "id": "M-005",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_033_inside-pets-upstairs.png",
+  "spot": "inside-pets-upstairs",
+  "where": "ipad-landscape, Pet Shop upstairs",
+  "what": "the action button label says \"Adopt a owl\" (should be \"an owl\")",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "button reads \"Adopt a owl\""
+ },
+ {
+  "id": "M-006",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_038_phone-jobs.png",
+  "spot": "phone-jobs",
+  "where": "ipad-landscape, the phone: Rosie's job list",
+  "what": "the chat header (back button, Rosie avatar, coin chip) is scrolled up under the phone's status bar; their tops are cut off",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "back-button circle, avatar and coin chip tops are clipped under the phone status bar"
+ },
+ {
+  "id": "M-007",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_046_bag.png",
+  "spot": "bag",
+  "where": "ipad-landscape, light theme, the bag card's bottom-right corner (city)",
+  "what": "the scroll-down badge is a ~36 px round button sitting half outside the card's right edge, smaller than a fingertip",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "deliberate scroll hint centred on the card border, clean and consistent, not a glitch"
+ },
+ {
+  "id": "M-008",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_047_settings.png",
+  "spot": "settings",
+  "where": "ipad-landscape, light theme, the settings card's bottom-right corner (city)",
+  "what": "the scroll-down badge is a ~36 px round button sitting half outside the card's right edge, smaller than a fingertip",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "same badge, same deliberate placement"
+ },
+ {
+  "id": "M-009",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_048_shop-market.png",
+  "spot": "shop-market",
+  "where": "ipad-landscape, light theme, the Market card's bottom-right corner (city)",
+  "what": "the scroll-down badge is a ~36 px round button sitting half outside the card's right edge, smaller than a fingertip",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "same badge, same deliberate placement"
+ },
+ {
+  "id": "M-010",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_049_shop-pets.png",
+  "spot": "shop-pets",
+  "where": "ipad-landscape, light theme, the Pet shop card's bottom-right corner (city)",
+  "what": "the scroll-down badge is a ~36 px round button sitting half outside the card's right edge, smaller than a fingertip",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "same badge, same deliberate placement"
+ },
+ {
+  "id": "M-011",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_055_party-invitation.png",
+  "spot": "party-invitation",
+  "where": "ipad-landscape, light theme, top centre over the park (city)",
+  "what": "the invitation card lies on top of a second yellow-bordered notice card (party-popper icon at left, its text cut to \"...eck it\" at right) that is still showing behind it: two cards overlap",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "invitation sits on a second yellow-bordered card with icon left and \"…eck it\" right"
+ },
+ {
+  "id": "M-012",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_060_photo-pose-card.png",
+  "spot": "photo-pose-card",
+  "where": "ipad-landscape, light theme, bottom right of the photo HUD (city)",
+  "what": "Mia's pose card overlaps the two-row photo bar: the 🏞️ icon of \"the fountain ▸\" and the whole \"−\" button are hidden under the card, only \"+\" and \"Snap!\" stay clear",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "pose card hides the \"−\" button and the fountain bar's icon; \"+\" and \"Snap!\" left exposed"
+ },
+ {
+  "id": "M-013",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_061_photo-shoot.png",
+  "spot": "photo-shoot",
+  "where": "ipad-landscape, light theme, the fountain photo frame (city)",
+  "what": "the player's three pets (Mochi, Waffles, Clover) stand between the camera and the family, hide the family's legs and are cut off by the bottom edge, their big name labels lying over Leo and Zoe",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "three pets fill the foreground, cut by the bottom edge, labels over Leo/Zoe/legs"
+ },
+ {
+  "id": "M-014",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_061_photo-shoot.png",
+  "spot": "photo-shoot",
+  "where": "ipad-landscape, light theme, right screen edge (city)",
+  "what": "the show-pet labels \"Granny Daisy\", \"Sir Barkley\", \"Lady Fluffington\" stack on top of each other and run off the right edge, the first two unreadable",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "three show-pet labels overlap into a jumble, first two partly hidden"
+ },
+ {
+  "id": "M-015",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_062_photo-result.png",
+  "spot": "photo-result",
+  "where": "ipad-landscape, light theme, bottom right (city)",
+  "what": "the result card lies over the photo bar still showing behind it: the \"−\" button and the left part of \"the fountain ▸\" are hidden under the card while 🧍, \"+\" and \"Snap!\" stay out beside it, and the \"Frame everyone and Snap!\" chip stays up top-left",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "result card over a still-live photo bar (\"−\" hidden, \"+\"/\"Snap!\" exposed), chip still up"
+ },
+ {
+  "id": "M-016",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_062_photo-result.png",
+  "spot": "photo-result",
+  "where": "ipad-landscape, light theme, right screen edge (city)",
+  "what": "the show-pet labels \"Granny Daisy\", \"Sir Barkley\", \"Lady Fluffington\" stack on top of each other and run off the right edge",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same stacked labels, overlap real"
+ },
+ {
+  "id": "M-017",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_064_town-square-fountain-night.png",
+  "spot": "town-square-fountain-night",
+  "where": "ipad-landscape, light theme, Pet Show stage at right (night)",
+  "what": "the balloon bunch stands in front of the \"Every Saturday!\" plate and hides its end (\"Every Saturda\")",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "balloon bunch cuts the plate to \"Every Saturda\""
+ },
+ {
+  "id": "M-018",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_065_town-pet-show-stage-night.png",
+  "spot": "town-pet-show-stage-night",
+  "where": "ipad-landscape, light theme, the stage sign (night)",
+  "what": "the balloon bunch covers the trophy and the start of \"Every Saturday!\" (only \"Saturday!\" shows)",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "balloons cover the trophy's lower half and \"Every\", only \"Saturday!\" shows"
+ },
+ {
+  "id": "M-019",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_072_town-square-fountain-rain.png",
+  "spot": "town-square-fountain-rain",
+  "where": "ipad-landscape, light theme, Pet Show stage at right (rain)",
+  "what": "the balloon bunch hides the end of \"Every Saturday!\" (\"Every Saturda\")",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "plate reads \"Every Saturda\" behind the balloons"
+ },
+ {
+  "id": "M-020",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_072_town-square-fountain-rain.png",
+  "spot": "town-square-fountain-rain",
+  "where": "ipad-landscape, light theme, left of the stage (rain)",
+  "what": "the three show-pet labels stack on top of each other, unreadable",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "the three labels overlap, tails hidden"
+ },
+ {
+  "id": "M-021",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_073_town-pet-show-stage-rain.png",
+  "spot": "town-pet-show-stage-rain",
+  "where": "ipad-landscape, light theme, the stage sign (rain)",
+  "what": "the balloon bunch covers the start of \"Every Saturday!\" (only \"Saturday!\" shows)",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "balloons hide \"Every\", only \"Saturday!\" shows"
+ },
+ {
+  "id": "M-022",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_073_town-pet-show-stage-rain.png",
+  "spot": "town-pet-show-stage-rain",
+  "where": "ipad-landscape, light theme, left of the stage (rain)",
+  "what": "the labels \"Granny Daisy\", \"Sir Barkley\", \"Lady Fluffington\" stack on top of each other, only the last readable",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "\"Granny Daisy\"/\"Sir Barkley\" mostly hidden behind \"Lady Fluffington\""
+ },
+ {
+  "id": "M-023",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_001_town-square-fountain.png",
+  "spot": "town-square-fountain",
+  "where": "ipad-landscape, dark theme, Pet Show stage at right (city)",
+  "what": "the balloon bunch hides the end of \"Every Saturday!\" (\"Every Saturda\")",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "plate reads \"Every Saturda\" behind the balloons"
+ },
+ {
+  "id": "M-024",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_001_town-square-fountain.png",
+  "spot": "town-square-fountain",
+  "where": "ipad-landscape, dark theme, left of the stage (city)",
+  "what": "the three show-pet labels stack on top of each other, unreadable",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "labels overlap, same jumble"
+ },
+ {
+  "id": "M-025",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_002_town-pet-show-stage.png",
+  "spot": "town-pet-show-stage",
+  "where": "ipad-landscape, dark theme, the stage sign (city)",
+  "what": "the balloon bunch covers the start of \"Every Saturday!\" (only \"Saturday!\" shows)",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "balloons hide trophy bottom and \"Every\", only \"Saturday!\" shows"
+ },
+ {
+  "id": "M-026",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_011_town-bus-stop.png",
+  "spot": "town-bus-stop",
+  "where": "ipad-landscape dark, the bus stop at the park (city)",
+  "what": "behind the park fence a thin flat pale plane (a roof or garland line seen edge-on) floats across the whole park at eye height, with the ghost and the pennants hanging on it",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "it is the pennant bunting string (flags hang from it), same in daylight; a decoration, not a stray plane"
+ },
+ {
+  "id": "M-027",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_018_treepark-finish.png",
+  "spot": "treepark-finish",
+  "where": "ipad-landscape dark, the medium path's finish deck (treepark)",
+  "what": "the round tree crown right of the Finish sign shows only its shaded side: a uniform dull olive-brown blob with no lit face, it reads as a brown dead tree among the bright autumn ones",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same flat olive-brown crown, no lit face, looks dead among bright trees"
+ },
+ {
+  "id": "M-028",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_021_inside-flowers.png",
+  "spot": "inside-flowers",
+  "where": "ipad-landscape dark, inside the flowers (flowers)",
+  "what": "the middle hanging flower basket's rod runs straight up into the ceiling lamp, so the basket looks hung from the lamp's bulb",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "rod stops ~16 px short of the lamp with a visible gap; perspective coincidence"
+ },
+ {
+  "id": "M-029",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_026_inside-bakery.png",
+  "spot": "inside-bakery",
+  "where": "ipad-landscape dark, inside the bakery (bakery)",
+  "what": "the two shoppers at the counter stand inside each other: the grey-haired one's arm passes through the pink-top one's shoulder",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "pink shopper is cleanly in front, outlines intact, no clipping; they just stand close"
+ },
+ {
+  "id": "M-030",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_027_inside-library.png",
+  "spot": "inside-library",
+  "where": "ipad-landscape dark, inside the library (library)",
+  "what": "a thin sliver of bare wall shows between the two middle bookcases (right under the reticle) while the other bookcases touch",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "thin gap at centre shows wall and skirting between the two middle bookcases, others touch"
+ },
+ {
+  "id": "M-031",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_030_inside-fire.png",
+  "spot": "inside-fire",
+  "where": "ipad-landscape dark, inside the fire station (fire)",
+  "what": "a thin white rod with a ring on top sticks up out of Chief Sparky's helmet and runs behind his name tag, like a halo on a stick",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "ring-topped pole is a background prop (fire pole/stand) behind him, lined up by chance"
+ },
+ {
+  "id": "M-032",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_030_inside-fire.png",
+  "spot": "inside-fire",
+  "where": "ipad-landscape dark, inside the fire station (fire)",
+  "what": "a plain yellow ball sits on the wall right of the Fire Station sign with no bracket or fixing, it looks like it floats in mid-air",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same floating yellow sphere, no bracket, offset shadow"
+ },
+ {
+  "id": "M-033",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_034_inside-home-floor-2.png",
+  "spot": "inside-home-floor-2",
+  "where": "ipad-landscape dark, my house floor 2 (home)",
+  "what": "the three windows on the back wall are unevenly spaced: the middle and right ones almost touch while the left one sits far apart",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "back-wall windows really uneven: ~150 px gap left, ~45 px gap right (cosmetic)"
+ },
+ {
+  "id": "M-034",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_035_inside-home-stairs.png",
+  "spot": "inside-home-stairs",
+  "where": "ipad-landscape dark, the stairs in my house (home)",
+  "what": "the white handrail beside the stairs hangs in the air with no posts or wall fixing and ends in mid-air at the bottom step",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "plain low-poly rail beam is the cartoon style; reads fine"
+ },
+ {
+  "id": "M-035",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_038_phone-jobs.png",
+  "spot": "phone-jobs",
+  "where": "ipad-landscape dark, Rosie's job list (city)",
+  "what": "the chat header (back button, Rosie's avatar and name, coin pill) has scrolled up under the phone's status bar and its top edge is clipped",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "back button's top arc is cut flat by the phone status bar (~7 px); avatar and coin pill are fine"
+ },
+ {
+  "id": "M-036",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_046_bag.png",
+  "spot": "bag",
+  "where": "ipad-landscape dark, the bag (city)",
+  "what": "the scroll-down button at the panel's bottom right is tiny (about 35 px, smaller than a fingertip) and sits half outside the panel's edge",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "~36 px round cue button straddling the panel edge, small for a child's finger (minor)"
+ },
+ {
+  "id": "M-037",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_047_settings.png",
+  "spot": "settings",
+  "where": "ipad-landscape dark, settings (city)",
+  "what": "the same tiny scroll-down button (about 35 px) sits half outside the panel's bottom-right edge",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same tiny edge-straddling cue button"
+ },
+ {
+  "id": "M-038",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_048_shop-market.png",
+  "spot": "shop-market",
+  "where": "ipad-landscape dark, the Market shop card (city)",
+  "what": "the same tiny scroll-down button (about 35 px) sits half outside the panel's bottom-right edge",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same tiny edge-straddling cue button"
+ },
+ {
+  "id": "M-039",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_049_shop-pets.png",
+  "spot": "shop-pets",
+  "where": "ipad-landscape dark, city: Pet Shop card",
+  "what": "the tall card's top-left corner covers the time chip in the top bar (only the sun icon of \"11:30 Sat\" still shows)",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "panel slices the time chip, only the sun icon peeks out (cosmetic; bag/settings/market do the same)"
+ },
+ {
+  "id": "M-040",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_049_shop-pets.png",
+  "spot": "shop-pets",
+  "where": "ipad-landscape dark, city: Pet Shop card",
+  "what": "tiny ⬇ scroll button (about 36 px, icon about 20 px) sitting half off the card's bottom-right edge",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same tiny edge-straddling cue button"
+ },
+ {
+  "id": "M-041",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_055_party-invitation.png",
+  "spot": "party-invitation",
+  "where": "ipad-landscape dark, city: party invitation",
+  "what": "the invitation card sits on top of a second party notification card (its 🎉 icon and \"…eck it\" text peek out on either side): two stacked, overlapping cards",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "yellow party toast clearly sticks out behind the invitation card on both sides"
+ },
+ {
+  "id": "M-042",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_060_photo-pose-card.png",
+  "spot": "photo-pose-card",
+  "where": "ipad-landscape dark, city: photographer's pose card",
+  "what": "the pose card overlaps the photo bar at the bottom right: the 🏞️ icon of the background picker and the \"−\" button are hidden behind the card's edge",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "card's right edge hides the 🏞️ icon and the \"−\" button of the photo bar"
+ },
+ {
+  "id": "M-043",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_061_photo-shoot.png",
+  "spot": "photo-shoot",
+  "where": "ipad-landscape dark, city: photo shoot at the fountain",
+  "what": "the three pets crowd into the front of the photo and hide the family's legs; the \"Clover\" and \"Waffles\" name tags lie across Zoe and Leo",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "pets fill the foreground, Clover's tag over Zoe, Waffles' tag over Leo's legs"
+ },
+ {
+  "id": "M-044",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_061_photo-shoot.png",
+  "spot": "photo-shoot",
+  "where": "ipad-landscape dark, city: photo shoot at the fountain",
+  "what": "the dashed photo frame is drawn straight across the corner map, the job text and the notepad (same in 060 and 062)",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "dashed frame line visibly runs through the mini-map, job note and notepad (minor)"
+ },
+ {
+  "id": "M-045",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_062_photo-result.png",
+  "spot": "photo-result",
+  "where": "ipad-landscape dark, city: photo result card",
+  "what": "the result card overlaps the photo bar: the 🏞️ icon and the \"−\" button are hidden behind its right edge",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same 🏞️ icon and \"−\" button hidden behind the result card"
+ },
+ {
+  "id": "M-046",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_065_town-pet-show-stage-night.png",
+  "spot": "town-pet-show-stage-night",
+  "where": "ipad-landscape dark, town: Pet Show stage at night",
+  "what": "a bunch of balloons hangs in front of the Pet Show sign, hiding the trophy and the \"Every\" of \"Every Saturday!\"",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "balloons cover \"Every\" and part of \"Pet\"; trophy is actually still visible (minor, angle-dependent)"
+ },
+ {
+  "id": "M-047",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_003_phone-jobs.png",
+  "spot": "phone-jobs",
+  "where": "iphone-portrait light, city: Rosie's job list",
+  "what": "the chat header has scrolled up with the messages: the top of the back button is cut off by the panel edge and the Rosie/coin row sits clipped against it",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "back button's top is cut flat (~3 px), slight; Rosie/coin row is not clipped"
+ },
+ {
+  "id": "M-048",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_010_big-map.png",
+  "spot": "big-map",
+  "where": "iphone-portrait light, city: big map",
+  "what": "place labels cut at the map's left edge (\"on\" and \"ion\" hang at the border)",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "map pans by drag, so labels clipped at the viewport edge is normal map behaviour"
+ },
+ {
+  "id": "M-049",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_012_settings.png",
+  "spot": "settings",
+  "where": "iphone-portrait light, city, settings card bottom",
+  "what": "the scroll-down arrow sits on the \"Bring my pets to…\" button and hides two letters of its label (\"B⬇ng my pets to\")",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "\"B⬇ng my pets to\": arrow button hides \"ri\""
+ },
+ {
+  "id": "M-050",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_016_house-paint.png",
+  "spot": "house-paint",
+  "where": "iphone-portrait light, city, house colour card, \"Pick any colour\" row",
+  "what": "the colour slider is a plain bright-blue browser slider with a thumb about 14 px wide, far smaller than a fingertip and off the game's palette",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "plain blue native range slider, ~14 px thumb, off-palette"
+ },
+ {
+  "id": "M-051",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_019_party-time.png",
+  "spot": "party-time",
+  "where": "iphone-portrait light, city, host-a-party time card",
+  "what": "only four time tiles (Tomorrow 9:00–12:00) fit in the card and there is no scroll cue, yet later times exist (the next shot's invitation is for 13:00)",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "code offers at most 4 slots (tomorrow 9-12 at night) and the card ends below them; the 13:00 party is Mia's (an NPC), not the player's"
+ },
+ {
+  "id": "M-052",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_020_party-invitation.png",
+  "spot": "party-invitation",
+  "where": "iphone-portrait light, city, invitation card under the top bar",
+  "what": "the invitation card lies over the left HUD column: half the health chip, the whole time chip and most of the corner map are hidden under it",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "card covers the time chip, half the apple chip and the top of the mini-map (minor)"
+ },
+ {
+  "id": "M-053",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_021_dance-card.png",
+  "spot": "dance-card",
+  "where": "iphone-portrait light, city, dance-off card under the top bar",
+  "what": "the card hides half the health chip, the whole time chip and most of the corner map",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same HUD overlap as M-052"
+ },
+ {
+  "id": "M-054",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_026_photo-shoot.png",
+  "spot": "photo-shoot",
+  "where": "iphone-portrait light, city photo shoot, bottom-right bar",
+  "what": "the background chip's text is cut to \"the fou…\" (the fountain)",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "label truncated to \"the fou…\", unreadable for a child"
+ },
+ {
+  "id": "M-055",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_026_photo-shoot.png",
+  "spot": "photo-shoot",
+  "where": "iphone-portrait light, city photo shoot, left side of the photo frame",
+  "what": "the \"Frame everyone and Snap!\" box and the notepad cover the left family member (Mia): her head and name label are hidden behind HUD inside the photo frame",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "Mia's head and name tag hidden behind the note and notepad inside the frame"
+ },
+ {
+  "id": "M-056",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_027_photo-result.png",
+  "spot": "photo-result",
+  "where": "iphone-portrait light, city, photo result card",
+  "what": "the yellow \"📷 Mia\" label floats over the card's top-left corner, overlapping the card edge",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "\"📸 Mia\" is the designed .who sticker tab (absolute, rotated, on the card corner)"
+ },
+ {
+  "id": "M-057",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_003_phone-jobs.png",
+  "spot": "phone-jobs",
+  "where": "iphone-portrait dark, city, phone, Rosie's chat header",
+  "what": "the chat header has scrolled part-way under the phone screen's top edge: the top of the back button and the coin pill are clipped",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "back button's top cut flat (~3 px), slight; coin pill is not clipped"
+ },
+ {
+  "id": "M-058",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_003_phone-jobs.png",
+  "spot": "phone-jobs",
+  "where": "iphone-portrait dark, city, phone, job cards",
+  "what": "the five job cards' descriptions are about 9 px tall, tiny for a child",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "descriptions about 10 px font, tiny for a child (design nit)"
+ },
+ {
+  "id": "M-059",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_010_big-map.png",
+  "spot": "big-map",
+  "where": "iphone-portrait dark, city, big map, left edge",
+  "what": "place labels are clipped by the map's edge, leaving fragments \"on\" and \"don\"",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "same as M-048: pannable map, edge clipping is normal"
+ },
+ {
+  "id": "M-060",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_012_settings.png",
+  "spot": "settings",
+  "where": "iphone-portrait dark, city, settings card bottom",
+  "what": "the scroll-down arrow sits on the \"Bring my pets to…\" button and hides two letters of its label",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same \"B⬇ng my pets to\" overlap"
+ },
+ {
+  "id": "M-061",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_025_photo-pose-card.png",
+  "spot": "photo-pose-card",
+  "where": "iphone-portrait, city, the photographer's pose card",
+  "what": "the \"📸 Pick the background…\" note sits on top of the round palette badge at the corner map's bottom-right corner, hiding its lower half",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "note's top edge cuts the palette badge roughly in half"
+ },
+ {
+  "id": "M-062",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_026_photo-shoot.png",
+  "spot": "photo-shoot",
+  "where": "iphone-portrait, city, the photo shoot at the fountain",
+  "what": "the \"📸 Frame everyone and Snap!\" note and the \"✏️ Write here!\" notepad cover the left family member (Mia): her head and name tag are hidden behind them; the joystick ring also shows through the dog in front",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "Mia hidden behind note/notepad; joystick ring drawn over Waffles' face"
+ },
+ {
+  "id": "M-063",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_026_photo-shoot.png",
+  "spot": "photo-shoot",
+  "where": "iphone-portrait, city, the photo bar bottom right",
+  "what": "the background label is cut to \"🏞️ the fou…\" instead of \"the fountain\"",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "\"the fou…\" truncation"
+ },
+ {
+  "id": "M-064",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_028_dance-hud.png",
+  "spot": "dance-hud",
+  "where": "iphone-portrait, home, top left",
+  "what": "the dance score bar sits on top of the apple chip, whose green edge peeks out under it",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "apple chip's top edge peeks out above the score bar"
+ },
+ {
+  "id": "M-065",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_038_inside-pets.png",
+  "spot": "inside-pets",
+  "where": "iphone-portrait, pets, the back wall",
+  "what": "the long shelf unit looks nearly empty (one row of tiny coloured dots, the lower shelf bare), not the full shelves promised",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "middle unit is the same sparse ball row with a bare lower shelf on PC too; content choice, not a portrait glitch"
+ },
+ {
+  "id": "M-066",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_010_big-map.png",
+  "spot": "big-map",
+  "where": "iphone-landscape, city, the big map top right",
+  "what": "the \"📍 Me\", \"+\" and \"−\" buttons sit on top of map labels: \"Duck Pond\" is cut to \"Duck Po\" and \"Tree Park\" is hidden behind the zoom buttons",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "Me/+/− buttons sit on the map: \"Duck Po\" cut, \"Tree Park\" split around the zoom buttons"
+ },
+ {
+  "id": "M-067",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_016_house-paint.png",
+  "spot": "house-paint",
+  "where": "iphone-landscape light, city – House colour card, top edge",
+  "what": "the near-full-height card runs over the top bar: hunger bar, clock, chat and phone buttons are hidden behind it and the backpack button is cut in half",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "card covers hunger bar, clock, chat, phone; backpack half-hidden at the card edge, no scrim (minor)"
+ },
+ {
+  "id": "M-068",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_016_house-paint.png",
+  "spot": "house-paint",
+  "where": "iphone-landscape light, city – House colour card, bottom-right corner",
+  "what": "a tiny round ⬇️ button (about 30 px, smaller than a fingertip) pokes out of the card's right edge and overlaps the mint ⬆️ button",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "~30 px ⬇️ scroll button straddles the card edge and overlaps the mint ⬆️ button"
+ },
+ {
+  "id": "M-069",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_020_party-invitation.png",
+  "spot": "party-invitation",
+  "where": "iphone-landscape light, city – top centre",
+  "what": "a second card (yellow picture panel with a party popper, pink panel reading \"…eck it\") sits behind the invitation card and is half hidden by it – two cards overlapping",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "yellow popper panel and pink \"…eck it\" panel of a second card visible behind the invitation; two cards overlapping"
+ },
+ {
+  "id": "M-070",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_022_tutorial-pizza.png",
+  "spot": "tutorial-pizza",
+  "where": "iphone-landscape light, city – pizza tutorial card",
+  "what": "the card covers the right end of the hunger bar and hides the chat button behind it",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "hunger bar track runs under the card's left edge, chat button hidden; minor overlay-on-HUD"
+ },
+ {
+  "id": "M-071",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_023_tutorial-hair.png",
+  "spot": "tutorial-hair",
+  "where": "iphone-landscape light, city – hairstylist tutorial card",
+  "what": "the card covers the right end of the hunger bar and hides the chat button behind it",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same: hunger bar clipped at card edge, chat hidden; minor"
+ },
+ {
+  "id": "M-072",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_024_tutorial-photo.png",
+  "spot": "tutorial-photo",
+  "where": "iphone-landscape light, city – photographer tutorial card",
+  "what": "the card covers the right end of the hunger bar and hides the chat button behind it",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same: hunger bar clipped at card edge, chat hidden; minor"
+ },
+ {
+  "id": "M-073",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_025_photo-pose-card.png",
+  "spot": "photo-pose-card",
+  "where": "iphone-landscape light, city – photo shoot top bar and left column",
+  "what": "the white dashed viewfinder frame runs straight through the coin chip \"900\", the hunger bar and the clock \"12:00 Sun\" (they look struck through) and down through the corner map and the notepad",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "dashed viewfinder clearly strikes through 900 chip, hunger bar, 12:00 Sun, round buttons, corner map and notepad"
+ },
+ {
+  "id": "M-074",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_025_photo-pose-card.png",
+  "spot": "photo-pose-card",
+  "where": "iphone-landscape light, city – pose card edges",
+  "what": "the pose card sits on top of the photo HUD: the \"📸 Tap each … (0/3\" hint is cut in half and the yellow Snap! button shows only \"nap!\"",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "\"Tap each (0/3\" hint cut by card edge, Snap button shows only \"nap!\""
+ },
+ {
+  "id": "M-075",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_026_photo-shoot.png",
+  "spot": "photo-shoot",
+  "where": "iphone-landscape light, city – photo shoot top bar",
+  "what": "the dashed viewfinder frame strikes through the coin chip \"900\", the hunger bar and the clock \"12:00 Sun\" and runs through the four round buttons",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "dashed frame runs through all top-bar chips and the four round buttons"
+ },
+ {
+  "id": "M-076",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_027_photo-result.png",
+  "spot": "photo-result",
+  "where": "iphone-landscape light, city – photo result card, top edge",
+  "what": "the card is taller than the screen: its \"📸 Mia\" title tab and top edge are cut off above the screen",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "\"📸 Mia\" tab and card top are cut off at the screen's top edge"
+ },
+ {
+  "id": "M-077",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_027_photo-result.png",
+  "spot": "photo-result",
+  "where": "iphone-landscape light, city – photo result card, photo",
+  "what": "the photo shows the three pets standing in front of the family, hiding their lower halves",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "pets in front of the family is normal group-photo composition, not a glitch"
+ },
+ {
+  "id": "M-078",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_027_photo-result.png",
+  "spot": "photo-result",
+  "where": "iphone-landscape light, city – top-left",
+  "what": "the dashed viewfinder frame is still drawn behind the card and strikes through the coin chip \"1020\"",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "dashed frame still drawn around the result card, striking through the 1020 chip"
+ },
+ {
+  "id": "M-079",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_031_town-flower-corner.png",
+  "spot": "town-flower-corner",
+  "where": "iphone-landscape light, city – Flower Corner gate",
+  "what": "a big tree trunk stands on the pavement right in front of the open gate, hiding the gate and the start of the stepping stones",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "foreground tree trunk stands on the pavement exactly over the gate gap, hiding it and the first stepping stones"
+ },
+ {
+  "id": "M-080",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_034_town-east-shops.png",
+  "spot": "town-east-shops",
+  "where": "iphone-landscape light, city – Toy Store door",
+  "what": "the grandma's speech bubble \"Toys were made of wood in my day.\" is tiny (letters about 8 px), unreadable on a phone",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "bubble text about 7 px, unreadable; the grandma's hair also overlaps a word"
+ },
+ {
+  "id": "M-081",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_037_inside-market.png",
+  "spot": "inside-market",
+  "where": "iphone-landscape light, market – top centre",
+  "what": "a white cloud puff is drawn inside the shop at the top centre of the view, half behind the score bar",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "it is the room's ceiling lamp (white shade + glowing bulb from shell()), not a cloud; same in every shop"
+ },
+ {
+  "id": "M-082",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_038_inside-pets.png",
+  "spot": "inside-pets",
+  "where": "iphone-landscape light, pet shop – top centre",
+  "what": "a white cloud puff is drawn inside the shop at the top centre of the view, half behind the score bar",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "same ceiling lamp, intended fixture"
+ },
+ {
+  "id": "M-083",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_039_inside-flowers.png",
+  "spot": "inside-flowers",
+  "where": "iphone-landscape light, flower shop – top centre",
+  "what": "a white cloud puff with a cream underside floats inside the shop at the top centre of the view, above the score bar",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "same ceiling lamp, intended fixture"
+ },
+ {
+  "id": "M-084",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_001_phone-messages.png",
+  "spot": "phone-messages",
+  "where": "iphone-landscape dark, city – phone, top edge",
+  "what": "the phone sits over the top bar: the clock chip and the chat button are hidden with only their tops peeking out above the phone frame, and the hunger bar is cut",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "phone frame cuts the hunger bar; clock chip and chat button tops peek above the phone (minor)"
+ },
+ {
+  "id": "M-085",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_002_phone-chat-rosie.png",
+  "spot": "phone-chat-rosie",
+  "where": "iphone-landscape dark, city – phone, top edge",
+  "what": "the phone sits over the top bar: clock chip and chat button hidden with their tops peeking out, hunger bar cut",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same phone-over-HUD overlap visible"
+ },
+ {
+  "id": "M-086",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_003_phone-jobs.png",
+  "spot": "phone-jobs",
+  "where": "iphone-landscape dark, city – phone, top edge",
+  "what": "the phone sits over the top bar: clock chip and chat button hidden with their tops peeking out, hunger bar cut",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same phone-over-HUD overlap visible"
+ },
+ {
+  "id": "M-087",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_003_phone-jobs.png",
+  "spot": "phone-jobs",
+  "where": "iphone-landscape dark, city – phone, job list",
+  "what": "the job grid is scrolled so the first row's icons (pizza, hands, books) are cut in half under the status bar and the title/back button are out of view",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "job grid scrolled: first-row icons cut under the status bar, title/back button out of view"
+ },
+ {
+  "id": "M-088",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_004_phone-friends.png",
+  "spot": "phone-friends",
+  "where": "iphone-landscape dark, city – phone, top edge",
+  "what": "the phone sits over the top bar: clock chip and chat button hidden with their tops peeking out, hunger bar cut",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same phone-over-HUD overlap visible"
+ },
+ {
+  "id": "M-089",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_005_phone-quests.png",
+  "spot": "phone-quests",
+  "where": "iphone-landscape dark, city – phone, top edge",
+  "what": "the phone sits over the top bar: clock chip and chat button hidden with their tops peeking out, hunger bar cut",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same phone-over-HUD overlap visible"
+ },
+ {
+  "id": "M-090",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_006_phone-skills.png",
+  "spot": "phone-skills",
+  "where": "iphone-landscape dark, city – phone, top edge",
+  "what": "the phone sits over the top bar: clock chip and chat button hidden with their tops peeking out, hunger bar cut",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same phone-over-HUD overlap visible"
+ },
+ {
+  "id": "M-091",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_007_phone-pets.png",
+  "spot": "phone-pets",
+  "where": "iphone-landscape dark, city – phone, top edge",
+  "what": "the phone sits over the top bar: clock chip and chat button hidden with their tops peeking out, hunger bar cut",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same phone-over-HUD overlap visible"
+ },
+ {
+  "id": "M-092",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_008_phone-furniture.png",
+  "spot": "phone-furniture",
+  "where": "iphone-landscape dark, city – phone, top edge",
+  "what": "the phone sits over the top bar: clock chip and chat button hidden with their tops peeking out, hunger bar cut",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same phone-over-HUD overlap visible"
+ },
+ {
+  "id": "M-093",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_009_phone-calendar.png",
+  "spot": "phone-calendar",
+  "where": "iphone-landscape dark, city – phone, top edge",
+  "what": "the phone sits over the top bar: clock chip and chat button hidden with their tops peeking out, hunger bar cut",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same phone-over-HUD overlap visible"
+ },
+ {
+  "id": "M-094",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_010_big-map.png",
+  "spot": "big-map",
+  "where": "iphone-landscape dark, city – big map, top-right",
+  "what": "the \"📍 Me\", \"+\" and \"−\" buttons sit on top of the map and cut the \"Duck Pond\" label to \"Duck Po\", the \"Tree Park\" label to \"Tr…ark\" and half of the Toy Store marker",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "\"Duck Po\" cut, \"Tr…rk\" split by zoom buttons, Toy Store teddy marker half under the Me button"
+ },
+ {
+  "id": "M-095",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_010_big-map.png",
+  "spot": "big-map",
+  "where": "iphone-landscape dark, city – big map, bottom",
+  "what": "the \"Tap a place to see the way there!\" bar covers a row of map places whose markers peek out below it",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "hint bar lies over map content: marker tops peek out above and below it"
+ },
+ {
+  "id": "M-096",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_011_bag.png",
+  "spot": "bag",
+  "where": "iphone-landscape dark, city – My bag card, top edge",
+  "what": "the near-full-height card runs over the top bar: hunger bar, clock, chat and phone buttons hidden, backpack button cut in half",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "bag card covers the top bar; backpack button half-hidden at the card edge, no scrim (minor)"
+ },
+ {
+  "id": "M-097",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_011_bag.png",
+  "spot": "bag",
+  "where": "iphone-landscape dark, city – My bag card, bottom-right corner",
+  "what": "a tiny round ⬇️ button (about 30 px) pokes out of the card's right edge and overlaps the mint ⬆️ button",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "⬇️ button sits half outside card edge and overlaps the mint ⬆️ button"
+ },
+ {
+  "id": "M-098",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_012_settings.png",
+  "spot": "settings",
+  "where": "iphone-landscape dark, city – Settings card, top edge",
+  "what": "the near-full-height card runs over the top bar: hunger bar, clock, chat and phone buttons hidden, backpack button cut in half",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "card covers hunger/clock/chat/phone; backpack button visibly cut in half at card edge"
+ },
+ {
+  "id": "M-099",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_012_settings.png",
+  "spot": "settings",
+  "where": "iphone-landscape dark, city – Settings card, bottom-right corner",
+  "what": "a tiny round ⬇️ button (about 30 px) pokes out of the card's right edge, touching the \"Show me the tips\" button and overlapping the mint ⬆️ button",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "⬇️ button outside card edge, overlaps mint button, nearly touches tips button"
+ },
+ {
+  "id": "M-100",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_013_shop-market.png",
+  "spot": "shop-market",
+  "where": "iphone-landscape dark, city – Market card, top edge",
+  "what": "the near-full-height card runs over the top bar: hunger bar, clock, chat and phone buttons hidden, backpack button cut in half",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same: chips hidden, half backpack button peeks out beside card"
+ },
+ {
+  "id": "M-101",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_013_shop-market.png",
+  "spot": "shop-market",
+  "where": "iphone-landscape dark, city – Market card, bottom-right corner",
+  "what": "a tiny round ⬇️ button (about 30 px) pokes out of the card's right edge and overlaps the mint ⬆️ button",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "⬇️ button overlaps mint ⬆️ button"
+ },
+ {
+  "id": "M-102",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_014_shop-pets.png",
+  "spot": "shop-pets",
+  "where": "iphone-landscape dark, city – Pet shop card, top edge",
+  "what": "the near-full-height card runs over the top bar: hunger bar, clock, chat and phone buttons hidden, backpack button cut in half",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "half backpack button peeks out under card edge"
+ },
+ {
+  "id": "M-103",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_014_shop-pets.png",
+  "spot": "shop-pets",
+  "where": "iphone-landscape dark, city – Pet shop card, bottom-right corner",
+  "what": "a tiny round ⬇️ button (about 30 px) pokes out of the card's right edge and overlaps the mint ⬆️ button",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "⬇️ button overlaps mint ⬆️ button"
+ },
+ {
+  "id": "M-104",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_016_house-paint.png",
+  "spot": "house-paint",
+  "where": "iphone-landscape dark, city – House colour card, top edge",
+  "what": "the near-full-height card runs over the top bar: hunger bar, clock, chat and phone buttons hidden, backpack button cut in half",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "half backpack button peeks out under card edge"
+ },
+ {
+  "id": "M-105",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_016_house-paint.png",
+  "spot": "house-paint",
+  "where": "iphone-landscape dark, city – House colour card, bottom-right corner",
+  "what": "a tiny round ⬇️ button (about 30 px) pokes out of the card's right edge and overlaps the mint ⬆️ button",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "⬇️ button overlaps mint ⬆️ button"
+ },
+ {
+  "id": "M-106",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_020_party-invitation.png",
+  "spot": "party-invitation",
+  "where": "iphone-landscape, city",
+  "what": "the party invitation pops up on top of another open card (yellow ice-cream picture panel with \"...check it\" text); the card behind is covered and its text cut",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "invitation dialog sits on yellow toast, toast text hidden/cut"
+ },
+ {
+  "id": "M-107",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_025_photo-pose-card.png",
+  "spot": "photo-pose-card",
+  "where": "iphone-landscape, city, top bar",
+  "what": "the photo frame's dashed white line runs straight through the top chips, striking out \"900\", the energy bar and \"12:00 Sun\"",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "dashed line strikes through 900, energy bar and 12:00 Sun"
+ },
+ {
+  "id": "M-108",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_026_photo-shoot.png",
+  "spot": "photo-shoot",
+  "where": "iphone-landscape, city, top bar",
+  "what": "the dashed photo frame's top edge crosses the coin, energy and clock chips and the four round buttons like a strikethrough",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "dashed line crosses all top chips and the four round buttons"
+ },
+ {
+  "id": "M-109",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_026_photo-shoot.png",
+  "spot": "photo-shoot",
+  "where": "iphone-landscape, city, photo view",
+  "what": "the big hint banner \"Pick the background...\" sits right on the family's heads and hides their name tags",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "banner bottom sits on family heads, their name tags not visible"
+ },
+ {
+  "id": "M-110",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_026_photo-shoot.png",
+  "spot": "photo-shoot",
+  "where": "iphone-landscape, city, photo view",
+  "what": "the player's three pets (Mochi, Waffles, Clover) stand between the camera and the family with their name labels over the view, \"Waffles\" overlapping the joystick",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "pets in front of family, Waffles label over joystick"
+ },
+ {
+  "id": "M-111",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_027_photo-result.png",
+  "spot": "photo-result",
+  "where": "iphone-landscape, city, result card",
+  "what": "the card's yellow \"📸 Mia\" name tab is pushed off the top of the screen, its text cut in half",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "yellow 📸 Mia tab cut off by top of screen"
+ },
+ {
+  "id": "M-112",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_027_photo-result.png",
+  "spot": "photo-result",
+  "where": "iphone-landscape, city, top-left",
+  "what": "the dashed photo frame still runs through the \"1020\" coin chip",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "dashed line through 1020 chip"
+ },
+ {
+  "id": "M-113",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_027_photo-result.png",
+  "spot": "photo-result",
+  "where": "iphone-landscape, city, result card",
+  "what": "the finished photo shows the three pets and their name labels in front of the family",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "photo shows pets and name labels in front of family"
+ },
+ {
+  "id": "M-114",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_038_inside-pets.png",
+  "spot": "inside-pets",
+  "where": "iphone-landscape, pets",
+  "what": "the shelves are mostly empty (one ring and a row of balls on the middle unit, bare bottom shelves), not the full shelves described",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "shelves do hold goods; sparse stock is style, not a glitch"
+ },
+ {
+  "id": "M-115",
+  "file": "s3_pc-1366_light_pc-1366-light_003_phone-jobs.png",
+  "spot": "phone-jobs",
+  "where": "pc-1366, city, phone",
+  "what": "the chat header (back button, Rosie's avatar, title, coin chip) is scrolled half under the phone's status bar, only slivers of it show",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "cut back button, avatar and coin chip peek under status bar"
+ },
+ {
+  "id": "M-116",
+  "file": "s3_pc-1366_light_pc-1366-light_008_phone-furniture.png",
+  "spot": "phone-furniture",
+  "where": "pc-1366, city, phone",
+  "what": "the 🎨 emoji at the end of the furniture text wraps alone onto its own line",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "lone wrapped emoji is normal text flow, not noticeable"
+ },
+ {
+  "id": "M-117",
+  "file": "s3_pc-1366_light_pc-1366-light_014_shop-pets.png",
+  "spot": "shop-pets",
+  "where": "pc-1366, city, shop card",
+  "what": "\"Coral pet bed\" has its colour dot inline after the name while \"Violet pet bed\" and \"Lemon cat tree\" have theirs on a line below",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "inline vs wrapped colour dot is a tiny wrap nit"
+ },
+ {
+  "id": "M-118",
+  "file": "s3_pc-1366_light_pc-1366-light_016_house-paint.png",
+  "spot": "house-paint",
+  "where": "pc-1366, city, house colour card",
+  "what": "the \"Pick any colour\" slider is a plain default browser slider (bright blue track, small round thumb), off the game's style",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "plain blue browser slider, no colours shown, off the game style"
+ },
+ {
+  "id": "M-119",
+  "file": "s3_pc-1366_light_pc-1366-light_020_party-invitation.png",
+  "spot": "party-invitation",
+  "where": "pc-1366 light, city park, top centre",
+  "what": "the white \"🎉 A party!\" invitation card sits on top of the yellow \"Party!\" toast; the toast's text is cut off after \"Go check it\"",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "dialog covers toast, text cut after \"Go check it\""
+ },
+ {
+  "id": "M-120",
+  "file": "s3_pc-1366_light_pc-1366-light_025_photo-pose-card.png",
+  "spot": "photo-pose-card",
+  "where": "pc-1366 light, city park, photographer job HUD",
+  "what": "the dashed white photo frame is drawn across the corner map, the \"Tap each person for a pose\" box, the notepad and the chat/phone/bag buttons",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "dashed frame crosses map, job box, notepad and top buttons"
+ },
+ {
+  "id": "M-121",
+  "file": "s3_pc-1366_light_pc-1366-light_026_photo-shoot.png",
+  "spot": "photo-shoot",
+  "where": "pc-1366 light, city park, photo shoot",
+  "what": "the player's pets Mochi, Waffles and Clover stand between the camera and the family, hiding their legs, and the pets' name labels cover Zoe and Mia/Leo",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "pets hide family legs, Clover/Waffles labels over Zoe and Mia/Leo"
+ },
+ {
+  "id": "M-122",
+  "file": "s3_pc-1366_light_pc-1366-light_026_photo-shoot.png",
+  "spot": "photo-shoot",
+  "where": "pc-1366 light, city park, photographer job HUD",
+  "what": "the dashed photo frame is drawn across the corner map, the job text box, the notepad and the top-right buttons",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "dashed frame crosses map, job box, notepad and buttons"
+ },
+ {
+  "id": "M-123",
+  "file": "s3_pc-1366_light_pc-1366-light_027_photo-result.png",
+  "spot": "photo-result",
+  "where": "pc-1366 light, city park, photographer job HUD",
+  "what": "the dashed photo frame is still drawn across the corner map, the notepad and the top-right buttons behind the result card",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "frame still drawn through map, notepad and buttons behind card"
+ },
+ {
+  "id": "M-124",
+  "file": "s3_pc-1366_light_pc-1366-light_030_town-pet-show-stage.png",
+  "spot": "town-pet-show-stage",
+  "where": "pc-1366 light, city park, Pet Show stage",
+  "what": "stiff flat purple and pink strips stick out sideways from the stage posts and lie on the grass beside the stage like fallen planks, one half sunk into the ground",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "flat strips float off stage posts and lie on grass, one sunk"
+ },
+ {
+  "id": "M-125",
+  "file": "s3_pc-1366_light_pc-1366-light_032_town-duck-pond.png",
+  "spot": "town-duck-pond",
+  "where": "pc-1366 light, city, duck pond bench",
+  "what": "the grandma's speech bubble is cut off by the house wall on the left: only \"…he ducks is the best part of my day.\" shows",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "bubble cut by house wall, grandma's head also covers text"
+ },
+ {
+  "id": "M-126",
+  "file": "s3_pc-1366_dark_pc-1366-dark_003_phone-jobs.png",
+  "spot": "phone-jobs",
+  "where": "pc-1366 dark, city, phone (Rosie's chat)",
+  "what": "the chat header (back button, Rosie's name, coin chip) is scrolled half out of view; cut circles peek out under the phone's status bar",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "cut header circles peek under status bar"
+ },
+ {
+  "id": "M-127",
+  "file": "s3_pc-1366_dark_pc-1366-dark_020_party-invitation.png",
+  "spot": "party-invitation",
+  "where": "pc-1366 dark, city park, top centre",
+  "what": "the white \"🎉 A party!\" invitation card sits on top of the yellow \"Party!\" toast; the toast's text is cut off after \"Go check it\"",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "dialog covers toast, text cut after \"Go check it\""
+ },
+ {
+  "id": "M-128",
+  "file": "s3_pc-1366_dark_pc-1366-dark_025_photo-pose-card.png",
+  "spot": "photo-pose-card",
+  "where": "pc-1366, city (photo job, left HUD)",
+  "what": "the dashed white photo frame is drawn straight across the corner map, the job-text box and the notepad",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "dashed frame runs through map, job box and notepad"
+ },
+ {
+  "id": "M-129",
+  "file": "s3_pc-1366_dark_pc-1366-dark_026_photo-shoot.png",
+  "spot": "photo-shoot",
+  "where": "pc-1366, city (the fountain)",
+  "what": "Mochi, Waffles and Clover stand between the camera and the family, hiding the family's legs and the fountain base; Mochi and Waffles are cut by the bottom edge and Clover's name label sits on Zoe",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "pets' backs block the family and fountain base, Mochi/Waffles cut at the bottom, Clover tag sits on Zoe"
+ },
+ {
+  "id": "M-130",
+  "file": "s3_pc-1366_dark_pc-1366-dark_026_photo-shoot.png",
+  "spot": "photo-shoot",
+  "where": "pc-1366, city (left HUD)",
+  "what": "the dashed photo frame runs through the corner map, job text and notepad",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "dashed frame line clearly crosses the corner map, job pill and notepad"
+ },
+ {
+  "id": "M-131",
+  "file": "s3_pc-1366_dark_pc-1366-dark_027_photo-result.png",
+  "spot": "photo-result",
+  "where": "pc-1366, city (result card)",
+  "what": "the result photo shows the three pets' backs in front of the family (the photobomb from the shoot)",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "result thumbnail shows the three pets' backs and tags in front of the family"
+ },
+ {
+  "id": "M-132",
+  "file": "s3_pc-1366_dark_pc-1366-dark_027_photo-result.png",
+  "spot": "photo-result",
+  "where": "pc-1366, city (left HUD)",
+  "what": "the dashed photo frame runs through the corner map, job text and notepad",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "same dashed line through map, job pill and notepad on the result screen"
+ },
+ {
+  "id": "M-133",
+  "file": "s3_pc-1366_dark_pc-1366-dark_030_town-pet-show-stage.png",
+  "spot": "town-pet-show-stage",
+  "where": "pc-1366, city (bench in front of the stage)",
+  "what": "a flat red board floats at shoulder height beside the bench, touching nothing",
+  "bad": "2",
+  "verdict": "DROP",
+  "why": "it is a red park butterfly mid-flutter (flat cartoon wings), gone in the light shot of the same view"
+ },
+ {
+  "id": "M-134",
+  "file": "s3_pc-1366_dark_pc-1366-dark_032_town-duck-pond.png",
+  "spot": "town-duck-pond",
+  "where": "pc-1366, city (grandma on the pond bench)",
+  "what": "her speech bubble is cut: the first word is hidden behind the building edge at left and her hair covers \"the\"",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "bubble reads \"he ducks is … e best part\": wall hides the first letters, hair hides \"th\""
+ },
+ {
+  "id": "M-135",
+  "file": "s3_pc-1366_dark_pc-1366-dark_034_town-east-shops.png",
+  "spot": "town-east-shops",
+  "where": "pc-1366, city (grandma at the Toy Store door)",
+  "what": "her bun hides the word \"of\" in \"Toys were made of wood in my day.\"",
+  "bad": "1",
+  "verdict": "KEEP",
+  "why": "bun covers \"of\": \"Toys were made [bun] wood in my day\""
+ },
+ {
+  "id": "M-136",
+  "file": "s3b_ipad-landscape_dark_christmas-night-dark_001_holiday-christmas-tree-night.png",
+  "spot": "holiday-christmas-tree-night",
+  "where": "ipad-landscape, city (Flower Corner gate)",
+  "what": "the same thick trunk and crown at the gate fill the left quarter and the top of the view",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "black trunk fills the left quarter and a dark crown covers the top of the view"
+ },
+ {
+  "id": "M-137",
+  "file": "s3b_ipad-landscape_dark_christmas-night-dark_002_holiday-christmas-lane-night.png",
+  "spot": "holiday-christmas-lane-night",
+  "where": "ipad-landscape, city (corner map)",
+  "what": "the pink arrow sits on the map's left border, half cut off",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "arrow is whole, it just sits at the map's left edge (player at the lane's end), not cut"
+ },
+ {
+  "id": "M-138",
+  "file": "s3b_ipad-landscape_dark_halloween-night-dark_005_halloween-clothes-costumes.png",
+  "spot": "halloween-clothes-costumes",
+  "where": "ipad-landscape dark, Clothing store card",
+  "what": "a small ⬇ scroll chip (about 34 px, below fingertip size) hangs half off the card's right edge",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "that is the designed non-tappable scroll hint, meant to sit half over the card edge"
+ },
+ {
+  "id": "M-139",
+  "file": "kit-teacher-class1-classroom.png",
+  "spot": "kit-teacher-class1-classroom",
+  "where": "ipad-landscape light, Math classroom",
+  "what": "the \"Jack\" name label sits on top of the \"Nora\" label, Nora's name is mostly hidden",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "Jack tag covers Nora tag, only the bottom of \"Nora\" shows"
+ },
+ {
+  "id": "M-140",
+  "file": "kit-n8-designer-designer-room-1.png",
+  "spot": "kit-n8-designer-designer-room-1",
+  "where": "ipad-landscape light, designer room 1",
+  "what": "the \"+20 🪙\" coin pop-up is drawn over the \"New client!\" message card and hides two lines of its text",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "+20 coin pop covers parts of three lines of the New client card"
+ },
+ {
+  "id": "M-141",
+  "file": "kit-n8-designer-designer-room-2.png",
+  "spot": "kit-n8-designer-designer-room-2",
+  "where": "ipad-landscape light, designer room 2",
+  "what": "the big \"Knock knock!\" banner and its door icon lie across the bottom of the \"New client!\" message card, hiding its last line and a half",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "Knock knock banner and door cover the card's last line and \"Tap to read it\""
+ },
+ {
+  "id": "M-142",
+  "file": "kit-n3-friends-friends-in-view-1.png",
+  "spot": "kit-n3-friends-friends-in-view-1",
+  "where": "ipad-landscape, pavement by the Clothes Shop, friends gathered",
+  "what": "Finn stands hidden behind Luna and the \"Luna\" name tag covers the \"Finn\" tag; Rosie is so close that her body runs off the bottom edge under the run/jump buttons",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "Finn and his tag hidden behind Luna/Luna tag; Rosie runs off the bottom under the buttons"
+ },
+ {
+  "id": "M-143",
+  "file": "kit-n3-friends-friends-in-view-1.png",
+  "spot": "kit-n3-friends-friends-in-view-1",
+  "where": "ipad-landscape, left third of the view",
+  "what": "a ghost drifts right into the camera: a big grey blob with a pink cheek covers the left third of the scene and half of Luna",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "a ghost right in the camera covers the left third and part of Luna"
+ },
+ {
+  "id": "M-144",
+  "file": "kit-n3-friends-friends-after-turn-1.png",
+  "spot": "kit-n3-friends-friends-after-turn-1",
+  "where": "ipad-landscape, middle, friends",
+  "what": "Theo stands hidden behind Rosie and the \"Rosie\" tag covers the \"Theo\" tag",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "Rosie tag covers Theo tag, Theo not visible behind her"
+ },
+ {
+  "id": "M-145",
+  "file": "kit-n3-friends-friends-in-view-2.png",
+  "spot": "kit-n3-friends-friends-in-view-2",
+  "where": "ipad-landscape, middle, friends behind the fence",
+  "what": "Theo stands hidden behind Rosie and the \"Rosie\" tag sits on top of the \"Theo\" tag",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "same Rosie-over-Theo tag overlap, only the bottom of \"Theo\" shows"
+ },
+ {
+  "id": "M-146",
+  "file": "kit-n35-notepad-notepad-off.png",
+  "spot": "kit-n35-notepad-notepad-off",
+  "where": "ipad-landscape, Settings card",
+  "what": "the card runs off the bottom of the screen: the last row \"Another iPad or phone / Move my game\" is cut in half at the screen edge",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "card's rounded bottom ends above the screen edge; the half row is scrollable content under the ⬇ hint, by design"
+ },
+ {
+  "id": "M-147",
+  "file": "kit-n9-food-food-truck.png",
+  "spot": "kit-n9-food-food-truck",
+  "where": "ipad-landscape, park, food truck",
+  "what": "long flat yellow bars stick out of both wheels onto the grass at odd angles (two from the right wheel, one from the left), stray or misplaced parts",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "long yellow slabs jut from both wheel hubs onto the grass, look like stray geometry (also in other shots)"
+ },
+ {
+  "id": "M-148",
+  "file": "kit-n15-A-one-clock-A.png",
+  "spot": "kit-n15-A-one-clock-A",
+  "where": "ipad-landscape, Flower Corner, grass left of the tree",
+  "what": "two flat blue bird shapes lie spread flat on the grass like squashed stickers",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "these are the flower-bed butterflies hovering (flat cartoon wings), not squashed birds"
+ },
+ {
+  "id": "M-149",
+  "file": "kit-n15-A-sleep-screen.png",
+  "spot": "kit-n15-A-sleep-screen",
+  "where": "ipad-landscape, in bed at home, middle of the screen",
+  "what": "the sleep card (\"22:10 · Sun\", \"Sleeping until 7:00\", \"Wake up\" button) is almost fully transparent, its text unreadable over the floor; the cat Mochi's tag and crown sit on top of it",
+  "bad": "2",
+  "verdict": "DROP",
+  "why": "caught during the sleep screen's 0.8 s fade-in; it ends opaque over a dark night overlay"
+ },
+ {
+  "id": "M-150",
+  "file": "kit-n20-A-valentine-fountain.png",
+  "spot": "kit-n20-A-valentine-fountain",
+  "where": "ipad-landscape, Flower Corner, grass left of the heart post",
+  "what": "a flat blue bird shape lies spread flat on the grass",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "a hovering butterfly, same as M-148"
+ },
+ {
+  "id": "M-151",
+  "file": "kit-n20-A-easter-bunny.png",
+  "spot": "kit-n20-A-easter-bunny",
+  "where": "ipad-landscape, Flower Corner, under the bunny",
+  "what": "a flat blue bird shape lies spread flat on the grass next to the egg",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "a hovering butterfly, same as M-148"
+ },
+ {
+  "id": "M-152",
+  "file": "kit-n20-A-december-tree-santa.png",
+  "spot": "kit-n20-A-december-tree-santa",
+  "where": "ipad-landscape, note at the top right",
+  "what": "the bunny's \"Happy Easter! I hid 25 eggs…\" note is still showing in the December scene with the tree and Santa",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "a 4-second toast from talking to the bunny, left over from the test's instant date jump; not a real-play state"
+ },
+ {
+  "id": "M-153",
+  "file": "kit-n19-halloween-oct1-day.png",
+  "spot": "kit-n19-halloween-oct1-day",
+  "where": "ipad-landscape, Flower Corner, grass by the tree and the bench",
+  "what": "two flat blue bird shapes lie spread flat on the grass",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "two hovering butterflies, same as M-148"
+ },
+ {
+  "id": "M-154",
+  "file": "kit-n19-halloween-oct31-night.png",
+  "spot": "kit-n19-halloween-oct31-night",
+  "where": "ipad-landscape, Flower Corner at night",
+  "what": "the five little path lamps are plain black boxes on posts with no glow while the street lamps and windows shine, so the path reads as unlit",
+  "bad": "1",
+  "verdict": "DROP",
+  "why": "unlit little posts read as dark decor at night; too subtle for a child or parent to flag"
+ },
+ {
+  "id": "M-155",
+  "file": "kit-n19-spooky-path-scare.png",
+  "spot": "kit-n19-spooky-path-scare",
+  "where": "ipad-landscape, top edge",
+  "what": "the \"BOO!\" scare text and its ghost icon are pushed above the top edge, only their lower halves show, behind the coin/apple/weather chips",
+  "bad": "2",
+  "verdict": "KEEP",
+  "why": "BOO! text and ghost icon pushed off the top edge, only lower halves show behind the HUD chips"
+ }
+]

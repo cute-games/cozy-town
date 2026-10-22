@@ -1,0 +1,3 @@
+pv_ipad-landscape_dark_pv-r21d-ipad-landscape_004_pond-bubble-r21d-ipad-landscape.png | ipad-landscape dark, duck pond | the two ducks sit stacked on each other (white duck's body overlaps the yellow duck, heads in a pile) | 1
+pv_ipad-landscape_dark_pv-r21d-ipad-landscape_003_photo-chat-r21d-ipad-landscape.png | ipad-landscape dark, behind the phone, right side of the park | two townsfolk at the right edge stand overlapping each other (one in front of the other, bodies merged) | 1
+count: 2

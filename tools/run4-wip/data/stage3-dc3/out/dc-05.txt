@@ -1,0 +1,26 @@
+M-105 | DROP | camera parked right behind a bench sitter; the photographer's viewpoint, not a game bug
+M-106 | DROP | HUD covering a bench at the frame edge is just framing, not a bug
+M-107 | KEEP | both front stones have dark outline slivers that come loose from their edges, with gaps showing
+M-108 | DROP | HUD over the sign comes from the framing; a step or turn shows the whole sign
+M-109 | KEEP | from the spot where you shop, the ceiling lamp shows as floating dark wedges and a yellow blob behind 💬/📱
+M-110 | DROP | the figure is a shopper looking at the shelf with her back to us (the keeper is off-screen); normal
+M-111 | KEEP | same lamp: dark wedges and a yellow blob behind 💬/📱
+M-112 | DROP | the rope runs up into the plain ceiling (the pale top area is the ceiling), so it is not hanging in mid-air
+M-113 | KEEP | grey joystick arc shows under the phone's bottom edge
+M-114 | KEEP | joystick arc shows under the phone
+M-115 | KEEP | half-cut job card text shows above the Rosie header that stays at the top
+M-116 | KEEP | joystick arc shows under the phone
+M-117 | KEEP | joystick arc shows under the phone
+M-118 | DROP | normal scroll cut-off; the line is still readable and the cut card shows there is more
+M-119 | KEEP | joystick arc shows under the phone
+M-120 | KEEP | joystick arc shows under the phone
+M-121 | KEEP | joystick arc shows under the phone
+M-122 | KEEP | joystick arc shows under the phone
+M-123 | DROP | normal scroll cut-off; "after 18:00." is readable and the corner only trims a sliver of the "a"
+M-124 | KEEP | joystick arc shows under the phone
+M-125 | KEEP | "Duck Pond" text really runs over Finn's light-blue tag
+M-126 | DROP | labels cut off at the edge of a map you can drag; normal
+M-127 | KEEP | ⬇️ button sits on the lower-left of the ⬆️ jump button
+M-128 | KEEP | panel corner hides about half of the 🎒 button
+M-129 | KEEP | ⬇️ button sits on the ⬆️ jump button
+M-130 | KEEP | panel corner hides about half of the 🎒 button

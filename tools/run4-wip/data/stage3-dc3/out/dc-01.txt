@@ -1,0 +1,26 @@
+M-001 | DROP | the bag is a pop-up over a dimmed screen, so covering the dimmed chip behind it is normal
+M-002 | DROP | same: Settings pop-up over the dimmed screen, normal for the chip behind to be covered
+M-003 | DROP | same: Market pop-up over the dimmed screen, normal for the chip behind to be covered
+M-004 | DROP | same: Pet shop pop-up over the dimmed screen, normal for the chip behind to be covered
+M-005 | KEEP | a thin dark pole line really runs up through the bus picture on the round sign, above the card
+M-006 | KEEP | pole line through the bus picture clearly visible, ending in a little hook above the bus
+M-007 | KEEP | same pole line through the bus picture
+M-008 | KEEP | same pole line through the bus picture
+M-009 | KEEP | the two button borders meet with zero gap, so yes and no are fused together
+M-010 | KEEP | pole line through the bus picture, right under the card
+M-011 | KEEP | the two button borders meet with zero gap
+M-012 | KEEP | pole line through the bus picture, right under the card
+M-013 | KEEP | the 👉 under the door points right at empty space, not at the chair or the arrow
+M-014 | KEEP | the second line touches the 📸 with no gap and ends about 8px from the right border
+M-015 | KEEP | the card's top-right corner covers Mia's left arm, side and cheek
+M-016 | KEEP | the dashed top edge really crosses the bottoms of the 💬📱🎒 buttons (but the corner next to ⚙️ is not hidden)
+M-017 | KEEP | Mia's waving hand vanishes into Leo's head and Leo's into Zoe's hair
+M-018 | KEEP | the frame edge crosses the bottoms of the top buttons and runs through the joystick ring (corner next to ⚙️ not hidden)
+M-019 | DROP | the truck is only cut off by the screen edge, so it is the camera placement
+M-020 | KEEP | the board runs behind the right pillar and the "w" touches it
+M-021 | KEEP | a faint 1px dashed line really runs down the right window glass near the frame
+M-022 | DROP | the truck is only cut off by the screen edge, so it is the camera placement
+M-023 | KEEP | the same dashed line in the same spot (fainter), so it is not rain
+M-024 | DROP | the truck is only cut off by the screen edge, so it is the camera placement
+M-025 | KEEP | "Show" runs right into the right pillar with no space
+M-026 | KEEP | the path stops at the posts and a tree trunk stands almost dead centre behind the gateway

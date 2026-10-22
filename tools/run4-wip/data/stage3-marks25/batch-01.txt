@@ -1,0 +1,4 @@
+pv_ipad-landscape_dark_pv-r25d-ipad-landscape_001_pond-bubble-upright-r25d-ipad-landscape.png | ipad-landscape, dark theme, duck pond | the notepad card stays a bright white paper with faint grey "Write here!" text in the dark theme (light-only, low contrast text) | 1
+pv_iphone-portrait_dark_pv-r25d-iphone-portrait_002_flower-bubble-r25d-iphone-portrait.png | iphone-portrait, dark theme, Flower Corner gate | the notepad card is still bright white with faint grey text in the dark theme and the corner map and notepad hide the Flower Corner sign | 1
+pv_ipad-landscape_light_n8-designer_001_designer-room-1.png | ipad-landscape, light theme, designer room 1 | a faint "Knock knock!" text sits see-through over the sofa and is half hidden, looks like a leftover | 1
+count: 3

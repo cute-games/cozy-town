@@ -1,0 +1,5 @@
+M-011 | KEEP | counts really tiny and dim grey on phone
+M-012 | KEEP | big dark arc clearly visible on stand front
+M-013 | DROP | loose pastel eggs are intended Easter decor
+M-014 | DROP | glow touches tier tip, reads as tree light
+M-015 | KEEP | no town at all, 3D view clearly broken

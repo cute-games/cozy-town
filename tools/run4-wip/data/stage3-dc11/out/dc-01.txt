@@ -1,0 +1,6 @@
+M-001 | DROP | only the shot angle; ducks facing you after feeding is natural, faces look fine
+M-002 | KEEP | map and notepad slivers clearly stick out beside the card, HUD not dimmed
+M-003 | DROP | caught mid-fade (0.2 s): toast still 8px low, other dark toasts are solid navy
+M-004 | DROP | shot framing only; truck cut by screen edge, nothing broken in the game
+M-005 | KEEP | red dashed smear really there, same spot in the light shot too (static)
+M-006 | DROP | as M-001: only the shot angle, ducks and faces look fine

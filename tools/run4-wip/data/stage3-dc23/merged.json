@@ -1,0 +1,178 @@
+[
+ {
+  "id": "M-001",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_019_town-ducks-close.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-p23/shots/s3_ipad-landscape_light_ipad-landscape-light_019_town-ducks-close.png",
+  "where": "ipad-landscape light, duck pond, camera at the pond's east side",
+  "what": "a big dark purple box shape (looks like a bench or person seen from far too close) fills the lower right edge and covers part of the blue building and a tree, camera almost inside an object",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "big dark purple box fills lower right, camera is inside an object",
+  "spot": "town-ducks-close"
+ },
+ {
+  "id": "M-002",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_004_town-duck-pond.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-p23/shots/s3_ipad-landscape_light_ipad-landscape-light_004_town-duck-pond.png",
+  "where": "ipad-landscape light, duck pond, grandma on the bench",
+  "what": "the cattail reeds grow right through and in front of the grandma's body, looks poked through",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "cattails overlap grandma's body and look poked through her",
+  "spot": "town-duck-pond"
+ },
+ {
+  "id": "M-003",
+  "file": "s3b_ipad-landscape_dark_christmas-night-dark_001_holiday-christmas-tree-night.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-p23b/shots/s3b_ipad-landscape_dark_christmas-night-dark_001_holiday-christmas-tree-night.png",
+  "where": "ipad-landscape, dark theme, Christmas tree at the Flower Corner at night",
+  "what": "bright white glare blobs (light bloom) left of and right of the tree's middle wash out the tree edge and the windows behind; looks like a stray light flare, not a bulb",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "big white glare blobs beside tree look like stray flares, not bulbs",
+  "spot": "holiday-christmas-tree-night"
+ },
+ {
+  "id": "M-004",
+  "file": "kit23-n25-ipad-landscape-photo-shoot-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-kit23/shots/kit23-n25-ipad-landscape-photo-shoot-ipad-landscape.png",
+  "where": "ipad-landscape, photo shoot beside the food truck (rain)",
+  "what": "a small grey round ball hangs in the air by the truck's awning edge, touching nothing (looks floating)",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "grey ball hangs in the air by the awning edge, touching nothing",
+  "spot": "kit23-n25-ipad-landscape-photo-shoot-ipad-landscape"
+ },
+ {
+  "id": "M-005",
+  "file": "kit23-n22-school-school-balloons.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-kit23/shots/kit23-n22-school-school-balloons.png",
+  "where": "ipad-landscape, in front of the school",
+  "what": "a big dark-outlined brown slab fills the lower left (camera very close to some object, hides the pavement and part of the school front)",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "big brown slab with a dark outline covers the lower left and hides the pavement and school front",
+  "spot": "kit23-n22-school-school-balloons"
+ },
+ {
+  "id": "M-006",
+  "file": "kit23-n8-designer-designer-room-2.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-kit23/shots/kit23-n8-designer-designer-room-2.png",
+  "where": "ipad-landscape, designer job room 2 (forest living room)",
+  "what": "the white fridge stands inside/on the pink armchair, the two pieces overlap and poke through each other",
+  "bad": "2",
+  "verdict": "KEEP",
+  "dc": "white fridge sits inside the pink armchair, the two overlap",
+  "spot": "kit23-n8-designer-designer-room-2"
+ },
+ {
+  "id": "M-007",
+  "file": "kit23-n9-food-food-truck.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-kit23/shots/kit23-n9-food-food-truck.png",
+  "where": "ipad-landscape, food truck in rain",
+  "what": "a small grey round ball sits on the truck's left wall above the wheel, like a floating or stuck-on object",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "grey ball sticks to the truck wall, looks stuck on",
+  "spot": "kit23-n9-food-food-truck"
+ },
+ {
+  "id": "M-008",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_039_town-duck-pond.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-p23/shots/s3_iphone-portrait_dark_iphone-portrait-dark_039_town-duck-pond.png",
+  "where": "iphone-portrait, duck pond",
+  "what": "a speech bubble (\"...s the ...ay.\") is half hidden behind the corner map",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "speech bubble half hidden behind the corner map",
+  "spot": "town-duck-pond"
+ },
+ {
+  "id": "M-009",
+  "file": "s3_ipad-landscape_light_ipad-landscape-light_026_inside-toys.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-p23/shots/s3_ipad-landscape_light_ipad-landscape-light_026_inside-toys.png",
+  "where": "ipad-landscape light, toy store",
+  "what": "shopper on the right is cut off by the screen edge and half hidden behind the castle and Clover button",
+  "bad": "1",
+  "verdict": "DROP",
+  "dc": "shopper only cropped by the camera edge, normal in a shop view",
+  "spot": "inside-toys"
+ },
+ {
+  "id": "M-010",
+  "file": "s3_pc-1366_dark_pc-1366-dark_045_inside-pets.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-p23/shots/s3_pc-1366_dark_pc-1366-dark_045_inside-pets.png",
+  "where": "pc-1366 dark, inside the pets",
+  "what": "a person stands right against the camera at the left edge, cut off by the screen and overlapping the cat tree",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "person cut off at left edge, arm touches the cat tree",
+  "spot": "inside-pets"
+ },
+ {
+  "id": "M-011",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_046_inside-flowers.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-p23/shots/s3_iphone-portrait_light_iphone-portrait-light_046_inside-flowers.png",
+  "where": "iphone-portrait light, inside the flowers",
+  "what": "two people stand overlapping each other (dark-haired and white-haired one merge into one blob)",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "two people overlap and read as one blob",
+  "spot": "inside-flowers"
+ },
+ {
+  "id": "M-012",
+  "file": "kit23-n24-grandmas-A-grandmas-pond.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-kit23/shots/kit23-n24-grandmas-A-grandmas-pond.png",
+  "where": "ipad-landscape light, grandmas at the pond",
+  "what": "the two grandmas on the bench overlap so one is half inside the other (grey bun back and a second face merged); cattails in front",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "the two grandmas merge into one grey blob on the bench",
+  "spot": "kit23-n24-grandmas-A-grandmas-pond"
+ },
+ {
+  "id": "M-013",
+  "file": "kit23-n3-friends-friends-after-turn-2.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-kit23/shots/kit23-n3-friends-friends-after-turn-2.png",
+  "where": "ipad-landscape light, friends after turn 2",
+  "what": "Luna and Theo are partly hidden behind Finn and Rosie, not clearly in the loose arc",
+  "bad": "1",
+  "verdict": "DROP",
+  "dc": "Luna and Theo have clear faces and names, only slightly overlapped",
+  "spot": "kit23-n3-friends-friends-after-turn-2"
+ },
+ {
+  "id": "M-014",
+  "file": "kit23-n3-friends-friends-in-view-2.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-kit23/shots/kit23-n3-friends-friends-in-view-2.png",
+  "where": "ipad-landscape light, friends in view 2",
+  "what": "Rosie stands very close to the camera, filling the right side of the screen",
+  "bad": "1",
+  "verdict": "DROP",
+  "dc": "Rosie is close because \"Talk to Rosie\" is offered; the screen is still readable",
+  "spot": "kit23-n3-friends-friends-in-view-2"
+ },
+ {
+  "id": "M-015",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_050_bag.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-p23/shots/s3_ipad-landscape_dark_ipad-landscape-dark_050_bag.png",
+  "where": "ipad-landscape dark, the bag, Friends and Pets heart rows",
+  "what": "the empty hearts (Rosie's five, the grey ones of Waffles and Mochi) are dull grey-purple on the dark card and hard to tell from the card, so the heart count is hard to read",
+  "bad": "1",
+  "verdict": "DROP",
+  "dc": "empty hearts are visible and clearly different from the pink filled ones",
+  "spot": "bag"
+ },
+ {
+  "id": "M-016",
+  "file": "s3_iphone-portrait_dark_iphone-portrait-dark_038_town-flower-corner.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-p23/shots/s3_iphone-portrait_dark_iphone-portrait-dark_038_town-flower-corner.png",
+  "where": "iphone-portrait, Flower Corner gate",
+  "what": "the grandma's speech bubble (\"...! Such a pretty garden.\") is cut off at the left screen edge and half hidden behind the notepad card",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "bubble text cut at left edge and half hidden behind notepad card",
+  "spot": "town-flower-corner"
+ }
+]

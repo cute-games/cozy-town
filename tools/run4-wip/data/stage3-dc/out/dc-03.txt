@@ -1,0 +1,32 @@
+M-065 | DROP | middle unit is the same sparse ball row with a bare lower shelf on PC too; content choice, not a portrait glitch
+M-066 | KEEP | Me/+/− buttons sit on the map: "Duck Po" cut, "Tree Park" split around the zoom buttons
+M-067 | KEEP | card covers hunger bar, clock, chat, phone; backpack half-hidden at the card edge, no scrim (minor)
+M-068 | KEEP | ~30 px ⬇️ scroll button straddles the card edge and overlaps the mint ⬆️ button
+M-069 | KEEP | yellow popper panel and pink "…eck it" panel of a second card visible behind the invitation; two cards overlapping
+M-070 | KEEP | hunger bar track runs under the card's left edge, chat button hidden; minor overlay-on-HUD
+M-071 | KEEP | same: hunger bar clipped at card edge, chat hidden; minor
+M-072 | KEEP | same: hunger bar clipped at card edge, chat hidden; minor
+M-073 | KEEP | dashed viewfinder clearly strikes through 900 chip, hunger bar, 12:00 Sun, round buttons, corner map and notepad
+M-074 | KEEP | "Tap each (0/3" hint cut by card edge, Snap button shows only "nap!"
+M-075 | KEEP | dashed frame runs through all top-bar chips and the four round buttons
+M-076 | KEEP | "📸 Mia" tab and card top are cut off at the screen's top edge
+M-077 | DROP | pets in front of the family is normal group-photo composition, not a glitch
+M-078 | KEEP | dashed frame still drawn around the result card, striking through the 1020 chip
+M-079 | KEEP | foreground tree trunk stands on the pavement exactly over the gate gap, hiding it and the first stepping stones
+M-080 | KEEP | bubble text about 7 px, unreadable; the grandma's hair also overlaps a word
+M-081 | DROP | it is the room's ceiling lamp (white shade + glowing bulb from shell()), not a cloud; same in every shop
+M-082 | DROP | same ceiling lamp, intended fixture
+M-083 | DROP | same ceiling lamp, intended fixture
+M-084 | KEEP | phone frame cuts the hunger bar; clock chip and chat button tops peek above the phone (minor)
+M-085 | KEEP | same phone-over-HUD overlap visible
+M-086 | KEEP | same phone-over-HUD overlap visible
+M-087 | KEEP | job grid scrolled: first-row icons cut under the status bar, title/back button out of view
+M-088 | KEEP | same phone-over-HUD overlap visible
+M-089 | KEEP | same phone-over-HUD overlap visible
+M-090 | KEEP | same phone-over-HUD overlap visible
+M-091 | KEEP | same phone-over-HUD overlap visible
+M-092 | KEEP | same phone-over-HUD overlap visible
+M-093 | KEEP | same phone-over-HUD overlap visible
+M-094 | KEEP | "Duck Po" cut, "Tr…rk" split by zoom buttons, Toy Store teddy marker half under the Me button
+M-095 | KEEP | hint bar lies over map content: marker tops peek out above and below it
+M-096 | KEEP | bag card covers the top bar; backpack button half-hidden at the card edge, no scrim (minor)

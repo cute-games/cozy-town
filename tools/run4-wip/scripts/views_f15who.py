@@ -1,0 +1,9 @@
+# Run 4 finish, pass 18 M-004: who stands at the camera's left in the photographer's mailbox-menu view on an upright phone (the house-paint spot)?
+WALK = "for(const w of WALKERS)if(Math.hypot(w.x-P.x,w.z-P.z)<9){w.x=WP[w.home][0];w.z=WP[w.home][1];w.node=w.home;w.prev=-1;}for(const q of PET_ACTORS){const f=P.yaw;q.x=P.x+Math.sin(f)*2.5;q.z=P.z+Math.cos(f)*2.5;}for(const c of CARS)if(Math.hypot(c.x-P.x,c.z-P.z)<16){c.d+=c.total/2;carPlace(c);}"
+def look(x, z, tx, tz, pitch=0.0): return f"P.x={x};P.z={z};P.yaw=Math.atan2(-({tx}-P.x),-({tz}-P.z));P.pitch={pitch};"
+WHO = r"""(()=>{const out=[],cx=camera.position.x,cz=camera.position.z,fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw);const f=(n,x,z,ex)=>{const d=Math.hypot(x-cx,z-cz);if(d>4)return;const a=Math.atan2((x-cx)*fz-(z-cz)*fx,(x-cx)*fx+(z-cz)*fz)*180/Math.PI;out.push(n+' '+d.toFixed(2)+' m, '+Math.round(a)+' deg'+(ex?' '+ex:''));};
+  for(const a of FRIEND_ACTORS)if(a.loc===CUR.id)f('friend '+(a.d&&a.d.name)+' ('+a.mode+')',a.x,a.z);for(const w of WALKERS)f('walker '+(w.state||'')+' vis '+(w.g&&w.g.visible),w.x,w.z);
+  for(const q of GRAN.g)f('grandma '+q.i+' vis '+(q.p&&q.p.root.visible),q.x+(q.ox||0),q.z+(q.oz||0),'(plan place '+q.x.toFixed(1)+','+q.z.toFixed(1)+')');for(const q of PET_ACTORS)if(q.loc===CUR.id)f('pet',q.x,q.z);
+  if(typeof MP!=='undefined')for(const a of MP.peers.values())if(a.av)f('player '+a.nm,a.x,a.z);return 'camera '+cx.toFixed(2)+','+cz.toFixed(2)+' yaw '+P.yaw.toFixed(2)+(out.length?'\n'+out.join('\n'):' (nobody within 4 m)');})()"""
+VIEWS = [('house-paint', "closePanel();__goto('city');" + look(-10, 4, -22, 16, .05) + WALK + "openHousePaint();"), ('house-paint-who', WHO),
+         ('big-house', "closePanel();openBigHouse();"), ('big-house-who', WHO), ('mailbox-menu', "closePanel();hpMailMenu();"), ('mailbox-menu-who', WHO)]

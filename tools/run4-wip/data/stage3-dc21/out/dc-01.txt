@@ -1,0 +1,3 @@
+M-001 | KEEP | palette button about 28 px, sits on the map's lower-right edge
+M-002 | KEEP | white duck sits on top of the yellow duck, heads piled
+M-003 | KEEP | two townsfolk at the right edge overlap, bodies merged

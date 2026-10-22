@@ -1,0 +1,146 @@
+[
+ {
+  "id": "M-001",
+  "file": "pv_ipad-landscape_light_pv-r20-ipad-landscape_004_pond-bubble-r20-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r20/shots/pv_ipad-landscape_light_pv-r20-ipad-landscape_004_pond-bubble-r20-ipad-landscape.png",
+  "where": "ipad-landscape, light, duck pond",
+  "what": "the speech bubble's top edge runs under the clock chip (bubble touches/overlaps the chip)",
+  "bad": "1"
+ },
+ {
+  "id": "M-002",
+  "file": "pv_ipad-landscape_dark_pv-r20d-ipad-landscape_005_toys-shopper-r20d-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r20d/shots/pv_ipad-landscape_dark_pv-r20d-ipad-landscape_005_toys-shopper-r20d-ipad-landscape.png",
+  "where": "ipad-landscape, dark theme, Toy Store",
+  "what": "a shopper is right at the camera at the right edge, big and cut off by the screen edge and partly under the \"Say hi\" button",
+  "bad": "2"
+ },
+ {
+  "id": "M-003",
+  "file": "pv_iphone-landscape_light_pv-r20-iphone-landscape_002_photo-side-r20-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r20/shots/pv_iphone-landscape_light_pv-r20-iphone-landscape_002_photo-side-r20-iphone-landscape.png",
+  "where": "iphone-landscape, light, photo shoot from the side",
+  "what": "a second pill is half hidden behind the \"Pose: Mia\" pill at the right edge (only an \"e\" shows)",
+  "bad": "1"
+ },
+ {
+  "id": "M-004",
+  "file": "pv_ipad-landscape_dark_pv-r20d-ipad-landscape_004_pond-bubble-r20d-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r20d/shots/pv_ipad-landscape_dark_pv-r20d-ipad-landscape_004_pond-bubble-r20d-ipad-landscape.png",
+  "where": "ipad-landscape, dark theme, duck pond",
+  "what": "the notepad stays a bright white/cream paper card in the dark theme (light-only) next to the dark chips",
+  "bad": "1"
+ },
+ {
+  "id": "M-005",
+  "file": "pv_iphone-landscape_light_pv-r20-iphone-landscape_002_photo-side-r20-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r20/shots/pv_iphone-landscape_light_pv-r20-iphone-landscape_002_photo-side-r20-iphone-landscape.png",
+  "where": "iphone-landscape, photo shoot from beside Mia",
+  "what": "the \"Pose: Mia\" pill has another pill peeking out behind it (a stray \"e\" at the right edge) and the big yellow pose button crowds the top buttons and the pill",
+  "bad": "1"
+ },
+ {
+  "id": "M-006",
+  "file": "pv_ipad-landscape_light_pv-r20-ipad-landscape_004_pond-bubble-r20-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r20/shots/pv_ipad-landscape_light_pv-r20-ipad-landscape_004_pond-bubble-r20-ipad-landscape.png",
+  "where": "ipad-landscape, duck pond",
+  "what": "the two-line speech bubble overlaps the clock chip at the top left of it, so the chip and bubble sit on top of each other",
+  "bad": "1"
+ },
+ {
+  "id": "M-007",
+  "file": "pv_ipad-landscape_dark_pv-r20d-ipad-landscape_004_pond-bubble-r20d-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r20d/shots/pv_ipad-landscape_dark_pv-r20d-ipad-landscape_004_pond-bubble-r20d-ipad-landscape.png",
+  "where": "ipad-landscape dark, duck pond",
+  "what": "the two-line speech bubble overlaps the clock chip at the top left of it",
+  "bad": "1"
+ },
+ {
+  "id": "M-008",
+  "file": "pv_ipad-landscape_dark_pv-r20d-ipad-landscape_005_toys-shopper-r20d-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r20d/shots/pv_ipad-landscape_dark_pv-r20d-ipad-landscape_005_toys-shopper-r20d-ipad-landscape.png",
+  "where": "ipad-landscape dark, Toy Store",
+  "what": "the shopper stands right at the camera on the right edge, half hidden under the \"Say hi\" and wave buttons under the thumb",
+  "bad": "1"
+ },
+ {
+  "id": "M-009",
+  "file": "pv_ipad-landscape_dark_pv-r20d-ipad-landscape_005_toys-shopper-r20d-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r20d/shots/pv_ipad-landscape_dark_pv-r20d-ipad-landscape_005_toys-shopper-r20d-ipad-landscape.png",
+  "where": "ipad-landscape, dark, inside the Toy Store",
+  "what": "the shopper is right at the camera on the right edge, head cut by the screen edge and half behind the Say hi button",
+  "bad": "1"
+ },
+ {
+  "id": "M-010",
+  "file": "pv_ipad-landscape_dark_pv-r20d-ipad-landscape_005_toys-shopper-r20d-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r20d/shots/pv_ipad-landscape_dark_pv-r20d-ipad-landscape_005_toys-shopper-r20d-ipad-landscape.png",
+  "where": "ipad-landscape dark, inside the Toy Store",
+  "what": "the shopper stands right at the camera on the right edge (face and torso big, cut off by the screen edge, partly behind the Say hi button), not \"beside you\"",
+  "bad": "1"
+ },
+ {
+  "id": "M-011",
+  "file": "pv_iphone-landscape_light_pv-r20-iphone-landscape_002_photo-side-r20-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r20/shots/pv_iphone-landscape_light_pv-r20-iphone-landscape_002_photo-side-r20-iphone-landscape.png",
+  "where": "iphone-landscape, photo shoot side view, top right",
+  "what": "the \"Pose: Mia\" pill overlaps another pill behind it (only a stray \"e\" shows)",
+  "bad": "1"
+ },
+ {
+  "id": "M-012",
+  "file": "s3c_iphone-portrait_light_dance-A_001_dance-two-portrait.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r20dance/shots/s3c_iphone-portrait_light_dance-A_001_dance-two-portrait.png",
+  "where": "iphone-portrait, dance-off",
+  "what": "the arrow lane covers the lower part of the dancers' floor and feet, so the floor mat is mostly hidden behind the lane",
+  "bad": "1"
+ },
+ {
+  "id": "M-013",
+  "file": "pv_iphone-landscape_light_pv-r20-iphone-landscape_004_pond-bubble-r20-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r20/shots/pv_iphone-landscape_light_pv-r20-iphone-landscape_004_pond-bubble-r20-iphone-landscape.png",
+  "where": "iphone-landscape, light, duck pond",
+  "what": "the speech bubble is half hidden under the clock chip and top bar, so only \"ducks is the\" and \"of my day.\" can be read (words cut off, not clear of the HUD)",
+  "bad": "2"
+ },
+ {
+  "id": "M-014",
+  "file": "pv_iphone-landscape_light_pv-r20-iphone-landscape_004_pond-bubble-r20-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r20/shots/pv_iphone-landscape_light_pv-r20-iphone-landscape_004_pond-bubble-r20-iphone-landscape.png",
+  "where": "iphone-landscape, duck pond",
+  "what": "the speech bubble sits under the clock chip and the top buttons, so its first line is cut (\"ducks is the / of my day.\") and not every word is readable",
+  "bad": "2"
+ },
+ {
+  "id": "M-015",
+  "file": "pv_iphone-landscape_light_pv-r20-iphone-landscape_004_pond-bubble-r20-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r20/shots/pv_iphone-landscape_light_pv-r20-iphone-landscape_004_pond-bubble-r20-iphone-landscape.png",
+  "where": "iphone-landscape, light, duck pond",
+  "what": "the grandma's speech bubble is cut off and hidden behind the clock chip and top-bar buttons; only \"ducks is the ... of my day.\" can be read",
+  "bad": "2"
+ },
+ {
+  "id": "M-016",
+  "file": "pv_iphone-landscape_light_pv-r20-iphone-landscape_004_pond-bubble-r20-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r20/shots/pv_iphone-landscape_light_pv-r20-iphone-landscape_004_pond-bubble-r20-iphone-landscape.png",
+  "where": "iphone-landscape, duck pond",
+  "what": "the speech bubble sits behind the clock chip and the top-right buttons, so its first words are cut off (only \"ducks is the ... of my day.\" can be read)",
+  "bad": "2"
+ },
+ {
+  "id": "M-017",
+  "file": "pv_ipad-landscape_light_pv-r20-ipad-landscape_004_pond-bubble-r20-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r20/shots/pv_ipad-landscape_light_pv-r20-ipad-landscape_004_pond-bubble-r20-ipad-landscape.png",
+  "where": "ipad-landscape, duck pond",
+  "what": "the speech bubble's top-left corner touches and partly covers the clock chip \"11:00 Tue\"",
+  "bad": "1"
+ },
+ {
+  "id": "M-018",
+  "file": "pv_ipad-landscape_dark_pv-r20d-ipad-landscape_004_pond-bubble-r20d-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r20d/shots/pv_ipad-landscape_dark_pv-r20d-ipad-landscape_004_pond-bubble-r20d-ipad-landscape.png",
+  "where": "ipad-landscape dark, duck pond",
+  "what": "the speech bubble's top-left corner touches and partly covers the clock chip \"11:00 Tue\"",
+  "bad": "1"
+ }
+]

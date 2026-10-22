@@ -1,0 +1,10 @@
+s3_pc-1366_light_pc-1366-light_013_whats-new-book.png | pc-1366 light, What's new book page 1 (city) | the wide book card overlaps the left HUD: it covers the right edge of the corner map and the right part of the notepad (its "1/1" is hidden), so the map and notepad stick out from under the card | 1
+s3_pc-1366_light_pc-1366-light_015_whats-new-book-p3.png | pc-1366 light, What's new book page 3 (city) | same as page 1: the book card covers the right edge of the corner map and the right part of the notepad | 1
+s3_pc-1366_light_pc-1366-light_016_whats-new-book-p4.png | pc-1366 light, What's new book page 4 (city) | same as page 1: the book card covers the right edge of the corner map and the right part of the notepad | 1
+s3_pc-1366_light_pc-1366-light_017_whats-new-book-p5.png | pc-1366 light, What's new book page 5 (city) | same as page 1: the book card covers the right edge of the corner map and the right part of the notepad | 1
+s3_pc-1366_light_pc-1366-light_018_whats-new-book-p6.png | pc-1366 light, What's new book page 6 (city) | same as page 1: the book card covers the right edge of the corner map and the right part of the notepad | 1
+s3_pc-1366_light_pc-1366-light_019_whats-new-book-p7.png | pc-1366 light, What's new book page 7 (city) | same as page 1: the book card covers the right edge of the corner map and the right part of the notepad | 1
+s3_pc-1366_light_pc-1366-light_020_shop-market.png | pc-1366 light, Market shop card (city) | the round ⬇️ scroll button sits on top of the bottom corners of the Lemon and Honey item cards | 1
+s3_pc-1366_light_pc-1366-light_021_shop-pets.png | pc-1366 light, Pet Shop card (city) | the round ⬇️ scroll button sits on top of the bottom corners of the Frisbee and Yarn ball item cards | 1
+s3_pc-1366_light_pc-1366-light_046_inside-flowers.png | pc-1366 light, inside the Flower Shop | the two shoppers on the left stand inside each other: the blond kid's head is pushed into the brown-haired kid's face and their bodies touch, so they look merged into one | 2
+count: 9

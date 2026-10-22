@@ -1,0 +1,2 @@
+s3_ipad-landscape_dark_ipad-landscape-dark_049_big-map.png | ipad-landscape dark, the big map | place names are cut by the map's edges ("e Station", "othes Shop", "Duck Po"), and the Hair Salon pin is hidden under the "Tap a place to see the way there!" bar while its cut name "air Salon" sticks out below the bar | 1
+count: 1

@@ -1,0 +1,3 @@
+M-019 | DROP | the shapes are the Flower Corner butterflies near the camera (yellow, blue, lavender two-tone wings, dark body) plus far birds and leaves; intended wildlife, not confetti
+M-020 | KEEP | bubble's left end is hidden under the corner map, first word reads "eding", clearly visible
+M-021 | KEEP | same cut in dark mode: bubble runs under the corner map, line starts "eding the ducks"

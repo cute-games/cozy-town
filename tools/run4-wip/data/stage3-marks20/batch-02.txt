@@ -1,0 +1,6 @@
+pv_iphone-landscape_light_pv-r20-iphone-landscape_004_pond-bubble-r20-iphone-landscape.png | iphone-landscape, duck pond | the speech bubble sits under the clock chip and the top buttons, so its first line is cut ("ducks is the / of my day.") and not every word is readable | 2
+pv_iphone-landscape_light_pv-r20-iphone-landscape_002_photo-side-r20-iphone-landscape.png | iphone-landscape, photo shoot from beside Mia | the "Pose: Mia" pill has another pill peeking out behind it (a stray "e" at the right edge) and the big yellow pose button crowds the top buttons and the pill | 1
+pv_ipad-landscape_light_pv-r20-ipad-landscape_004_pond-bubble-r20-ipad-landscape.png | ipad-landscape, duck pond | the two-line speech bubble overlaps the clock chip at the top left of it, so the chip and bubble sit on top of each other | 1
+pv_ipad-landscape_dark_pv-r20d-ipad-landscape_004_pond-bubble-r20d-ipad-landscape.png | ipad-landscape dark, duck pond | the two-line speech bubble overlaps the clock chip at the top left of it | 1
+pv_ipad-landscape_dark_pv-r20d-ipad-landscape_005_toys-shopper-r20d-ipad-landscape.png | ipad-landscape dark, Toy Store | the shopper stands right at the camera on the right edge, half hidden under the "Say hi" and wave buttons under the thumb | 1
+count: 5

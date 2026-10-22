@@ -1,0 +1,189 @@
+[
+ {
+  "id": "M-001",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_026_inside-toys.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p14/shots/s3_ipad-landscape_dark_ipad-landscape-dark_026_inside-toys.png",
+  "where": "ipad-landscape dark theme, inside the toy shop",
+  "what": "a friend stands half off the right screen edge (head cut off), with the \"Play with Clover\" label across her and the bunny button over her legs; another friend is cut by the left edge",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "friend half off right edge, under the Play label and bunny button",
+  "spot": "inside-toys"
+ },
+ {
+  "id": "M-002",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_027_inside-bakery.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p14/shots/s3_ipad-landscape_dark_ipad-landscape-dark_027_inside-bakery.png",
+  "where": "ipad-landscape dark theme, inside the bakery",
+  "what": "a friend stands in the middle at the counter with her back to us, and her head hides the menu board's last two lines (Apple pie, Cake); a second friend is cut in half by the left screen edge",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "head hides Apple pie/Cake names; left friend cut in half by edge",
+  "spot": "inside-bakery"
+ },
+ {
+  "id": "M-003",
+  "file": "s3_iphone-landscape_dark_iphone-landscape-dark_003_phone-jobs.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p14/shots/s3_iphone-landscape_dark_iphone-landscape-dark_003_phone-jobs.png",
+  "where": "iphone-landscape dark, phone: Rosie's job list",
+  "what": "only 3 job cards show (Pizza delivery, Interior designer, Teacher) and they end exactly at the phone screen's bottom edge with no part of a next row showing, so the other jobs (the book says Rosie has 5, the new Photographer among them) look missing",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "5 jobs in a 3-wide grid; row 2 (Hairstylist, Photographer) hidden, no peek",
+  "spot": "phone-jobs"
+ },
+ {
+  "id": "M-004",
+  "file": "s3b_ipad-landscape_light_jobs-light_002_job-hair-card.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p14b/shots/s3b_ipad-landscape_light_jobs-light_002_job-hair-card.png",
+  "where": "ipad-landscape, salon customer card",
+  "what": "Ivy's line wraps so \"💕”\" sits alone on a second line",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "heart emoji and closing quote really sit alone on line 2",
+  "spot": "job-hair-card"
+ },
+ {
+  "id": "M-005",
+  "file": "s3b_ipad-landscape_light_jobs-light_003_job-delivery-way.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p14b/shots/s3b_ipad-landscape_light_jobs-light_003_job-delivery-way.png",
+  "where": "ipad-landscape, job box under the corner map",
+  "what": "the job text breaks so the second line starts with the separator dot (\"· 86 m\")",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "line 2 really starts with the separator dot (\"· 86 m\")",
+  "spot": "job-delivery-way"
+ },
+ {
+  "id": "M-006",
+  "file": "kit14-n13-ipad-landscape-hair-card.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit14/shots/kit14-n13-ipad-landscape-hair-card.png",
+  "where": "ipad-landscape, salon customer card",
+  "what": "Max's line wraps so \"✨”\" sits alone on a second line",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "sparkle emoji and closing quote really sit alone on line 2",
+  "spot": "kit14-n13-ipad-landscape-hair-card"
+ },
+ {
+  "id": "M-007",
+  "file": "kit14-n25-ipad-landscape-photo-shoot-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit14/shots/kit14-n25-ipad-landscape-photo-shoot-ipad-landscape.png",
+  "where": "ipad-landscape, photo shoot at the duck pond",
+  "what": "a thin dark strip pokes in at the bottom-right corner under the Snap bar, like the edge of a hidden panel",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "dark sliver really there, same bottom-right spot in all 3 photo shots, not scenery",
+  "spot": "kit14-n25-ipad-landscape-photo-shoot-ipad-landscape"
+ },
+ {
+  "id": "M-008",
+  "file": "kit14-n37-ipad-landscape-treepark-start.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit14/shots/kit14-n37-ipad-landscape-treepark-start.png",
+  "where": "ipad-landscape, Tree Park clearing",
+  "what": "the clock chip says cloudy (☁️) but the sky between the trees is clear blue and the light is sunny-bright; the cloudy town sky is grey",
+  "bad": "2",
+  "verdict": "DROP",
+  "dc": "weather mid-change (gate still sunny at 11:10); park sky is grey by 11:20 finish shot",
+  "spot": "kit14-n37-ipad-landscape-treepark-start"
+ },
+ {
+  "id": "M-009",
+  "file": "kit14-n37-ipad-landscape-treepark-easy-first-deck.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit14/shots/kit14-n37-ipad-landscape-treepark-easy-first-deck.png",
+  "where": "ipad-landscape, Tree Park first deck",
+  "what": "a big yellow star hangs in mid-air over the bridge to the next deck, touching nothing (no star in the Tree Park look)",
+  "bad": "1",
+  "verdict": "DROP",
+  "dc": "deliberate guide star over the next deck (stage-3 tpMark), not a stray object",
+  "spot": "kit14-n37-ipad-landscape-treepark-easy-first-deck"
+ },
+ {
+  "id": "M-010",
+  "file": "kit14-n6-grandmas-grandmas-day.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit14/shots/kit14-n6-grandmas-grandmas-day.png",
+  "where": "ipad-landscape, duck pond bench",
+  "what": "the two grandmas are jammed together right in front of the camera, one grey head covering the other's face and their bodies hidden under the toast; no ducks or crumbs in view and a building wall fills the left third",
+  "bad": "2",
+  "verdict": "KEEP",
+  "dc": "grandmas' heads overlap into one grey lump, wall fills left third, no ducks",
+  "spot": "kit14-n6-grandmas-grandmas-day"
+ },
+ {
+  "id": "M-011",
+  "file": "kit14-n8-designer-designer-room-1.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit14/shots/kit14-n8-designer-designer-room-1.png",
+  "where": "ipad-landscape, designer room 1 (Forest living room)",
+  "what": "a faint see-through \"Knock knock!\" text hangs over the sofa back in the middle of the room",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "faint but readable stray \"Knock knock!\" text floats over sofa",
+  "spot": "kit14-n8-designer-designer-room-1"
+ },
+ {
+  "id": "M-012",
+  "file": "kit14-n8-designer-designer-room-2.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit14/shots/kit14-n8-designer-designer-room-2.png",
+  "where": "ipad-landscape, designer room 2 (Beautiful bedroom)",
+  "what": "a big grey see-through \"Knock knock!\" text hangs across the middle of the room over the bunk bed",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "big grey see-through \"Knock knock!\" across room over bunk bed",
+  "spot": "kit14-n8-designer-designer-room-2"
+ },
+ {
+  "id": "M-013",
+  "file": "kit14-n9-food-food-truck.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit14/shots/kit14-n9-food-food-truck.png",
+  "where": "ipad-landscape, food truck in the park",
+  "what": "the toast says \"The Food truck is closed now. It opens at 8:00\" with a moon while the clock shows 12:00 Sun in bright daylight and food sits in the open window",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "moon \"closed, opens at 8:00\" toast at sunny 12:00, food in open window",
+  "spot": "kit14-n9-food-food-truck"
+ },
+ {
+  "id": "M-014",
+  "file": "kit14-n13-iphone-landscape-hair-card.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit14/shots/kit14-n13-iphone-landscape-hair-card.png",
+  "where": "iphone-landscape, hair salon",
+  "what": "the hair card hides the client in the chair; only the top of her brown hair peeks over the card",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "card covers the client, only her brown hair top peeks out",
+  "spot": "kit14-n13-iphone-landscape-hair-card"
+ },
+ {
+  "id": "M-015",
+  "file": "kit14-n13-iphone-landscape-hair-before-done.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit14/shots/kit14-n13-iphone-landscape-hair-before-done.png",
+  "where": "iphone-landscape, hair salon",
+  "what": "a friend (orange, with a white wing) is jammed into the bottom-left corner right in front of the camera, half off the screen",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "orange winged friend jammed in bottom-left corner, half off screen",
+  "spot": "kit14-n13-iphone-landscape-hair-before-done"
+ },
+ {
+  "id": "M-016",
+  "file": "kit14-n25-pc-1366-photo-shoot-pc-1366.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit14/shots/kit14-n25-pc-1366-photo-shoot-pc-1366.png",
+  "where": "pc-1366, photo shoot by the Flower Corner",
+  "what": "a tree stands right in front of the camera: its big yellow crown covers the top-left of the photo frame and its trunk runs down through the frame next to Oscar",
+  "bad": "2",
+  "verdict": "KEEP",
+  "dc": "tree right in front of camera: crown covers top-left of frame, trunk beside Oscar",
+  "spot": "kit14-n25-pc-1366-photo-shoot-pc-1366"
+ },
+ {
+  "id": "M-017",
+  "file": "kit14-n25-pc-1366-photo-result-pc-1366.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit14/shots/kit14-n25-pc-1366-photo-result-pc-1366.png",
+  "where": "pc-1366, photo result card",
+  "what": "the snapped photo has the tree trunk and crown filling its left part, yet it is praised \"Just beautiful! Five stars!\"",
+  "bad": "1",
+  "verdict": "DROP",
+  "dc": "Oscar and Lily clear and centred, five stars fair; the tree itself is M-016",
+  "spot": "kit14-n25-pc-1366-photo-result-pc-1366"
+ }
+]

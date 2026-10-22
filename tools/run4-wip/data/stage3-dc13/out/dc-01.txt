@@ -1,0 +1,4 @@
+M-001 | DROP | string goes behind the back wall (properly hidden); the white bits under the roof are the shelter's cobweb tips (web mostly inside the roof), not garland flags
+M-002 | DROP | normal chat scroll: the older bubble slides under the sticky header, as in any chat app
+M-003 | DROP | same view as M-001: string hidden behind the back wall; the two white bits are cobweb lines under the roof, not flags
+M-004 | DROP | normal edge clipping on a zoomed, draggable map; names complete when you pan

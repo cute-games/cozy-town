@@ -1,0 +1,70 @@
+[
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r24d/shots/pv_ipad-landscape_dark_pv-r24d-ipad-landscape_001_pond-bubble-upright-r24d-ipad-landscape.png",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "name": "pond-bubble-upright",
+  "note": "the duck pond on an upright phone: a grandma's two-line speech bubble, every word readable, clear of the corner map and the notepad"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r24d/shots/pv_ipad-landscape_dark_pv-r24d-ipad-landscape_002_flower-bubble-r24d-ipad-landscape.png",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "name": "flower-bubble",
+  "note": "the Flower Corner gate: a grandma's speech bubble (she stands off the left edge), clear of the corner map and the notepad, readable"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r24d/shots/pv_iphone-portrait_dark_pv-r24d-iphone-portrait_001_pond-bubble-upright-r24d-iphone-portrait.png",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "name": "pond-bubble-upright",
+  "note": "the duck pond on an upright phone: a grandma's two-line speech bubble, every word readable, clear of the corner map and the notepad"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r24d/shots/pv_iphone-portrait_dark_pv-r24d-iphone-portrait_002_flower-bubble-r24d-iphone-portrait.png",
+  "prof": "iphone-portrait",
+  "theme": "dark",
+  "name": "flower-bubble",
+  "note": "the Flower Corner gate: a grandma's speech bubble (she stands off the left edge), clear of the corner map and the notepad, readable"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r24/shots/pv_ipad-landscape_light_pv-r24-ipad-landscape_001_pond-bubble-upright-r24-ipad-landscape.png",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "name": "pond-bubble-upright",
+  "note": "the duck pond on an upright phone: a grandma's two-line speech bubble, every word readable, clear of the corner map and the notepad"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r24/shots/pv_ipad-landscape_light_pv-r24-ipad-landscape_002_flower-bubble-r24-ipad-landscape.png",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "name": "flower-bubble",
+  "note": "the Flower Corner gate: a grandma's speech bubble (she stands off the left edge), clear of the corner map and the notepad, readable"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r24/shots/pv_iphone-portrait_light_pv-r24-iphone-portrait_001_pond-bubble-upright-r24-iphone-portrait.png",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "name": "pond-bubble-upright",
+  "note": "the duck pond on an upright phone: a grandma's two-line speech bubble, every word readable, clear of the corner map and the notepad"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r24/shots/pv_iphone-portrait_light_pv-r24-iphone-portrait_002_flower-bubble-r24-iphone-portrait.png",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "name": "flower-bubble",
+  "note": "the Flower Corner gate: a grandma's speech bubble (she stands off the left edge), clear of the corner map and the notepad, readable"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r24k/shots/p24kit_ipad-landscape_light_n8-designer_001_designer-room-1.png",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "note": "the kit's N8: a two-room designer order, room 1"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r24k/shots/p24kit_ipad-landscape_light_n8-designer_002_designer-room-2.png",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "note": "the kit's N8: a two-room designer order, room 2: only room 2's own pieces (room 1's furniture is not drawn here)"
+ }
+]

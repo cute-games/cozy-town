@@ -1,0 +1,13 @@
+s3_pc-1366_light_pc-1366-light_003_phone-jobs.png | pc-1366, Rosie's chat on the phone (city) | the sent bubble "I want a new job! 💼" sits half behind the Rosie header bar; its top pokes out above the header with the text cut off | 2
+s3_pc-1366_light_pc-1366-light_012_settings.png | pc-1366, settings panel, bottom row | the round scroll-down arrow sits on top of the "🏠 Take me home" button and hides the end of its text | 2
+s3_pc-1366_light_pc-1366-light_018_mailbox-menu.png | pc-1366, city, at the mailbox | the mailbox is right against the camera and fills the right 40% of the picture as a near-black mass | 1
+s3_pc-1366_light_pc-1366-light_019_party-time.png | pc-1366, city, at the mailbox | the mailbox is right against the camera and fills the whole middle of the picture above the card as a flat near-black block, like a hole in the scene | 2
+s3_pc-1366_light_pc-1366-light_020_party-invitation.png | pc-1366, city, at the mailbox | the mailbox is right against the camera and fills the left 40% of the picture as a black mass | 1
+s3_pc-1366_light_pc-1366-light_026_photo-shoot.png | pc-1366, photo shoot at the fountain | the player's pets stand between the camera and the family, and the bunny Clover is right against the camera so its giant ears fill the bottom-right of the photo frame under the Snap! bar | 1
+s3_pc-1366_light_pc-1366-light_029_town-square-fountain.png | pc-1366, city, the square looking at the park | a thick tree trunk stands right in front of the camera and hides the fountain; the picture is mostly trunk and the blank back of a notice board | 2
+s3_pc-1366_light_pc-1366-light_030_town-pet-show-stage.png | pc-1366, city, food truck corner | a cluster of flat purple shards (a low-poly butterfly or bird) hangs beside the food truck's front wheel with one piece poking into the tyre | 1
+s3_pc-1366_light_pc-1366-light_034_town-east-shops.png | pc-1366, city, the Toy Store front | the "🧸 Toy Store" text is not in the middle of its long white board; the right part of the board is empty | 1
+s3_pc-1366_light_pc-1366-light_039_inside-flowers.png | pc-1366, inside the flower shop | a townsperson stands right against the camera; their head and raised hand fill the middle of the picture and hide the middle flower stand | 2
+s3_iphone-landscape_dark_iphone-landscape-dark_039_inside-flowers.png | iphone-landscape dark, inside the flower shop | a flat dark-purple slab (the outline of something right against the camera) runs down the whole right edge behind the Say hi and wave buttons | 1
+
+11 problems

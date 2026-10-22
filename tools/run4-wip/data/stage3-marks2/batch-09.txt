@@ -1,0 +1,11 @@
+s3_pc-1366_dark_pc-1366-dark_003_phone-jobs.png | pc-1366, the phone: Rosie's chat (job list) | the player's green "I want a new job!" bubble is scrolled up behind the "Rosie" header bar: its top is cut off and its text and time stamp are half hidden under the header | 2
+s3_pc-1366_dark_pc-1366-dark_011_bag.png | pc-1366, the bag panel, bottom right | the round ↓ scroll button sits on top of the last pet row, covering its hearts | 1
+s3_pc-1366_dark_pc-1366-dark_012_settings.png | pc-1366, settings panel, bottom right | the round ↓ scroll button sits on top of the "Take me home" button and hides the end of its text | 2
+s3_pc-1366_dark_pc-1366-dark_013_shop-market.png | pc-1366, the Market card, bottom right | the round ↓ scroll button sits on top of the last row's soft-serve card | 1
+s3_pc-1366_dark_pc-1366-dark_014_shop-pets.png | pc-1366, the Pet Shop card, bottom right | the round ↓ scroll button sits on top of the last row's bell card | 1
+s3_pc-1366_dark_pc-1366-dark_026_photo-shoot.png | pc-1366, the photo shoot at the fountain, bottom right of the frame | the player's bunny Clover stands right against the camera: only its giant pink ears show, cut by the screen bottom and partly under the Snap bar, with its name tag floating above; Mochi and Waffles also stand in front of the family (the ears end up in the result photo too) | 2
+s3_pc-1366_dark_pc-1366-dark_029_town-square-fountain.png | pc-1366, the park from the square | the camera is pressed against a tree trunk that fills the whole middle of the picture; the fountain (the subject) is not visible at all | 3
+s3_pc-1366_dark_pc-1366-dark_030_town-pet-show-stage.png | pc-1366, the Pet Show stage | a flat purple slab hangs over the top right of the "Pet Show" sign and hides the "w"; flat pink and purple pieces stick out of the stage's left and right sides in mid-air | 2
+s3_pc-1366_dark_pc-1366-dark_030_town-pet-show-stage.png | pc-1366, the food truck | the truck's front shows thin pink and yellow V-shaped slivers, a red zigzag by the counter and a purple sliver across the wheel instead of clean headlights and a bumper; the single round headlight sits up near the roof | 2
+
+9 problems

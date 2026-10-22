@@ -1,0 +1,4 @@
+s3_pc-1366_dark_pc-1366-dark_013_whats-new-book.png | pc-1366 dark theme, the title's What's new book page 1 (city) | the wide book card lies over the right side of the corner map and the notepad: the map's right column and the notepad's "1/1" are cut off under the card's left edge (same on pages 3 to 7, shots 015 to 019) | 1
+s3_pc-1366_dark_pc-1366-dark_020_shop-market.png | pc-1366 dark theme, the Market shop card (city) | the round ⬇️ scroll button sits on top of the bottom corners of the Lemon and Honey cards (same on the Pet Shop card, shot 021, over the Frisbee and Yarn ball cards) | 1
+s3_pc-1366_dark_pc-1366-dark_044_inside-market.png | pc-1366 dark theme, inside the market | a big dark half-round shadow lies across the fruit stand in the foreground (its curved edge runs over the crates and down the front of the stand), and nothing in view casts it | 1
+count: 3

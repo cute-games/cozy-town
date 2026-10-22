@@ -1,0 +1,6 @@
+SCORE: 7
+iPhone landscape House colour card overflows: the bottom "lane's own colour" button is cut off, the card covers the apple/time pills and half the backpack button, and the ⬇ scroll hint lands on top of the green ⬆ button — make it fit or scroll inside the card.
+Floor 2 shows a big solid white outlined oval on the floor under the lamp, like a giant plate — make the light pool soft and see-through or remove it.
+The stair-door plate is only an arrow, not "⬆️ Upstairs", and the yellow "Go upstairs" button repeats the same ⬆ icon as the green button right below it — use a stairs icon plus the word.
+When the house is the lane's own pink nothing is marked as chosen (Purple lights up when purple) — highlight the matching swatch or the "lane's own colour" button so a child sees what is picked.
+No garden picture was given, so the 30 pots and lock labels are unverified; the six-floor house reads as a flat-roofed tower block — keep the pitched pink roof and enlarge the rooftop name sign.

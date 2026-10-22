@@ -1,0 +1,37 @@
+s3_pc-1366_dark_pc-1366-dark_025_photo-pose-card.png | pc-1366, city (photo job, left HUD) | the dashed white photo frame is drawn straight across the corner map, the job-text box and the notepad | 1
+s3_pc-1366_dark_pc-1366-dark_026_photo-shoot.png | pc-1366, city (the fountain) | Mochi, Waffles and Clover stand between the camera and the family, hiding the family's legs and the fountain base; Mochi and Waffles are cut by the bottom edge and Clover's name label sits on Zoe | 2
+s3_pc-1366_dark_pc-1366-dark_026_photo-shoot.png | pc-1366, city (left HUD) | the dashed photo frame runs through the corner map, job text and notepad | 1
+s3_pc-1366_dark_pc-1366-dark_027_photo-result.png | pc-1366, city (result card) | the result photo shows the three pets' backs in front of the family (the photobomb from the shoot) | 1
+s3_pc-1366_dark_pc-1366-dark_027_photo-result.png | pc-1366, city (left HUD) | the dashed photo frame runs through the corner map, job text and notepad | 1
+s3_pc-1366_dark_pc-1366-dark_029_town-square-fountain.png | pc-1366, city (the square) | the dance-off HUD (score bar "Cozy Kid 45 / Leo 30", the arrow lane, the four arrow buttons) is still on screen over the town; corner map and notepad are gone | 3
+s3_pc-1366_dark_pc-1366-dark_029_town-square-fountain.png | pc-1366, city (left of the fountain) | a townsperson sitting on a bench right against the camera: dark hair and pink back fill the left third of the view | 2
+s3_pc-1366_dark_pc-1366-dark_030_town-pet-show-stage.png | pc-1366, city (Pet Show corner) | dance-off HUD still on screen; the arrow lane sits over the food truck | 3
+s3_pc-1366_dark_pc-1366-dark_030_town-pet-show-stage.png | pc-1366, city (bench in front of the stage) | a flat red board floats at shoulder height beside the bench, touching nothing | 2
+s3_pc-1366_dark_pc-1366-dark_031_town-flower-corner.png | pc-1366, city (Flower Corner gate) | dance-off HUD still on screen over the town | 3
+s3_pc-1366_dark_pc-1366-dark_032_town-duck-pond.png | pc-1366, city (duck pond) | dance-off HUD still on screen over the town | 3
+s3_pc-1366_dark_pc-1366-dark_032_town-duck-pond.png | pc-1366, city (grandma on the pond bench) | her speech bubble is cut: the first word is hidden behind the building edge at left and her hair covers "the" | 1
+s3_pc-1366_dark_pc-1366-dark_033_town-school-front.png | pc-1366, city (school front) | dance-off HUD still on screen; the score bar also covers the top-left corner of the "Cozy Town School" sign | 3
+s3_pc-1366_dark_pc-1366-dark_034_town-east-shops.png | pc-1366, city (east shops) | dance-off HUD still on screen over the town | 3
+s3_pc-1366_dark_pc-1366-dark_034_town-east-shops.png | pc-1366, city (Toy Store front) | a street tree stands right in front of the camera: its crown hides the "Toy S..." sign and its trunk the shop's right half | 1
+s3_pc-1366_dark_pc-1366-dark_034_town-east-shops.png | pc-1366, city (grandma at the Toy Store door) | her bun hides the word "of" in "Toys were made of wood in my day." | 1
+s3_pc-1366_dark_pc-1366-dark_035_town-treepark-gate.png | pc-1366, city (Tree Park gate) | dance-off HUD still on screen over the woods | 3
+s3_pc-1366_dark_pc-1366-dark_036_town-apartments.png | pc-1366, city (west road) | dance-off HUD still on screen; the arrow lane sits over the apartment block | 3
+s3_pc-1366_dark_pc-1366-dark_037_inside-market.png | pc-1366, market | dance-off HUD still on screen inside the shop | 3
+s3_pc-1366_dark_pc-1366-dark_037_inside-market.png | pc-1366, market | a shopper's brown head is right against the camera and fills the middle of the view; the market itself is hidden | 3
+s3_pc-1366_dark_pc-1366-dark_038_inside-pets.png | pc-1366, pets | dance-off HUD still on screen inside the shop | 3
+s3_pc-1366_dark_pc-1366-dark_038_inside-pets.png | pc-1366, pets | a dark-haired shopper and a blond one stand right in front of the camera in the middle, hiding the shelves | 2
+s3_pc-1366_dark_pc-1366-dark_039_inside-flowers.png | pc-1366, flowers | dance-off HUD still on screen inside the shop | 3
+s3b_ipad-landscape_light_easter-light_001_holiday-easter-bunny.png | ipad-landscape, city (Flower Corner from the gate) | no Easter Bunny: the big white bunny with the golden bow is missing by the stepping stones; only eggs and ground birds in the garden | 3
+s3b_ipad-landscape_light_easter-light_002_holiday-easter-bunny-talk.png | ipad-landscape, city (Flower Corner) | no Bunny and no words: the picture is the empty garden with no speech bubble or card | 3
+s3b_ipad-landscape_light_easter-light_004_holiday-easter-corner.png | ipad-landscape, city (Flower Corner from the gate) | the Easter Bunny is missing by the stepping stones | 2
+s3b_ipad-landscape_light_christmas-light_001_holiday-christmas-tree.png | ipad-landscape, city (Flower Corner gate) | a thick tree trunk fills the left quarter and its crown the top third of the view right at the gate (not in the builder's gate pictures); the map and notepad sit on the trunk | 2
+s3b_ipad-landscape_light_christmas-light_004_holiday-christmas-park.png | ipad-landscape, city (the square) | a townsperson on a bench right against the camera: dark hair and pink back fill the lower-left corner | 2
+s3b_ipad-landscape_dark_christmas-night-dark_001_holiday-christmas-tree-night.png | ipad-landscape, city (Flower Corner gate) | the same thick trunk and crown at the gate fill the left quarter and the top of the view | 2
+s3b_ipad-landscape_dark_christmas-night-dark_002_holiday-christmas-lane-night.png | ipad-landscape, city (Friends Lane) | no houses on the lane: only fences, sign boards, mailboxes and lamps; the "Cozy Kid's house" sign has nothing but a fence and trees behind it (brightened copy checked) | 3
+s3b_ipad-landscape_dark_christmas-night-dark_002_holiday-christmas-lane-night.png | ipad-landscape, city (corner map) | the pink arrow sits on the map's left border, half cut off | 1
+s3b_ipad-landscape_dark_newyear-night-dark_001_holiday-newyear-fireworks.png | ipad-landscape, city (park, 30 Dec night) | no fireworks: the sky holds only stars and clouds, not one coloured spark (pixel scan confirms) | 3
+s3b_ipad-landscape_dark_newyear-night-dark_002_holiday-newyear-fireworks-2.png | ipad-landscape, city (main road, 30 Dec night) | no fireworks in the sky (pixel scan confirms) | 3
+s3b_ipad-landscape_light_newyear-day-light_001_holiday-newyear-hats.png | ipad-landscape, city (the square) | a townsperson on a bench right against the camera: dark hair and pink back fill the lower-left corner | 2
+s3b_ipad-landscape_light_newyear-day-light_003_holiday-newyear-hats-me.png | ipad-landscape, city | no own party hat or own head in view: the camera looks straight along the street at eye level instead of down at me from behind | 2
+s3b_ipad-landscape_light_school-light_001_holiday-school-front.png | ipad-landscape, city (school front, 1 Sep) | no balloon bunches anywhere around the school front | 2
+s3b_ipad-landscape_dark_halloween-night-dark_001_halloween-spooky-gate.png | ipad-landscape, city (Flower Corner gate, 19:40) | a thick tree trunk fills the left quarter and its crown the top third of the view right at the gate (the builder's October gate picture has none) | 2

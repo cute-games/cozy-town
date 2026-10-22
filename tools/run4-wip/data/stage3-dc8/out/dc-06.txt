@@ -1,0 +1,15 @@
+M-076 | KEEP | dark pole splits the view, ball/racket/carrot float in mid-air
+M-077 | KEEP | dark pole splits the view, chick toy floats in mid-air
+M-078 | KEEP | dark pole splits the view, mouse toy and hand float in mid-air
+M-079 | KEEP | grey cat's tag behind "Marshmallow", only "M" shows
+M-080 | KEEP | three tags pile up, "Mocha" cut to "Moch"
+M-081 | KEEP | green rug clearly half under the blue rug
+M-082 | KEEP | caption visibly off-centre (about 140 vs 68 px of air)
+M-083 | KEEP | card and "Max" tab cover Max's face and body
+M-084 | DROP | ghost looks whole, sits on the bowl rim, not cut off
+M-085 | DROP | ghost whole, its wavy bottom shows above the rim
+M-086 | DROP | ghost whole, its wavy bottom shows above the rim
+M-087 | DROP | ghost whole, its wavy bottom shows above the rim
+M-088 | KEEP | many stars shine between rain streaks at night
+M-089 | KEEP | big purple shape and grey smear in bottom-left corner
+M-090 | KEEP | down button about 33 px, much smaller than other buttons

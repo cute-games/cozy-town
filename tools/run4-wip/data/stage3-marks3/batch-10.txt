@@ -1,0 +1,14 @@
+s3_pc-1366_dark_pc-1366-dark_020_party-invitation.png | pc-1366 dark, city by the bus stop: party invitation card | the invitation card stays bright white in the dark theme, while the other cards (mailbox, party time, bigger house) and the top chips are dark | 1
+s3_pc-1366_dark_pc-1366-dark_021_dance-card.png | pc-1366 dark, city by the bus stop: dance-off card | the dance-off card stays bright white in the dark theme, unlike the other cards, which are dark | 1
+s3_pc-1366_dark_pc-1366-dark_022_tutorial-pizza.png | pc-1366 dark, city: pizza tutorial step 1 | the tutorial card stays bright white in the dark theme, unlike the other cards, which are dark | 1
+s3_pc-1366_dark_pc-1366-dark_023_tutorial-hair.png | pc-1366 dark, city: hairstylist tutorial step 1 | the tutorial card stays bright white in the dark theme, unlike the other cards, which are dark | 1
+s3_pc-1366_dark_pc-1366-dark_023_tutorial-hair.png | pc-1366 dark, city: hairstylist tutorial, picture panel | the 👉 hand under the door points right at empty space, away from the customer and the chair | 1
+s3_pc-1366_dark_pc-1366-dark_024_tutorial-photo.png | pc-1366 dark, city: photographer tutorial step 1 | the tutorial card stays bright white in the dark theme, unlike the other cards, which are dark | 1
+s3_pc-1366_dark_pc-1366-dark_024_tutorial-photo.png | pc-1366 dark, city: photographer tutorial, booking message in the picture panel | the second line "family photo · the fountain" is squeezed against the camera icon (touching it) and almost reaches the right border, with no air around it | 1
+s3_pc-1366_dark_pc-1366-dark_025_photo-pose-card.png | pc-1366 dark, city fountain: photo view, top right | the top edge and right corner of the dashed photo frame run under the four round top-right buttons, so the buttons sit on the frame line | 1
+s3_pc-1366_dark_pc-1366-dark_026_photo-shoot.png | pc-1366 dark, city fountain: photo view, top right | the top edge of the dashed photo frame runs under the four round top-right buttons, so the buttons sit on the frame line | 1
+s3_pc-1366_dark_pc-1366-dark_026_photo-shoot.png | pc-1366 dark, city fountain: photo view, centre | the small white aim ring is still drawn in photo mode and sits on Leo's forehead | 1
+s3_pc-1366_dark_pc-1366-dark_030_town-pet-show-stage.png | pc-1366 dark, city park: Pet Show stage | a drifting ghost hangs right in front of the Pet Show sign and hides its title (only "...OW" and "Every Saturday!" show) | 1
+s3_pc-1366_dark_pc-1366-dark_032_town-duck-pond.png | pc-1366 dark, city: houses across the road behind the pond | no pumpkins at the mint house's yellow door or the yellow house's blue door (the builder says there are pumpkins at every door) | 1
+s3_pc-1366_dark_pc-1366-dark_036_town-apartments.png | pc-1366 dark, city west road: Hair Salon | no pumpkin at the Hair Salon door, though the school and the Toy Store have one (the builder says there are pumpkins at every door) | 1
+13 problems

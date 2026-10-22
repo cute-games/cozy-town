@@ -1,0 +1,3 @@
+M-016 | KEEP | bubble hidden behind clock chip and buttons, first words cut off
+M-017 | KEEP | bubble top edge runs under the clock chip, small overlap
+M-018 | KEEP | same overlap in dark, bubble top edge under the clock chip

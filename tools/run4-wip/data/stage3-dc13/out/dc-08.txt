@@ -1,0 +1,4 @@
+M-029 | KEEP | huge open door at camera blocks left of room
+M-030 | DROP | normal chat scroll, older message under header
+M-031 | DROP | normal edge framing at gate, view itself clear
+M-032 | KEEP | near floor tiles visibly soft, far tiles sharp

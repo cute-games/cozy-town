@@ -1,0 +1,4 @@
+kit11-n26-map-pc-1366-big-map-pc-1366.png | pc-1366, big Map, left edge of the map by the pink bar on the road | a place label is cut off by the map edge and reads only "ne" | 1
+kit11-n26-map-pc-1366-big-map-pc-1366.png | pc-1366, big Map, bottom of the Places list | the last row (Beach, Bus stop) is faded like switched-off buttons with the down-arrow hint sitting on both buttons' edges, and under it the top edge of one more button pokes out sharp at the panel's bottom edge | 1
+kit11-n5-B-bench-other-player-sits.png | pc-1366, sitting on a garden bench facing the gate and the bus stop | a big dark purple-and-brown block (a model right against the camera: the bench end or the player sitting beside you) fills the bottom-right corner, half under the stand-up, run and jump buttons; the other player sitting is not seen anywhere in the shot | 2
+count: 3

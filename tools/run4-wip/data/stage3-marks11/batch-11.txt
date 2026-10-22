@@ -1,0 +1,6 @@
+s3_pc-1366_dark_pc-1366-dark_012_settings.png | pc-1366 dark theme, settings card (place city) | the round ⬇️ scroll button sits inside the Notepad row about 12 px from the "✏️ On" button, so it looks like a third Notepad button and is easy to tap by mistake | 1
+s3_pc-1366_dark_pc-1366-dark_020_shop-market.png | pc-1366 dark theme, Market shop card (place city) | the round ⬇️ scroll button overlaps the bottom corners of the Lemon and Honey tiles | 1
+s3_pc-1366_dark_pc-1366-dark_021_shop-pets.png | pc-1366 dark theme, Pet Shop card (place city) | the round ⬇️ scroll button overlaps the bottom corners of the Frisbee and Yarn ball tiles | 1
+s3_pc-1366_dark_pc-1366-dark_024_big-house.png | pc-1366 dark theme, bigger house card by the Beach Bus stop (place city) | a strolling grandma is right against the camera: the back of her grey head and mint cardigan, cut by the left screen edge, fill the left quarter of the view (camera almost inside her; she is gone in the next shot from the same spot) | 2
+s3b_ipad-landscape_light_christmas-light_001_holiday-christmas-tree.png | ipad-landscape light theme, the Flower Corner gate in December (place city) | a big figure (grey head, tan neck band, lilac body, looks like a grandma) stands right against the camera at the left edge, cut by the screen edge, with a big dark shadow under the joystick | 1
+count: 5

@@ -1,0 +1,3 @@
+M-004 | KEEP | seat faces the grass, not the water (side-on, ~70° off the lake)
+M-005 | DROP | not the keeper: a shopper at the back shelf, facing it as set
+M-006 | KEEP | the 46px ⬇️ badge really sits on both tiles' lower corners

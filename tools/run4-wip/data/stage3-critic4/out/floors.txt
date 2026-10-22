@@ -1,0 +1,6 @@
+SCORE: 7
+1. From the lane, the six-floor house has no name sign on top. The one-storey house shows "🏠 Cozy Kid" above its roof, but the tall one shows nothing.
+2. In the garden, no pot shows "🔒 Gardening level 20" (or any lock plate), so a child can't tell locked pots from open ones.
+3. The stairs plate says "⬆️ Up", not "⬆️ Upstairs", and is squashed against the top edge of the view. No "⬇️ Downstairs" plate appears in any picture.
+4. Colour card: no swatch is marked as chosen, the slider sits on blue while "Your house now" is pink, and the "✅ ↩️" pair on the button is confusing. The swatch buttons are small on iPhone landscape.
+5. The tall house's flat top makes it look like a block of flats; keep the pink pointed roof on top. The Bigger house card could add a coin progress bar next to "900 / 2500".

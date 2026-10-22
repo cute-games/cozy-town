@@ -1,0 +1,8 @@
+06:23:42 ACTION open test copy web build md5 fc049d25 on iphone-landscape light as iphone-landscape
+06:24:13 UNDONE closed test copy web iphone-landscape light iphone-landscape: its saves and test data are thrown away
+06:24:13 ACTION open test copy web build md5 fc049d25 on ipad-landscape light as ipad-landscape
+06:24:37 UNDONE closed test copy web ipad-landscape light ipad-landscape: its saves and test data are thrown away
+06:24:38 ACTION open test copy web build md5 fc049d25 on pc-1366 light as pc-1366
+06:25:02 UNDONE closed test copy web pc-1366 light pc-1366: its saves and test data are thrown away
+06:25:02 ACTION open test copy web build md5 fc049d25 on iphone-portrait light as iphone-portrait
+06:25:15 UNDONE closed test copy web iphone-portrait light iphone-portrait: its saves and test data are thrown away

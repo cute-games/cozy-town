@@ -1,0 +1,15 @@
+M-046 | KEEP | mint jump button sliver sticks out past card's right edge
+M-047 | KEEP | same mint jump button sliver beside the party card
+M-048 | KEEP | close-up blob fills left third, cut "ce." bubble top-left
+M-049 | DROP | floating scroll hint by design, only touches card corners, hides no text
+M-050 | DROP | natural occlusion of a walking friend behind lamp post (tag hidden by post, not edge)
+M-051 | KEEP | close-up blob fills left third, cut "ce." label top-left
+M-052 | DROP | ordinary photo crop of a fourth sign, not a glitch
+M-053 | KEEP | big red question mark makes the statement read as a question
+M-054 | KEEP | emoji sits alone on its own line after "zip lines"
+M-055 | KEEP | second dancer emoji split off alone onto next line
+M-056 | DROP | floating scroll hint by design, only touches card corners, hides no text
+M-057 | DROP | floating scroll hint by design, only touches card corners, hides no text
+M-058 | KEEP | wall pale with faint vertical streaks at 12:00, flat dark at 12:10 (subtle)
+M-059 | KEEP | signpost board covers end of "today!" and right balloon, post crosses banner
+M-060 | KEEP | balloon bunches hide small white posters, edges and red bit peek out

@@ -1,0 +1,4 @@
+M-005 | KEEP | grey panel, close fence and huge pennants block the view; stage small and far
+M-006 | DROP | card covers only the pond's left edge; normal HUD, duck just far away
+M-007 | KEEP | only one duck though the whole pond is in view (second may sit on top of the first)
+M-008 | KEEP | yellow head on white body clearly visible, looks like two ducks merged

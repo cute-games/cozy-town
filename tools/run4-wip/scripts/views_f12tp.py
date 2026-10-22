@@ -1,0 +1,20 @@
+# Run 4 finish, pass 15 M-001: the saw-tooth marks on a yellow crown in the Tree Park's hard-path view: what the camera ray hits there,
+# and what stands between that point and the sun (a shadow) or in front of the crown (something drawn through it)
+RAY = r"""(()=>{const W=innerWidth,H=innerHeight,rc=new THREE.Raycaster(),out=[];camera.updateMatrixWorld();
+  const sun=scene.children.find(o=>o.isDirectionalLight)||(()=>{let s=null;scene.traverse(o=>{if(!s&&o.isDirectionalLight)s=o;});return s;})();
+  const sd=sun?new THREE.Vector3().subVectors(sun.position,sun.target.position).normalize():null;
+  for(const [px,py] of [[782,134],[795,134],[808,136],[795,128],[795,142]]){rc.setFromCamera(new THREE.Vector2(px/W*2-1,-(py/H*2-1)),camera);
+    const hs=rc.intersectObjects(scene.children,true).filter(h=>h.object.visible&&h.object.material&&h.distance>.3&&h.object.layers.test(camera.layers)&&!h.object.isSprite);const h=hs[0];if(!h){out.push(px+','+py+': nothing');continue;}
+    const m=Array.isArray(h.object.material)?h.object.material[0]:h.object.material;
+    let occ='';if(sd){const r2=new THREE.Raycaster(h.point.clone().addScaledVector(sd,.02),sd.clone());r2.camera=camera;const o2=r2.intersectObjects(scene.children,true).filter(q=>q.object.visible&&q.object.castShadow)[0];
+      if(o2){const m2=Array.isArray(o2.object.material)?o2.object.material[0]:o2.object.material;const b=new THREE.Box3().setFromObject(o2.object);occ=' | toward the sun: '+o2.object.geometry.type+' #'+(m2.color?m2.color.getHexString():'')+' at '+o2.distance.toFixed(2)+' m, box '+[b.min.x,b.min.y,b.min.z,b.max.x,b.max.y,b.max.z].map(v=>v.toFixed(1)).join(',')+(m2.map?' (textured)':'');}else occ=' | toward the sun: open';}
+    out.push(px+','+py+': '+h.object.geometry.type+' #'+(m.color?m.color.getHexString():'')+(m.transparent?' transparent':'')+(m.depthTest===false?' NO-DEPTH':'')+' at '+h.distance.toFixed(2)+' m, point '+[h.point.x,h.point.y,h.point.z].map(v=>v.toFixed(2)).join(',')+occ+' | next: '+hs.slice(1,3).map(q=>q.object.geometry.type+'#'+((Array.isArray(q.object.material)?q.object.material[0]:q.object.material).color||{getHexString:()=>''}).getHexString()+'@'+q.distance.toFixed(1)).join(' '));}
+  const L0=sun&&sun.shadow?sun.shadow:null;return (L0?'shadow map '+L0.mapSize.x+' px over '+(L0.camera.right-L0.camera.left).toFixed(0)+' m, bias '+L0.bias+', normalBias '+L0.normalBias+'; ':'')+'sun '+(sd?[sd.x,sd.y,sd.z].map(v=>v.toFixed(2)).join(','):'none')+', shadows '+(renderer.shadowMap.enabled)+', time '+S.time.toFixed(2)+'\n'+out.join('\n');})()"""
+BOXES = r"""(()=>{const W=innerWidth,H=innerHeight,rc=new THREE.Raycaster();camera.updateMatrixWorld();let sun=null;scene.traverse(o=>{if(!sun&&o.isDirectionalLight)sun=o;});
+  const sd=new THREE.Vector3().subVectors(sun.position,sun.target.position).normalize();rc.setFromCamera(new THREE.Vector2(795/W*2-1,-(134/H*2-1)),camera);
+  const h=rc.intersectObjects(scene.children,true).filter(q=>q.object.visible&&q.object.material&&q.distance>.3&&q.object.layers.test(camera.layers)&&!q.object.isSprite)[0];if(!h)return 'no hit';
+  const ray=new THREE.Ray(h.point.clone().addScaledVector(sd,.05),sd),out=[];const v=new THREE.Vector3();
+  scene.traverse(o=>{if(!(o.isMesh||o.isLine||o.isPoints)||!o.visible||!o.castShadow)return;const b=new THREE.Box3().setFromObject(o);if(b.isEmpty())return;if(!ray.intersectBox(b,v))return;
+    const m=Array.isArray(o.material)?o.material[0]:o.material;const d=v.distanceTo(ray.origin);out.push({d:+d.toFixed(2),type:o.type+'/'+(o.geometry&&o.geometry.type),col:m&&m.color?'#'+m.color.getHexString():'',side:m&&m.side,map:!!(m&&m.map),alphaTest:m&&m.alphaTest,size:[b.max.x-b.min.x,b.max.y-b.min.y,b.max.z-b.min.z].map(x=>+x.toFixed(1)),min:[b.min.x,b.min.y,b.min.z].map(x=>+x.toFixed(1))});});
+  out.sort((a,b)=>a.d-b.d);return JSON.stringify({point:[h.point.x,h.point.y,h.point.z].map(x=>+x.toFixed(2)),n:out.length,c:out.slice(0,12)});})()"""
+VIEWS = [('tp-hard', "__goto('city');__setClock(null,11.67);wxForce('sun');__goto('treepark');tpStart('hard');"), ('tp-hard-ray', RAY), ('tp-hard-boxes', BOXES)]

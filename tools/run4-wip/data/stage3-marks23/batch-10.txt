@@ -1,0 +1,3 @@
+kit23-n26-map-pc-1366-big-map-pc-1366.png | pc-1366, big map, left edge of the map pane | a road label is cut off at the map's left edge (only "ne" shows) | 1
+kit23-n39-B-party-invitation.png | pc-1366, party invitation card under the top bar | the card is see-through and washed out, its text and the two buttons ("I'll come!", "Not this time!") are hard to read (looks caught mid-fade) | 1
+count: 2

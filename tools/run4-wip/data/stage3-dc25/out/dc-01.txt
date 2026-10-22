@@ -1,0 +1,4 @@
+M-001 | KEEP | faint half-hidden "Knock knock!" text on sofa, visible
+M-002 | KEEP | thin lilac horizontal lines across floor, off plank seams
+M-003 | KEEP | same lilac stripes across floor in room 2
+M-004 | KEEP | same faint "Knock knock!" on sofa (duplicate of M-001)

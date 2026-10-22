@@ -1,0 +1,19 @@
+# Run 4 finish, f15 (pass 18's kept marks), before and after: the cooking quests' words, 3000 "New in!" rows of each shop (the same piece twice
+# in colours a child cannot tell apart), every design client's "I live in ..." line, and the photographer's fountain shoot on a sideways phone
+# while a grandma stands at her park stop (does the camera take a spot where everyone fits?)
+WALK = "for(const w of WALKERS)if(Math.hypot(w.x-P.x,w.z-P.z)<9){w.x=WP[w.home][0];w.z=WP[w.home][1];w.node=w.home;w.prev=-1;}for(const q of PET_ACTORS){const f=P.yaw;q.x=P.x+Math.sin(f)*2.5;q.z=P.z+Math.cos(f)*2.5;}for(const c of CARS)if(Math.hypot(c.x-P.x,c.z-P.z)<16){c.d+=c.total/2;carPlace(c);}"
+COOK = r"""(()=>{const out=[];for(const R of RECIPES){out.push(genQuest('cook:'+R.id).d);}const t=genQuest('trk:recipe:sandwich');out.push(t.steps[t.steps.length-1].d);const t2=genQuest('trk:recipe:hotchoc');out.push(t2.steps[t2.steps.length-1].d);return out.join(' | ');})()"""
+NEWIN = r"""(()=>{const near=(a,b)=>{const h=c=>/^#[0-9a-f]{6}$/i.test(c)?[1,3,5].map(i=>parseInt(c.slice(i,i+2),16)):null,p=h(a),q=h(b);return a===b||(!!p&&!!q&&Math.hypot(p[0]-q[0],p[1]-q[1],p[2]-q[2])<90);};const out=[];
+  for(const sh of Object.keys(NEWIN_SHOPS)){let rows=0,bad=0,ex='';for(let r=0;r<3000;r++){const L=[];for(let i=0;i<3;i++)L[i]=niMake(sh,L);rows++;let b=false;for(let i=0;i<3;i++)for(let j=i+1;j<3;j++)if(L[i]&&L[j]&&L[i].k===L[j].k&&near(L[i].c,L[j].c)){b=true;if(!ex)ex=L[i].n+' + '+L[j].n;}if(b)bad++;}
+    out.push(sh+': '+bad+' of '+rows+' rows with one piece twice in look-alike colours'+(ex?' (e.g. '+ex+')':''));}return out.join('\n');})()"""
+DSX = r"""(()=>{const got=new Map(),orig=addMsg;addMsg=(a,b,x)=>{const m=/I live in the ([^.]*)\./.exec(x);if(m)got.set(m[1].split(',')[0],m[1]);};
+  try{for(let k=0;k<300;k++)dsNew(1);}catch(e){addMsg=orig;return 'ERR '+e;}addMsg=orig;return [...got.values()].sort().map(v=>'I live in the '+v+'.').join('\n');})()"""
+SETUP = "tutEnd();__goto('city');__setClock(null,12);setJob('photo');S.ptTut=1;const d=pt();d.o={id:'px',kind:'family',spot:'park',bg:'fountain',who:['n1','n2','s1'],pet:null,st:'go'};P.x=-22;P.z=11.4;P.yaw=Math.PI;P.pitch=.02;__run(2);ptSetup();"
+GPARK = """(()=>{closePanel();__goto('city');__setClock(null,12);wxForce('sunny');let ms=realMs();granPlan(ms);const T=GRAN.T,ip=GRAN_STOPS.findIndex(s=>s.id==='park');
+  let k0=-1,g0=-1;for(let k=Math.floor((ms-GRAN.day0)/T)+1;k<GRAN.plan.length-1&&k0<0;k++)for(let j=0;j<GRAN.plan[k].length;j++)if(GRAN.plan[k][j]===ip&&granPose(j,GRAN.day0+k*T+60000).arrived){k0=k;g0=j;break;}
+  if(k0<0)return 'no park turn';const off=GRAN.day0+k0*T+70000-Date.now();realMs=()=>Date.now()+off;P.x=-22;P.z=9;P.yaw=Math.PI;P.pitch=0;__run(3);const q=GRAN.g[g0];window.__gq=q;
+  return 'grandma '+g0+' at her park stop '+q.x.toFixed(2)+','+q.z.toFixed(2)+', drawn '+q.p.root.visible;})()"""
+SHOOT = "(()=>{const q=window.__gq;const before='grandma drawn '+(q&&q.p.root.visible)+' at '+(q?q.x.toFixed(1)+','+q.z.toFixed(1):'-');" + SETUP + WALK + "return before+'; the shoot starts: camera '+P.x.toFixed(2)+','+P.z.toFixed(2)+' pitch '+P.pitch.toFixed(3);})()"
+FIT = r"""(()=>{updateCamera(0);camera.updateMatrixWorld();const F=ptFrame(),H=innerHeight;let lo=0;const v=new THREE.Vector3();for(const m of PHO.group){m.root.updateMatrixWorld(true);m.root.traverse(o=>{if(!o.isMesh)return;const pa=o.geometry.attributes.position;for(let i=0;i<pa.count;i++){v.fromBufferAttribute(pa,i).applyMatrix4(o.matrixWorld);const q=v.clone().project(camera);lo=Math.max(lo,(1-q.y)/2*H);}});}
+  const q=window.__gq;return 'feet lowest at '+lo.toFixed(0)+' px, frame bottom '+((1-F.y1)/2*H).toFixed(0)+' px: '+(lo<(1-F.y1)/2*H?'IN':'OUT')+'; fits '+ptFits(F)+'; grandma drawn '+(q&&q.p.root.visible);})()"""
+VIEWS = [('cook', COOK), ('newin', NEWIN), ('ds-clients', DSX), ('gran-park', GPARK), ('shoot', SHOOT), ('shoot-fit', FIT)]

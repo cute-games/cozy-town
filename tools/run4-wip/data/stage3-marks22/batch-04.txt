@@ -1,0 +1,2 @@
+pv_ipad-landscape_dark_pv-r22d-ipad-landscape_003_photo-chat-r22d-ipad-landscape.png | ipad-landscape, dark theme, phone Photos chat | the phone screen stays fully light (white header and card, pastel gradient) while the game cards and top chips are dark, so it looks left light-only in the dark theme (may be intended) | 1
+count: 1

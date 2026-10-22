@@ -1,0 +1,3 @@
+s3_ipad-landscape_light_ipad-landscape-light_019_town-ducks-close.png | ipad-landscape light, duck pond, camera at the pond's east side | a big dark purple box shape (looks like a bench or person seen from far too close) fills the lower right edge and covers part of the blue building and a tree, camera almost inside an object | 1
+s3_ipad-landscape_light_ipad-landscape-light_004_town-duck-pond.png | ipad-landscape light, duck pond, grandma on the bench | the cattail reeds grow right through and in front of the grandma's body, looks poked through | 1
+count: 2

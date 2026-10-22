@@ -1,0 +1,38 @@
+[
+ {
+  "name": "dance-two-portrait",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3c_iphone-portrait_light_dance-A_001_dance-two-portrait.png",
+  "ref": "stage3-p6c/shots/s3c_iphone-portrait_light_dance-A_001_dance-two-portrait.png",
+  "changed_share": 0.1202,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-two-landscape",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3c_iphone-landscape_light_dance-B_001_dance-two-landscape.png",
+  "ref": "stage3-p6c/shots/s3c_iphone-landscape_light_dance-B_001_dance-two-landscape.png",
+  "changed_share": 0.0641,
+  "verdict": "CHANGED"
+ },
+ {
+  "name": "dance-two-result-portrait",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "file": "s3c_iphone-portrait_light_dance-A_002_dance-two-result-portrait.png",
+  "ref": "stage3-p6c/shots/s3c_iphone-portrait_light_dance-A_002_dance-two-result-portrait.png",
+  "changed_share": 0.0007,
+  "verdict": "SAME"
+ },
+ {
+  "name": "dance-two-result-landscape",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "file": "s3c_iphone-landscape_light_dance-B_002_dance-two-result-landscape.png",
+  "ref": "stage3-p6c/shots/s3c_iphone-landscape_light_dance-B_002_dance-two-result-landscape.png",
+  "changed_share": 0.0005,
+  "verdict": "CHANGED"
+ }
+]

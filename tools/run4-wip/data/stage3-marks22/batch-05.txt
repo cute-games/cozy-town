@@ -1,0 +1,2 @@
+pv_iphone-landscape_light_pv-r22-iphone-landscape_003_photo-chat-r22-iphone-landscape.png | iphone-landscape, phone Photos chat | the photo is cut off at the bottom by the fade at the foot (feet and lower frame hidden), so the whole photo is not in view under the header and the thank-you words are not visible without scrolling | 2
+count: 1

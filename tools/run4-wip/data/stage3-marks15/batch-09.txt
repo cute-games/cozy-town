@@ -1,0 +1,3 @@
+s3_iphone-landscape_dark_iphone-landscape-dark_033_photo-shoot.png | iphone-landscape, dark theme, the photo shoot at the fountain (city) | the dashed white photo frame is shifted to the right (about x 185 to 810 of 844) while the family stands at the screen centre, so Mia, Leo and Zoe stand left of the frame's middle with empty plaza on the right; the photo on the result card (034) shows them off-centre the same way | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_041_town-east-shops.png | iphone-landscape, dark theme, the Toy Store front (city, east shops) | the "🧸 Toy Store" text sits toward the left end of its white sign board above the awning, leaving a wide empty strip on its right, so it is not in the middle of the board | 1
+count: 2

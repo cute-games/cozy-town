@@ -1,0 +1,2 @@
+s3_ipad-landscape_dark_ipad-landscape-dark_042_phone-jobs.png | ipad-landscape dark theme, phone: Rosie's job list (city) | at the top of the chat the player's own mint message bubble is scrolled up under the phone's white top bar: only a thin sliver of it shows, with its "Sun · 11:00" time cut in half (a hard cut with no fade, unlike the quest list's bottom edge) | 1
+count: 1

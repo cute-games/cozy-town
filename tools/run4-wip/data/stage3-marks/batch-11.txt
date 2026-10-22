@@ -1,0 +1,5 @@
+s3b_ipad-landscape_dark_halloween-night-dark_005_halloween-clothes-costumes.png | ipad-landscape dark, Clothing store card | a small ⬇ scroll chip (about 34 px, below fingertip size) hangs half off the card's right edge | 1
+s3b_ipad-landscape_light_jobs-light_004_job-delivery-note.png | ipad-landscape light, city at the pizza shop | camera stands nose-to-wall: a flat brown wall and one blue window pane fill almost the whole picture, only a sliver of street shows at the far left | 2
+kit-teacher-class1-classroom.png | ipad-landscape light, Math classroom | the "Jack" name label sits on top of the "Nora" label, Nora's name is mostly hidden | 2
+kit-n8-designer-designer-room-1.png | ipad-landscape light, designer room 1 | the "+20 🪙" coin pop-up is drawn over the "New client!" message card and hides two lines of its text | 2
+kit-n8-designer-designer-room-2.png | ipad-landscape light, designer room 2 | the big "Knock knock!" banner and its door icon lie across the bottom of the "New client!" message card, hiding its last line and a half | 2

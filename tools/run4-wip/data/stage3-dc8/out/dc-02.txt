@@ -1,0 +1,15 @@
+M-016 | KEEP | Leo's raised hand disappears into Zoe's hair, also in result photo
+M-017 | DROP | truck just at frame edge, stage in view; normal framing, not a glitch
+M-018 | KEEP | ducks tiny at far rim behind cattail heads; faces unreadable
+M-019 | KEEP | both teachers half off screen, tags cut to "Owl" and "Mrs. M"
+M-020 | KEEP | pets and big tags block pen fronts, kitten hidden behind "Mochi"
+M-021 | KEEP | back wall grey, house front lavender; lit fence rules out shade
+M-022 | KEEP | "Buy a fairy wings" grammar slip is there
+M-023 | DROP | HUD prompt behind open book, like map and notepad; normal layering
+M-024 | KEEP | close blocky head covers left third, cut "ce." tag
+M-025 | KEEP | photo paler than in game, empty top third, sign cut to "Cap"
+M-026 | KEEP | line ends in red question mark, reads as a question
+M-027 | DROP | scroll button sits in tile gap, items uncovered; normal hint
+M-028 | DROP | scroll button sits in tile gap, items uncovered; normal hint
+M-029 | DROP | cut labels at edge of pannable map; normal crop
+M-030 | KEEP | close blocky head fills left third, cut "ce." tag

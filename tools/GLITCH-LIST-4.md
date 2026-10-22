@@ -6,7 +6,9 @@ Pass 1 in numbers: 494 pictures (392 + 32 holiday and job pictures + 69 of the k
 
 Pass 2 in numbers: every picture again on the fixed file, 585 taken (394 + 32 holiday and job pictures + a 119-picture retake of the fixed camera spots + 40 of the kit's own after the fixes); the change-spotter compared each with pass 1's picture of the same spot and passed 418 changed or new ones to eleven viewers, who marked 162 things. 51 marks were the photographer's own mistakes and were set aside (a tree trunk at the fountain spot, the camera inside a counter or against a passer-by, a picture taken mid-fade or with the snap flash on); five double-checkers kept 87 of the other 111 and dropped 24; grouped by cause they are the entries G4-034 to G4-063 below (the second critic round's lines were fixed in the same batch).
 
-Passes 3 to 5 in numbers: pass 3 took 475 pictures (394 + 32 holiday and job pictures + 49 of the kit's own), 383 went to eleven viewers, 244 marks, 25 set aside as the photographer's own, the double-checkers kept 175 of 219; pass 4 took 470, 407 to eleven viewers, 186 marks, 31 set aside, 103 kept of 155; pass 5 took 494 (with 4 two-phone dance pictures), 448 to twelve viewers, 227 marks, 90 set aside (the photographer's spots, the kit's staging and timing, and the cases decided in the report's section 9c), 102 kept of 137. The kept marks are grouped by cause into G4-064 to G4-159; each entry names its marks, the pass that found them and the commit that fixed the cause. Pass 6 took every picture again after the pass-5 fixes and is the "after" picture where one exists; pass 7 (after the pass-6 fixes): four of its thirteen viewer batches finished before the org's spend limit stopped the sub-agents (35 marks), and fresh double-checkers kept 15 of 23, grouped into G4-160 to G4-167. Pass 8 was stopped by the owner's wrap-up on 18 Oct after 71 pictures; pass 8 and the last critic round are open (the work is on the branch claude/run-4-wip).
+Passes 3 to 5 in numbers: pass 3 took 475 pictures (394 + 32 holiday and job pictures + 49 of the kit's own), 383 went to eleven viewers, 244 marks, 25 set aside as the photographer's own, the double-checkers kept 175 of 219; pass 4 took 470, 407 to eleven viewers, 186 marks, 31 set aside, 103 kept of 155; pass 5 took 494 (with 4 two-phone dance pictures), 448 to twelve viewers, 227 marks, 90 set aside (the photographer's spots, the kit's staging and timing, and the cases decided in the report's section 9c), 102 kept of 137. The kept marks are grouped by cause into G4-064 to G4-159; each entry names its marks, the pass that found them and the commit that fixed the cause. Pass 6 took every picture again after the pass-5 fixes and is the "after" picture where one exists; pass 7 (after the pass-6 fixes): four of its thirteen viewer batches finished before the org's spend limit stopped the sub-agents (35 marks), and fresh double-checkers kept 15 of 23, grouped into G4-160 to G4-167. Pass 8 was stopped by the owner's wrap-up on 18 Oct after 71 pictures.
+
+The run-4 finish (20 and 21 Oct, branch claude/run-4-finish): pass 8 again in full, then passes 9 to 19 on each fixed file (G4-168 to G4-326); from pass 20 the owner's loop rules of 21 Oct: only what changed was pictured again, five viewers each with its own focus, the kit's night3 and run4 lines in full every pass (G4-327 to G4-333); after the stop, one full picture pass (pass 23, 628 pictures; G4-334 to G4-339) and its re-checks (passes 24 and 25; G4-340, G4-341). The pictures of passes 8 to 19 stayed in the first finish session's scratch folder, which is gone: G4-168 to G4-326 have no before picture here, and the fixed ones show the full final pass's picture of the same spot as the after. Minor marks (how bad 1) still open are listed in tools/RUN-4-REPORT.md ("Leftover minor marks").
 
 How bad: 1 small, 2 clear, 3 broken. Status: fixed / open / not a glitch.
 
@@ -42,7 +44,7 @@ How bad: 1 small, 2 clear, 3 broken. Status: fixed / open / not a glitch.
 | G4-028 | the friends who follow you | every device | When the four friends gathered, one stood behind another and the front one's tag covered the other's. (viewer marks M-142, M-144, M-145) | 2 | [before](pictures-4/stage3-glitches/G4-028-before.webp) | fixed |
 | G4-029 | the designer job: the new-client message | iPad | The '+20 🪙' coin pop and the 'Knock knock!' card landed on the message card and hid its lines. (viewer marks M-140, M-141) | 2 | [before](pictures-4/stage3-glitches/G4-029-before.webp) | fixed |
 | G4-030 | the spooky path: a scare | iPad | The 'BOO! 👻' words floated 2.1 m up, above the top of the screen when the ghost was close. (viewer marks M-155) | 2 | [before](pictures-4/stage3-glitches/G4-030-before.webp) | fixed |
-| G4-031 | October: the little ghosts | iPad | A little ghost drifted right into the camera and filled a third of the view for a moment. (viewer marks M-143) | 1 | [before](pictures-4/stage3-glitches/G4-031-before.webp) | open |
+| G4-031 | October: the little ghosts | iPad | A little ghost drifted right into the camera and filled a third of the view for a moment. (viewer marks M-143) | 1 | [before](pictures-4/stage3-glitches/G4-031-before.webp) | fixed |
 | G4-032 | the park by the food truck | iPad | Flat yellow bars seemed to stick out of the truck's wheels. (viewer marks M-147) | 1 | [before](pictures-4/stage3-glitches/G4-032-before.webp) | not a glitch |
 | G4-033 | cards and the phone on a short screen | iPhone sideways (and the Pet Shop card on iPad) | A tall card, a tutorial card or the phone covers the HUD chips and buttons behind it. (viewer marks M-039, M-067, M-070, M-071, M-072, M-084, M-085, M-086, M-088, M-089, M-090, M-091, M-092, M-093, M-096, M-098, M-100, M-102, M-104) | 1 | [before](pictures-4/stage3-glitches/G4-033-before.webp) · [after](pictures-4/stage3-glitches/G4-033-after.webp) | not a glitch |
 | G4-034 | the cards' scroll-down arrow | every device | The ⬇ arrow of a long card sat on the card's bottom edge and still covered the end of the last visible row: 'Move my ga…', 'Show me the ti…', 'Bring my pets to me', the end of the colour slider, a shop tile's price. (viewer marks M-007, M-011, M-028, M-035, M-058, M-060, M-066, M-067, M-070, M-074, M-075, M-076, M-077, M-086 of pass 2) | 2 | [before](pictures-4/stage3-glitches/G4-034-before.webp) · [after](pictures-4/stage3-glitches/G4-034-after.webp) | fixed |
@@ -179,8 +181,182 @@ How bad: 1 small, 2 clear, 3 broken. Status: fixed / open / not a glitch.
 | G4-165 | friends on the big map | iPhone sideways | "Finn" stood 3 px from "Duck Pond", so it read as one name, "Finn Duck Pond". (viewer marks M-017 (pass 7)) | 1 | [before](pictures-4/stage3-glitches/G4-165-before.webp) · [after](pictures-4/stage3-glitches/G4-165-after.webp) | fixed |
 | G4-166 | a photo shoot at the school | PC | The asked background, "the school sign", was above the dashed frame, cut by the top of the screen and under the coin and time chips; the "Everyone is posed!" tip sat in the frame over Mia and the cat; the photo had no school sign in it and still got five stars. (viewer marks M-020 (pass 7), M-021 (pass 7), M-022 (pass 7)) | 2 | [before](pictures-4/stage3-glitches/G4-166-before.webp) | fixed |
 | G4-167 | the big map's left edge | PC | A cut "ne" of "Friends Lane" hung alone at the map's left edge. (viewer marks M-023 (pass 7)) | 1 | [before](pictures-4/stage3-glitches/G4-167-before.webp) | not a glitch |
+| G4-168 | October: the park fountain | iPad | A white ghost hung inside the fountain, between its top and middle bowls. (viewer marks M-001 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-168-after.webp) | fixed |
+| G4-169 | the Café, Bakery and Ice Cream chalkboards | iPad | The last of five rows sat on the bottom frame with no air under it. (viewer marks M-003 (pass 8), M-004 (pass 8), M-005 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-169-after.webp) | fixed |
+| G4-170 | your garden: a row of locked pots | iPad | The big "🔒 Level 40" plate hung in the air above its stake. (viewer marks M-008 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-170-after.webp) | fixed |
+| G4-171 | people right at the camera | iPad | A grandma or a passer-by stood right against the camera: a grey head, a cardigan or a back filled a third of the picture. (viewer marks M-010 (pass 8), M-011 (pass 8), M-072 (pass 8), M-089 (pass 8)) | 2 | [after](pictures-4/stage3-glitches/G4-171-after.webp) | fixed |
+| G4-172 | the phone: quests | iPad | A quest read "Buy a fairy wings at the Pet shop" ("a" before a plural; "Pet shop", the building says Pet Shop). (viewer marks M-012 (pass 8), M-022 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-172-after.webp) | fixed |
+| G4-173 | the What's new book, page 3 (February) | every screen | The February picture had a townsperson right at the camera filling its left third, her bubble cut to "ce.". (viewer marks M-014 (pass 8), M-024 (pass 8), M-030 (pass 8), M-034 (pass 8), M-038 (pass 8), M-044 (pass 8), M-048 (pass 8), M-051 (pass 8)) | 2 | [after](pictures-4/stage3-glitches/G4-173-after.webp) | fixed |
+| G4-174 | the What's new book, page 5 | every screen | The last line "Your tutorials are pictures now ❓" ended in a red question mark, like a question. (viewer marks M-015 (pass 8), M-026 (pass 8), M-053 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-174-after.webp) | fixed |
+| G4-175 | a photo shoot at the fountain | iPad | Leo's waving arm reached into Zoe's hair, in the view and in the photo. (viewer marks M-016 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-175-after.webp) | fixed |
+| G4-176 | the pond ducks close up | iPad | The close-up missed: both ducks small at the far rim, cattails in front of their heads. (viewer marks M-018 (pass 8)) | 2 | — | not a glitch |
+| G4-177 | inside the school | iPad | The two teachers stood at the screen edges, their name tags cut. (viewer marks M-019 (pass 8)) | 1 | — | not a glitch |
+| G4-178 | the Pet Shop upstairs | iPad | Your pets and their name tags stood right in front of the camera over the pens. (viewer marks M-020 (pass 8)) | 1 | — | not a glitch |
+| G4-179 | walls and tree crowns turned away from the sun | iPad | The house's back wall in the garden was a dull grey, not its colour; the apartment block's wall had a lit strip and a soft seam at 12:30 and pale streaks at 17:30; a house wall at the Flower Corner was pale and streaky at noon; the Tree Park's crowns had thin stripes. (viewer marks M-021 (pass 8), M-058 (pass 8), M-070 (pass 8), M-097 (pass 8), M-099 (pass 8)) | 2 | [after](pictures-4/stage3-glitches/G4-179-after.webp) | fixed |
+| G4-180 | the What's new book, page 4 (the Pet Shop upstairs) | iPad | The picture was pale, a third of it ceiling, the Capybaras sign cut to "Cap". (viewer marks M-025 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-180-after.webp) | fixed |
+| G4-181 | the What's new book, pages 6 and 7 | iPhone, PC | Line breaks: "dance-" / "off"; an emoji alone on a line; 🕺 and 💃 split over two lines. (viewer marks M-031 (pass 8), M-035 (pass 8), M-054 (pass 8), M-055 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-181-after.webp) | fixed |
+| G4-182 | inside the Pet Shop | iPhone upright | A huge pink ceiling lamp hung right in front of the camera at the top. (viewer marks M-033 (pass 8)) | 1 | — | not a glitch |
+| G4-183 | the Pet Shop card | iPhone sideways | Two prices sat lower than the third and were greyed out by the card's bottom fade, so they looked disabled. (viewer marks M-039 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-183-after.webp) | fixed |
+| G4-184 | cards at the bottom of a short screen | iPhone sideways | The bigger-house card ran under the round top buttons (the gear on its corner); the mint jump button poked out beside the mailbox and party cards. (viewer marks M-040 (pass 8), M-045 (pass 8), M-046 (pass 8), M-047 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-184-after.webp) | fixed |
+| G4-185 | the job tutorials | iPhone sideways | The tall tutorial card lay over the top bar, which stayed: it hid the clock chip and the chat button and cut the food chip in half. (viewer marks M-041 (pass 8), M-042 (pass 8), M-043 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-185-after.webp) | fixed |
+| G4-186 | 1 September: the school front | iPad | The "School party today!" banner ran behind the school's name board on its posts. (viewer marks M-059 (pass 8), M-092 (pass 8)) | 2 | [after](pictures-4/stage3-glitches/G4-186-after.webp) | fixed |
+| G4-187 | 1 September: the school hall | iPad | Two balloon bunches stood in front of the 🌈 and 🚀 posters between the doors. (viewer marks M-060 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-187-after.webp) | fixed |
+| G4-188 | October: the spooky gate at night | iPad | Your pets bunched up right in front of the camera over the gate. (viewer marks M-061 (pass 8)) | 2 | — | not a glitch |
+| G4-189 | a pizza delivery | iPad | Two orders at once: the chef's card for Iris and the message of a new order for Mr. Bolt. (viewer marks M-063 (pass 8)) | 2 | — | not a glitch |
+| G4-190 | two players at the park | PC | The PC player's view was boxed in by a tree trunk and the back of the Ideas Board. (viewer marks M-064 (pass 8)) | 2 | — | not a glitch |
+| G4-191 | the dance-off | iPhone upright, iPhone sideways | The "✨ Perfect +15" pop-up ran into the score bar (upright); on a sideways phone its ✨ covered the left dancer's face, which read as the back of a head. (viewer marks M-065 (pass 8), M-066 (pass 8)) | 2 | [after](pictures-4/stage3-glitches/G4-191-after.webp) | fixed |
+| G4-192 | the disco ball | iPhone upright | The mirror ball seemed to float beside its pole: the 3 cm arm and 1 cm string were too thin and pale to see. (viewer marks M-067 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-192-after.webp) | fixed |
+| G4-193 | the big map on a tablet | Android tablet upright | The "You are online!" message lay on the chat and phone buttons above the map card. (viewer marks M-068 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-193-after.webp) | fixed |
+| G4-194 | the hair salon | iPad | The hair card and its name tab covered the customer in the chair, the tab on their face. (viewer marks M-069 (pass 8), M-083 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-194-after.webp) | fixed |
+| G4-195 | playing with a pet | iPad | A toy and a hand seemed to hang in mid-air beside a lamp pole. (viewer marks M-073 (pass 8), M-074 (pass 8), M-075 (pass 8), M-076 (pass 8), M-077 (pass 8), M-078 (pass 8)) | 1 | — | not a glitch |
+| G4-196 | your house | iPad | Three pet name tags piled up: "Moch", only an "M". (viewer marks M-079 (pass 8), M-080 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-196-after.webp) | fixed |
+| G4-197 | your house upstairs | iPad | The save's green rug lay half under the floor's blue starter rug. (viewer marks M-081 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-197-after.webp) | fixed |
+| G4-198 | the hairstylist tutorial | iPad, PC | The caption "A customer sits down" sat right of centre in its picture. (viewer marks M-082 (pass 8), M-118 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-198-after.webp) | fixed |
+| G4-199 | the park at night in rain | iPad | It rained from a clear starry sky. (viewer marks M-088 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-199-after.webp) | fixed |
+| G4-200 | the clothes maker at the mirror | iPad | Its ⬇️ "more below" was a tiny 33 px round button. (viewer marks M-090 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-200-after.webp) | fixed |
+| G4-201 | the Easter month at the Flower Corner | iPad | The eggs in view were small pastel ones lying loose, no golden-banded egg in a nest. (viewer marks M-091 (pass 8)) | 1 | — | not a glitch |
+| G4-202 | the Pet Shop upstairs: the ducks | iPad | The two ducks stood on top of their water on orange legs. (viewer marks M-093 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-202-after.webp) | fixed |
+| G4-203 | friends round you | iPad | After you turned round on a narrow pavement, Finn stood hidden behind Luna (only his name tag showed); Rosie walked past right at the camera. (viewer marks M-095 (pass 8), M-096 (pass 8)) | 2 | [after](pictures-4/stage3-glitches/G4-203-after.webp) | fixed |
+| G4-204 | the clock chip | iPad | The chip showed the old hour or weather under the new sky: "11:30" at 12:30, the sun under an evening sky, a cloud under a blue sky. (viewer marks M-098 (pass 8), M-100 (pass 8), M-101 (pass 8), M-103 (pass 8)) | 2 | [after](pictures-4/stage3-glitches/G4-204-after.webp) | fixed |
+| G4-205 | your pets at the Tree Park gate | iPad | Your pets crowded the bottom edge in front of the camera; Clover stood behind Waffles, only her ears showing. (viewer marks M-102 (pass 8)) | 2 | — | open |
+| G4-206 | a grandma's long line | iPad, PC | A long line ("Holidays bring something new here, you'll see.") was one huge pill running off the screen's left edge, under the corner map and the bus pill (and in M-117 the grandma stood at the camera too). (viewer marks M-104 (pass 8), M-105 (pass 8), M-106 (pass 8), M-107 (pass 8), M-117 (pass 8)) | 2 | [after](pictures-4/stage3-glitches/G4-206-after.webp) | fixed |
+| G4-207 | the duck-pond bench | iPad | Two speech bubbles overlapped: "Hee hee!" on the middle of the other line. (viewer marks M-108 (pass 8)) | 2 | [after](pictures-4/stage3-glitches/G4-207-after.webp) | fixed |
+| G4-208 | the designer job: a new client | iPad | The "+20" coin pop sat on the "New client!" message, over its first words. (viewer marks M-109 (pass 8), M-112 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-208-after.webp) | fixed |
+| G4-209 | the designer job's room | iPad | A white ring floated in the room (over the sofa, beside the armchair), at the same screen spot in both rooms. (viewer marks M-110 (pass 8), M-113 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-209-after.webp) | fixed |
+| G4-210 | the designer's wish card | iPad | The title was cut: "Sunny living room · r…". (viewer marks M-111 (pass 8), M-114 (pass 8)) | 1 | [after](pictures-4/stage3-glitches/G4-210-after.webp) | fixed |
+| G4-211 | a photo shoot by the food truck | iPhone sideways | "Pick up the litter" and its big button sat inside the dashed photo frame. (viewer marks M-116 (pass 8)) | 2 | [after](pictures-4/stage3-glitches/G4-211-after.webp) | fixed |
+| G4-212 | the phone: calendar | iPad | In Saturday's tile the ⭐ and the 🏆 sat to the left, one under the other, not under the day. (viewer marks M-005 (pass 9)) | 1 | [after](pictures-4/stage3-glitches/G4-212-after.webp) | fixed |
+| G4-213 | the Pet Shop card | iPad | "Buy one and something new pops up!" beside "✨ New in!" was tiny (12 px, faint). (viewer marks M-008 (pass 9)) | 1 | [after](pictures-4/stage3-glitches/G4-213-after.webp) | fixed |
+| G4-214 | the phone's furniture page, the delivery job box | PC, iPad | An emoji stood alone on the last line: 🎨 after "free!", 🍕 after "Pizzeria". (viewer marks M-017 (pass 9), M-021 (pass 9)) | 1 | [after](pictures-4/stage3-glitches/G4-214-after.webp) | fixed |
+| G4-215 | the What's new book, page 4 | iPad | The Pet Shop upstairs picture was soft and pale: its lower third an empty floor, the Capybaras sign cut at its edge. (viewer marks M-012 (pass 9)) | 1 | [after](pictures-4/stage3-glitches/G4-215-after.webp) | fixed |
+| G4-216 | inside the flower shop | iPhone upright | From the door the middle hanging basket's rod came straight out of the ceiling lamp's bulb. (viewer marks M-015 (pass 9)) | 1 | [after](pictures-4/stage3-glitches/G4-216-after.webp) | fixed |
+| G4-217 | 1 September: the school hall | iPad | No balloons in sight as you come in: f5 had moved the back two bunches by the lockers (G4-187), out of the view from the door. (viewer marks M-020 (pass 9), M-035 (pass 9)) | 2 | [after](pictures-4/stage3-glitches/G4-217-after.webp) | fixed |
+| G4-218 | the hair salon | iPad, PC | Big words ("Ava sits down!", "Ben comes in!") lay across the customer's face once the view turned to them (G4-194). (viewer marks M-030 (pass 9), M-054 (pass 9), M-055 (pass 9)) | 2 | [after](pictures-4/stage3-glitches/G4-218-after.webp) | fixed |
+| G4-219 | the hair card | iPhone sideways | The card covered the end of the job pill: "Ben is in your ch". (viewer marks M-049 (pass 9), M-051 (pass 9)) | 1 | [after](pictures-4/stage3-glitches/G4-219-after.webp) | fixed |
+| G4-220 | a photo shoot at the school | iPhone sideways | The "Everyone is posed!" message lay over the school's name board, the background the booking asked for. (viewer marks M-052 (pass 9)) | 1 | [after](pictures-4/stage3-glitches/G4-220-after.webp) | fixed |
+| G4-221 | friends round you (after G4-203) | iPad | After a turn on a narrow pavement Theo stood half behind Luna and Rosie walked past right at the camera; in the other pictures Finn's face showed beside Luna's hair. (viewer marks M-040 (pass 9), M-043 (pass 9)) | 2 | [after](pictures-4/stage3-glitches/G4-221-after.webp) | fixed |
+| G4-222 | your pets (G4-205 again) | iPad | Your pets at your heels at the bottom edge: a name tag cut at the edge or under the joystick, one pet behind another, three in one clump. (viewer marks M-028 (pass 9), M-041 (pass 9), M-044 (pass 9), M-046 (pass 9), M-048 (pass 9)) | 2 | — | open |
+| G4-223 | the photographer's own staging | iPad, PC | A car right at the camera (the school front in rain); the garden's back wall pink after the house was painted purple; two shoppers inside each other; a posed townsperson on the road at New Year. (viewer marks M-009 (pass 9), M-010 (pass 9), M-018 (pass 9), M-019 (pass 9)) | 1 | — | not a glitch |
+| G4-224 | the big map | iPad, iPhone sideways | Place names cut at the map's edges; under the "👆 Tap a place" tip only the end of a name showed ("air Salon"). (viewer marks M-011 (pass 9), M-038 (pass 9), M-053 (pass 9)) | 1 | — | not a glitch |
+| G4-225 | the check's own staging | iPad | A pink thing half sunk in the park fountain at Christmas; play feedback (words, toys, a hand) piled on the Spooky path sign; a "🥚 18/25" floating over the scene under "All 25!"; grandmas behind a message, ducks under the buttons. (viewer marks M-022 (pass 9), M-023 (pass 9), M-024 (pass 9), M-025 (pass 9), M-026 (pass 9), M-027 (pass 9), M-032 (pass 9), M-036 (pass 9)) | 1 | — | not a glitch |
+| G4-226 | your house upstairs, an old save | iPad | The purple bed seemed pushed into the bunk bed. (viewer marks M-029 (pass 9)) | 1 | — | not a glitch |
+| G4-227 | the hair salon: a customer's wish | PC | "I'd like my hair shoulder-length and bun" (clumsy words). (viewer marks M-063 (pass 10)) | 1 | [after](pictures-4/stage3-glitches/G4-227-after.webp) | fixed |
+| G4-228 | the photo and hair result cards | iPhone sideways | The "+120 🪙" pop flew half behind the card's top edge. (viewer marks M-022 (pass 10), M-033 (pass 10), M-059 (pass 10)) | 1 | [after](pictures-4/stage3-glitches/G4-228-after.webp) | fixed |
+| G4-229 | the designer job: a new client (after G4-208) | iPad | The "+20 🪙" pop lay on the "New client!" words that came a moment after it. (viewer marks M-058 (pass 10)) | 1 | [after](pictures-4/stage3-glitches/G4-229-after.webp) | fixed |
+| G4-230 | the clock chip | iPad, PC, Android tablet | The chip showed ☀️ under a grey sky. (viewer marks M-045 (pass 10), M-052 (pass 10), M-062 (pass 10)) | 1 | [after](pictures-4/stage3-glitches/G4-230-after.webp) | fixed |
+| G4-231 | a grandma walking by | PC | At the Beach Bus stop a grandma walked right through the camera: her head and cardigan filled a third of the screen, her shoes stuck out under a card. (viewer marks M-036 (pass 10), M-037 (pass 10), M-040 (pass 10), M-041 (pass 10)) | 2 | [after](pictures-4/stage3-glitches/G4-231-after.webp) | fixed |
+| G4-232 | a friend out for a walk | iPad | Luna, out for a walk, stood 0.9 m in front of the camera, her back and hair filling a quarter of the view, for as long as you stood still. (viewer marks M-004 (pass 10), M-005 (pass 10)) | 2 | [after](pictures-4/stage3-glitches/G4-232-after.webp) | fixed |
+| G4-233 | friends round you | iPad | After a turn a townsperson stood between you and your friends, hiding Luna and Theo. (viewer marks M-057 (pass 10)) | 2 | [after](pictures-4/stage3-glitches/G4-233-after.webp) | fixed |
+| G4-234 | name tags far away | iPad, iPhone | The Pet Show judges' far name tags were tiny pills piled in a staircase; at New Year a far grandma's tiny bubble, drawn over everything, sat on a near face. (viewer marks M-014 (pass 10), M-016 (pass 10), M-019 (pass 10), M-021 (pass 10), M-053 (pass 10)) | 1 | [after](pictures-4/stage3-glitches/G4-234-after.webp) | fixed |
+| G4-235 | a photo shoot at the school (after G4-220) | iPhone sideways | The "Everyone is posed!" message still lay over the hanging school sign and Ben's tag; the big school sign was cut by the top edge, behind the coin, food and clock chips. (viewer marks M-061 (pass 10)) | 2 | [after](pictures-4/stage3-glitches/G4-235-after.webp) | fixed |
+| G4-236 | the phone: calendar (after G4-163) | iPhone sideways | On a Saturday the Halloween line stopped at "…and the" in the phone's bottom fade. (viewer marks M-032 (pass 10)) | 1 | [after](pictures-4/stage3-glitches/G4-236-after.webp) | fixed |
+| G4-237 | the phone: Rosie's job list | iPhone upright | "Photographer" touched both sides of its card. (viewer marks M-015 (pass 10)) | 1 | [after](pictures-4/stage3-glitches/G4-237-after.webp) | fixed |
+| G4-238 | the Clothes Shop's New in! row | iPad (dark) | The Special cap's near-black colour dot had no ring and vanished on the dark card. (viewer marks M-043 (pass 10)) | 1 | [after](pictures-4/stage3-glitches/G4-238-after.webp) | fixed |
+| G4-239 | the Toy Store's corner post | iPad | A faint dashed line ran down the pink corner post, roof edge to pavement. (viewer marks M-001 (pass 10)) | 1 | [after](pictures-4/stage3-glitches/G4-239-after.webp) | fixed |
+| G4-240 | the Toy Store and Hair Salon awnings | iPad | The awning seemed to run on past the shop's far corner into thin air, off-centre. (viewer marks M-008 (pass 10)) | 1 | [after](pictures-4/stage3-glitches/G4-240-after.webp) | fixed |
+| G4-241 | the duck pond | iPad | Broken dark-blue blotches on the water along the reeds. (viewer marks M-003 (pass 10)) | 1 | [after](pictures-4/stage3-glitches/G4-241-after.webp) | fixed |
+| G4-242 | the Tree Park: the star over your next deck | iPad | Seen half-way round, the turning star looked like a bell drawn through a star. (viewer marks M-010 (pass 10)) | 1 | [after](pictures-4/stage3-glitches/G4-242-after.webp) | fixed |
+| G4-243 | inside the Bakery | iPad | A shopper at the counter stood right in front of Mrs. Crumb as seen from the door: the two read as one stacked figure. (viewer marks M-012 (pass 10)) | 1 | [after](pictures-4/stage3-glitches/G4-243-after.webp) | fixed |
+| G4-244 | the Tree Park: a tree crown | iPad | A short row of soft dark dots on a big orange crown. (viewer marks M-002 (pass 10)) | 1 | — | open |
+| G4-245 | your pets (G4-205 again) | iPad | Mochi and Clover with their big tags in front of the Pet Shop's upstairs pens. (viewer marks M-013 (pass 10)) | 1 | — | open |
+| G4-246 | not glitches | iPad, iPhone sideways | The fountain mottled at night; a house sign without a garland in October; the Toy Store's name off-centre on its board; two shoppers at the left edge of the Pet Shop, one behind the other, and one behind the buttons. (viewer marks M-006 (pass 10), M-009 (pass 10), M-034 (pass 10), M-035 (pass 10)) | 1 | — | not a glitch |
+| G4-247 | the photographer's own staging | iPad | On a rare delivery the job box read 0:44 while Chef Blaze's card said the timer starts when you close it. (viewer marks M-044 (pass 10)) | 1 | — | not a glitch |
+| G4-248 | the check's own staging | iPad | A townsperson's back filling the middle of the fountain pictures; a faded "And the winner is…" over a new pet; the whole picture dimmed after the stairs. (viewer marks M-046 (pass 10), M-047 (pass 10), M-048 (pass 10), M-049 (pass 10), M-051 (pass 10)) | 1 | — | not a glitch |
+| G4-249 | a grandma walking by (after G4-231) | PC | At the Beach Bus stop a grandma still passed right at the camera: her head and cardigan filled the left quarter (the light-theme picture and the December picture showed the same; the filter set those two aside under a wrong reason). (viewer marks M-022 (pass 11)) | 2 | [after](pictures-4/stage3-glitches/G4-249-after.webp) | fixed |
+| G4-250 | the big map | iPhone, iPad, PC | Your friends' dots had no names (the builder's picture shows Luna, Rosie and Finn); Rosie's dot lay on the S of "Spooky path". (viewer marks M-015 (pass 11), M-017 (pass 11)) | 1 | [after](pictures-4/stage3-glitches/G4-250-after.webp) | fixed |
+| G4-251 | the What's new book | PC | On the last page the page dots sat 21 px left of the middle: the wider "Let's play!" button pushed them. (viewer marks M-020 (pass 11)) | 1 | [after](pictures-4/stage3-glitches/G4-251-after.webp) | fixed |
+| G4-252 | a message after the clock jumped | iPad | At 22:10 the message said "The football friends are at the field until 19:00. Come and play!". (viewer marks M-024 (pass 11)) | 1 | [after](pictures-4/stage3-glitches/G4-252-after.webp) | fixed |
+| G4-253 | a message over the big map | Android tablet (upright) | The "You are online!" message lay on the chat and phone buttons. (viewer marks M-027 (pass 11)) | 1 | [after](pictures-4/stage3-glitches/G4-253-after.webp) | fixed |
+| G4-254 | New Year's fireworks | iPad | The fireworks hardly read as fireworks: a thin spray of pale dots and a white smudge. (viewer marks M-023 (pass 11)) | 2 | [after](pictures-4/stage3-glitches/G4-254-after.webp) | fixed |
+| G4-255 | the photographer's stars | iPad | Ben asked for "the bench behind us"; the photo showed a blue wall and no bench and still got the full score. (viewer marks M-034 (pass 11)) | 1 | [after](pictures-4/stage3-glitches/G4-255-after.webp) | fixed |
+| G4-256 | a photo shoot at the Pet Show stage | iPhone sideways | Two judges sat right beside the camera, cut by the screen edge, one reaching into the photo; a judge's name tag cut at the edge of the result. (viewer marks M-041 (pass 11), M-042 (pass 11)) | 2 | [after](pictures-4/stage3-glitches/G4-256-after.webp) | fixed |
+| G4-257 | shadows (G4-088 again) | iPad | Soft dark dots on a Tree Park crown; fine stripes under the apartments' window sills at 11:30. (viewer marks M-005 (pass 11), M-040 (pass 11)) | 1 | — | open |
+| G4-258 | your pets (G4-205 again) | iPad | Mochi behind Finn, its tag cut to "chi"; Waffles' hatted head at the bottom edge, its tag on Rosie's dress. (viewer marks M-038 (pass 11), M-039 (pass 11)) | 1 | — | open |
+| G4-259 | decided before | iPad, PC, iPhone sideways | The book over the corner map and the notepad; the garden's back wall not the house's purple; the joystick in from the edge on a sideways phone; a round shadow on the market's fruit stand; the iPad's notepad over two townsfolk's heads; the map's places list fading at its foot under the ⬇️ hint. (viewer marks M-002 (pass 11), M-008 (pass 11), M-019 (pass 11), M-021 (pass 11), M-025 (pass 11), M-043 (pass 11)) | 1 | — | not a glitch |
+| G4-260 | the check's own staging | iPad | The spooky path's picture facing the street; a grandma's back filling the fountain picture; a lamp post coming down into a new pet's head; a townsperson's hat hidden in a low tree crown right at the camera; the camera tilted at the sky after a pick-up. (viewer marks M-029 (pass 11), M-030 (pass 11), M-031 (pass 11), M-032 (pass 11), M-033 (pass 11), M-035 (pass 11), M-036 (pass 11)) | 1 | — | not a glitch |
+| G4-261 | the What's new book on an upright phone | iPhone upright | On the last page the wide "Let's play!" button lay on the page dots and hid the last three, this page's pink one among them (since f8, G4-251). (viewer marks M-003 (pass 12), M-006 (pass 12)) | 2 | [after](pictures-4/stage3-glitches/G4-261-after.webp) | fixed |
+| G4-262 | a car right at the camera | iPad | The delivery picture showed no town: a flat green field and a dark band across the middle. A mint car stood at the photographer's spot on the road; its cabin was 15 cm from the camera and its roof edge 2 cm above eye height. (viewer marks M-015 (pass 12), M-016 (pass 12)) | 3 | [after](pictures-4/stage3-glitches/G4-262-after.webp) | fixed |
+| G4-263 | the phone's screen | iPhone sideways | A muddy grey band along the foot of every phone page, also with nothing to scroll. (viewer marks M-008 (pass 12), M-010 (pass 12)) | 1 | [after](pictures-4/stage3-glitches/G4-263-after.webp) | fixed |
+| G4-264 | the bag's counts | iPhone sideways, dark theme | The "×3" under each thing was small, light and hard to read. (viewer marks M-011 (pass 12)) | 1 | [after](pictures-4/stage3-glitches/G4-264-after.webp) | fixed |
+| G4-265 | the dance-off's crouch | iPad | In the crouch the dancer's legs ended flat on the tiles: the shoes had sunk into the dance floor. (viewer marks M-036 (pass 12)) | 2 | [after](pictures-4/stage3-glitches/G4-265-after.webp) | fixed |
+| G4-266 | the dance-off on an upright phone | iPhone upright | The host's dancer leaned out of the picture (crown, head and arm cut by the left edge). (viewer marks M-017 (pass 12)) | 1 | [after](pictures-4/stage3-glitches/G4-266-after.webp) | fixed |
+| G4-267 | the owl's and the duck's outfits | iPad | A new owl's cape stood flat out of its back and its collar hung off its front; on the duck a box sat loose on its back. (viewer marks M-021 (pass 12), M-023 (pass 12)) | 2 | [after](pictures-4/stage3-glitches/G4-267-after.webp) | fixed |
+| G4-268 | the little pictures of glowing furniture | iPad | The "Seafoam neon sign" in the Home shop showed white tubes, not seafoam. (viewer marks M-033 (pass 12)) | 1 | [after](pictures-4/stage3-glitches/G4-268-after.webp) | fixed |
+| G4-269 | the job tutorials' pictures | iPad | Pizza, "Follow the dot": the hand right of the dot pointed away from it. Hairstylist: the picture's words were the line under it again ("Make the hair like the picture"). (viewer marks M-034 (pass 12), M-035 (pass 12)) | 1 | [after](pictures-4/stage3-glitches/G4-269-after.webp) | fixed |
+| G4-270 | the photographer's framing | iPad | Two dark posts behind a tree by the football field ran up into its crown; the garden picture's lower half was the garden fence. (viewer marks M-001 (pass 12), M-002 (pass 12)) | 1 | — | not a glitch |
+| G4-271 | decided before | iPhone upright, PC, iPad | A grey-haired figure in the market with her back to you; a dark half-round on the fruit stand; a small 🎨 at the corner map's foot; Mochi's tag at the joystick. (viewer marks M-004 (pass 12), M-012 (pass 12), M-024 (pass 12), M-037 (pass 12)) | 1 | — | not a glitch |
+| G4-272 | the check's own staging | iPad | A friend walking by right in front of the fountain picture; the lamp post in each new pet's picture; the Halloween gate's signs at the screen's edges, one behind the notepad; the camera at the sky after a pick-up. (viewer marks M-018 (pass 12), M-019 (pass 12), M-020 (pass 12), M-022 (pass 12), M-027 (pass 12), M-028 (pass 12), M-029 (pass 12), M-031 (pass 12), M-032 (pass 12)) | 1 | — | not a glitch |
+| G4-273 | the clock chip's rain | iPad, Android tablet | The chip showed 🌧️ while no rain fell, the scene still in sunshine (just after the weather turned). (viewer marks M-015 (pass 13), M-021 (pass 13), M-024 (pass 13)) | 1 | [after](pictures-4/stage3-glitches/G4-273-after.webp) | fixed |
+| G4-274 | a photo shoot that never ended | iPad | After a photo job the corner map and the notepad were gone in town, with the phone's Photos chat open. (viewer marks M-023 (pass 13)) | 2 | [after](pictures-4/stage3-glitches/G4-274-after.webp) | fixed |
+| G4-275 | quests | PC | "Snack time: Eat some flour"; "Buy 3 different treats" with flour among them. (viewer marks M-014 (pass 13)) | 1 | [after](pictures-4/stage3-glitches/G4-275-after.webp) | fixed |
+| G4-276 | the Pet Shop's owl | iPad | The owl hung in the air in front of the wall, with its back to the room. (viewer marks M-025 (pass 13)) | 1 | [after](pictures-4/stage3-glitches/G4-276-after.webp) | fixed |
+| G4-277 | the park garland at the bus stop | iPad | A holiday garland ran into the bus shelter under its roof. (viewer marks M-001 (pass 13), M-003 (pass 13)) | 1 | [after](pictures-4/stage3-glitches/G4-277-after.webp) | fixed |
+| G4-278 | two ducks, a bird | iPhone sideways, PC | One duck on the pond, with a yellow head on a white body; a dark stick at the top of a photo. (viewer marks M-007 (pass 13), M-008 (pass 13), M-011 (pass 13), M-012 (pass 13)) | 1 | — | not a glitch |
+| G4-279 | the salon floor | PC 1920 | The floor near the camera looked soft, the far tiles sharp. (viewer marks M-032 (pass 13)) | 1 | — | open |
+| G4-280 | decided before | iPhone upright, PC, iPad | The upright phone's Pet Show picture boxed in by the truck, the fence and the pennants; the places list's ⬇️; the salon's sign under the round buttons. (viewer marks M-005 (pass 13), M-010 (pass 13), M-019 (pass 13)) | 1 | — | not a glitch |
+| G4-281 | the check's own staging | iPad | Crates at the edge of the check's photo shoot; the Ideas Board in front of N16's camera; a townsperson's back in N21's; a post, a lamp post, a door at the camera; a friend partly behind another. (viewer marks M-016 (pass 13), M-020 (pass 13), M-022 (pass 13), M-026 (pass 13), M-027 (pass 13), M-028 (pass 13), M-029 (pass 13)) | 1 | — | not a glitch |
+| G4-282 | the salon card's last word | iPad | The customer's words wrapped so the last emoji and the closing quote stood alone on a line ("💕”", "✨”"). (viewer marks M-004 (pass 14), M-006 (pass 14)) | 1 | [after](pictures-4/stage3-glitches/G4-282-after.webp) | fixed |
+| G4-283 | the job box's distance | iPad | The job box broke its line before "· 86 m", the second line starting with the dot. (viewer marks M-005 (pass 14)) | 1 | [after](pictures-4/stage3-glitches/G4-283-after.webp) | fixed |
+| G4-284 | the photo shoot at the Duck Pond | iPad | A thin dark strip at the bottom-right corner, under Snap. (viewer marks M-007 (pass 14)) | 1 | — | not a glitch |
+| G4-285 | the phone's jobs on a sideways iPhone | iPhone sideways | Three job cards filled the phone screen; the other two (the Hairstylist, the Photographer) showed no part above its foot. (viewer marks M-003 (pass 14)) | 1 | — | open |
+| G4-286 | your friends in a shop | iPad, dark theme | A friend half off the screen's edge in the toy shop; one with her back to you at the bakery's counter, her head in front of the menu's last lines. (viewer marks M-001 (pass 14), M-002 (pass 14)) | 1 | — | not a glitch |
+| G4-287 | the designer's reveal | iPad | A see-through "Knock knock!" over the room. (viewer marks M-011 (pass 14), M-012 (pass 14)) | 1 | — | not a glitch |
+| G4-288 | decided before | iPhone sideways | The hair card over the customer; an orange pet with a white wing half off the screen's bottom-left corner. (viewer marks M-014 (pass 14), M-015 (pass 14)) | 1 | — | not a glitch |
+| G4-289 | the check's own staging | iPad, PC | Two grandmas right in front of N6's camera; "The Food truck is closed now" at noon; a tree in front of N25's camera at the Flower Corner. (viewer marks M-010 (pass 14), M-013 (pass 14), M-016 (pass 14)) | 1 | — | not a glitch |
+| G4-290 | a quest's steps | iPhone upright, PC | A long step wrapped under its ○, and "Ice / Cream Shop" was split over two lines. (viewer marks M-003 (pass 15), M-010 (pass 15)) | 1 | [after](pictures-4/stage3-glitches/G4-290-after.webp) | fixed |
+| G4-291 | the photo frame on a touch screen held sideways | iPhone sideways (and iPad) | The dashed photo frame sat right of the middle: the family you faced stood left of its middle, in the photo too. (viewer marks M-007 (pass 15)) | 1 | [after](pictures-4/stage3-glitches/G4-291-after.webp) | fixed |
+| G4-292 | the clock chip on a cloudy night | iPad | A grey night sky with no stars while the clock chip showed 🌙. (viewer marks M-015 (pass 15)) | 1 | [after](pictures-4/stage3-glitches/G4-292-after.webp) | fixed |
+| G4-293 | the path through the Tree Park's gate | PC | The path through the gate stopped in a straight edge in the grass a few steps past it. (viewer marks M-009 (pass 15)) | 1 | [after](pictures-4/stage3-glitches/G4-293-after.webp) | fixed |
+| G4-294 | the Tree Park's crowns | iPad | A small row of brown saw-tooth marks on a yellow crown. (viewer marks M-001 (pass 15)) | 1 | — | open |
+| G4-295 | a duck, a shop, two holiday views | iPad, iPhone upright | A grey lump on the pond at night; a chef's hat on the market's oranges; the Christmas tree's star cut by the screen's top; a firework burst at the screen's edge beside an older one's grey dots. (viewer marks M-002 (pass 15), M-006 (pass 15), M-013 (pass 15), M-014 (pass 15)) | 1 | — | not a glitch |
+| G4-296 | decided before | iPhone upright, PC, iPad | The notepad over the Toy Store's sign on an upright phone; a dark half-circle on the fruit stand; townsfolk in party hats with their backs to N21's camera. (viewer marks M-004 (pass 15), M-011 (pass 15), M-016 (pass 15)) | 1 | — | not a glitch |
+| G4-297 | the ducks and the lily flowers | iPhone sideways | The white duck sat on a lily pad, the pad's pink flower poking out at the duck's chest. (viewer marks M-005 (pass 16)) | 1 | [after](pictures-4/stage3-glitches/G4-297-after.webp) | fixed |
+| G4-298 | a duck's eyes | PC, dark theme | The white duck's far eye showed as a white ring past its head's outline, like a googly eye. (viewer marks M-007 (pass 16)) | 1 | [after](pictures-4/stage3-glitches/G4-298-after.webp) | fixed |
+| G4-299 | a friend behind a post, two ducks, the invitation card | iPad, PC | Luna half behind a lamp post beside the camera at the bus stop; the white duck behind the yellow one, its head over the yellow one's; N39's invitation card pale and see-through. (viewer marks M-001 (pass 16), M-006 (pass 16), M-009 (pass 16)) | 1 | — | not a glitch |
+| G4-300 | decided before | iPhone upright, iPhone sideways | A grandma's back filling the fountain view; the pose card over the photo frame's right end. (viewer marks M-002 (pass 16), M-003 (pass 16), M-004 (pass 16)) | 1 | — | not a glitch |
+| G4-301 | October: the bus shelter at the park | iPad | A thin white line lay on the shelter's roof, as if a garland string ran through the roof and its sign. (viewer marks M-001 (pass 17)) | 1 | [after](pictures-4/stage3-glitches/G4-301-after.webp) | fixed |
+| G4-302 | the lake | iPad | The bench by the lake faced the grass, side-on to the water. (viewer marks M-004 (pass 17)) | 1 | [after](pictures-4/stage3-glitches/G4-302-after.webp) | fixed |
+| G4-303 | a shop card in the dark theme | PC, dark theme | The Midnight cat tree's picture, dark navy, was hard to make out on the dark purple tile. (viewer marks M-008 (pass 17)) | 1 | [after](pictures-4/stage3-glitches/G4-303-after.webp) | fixed |
+| G4-304 | inside a shop, at the door | PC | A shopper stood right against the camera at the edge of the view: a giant half face (the Pet Shop), a big yellow figure (the Flower shop). (viewer marks M-015 (pass 17), M-016 (pass 17)) | 1 | [after](pictures-4/stage3-glitches/G4-304-after.webp) | fixed |
+| G4-305 | a grandma behind the bus shelter | PC | A tiny bubble, "The park is the heart of our town.", floated over the shelter's glass with nobody under it. (viewer marks M-017 (pass 17)) | 1 | [after](pictures-4/stage3-glitches/G4-305-after.webp) | fixed |
+| G4-306 | the Tree Park's crowns (G4-294 again) | iPad | Small brown striped bits on a big yellow crown by the first deck of the hard path. (viewer marks M-002 (pass 17)) | 1 | — | open |
+| G4-307 | the photographer's shoot at the pond's bench | iPhone sideways | The bench, the photo's background, was mostly behind Lily; a grey wall filled half the frame. (viewer marks M-012 (pass 17)) | 1 | — | open |
+| G4-308 | the Home shop: two pieces, one picture | iPad | Armchair and Beanbag showed the same blue seat 💺. (viewer marks M-011 (pass 17)) | 1 | — | not a glitch |
+| G4-309 | decided before | iPhone sideways, iPad | The ⬇️ over two tiles' corners on the Market card; N27's camera tipped up at the sky after a pick-up; the coin, food and clock chips gone while a photo's +120 popped. (viewer marks M-006 (pass 17), M-010 (pass 17), M-013 (pass 17)) | 1 | — | not a glitch |
+| G4-310 | the phone: quests | iPhone upright | A cooking quest read "Cook cheese sandwich on your stove". (viewer marks M-003 (pass 18)) | 1 | [after](pictures-4/stage3-glitches/G4-310-after.webp) | fixed |
+| G4-311 | a shop card: New in! | iPad, dark theme | "Grape dog house" and "Violet dog house" side by side looked like one item twice. (viewer marks M-002 (pass 18)) | 1 | [after](pictures-4/stage3-glitches/G4-311-after.webp) | fixed |
+| G4-312 | the designer's new client | iPad | The card said "I live in the Apartments behind the Pet Shop, flat 11, near the Pet Shop". (viewer marks M-013 (pass 18)) | 1 | [after](pictures-4/stage3-glitches/G4-312-after.webp) | fixed |
+| G4-313 | the photographer's first view of a shoot | iPhone sideways | Everyone's feet were below the photo frame at the shoot's start. (viewer marks M-018 (pass 18)) | 1 | [after](pictures-4/stage3-glitches/G4-313-after.webp) | fixed |
+| G4-314 | a burst on a cloud, lines on a floor, a yellow bar | iPad, PC | A New Year burst resting on a cloud; thin lilac lines across a client room's wooden floor; a yellow bar at the bottom-right corner of a visit to a friend's house. (viewer marks M-006 (pass 18), M-014 (pass 18), M-015 (pass 18)) | 1 | — | not a glitch |
+| G4-315 | decided before | iPad, iPhone upright, iPhone sideways | An older chat bubble cut under the header; a person close by at the left edge of an upright phone's view; a dark bar at the bottom-right of N25's pond shoot; the customer's head above the hair card on a sideways phone. (viewer marks M-001 (pass 18), M-004 (pass 18), M-007 (pass 18), M-010 (pass 18), M-011 (pass 18), M-020 (pass 18)) | 1 | — | not a glitch |
+| G4-316 | the check's own staging | iPad | A white gate post at the edge of N20's February picture; N30's camera down in the fountain's pool. (viewer marks M-009 (pass 18), M-012 (pass 18)) | 1 | — | not a glitch |
+| G4-317 | a photo shoot: a raised arm | iPad, PC | Mia's raised arm went straight up through her pigtail. (viewer marks M-003 (pass 19)) | 1 | [after](pictures-4/stage3-glitches/G4-317-after.webp) | fixed |
+| G4-318 | the photographer's thank-you card | iPad | The photo on the card was soft: faces and name tags fuzzy. (viewer marks M-004 (pass 19)) | 1 | [after](pictures-4/stage3-glitches/G4-318-after.webp) | fixed |
+| G4-319 | inside a shop | iPad, dark theme | A shopper walking past stood right at the camera in the Toy Store: a head and a body filled the left sixth of the view. (viewer marks M-005 (pass 19)) | 1 | [after](pictures-4/stage3-glitches/G4-319-after.webp) | fixed |
+| G4-320 | the dance-off on a sideways phone | iPhone sideways | The score bar sat on the dancers' crowns and hid the mirror ball. (viewer marks M-013 (pass 19)) | 1 | [after](pictures-4/stage3-glitches/G4-320-after.webp) | fixed |
+| G4-321 | 1 September: the school's banner | iPad | The end of the "School party today!" banner covered the front of the little roof over the door. (viewer marks M-014 (pass 19)) | 1 | [after](pictures-4/stage3-glitches/G4-321-after.webp) | fixed |
+| G4-322 | a grandma's bubble at the duck pond | iPad, light and dark theme | Her bubble ran under the corner map: "eding the ducks is the best part of my day." (viewer marks M-020 (pass 19), M-021 (pass 19)) | 2 | [after](pictures-4/stage3-glitches/G4-322-after.webp) | fixed |
+| G4-323 | a butterfly at the camera | iPad | A big gold block with a dark top hung in the air by the Easter bunny's bubble: a butterfly 1.3 m from the camera, its two flat wings. (viewer marks M-022 (pass 19)) | 1 | [after](pictures-4/stage3-glitches/G4-323-after.webp) | fixed |
+| G4-324 | the hair job on a sideways phone | iPhone sideways | A big orange striped thing with a white ear filled the bottom-left corner under the hair card. (viewer marks M-017 (pass 19), M-018 (pass 19)) | 1 | — | open |
+| G4-325 | a shopper and butterflies | iPad | A shopper facing you in the bakery, in front of Mrs. Crumb; purple and yellow pieces in a tree crown behind the food truck. (viewer marks M-002 (pass 19), M-015 (pass 19)) | 1 | — | not a glitch |
+| G4-326 | decided before | iPad, iPhone sideways | The two ducks one behind the other after you feed them; your pets' tags over the pens upstairs in the Pet Shop; a townsperson close at the left edge by the Christmas tree; an older chat bubble cut under the header. (viewer marks M-001 (pass 19), M-006 (pass 19), M-011 (pass 19), M-016 (pass 19)) | 1 | — | not a glitch |
+| G4-327 | the photographer: the photo in your phone's chat | iPad, iPhone sideways, PC | The kit's N25 failed on the f16 file: right after the thank-you card, the photo in the phone's chat had no size yet when the phone opened (it showed a moment later). | 2 | [after](pictures-4/stage3-glitches/G4-327-after.webp) | fixed |
+| G4-328 | a grandma's bubble at the duck pond | iPhone sideways; iPad, light and dark theme | On a sideways phone her bubble ran under the clock chip and the top buttons: only "ducks is the ... of my day." could be read; on the iPad its corner lay on the clock chip. (viewer marks M-013 (pass 20), M-014 (pass 20), M-015 (pass 20), M-016 (pass 20), M-001 (pass 20), M-006 (pass 20), M-007 (pass 20), M-017 (pass 20), M-018 (pass 20)) | 2 | [before](pictures-4/stage3-glitches/G4-328-before.webp) · [after](pictures-4/stage3-glitches/G4-328-after.webp) | fixed |
+| G4-329 | a photo shoot from the side | iPhone sideways | A white pill peeked out behind the "Pose: Mia" label at the right edge (only an "e" showed). (viewer marks M-003 (pass 20), M-005 (pass 20), M-011 (pass 20)) | 1 | [before](pictures-4/stage3-glitches/G4-329-before.webp) | open |
+| G4-330 | not a glitch, decided before | iPad, dark theme | The notepad a cream lined paper in the dark theme; a shopper big at the right edge of the Toy Store, partly behind "Say hi". (viewer marks M-004 (pass 20), M-002 (pass 20), M-008 (pass 20), M-009 (pass 20), M-010 (pass 20)) | 1 | [before](pictures-4/stage3-glitches/G4-330-before.webp) | not a glitch |
+| G4-331 | the photographer: your phone's chat | iPhone sideways | The chat opened at the foot of the thank-you message, so the top of its photo lay under the Photos header. (viewer marks M-004 (pass 21), M-006 (pass 21)) | 1 | [before](pictures-4/stage3-glitches/G4-331-before.webp) · [after](pictures-4/stage3-glitches/G4-331-after.webp) | fixed |
+| G4-332 | not a glitch, decided before | iPhone sideways; iPad, dark theme | A palette badge on the corner map about 28 px across; the two ducks one on the other by the pond; two townsfolk at the right edge one in front of the other. (viewer marks M-001 (pass 21), M-002 (pass 21), M-003 (pass 21)) | 1 | [before](pictures-4/stage3-glitches/G4-332-before.webp) | not a glitch |
+| G4-333 | not a glitch | iPad, dark theme | Two townsfolk at the right edge of the park, one squeezed in front of the other. (viewer marks M-001 (pass 22)) | 1 | [before](pictures-4/stage3-glitches/G4-333-before.webp) | not a glitch |
+| G4-334 | the designer job: a two-room order | iPad | In room 2 (a forest living room) a white fridge stood inside a pink armchair. (viewer marks M-006 (pass 23 (the full final pass))) | 3 | [before](pictures-4/stage3-glitches/G4-334-before.webp) · [after](pictures-4/stage3-glitches/G4-334-after.webp) | fixed |
+| G4-335 | a grandma's bubble on an upright phone | iPhone upright, dark theme | At the duck pond and the Flower Corner her bubble lay half under the corner map and the notepad ("...s the ...ay."; "...! Such a pretty garden."). (viewer marks M-008 (pass 23 (the full final pass)), M-016 (pass 23 (the full final pass))) | 2 | [before](pictures-4/stage3-glitches/G4-335-before.webp) · [after](pictures-4/stage3-glitches/G4-335-after.webp) | fixed |
+| G4-336 | the food truck | iPad | A small grey ball on the truck's side by the awning's end. (viewer marks M-004 (pass 23 (the full final pass)), M-007 (pass 23 (the full final pass))) | 1 | [before](pictures-4/stage3-glitches/G4-336-before.webp) | open |
+| G4-337 | the Christmas tree at night | iPad, dark theme | Two big white glows at the sides of the tree's middle washed out its edge. (viewer marks M-003 (pass 23 (the full final pass))) | 1 | [before](pictures-4/stage3-glitches/G4-337-before.webp) | open |
+| G4-338 | the photographer's close view of the ducks | iPad | A big dark purple box at the right edge of the view, by the blue house. (viewer marks M-001 (pass 23 (the full final pass))) | 1 | [before](pictures-4/stage3-glitches/G4-338-before.webp) | open |
+| G4-339 | not a glitch | iPad, iPhone upright, PC | Cattails in front of a grandma on the pond bench; a brown slab at the corner of N22's school view; someone at the left edge in the Pet Shop; two shoppers one behind the other in the flower shop; N24's two grandmas one behind the other on their bench. (viewer marks M-002 (pass 23 (the full final pass)), M-005 (pass 23 (the full final pass)), M-010 (pass 23 (the full final pass)), M-011 (pass 23 (the full final pass)), M-012 (pass 23 (the full final pass))) | 1 | [before](pictures-4/stage3-glitches/G4-339-before.webp) | not a glitch |
+| G4-340 | a grandma's bubble at the Flower Corner | iPhone upright, light and dark theme | Clear of the map column since f19, her bubble ran past the right edge of the screen ("Such" cut, no right border). (viewer marks M-001 (pass 24), M-002 (pass 24), M-003 (pass 24), M-004 (pass 24), M-005 (pass 24), M-006 (pass 24), M-007 (pass 24), M-008 (pass 24)) | 2 | [before](pictures-4/stage3-glitches/G4-340-before.webp) · [after](pictures-4/stage3-glitches/G4-340-after.webp) | fixed |
+| G4-341 | decided before | iPad | N8's designer pictures: faint "Knock knock!" over the sofa; thin lilac lines across the floor. (viewer marks M-001 (pass 25), M-002 (pass 25), M-003 (pass 25), M-004 (pass 25)) | 1 | [before](pictures-4/stage3-glitches/G4-341-before.webp) | not a glitch |
 
-167 entries: 142 fixed, 23 not a glitch, 2 open.
+341 entries: 256 fixed, 68 not a glitch, 17 open.
 
 ## Each one in full
 
@@ -393,11 +569,12 @@ How bad: 1 small, 2 clear, 3 broken. Status: fixed / open / not a glitch.
 - Fix: The words float at eye height.
 - Fix check: N19 of the full check.
 
-### G4-031 (open, how bad 1): October: the little ghosts
+### G4-031 (fixed, how bad 1): October: the little ghosts
 - Device: iPad
 - What's wrong: A little ghost drifted right into the camera and filled a third of the view for a moment. (viewer marks M-143)
 - Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 1)
-- Fix: Not changed: the ghosts drift where they drift; walking on takes you past one. Written down for the owner.
+- Fix: Fixed with G4-118: ghosts and bats glide round the camera (50db62c) and keep 3 m from it (9777d26); pass 8 saw no ghost at the camera.
+- Fix check: pass 8 pictures.
 
 ### G4-032 (not a glitch, how bad 1): the park by the food truck
 - Device: iPad
@@ -1214,7 +1391,7 @@ How bad: 1 small, 2 clear, 3 broken. Status: fixed / open / not a glitch.
 - What's wrong: Mia and Zoe stuck out of the dashed frame and the card hid everything below their chins. (viewer marks M-031, M-040 (pass 5), M-011 (pass 7))
 - Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 5, pass 7)
 - Fix: Pass 5 put it down to the photographer's camera standing too close. Pass 7 found it again, and in play it happens too: a child who walks up to a friend to pose them sees them from close by. On an upright phone, opening a pose card now steps the camera back to the spot that frames the whole group, so the card sits under them (96b40df).
-- Fix check: a probe of the pose card on an upright iPhone after the fix: all three in the dashed frame above the card; N25 passes.
+- Fix check: pass 8 pictures: not seen again.
 
 ### G4-149 (fixed, how bad 1): the What's new book
 - Device: iPhone upright
@@ -1298,14 +1475,14 @@ How bad: 1 small, 2 clear, 3 broken. Status: fixed / open / not a glitch.
 - What's wrong: Dark blurred smudges lay on the wall either side of the front door and over its top half, with a jagged grey band under the roof edge. (viewer marks M-001 (pass 7), M-004 (pass 7))
 - Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 7)
 - Fix: The smudges were the shadow of the little roof over the door and its two brackets, which the town's soft shadows drew as blurred blots on the wall. The little door roof and its brackets cast no shadow now (f26b169). The pictures of this pass were taken before the fix went in.
-- Fix check: a probe of a one-storey and a six-floor house after the fix: the wall round the door is clean; pass 8 pictures.
+- Fix check: pass 8 pictures: not seen again.
 
 ### G4-161 (fixed, how bad 1): the stair plates on floor 2
 - Device: iPad
 - What's wrong: "⬇️ Downstairs" ran to both edges of its plate, while "⬆️ Upstairs" beside it had room. (viewer marks M-003 (pass 7))
 - Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 7)
 - Fix: A plate's words keep 8% of its width free at each side (the fit test let them run to the edge) (96b40df). The pictures of this pass were taken before the fix went in.
-- Fix check: a probe of floor 2 after the fix: both plates have room at the sides; pass 8 pictures.
+- Fix check: pass 8 pictures: not seen again.
 
 ### G4-162 (not a glitch, how bad 3): the square, looking to the Flower Corner
 - Device: iPhone upright
@@ -1319,33 +1496,1235 @@ How bad: 1 small, 2 clear, 3 broken. Status: fixed / open / not a glitch.
 - What's wrong: The phone was narrow, so its words wrapped into many lines: Rosie's three job cards were cut at the bottom, the quest's second step and the calendar's Halloween line sat half under the bottom fade. (viewer marks M-013 (pass 7), M-014 (pass 7), M-015 (pass 7))
 - Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 7)
 - Fix: On a short sideways screen the phone is wider (up to 72% of the screen, at most 600 px), so the job cards, the calendar line and the quest card's first steps fit; a list that goes on below still shows its soft fade (96b40df). The pictures of this pass were taken before the fix went in.
-- Fix check: a probe on a sideways iPhone after the fix: Rosie's cards and the Halloween line read in full; the quest list ends in its fade because more quests follow; pass 8 pictures.
+- Fix check: pass 8 pictures: not seen again.
 
 ### G4-164 (fixed, how bad 1): the big map on a short sideways screen
 - Device: iPhone sideways
 - What's wrong: The "Tap a place to see the way there!" tip sat over the map's bottom row: Pet Shop and Cozy Park lost their names under it, and a cut "Ice Cream Shop" peeked out below it. (viewer marks M-016 (pass 7), M-018 (pass 7))
 - Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 7)
 - Fix: The tip fades away after four seconds (and comes back with the next tip); the card for a place you picked stays (96b40df). The pictures of this pass were taken before the fix went in.
-- Fix check: a probe of the big map on a sideways iPhone after the fix: after five seconds the tip is gone and every name on the bottom row reads; N26 passes.
+- Fix check: pass 8 pictures: not seen again.
 
 ### G4-165 (fixed, how bad 1): friends on the big map
 - Device: iPhone sideways
 - What's wrong: "Finn" stood 3 px from "Duck Pond", so it read as one name, "Finn Duck Pond". (viewer marks M-017 (pass 7))
 - Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 7)
 - Fix: A friend's name on the map keeps 7 px of air from every place name and icon; it takes the next side of its dot that has room (96b40df). The pictures of this pass were taken before the fix went in.
-- Fix check: N26 passes; pass 8 map pictures.
+- Fix check: N26 passes; pass 8 pictures: not seen again.
 
 ### G4-166 (fixed, how bad 2): a photo shoot at the school
 - Device: PC
 - What's wrong: The asked background, "the school sign", was above the dashed frame, cut by the top of the screen and under the coin and time chips; the "Everyone is posed!" tip sat in the frame over Mia and the cat; the photo had no school sign in it and still got five stars. (viewer marks M-020 (pass 7), M-021 (pass 7), M-022 (pass 7))
 - Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 7)
 - Fix: The school has a name board on two tall posts right of its door, the "school sign" background, at a height a photo from the pavement takes in (the name over the door was too high); the asked background has to be in the frame for the stars; the shoot's tips sit under the top row (c6d204f). The pictures of this pass were taken before the fix went in.
-- Fix check: N25 passes; a probe of a school shoot after the fix: the board in the frame, the tip at the top; pass 8 pictures.
+- Fix check: N25 passes; pass 8 pictures: not seen again.
 
 ### G4-167 (not a glitch, how bad 1): the big map's left edge
 - Device: PC
 - What's wrong: A cut "ne" of "Friends Lane" hung alone at the map's left edge. (viewer marks M-023 (pass 7))
 - Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 7)
 - Fix: A map is cut at its edge like any map you can move and zoom; the name shows in full when you move the map (decided in section 9c, with the names at the map's edge in pass 5).
+- Fix check: —
+
+### G4-168 (fixed, how bad 1): October: the park fountain
+- Device: iPad
+- What's wrong: A white ghost hung inside the fountain, between its top and middle bowls. (viewer marks M-001 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The ghost that circled the park fountain at 1.2 m from its middle (inside its bowls) circles 4 m from it (patch_f3.py).
+- Fix check: pass 9 pictures.
+
+### G4-169 (fixed, how bad 1): the Café, Bakery and Ice Cream chalkboards
+- Device: iPad
+- What's wrong: The last of five rows sat on the bottom frame with no air under it. (viewer marks M-003 (pass 8), M-004 (pass 8), M-005 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The rows are spaced to the board (66 px apart at most, 48 px type from five rows) (patch_f3.py).
+- Fix check: pass 9 pictures.
+
+### G4-170 (fixed, how bad 1): your garden: a row of locked pots
+- Device: iPad
+- What's wrong: The big "🔒 Level 40" plate hung in the air above its stake. (viewer marks M-008 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The size cap of a name tag made the plate smaller round its middle close up, so its bottom rose off the stake; the plate is now held at its bottom edge, on the stake top (patch_f5.py).
+- Fix check: pass 9 pictures.
+
+### G4-171 (fixed, how bad 2): people right at the camera
+- Device: iPad
+- What's wrong: A grandma or a passer-by stood right against the camera: a grey head, a cardigan or a back filled a third of the picture. (viewer marks M-010 (pass 8), M-011 (pass 8), M-072 (pass 8), M-089 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: A walking grandma or a passer-by within 1.3 m of the camera is not drawn for that moment (it was 1 m for passers-by; grandmas were always drawn); a grandma sitting next to you on a bench stays (patch_f4.py, patch_f5.py).
+- Fix check: the kit N6 and N24 lines; pass 9 pictures.
+
+### G4-172 (fixed, how bad 1): the phone: quests
+- Device: iPad
+- What's wrong: A quest read "Buy a fairy wings at the Pet shop" ("a" before a plural; "Pet shop", the building says Pet Shop). (viewer marks M-012 (pass 8), M-022 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: Wings, glasses, ears and headphones take "a pair of", fries, noodles and dumplings "some"; the shop names in quests, cards and the friends list are the names on the buildings (patch_f3.py).
+- Fix check: pass 9 pictures.
+
+### G4-173 (fixed, how bad 2): the What's new book, page 3 (February)
+- Device: every screen
+- What's wrong: The February picture had a townsperson right at the camera filling its left third, her bubble cut to "ce.". (viewer marks M-014 (pass 8), M-024 (pass 8), M-030 (pass 8), M-034 (pass 8), M-038 (pass 8), M-044 (pass 8), M-048 (pass 8), M-051 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: A new February picture from a spot the grandmas and passers-by keep clear of (bookshots5.py, bookswap.py).
+- Fix check: pass 9 pictures of the book.
+
+### G4-174 (fixed, how bad 1): the What's new book, page 5
+- Device: every screen
+- What's wrong: The last line "Your tutorials are pictures now ❓" ended in a red question mark, like a question. (viewer marks M-015 (pass 8), M-026 (pass 8), M-053 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: It reads "Job tutorials are pictures now: tap ❓ on a job card to see one!" (patch_f3.py).
+- Fix check: pass 9 pictures.
+
+### G4-175 (fixed, how bad 1): a photo shoot at the fountain
+- Device: iPad
+- What's wrong: Leo's waving arm reached into Zoe's hair, in the view and in the photo. (viewer marks M-016 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The wave is higher (the arm between 148° and 173° up, not 120° to 166°): it no longer swings out into the next person (patch_f5.py).
+- Fix check: pass 9 pictures.
+
+### G4-176 (not a glitch, how bad 2): the pond ducks close up
+- Device: iPad
+- What's wrong: The close-up missed: both ducks small at the far rim, cattails in front of their heads. (viewer marks M-018 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The photographer's framing, not the game: pass 9 photographs the ducks after you feed them (they swim up to you); from a fixed spot they were wherever they had swum.
+- Fix check: —
+
+### G4-177 (not a glitch, how bad 1): inside the school
+- Device: iPad
+- What's wrong: The two teachers stood at the screen edges, their name tags cut. (viewer marks M-019 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The photographer's framing, not the game: the picture was taken 1.5 m into the hall; pass 9 takes it from 0.6 m, nearer the door, where both teachers are in view.
+- Fix check: —
+
+### G4-178 (not a glitch, how bad 1): the Pet Shop upstairs
+- Device: iPad
+- What's wrong: Your pets and their name tags stood right in front of the camera over the pens. (viewer marks M-020 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The photographer's framing, not the game: your pets follow you; pass 9 puts them a step behind you indoors, as the town pictures always did.
+- Fix check: —
+
+### G4-179 (fixed, how bad 2): walls and tree crowns turned away from the sun
+- Device: iPad
+- What's wrong: The house's back wall in the garden was a dull grey, not its colour; the apartment block's wall had a lit strip and a soft seam at 12:30 and pale streaks at 17:30; a house wall at the Flower Corner was pale and streaky at noon; the Tree Park's crowns had thin stripes. (viewer marks M-021 (pass 8), M-058 (pass 8), M-070 (pass 8), M-097 (pass 8), M-099 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: Outdoors a face turned away from the sun takes no cast shadow (the toon shade lights it at its middle or low tone, like every such face nothing shades); the baked pieces, most walls, now get the same shade fix as the loose ones: they never had it, so item 17's cure for the noon streaks only reached the loose pieces. Indoors nothing changes (patch_f5.py).
+- Fix check: probes before and after on ten views; the kit N31 line; pass 9 pictures.
+
+### G4-180 (fixed, how bad 1): the What's new book, page 4 (the Pet Shop upstairs)
+- Device: iPad
+- What's wrong: The picture was pale, a third of it ceiling, the Capybaras sign cut to "Cap". (viewer marks M-025 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: A new picture of the upstairs pens (bookshots5.py, bookswap.py).
+- Fix check: pass 9 pictures of the book.
+
+### G4-181 (fixed, how bad 1): the What's new book, pages 6 and 7
+- Device: iPhone, PC
+- What's wrong: Line breaks: "dance-" / "off"; an emoji alone on a line; 🕺 and 💃 split over two lines. (viewer marks M-031 (pass 8), M-035 (pass 8), M-054 (pass 8), M-055 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: A non-breaking space before a line's last emoji; "dance-off" and 🕺💃 never split (patch_f3.py).
+- Fix check: pass 9 pictures.
+
+### G4-182 (not a glitch, how bad 1): inside the Pet Shop
+- Device: iPhone upright
+- What's wrong: A huge pink ceiling lamp hung right in front of the camera at the top. (viewer marks M-033 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The photographer's framing, not the game: an upright phone sees high; pass 9 takes a room's view a little lower on an upright phone.
+- Fix check: —
+
+### G4-183 (fixed, how bad 1): the Pet Shop card
+- Device: iPhone sideways
+- What's wrong: Two prices sat lower than the third and were greyed out by the card's bottom fade, so they looked disabled. (viewer marks M-039 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The prices of a row sit on one line (a name on two lines pushed its price down); on a short screen the "more below" fade is 40 px, not 58 (patch_f5.py).
+- Fix check: pass 9 pictures.
+
+### G4-184 (fixed, how bad 1): cards at the bottom of a short screen
+- Device: iPhone sideways
+- What's wrong: The bigger-house card ran under the round top buttons (the gear on its corner); the mint jump button poked out beside the mailbox and party cards. (viewer marks M-040 (pass 8), M-045 (pass 8), M-046 (pass 8), M-047 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: A card at the bottom of a short screen that reaches up into the top row or over the jump and run buttons: those pieces wait out of sight under it, as under a big card (patch_f5.py).
+- Fix check: a probe of the three cards; pass 9 pictures.
+
+### G4-185 (fixed, how bad 1): the job tutorials
+- Device: iPhone sideways
+- What's wrong: The tall tutorial card lay over the top bar, which stayed: it hid the clock chip and the chat button and cut the food chip in half. (viewer marks M-041 (pass 8), M-042 (pass 8), M-043 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: On a short screen a tutorial card with nothing to point at hides the top row it covers; a message with no free spot beside a tutorial waits until it closes (patch_f5.py).
+- Fix check: a probe of steps 1 and 2; pass 9 pictures.
+
+### G4-186 (fixed, how bad 2): 1 September: the school front
+- Device: iPad
+- What's wrong: The "School party today!" banner ran behind the school's name board on its posts. (viewer marks M-059 (pass 8), M-092 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: A shorter banner from the left door balloons to the name board, clear of it (patch_f3.py).
+- Fix check: N22 passes; pass 9 pictures.
+
+### G4-187 (fixed, how bad 1): 1 September: the school hall
+- Device: iPad
+- What's wrong: Two balloon bunches stood in front of the 🌈 and 🚀 posters between the doors. (viewer marks M-060 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The two back bunches stand by the lockers (patch_f5.py).
+- Fix check: N22 passes; pass 9 pictures.
+
+### G4-188 (not a glitch, how bad 2): October: the spooky gate at night
+- Device: iPad
+- What's wrong: Your pets bunched up right in front of the camera over the gate. (viewer marks M-061 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The photographer's framing, not the game: this spot never stepped your pets back as the town spots do; pass 9 does.
+- Fix check: —
+
+### G4-189 (not a glitch, how bad 2): a pizza delivery
+- Device: iPad
+- What's wrong: Two orders at once: the chef's card for Iris and the message of a new order for Mr. Bolt. (viewer marks M-063 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The photographer's staging: it made a new order while the chef's card of the last one was still open (a game never makes a new order then); pass 9 closes the card first.
+- Fix check: —
+
+### G4-190 (not a glitch, how bad 2): two players at the park
+- Device: PC
+- What's wrong: The PC player's view was boxed in by a tree trunk and the back of the Ideas Board. (viewer marks M-064 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The photographer's framing, not the game: pass 9 puts both players on the open square.
+- Fix check: —
+
+### G4-191 (fixed, how bad 2): the dance-off
+- Device: iPhone upright, iPhone sideways
+- What's wrong: The "✨ Perfect +15" pop-up ran into the score bar (upright); on a sideways phone its ✨ covered the left dancer's face, which read as the back of a head. (viewer marks M-065 (pass 8), M-066 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: Under the score bar on an upright phone; at the bottom left, under the dancers, on a sideways phone. Both dancers face the view (rotation 0, as asked) (patch_f5.py).
+- Fix check: the two-phone dance-off probe; pass 9 pictures.
+
+### G4-192 (fixed, how bad 1): the disco ball
+- Device: iPhone upright
+- What's wrong: The mirror ball seemed to float beside its pole: the 3 cm arm and 1 cm string were too thin and pale to see. (viewer marks M-067 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: A thicker arm with an outline and a dark string (patch_f5.py).
+- Fix check: a probe; pass 9 pictures.
+
+### G4-193 (fixed, how bad 1): the big map on a tablet
+- Device: Android tablet upright
+- What's wrong: The "You are online!" message lay on the chat and phone buttons above the map card. (viewer marks M-068 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The top row counts fully for a message while you can see it (under a card it counted a quarter): with no free spot the message waits (patch_f5.py).
+- Fix check: pass 9 pictures.
+
+### G4-194 (fixed, how bad 1): the hair salon
+- Device: iPad
+- What's wrong: The hair card and its name tab covered the customer in the chair, the tab on their face. (viewer marks M-069 (pass 8), M-083 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: When the hair card opens, the view turns to the customer so they show above it (on a sideways phone the card fills the screen's height: nothing can show above it there) (patch_f5.py).
+- Fix check: N13 passes; probes on iPad and a sideways iPhone; pass 9 pictures.
+
+### G4-195 (not a glitch, how bad 1): playing with a pet
+- Device: iPad
+- What's wrong: A toy and a hand seemed to hang in mid-air beside a lamp pole. (viewer marks M-073 (pass 8), M-074 (pass 8), M-075 (pass 8), M-076 (pass 8), M-077 (pass 8), M-078 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The toy is the game's play feedback, an emoji that rises over the pet and fades; the hand is a townsperson's arm behind the lamp pole at the kit's N11 spot.
+- Fix check: —
+
+### G4-196 (fixed, how bad 1): your house
+- Device: iPad
+- What's wrong: Three pet name tags piled up: "Moch", only an "M". (viewer marks M-079 (pass 8), M-080 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: Your pets' name tags step apart on screen with the friends' (only the friends' did) (patch_f5.py).
+- Fix check: a probe; pass 9 pictures.
+
+### G4-197 (fixed, how bad 1): your house upstairs
+- Device: iPad
+- What's wrong: The save's green rug lay half under the floor's blue starter rug. (viewer marks M-081 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The starter rug of an upper floor lies flat (1 cm), under any rug you place (it stood 4 cm, a placed rug 2.5 cm) (patch_f5.py).
+- Fix check: N12 and N34 pass; a probe.
+
+### G4-198 (fixed, how bad 1): the hairstylist tutorial
+- Device: iPad, PC
+- What's wrong: The caption "A customer sits down" sat right of centre in its picture. (viewer marks M-082 (pass 8), M-118 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The bottom captions are centred in the picture (patch_f3.py).
+- Fix check: N38 passes; pass 9 pictures.
+
+### G4-199 (fixed, how bad 1): the park at night in rain
+- Device: iPad
+- What's wrong: It rained from a clear starry sky. (viewer marks M-088 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The stars and the moon fade out with the grey sky in rain, snow and cloudy weather (patch_f3.py).
+- Fix check: N16 passes; pass 9 pictures.
+
+### G4-200 (fixed, how bad 1): the clothes maker at the mirror
+- Device: iPad
+- What's wrong: Its ⬇️ "more below" was a tiny 33 px round button. (viewer marks M-090 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: 46 px like every other "more below" (it never takes a tap: it is a hint) (patch_f5.py).
+- Fix check: pass 9 pictures.
+
+### G4-201 (not a glitch, how bad 1): the Easter month at the Flower Corner
+- Device: iPad
+- What's wrong: The eggs in view were small pastel ones lying loose, no golden-banded egg in a nest. (viewer marks M-091 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The small pastel eggs are the corner's spring decorations, by design ("so no decorative egg looks like one"); the check had picked up the hunt eggs near the bunny (18/25).
+- Fix check: —
+
+### G4-202 (fixed, how bad 1): the Pet Shop upstairs: the ducks
+- Device: iPad
+- What's wrong: The two ducks stood on top of their water on orange legs. (viewer marks M-093 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The whole pen is water (a pale blue floor round a darker pond): the ducks there swim, low in it, legs under the surface, gliding (patch_f5.py).
+- Fix check: N28 passes; a probe.
+
+### G4-203 (fixed, how bad 2): friends round you
+- Device: iPad
+- What's wrong: After you turned round on a narrow pavement, Finn stood hidden behind Luna (only his name tag showed); Rosie walked past right at the camera. (viewer marks M-095 (pass 8), M-096 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: A friend takes a spot a little nearer at the side (from 1.6 m) before one straight behind another friend, and the spots may be 1.22 m apart instead of 1.3 (the check asks 1.2): all four faces show; walking to their spots after a turn still takes a few seconds (patch_f5.py).
+- Fix check: N3 passes (1.28 m and 1.25 m apart); a probe of both turns; pass 9 pictures.
+
+### G4-204 (fixed, how bad 2): the clock chip
+- Device: iPad
+- What's wrong: The chip showed the old hour or weather under the new sky: "11:30" at 12:30, the sun under an evening sky, a cloud under a blue sky. (viewer marks M-098 (pass 8), M-100 (pass 8), M-101 (pass 8), M-103 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The chip was refreshed twice a second, and the check took its pictures right after moving the clock; it is now refreshed at once after a jump of the clock (a phone waking up) or a change of weather (patch_f5.py).
+- Fix check: N15, N16, N31, N32 and N37 pass; pass 9 pictures.
+
+### G4-205 (open, how bad 2): your pets at the Tree Park gate
+- Device: iPad
+- What's wrong: Your pets crowded the bottom edge in front of the camera; Clover stood behind Waffles, only her ears showing. (viewer marks M-102 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: Not changed: your pets keep close at your heels, so from your eyes they are at the bottom of the screen, and one can stand behind another for a moment. Written down for the owner (section 5c).
+
+### G4-206 (fixed, how bad 2): a grandma's long line
+- Device: iPad, PC
+- What's wrong: A long line ("Holidays bring something new here, you'll see.") was one huge pill running off the screen's left edge, under the corner map and the bus pill (and in M-117 the grandma stood at the camera too). (viewer marks M-104 (pass 8), M-105 (pass 8), M-106 (pass 8), M-107 (pass 8), M-117 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: Over 22 letters the bubble wraps onto two lines, split at the space nearest the middle, and its size cap is two lines' height (patch_f4.py); a grandma at the camera is not drawn (G4-171).
+- Fix check: N6, N24 and N38 pass; pass 9 pictures.
+
+### G4-207 (fixed, how bad 2): the duck-pond bench
+- Device: iPad
+- What's wrong: Two speech bubbles overlapped: "Hee hee!" on the middle of the other line. (viewer marks M-108 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: A grandma who starts talking ends the bubble of any grandma within 3 m (after a jump of the clock the next one could start while the first was still talking) (patch_f4.py).
+- Fix check: N6 passes; pass 9 pictures.
+
+### G4-208 (fixed, how bad 1): the designer job: a new client
+- Device: iPad
+- What's wrong: The "+20" coin pop sat on the "New client!" message, over its first words. (viewer marks M-109 (pass 8), M-112 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: The coin pop keeps clear of the message card too (patch_f5.py).
+- Fix check: pass 9 pictures; pass 10: once more, with the message coming after the pop (G4-229).
+
+### G4-209 (fixed, how bad 1): the designer job's room
+- Device: iPad
+- What's wrong: A white ring floated in the room (over the sofa, beside the armchair), at the same screen spot in both rooms. (viewer marks M-110 (pass 8), M-113 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: It was the aim ring of decorating: the big-button style (.big) gave it a button's padding and height, so the 28 px ring was a 118 × 70 px ellipse; it is a 28 px ring again (patch_f5.py).
+- Fix check: a probe of the room; N8 passes; pass 9 pictures.
+
+### G4-210 (fixed, how bad 1): the designer's wish card
+- Device: iPad
+- What's wrong: The title was cut: "Sunny living room · r…". (viewer marks M-111 (pass 8), M-114 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: "room 1 of 2" goes on a line of its own under the title (patch_f3.py).
+- Fix check: N8 passes; pass 9 pictures.
+
+### G4-211 (fixed, how bad 2): a photo shoot by the food truck
+- Device: iPhone sideways
+- What's wrong: "Pick up the litter" and its big button sat inside the dashed photo frame. (viewer marks M-116 (pass 8))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 8)
+- Fix: While a shoot is on only its own buttons show (patch_f5.py).
+- Fix check: N25 passes; pass 9 pictures.
+
+### G4-212 (fixed, how bad 1): the phone: calendar
+- Device: iPad
+- What's wrong: In Saturday's tile the ⭐ and the 🏆 sat to the left, one under the other, not under the day. (viewer marks M-005 (pass 9))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 9)
+- Fix: The tile's last line is centred, so they sit under the day (patch_f6.py).
+- Fix check: pass 10 pictures.
+
+### G4-213 (fixed, how bad 1): the Pet Shop card
+- Device: iPad
+- What's wrong: "Buy one and something new pops up!" beside "✨ New in!" was tiny (12 px, faint). (viewer marks M-008 (pass 9))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 9)
+- Fix: 14 px, bolder and darker (patch_f6.py).
+- Fix check: pass 10 pictures.
+
+### G4-214 (fixed, how bad 1): the phone's furniture page, the delivery job box
+- Device: PC, iPad
+- What's wrong: An emoji stood alone on the last line: 🎨 after "free!", 🍕 after "Pizzeria". (viewer marks M-017 (pass 9), M-021 (pass 9))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 9)
+- Fix: A no-break space ties each emoji to its word (patch_f6.py).
+- Fix check: pass 10 pictures.
+
+### G4-215 (fixed, how bad 1): the What's new book, page 4
+- Device: iPad
+- What's wrong: The Pet Shop upstairs picture was soft and pale: its lower third an empty floor, the Capybaras sign cut at its edge. (viewer marks M-012 (pass 9))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 9)
+- Fix: A new picture, a step nearer: the four pens with their animals and all four signs whole (bookswap.py, bookshots7.py).
+- Fix check: pass 10 pictures.
+
+### G4-216 (fixed, how bad 1): inside the flower shop
+- Device: iPhone upright
+- What's wrong: From the door the middle hanging basket's rod came straight out of the ceiling lamp's bulb. (viewer marks M-015 (pass 9))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 9)
+- Fix: That basket hangs 1.5 m to the right, clear of the lamp and of the shop sign (patch_f6.py).
+- Fix check: a probe from the door; pass 10 pictures.
+
+### G4-217 (fixed, how bad 2): 1 September: the school hall
+- Device: iPad
+- What's wrong: No balloons in sight as you come in: f5 had moved the back two bunches by the lockers (G4-187), out of the view from the door. (viewer marks M-020 (pass 9), M-035 (pass 9))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 9)
+- Fix: The back two stand between the posters and the side doors, the 🌈 and 🚀 posters 65 cm nearer the middle door: seen as you come in, clear of the posters and the doors (patch_f6.py).
+- Fix check: N22 passes; a probe; pass 10 pictures.
+
+### G4-218 (fixed, how bad 2): the hair salon
+- Device: iPad, PC
+- What's wrong: Big words ("Ava sits down!", "Ben comes in!") lay across the customer's face once the view turned to them (G4-194). (viewer marks M-030 (pass 9), M-054 (pass 9), M-055 (pass 9))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 9)
+- Fix: When the hair card opens at once, its tab names who sat down, so "… sits down!" pops only when the card cannot open; as the view turns to the face, big words still on the screen or waiting go (patch_f6.py).
+- Fix check: N13 passes; a probe; pass 10 pictures.
+
+### G4-219 (fixed, how bad 1): the hair card
+- Device: iPhone sideways
+- What's wrong: The card covered the end of the job pill: "Ben is in your ch". (viewer marks M-049 (pass 9), M-051 (pass 9))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 9)
+- Fix: Under a bottom card on a short screen the job pill waits out of sight, like the HUD pieces such a card would touch (patch_f6.py).
+- Fix check: N13 passes; pass 10 pictures.
+
+### G4-220 (fixed, how bad 1): a photo shoot at the school
+- Device: iPhone sideways
+- What's wrong: The "Everyone is posed!" message lay over the school's name board, the background the booking asked for. (viewer marks M-052 (pass 9))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 9)
+- Fix: On a short sideways screen the shoot's messages sit at the top, above the viewfinder (patch_f6.py).
+- Fix check: pass 10 pictures: the message still lay over the school's sign: f6's style rule did not take, the game places its messages itself; f7 places it (G4-235).
+
+### G4-221 (fixed, how bad 2): friends round you (after G4-203)
+- Device: iPad
+- What's wrong: After a turn on a narrow pavement Theo stood half behind Luna and Rosie walked past right at the camera; in the other pictures Finn's face showed beside Luna's hair. (viewer marks M-040 (pass 9), M-043 (pass 9))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 9)
+- Fix: The friends stand on an arc over the free part of the view: its two ends nearer (2.8 m), its middle further back (up to 4.6 m), so each face shows between the two in front; every order of filling it is tried (24 for four friends) and a face behind another's head costs most; a friend on the way to a spot waits unseen within 1.3 m of the camera, like a passer-by (patch_f6.py).
+- Fix check: N3 passes; a probe of the check's two stops and turns; pass 10 pictures.
+
+### G4-222 (open, how bad 2): your pets (G4-205 again)
+- Device: iPad
+- What's wrong: Your pets at your heels at the bottom edge: a name tag cut at the edge or under the joystick, one pet behind another, three in one clump. (viewer marks M-028 (pass 9), M-041 (pass 9), M-044 (pass 9), M-046 (pass 9), M-048 (pass 9))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 9)
+- Fix: The same as G4-205: not changed, written down for the owner (section 5c).
+
+### G4-223 (not a glitch, how bad 1): the photographer's own staging
+- Device: iPad, PC
+- What's wrong: A car right at the camera (the school front in rain); the garden's back wall pink after the house was painted purple; two shoppers inside each other; a posed townsperson on the road at New Year. (viewer marks M-009 (pass 9), M-010 (pass 9), M-018 (pass 9), M-019 (pass 9))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 9)
+- Fix: The photographer's framing, not the game: the school-front spot stood 30 cm into the road (pass 10: on the pavement); the garden spot repaints the house in the lane's own colour on purpose (a plain one-storey house); the photographer had moved a shopper to the spot another one was walking to (the game keeps two shoppers off one spot; pass 10 checks both); the New Year shot puts three townsfolk in a row 3.6 m ahead and one landed on the road (pass 10 keeps the row off it).
+- Fix check: pass 12: a car stood at the photographer's delivery spot, and walking up to a car's middle brings your eyes as near: G4-262.
+
+### G4-224 (not a glitch, how bad 1): the big map
+- Device: iPad, iPhone sideways
+- What's wrong: Place names cut at the map's edges; under the "👆 Tap a place" tip only the end of a name showed ("air Salon"). (viewer marks M-011 (pass 9), M-038 (pass 9), M-053 (pass 9))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 9)
+- Fix: The map is wider than its frame and scrolls (stage 3); the tip fades away after 4 seconds, and the town's bottom row scrolls up above it (stage 3).
+- Fix check: —
+
+### G4-225 (not a glitch, how bad 1): the check's own staging
+- Device: iPad
+- What's wrong: A pink thing half sunk in the park fountain at Christmas; play feedback (words, toys, a hand) piled on the Spooky path sign; a "🥚 18/25" floating over the scene under "All 25!"; grandmas behind a message, ducks under the buttons. (viewer marks M-022 (pass 9), M-023 (pass 9), M-024 (pass 9), M-025 (pass 9), M-026 (pass 9), M-027 (pass 9), M-032 (pass 9), M-036 (pass 9))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 9)
+- Fix: An autumn leaf at the end of its fall (the check jumps from October to December in one page, so autumn's leaves still fall; a December game has none); N11 feeds and plays with each new pet in one go, so both games' feedback rises at once; each egg's "n/25" rises where it was found and the check picks up all 25 at once; N24's camera stands where its check stands, under the bus message.
+- Fix check: —
+
+### G4-226 (not a glitch, how bad 1): your house upstairs, an old save
+- Device: iPad
+- What's wrong: The purple bed seemed pushed into the bunk bed. (viewer marks M-029 (pass 9))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 9)
+- Fix: They stand 70 cm apart side by side (a probe from the side); from the stairs one is seen behind the other.
+- Fix check: —
+
+### G4-227 (fixed, how bad 1): the hair salon: a customer's wish
+- Device: PC
+- What's wrong: "I'd like my hair shoulder-length and bun" (clumsy words). (viewer marks M-063 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: The wish reads like a child would say it: "I'd like brown hair, shoulder-length, in a bun, please!", "long and straight", "short, in pigtails" (patch_f7.py).
+- Fix check: a check of every style; N13 passes; pass 11 pictures.
+
+### G4-228 (fixed, how bad 1): the photo and hair result cards
+- Device: iPhone sideways
+- What's wrong: The "+120 🪙" pop flew half behind the card's top edge. (viewer marks M-022 (pass 10), M-033 (pass 10), M-059 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: A coin pop is drawn over a card (it was drawn under it) (patch_f7.py).
+- Fix check: pass 11 pictures.
+
+### G4-229 (fixed, how bad 1): the designer job: a new client (after G4-208)
+- Device: iPad
+- What's wrong: The "+20 🪙" pop lay on the "New client!" words that came a moment after it. (viewer marks M-058 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: When a message comes after a coin pop, the pop moves clear of it (patch_f7.py).
+- Fix check: N8 passes; pass 11 pictures.
+
+### G4-230 (fixed, how bad 1): the clock chip
+- Device: iPad, PC, Android tablet
+- What's wrong: The chip showed ☀️ under a grey sky. (viewer marks M-045 (pass 10), M-052 (pass 10), M-062 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: The sky turns fully grey in the first 40 % of a weather change, the chip turned at 50 %; the chip shows the sky as you see it now: ☁️ once the sky is half grey, 🌧️ and 🌨️ as soon as rain or snow falls (patch_f7.py).
+- Fix check: a check of each sky; N16 and N18 pass; pass 11 pictures.
+
+### G4-231 (fixed, how bad 2): a grandma walking by
+- Device: PC
+- What's wrong: At the Beach Bus stop a grandma walked right through the camera: her head and cardigan filled a third of the screen, her shoes stuck out under a card. (viewer marks M-036 (pass 10), M-037 (pass 10), M-040 (pass 10), M-041 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: A grandma walks round you, at least 2.1 m away (a smooth step aside from 4.5 m before you to 4.5 m past you), and keeps her step while she stands; on your device only: her place in the day's plan stays the same on every device (patch_f7.py).
+- Fix check: a check by script; N24 passes; pass 11: on the PC (a slow screen) a grandma still passed 1.5 m from the camera: G4-249.
+
+### G4-232 (fixed, how bad 2): a friend out for a walk
+- Device: iPad
+- What's wrong: Luna, out for a walk, stood 0.9 m in front of the camera, her back and hair filling a quarter of the view, for as long as you stood still. (viewer marks M-004 (pass 10), M-005 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: A friend out for a walk gives way like a passer-by: coming at you, she stops 2.4 m away and after a moment walks back; right at the camera (1.3 m) she waits unseen, like a friend who follows you (patch_f7.py).
+- Fix check: a check: she stops at 2.39 m and turns back; N3 passes; pass 11 pictures.
+
+### G4-233 (fixed, how bad 2): friends round you
+- Device: iPad
+- What's wrong: After a turn a townsperson stood between you and your friends, hiding Luna and Theo. (viewer marks M-057 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: A passer-by never steps into the space between you and your friends round you, and one standing there when they gather steps out of view, as in a photo shoot; a passer-by coming straight at you stops 2.4 m away (1.7 m before); one walking away from you is never held (patch_f7.py).
+- Fix check: a check of the circle; N3 passes; pass 11 pictures.
+
+### G4-234 (fixed, how bad 1): name tags far away
+- Device: iPad, iPhone
+- What's wrong: The Pet Show judges' far name tags were tiny pills piled in a staircase; at New Year a far grandma's tiny bubble, drawn over everything, sat on a near face. (viewer marks M-014 (pass 10), M-016 (pass 10), M-019 (pass 10), M-021 (pass 10), M-053 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: A name tag or bubble too small to read (a line under 15 px tall) fades out, gone under 11 px (patch_f7.py).
+- Fix check: probes of the photo shoot and the stage; pass 11 pictures.
+
+### G4-235 (fixed, how bad 2): a photo shoot at the school (after G4-220)
+- Device: iPhone sideways
+- What's wrong: The "Everyone is posed!" message still lay over the hanging school sign and Ben's tag; the big school sign was cut by the top edge, behind the coin, food and clock chips. (viewer marks M-061 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: On a short sideways screen the chips step aside during a shoot and the shoot's messages sit at the top left, in their place (patch_f7.py).
+- Fix check: N25 passes; a probe; pass 11 pictures.
+
+### G4-236 (fixed, how bad 1): the phone: calendar (after G4-163)
+- Device: iPhone sideways
+- What's wrong: On a Saturday the Halloween line stopped at "…and the" in the phone's bottom fade. (viewer marks M-032 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: On a short sideways screen the week's tiles are lower, so the month's line shows in full above the fade (patch_f7.py).
+- Fix check: a probe on a Saturday; pass 11 pictures.
+
+### G4-237 (fixed, how bad 1): the phone: Rosie's job list
+- Device: iPhone upright
+- What's wrong: "Photographer" touched both sides of its card. (viewer marks M-015 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: The job titles are a little smaller on the phone (13 px) (patch_f7.py).
+- Fix check: a probe; pass 11 pictures.
+
+### G4-238 (fixed, how bad 1): the Clothes Shop's New in! row
+- Device: iPad (dark)
+- What's wrong: The Special cap's near-black colour dot had no ring and vanished on the dark card. (viewer marks M-043 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: A colour dot keeps its light ring when the device is in dark mode, not only when dark is picked in the settings (the book's page dots too) (patch_f7.py).
+- Fix check: a probe; pass 11 pictures.
+
+### G4-239 (fixed, how bad 1): the Toy Store's corner post
+- Device: iPad
+- What's wrong: A faint dashed line ran down the pink corner post, roof edge to pavement. (viewer marks M-001 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: Cause, found by switching the ink outlines off: the wall's ink shell ran 4 cm behind the post's face, too close for the depth test from across the street. The corner posts of every flat-roofed building stand 11 cm out from the wall, not 7 (patch_f7.py).
+- Fix check: a probe of the same view: the line is gone.
+
+### G4-240 (fixed, how bad 1): the Toy Store and Hair Salon awnings
+- Device: iPad
+- What's wrong: The awning seemed to run on past the shop's far corner into thin air, off-centre. (viewer marks M-008 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: The awning is centred (20 cm over each end), but it reaches 1.4 m out from the wall, so seen from one end its open far end looked like a strip hanging past the corner; both ends are closed by a side valance now (patch_f7.py).
+- Fix check: probes from both ends; pass 11 pictures.
+
+### G4-241 (fixed, how bad 1): the duck pond
+- Device: iPad
+- What's wrong: Broken dark-blue blotches on the water along the reeds. (viewer marks M-003 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: The reeds' 3.6 cm stems were too thin for the sun's shadow map; they cast no shadow now (patch_f7.py).
+- Fix check: a probe; pass 11 pictures.
+
+### G4-242 (fixed, how bad 1): the Tree Park: the star over your next deck
+- Device: iPad
+- What's wrong: Seen half-way round, the turning star looked like a bell drawn through a star. (viewer marks M-010 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: It was two crossed stars turning; now one star faces you and sways a little (patch_f7.py).
+- Fix check: a probe; pass 11 pictures.
+
+### G4-243 (fixed, how bad 1): inside the Bakery
+- Device: iPad
+- What's wrong: A shopper at the counter stood right in front of Mrs. Crumb as seen from the door: the two read as one stacked figure. (viewer marks M-012 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: The counter's right-hand spot (Bakery and Ice Cream Shop) is 85 cm further right, out of the line from the door to the shopkeeper (patch_f7.py).
+- Fix check: a probe from the door; pass 11 pictures.
+
+### G4-244 (open, how bad 1): the Tree Park: a tree crown
+- Device: iPad
+- What's wrong: A short row of soft dark dots on a big orange crown. (viewer marks M-002 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: Found by switching each shadow caster off in turn: another orange crown's shadow, broken up by the sun's shadow map (2048 px over 60 m); the same as G4-088, written down in stage 3.
+
+### G4-245 (open, how bad 1): your pets (G4-205 again)
+- Device: iPad
+- What's wrong: Mochi and Clover with their big tags in front of the Pet Shop's upstairs pens. (viewer marks M-013 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: The same as G4-205: not changed, written down for the owner (section 5c).
+
+### G4-246 (not a glitch, how bad 1): not glitches
+- Device: iPad, iPhone sideways
+- What's wrong: The fountain mottled at night; a house sign without a garland in October; the Toy Store's name off-centre on its board; two shoppers at the left edge of the Pet Shop, one behind the other, and one behind the buttons. (viewer marks M-006 (pass 10), M-009 (pass 10), M-034 (pass 10), M-035 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: The mottling is the water falling from the fountain's bowls (blue at night; the same sheets show in rain); the Halloween line's "garlands on their posts" means garlands hanging on posts of their own (no garland floats), the house signs have their pumpkins; the name sits in the middle of its board, above the door: measured, from where the camera stands the board's far half looks about half as long as its near half; the shoppers stand at their spots by the side shelves, at the edges of a wide view.
+- Fix check: —
+
+### G4-247 (not a glitch, how bad 1): the photographer's own staging
+- Device: iPad
+- What's wrong: On a rare delivery the job box read 0:44 while Chef Blaze's card said the timer starts when you close it. (viewer marks M-044 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: The photographer's framing, not the game: the photographer picks the pizza up in the street; in the game Chef Blaze hands it over in the pizzeria, where the timer waits for his card (pass 11 closes the card).
+- Fix check: —
+
+### G4-248 (not a glitch, how bad 1): the check's own staging
+- Device: iPad
+- What's wrong: A townsperson's back filling the middle of the fountain pictures; a faded "And the winner is…" over a new pet; the whole picture dimmed after the stairs. (viewer marks M-046 (pass 10), M-047 (pass 10), M-048 (pass 10), M-049 (pass 10), M-051 (pass 10))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 10)
+- Fix: The check puts you at the fountain in one step, onto a townsperson's way (the one walking off was 1.4 m ahead; a child walking there meets them coming, and they stop 2.4 m away); N11 runs each pet's Pet Show in fast game time, and the show's drum message fades in real time; N12 takes its upstairs picture as the stairs' 0.4 s fade ends.
+- Fix check: —
+
+### G4-249 (fixed, how bad 2): a grandma walking by (after G4-231)
+- Device: PC
+- What's wrong: At the Beach Bus stop a grandma still passed right at the camera: her head and cardigan filled the left quarter (the light-theme picture and the December picture showed the same; the filter set those two aside under a wrong reason). (viewer marks M-022 (pass 11))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 11)
+- Fix: Her step aside followed the drawn frames, so on a slow screen (the PC pictures) it lagged and she passed 1.5 m from you; it follows the clock now, and keeps 2.4 m, like a passer-by (patch_f8.py).
+- Fix check: a check by script with frames 50 ms and 200 ms apart: 2.37 m and 2.4 m at the closest (before: 2.06 m and 1.79 m); N24 passes; pass 12 pictures.
+
+### G4-250 (fixed, how bad 1): the big map
+- Device: iPhone, iPad, PC
+- What's wrong: Your friends' dots had no names (the builder's picture shows Luna, Rosie and Finn); Rosie's dot lay on the S of "Spooky path". (viewer marks M-015 (pass 11), M-017 (pass 11))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 11)
+- Fix: A friend's name was tested against its own dot with the air round it (stage 3), so every side touched the dot and no name was ever drawn; it is tested against the others only. A place's name a friend's dot lies on is drawn again over the dot (patch_f8.py).
+- Fix check: a probe of the map: Theo, Rosie and Luna by their dots; pass 12 pictures.
+
+### G4-251 (fixed, how bad 1): the What's new book
+- Device: PC
+- What's wrong: On the last page the page dots sat 21 px left of the middle: the wider "Let's play!" button pushed them. (viewer marks M-020 (pass 11))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 11)
+- Fix: The footer is three columns, the dots in the middle one (patch_f8.py).
+- Fix check: pass 12: on an upright phone the last page's wider button lay on the dots (the three even columns were narrower than it): G4-261.
+
+### G4-252 (fixed, how bad 1): a message after the clock jumped
+- Device: iPad
+- What's wrong: At 22:10 the message said "The football friends are at the field until 19:00. Come and play!". (viewer marks M-024 (pass 11))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 11)
+- Fix: It had waited for its turn while the clock jumped (in the game: a night in bed); a waiting message is dropped once the game clock has moved half an hour or a day since (patch_f8.py).
+- Fix check: a check by script: queued at 14:03, the clock to 22:06: not shown (before: shown).
+
+### G4-253 (fixed, how bad 1): a message over the big map
+- Device: Android tablet (upright)
+- What's wrong: The "You are online!" message lay on the chat and phone buttons. (viewer marks M-027 (pass 11))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 11)
+- Fix: With a big card open and no free spot beside it, a message goes up in the top row, left of the round buttons (patch_f8.py).
+- Fix check: a check by script on the tablet: the message clear of the buttons and the card.
+
+### G4-254 (fixed, how bad 2): New Year's fireworks
+- Device: iPad
+- What's wrong: The fireworks hardly read as fireworks: a thin spray of pale dots and a white smudge. (viewer marks M-023 (pass 11))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 11)
+- Fix: Bigger sparks (up to 16 px), 130 to a burst, in their own colours: added up, sparks lying on each other made a young burst a white blob; they fade in over the first moment and stay bright longer (patch_f8.py).
+- Fix check: probes at three moments; N21 passes; pass 12 pictures.
+
+### G4-255 (fixed, how bad 1): the photographer's stars
+- Device: iPad
+- What's wrong: Ben asked for "the bench behind us"; the photo showed a blue wall and no bench and still got the full score. (viewer marks M-034 (pass 11))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 11)
+- Fix: Only the school sign had a point to check whether the background is in the photo; every other background counted as in. Each now has one: 2 m behind where the group stands, 1 m up (patch_f8.py).
+- Fix check: a check by script: from the front 5 stars, from behind the group the bench no longer counts; N25 passes.
+
+### G4-256 (fixed, how bad 2): a photo shoot at the Pet Show stage
+- Device: iPhone sideways
+- What's wrong: Two judges sat right beside the camera, cut by the screen edge, one reaching into the photo; a judge's name tag cut at the edge of the result. (viewer marks M-041 (pass 11), M-042 (pass 11))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 11)
+- Fix: The judges step out of a photo shoot like anyone else (patch_f8.py).
+- Fix check: a probe of the shoot on a Saturday; N25 passes; pass 12 pictures.
+
+### G4-257 (open, how bad 1): shadows (G4-088 again)
+- Device: iPad
+- What's wrong: Soft dark dots on a Tree Park crown; fine stripes under the apartments' window sills at 11:30. (viewer marks M-005 (pass 11), M-040 (pass 11))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 11)
+- Fix: The same as G4-088 and G4-244: the sun's shadow map (2048 px over 60 m), written down in stage 3.
+
+### G4-258 (open, how bad 1): your pets (G4-205 again)
+- Device: iPad
+- What's wrong: Mochi behind Finn, its tag cut to "chi"; Waffles' hatted head at the bottom edge, its tag on Rosie's dress. (viewer marks M-038 (pass 11), M-039 (pass 11))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 11)
+- Fix: The same as G4-205: not changed, written down for the owner (section 5c).
+
+### G4-259 (not a glitch, how bad 1): decided before
+- Device: iPad, PC, iPhone sideways
+- What's wrong: The book over the corner map and the notepad; the garden's back wall not the house's purple; the joystick in from the edge on a sideways phone; a round shadow on the market's fruit stand; the iPad's notepad over two townsfolk's heads; the map's places list fading at its foot under the ⬇️ hint. (viewer marks M-002 (pass 11), M-008 (pass 11), M-019 (pass 11), M-021 (pass 11), M-025 (pass 11), M-043 (pass 11))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 11)
+- Fix: A card over the dimmed HUD (G4-033, G4-060); the photographer's garden spot repaints the house on purpose (G4-223); where the owner put the joystick (commit 0f5939f); your own shadow (G4-146); the HUD stays where it is, and the photographer's New Year row stands left of the middle; the list's scroll hint (G4-034).
+- Fix check: —
+
+### G4-260 (not a glitch, how bad 1): the check's own staging
+- Device: iPad
+- What's wrong: The spooky path's picture facing the street; a grandma's back filling the fountain picture; a lamp post coming down into a new pet's head; a townsperson's hat hidden in a low tree crown right at the camera; the camera tilted at the sky after a pick-up. (viewer marks M-029 (pass 11), M-030 (pass 11), M-031 (pass 11), M-032 (pass 11), M-033 (pass 11), M-035 (pass 11), M-036 (pass 11))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 11)
+- Fix: N1 photographs from a fixed spot; N10's camera stands 2.7 m behind the grandmas' park stop, where one stood facing the fountain; N11 photographs each new pet by the same lamp post; N21 puts you in one step right behind a tall townsperson under a street tree; N27 looks up after each pick-up (the check counts the litter by code).
+- Fix check: —
+
+### G4-261 (fixed, how bad 2): the What's new book on an upright phone
+- Device: iPhone upright
+- What's wrong: On the last page the wide "Let's play!" button lay on the page dots and hid the last three, this page's pink one among them (since f8, G4-251). (viewer marks M-003 (pass 12), M-006 (pass 12))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 12)
+- Fix: The footer's side columns are at least as wide as their buttons: the dots stay in the middle where they fit and move aside where they do not, never under a button (patch_f9.py).
+- Fix check: a footer probe on 4 screens, every page; pass 13 pictures.
+
+### G4-262 (fixed, how bad 3): a car right at the camera
+- Device: iPad
+- What's wrong: The delivery picture showed no town: a flat green field and a dark band across the middle. A mint car stood at the photographer's spot on the road; its cabin was 15 cm from the camera and its roof edge 2 cm above eye height. (viewer marks M-015 (pass 12), M-016 (pass 12))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 12)
+- Fix: A car is one box for you to bump into, like the bus: your eyes stay 30 cm from its body and half a metre from its cabin (its two round ends let you walk up to 15 cm from the cabin's side, as at the photographer's spot) (patch_f9.py); the photographer's delivery spot keeps out of a car standing there too, as walking would (shots4b.py).
+- Fix check: a check by script round a car (eyes to the cabin: 0 before, 0.50 m after); pass 13 pictures.
+
+### G4-263 (fixed, how bad 1): the phone's screen
+- Device: iPhone sideways
+- What's wrong: A muddy grey band along the foot of every phone page, also with nothing to scroll. (viewer marks M-008 (pass 12), M-010 (pass 12))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 12)
+- Fix: The fade at the screen's foot shows only while there is more below (it let the dark phone through on every page) (patch_f9.py).
+- Fix check: a check by script of three phone pages; pass 13 pictures.
+
+### G4-264 (fixed, how bad 1): the bag's counts
+- Device: iPhone sideways, dark theme
+- What's wrong: The "×3" under each thing was small, light and hard to read. (viewer marks M-011 (pass 12))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 12)
+- Fix: The counts are a size bigger, bold and nearly solid (patch_f9.py).
+- Fix check: pictures of the bag before and after; pass 13 pictures.
+
+### G4-265 (fixed, how bad 2): the dance-off's crouch
+- Device: iPad
+- What's wrong: In the crouch the dancer's legs ended flat on the tiles: the shoes had sunk into the dance floor. (viewer marks M-036 (pass 12))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 12)
+- Fix: The body goes down and the legs slide up into it, so the shoes stay on the floor (they went down 23 cm with the body) (patch_f9.py).
+- Fix check: a check by script of the lowest shoe point through the move (-0.23 m before, within 1 cm after); pass 13 pictures.
+
+### G4-266 (fixed, how bad 1): the dance-off on an upright phone
+- Device: iPhone upright
+- What's wrong: The host's dancer leaned out of the picture (crown, head and arm cut by the left edge). (viewer marks M-017 (pass 12))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 12)
+- Fix: In a room too small for the view to stand 5.6 m back (a plain house: 4.3 m) the view widens until both dancers and their lean fit, up to 95°; a sideways screen keeps its view (patch_f9.py).
+- Fix check: the two-phone dance-off on the fixed file; pass 13 pictures.
+
+### G4-267 (fixed, how bad 2): the owl's and the duck's outfits
+- Device: iPad
+- What's wrong: A new owl's cape stood flat out of its back and its collar hung off its front; on the duck a box sat loose on its back. (viewer marks M-021 (pass 12), M-023 (pass 12))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 12)
+- Fix: The owl and the duck wear their outfits on their own bodies (they borrowed the cat's and the bunny's sizes): the owl's cape and backpack lie on its upright back, the collar and scarf go round both birds' necks, the bow tie sits under the beak (the duck's was inside its chest); a cat, dog, bunny or hamster looks exactly as before (patch_f9.py).
+- Fix check: pictures of both birds in every back and neck piece, from the front and the back; the cat and the bunny unchanged pixel for pixel; pass 13 pictures.
+
+### G4-268 (fixed, how bad 1): the little pictures of glowing furniture
+- Device: iPad
+- What's wrong: The "Seafoam neon sign" in the Home shop showed white tubes, not seafoam. (viewer marks M-033 (pass 12))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 12)
+- Fix: In a little picture a glowing piece glows less, so its own colour shows (the neon sign's tubes, the lamp shades and the lanterns came out nearly white); the pieces in the room glow as before (patch_f9.py).
+- Fix check: every lamp-type piece in each colour before and after; pass 13 pictures.
+
+### G4-269 (fixed, how bad 1): the job tutorials' pictures
+- Device: iPad
+- What's wrong: Pizza, "Follow the dot": the hand right of the dot pointed away from it. Hairstylist: the picture's words were the line under it again ("Make the hair like the picture"). (viewer marks M-034 (pass 12), M-035 (pass 12))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 12)
+- Fix: The hand points at the dot (👈); the hair pictures say what they show ("The picture = the new hair", "A match = stars and coins") under the same lines as before (patch_f9.py).
+- Fix check: the tutorial pictures before and after; N38 passes.
+
+### G4-270 (not a glitch, how bad 1): the photographer's framing
+- Device: iPad
+- What's wrong: Two dark posts behind a tree by the football field ran up into its crown; the garden picture's lower half was the garden fence. (viewer marks M-001 (pass 12), M-002 (pass 12))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 12)
+- Fix: The photographer's framing, not the game: the posts hold the field's scoreboard, which stands 8 m behind that pavement tree: from this one spot its board is behind the crown (from the field it shows); the garden spot stands on the lane outside the garden's fence, so its rails are in front of the first pots.
+- Fix check: —
+
+### G4-271 (not a glitch, how bad 1): decided before
+- Device: iPhone upright, PC, iPad
+- What's wrong: A grey-haired figure in the market with her back to you; a dark half-round on the fruit stand; a small 🎨 at the corner map's foot; Mochi's tag at the joystick. (viewer marks M-004 (pass 12), M-012 (pass 12), M-024 (pass 12), M-037 (pass 12))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 12)
+- Fix: A shopper looking at the shelves (pass 11's double-checkers dropped it; the keeper stands at the right); your own shadow (G4-146); the corner map is a button: tap it to change your dot's colour (since job 7); your pets at your heels (G4-205), their tags seen through the see-through joystick.
+- Fix check: —
+
+### G4-272 (not a glitch, how bad 1): the check's own staging
+- Device: iPad
+- What's wrong: A friend walking by right in front of the fountain picture; the lamp post in each new pet's picture; the Halloween gate's signs at the screen's edges, one behind the notepad; the camera at the sky after a pick-up. (viewer marks M-018 (pass 12), M-019 (pass 12), M-020 (pass 12), M-022 (pass 12), M-027 (pass 12), M-028 (pass 12), M-029 (pass 12), M-031 (pass 12), M-032 (pass 12))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 12)
+- Fix: N10 puts you at the fountain in one step, on a walking way (a friend walked by 1.4 m ahead); N11 photographs each new pet by the same lamp post (G4-260); N19 looks at the gate from a fixed spot, the HUD where it always is (its lines count the pieces by code); N27 looks up after each pick-up (G4-260).
+- Fix check: —
+
+### G4-273 (fixed, how bad 1): the clock chip's rain
+- Device: iPad, Android tablet
+- What's wrong: The chip showed 🌧️ while no rain fell, the scene still in sunshine (just after the weather turned). (viewer marks M-015 (pass 13), M-021 (pass 13), M-024 (pass 13))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 13)
+- Fix: The chip shows rain or snow once it can be seen: the streaks fade in from rain level 0.3 to 1 and the chip turned at 0.3, with nothing falling yet; it turns at 0.55 now (the streaks a third in) (patch_f10.py).
+- Fix check: a check by script of the chip at each rain level; pass 14 pictures.
+
+### G4-274 (fixed, how bad 2): a photo shoot that never ended
+- Device: iPad
+- What's wrong: After a photo job the corner map and the notepad were gone in town, with the phone's Photos chat open. (viewer marks M-023 (pass 13))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 13)
+- Fix: Only the result card's Bye ended a shoot; opening the phone or the bag over the result card left it on: the map, the notepad and the job box hidden and only the shoot's own buttons working, until you left town. Once its result card is gone, however it goes, the shoot ends as with Bye (patch_f10.py).
+- Fix check: a check by script: a shoot, then the phone over its result card (the shoot on before, ended after); the Bye path unchanged; N25 passes.
+
+### G4-275 (fixed, how bad 1): quests
+- Device: PC
+- What's wrong: "Snack time: Eat some flour"; "Buy 3 different treats" with flour among them. (viewer marks M-014 (pass 13))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 13)
+- Fix: A day's new quests never ask you to eat raw flour or eggs, and a shopping spree's treats are never flour or eggs (400 such snack quests and 66 such sprees in 200 days before, none after); an old day's quests stay as they were (patch_f10.py).
+- Fix check: a check by script of 200 days of quests.
+
+### G4-276 (fixed, how bad 1): the Pet Shop's owl
+- Device: iPad
+- What's wrong: The owl hung in the air in front of the wall, with its back to the room. (viewer marks M-025 (pass 13))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 13)
+- Fix: The owl kept to its perch's height but walked the whole pen, in the air most of the time; it keeps to the perch now and turns to the room when it stops (patch_f10.py).
+- Fix check: a check by script over 1500 frames: always on the perch line; pass 14 pictures.
+
+### G4-277 (fixed, how bad 1): the park garland at the bus stop
+- Device: iPad
+- What's wrong: A holiday garland ran into the bus shelter under its roof. (viewer marks M-001 (pass 13), M-003 (pass 13))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 13)
+- Fix: The double-checker dropped both marks: from the front the string is behind the shelter's back wall. From the park side it ran along the back wall, through the roof's rim (the shelter came in run 4; the garland was older); it hangs in two pieces now, either side of the shelter, at every holiday (patch_f10.py).
+- Fix check: pictures from the front and the park side; N1 passes.
+
+### G4-278 (not a glitch, how bad 1): two ducks, a bird
+- Device: iPhone sideways, PC
+- What's wrong: One duck on the pond, with a yellow head on a white body; a dark stick at the top of a photo. (viewer marks M-007 (pass 13), M-008 (pass 13), M-011 (pass 13), M-012 (pass 13))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 13)
+- Fix: Two ducks one behind the other from that spot: they keep 80 cm apart (0.78 m at the nearest over 1200 frames), and from there the yellow one's head lies on the white one; one of the town's birds flying over, edge-on with its wings up.
+- Fix check: —
+
+### G4-279 (open, how bad 1): the salon floor
+- Device: PC 1920
+- What's wrong: The floor near the camera looked soft, the far tiles sharp. (viewer marks M-032 (pass 13))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 13)
+- Fix: Each room's floor is a 256-pixel picture repeated over the room (about 64 pixels a metre): near the camera on a big screen it softens. A bigger picture costs memory on phones; not changed, written down.
+
+### G4-280 (not a glitch, how bad 1): decided before
+- Device: iPhone upright, PC, iPad
+- What's wrong: The upright phone's Pet Show picture boxed in by the truck, the fence and the pennants; the places list's ⬇️; the salon's sign under the round buttons. (viewer marks M-005 (pass 13), M-010 (pass 13), M-019 (pass 13))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 13)
+- Fix: The photographer's spot (set aside so in passes 11 and 12); the list's scroll hint (G4-034); pass 12's double-checkers dropped the salon's sign (M-025).
+- Fix check: —
+
+### G4-281 (not a glitch, how bad 1): the check's own staging
+- Device: iPad
+- What's wrong: Crates at the edge of the check's photo shoot; the Ideas Board in front of N16's camera; a townsperson's back in N21's; a post, a lamp post, a door at the camera; a friend partly behind another. (viewer marks M-016 (pass 13), M-020 (pass 13), M-022 (pass 13), M-026 (pass 13), M-027 (pass 13), M-028 (pass 13), M-029 (pass 13))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 13)
+- Fix: Each check takes its pictures where its test stands (set aside so since stage 3); N21 puts you right behind a tall townsperson (G4-260); four friends in a fan, one can be partly behind another for a moment (pass 11's double-checkers dropped it).
+- Fix check: —
+
+### G4-282 (fixed, how bad 1): the salon card's last word
+- Device: iPad
+- What's wrong: The customer's words wrapped so the last emoji and the closing quote stood alone on a line ("💕”", "✨”"). (viewer marks M-004 (pass 14), M-006 (pass 14))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 14)
+- Fix: The last word keeps to the word before it (the space between them cannot break), so an emoji and the closing quote never start a line alone (patch_f11.py).
+- Fix check: pictures of the salon card; pass 15 pictures.
+
+### G4-283 (fixed, how bad 1): the job box's distance
+- Device: iPad
+- What's wrong: The job box broke its line before "· 86 m", the second line starting with the dot. (viewer marks M-005 (pass 14))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 14)
+- Fix: The distance keeps to the place before it in the photographer's, the hairstylist's, the teacher's, the designer's and the pizza job box, so a line never starts with "·" (patch_f11.py).
+- Fix check: pictures of the job box; pass 15 pictures.
+
+### G4-284 (not a glitch, how bad 1): the photo shoot at the Duck Pond
+- Device: iPad
+- What's wrong: A thin dark strip at the bottom-right corner, under Snap. (viewer marks M-007 (pass 14))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 14)
+- Fix: A bush 1 m from the camera, just below the screen's bottom edge: the black outline round every thing is 2 cm bigger than the thing, so the bush's outline shows at the edge a step before the bush does. Traced by replaying the check's shoot with its booking: no page element there; the pixels are that bush's outline.
+- Fix check: —
+
+### G4-285 (open, how bad 1): the phone's jobs on a sideways iPhone
+- Device: iPhone sideways
+- What's wrong: Three job cards filled the phone screen; the other two (the Hairstylist, the Photographer) showed no part above its foot. (viewer marks M-003 (pass 14))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 14)
+- Fix: The cards are as tall as their pictures, and the second row starts right at the screen's foot; the foot fades while there is more below (G4-263) and the list scrolls. Not changed: written down for the owner (section 5c).
+
+### G4-286 (not a glitch, how bad 1): your friends in a shop
+- Device: iPad, dark theme
+- What's wrong: A friend half off the screen's edge in the toy shop; one with her back to you at the bakery's counter, her head in front of the menu's last lines. (viewer marks M-001 (pass 14), M-002 (pass 14))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 14)
+- Fix: Your friends follow you into a shop and stand round you (the narrower fan, run 4 finish): seen from the door, one can be at the view's edge or at the counter in front of the menu, as anyone in the shop would; they move on with you.
+- Fix check: —
+
+### G4-287 (not a glitch, how bad 1): the designer's reveal
+- Device: iPad
+- What's wrong: A see-through "Knock knock!" over the room. (viewer marks M-011 (pass 14), M-012 (pass 14))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 14)
+- Fix: The reveal starts with the client's knock: "Knock knock! 🚪" rises over the room and fades (the check's pictures catch it fading).
+- Fix check: —
+
+### G4-288 (not a glitch, how bad 1): decided before
+- Device: iPhone sideways
+- What's wrong: The hair card over the customer; an orange pet with a white wing half off the screen's bottom-left corner. (viewer marks M-014 (pass 14), M-015 (pass 14))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 14)
+- Fix: On a sideways phone the hair card fills the screen's height (G4-194); your pets at your heels (G4-205).
+- Fix check: —
+
+### G4-289 (not a glitch, how bad 1): the check's own staging
+- Device: iPad, PC
+- What's wrong: Two grandmas right in front of N6's camera; "The Food truck is closed now" at noon; a tree in front of N25's camera at the Flower Corner. (viewer marks M-010 (pass 14), M-013 (pass 14), M-016 (pass 14))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 14)
+- Fix: N6 looks at the grandmas' bench from right behind them; N9 tries the truck at 21:00 and then turns the clock to noon, its "closed" toast still up for the day picture; N25 stands straight in front of the group at the nearest distance where everyone fits: at the hedge a pavement tree is at the frame's left, in front of nobody (five stars; a player can step aside).
+- Fix check: —
+
+### G4-290 (fixed, how bad 1): a quest's steps
+- Device: iPhone upright, PC
+- What's wrong: A long step wrapped under its ○, and "Ice / Cream Shop" was split over two lines. (viewer marks M-003 (pass 15), M-010 (pass 15))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 15)
+- Fix: A long step wraps under its own words now, and the shop's name keeps together (patch_f12.py).
+- Fix check: pictures of a quest card on an upright iPhone, a sideways one and a PC (each step's words start at the same place on every line); pass 16 pictures.
+
+### G4-291 (fixed, how bad 1): the photo frame on a touch screen held sideways
+- Device: iPhone sideways (and iPad)
+- What's wrong: The dashed photo frame sat right of the middle: the family you faced stood left of its middle, in the photo too. (viewer marks M-007 (pass 15))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 15)
+- Fix: The frame's left edge kept off the joystick (stage 3) and its right edge stayed near the screen's edge, so its middle was 70 to 76 px right of the camera's; it keeps the same space on both sides now: whom you face is in the middle of the frame and of the photo (patch_f12.py).
+- Fix check: a check by script of the frame's middle against the family's (498 and 422 before, 422 and 422 after; five stars before and after); pictures of the shoot and the result card; pass 16 pictures.
+
+### G4-292 (fixed, how bad 1): the clock chip on a cloudy night
+- Device: iPad
+- What's wrong: A grey night sky with no stars while the clock chip showed 🌙. (viewer marks M-015 (pass 15))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 15)
+- Fix: Clouds hide the moon and the stars (f3), but the chip showed 🌙 at night whatever the sky; under a grey night sky it shows ☁️ now, as by day (a clear night 🌙, rain 🌧️) (patch_f12.py).
+- Fix check: a check by script of the chip on a cloudy, a clear and a rainy night and a cloudy noon.
+
+### G4-293 (fixed, how bad 1): the path through the Tree Park's gate
+- Device: PC
+- What's wrong: The path through the gate stopped in a straight edge in the grass a few steps past it. (viewer marks M-009 (pass 15))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 15)
+- Fix: Its far end is round now (patch_f12.py).
+- Fix check: pictures from the town side of the gate; pass 16 pictures.
+
+### G4-294 (open, how bad 1): the Tree Park's crowns
+- Device: iPad
+- What's wrong: A small row of brown saw-tooth marks on a yellow crown. (viewer marks M-001 (pass 15))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 15)
+- Fix: Traced by script: nothing stands between that point and the sun; the marks are the steps of the sun's shadow map (2048 pixels over 60 m, 3 cm each) on the crown, as in G4-088 and G4-257 (written down in stage 3).
+
+### G4-295 (not a glitch, how bad 1): a duck, a shop, two holiday views
+- Device: iPad, iPhone upright
+- What's wrong: A grey lump on the pond at night; a chef's hat on the market's oranges; the Christmas tree's star cut by the screen's top; a firework burst at the screen's edge beside an older one's grey dots. (viewer marks M-002 (pass 15), M-006 (pass 15), M-013 (pass 15), M-014 (pass 15))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 15)
+- Fix: The white duck from behind in the night light (its face is on its front); from the market's door on an upright phone the fruit stand stands between the camera and the keeper behind it; the photographer frames Santa at eye level, with the tall tree's star above the screen's top (the same view's other picture was dropped by its double-checker, M-012); the bursts fill the sky round the town, so one can be at the screen's edge, and an older burst's sparks fade (G4-254).
+- Fix check: —
+
+### G4-296 (not a glitch, how bad 1): decided before
+- Device: iPhone upright, PC, iPad
+- What's wrong: The notepad over the Toy Store's sign on an upright phone; a dark half-circle on the fruit stand; townsfolk in party hats with their backs to N21's camera. (viewer marks M-004 (pass 15), M-011 (pass 15), M-016 (pass 15))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 15)
+- Fix: On an upright phone the fixed HUD can cover part of a sign (section 9c); your own shadow (G4-146, G4-271); N21 puts you right behind a townsperson (G4-260, G4-281).
+- Fix check: —
+
+### G4-297 (fixed, how bad 1): the ducks and the lily flowers
+- Device: iPhone sideways
+- What's wrong: The white duck sat on a lily pad, the pad's pink flower poking out at the duck's chest. (viewer marks M-005 (pass 16))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 16)
+- Fix: The little pond's ducks keep 34 cm from each lily flower; and a duck pushed aside by the other (they keep 80 cm apart) no longer swims on straight at its old goal across a flower: a step into water it may not use ends that swim (patch_f13.py).
+- Fix check: a check by script over 6000 frames and 6 feedings: a duck's middle within 34 cm of a flower in 368 duck-frames before, none after (the nearest 0.34 m); the ducks still swim (47 m and 46 m in 5 minutes) and come to you when fed; pass 17 pictures.
+
+### G4-298 (fixed, how bad 1): a duck's eyes
+- Device: PC, dark theme
+- What's wrong: The white duck's far eye showed as a white ring past its head's outline, like a googly eye. (viewer marks M-007 (pass 16))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 16)
+- Fix: The eyes sit a little deeper and their shine on their top, both inside the head's outline: from behind and from the side a shine stuck out past the outline (from 1148 of 1440 view directions, now none; `eyegeo2.py`) (patch_f13.py).
+- Fix check: pictures of both ducks from the front, the side and behind; pass 17 pictures.
+
+### G4-299 (not a glitch, how bad 1): a friend behind a post, two ducks, the invitation card
+- Device: iPad, PC
+- What's wrong: Luna half behind a lamp post beside the camera at the bus stop; the white duck behind the yellow one, its head over the yellow one's; N39's invitation card pale and see-through. (viewer marks M-001 (pass 16), M-006 (pass 16), M-009 (pass 16))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 16)
+- Fix: The photographer's bus-stop spot stands beside a lamp post (pass 5): Luna, on her own walk in town, stood behind it from there; two ducks one behind the other from that spot (G4-278); N39's picture caught the card's 0.2 s pop-in (the card shows once per invitation; the line measures the card itself and passes).
+- Fix check: —
+
+### G4-300 (not a glitch, how bad 1): decided before
+- Device: iPhone upright, iPhone sideways
+- What's wrong: A grandma's back filling the fountain view; the pose card over the photo frame's right end. (viewer marks M-002 (pass 16), M-003 (pass 16), M-004 (pass 16))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 16)
+- Fix: A grandma walks round you at least 2.1 m away (G4-231): on an upright phone someone 2 m in front fills the middle of the narrow view as she passes; a card over the scene and the HUD while it is open (G4-033, G4-060).
+- Fix check: —
+
+### G4-301 (fixed, how bad 1): October: the bus shelter at the park
+- Device: iPad
+- What's wrong: A thin white line lay on the shelter's roof, as if a garland string ran through the roof and its sign. (viewer marks M-001 (pass 17))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 17)
+- Fix: It was the shelter's two cobwebs, standing up through the roof (their middle at the roof's height); they hang in its front corners under the roof now, from the post to the side glass (patch_f14.py).
+- Fix check: pictures of the photographer's bus-stop view and of both corners close, before and after (`views_f14.py`); pass 18 pictures.
+
+### G4-302 (fixed, how bad 1): the lake
+- Device: iPad
+- What's wrong: The bench by the lake faced the grass, side-on to the water. (viewer marks M-004 (pass 17))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 17)
+- Fix: It faces the water now (it faced along the shore); its two seats turn with it (patch_f14.py).
+- Fix check: pictures from the town and from behind the bench, before and after; pass 18 pictures.
+
+### G4-303 (fixed, how bad 1): a shop card in the dark theme
+- Device: PC, dark theme
+- What's wrong: The Midnight cat tree's picture, dark navy, was hard to make out on the dark purple tile. (viewer marks M-008 (pass 17))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 17)
+- Fix: In the dark theme a furniture picture (a shop's New in, the designer's list, the claw machine's prize) has a thin light edge (patch_f14.py).
+- Fix check: pictures of the Pet Shop card in the dark theme with a Midnight, a Cloud and a Hot pink cat tree new in, before and after (`views_f14dark.py`); pass 18 pictures.
+
+### G4-304 (fixed, how bad 1): inside a shop, at the door
+- Device: PC
+- What's wrong: A shopper stood right against the camera at the edge of the view: a giant half face (the Pet Shop), a big yellow figure (the Flower shop). (viewer marks M-015 (pass 17), M-016 (pass 17))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 17)
+- Fix: A shopper walked on until 0.9 m from you and waited there for as long as you stood still; it stops a step before you when you stand on its way (2.4 m straight ahead, 1.7 m at an angle) and, after a moment, goes back, like a passer-by in town (patch_f14.py).
+- Fix check: a check by script in nine shops, 30 s each while you stand just inside the door (`views_f14.py`): a shopper within 1.2 m in front of you in 7 of the 9 before (for nearly all 30 s in the Pet Shop, the Flower shop, the Toy Store and the library; the nearest 0.80 m), in none after (the nearest 1.41 m, passing by); pass 18 pictures.
+
+### G4-305 (fixed, how bad 1): a grandma behind the bus shelter
+- Device: PC
+- What's wrong: A tiny bubble, "The park is the heart of our town.", floated over the shelter's glass with nobody under it. (viewer marks M-017 (pass 17))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 17)
+- Fix: A grandma's bubble (and a photo family's name tag) is drawn over everything only within 10 m and while it can be read (a line 15 px tall or more); further away a wall in front of her hides it, like any name tag (patch_f14.py).
+- Fix check: a check by script with a grandma at the park, 13 to 16 m away behind the shelter: her bubble over the shelter before, hidden by it after; 2.9 m away it is drawn over everything as before; pass 18 pictures.
+
+### G4-306 (open, how bad 1): the Tree Park's crowns (G4-294 again)
+- Device: iPad
+- What's wrong: Small brown striped bits on a big yellow crown by the first deck of the hard path. (viewer marks M-002 (pass 17))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 17)
+- Fix: The same as G4-294: the steps of the sun's shadow map on the crown (written down in stage 3).
+
+### G4-307 (open, how bad 1): the photographer's shoot at the pond's bench
+- Device: iPhone sideways
+- What's wrong: The bench, the photo's background, was mostly behind Lily; a grey wall filled half the frame. (viewer marks M-012 (pass 17))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 17)
+- Fix: The shoot's start spot stands straight in front of the family, back just far enough that everyone fits (round 5), and does not look for the background; a child turns or steps aside to frame it: written down for the owner (section 5c).
+
+### G4-308 (not a glitch, how bad 1): the Home shop: two pieces, one picture
+- Device: iPad
+- What's wrong: Armchair and Beanbag showed the same blue seat 💺. (viewer marks M-011 (pass 17))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 17)
+- Fix: A shop's list shows each piece's emoji, and there is no beanbag emoji; Bed and Bunk bed share 🛏️ the same way. The names under them tell them apart (the New in tiles show the piece itself).
+- Fix check: —
+
+### G4-309 (not a glitch, how bad 1): decided before
+- Device: iPhone sideways, iPad
+- What's wrong: The ⬇️ over two tiles' corners on the Market card; N27's camera tipped up at the sky after a pick-up; the coin, food and clock chips gone while a photo's +120 popped. (viewer marks M-006 (pass 17), M-010 (pass 17), M-013 (pass 17))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 17)
+- Fix: A card that scrolls shows the ⬇️ in a soft fade over its foot, inside the card (section 1, after round 5; the same on the Pet Shop card was dropped by its double-checker, M-007); N27 looks up after each pick-up (G4-260); on a short sideways screen the chips step aside during a shoot (G4-235).
+- Fix check: —
+
+### G4-310 (fixed, how bad 1): the phone: quests
+- Device: iPhone upright
+- What's wrong: A cooking quest read "Cook cheese sandwich on your stove". (viewer marks M-003 (pass 18))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 18)
+- Fix: A cooking quest takes "a" or "some" like the other quests: "Cook a cheese sandwich", "Cook some pancakes", also the last step of a recipe quest (patch_f15.py).
+- Fix check: a check by script of all 12 recipes' quests and two recipe quests' last steps, before and after (`views_f15.py`); pass 19 pictures.
+
+### G4-311 (fixed, how bad 1): a shop card: New in!
+- Device: iPad, dark theme
+- What's wrong: "Grape dog house" and "Violet dog house" side by side looked like one item twice. (viewer marks M-002 (pass 18))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 18)
+- Fix: A "New in!" row never shows one piece twice in two colours a child cannot tell apart on its little picture (Grape and Violet, Lilac and Orchid, Lemon and Butter...); it already never showed the exact same one twice (patch_f15.py).
+- Fix check: a check by script of 3000 new rows in each of the five shops: one piece twice in look-alike colours in 16 to 463 rows per shop before, none after.
+
+### G4-312 (fixed, how bad 1): the designer's new client
+- Device: iPad
+- What's wrong: The card said "I live in the Apartments behind the Pet Shop, flat 11, near the Pet Shop". (viewer marks M-013 (pass 18))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 18)
+- Fix: A client whose building's name says where it is ("Apartments behind the Pet Shop", "Big apartments by the flowers", "Tall building behind the Market", "Apartments by the park") says no "near" after it; the coloured houses keep theirs ("the Blue house, near the Lake") (patch_f15.py).
+- Fix check: a check by script of 300 new clients: every building's line before and after (`views_f15.py`).
+
+### G4-313 (fixed, how bad 1): the photographer's first view of a shoot
+- Device: iPhone sideways
+- What's wrong: Everyone's feet were below the photo frame at the shoot's start. (viewer marks M-018 (pass 18))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 18)
+- Fix: At the start of a shoot the camera looks for a spot with a clear view where everyone fits; when none passed, it stayed where you stood, and from there the feet were out of the frame. A grandma counted as in the way although she steps out of a shoot (the park stop of the grandmas is at the fountain background: one 1.5 m in front of the family failed every spot); she no longer counts, and when no spot has a clear view the camera takes the nearest where everyone fits (patch_f15.py).
+- Fix check: a check by script on a sideways iPhone with a grandma 1.5 m in front of the family and with a wall in front of it: the camera left where it was before (the feet at 326 px, the frame's foot at 304), a spot where everyone fits after (the feet at 294 px; `views_f15b.py`); pass 19 pictures.
+
+### G4-314 (not a glitch, how bad 1): a burst on a cloud, lines on a floor, a yellow bar
+- Device: iPad, PC
+- What's wrong: A New Year burst resting on a cloud; thin lilac lines across a client room's wooden floor; a yellow bar at the bottom-right corner of a visit to a friend's house. (viewer marks M-006 (pass 18), M-014 (pass 18), M-015 (pass 18))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 18)
+- Fix: The bursts go off 34 to 58 m away and the clouds are over 100 m away, so a burst is drawn in front of a cloud (a probe shows a burst's sparks over one); the burst in the picture is whole, just above a cloud's top. The lines are the placing grid, which shows while you decorate (the Furniture, Move and Remove bar was up). The bar is a yellow piece in that house just below the view (no page element there: `views_f15n18.py`).
+- Fix check: —
+
+### G4-315 (not a glitch, how bad 1): decided before
+- Device: iPad, iPhone upright, iPhone sideways
+- What's wrong: An older chat bubble cut under the header; a person close by at the left edge of an upright phone's view; a dark bar at the bottom-right of N25's pond shoot; the customer's head above the hair card on a sideways phone. (viewer marks M-001 (pass 18), M-004 (pass 18), M-007 (pass 18), M-010 (pass 18), M-011 (pass 18), M-020 (pass 18))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 18)
+- Fix: An older bubble under the header, as in any chat (pass 13's double-checkers); someone passing 1.3 m or more from you is drawn, and on the narrow upright view one close beside you fills the edge (G4-171, G4-300); the outline of a bush just below the screen at the pond's spot (G4-284); on a sideways phone the hair card fills the screen's height (G4-194, G4-288).
+- Fix check: —
+
+### G4-316 (not a glitch, how bad 1): the check's own staging
+- Device: iPad
+- What's wrong: A white gate post at the edge of N20's February picture; N30's camera down in the fountain's pool. (viewer marks M-009 (pass 18), M-012 (pass 18))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 18)
+- Fix: N20 takes its holiday pictures from the Flower Corner's gate; N30 stands where its leaves test stands (G4-260).
+- Fix check: —
+
+### G4-317 (fixed, how bad 1): a photo shoot: a raised arm
+- Device: iPad, PC
+- What's wrong: Mia's raised arm went straight up through her pigtail. (viewer marks M-003 (pass 19))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 19)
+- Fix: A raised arm in a pose (wave, peace sign) leans a little forward, so it passes in front of the hair, not through it (straight up, it ran through a pigtail's ball at the side of the head) (patch_f16.py).
+- Fix check: pictures of the shoot from the front and from Mia's side, before and after (`views_f16.py`); pass 20's re-check.
+
+### G4-318 (fixed, how bad 1): the photographer's thank-you card
+- Device: iPad
+- What's wrong: The photo on the card was soft: faces and name tags fuzzy. (viewer marks M-004 (pass 19))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 19)
+- Fix: The card shows a sharp copy of the photo (it was made 400 px across for the whole screen and blown up about four times); the copy kept in your phone stays small, as before (patch_f16.py).
+- Fix check: pictures of the card, before and after (`views_f16.py`); pass 20: the card sharp, but the kit's N25 failed on the phone's copy: G4-327.
+
+### G4-319 (fixed, how bad 1): inside a shop
+- Device: iPad, dark theme
+- What's wrong: A shopper walking past stood right at the camera in the Toy Store: a head and a body filled the left sixth of the view. (viewer marks M-005 (pass 19))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 19)
+- Fix: A shopper on its way stops a step before you (G4-304), which beside you can be 0.95 m; within 1.3 m of the camera it now waits unseen for that moment, like a passer-by in town and a friend (G4-171) (patch_f16.py).
+- Fix check: a probe with a shopper put 0.8 m beside you on its way: filling half the view before, not drawn after (`views_f16.py`); pass 20's re-check.
+
+### G4-320 (fixed, how bad 1): the dance-off on a sideways phone
+- Device: iPhone sideways
+- What's wrong: The score bar sat on the dancers' crowns and hid the mirror ball. (viewer marks M-013 (pass 19))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 19)
+- Fix: On a short sideways screen the chips and buttons above the bar are hidden for the round, so the bar now sits at the top: the dancers and the ball show under it (patch_f16.py).
+- Fix check: a real two-phone dance-off, before and after (`shots4c_f.py`); pass 20's re-check.
+
+### G4-321 (fixed, how bad 1): 1 September: the school's banner
+- Device: iPad
+- What's wrong: The end of the "School party today!" banner covered the front of the little roof over the door. (viewer marks M-014 (pass 19))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 19)
+- Fix: The banner hangs 27 cm higher, clear of the little roof from the street and from near the door (patch_f16.py).
+- Fix check: pictures from the street and from near the door on 1 September, before and after (`views_f16b.py`); pass 20's re-check.
+
+### G4-322 (fixed, how bad 2): a grandma's bubble at the duck pond
+- Device: iPad, light and dark theme
+- What's wrong: Her bubble ran under the corner map: "eding the ducks is the best part of my day." (viewer marks M-020 (pass 19), M-021 (pass 19))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 19)
+- Fix: A speech bubble (a grandma's, another player's, a football friend's) slides sideways, still over its speaker, to stay clear of the map and notepad column, the buttons and the screen's edges (patch_f16.py).
+- Fix check: a probe by the pond, before and after (`views_f16.py`); pass 20: on a sideways phone the bubble ran under the clock chip and the top buttons: G4-328.
+
+### G4-323 (fixed, how bad 1): a butterfly at the camera
+- Device: iPad
+- What's wrong: A big gold block with a dark top hung in the air by the Easter bunny's bubble: a butterfly 1.3 m from the camera, its two flat wings. (viewer marks M-022 (pass 19))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 19)
+- Fix: Butterflies keep 2.2 m from the camera (1.3 m before), so a close one still reads as a butterfly (patch_f16.py).
+- Fix check: pictures at the yard's flower beds, before and after (`views_f16.py`); pass 20's re-check.
+
+### G4-324 (open, how bad 1): the hair job on a sideways phone
+- Device: iPhone sideways
+- What's wrong: A big orange striped thing with a white ear filled the bottom-left corner under the hair card. (viewer marks M-017 (pass 19), M-018 (pass 19))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 19)
+- Fix: Found with probes: it is your cat Mochi, 2 m to your left. When the card opens the view turns to the customer and looks down, and the wide sideways view stretches what is at its edge. The same open question as your pets at your heels (G4-205): written down for the owner.
+
+### G4-325 (not a glitch, how bad 1): a shopper and butterflies
+- Device: iPad
+- What's wrong: A shopper facing you in the bakery, in front of Mrs. Crumb; purple and yellow pieces in a tree crown behind the food truck. (viewer marks M-002 (pass 19), M-015 (pass 19))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 19)
+- Fix: A shopper walking from the counter towards the door crosses between you and Mrs. Crumb for a moment, like anyone in a shop (probes of the bakery from the door: the shoppers at their spots leave her in view); the pieces are the park's butterflies flying in front of the crown, the same as pass 19's N5 sky (dropped by its double-checker).
+- Fix check: —
+
+### G4-326 (not a glitch, how bad 1): decided before
+- Device: iPad, iPhone sideways
+- What's wrong: The two ducks one behind the other after you feed them; your pets' tags over the pens upstairs in the Pet Shop; a townsperson close at the left edge by the Christmas tree; an older chat bubble cut under the header. (viewer marks M-001 (pass 19), M-006 (pass 19), M-011 (pass 19), M-016 (pass 19))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 19)
+- Fix: The ducks keep 80 cm apart and from your spot one can be behind the other (G4-278); your pets at your heels and their tags, open for the owner (G4-205); someone passing 1.3 m or more from you is drawn (G4-171, G4-300); an older bubble under the header, as in any chat (pass 13's double-checkers).
+- Fix check: —
+
+### G4-327 (fixed, how bad 2): the photographer: the photo in your phone's chat
+- Device: iPad, iPhone sideways, PC
+- What's wrong: The kit's N25 failed on the f16 file: right after the thank-you card, the photo in the phone's chat had no size yet when the phone opened (it showed a moment later).
+- Found by: the kit (N25, pass 20)
+- Fix: Since f16 the card shows the sharp copy, so the phone's small copy was first decoded when the phone opened; it is decoded at the snap now, as when the card showed it (patch_f17.py).
+- Fix check: N25 alone on the f17 file, twice: PASS; pass 21's kit (41 of 41 PASS) and its picture of the phone's chat: the photo shows.
+
+### G4-328 (fixed, how bad 2): a grandma's bubble at the duck pond
+- Device: iPhone sideways; iPad, light and dark theme
+- What's wrong: On a sideways phone her bubble ran under the clock chip and the top buttons: only "ducks is the ... of my day." could be read; on the iPad its corner lay on the clock chip. (viewer marks M-013 (pass 20), M-014 (pass 20), M-015 (pass 20), M-016 (pass 20), M-001 (pass 20), M-006 (pass 20), M-007 (pass 20), M-017 (pass 20), M-018 (pass 20))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 20)
+- Fix: A speech bubble also stays below the top row (the coin, food and clock chips and the top buttons): it moves down, at most its own height, then slides sideways as before (f16 kept it clear of the map column and the buttons only) (patch_f17.py).
+- Fix check: the pond probe before and after (`views_f17.py`); pass 21: the bubble below the top row on a sideways iPhone and an iPad, light and dark, no mark about it.
+
+### G4-329 (open, how bad 1): a photo shoot from the side
+- Device: iPhone sideways
+- What's wrong: A white pill peeked out behind the "Pose: Mia" label at the right edge (only an "e" showed). (viewer marks M-003 (pass 20), M-005 (pass 20), M-011 (pass 20))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 20)
+- Fix: Found with a probe: no page element lies there; it is the name tag of the group member standing at the screen's edge, under the action label. Small, left as it is (a tag pushed below the label would leave its person).
+
+### G4-330 (not a glitch, how bad 1): not a glitch, decided before
+- Device: iPad, dark theme
+- What's wrong: The notepad a cream lined paper in the dark theme; a shopper big at the right edge of the Toy Store, partly behind "Say hi". (viewer marks M-004 (pass 20), M-002 (pass 20), M-008 (pass 20), M-009 (pass 20), M-010 (pass 20))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 20)
+- Fix: The notepad is a sheet of lined paper by design, its words readable in both themes; the shopper stands about 1.5 m from the camera (its head 150 px across), and someone 1.3 m or more from you is drawn (G4-171, G4-300).
+- Fix check: —
+
+### G4-331 (fixed, how bad 1): the photographer: your phone's chat
+- Device: iPhone sideways
+- What's wrong: The chat opened at the foot of the thank-you message, so the top of its photo lay under the Photos header. (viewer marks M-004 (pass 21), M-006 (pass 21))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 21)
+- Fix: A chat opens at its newest message; when that one is taller than the screen (a photo on a short sideways phone) it now opens at the message's top, the fade at the foot showing there is more (patch_f18.py).
+- Fix check: the chat probe before and after (`views_f18.py`); pass 22: the chat opens at the thank-you message's top on a sideways iPhone (a mark about the fade at its foot dropped by the first checker); the kit 41 of 41 PASS.
+
+### G4-332 (not a glitch, how bad 1): not a glitch, decided before
+- Device: iPhone sideways; iPad, dark theme
+- What's wrong: A palette badge on the corner map about 28 px across; the two ducks one on the other by the pond; two townsfolk at the right edge one in front of the other. (viewer marks M-001 (pass 21), M-002 (pass 21), M-003 (pass 21))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 21)
+- Fix: The palette badge is drawn in the map's own picture (a probe found no page element there): the whole map is the one tap target; the fed ducks keep 80 cm apart and from your spot one can be behind the other (G4-278); two townsfolk at different distances, one in front of the other, as anyone in a crowd.
+- Fix check: —
+
+### G4-333 (not a glitch, how bad 1): not a glitch
+- Device: iPad, dark theme
+- What's wrong: Two townsfolk at the right edge of the park, one squeezed in front of the other. (viewer marks M-001 (pass 22))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 22)
+- Fix: Two townsfolk at different distances, one in front of the other from the shoot's spot, as G4-332 (the kit's N4 keeps walkers apart: closest 0.64 m).
+- Fix check: —
+
+### G4-334 (fixed, how bad 3): the designer job: a two-room order
+- Device: iPad
+- What's wrong: In room 2 (a forest living room) a white fridge stood inside a pink armchair. (viewer marks M-006 (pass 23 (the full final pass)))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 23 (the full final pass))
+- Fix: Room 2 drew room 1's furniture: setting a room up always laid out room 1's list (`o.items`), so room 1's fridge stood where N8 put room 2's armchair, and after a trip back to room 1 your pieces in room 2 were gone from view (the order's lists themselves were right). Each room now shows its own list (patch_f19.py).
+- Fix check: the kit's N8 with a probe, before and after; pass 24: the kit 41 of 41 PASS, N8's room-2 picture with only room 2's pieces, no mark about it.
+
+### G4-335 (fixed, how bad 2): a grandma's bubble on an upright phone
+- Device: iPhone upright, dark theme
+- What's wrong: At the duck pond and the Flower Corner her bubble lay half under the corner map and the notepad ("...s the ...ay."; "...! Such a pretty garden."). (viewer marks M-008 (pass 23 (the full final pass)), M-016 (pass 23 (the full final pass)))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 23 (the full final pass))
+- Fix: On an upright phone the map and notepad column is a third of the width: a bubble held over its speaker (who stood under the column or off the left edge) could not clear it, and a speaker off the edge had the whole column counted on its right. Such a bubble now slides fully clear of the column, and a HUD part counts as left or right by the half of the screen it is in (patch_f19.py).
+- Fix check: probes before and after (`views_f19.py`); pass 24: the pond bubble readable; the Flower Corner bubble ran past the right edge: G4-340.
+
+### G4-336 (open, how bad 1): the food truck
+- Device: iPad
+- What's wrong: A small grey ball on the truck's side by the awning's end. (viewer marks M-004 (pass 23 (the full final pass)), M-007 (pass 23 (the full final pass)))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 23 (the full final pass))
+- Fix: It is the truck's little evening lamp under the awning's end (unlit by day, with no bracket). Small: left as it is, in the leftover list.
+
+### G4-337 (open, how bad 1): the Christmas tree at night
+- Device: iPad, dark theme
+- What's wrong: Two big white glows at the sides of the tree's middle washed out its edge. (viewer marks M-003 (pass 23 (the full final pass)))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 23 (the full final pass))
+- Fix: The tree's lights glow at night; two of them read as a flare. Small: left as it is, in the leftover list.
+
+### G4-338 (open, how bad 1): the photographer's close view of the ducks
+- Device: iPad
+- What's wrong: A big dark purple box at the right edge of the view, by the blue house. (viewer marks M-001 (pass 23 (the full final pass)))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 23 (the full final pass))
+- Fix: Something by the blue house's corner stands right at that camera spot (the photographer's fixed view). Small: left as it is, in the leftover list.
+
+### G4-339 (not a glitch, how bad 1): not a glitch
+- Device: iPad, iPhone upright, PC
+- What's wrong: Cattails in front of a grandma on the pond bench; a brown slab at the corner of N22's school view; someone at the left edge in the Pet Shop; two shoppers one behind the other in the flower shop; N24's two grandmas one behind the other on their bench. (viewer marks M-002 (pass 23 (the full final pass)), M-005 (pass 23 (the full final pass)), M-010 (pass 23 (the full final pass)), M-011 (pass 23 (the full final pass)), M-012 (pass 23 (the full final pass)))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 23 (the full final pass))
+- Fix: The cattails stand between you and the bench; N22's and N24's pictures come from the check's own camera spots (as N6's, G4-289); someone 1.3 m or more from you is drawn (G4-171, G4-300); two people at different distances, one in front of the other (G4-332).
+- Fix check: —
+
+### G4-340 (fixed, how bad 2): a grandma's bubble at the Flower Corner
+- Device: iPhone upright, light and dark theme
+- What's wrong: Clear of the map column since f19, her bubble ran past the right edge of the screen ("Such" cut, no right border). (viewer marks M-001 (pass 24), M-002 (pass 24), M-003 (pass 24), M-004 (pass 24), M-005 (pass 24), M-006 (pass 24), M-007 (pass 24), M-008 (pass 24))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 24)
+- Fix: The bubble (253 px) was wider than the space beside the column (234 px). A bubble that slides clear of the column and is wider than the space beside it is now drawn smaller to fit (patch_f20.py).
+- Fix check: the Flower Corner probe after (`views_f19.py`); pass 25: the whole bubble on the screen on an upright iPhone, light and dark, no mark about it; the kit 40 of 41 (N15 on its own timing, then 2 of 3 alone PASS).
+
+### G4-341 (not a glitch, how bad 1): decided before
+- Device: iPad
+- What's wrong: N8's designer pictures: faint "Knock knock!" over the sofa; thin lilac lines across the floor. (viewer marks M-001 (pass 25), M-002 (pass 25), M-003 (pass 25), M-004 (pass 25))
+- Found by: PHOTOVIEWER + DOUBLE-CHECKER (pass 25)
+- Fix: The designer's reveal starts with the client's knock, the words rising over the room and fading (G4-287); the placing grid shows while you decorate (G4-314).
 - Fix check: —
 

@@ -1,0 +1,3 @@
+M-004 | KEEP | photo visibly softer than the UI, tags and faces a bit fuzzy (mild, not distorted)
+M-005 | KEEP | huge cut-off brown head and mint body fill left edge
+M-006 | KEEP | Mochi and Clover tags cover orange kitten and brown bunny

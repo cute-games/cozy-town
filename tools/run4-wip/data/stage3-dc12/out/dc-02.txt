@@ -1,0 +1,5 @@
+M-006 | KEEP | wide button covers dots 5-7, current pink dot hidden (page 6 shows all 7)
+M-007 | DROP | big photo looks clean, not stretched, fits card; nothing a child or parent would notice
+M-008 | KEEP | muddy grey band clearly visible at screen bottom over empty space, nothing to scroll
+M-009 | DROP | map and notepad sit beside card, no overlap; layout looks tidy
+M-010 | KEEP | same muddy grey band at screen bottom over empty space as M-008

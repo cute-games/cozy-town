@@ -1,0 +1,7 @@
+M-008 | KEEP | hint really tiny (~10px), far smaller than body text
+M-009 | KEEP | yellow car hides right half of school (clear in 005/079)
+M-010 | KEEP | back wall is default pink (as 012), front lavender (038)
+M-011 | KEEP | names cut mid-word at edges, "air Salon" peeks under bar
+M-012 | KEEP | photo soft vs in-game 034, lower third empty floor, sign cut
+M-013 | DROP | lag gone by next shot; harness timing, not seen in play
+M-014 | DROP | small normal HUD overlap; pond and both ducks clearly shown

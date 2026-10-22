@@ -1,0 +1,26 @@
+M-027 | KEEP | orange hair band covers the cheeks to the mouth like a mask, skin only round the eyes; dotted flicker strip and dark line visible on the right
+M-028 | KEEP | blurry grey streaky smears clearly visible on the wall under all three racks
+M-029 | DROP | camera placement: teachers just stand at the frame edges (photographer's spot is nearer the doors than the entry spot)
+M-030 | DROP | camera placement: camera parked right beside the truck facing bare wall; the ring is the fire pole's ceiling ring with the pole just out of frame
+M-031 | KEEP | wall above the dog, cat, bunny and capybara pens shows only windows, no pen signs
+M-032 | DROP | real but only 2 px slivers, same colour as the card border; nobody would notice
+M-033 | KEEP | bag card covers the clock chip, sun icon sticks out by the card's corner
+M-034 | DROP | card ends above the screen edge; last row is just clipped by the scrolling list, ⬇️ button shown
+M-035 | KEEP | Settings card corner covers the clock chip, sun icon pokes out
+M-036 | KEEP | Market card covers the clock chip, sun icon pokes out
+M-037 | KEEP | Pet shop card covers the clock chip, sun icon pokes out
+M-038 | KEEP | pose card hides Mia's left side and the lower-left corner of her head
+M-039 | KEEP | phone frame sits on the joystick, run and jump buttons; their lower halves stick out below
+M-040 | KEEP | same: joystick, run and jump buttons stick out under the phone frame
+M-041 | KEEP | same: joystick, run and jump buttons stick out under the phone frame
+M-042 | KEEP | same: joystick, run and jump buttons stick out under the phone frame
+M-043 | KEEP | same: joystick, run and jump buttons stick out under the phone frame
+M-044 | KEEP | same: joystick, run and jump buttons stick out under the phone frame
+M-045 | KEEP | same: joystick, run and jump buttons stick out under the phone frame
+M-046 | KEEP | same: joystick, run and jump buttons stick out under the phone frame
+M-047 | KEEP | same: joystick, run and jump buttons stick out under the phone frame
+M-048 | KEEP | ⬇️ button covers the end of "Bring my pets to me" (text cut after "to")
+M-049 | DROP | real but only 2 px bumps, same colour as the border; not noticeable
+M-050 | DROP | same 2 px bumps; not noticeable
+M-051 | DROP | same 2 px bumps; not noticeable
+M-052 | KEEP | Beach kiosk card cuts across the corner map, its bottom part hidden

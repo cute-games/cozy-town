@@ -1,0 +1,23 @@
+M-070 | KEEP | joystick outer ring and knob stick out half cut off beside the card's left edge, easy to see
+M-071 | DROP | tiny passing bird sits whole on the awning underside above the window; nothing sinks in, looks like a bird under the awning
+M-072 | KEEP | view is from inside the parked bus: window frames, orange walls, seat and grey ceiling behind the phone
+M-073 | KEEP | same inside-the-bus view (windows, seat, walls) behind Rosie's chat
+M-074 | KEEP | same inside-the-bus view behind the job list
+M-075 | KEEP | same inside-the-bus view behind the friends page
+M-076 | KEEP | same inside-the-bus view behind quests
+M-077 | KEEP | same inside-the-bus view behind skills
+M-078 | KEEP | same inside-the-bus view behind pets
+M-079 | KEEP | same inside-the-bus view behind furniture
+M-080 | KEEP | same inside-the-bus view behind the calendar
+M-081 | DROP | map covers almost the whole screen; the thin grey strips do not read as a bus
+M-082 | DROP | a clear scroll-down hint over the list's fade, not a glitch
+M-083 | KEEP | bus windows, orange walls and seat clearly around the bag card; run/jump buttons show the player is not seated
+M-084 | KEEP | bus interior clearly around the settings card
+M-085 | KEEP | bus ceiling, walls, seat and pole around the book; "Take the bus (free)" prompt shows the player is not riding
+M-086 | KEEP | bus interior clearly around the Market card
+M-087 | KEEP | bus interior clearly around the Pet shop card
+M-088 | KEEP | small card, so it is plain to see: big bus window, yellow grab pole, seat and orange walls fill the view
+M-089 | KEEP | dark: same inside-the-bus view (ceiling, window frames, orange walls, seat, pole) behind messages
+M-090 | KEEP | same inside-the-bus view behind Rosie's chat
+M-091 | KEEP | same inside-the-bus view behind the job list
+M-092 | KEEP | same inside-the-bus view behind friends

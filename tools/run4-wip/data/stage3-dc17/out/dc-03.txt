@@ -1,0 +1,3 @@
+M-007 | DROP | normal floating scroll button (same on all devices), covers only empty tile corners
+M-008 | KEEP | dark navy cat tree blends into dark purple tile, much harder to see than the rest
+M-009 | DROP | only a tiny dimmed speck, gone in other pizza shots; nobody would notice it

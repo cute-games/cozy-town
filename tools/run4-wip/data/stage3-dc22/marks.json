@@ -1,0 +1,18 @@
+[
+ {
+  "id": "M-001",
+  "file": "pv_ipad-landscape_dark_pv-r22d-ipad-landscape_001_photo-shoot-r22d-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r22d/shots/pv_ipad-landscape_dark_pv-r22d-ipad-landscape_001_photo-shoot-r22d-ipad-landscape.png",
+  "where": "ipad-landscape dark, right edge of the park by the wooden crates",
+  "what": "two townsfolk (a grey-haired grandma in blue and a person in yellow/orange) stand squeezed against each other, bodies overlapping, in the background",
+  "bad": "1"
+ },
+ {
+  "id": "M-002",
+  "file": "pv_iphone-landscape_light_pv-r22-iphone-landscape_003_photo-chat-r22-iphone-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r22/shots/pv_iphone-landscape_light_pv-r22-iphone-landscape_003_photo-chat-r22-iphone-landscape.png",
+  "where": "iphone-landscape, phone Photos chat",
+  "what": "the photo is cut off at the bottom by the fade at the foot (feet and lower frame hidden), so the whole photo is not in view under the header and the thank-you words are not visible without scrolling",
+  "bad": "2"
+ }
+]

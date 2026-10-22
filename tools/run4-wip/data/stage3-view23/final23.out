@@ -1,0 +1,25 @@
+checks ended 16:54:00; file d93c58704659d836d8949395db22a436
+shots8 ended 17:07:24: pictures 456 map at /tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-p23/map.json
+shots4b ended 17:10:40: pictures 32 map at /tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-p23b/map.json
+shots4c ended 17:11:15: pictures 4 map at /tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-p23c/map.json
+144 pictures -> /tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-kit23
+628 pictures in 16 batches -> /tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/stage3-list23
+batch-01.md lighting/objects 40 pictures
+batch-02.md lighting/objects 40 pictures
+batch-03.md lighting/objects 40 pictures
+batch-04.md lighting/objects 40 pictures
+batch-05.md lighting/objects 40 pictures
+batch-06.md lighting/objects 14 pictures
+batch-07.md text/UI 40 pictures
+batch-08.md text/UI 40 pictures
+batch-09.md text/UI 40 pictures
+batch-10.md text/UI 12 pictures
+batch-11.md dark mode 40 pictures
+batch-12.md dark mode 40 pictures
+batch-13.md dark mode 40 pictures
+batch-14.md dark mode 36 pictures
+batch-15.md iPad touch 40 pictures
+batch-16.md iPad touch 24 pictures
+batch-17.md shops/people 40 pictures
+batch-18.md shops/people 22 pictures
+PASS23 PICTURES DONE 17:11:16

@@ -1,0 +1,7 @@
+M-057 | KEEP | figure in front hides Luna, Theo, half of Rosie; their tags float alone
+M-058 | KEEP | +20 coin pop-up covers start of three message lines
+M-059 | KEEP | +120 pop-up stuck behind result card, only tops peek out (minor)
+M-060 | DROP | normal chat scroll; old answered bubble slides under header
+M-061 | KEEP | banner inside photo frame cuts Ben's tag; school sign cut, behind chips
+M-062 | KEEP | sun icon on clock chip but sky is plainly grey overcast (minor)
+M-063 | KEEP | "shoulder-length and bun" is broken English

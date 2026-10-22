@@ -1,0 +1,26 @@
+M-157 | KEEP | the card's top-left corner sits over the rounded right end of the "11:30 Tue" chip (small but visible)
+M-158 | KEEP | same overlap: the Pet shop card's corner covers the right end of the time chip
+M-159 | KEEP | invitation card is bright white, while the Mailbox and Host-a-party cards in the same dark run are dark navy
+M-160 | KEEP | dance-off card is bright white in the dark theme; the run's other cards are navy
+M-161 | KEEP | pizza tutorial card is bright white in the dark theme
+M-162 | KEEP | hairstylist tutorial card is bright white in the dark theme
+M-163 | KEEP | the pointing hand sits under the door and points right at empty space (this build drew it at 330,150; the code has since moved it next to the chair)
+M-164 | KEEP | photographer tutorial card is bright white in the dark theme
+M-165 | KEEP | "family photo · the fountain" starts right against the camera icon, touching it, with only about 10 px to the right border
+M-166 | KEEP | the dashed frame's top edge and corner run just under the four round buttons, which sit on the line
+M-167 | KEEP | same: the four buttons sit on the dashed frame's top line
+M-168 | KEEP | the white screen-centre ring is still drawn in photo mode and sits on Leo's forehead like a spot
+M-169 | DROP | the ghost circles a fixed spot mid-park, about 18 m in front of the stage; it hides the sign only from this spot at this moment (line of sight)
+M-170 | KEEP | neither door has a pumpkin; these houses are not on the pumpkin door list, although the builder promised pumpkins at every door
+M-171 | KEEP | the Hair Salon's doorstep is empty; the salon is missing from the pumpkin door list (other west-road shops are on it)
+M-172 | KEEP | Santa is side-on (side of a cube head, beard and nose poking left, thin body, no face); the build shot here had no turn-to-player code
+M-173 | KEEP | still side-on while handing over the coins, never faces the player (turn-to-player code was added after this shot)
+M-174 | DROP | not floating boxes: they are the legs of two townsfolk sitting on the fountain benches just off-screen (trouser and shoe colours match); the screen edge cuts them off
+M-175 | KEEP | the tree's bottom rim covers his left side and the lowest pink bulb sits on his beard; in this build he stood 2.3 m from the trunk, partly inside the 2.1 m bottom layer (since moved)
+M-176 | KEEP | the round tree behind the bus stop is summer green while every other tree is snowy (it is also green among orange trees in October)
+M-177 | DROP | the same seated townsfolk's legs poking in at the frame edges; nothing is floating
+M-178 | KEEP | the yellow plate pokes through the banner and clips the tops of the "l" and "t"
+M-179 | KEEP | the hat's pink pompom is drawn over the tag and hides the "a" (reads "W ffles")
+M-180 | DROP | the short-lived "You are online!" pop-up hides a tag for a moment; the gate being "the subject" is just how the shot was framed
+M-181 | KEEP | the path lamps render solid near-black with no lit glass, and the purple stones look like dark holes; nothing reads as purple-lit
+M-182 | KEEP | the Clothing store card covers the time chip, leaving only a sliver with the moon

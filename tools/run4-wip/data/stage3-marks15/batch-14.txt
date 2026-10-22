@@ -1,0 +1,9 @@
+kit15-n3-friends-friends-after-turn-2.png | ipad-landscape, pavement by the shops, after turn 2 | the friends bunch up instead of standing in a loose arc: Luna and Theo stand shoulder to shoulder (far under 1.2 m apart) and a passer-by is wedged in behind Theo and Rosie | 1
+kit15-n30-sky-leaves-park.png | ipad-landscape, park fountain | the camera stands inside the fountain's pool right under the big bowl: the grey bowl fills two thirds of the picture, so the sky and falling leaves this shot is for are hidden | 2
+kit15-n31-trees-wall-11-5.png | ipad-landscape, apartment block east wall at 11:30 | faint vertical streaks hang under every window sill on the blue wall (and under the yellow house's sill at left); the 12:00 and 12:30 shots of the same wall are clean | 2
+kit15-n6-grandmas-grandmas-day.png | ipad-landscape, bench by the duck pond | pet name tags clash with the HUD: a faint "Clover" tag shows through the toast right under "Comfy! Move to..." (text over text) and the "Mochi" tag sits on top of the joystick | 1
+kit15-n8-designer-designer-room-2.png | ipad-landscape, designer job, unicorn play room | a big grey see-through "Knock knock! 🚪" hangs across the middle of the room over the bunk bed with no card behind it, like ghost text (the same faint text lies across the sofa in designer-room-1) | 1
+kit15-n26-map-iphone-portrait-big-map-iphone-portrait.png | iphone-portrait, big Map | place names cut by the map's left edge read just "on" and "lon" | 1
+kit15-n15-B-one-clock-B.png | pc-1366 dark theme, pavement by the Flower Corner (player B) | the other player ZZTEST-CLKA stands right against B's camera: its back fills the left quarter of the view and its name tag is cut under the corner map ("EST-CLKA") | 1
+kit15-n26-map-pc-1366-big-map-pc-1366.png | pc-1366, big Map | the "Friends Lane" name is cut by the map's left edge and reads just "ne" beside the Places list | 1
+count: 8

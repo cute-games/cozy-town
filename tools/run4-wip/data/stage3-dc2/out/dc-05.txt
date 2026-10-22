@@ -1,0 +1,19 @@
+M-093 | KEEP | whole frame, HUD included, sits under a dark veil (max channel value 99/255); decks, bridge and HUD barely readable
+M-094 | DROP | camera simply faces away from the finish deck; bell/flag at the edge and the empty grass are framing, nothing broken
+M-095 | KEEP | rain-cloud icon in the pill, but zoomed sky shows only stars and clouds with no rain streaks (streaks are plainly visible in the tree-park rain shots)
+M-096 | KEEP | zoom confirms a purple pennant pair on the back box and a pink pair under the serving window, both drawn through the truck body
+M-097 | KEEP | sun icon + 10:00 Thu over a starry purple dusk with lit lamps; mismatch is real on screen (shot is named "evening", discount if the test forced the lighting)
+M-098 | KEEP | notepad card is about 95x60 px with "Write here!" at roughly 8 px; unreadable at phone size
+M-099 | KEEP | zoom shows two place icons half-covered under the bottom edge of the "Tap a place" bar
+M-100 | DROP | "0:00" is a valid unpadded midnight; the cited pills are all two-digit hours, so no inconsistency is actually shown
+M-101 | KEEP | three large grey cloud puffs at head height: Theo fully hidden, Rosie half hidden, left third of the view blocked
+M-102 | KEEP | zoom shows only a sliver of Finn's hair/face behind Luna's head; his label floats with no body
+M-103 | DROP | photo-mode framing: camera parked beside the trunk; Leo and the school sign are out of view because of where the photographer stands, not a game fault
+M-104 | KEEP | whole screen washed white; result card, photo, text and stars all very faint
+M-105 | KEEP | header reads "Photo bookin", clipped hard against the coin pill with no ellipsis
+M-106 | KEEP | "the hedge" chip overlaps the joystick ring's lower-right and crosses the dashed frame's bottom edge
+M-107 | KEEP | bus pill covers the dashed frame's top-left corner (minor)
+M-108 | KEEP | whole screen washed white; card text and stars very faint
+M-109 | KEEP | "the hedge" chip drawn on top of the result card, across the photo thumbnail
+M-110 | KEEP | bus pill covers the dashed frame's top-left corner (minor)
+M-111 | KEEP | whole screen washed white; card text and stars very faint

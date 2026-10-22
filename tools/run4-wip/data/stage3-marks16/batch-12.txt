@@ -1,0 +1,8 @@
+s3b_ipad-landscape_light_christmas-light_002_holiday-christmas-santa.png | ipad-landscape, Flower Corner: Santa in front of the Christmas tree (day) | the tree's yellow star is cut off by the top edge of the screen, so the tree top does not fit in the view | 1
+s3b_ipad-landscape_light_newyear-day-light_001_holiday-newyear-hats.png | ipad-landscape, bus stop on 31 Dec (day) | the notepad card top-left covers the heads of the two townsfolk on the left and hides their party hats (only a yellow pompom tip peeks out at the screen edge) | 2
+s3b_pc-1366_light_two-B_001_two-players-pc.png | pc-1366, pavement by the park gate | a big grey ghost hangs right by the camera top-right over the houses; this close it looks like a dull grey smoke blob, not a little white ghost | 1
+kit16-n1-holidays-holiday-christmas.png | ipad-landscape, park by the fountain (Christmas) | nothing of Christmas shows: orange autumn trees, no snow, no Christmas tree, Santa or lights in view; the picture is the same as the Valentine one | 1
+kit16-n1-holidays-holiday-valentine.png | ipad-landscape, park by the fountain (Valentine's) | nothing of Valentine's shows: no hearts, petals or pink fountain, orange autumn trees; the picture is the same as the Christmas one | 1
+kit16-n11-pets-pet-capybara.png | ipad-landscape, pavement by the Flower Corner (pet Mango) | the toy emojis (tennis ball, racket, carrot, sparkles) are piled on the big "Oopsie! 🙈" text and the Mango name tag in a messy clump | 1
+kit16-n11-pets-pet-duck.png | ipad-landscape, pavement by the Flower Corner (pet Sunny) | a big "🥉 3rd place: Foxy!" popup floats over Sunny the duck with a chick emoji and sparkles piled on its letters, and it names another pet (Foxy), not Sunny | 2
+count: 7

@@ -1,0 +1,6 @@
+M-019 | KEEP | ring sits bottom-middle over gate and stones (bottom-left in 033 and on iPad)
+M-020 | KEEP | dots centred on p6, about 21 px left on p7; row jumps
+M-021 | KEEP | big curved dark shadow on stand and crate fronts, no visible caster
+M-022 | KEEP | grey head and mint cardigan block left quarter; gone in 025
+M-023 | KEEP | only a white blob and faint pale dots; same weak look in 002
+M-024 | KEEP | toast says until 19:00 while clock reads 22:10

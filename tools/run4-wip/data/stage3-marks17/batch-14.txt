@@ -1,0 +1,12 @@
+kit17-n30-sky-leaves-park.png | ipad-landscape, park fountain | the camera stands inside the fountain pool, right under the bowls: the grey bowls fill most of the view and the water sheet runs over the lens; the falling leaves (the shot's subject) can't be seen | 2
+kit17-n36-A-new-furniture-in-the-house.png | ipad-landscape, house, Home shop | Armchair and Beanbag have the same blue aeroplane-seat thumbnail (💺), so the beanbag looks like the armchair | 1
+kit17-n37-ipad-landscape-treepark-gate.png | ipad-landscape, Tree Park gate | the friends bunch at the bottom edge: Clover is hidden behind Waffles (only its ears and name tag show, the Clover and Waffles tags stacked), Waffles and Mochi are cut by the bottom edge; not a loose arc with nobody hidden | 2
+kit17-n4-walkers-walkers-give-way.png | ipad-landscape, Flower Corner gate, rain | the camera is right against the Flower Corner sign: the board fills the left half and its text runs off the left edge (the 🌸 is cut off); no walkers can be seen | 2
+kit17-n25-iphone-landscape-photo-shoot-iphone-landscape.png | iphone-landscape, photo shoot by the duck pond | the asked background "the bench" is almost all hidden behind Lily; half the frame is a plain grey wall | 1
+kit17-n25-iphone-landscape-photo-result-iphone-landscape.png | iphone-landscape, photo result card | the coin, food and clock chips are missing at the top left while "+120" pops (on PC they show) | 1
+kit17-n26-map-iphone-landscape-corner-map-iphone-landscape.png | iphone-landscape, Flower Corner gate | the joystick sits in the middle of the bottom over the garden path, not in its bottom-left place | 1
+kit17-n26-map-iphone-portrait-big-map-iphone-portrait.png | iphone-portrait, big map | two place labels are cut by the map's left edge and read only "on" | 1
+kit17-n18-B-same-B-visits-A.png | pc-1366, inside a house, waiting at A's door | the whole screen, HUD included, is under a grey veil (washed-out), and only the top edge of a yellow panel shows at the bottom right, the rest of it is off the screen | 2
+kit17-n18-B-same-B-lane.png | pc-1366, Flower Corner gate | named for the lane but shows the start spot at the Flower Corner gate: no Friends Lane or houses in view | 1
+kit17-n5-B-bench-other-player-sits.png | pc-1366, Flower Corner bench, rain | the other player is only a dark purple-brown blob in the bottom-right corner under the Stand up and jump buttons (camera almost inside it), with a purple shape poking up at the bottom edge; the sitting player can't be seen | 2
+count: 11

@@ -1,0 +1,4 @@
+06:56:00 ACTION open test copy web build md5 250fe60c on ipad-landscape light as before
+06:56:05 UNDONE closed test copy web ipad-landscape light before: its saves and test data are thrown away
+06:56:13 ACTION open test copy web build md5 0270ee66 on ipad-landscape light as after
+06:56:18 UNDONE closed test copy web ipad-landscape light after: its saves and test data are thrown away

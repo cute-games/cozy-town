@@ -1,0 +1,32 @@
+M-001 | KEEP | pink/purple/yellow/blue flat quads with black tips really float as streaks across the truck panel
+M-002 | KEEP | grey hair covers the bubble, reads "The lake is s…eaceful."
+M-003 | KEEP | crown is a flat dull olive (≈130,112,46) with no lit face next to bright faceted trees; reads dead
+M-004 | KEEP | outlined yellow sphere hovers beside the sign with an offset shadow, nothing holds it
+M-005 | KEEP | button reads "Adopt a owl"
+M-006 | KEEP | back-button circle, avatar and coin chip tops are clipped under the phone status bar
+M-007 | DROP | deliberate scroll hint centred on the card border, clean and consistent, not a glitch
+M-008 | DROP | same badge, same deliberate placement
+M-009 | DROP | same badge, same deliberate placement
+M-010 | DROP | same badge, same deliberate placement
+M-011 | KEEP | invitation sits on a second yellow-bordered card with icon left and "…eck it" right
+M-012 | KEEP | pose card hides the "−" button and the fountain bar's icon; "+" and "Snap!" left exposed
+M-013 | KEEP | three pets fill the foreground, cut by the bottom edge, labels over Leo/Zoe/legs
+M-014 | KEEP | three show-pet labels overlap into a jumble, first two partly hidden
+M-015 | KEEP | result card over a still-live photo bar ("−" hidden, "+"/"Snap!" exposed), chip still up
+M-016 | KEEP | same stacked labels, overlap real
+M-017 | KEEP | balloon bunch cuts the plate to "Every Saturda"
+M-018 | KEEP | balloons cover the trophy's lower half and "Every", only "Saturday!" shows
+M-019 | KEEP | plate reads "Every Saturda" behind the balloons
+M-020 | KEEP | the three labels overlap, tails hidden
+M-021 | KEEP | balloons hide "Every", only "Saturday!" shows
+M-022 | KEEP | "Granny Daisy"/"Sir Barkley" mostly hidden behind "Lady Fluffington"
+M-023 | KEEP | plate reads "Every Saturda" behind the balloons
+M-024 | KEEP | labels overlap, same jumble
+M-025 | KEEP | balloons hide trophy bottom and "Every", only "Saturday!" shows
+M-026 | DROP | it is the pennant bunting string (flags hang from it), same in daylight; a decoration, not a stray plane
+M-027 | KEEP | same flat olive-brown crown, no lit face, looks dead among bright trees
+M-028 | DROP | rod stops ~16 px short of the lamp with a visible gap; perspective coincidence
+M-029 | DROP | pink shopper is cleanly in front, outlines intact, no clipping; they just stand close
+M-030 | KEEP | thin gap at centre shows wall and skirting between the two middle bookcases, others touch
+M-031 | DROP | ring-topped pole is a background prop (fire pole/stand) behind him, lined up by chance
+M-032 | KEEP | same floating yellow sphere, no bracket, offset shadow

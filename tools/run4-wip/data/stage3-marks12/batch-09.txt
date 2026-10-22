@@ -1,0 +1,6 @@
+s3_iphone-landscape_dark_iphone-landscape-dark_038_town-flower-corner.png | iphone-landscape dark, Flower Corner gate from the square | the joystick ring sits in the middle of the screen (on iPad and iPhone portrait it sits bottom-left) and covers the open gate and the stepping stones, the subject of the shot; the same mid-screen joystick is in every iPhone-landscape scene shot of this batch (027, 028, 036-046) | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_039_town-duck-pond.png | iphone-landscape dark, duck pond | the mid-screen joystick ring and knob sit on the pond's front ring of stones | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_041_town-east-shops.png | iphone-landscape dark, Toy Store and east shops | the mid-screen joystick ring covers the bottom of the Toy Store door and the pumpkin by the door | 1
+s3_pc-1366_light_pc-1366-light_010_big-map.png | pc-1366 light, big map | place labels are cut at the map's edges: a lone "en" at the left edge, "Hair Salon" half cut and peeking out under the hint bar at the bottom, and a lone "c" at the bottom right | 1
+s3_pc-1366_light_pc-1366-light_010_big-map.png | pc-1366 light, big map, Places list | the ⬇️ scroll hint is a small bare emoji, not the round button used in the bag and settings, and it sits on the edges of the faded Beach and Bus stop buttons | 1
+count: 5

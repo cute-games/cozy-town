@@ -1,0 +1,65 @@
+[
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r22/shots/pv_ipad-landscape_light_pv-r22-ipad-landscape_001_photo-shoot-r22-ipad-landscape.png",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "name": "photo-shoot",
+  "note": "a photo shoot at the fountain, everyone waving"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r22/shots/pv_ipad-landscape_light_pv-r22-ipad-landscape_002_photo-result-r22-ipad-landscape.png",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "name": "photo-result",
+  "note": "the thank-you card after the snap: the photo on it sharp"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r22/shots/pv_ipad-landscape_light_pv-r22-ipad-landscape_003_photo-chat-r22-ipad-landscape.png",
+  "prof": "ipad-landscape",
+  "theme": "light",
+  "name": "photo-chat",
+  "note": "your phone's chat with the customer right after the snap: it opens at the thank-you message's top, the whole photo in view under the header (on a short screen the words under it are below, with a fade at the foot)"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r22/shots/pv_iphone-landscape_light_pv-r22-iphone-landscape_001_photo-shoot-r22-iphone-landscape.png",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "name": "photo-shoot",
+  "note": "a photo shoot at the fountain, everyone waving"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r22/shots/pv_iphone-landscape_light_pv-r22-iphone-landscape_002_photo-result-r22-iphone-landscape.png",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "name": "photo-result",
+  "note": "the thank-you card after the snap: the photo on it sharp"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r22/shots/pv_iphone-landscape_light_pv-r22-iphone-landscape_003_photo-chat-r22-iphone-landscape.png",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "name": "photo-chat",
+  "note": "your phone's chat with the customer right after the snap: it opens at the thank-you message's top, the whole photo in view under the header (on a short screen the words under it are below, with a fade at the foot)"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r22d/shots/pv_ipad-landscape_dark_pv-r22d-ipad-landscape_001_photo-shoot-r22d-ipad-landscape.png",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "name": "photo-shoot",
+  "note": "a photo shoot at the fountain, everyone waving"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r22d/shots/pv_ipad-landscape_dark_pv-r22d-ipad-landscape_002_photo-result-r22d-ipad-landscape.png",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "name": "photo-result",
+  "note": "the thank-you card after the snap: the photo on it sharp"
+ },
+ {
+  "path": "/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/r22d/shots/pv_ipad-landscape_dark_pv-r22d-ipad-landscape_003_photo-chat-r22d-ipad-landscape.png",
+  "prof": "ipad-landscape",
+  "theme": "dark",
+  "name": "photo-chat",
+  "note": "your phone's chat with the customer right after the snap: it opens at the thank-you message's top, the whole photo in view under the header (on a short screen the words under it are below, with a fade at the foot)"
+ }
+]

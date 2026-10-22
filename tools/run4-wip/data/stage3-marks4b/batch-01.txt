@@ -1,0 +1,39 @@
+s3b_ipad-landscape_dark_christmas-night-dark_001_holiday-christmas-tree-night.png | ipad-landscape (dark), Christmas tree at night | a kid character stands right at the lens: a huge blocky face and teal shirt fill the bottom-left corner, cut off by the screen edges, with the joystick on top | 2
+s3b_ipad-landscape_dark_christmas-night-dark_001_holiday-christmas-tree-night.png | ipad-landscape (dark), Christmas tree at night | lights are too bright: Santa's face is a yellow-white blob and a big pure-white glow sits on the tree's left side | 1
+s3b_ipad-landscape_dark_halloween-night-dark_001_halloween-spooky-gate.png | ipad-landscape (dark), spooky path gate | Waffles is right at the lens (head cut off by the bottom edge) and its party-hat pompom is drawn over its own "Waffles" name tag | 1
+s3b_ipad-landscape_light_jobs-light_002_job-hair-card.png | ipad-landscape, salon chair | the camera is right behind Nora's head: her black hair is a big flat dark block across the middle of the screen and the card covers the rest, so you can't see the hair you are styling | 2
+s3b_ipad-landscape_light_jobs-light_002_job-hair-card.png | ipad-landscape, salon | the big "✂️ Nora sits down!" pop text runs into the pink "✂️ Hair Salon" wall sign and the two texts overlap | 1
+s3b_ipad-landscape_light_jobs-light_004_job-delivery-note.png | ipad-landscape, city street | there is no delivery message on screen; the job box still says "Go to the Pizzeria to start work" | 1
+s3b_pc-1366_light_two-B_001_two-players-pc.png | pc-1366, by the Ideas Board | a big brown wooden board (the back and roof of the Ideas Board) is right at the lens and fills the whole right half of the screen | 2
+kit4-n25-ipad-landscape-photo-shoot-ipad-landscape.png | ipad-landscape, photo shoot at the duck pond | the "Zoom" and "Pose" labels under the −, + and 🧍 buttons are tiny (about 7–8 px) | 1
+kit4-n19-costume-mirror.png | ipad-landscape, costume mirror | the "Cat costume: it's yours! Try it on at the mirror." toast lies across the avatar's chin and chest, covering the costume on show | 2
+kit4-n19-spooky-path-scare.png | ipad-landscape (night, rain), spooky path | the soft monster pops up right in the camera's face, fills the middle of the screen and is cut off by the bottom edge, instead of appearing beside the path | 2
+kit4-n20-A-easter-bunny.png | ipad-landscape, Flower Corner (Easter) | a big gold box-like shape hangs in the sky top-left next to the map, attached to nothing | 1
+kit4-n20-A-easter-bunny.png | ipad-landscape, Flower Corner (Easter) | the eggs around the bunny are small pastel ones lying loose (no gold band, no nest); the builder says the hunt eggs are golden-banded eggs in nests, not the small pastel ones | 1
+kit4-n20-A-december-tree-santa.png | ipad-landscape, Flower Corner (December) | the Easter bunny's "Happy Easter! I hid 25 eggs…" bubble is still on screen next to Santa and the Christmas tree | 1
+kit4-n21-newyear-fireworks.png | ipad-landscape (night, snow), Flower Corner | there are no fireworks at all; the sky shows only snowflakes and clouds | 2
+kit4-n21-newyear-fireworks.png | ipad-landscape (night, snow), Flower Corner | the camera is pressed against the Christmas tree: its lights are huge over-bright glow blobs at the bottom-left over the joystick, and Santa is cut off by the bottom edge | 1
+kit4-n21-newyear-party-hats-confetti.png | ipad-landscape, city pavement | the camera is squeezed between a townsperson's huge head (body cut off by the bottom edge) and a lamp post that runs the full height of the screen | 2
+kit4-n25-ipad-landscape-photo-chat-ipad-landscape.png | ipad-landscape, phone Photo bookings chat | the header title is cut off: "Photo booki…" disappears under the 🪙 220 chip | 2
+kit4-n3-friends-friends-in-view-1.png | ipad-landscape, city pavement | a huge flat grey shape (looks like a ghost drifting through the camera) covers the top-right third of the view and hides Rosie's head and name tag | 2
+kit4-n3-friends-friends-in-view-1.png | ipad-landscape, city pavement | Finn stands straight behind Luna; only his hair and "Finn" tag show | 2
+kit4-n3-friends-friends-after-turn-1.png | ipad-landscape, city pavement | Theo stands straight behind Rosie; only his "Theo" tag shows above hers | 2
+kit4-n3-friends-friends-after-turn-1.png | ipad-landscape, city pavement | Waffles is pressed against the lens at the bottom-left under the joystick, and Finn's name tag is hidden under the notepad (only "n" shows) | 1
+kit4-n3-friends-friends-in-view-2.png | ipad-landscape, Flower Corner fence | Rosie stands right at the lens: her head is huge, her body is cut off by the bottom edge, and the "Talk to Rosie", chat, run and jump buttons sit on top of her | 1
+kit4-n3-friends-friends-after-turn-2.png | ipad-landscape, city pavement | Finn is hidden behind Luna (only his tag and a yellow sleeve show) and Theo is half behind Rosie | 2
+kit4-n3-friends-friends-after-turn-2.png | ipad-landscape, city pavement | the Beach Bus toast was caught half see-through over Luna and Rosie, so its words are hard to read | 1
+kit4-n3-friends-friends-after-turn-2.png | ipad-landscape, city pavement | scenery cuts off name tags: "Clov…" by the pink sign on the right, "…i" by the tree trunk on the left | 1
+kit4-n37-ipad-landscape-treepark-gate.png | ipad-landscape, Tree Park town gate | the clock shows 🌙 22:20 but the scene is in full daylight | 2
+kit4-n37-ipad-landscape-treepark-gate.png | ipad-landscape, Tree Park town gate | Clover, Waffles and Mochi crowd the bottom of the view right at the lens, all cut off by the bottom edge | 1
+kit4-n37-ipad-landscape-treepark-finish.png | ipad-landscape, Tree Park finish deck | the "🏁 Finish" sign runs off the right edge; only "Finis" shows | 2
+kit4-n39-A-dance-off.png | ipad-landscape, house dance-off | the player names in the top score bar are tiny (about 7–8 px) | 1
+kit4-n39-A-dance-result.png | ipad-landscape, house after the dance | Mochi's crown is drawn solid black (it is gold outdoors) | 2
+kit4-n39-A-dance-result.png | ipad-landscape, house after the dance | Mochi is pressed against the lens at the bottom-right under the run/jump buttons, and another pet's name tag is cut off by the right edge ("W…") | 1
+kit4-n25-iphone-landscape-photo-shoot-iphone-landscape.png | iphone-landscape, photo shoot at the garden gate | the "Everyone is posed! Frame them and Snap!" banner sits on top of the − / + Zoom buttons and hides them | 2
+kit4-n25-iphone-landscape-photo-shoot-iphone-landscape.png | iphone-landscape, photo shoot at the garden gate | a white joystick-like ring sits in the middle of the frame over Oscar's legs and the gate (there is no joystick at the bottom-left) | 2
+kit4-n25-iphone-landscape-photo-result-iphone-landscape.png | iphone-landscape, photo result | the "+120 🪙" pop lands on top of the clock chip and hides the end of "Tue" | 1
+kit4-n15-B-one-clock-B.png | pc-1366 (dark), Flower Corner | the other player's avatar stands right at the lens and fills the left quarter (seen from behind), and its name tag runs under the corner map ("…EST-CLKA") | 1
+kit4-n25-pc-1366-photo-shoot-pc-1366.png | pc-1366, photo shoot by the school | a tree trunk stands in the middle of the shot right in front of the group and splits it (Zoe and the bunny partly hidden); the asked "school sign" is not in view | 2
+kit4-n25-pc-1366-photo-result-pc-1366.png | pc-1366, photo result | the photo is split by the tree trunk, yet it gets five stars and "Wow, what a photo!" | 1
+
+Count: 37 problems

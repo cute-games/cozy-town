@@ -1,0 +1,3 @@
+M-013 | DROP | Luna and Theo have clear faces and names, only slightly overlapped
+M-014 | DROP | Rosie is close because "Talk to Rosie" is offered; the screen is still readable
+M-015 | DROP | empty hearts are visible and clearly different from the pink filled ones

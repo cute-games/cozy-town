@@ -1,0 +1,13 @@
+M-106 | KEEP | huge bubble cut at left edge, under map and bus pill
+M-107 | KEEP | same huge cut bubble under map and bus pill
+M-108 | KEEP | "Hee hee!" covers middle of the paddling line
+M-109 | KEEP | +20 coin pop-up sits over start of card text
+M-110 | KEEP | stray white ring drawn across sofa backrest
+M-111 | KEEP | title visibly cut to "Sunny living room · r..."
+M-112 | KEEP | +20 coin and palette hide "Hi! I'm", "park,", "me a"
+M-113 | KEEP | white ring floats mid-air left of armchair
+M-114 | KEEP | title ends "room 2 ...", text cut (minor)
+M-115 | DROP | normal chat scroll, answered message under header, newest lines in full
+M-116 | KEEP | litter pill and trash button sit in photo frame over truck
+M-117 | KEEP | giant bubble cut at left edge, under bus chip and map
+M-118 | KEEP | caption clearly right of centre, ~140px left vs ~68px right

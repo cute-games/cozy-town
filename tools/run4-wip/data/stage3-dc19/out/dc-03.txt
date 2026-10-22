@@ -1,0 +1,3 @@
+M-007 | DROP | true, but normal HUD notepad over the scene at this camera spot; full name readable on the sign
+M-008 | DROP | the dark V's are the town's flying birds (same spots and colour in light mode), not leaves
+M-009 | DROP | the V and stick are birds high over town (identical in light mode), not dark leaves

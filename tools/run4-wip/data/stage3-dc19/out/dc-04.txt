@@ -1,0 +1,3 @@
+M-010 | DROP | ring on the head reads as the duck's eye; centre ring over the aimed thing is normal UI and this view's framing, duck facing away is natural
+M-011 | KEEP | huge half-cut grey townsperson face and body fill the left edge under the joystick, hide "Flower", only "Corner" shows
+M-012 | DROP | read as soft balloon shadows, same look and direction as the teachers' wall shadows, not dirt

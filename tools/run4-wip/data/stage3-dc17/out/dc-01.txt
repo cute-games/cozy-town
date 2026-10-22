@@ -1,0 +1,3 @@
+M-001 | KEEP | garland string visible on shelter roof, runs behind sign to right post
+M-002 | KEEP | brown striped bit clearly pokes through yellow crown
+M-003 | DROP | yellow duck just in front of white one; both heads visible, not merged

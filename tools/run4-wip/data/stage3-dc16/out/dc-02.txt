@@ -1,0 +1,3 @@
+M-004 | KEEP | card hides frame's right end, dashed line grazes card top
+M-005 | KEEP | ducks clumped, white overlaps yellow, sits on lily flower
+M-006 | KEEP | white duck hidden behind yellow, only head pokes up

@@ -1,0 +1,4 @@
+s3_ipad-landscape_light_ipad-landscape-light_034_inside-pets-upstairs.png | ipad-landscape light, Pet Shop upstairs | pets Mochi and Clover stand right against the camera at the bottom edge, Clover cut off by the screen edge and both hiding the front of the pens | 1
+s3_ipad-landscape_dark_ipad-landscape-dark_034_inside-pets-upstairs.png | ipad-landscape dark, Pet Shop upstairs | pets Mochi and Clover stand right against the camera at the bottom edge, Clover cut off by the screen edge and both hiding the front of the pens | 1
+s3_ipad-landscape_light_ipad-landscape-light_026_inside-toys.png | ipad-landscape light, toy store | shopper on the right is cut off by the screen edge and half hidden behind the castle and Clover button | 1
+count: 3

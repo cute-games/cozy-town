@@ -1,0 +1,12 @@
+M-001 | KEEP | blurry dark smudges beside and over the door, plus a jagged grey band under the roof, clearly visible mid-screen
+M-002 | DROP | HUD buttons only cover a blank corner of the banner; "Finish" fully readable, normal HUD over scenery
+M-003 | KEEP | "Downstairs" text runs to both plate edges while the same-size "Upstairs" plate has room; visible side by side
+M-004 | KEEP | same blurry dark smear left of the door and over its top half, smaller but visible
+M-005 | DROP | label for pots that are themselves at the screen edge; normal 3D framing, lock icon still clear
+M-006 | DROP | labels clipped at the edge of a zoomable, pannable map is normal; tip bar only hides a dot and a corner label
+M-007 | DROP | normal scroll list: half-visible last row plus the down-arrow button shows there is more below
+M-008 | DROP | all three kids fully inside the frame and not covered; shoot view and final photo are framed fine
+M-009 | DROP | night path looks nice with warm lamps (stones even look purple); wording mismatch, not a visible glitch
+M-010 | DROP | normal map edge clipping on a small phone; letter tops above the hint bar are tiny specks
+M-011 | KEEP | pose view zooms in: Mia and Zoe spill past the frame and the card hides their bodies, so the pose cannot be seen
+M-012 | KEEP | camera stuck inside a vehicle-like box (walls, two windows); whole view blocked, no Flower Corner

@@ -1,0 +1,2 @@
+s3_ipad-landscape_dark_ipad-landscape-dark_042_phone-jobs.png | ipad-landscape dark, phone: Rosie's chat with the job list | the player's earlier mint chat bubble sticks out as a thin strip under the Rosie header, so its "Wed · 11:00" time is cut off at the top. There is no fade there, unlike the bottom of the quest and skills lists | 1
+count: 1

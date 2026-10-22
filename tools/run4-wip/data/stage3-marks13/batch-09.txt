@@ -1,0 +1,3 @@
+s3_iphone-landscape_dark_iphone-landscape-dark_021_shop-pets.png | iphone-landscape dark, city, Pet Shop card | the round ⬇️ "more below" button sits on top of the item row, covering the bottom-right corner of the "Seafoam pet bed" card and the bottom-left corner of the "Leaf food bowl" card | 1
+s3_pc-1366_light_pc-1366-light_010_big-map.png | pc-1366 light, city, big map place list | at the foot of the place list the ⬇️ scroll hint is a small bare emoji (about 22 px, no round button like the one in the bag and settings) lying on the edges of the faded "Beach" and "Bus stop" buttons, and the top of the next list button shows unfaded below them at the panel's bottom border | 1
+count: 2

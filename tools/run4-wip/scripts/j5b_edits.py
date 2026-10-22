@@ -1,0 +1,21 @@
+# Run 4, job 5 follow-up: signs stand clear of what is behind and in front of them; signs centre by the ink that really shows against their colour.
+import json
+E = []
+# inkBox: with a background colour, count the pixels that stand out against it (the same measure as the check kit: a light part of an emoji hardly shows on a white sign)
+E.append(["function inkBox(x,W,H){const d=x.getImageData(0,0,W,H).data;let x1=W,y1=H,x2=-1,y2=-1;for(let j=0;j<H;j++){const row=j*W*4;for(let i=0;i<W;i++){if(d[row+i*4+3]>40){",
+          "function inkBox(x,W,H,bgc){const d=x.getImageData(0,0,W,H).data;let x1=W,y1=H,x2=-1,y2=-1;for(let j=0;j<H;j++){const row=j*W*4;for(let i=0;i<W;i++){const k=row+i*4;if(bgc?Math.abs(d[k]-bgc[0])+Math.abs(d[k+1]-bgc[1])+Math.abs(d[k+2]-bgc[2])>90:d[k+3]>40){"])
+# signPlane: a second look at the drawn sign: the pixels that stand out against the sign's colour decide the centre (the steam of ☕ is nearly white on a white sign)
+E.append(["    x.font=f();x.textAlign='left';x.textBaseline='alphabetic';x.fillStyle=fg;x.fillText(text,W/2-b.cx,H/2-b.cy);};   /* the ink's middle lands in the sign's middle */",
+          "    x.font=f();x.textAlign='left';x.textBaseline='alphabetic';x.fillStyle=fg;const tx=W/2-b.cx,ty=H/2-b.cy;x.fillText(text,tx,ty);   /* the ink's middle lands in the sign's middle */\n    const bgc=/^#[0-9a-f]{6}$/i.test(bg)?[1,3,5].map(i=>parseInt(bg.slice(i,i+2),16)):null,v=bgc&&inkBox(x,W,H,bgc);   /* second look: only the pixels that really show against the sign's colour (the steam of ☕ is nearly white) decide the middle */\n    if(v){const dx=W/2-(v.x1+v.x2)/2,dy=H/2-(v.y1+v.y2)/2;if(Math.abs(dx)>1||Math.abs(dy)>1){x.fillStyle=bg;x.fillRect(0,0,W,H);x.fillStyle=fg;x.fillText(text,tx+dx,ty+dy);}}};"])
+# building signs: 2 cm in front of their board (they were 1 cm: too close for comfort against z-fighting)
+E.append(["sm.position.set(0,3.75,.19);p.add(sm);}", "sm.position.set(0,3.75,.2);p.add(sm);}   /* 2 cm in front of its board (run 4, job 5) */"])
+# Pet Show: the two signs 2 cm in front of the stage's back wall (they were flush with it); no boards
+E.append(["    box(st,.08,.9,3.16,'#3d2c5e',-37.92,2.17,SZ,{ol:.015});box(st,.08,.46,2.02,'#ff4d8d',-37.92,1.75,SZ,{ol:.012});   /* boards for the two signs (run 4, job 5) */\n    const sg=signPlane('🏆 Pet Show',3.0,.8,'#ffd45c','#3d2c5e');sg.position.set(-37.84,2.62,SZ);sg.rotation.y=Math.PI/2;L.g.add(sg);\n    const sg2=signPlane('Every Saturday!',1.9,.38,'#ffffff','#ff4d8d');sg2.position.set(-37.84,1.98,SZ);sg2.rotation.y=Math.PI/2;L.g.add(sg2);",
+          "    const sg=signPlane('🏆 Pet Show',3.0,.8,'#ffd45c','#3d2c5e');sg.position.set(-37.82,2.62,SZ);sg.rotation.y=Math.PI/2;L.g.add(sg);   /* 2 cm in front of the stage's back wall (run 4, job 5: it was flush with it) */\n    const sg2=signPlane('Every Saturday!',1.9,.38,'#ffffff','#ff4d8d');sg2.position.set(-37.82,1.98,SZ);sg2.rotation.y=Math.PI/2;L.g.add(sg2);"])
+# the Halloween garland on the stage hangs from the post tops, above the sign (its pendants used to hang over the sign's middle)
+E.append(["garland(st,-37.8,3.3,19.85,-37.8,24.15,OP);HOL.n+=4;", "garland(st,-37.8,3.9,19.85,-37.8,24.15,OP);HOL.n+=4;   /* the stage's garland hangs from the post tops: its pendants used to hang over the Pet Show sign (run 4, job 5) */"])
+# salon posters: past the window's curtain (the curtain's top crossed their left end)
+E.append(["  const s2=signPlane('💇 Long · Bob · Ponytail',3.0,.5,'#ffffff','#3d2c5e');s2.position.set(5.94,2.2,1.6);s2.rotation.y=-Math.PI/2;L.g.add(s2);\n  const s3=signPlane('🌀 Bun · Pigtails · Curly',3.0,.5,'#ffffff','#3d2c5e');s3.position.set(5.94,1.55,1.6);s3.rotation.y=-Math.PI/2;L.g.add(s3);",
+          "  const s2=signPlane('💇 Long · Bob · Ponytail',2.8,.5,'#ffffff','#3d2c5e');s2.position.set(5.94,2.2,2.25);s2.rotation.y=-Math.PI/2;L.g.add(s2);   /* past the window's curtain (run 4, job 5: the curtain's top crossed the posters' end) */\n  const s3=signPlane('🌀 Bun · Pigtails · Curly',2.8,.5,'#ffffff','#3d2c5e');s3.position.set(5.94,1.55,2.25);s3.rotation.y=-Math.PI/2;L.g.add(s3);"])
+json.dump(E, open('/tmp/claude-0/-home-user-cozy-town/2d51fefd-8eab-5b42-b420-85b3aa0550f9/scratchpad/j5b.json', 'w'), ensure_ascii=False)
+print(len(E), 'edits')

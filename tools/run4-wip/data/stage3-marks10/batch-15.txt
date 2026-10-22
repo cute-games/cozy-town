@@ -1,0 +1,4 @@
+kit10-n26-map-pc-1366-big-map-pc-1366.png | pc-1366, big Map, left edge of the map on the road west of "You!" | a road name is cut down to just "ne" by the map's left frame, next to the pink lane marker | 1
+kit10-n5-B-bench-other-player-sits.png | pc-1366, rain, sitting on the Flower Corner bench | the camera almost touches something: a big shapeless dark-brown block with a thick outline (the bench arm or the other sitter's head, seen from very close) fills the bottom-right corner behind the stand-up, run and jump buttons, and a dark purple piece pokes up at the bottom centre; neither the bench nor the other player who sits can be seen | 2
+kit10-n13-pc-1920-hair-card.png | pc-1920, Hair Salon, Ivy's hair card | Ivy's wish reads "I'd like my hair shoulder-length and bun" (clumsy English, needs "in a bun"); the same line is in kit10-n13-pc-1920-hair-before-done.png | 1
+count: 3

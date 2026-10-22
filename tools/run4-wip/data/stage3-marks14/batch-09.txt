@@ -1,0 +1,8 @@
+s3_iphone-landscape_dark_iphone-landscape-dark_020_shop-market.png | iphone-landscape dark, city: Market shop card | the round ⬇️ "more below" button sits on top of the bottom corners of the Watermelon and Corn tiles (a button overlapping two item cards) | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_021_shop-pets.png | iphone-landscape dark, city: Pet Shop card | the round ⬇️ "more below" button overlaps the bottom corners of the Cherry pet bed and Violet dog house tiles, close to the "180" price | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_038_town-flower-corner.png | iphone-landscape dark, city: Flower Corner gate from the square | the joystick rests in the lower middle of the screen (in photo mode it sits bottom-left) and its ring lies over the white fence and the left half of the open gate and stepping stones, the picture's subject | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_039_town-duck-pond.png | iphone-landscape dark, city: duck pond | the joystick ring and knob sit on the pond's front stones and water, covering part of the subject | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_041_town-east-shops.png | iphone-landscape dark, city: Toy Store | the joystick ring covers the foot of the Toy Store door and the pumpkin beside it | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_042_town-treepark-gate.png | iphone-landscape dark, city: Tree Park gate | the joystick ring and knob cover the foot of the gate's left post and the earth path into the gate | 1
+s3_pc-1366_light_pc-1366-light_012_settings.png | pc-1366 light, city: settings | the round ⬇️ "more below" button sits inside the Notepad row about 10 px left of [✏️ On], so the row reads as three buttons (⬇️, On, Last page) | 1
+count: 7

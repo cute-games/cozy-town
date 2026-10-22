@@ -1,0 +1,222 @@
+[
+ {
+  "id": "M-001",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_042_phone-jobs.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18/shots/s3_ipad-landscape_dark_ipad-landscape-dark_042_phone-jobs.png",
+  "where": "ipad-landscape dark, phone: Rosie's chat with the job list",
+  "what": "the player's earlier mint chat bubble sticks out as a thin strip under the Rosie header, so its \"Wed · 11:00\" time is cut off at the top. There is no fade there, unlike the bottom of the quest and skills lists",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "mint bubble strip under header, \"Wed · 11:00\" cut in half, no fade",
+  "spot": "phone-jobs"
+ },
+ {
+  "id": "M-002",
+  "file": "s3_ipad-landscape_dark_ipad-landscape-dark_060_shop-pets.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18/shots/s3_ipad-landscape_dark_ipad-landscape-dark_060_shop-pets.png",
+  "where": "iPad landscape, dark theme, Pet Shop card, \"New in\" row",
+  "what": "\"Grape dog house\" and \"Violet dog house\" look identical (same purple house picture, same purple colour dot, same 180 price), so the row seems to show one item twice",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "Grape and Violet dog house look the same: same house, dot colour, 180 price",
+  "spot": "shop-pets"
+ },
+ {
+  "id": "M-003",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_005_phone-quests.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18/shots/s3_iphone-portrait_light_iphone-portrait-light_005_phone-quests.png",
+  "where": "iPhone portrait, light theme, the phone: quests",
+  "what": "the \"Chef time\" quest text reads \"Cook cheese sandwich on your stove\" (missing \"a\")",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "text really reads \"Cook cheese sandwich on your stove\", \"a\" missing",
+  "spot": "phone-quests"
+ },
+ {
+  "id": "M-004",
+  "file": "s3_iphone-portrait_light_iphone-portrait-light_025_mailbox-menu.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18/shots/s3_iphone-portrait_light_iphone-portrait-light_025_mailbox-menu.png",
+  "where": "iphone-portrait light, city by the Beach Bus stop, mailbox menu",
+  "what": "a passer-by right against the camera fills the left quarter of the scene as a huge grey-and-pink block cut by the screen edge",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "huge grey-pink block cut by left edge, clearly visible",
+  "spot": "mailbox-menu"
+ },
+ {
+  "id": "M-005",
+  "file": "s3_pc-1366_dark_pc-1366-dark_039_town-duck-pond.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18/shots/s3_pc-1366_dark_pc-1366-dark_039_town-duck-pond.png",
+  "where": "pc-1366 dark, duck pond in the park",
+  "what": "the two ducks sit jammed together (the yellow duck's bill against the white duck's head), and the white duck shows no eye or bill from this side, so it reads as a plain white blob",
+  "bad": "1",
+  "verdict": "DROP",
+  "dc": "ducks just close, white one seen from behind, still reads as duck",
+  "spot": "town-duck-pond"
+ },
+ {
+  "id": "M-006",
+  "file": "s3b_ipad-landscape_dark_newyear-night-dark_001_holiday-newyear-fireworks.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18b/shots/s3b_ipad-landscape_dark_newyear-night-dark_001_holiday-newyear-fireworks.png",
+  "where": "ipad-landscape, dark theme, park at night (30 Dec, 22:10)",
+  "what": "the firework burst sits right on top of a cloud and the cloud hides its lower half, so it reads as a pink pom-pom resting on the cloud, not sparks high over the town (the mint burst in the fireworks-2 shot also sits on a cloud)",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "burst sits right on cloud top, looks stuck to it (also in shot 2)",
+  "spot": "holiday-newyear-fireworks"
+ },
+ {
+  "id": "M-007",
+  "file": "kit18-n25-ipad-landscape-photo-shoot-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit18/shots/kit18-n25-ipad-landscape-photo-shoot-ipad-landscape.png",
+  "where": "ipad-landscape, light theme, photo shoot at the duck pond",
+  "what": "a dark navy bar with a slanted end peeks in along the bottom edge under the Snap bar (bottom-right corner), cut off by the screen edge",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "dark navy slanted sliver really peeks in at bottom-right edge under Snap",
+  "spot": "kit18-n25-ipad-landscape-photo-shoot-ipad-landscape"
+ },
+ {
+  "id": "M-008",
+  "file": "kit18-n25-ipad-landscape-photo-shoot-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit18/shots/kit18-n25-ipad-landscape-photo-shoot-ipad-landscape.png",
+  "where": "ipad-landscape, light theme, photo shoot at the duck pond",
+  "what": "all three posing townsfolk wear striped party-cone hats in an October scene (autumn trees, a ghost); party hats are meant for 31 Dec and 1 Jan only (unless they are meant as photo props)",
+  "bad": "1",
+  "verdict": "DROP",
+  "dc": "three posers in party hats = birthday-photo booking, hats are props by design",
+  "spot": "kit18-n25-ipad-landscape-photo-shoot-ipad-landscape"
+ },
+ {
+  "id": "M-009",
+  "file": "kit18-n20-A-valentine-fountain.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit18/shots/kit18-n20-A-valentine-fountain.png",
+  "where": "ipad-landscape light, Flower Corner in February (heart fountain)",
+  "what": "camera stands right at the gate: a big white post fills the left edge from the middle down and white fence-post tops poke into the bottom-left corner",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "big white gate post fills left edge, white fence tops poke into bottom-left",
+  "spot": "kit18-n20-A-valentine-fountain"
+ },
+ {
+  "id": "M-010",
+  "file": "kit18-n25-ipad-landscape-photo-result-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit18/shots/kit18-n25-ipad-landscape-photo-result-ipad-landscape.png",
+  "where": "ipad-landscape light, photographer job result card",
+  "what": "a dark rounded bar peeks in at the very bottom-right edge of the screen (a HUD part, maybe the photo bar, not fully hidden)",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "small dark pill really peeks at bottom-right edge; also in iPad shoot shot under Snap panel, so not the photo bar",
+  "spot": "kit18-n25-ipad-landscape-photo-result-ipad-landscape"
+ },
+ {
+  "id": "M-011",
+  "file": "kit18-n25-ipad-landscape-photo-chat-ipad-landscape.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit18/shots/kit18-n25-ipad-landscape-photo-chat-ipad-landscape.png",
+  "where": "ipad-landscape light, phone Photos chat after the shoot",
+  "what": "the same dark rounded bar peeks in at the very bottom-right edge of the screen",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "same dark pill visible at bottom-right edge",
+  "spot": "kit18-n25-ipad-landscape-photo-chat-ipad-landscape"
+ },
+ {
+  "id": "M-012",
+  "file": "kit18-n30-sky-leaves-park.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit18/shots/kit18-n30-sky-leaves-park.png",
+  "where": "ipad-landscape light, park fountain at noon",
+  "what": "camera is down inside the fountain's pool under its big bowl: the grey basin fills the view and no leaves falling from tree crowns can be seen",
+  "bad": "3",
+  "verdict": "KEEP",
+  "dc": "camera in fountain pool under bowl; grey basin fills view, no player or falling leaves",
+  "spot": "kit18-n30-sky-leaves-park"
+ },
+ {
+  "id": "M-013",
+  "file": "kit18-n8-designer-designer-room-1.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit18/shots/kit18-n8-designer-designer-room-1.png",
+  "where": "ipad-landscape, light, designer job, Finn's garden kitchen",
+  "what": "the \"New client!\" card names the Pet Shop twice: \"the Apartments behind the Pet Shop, flat 11, near the Pet Shop\" (same card in designer-room-2)",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "card really says \"behind the Pet Shop ... near the Pet Shop\", clumsy repeat",
+  "spot": "kit18-n8-designer-designer-room-1"
+ },
+ {
+  "id": "M-014",
+  "file": "kit18-n8-designer-designer-room-2.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit18/shots/kit18-n8-designer-designer-room-2.png",
+  "where": "ipad-landscape, light, designer job, Finn's bedroom",
+  "what": "thin lilac lines run straight across the wooden floor at even steps, as if the lilac checker floor shows through the wood",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "thin lilac lines visible straight across wood floor, not plank seams",
+  "spot": "kit18-n8-designer-designer-room-2"
+ },
+ {
+  "id": "M-015",
+  "file": "kit18-n18-B-same-B-visits-A.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit18/shots/kit18-n18-B-same-B-visits-A.png",
+  "where": "pc-1366, light, inside a house while waiting at the door",
+  "what": "a yellow bar with a dark top edge sticks up in the bottom-right corner, cut off by the bottom of the screen (a panel or button almost entirely off-screen)",
+  "bad": "2",
+  "verdict": "KEEP",
+  "dc": "yellow outlined panel edge visibly cut off at bottom-right",
+  "spot": "kit18-n18-B-same-B-visits-A"
+ },
+ {
+  "id": "M-016",
+  "file": "kit18-n25-pc-1366-photo-shoot-pc-1366.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit18/shots/kit18-n25-pc-1366-photo-shoot-pc-1366.png",
+  "where": "pc-1366, light, photographer job at the Pet Show stage",
+  "what": "all three townsfolk wear striped party hats in the October scene (cobwebs, ghosts), although the party-hat look is meant for 31 Dec and 1 Jan; same in the iPhone photo shoot",
+  "bad": "1",
+  "verdict": "DROP",
+  "dc": "party hats are the birthday booking's look by design (code gives birthday groups party hats; kit booking reads \"my birthday photo\"), not New Year hats",
+  "spot": "kit18-n25-pc-1366-photo-shoot-pc-1366"
+ },
+ {
+  "id": "M-017",
+  "file": "kit18-n26-map-pc-1366-corner-map-pc-1366.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit18/shots/kit18-n26-map-pc-1366-corner-map-pc-1366.png",
+  "where": "pc-1366, light, Flower Corner at night (23:10 Tue)",
+  "what": "the October path is not purple-lit: the five little lamps glow warm yellow and the stepping stones stay dark (same in the iPhone night shots)",
+  "bad": "1",
+  "verdict": "DROP",
+  "dc": "path lamps are built warm yellow on purpose (no purple light in code or plan); purple trail stones show; nothing looks broken",
+  "spot": "kit18-n26-map-pc-1366-corner-map-pc-1366"
+ },
+ {
+  "id": "M-018",
+  "file": "s3_iphone-landscape_light_iphone-landscape-light_032_photo-pose-card.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-p18/shots/s3_iphone-landscape_light_iphone-landscape-light_032_photo-pose-card.png",
+  "where": "iphone-landscape light, city at the fountain: photographer's pose card",
+  "what": "the dashed photo frame is too short: the feet and shadows of all three townsfolk (Mia, Leo, Zoe) stick out below its bottom edge, and the pose card covers the frame's right side",
+  "bad": "1",
+  "verdict": "KEEP",
+  "dc": "feet and shadows of Mia, Leo and Zoe clearly below the dashed frame's bottom edge; the game's own fit rule counts feet",
+  "spot": "photo-pose-card"
+ },
+ {
+  "id": "M-019",
+  "file": "kit18-n10-weather-weather-cloudy.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit18/shots/kit18-n10-weather-weather-cloudy.png",
+  "where": "ipad-landscape, light theme, park fountain, cloudy",
+  "what": "an unexplained teal-green flat shape with a dark lump under it hangs in the grey sky left of the grandma's bun",
+  "bad": "1",
+  "verdict": "DROP",
+  "dc": "it is a mint butterfly by the fountain (flat wings, dark body); it flutters in play, not a glitch",
+  "spot": "kit18-n10-weather-weather-cloudy"
+ },
+ {
+  "id": "M-020",
+  "file": "kit18-n13-iphone-landscape-hair-before-done.png",
+  "path": "/tmp/claude-0/-home-user-cozy-town/13646462-56a2-5e69-9aed-e876265ee276/scratchpad/stage3-kit18/shots/kit18-n13-iphone-landscape-hair-before-done.png",
+  "where": "iphone-landscape, light, Hair Salon style card",
+  "what": "Ava is squeezed between the card and the top edge with the top of her head cut off, so the new bun cannot be seen before pressing Done",
+  "bad": "2",
+  "verdict": "KEEP",
+  "dc": "Ava's head is cut off by the top edge above the card, so the bun on top cannot be seen",
+  "spot": "kit18-n13-iphone-landscape-hair-before-done"
+ }
+]

@@ -1,0 +1,3 @@
+s3_ipad-landscape_dark_ipad-landscape-dark_064_mailbox-menu.png | ipad-landscape dark, city by the Beach Bus stop | Luna stands right behind the lamp post next to the camera: the post hides half of her and cuts her name tag to "Lu" (she is half behind the same post in 063 and 065 to 067 too) | 1
+s3_ipad-landscape_dark_ipad-landscape-dark_071_photo-pose-card.png | ipad-landscape dark, photo shoot at the fountain | two flying bats seen edge-on look like black sticks hanging in the sky, one right beside the clock chip and one on the cloud at the top | 1
+count: 2

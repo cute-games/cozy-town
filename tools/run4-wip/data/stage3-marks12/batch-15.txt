@@ -1,0 +1,9 @@
+kit12-n38-hair-tutorial-hair-step-2.png | ipad-landscape, hair tutorial card step 2 | the same sentence is shown twice: "Make the hair like the picture" is the caption inside the picture panel and again the line of words under the panel | 1
+kit12-n39-A-dance-off.png | ipad-landscape, dance-off on the house dance floor | the left dancer (You) has no shoes: the blue legs end flat on the tiles as if sunk into the dance floor, while the other dancer's brown shoes show | 2
+kit12-n4-walkers-walkers-give-way.png | ipad-landscape, at the Flower Corner gate | camera jammed against the "Flower Corner" sign and the fence: the pink board fills the left third of the view and runs off the left edge, and no walkers are in view | 2
+kit12-n41-bus-A-bus-pill.png | ipad-landscape, at the bus stop | a lamp post right in front of the camera splits the whole view in two from top to bottom; the bus is cut off by the left edge | 2
+kit12-n6-grandmas-grandmas-day.png | ipad-landscape, sitting on the bench by the duck pond | cramped view: a pale blue house wall fills the left 40%, three pets cut off by the bottom edge crowd the front, the two grandmas show only as heads above the toast, no ducks in view | 2
+kit12-n6-grandmas-grandmas-day.png | ipad-landscape, sitting on the bench by the duck pond | the big "Mochi" name label lies over the joystick | 1
+kit12-n26-map-iphone-landscape-corner-map-iphone-landscape.png | iphone-landscape, at the Flower Corner gate | the joystick sits in the middle of the lower screen over the garden path instead of in the bottom-left corner (where it is in the iPhone photo-shoot shot) | 1
+kit12-n15-B-one-clock-B.png | pc-1366 dark theme, pavement by the Flower Corner | the other player ZZTEST-CLKA stands right against the camera: a giant body cut off by the left and bottom edges fills the left quarter, and its name label is half hidden under the corner map | 1
+count: 8

@@ -1,0 +1,2 @@
+s3_iphone-portrait_dark_iphone-portrait-dark_010_big-map.png | iphone-portrait, dark theme, the big map (city, 11:20) | the three friends' house boxes (north of the Spooky path pumpkin, west of it, and above the Market apple, each with its lilac, pink or yellow dot) are blank with no names; the builder's tools/pictures-4/after-big-map-iphone.png shows "Luna", "Rosie" and "Finn" on these same boxes (this pass's light-theme iphone big map is blank too, so it is not only the dark theme) | 1
+count: 1

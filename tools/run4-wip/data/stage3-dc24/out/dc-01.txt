@@ -1,0 +1,8 @@
+M-001 | KEEP | bubble runs off right edge, no right border
+M-002 | KEEP | bubble runs off right edge, no right border
+M-003 | KEEP | bubble runs off right edge, right end missing
+M-004 | KEEP | bubble runs off right edge
+M-005 | KEEP | right end and corner cut off
+M-006 | KEEP | right end and corner cut off
+M-007 | KEEP | no right border, runs off edge
+M-008 | KEEP | no right border, runs off edge

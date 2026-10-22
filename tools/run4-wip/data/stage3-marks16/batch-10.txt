@@ -1,0 +1,3 @@
+s3_pc-1366_light_pc-1366-light_039_town-duck-pond.png | pc-1366 light, the duck pond (city, 11:00) | the two ducks are bunched on top of each other: the white duck sits right behind the yellow one with its body hidden and only its head popping up behind the yellow duck's head, so they read as one two-headed duck instead of two ducks paddling apart | 1
+s3_pc-1366_light_pc-1366-light_044_inside-market.png | pc-1366 light, inside the market (11:00) | a big soft dark half-circle shadow sweeps across the front of the fruit stand (the big base and the right-hand bins), and nothing in the room casts it; it looks like a stray light-cone or shadow blotch on the flat crate | 1
+count: 2

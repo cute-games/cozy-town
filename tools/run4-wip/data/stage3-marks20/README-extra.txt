@@ -1,0 +1,1 @@
+Pass 20: all 6 set-aside marks sent on as well: 4 (the sideways-iPhone duck pond bubble behind the clock chip and the top buttons, words cut) were set aside as "a talking townsperson's bubble", and 2 (the iPad bubble's corner over the clock chip) as "a card over the dimmed HUD"; neither reason fits a speech bubble under a chip, the spot f16's bubble fix touched.

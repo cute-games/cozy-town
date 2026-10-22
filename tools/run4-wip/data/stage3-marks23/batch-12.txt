@@ -1,0 +1,6 @@
+s3_iphone-portrait_dark_iphone-portrait-dark_038_town-flower-corner.png | iphone-portrait, Flower Corner gate | the grandma's speech bubble ("...! Such a pretty garden.") is cut off at the left screen edge and half hidden behind the notepad card | 1
+s3_iphone-portrait_dark_iphone-portrait-dark_039_town-duck-pond.png | iphone-portrait, duck pond | a speech bubble ("...s the ...ay.") is half hidden behind the corner map | 1
+s3_iphone-portrait_dark_iphone-portrait-dark_040_town-school-front.png | iphone-portrait, school front | the notepad card covers the start of the "Cozy Town School" sign, so it reads "ozy Town School" | 1
+s3_iphone-portrait_dark_iphone-portrait-dark_041_town-east-shops.png | iphone-portrait, Toy Store front | the notepad card covers the start of the shop sign, only "ore" is readable | 1
+s3_iphone-portrait_dark_iphone-portrait-dark_042_town-treepark-gate.png | iphone-portrait, Tree Park gate | the notepad card covers the left end of the gate beam and the left post top | 1
+count: 5

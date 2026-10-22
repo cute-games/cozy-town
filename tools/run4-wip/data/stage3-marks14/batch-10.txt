@@ -1,0 +1,4 @@
+s3_pc-1366_light_pc-1366-light_013_whats-new-book.png | pc-1366 light, What's new book opened over the town (same on every page, _014 to _019) | the book card's left edge lies over the corner map's right edge and covers the right part of the notepad (its 1/1 is hidden); map and notepad stay bright and stick out from under the card while the town behind is dimmed | 1
+s3_pc-1366_light_pc-1366-light_040_town-school-front.png | pc-1366 light, school front from the road | faint streaky (striped) shadow bands under the window sills along the yellow wall, upstairs and downstairs | 1
+s3_pc-1366_light_pc-1366-light_044_inside-market.png | pc-1366 light, inside the market, fruit table in front | a big dark round shadow (looks like the ceiling lamp's) lies across the middle of the fruit table right under the lamp, like a stain on the wood | 1
+count: 3

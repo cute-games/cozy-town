@@ -1,0 +1,6 @@
+SCORE: 7
+Floor 2: the "Downstairs" and "Upstairs" plates share one doorway whose stairs only go up, so a child can't see the way down.
+Garden: the near pots hide behind the fence rails, the big "Level 40" plate floats over the carrots, and a lone water drop hangs in mid-air.
+Dark, smudgy shadows around the front door make the house front look dirty (on both the one-storey and the six-storey house).
+Colour card: show which colour is picked; the ticked "The lane's own colour" looks like a status, not a button.
+Bigger house card: show "Floor 2 of 6" and a coin progress bar; on iPhone landscape the card touches the minimap and notepad.

@@ -1,0 +1,3 @@
+M-016 | DROP | party hats are the birthday booking's look by design (code gives birthday groups party hats; kit booking reads "my birthday photo"), not New Year hats
+M-017 | DROP | path lamps are built warm yellow on purpose (no purple light in code or plan); purple trail stones show; nothing looks broken
+M-018 | KEEP | feet and shadows of Mia, Leo and Zoe clearly below the dashed frame's bottom edge; the game's own fit rule counts feet

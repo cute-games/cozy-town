@@ -1,0 +1,7 @@
+M-043 | KEEP | Rosie's back fills right side close to camera, hides much of Theo
+M-044 | KEEP | tag visibly cut to "Clov", pet mostly behind round buttons
+M-045 | DROP | passing toast over scene, truck still clear; front not shown is only the shot angle
+M-046 | KEEP | pets cut off by bottom edge, Clover hidden behind Waffles
+M-047 | DROP | only pill corners touch, both names fully readable
+M-048 | KEEP | pets cut off at bottom, Mochi tag on joystick, Clover tag under toast
+M-049 | KEEP | card cuts pill text to "Ben is in your ch"

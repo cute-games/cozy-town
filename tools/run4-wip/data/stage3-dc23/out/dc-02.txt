@@ -1,0 +1,3 @@
+M-004 | KEEP | grey ball hangs in the air by the awning edge, touching nothing
+M-005 | KEEP | big brown slab with a dark outline covers the lower left and hides the pavement and school front
+M-006 | KEEP | white fridge sits inside the pink armchair, the two overlap

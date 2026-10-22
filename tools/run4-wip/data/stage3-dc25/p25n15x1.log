@@ -1,0 +1,7 @@
+/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/p25n15x1/live/claude-form-of-github-live.html: removed 55 online-part lines; md5 fd84696cb6775f78d19c823aed4ab0f2
+/tmp/claude-0/-home-user-cozy-town/c7fb71e2-c81b-5a34-ae06-7b8688b27515/scratchpad/runs/p25n15x1/new/claude-new.html: removed 55 online-part lines; md5 fc7a4cd614ae2f7d3b11ccc467d54dcc
+[stage run4: running]
+    PASS | N15 | the code writes a day number in 0 places; the day-58 save loaded in 123 ms and jumped once to the shared day (the clock's day); the day-1 save loaded in 75 ms and jumped to the same day: True; after the jump: coins 740 -> 740, furniture 0 of 0, pets 4 of 4, job designer with its order True, skills k
+[stage run4: done in 39 s]
+    PASS | N15 One clock: two players with saves on day 1 and day 58, device clocks 1 s apart, show the same time (within 10 game minutes), the same weekday and the same weather; no "Day" in any text; in bed you wait for 7:00, no skip; an old save jumps once, keeps everything (B1) and loads in under 1 s | the code writes a day number in 0 places; the day-58 save loaded in 123 ms and jumped once to the shared day (the clock's day); the day-1 save loaded in 75 ms and jumped to the same day: True; after t
+[partial run: some stages skipped by --only]

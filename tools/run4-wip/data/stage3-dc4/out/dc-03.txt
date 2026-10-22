@@ -1,0 +1,26 @@
+M-053 | KEEP | "Mochi" tag is jammed right under the pill and the bunny button hides the bottom half of its letters
+M-054 | KEEP | name tag is cut to "affles" at the left edge, and its end also runs into the joystick ring
+M-055 | KEEP | faint ladder-like shadow stripes really show on the floor in the gap between counters (visible at 2x, would crawl when moving)
+M-056 | KEEP | big pale-yellow/pink lamp blob with two thick dark bands at top centre, half behind chat/phone buttons
+M-057 | KEEP | same lamp blob with dark bands at top centre behind chat/phone buttons
+M-058 | KEEP | about 78% of pixels near-white and only about 2% colourful (town shots about 46%); shelves blend into walls, tile edges blurry
+M-059 | KEEP | "Football Field" label hidden under the hint bar, only the tops of its letters show
+M-060 | KEEP | ⬇️ button hides the "n" of "drag on" at the end of the help line
+M-061 | DROP | card just sits over the top of the faint joystick ring; knob fully visible, nothing lost
+M-062 | DROP | only the "+" touches the pill's rounded end; "12:00 Tue" fully readable, short-lived reward pop
+M-063 | DROP | truck is just at the edge of the view behind bunting, normal camera framing
+M-064 | DROP | signs cut by the screen edges is normal camera framing, not a game glitch
+M-065 | DROP | notepad only clips the pond's back corner; pond and duck are clear, a second duck can't be confirmed
+M-066 | KEEP | notepad hides the "C", sign reads "ozy Town School"
+M-067 | KEEP | "Play with Waffles" pill hides the "r", tag reads "Clove"
+M-068 | KEEP | notepad hides "Toy St", only "ore" is readable
+M-069 | KEEP | 🐱 button hides "Waff", only "les" shows
+M-070 | DROP | "🌲 Tree Park" is fully readable; notepad only clips the gate corner and knob
+M-071 | KEEP | 🐰 button covers the lower half of the "Mochi" tag
+M-072 | KEEP | tag cut to "affles" at the left edge and runs into the joystick ring
+M-073 | KEEP | same pale-yellow/pink lamp blob with dark bands at top centre under the buttons
+M-074 | KEEP | same lamp blob at top centre behind the buttons
+M-075 | KEEP | about 76% of pixels near-white, about 2% colourful; tile edges blurry, mint barely shows
+M-076 | DROP | pink dot only touches the "S"; "Spooky path" still fully readable
+M-077 | KEEP | measured: chips 34 px tall with 6-7 px gaps, under the 44 pt touch size, tight for small fingers
+M-078 | KEEP | huge cut-off grey character body fills the left edge behind the map and notepad

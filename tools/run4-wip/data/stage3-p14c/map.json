@@ -1,0 +1,30 @@
+[
+ {
+  "name": "dance-two-portrait",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "note": "a real dance-off from the host on an upright phone (the guest dances beside)",
+  "file": "s3c_iphone-portrait_light_dance-A_001_dance-two-portrait.png"
+ },
+ {
+  "name": "dance-two-landscape",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "note": "the same dance-off from the guest on a sideways phone",
+  "file": "s3c_iphone-landscape_light_dance-B_001_dance-two-landscape.png"
+ },
+ {
+  "name": "dance-two-result-portrait",
+  "prof": "iphone-portrait",
+  "theme": "light",
+  "note": "the result card on the host's upright phone, the view still on the two dancers",
+  "file": "s3c_iphone-portrait_light_dance-A_002_dance-two-result-portrait.png"
+ },
+ {
+  "name": "dance-two-result-landscape",
+  "prof": "iphone-landscape",
+  "theme": "light",
+  "note": "the result card on the guest's sideways phone",
+  "file": "s3c_iphone-landscape_light_dance-B_002_dance-two-result-landscape.png"
+ }
+]

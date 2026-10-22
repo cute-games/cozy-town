@@ -1,0 +1,2 @@
+s3b_ipad-landscape_dark_christmas-night-dark_001_holiday-christmas-tree-night.png | ipad-landscape, dark theme, Christmas tree at the Flower Corner at night | bright white glare blobs (light bloom) left of and right of the tree's middle wash out the tree edge and the windows behind; looks like a stray light flare, not a bulb | 1
+count: 1

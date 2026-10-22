@@ -1,0 +1,7 @@
+s3_iphone-portrait_light_iphone-portrait-light_041_town-east-shops.png | iphone-portrait light, town: the Toy Store and the east shops | the notepad card under the corner map covers the left part of the Toy Store sign, only "ore" can be read | 2
+s3_iphone-portrait_light_iphone-portrait-light_042_town-treepark-gate.png | iphone-portrait light, town: the Tree Park gate | the notepad card covers the left gate post with its mint knob and the left end of the Tree Park beam | 1
+s3_iphone-portrait_light_iphone-portrait-light_042_town-treepark-gate.png | iphone-portrait light, town: the Tree Park gate | the camera is right up against a pink shop's side wall, which fills the right fifth of the view from top to bottom | 1
+s3_iphone-portrait_light_iphone-portrait-light_046_inside-flowers.png | iphone-portrait light, inside the flower shop | a purple flower basket at the top right edge seems to float, no rope, hook or bracket in view | 1
+s3_iphone-portrait_dark_iphone-portrait-dark_010_big-map.png | iphone-portrait dark, the big map | the "Tap a place to see the way there!" card cuts through the label under the football field at the bottom, only the tops of its letters show | 1
+s3_iphone-portrait_dark_iphone-portrait-dark_032_photo-pose-card.png | iphone-portrait dark, the photographer's pose card at the fountain | a dark stick-like shape sits in the sky at top left between the coin and food chips, with nothing under it in the view (plus a dark bit at the left edge by the clock chip), looks like it floats | 1
+count: 6

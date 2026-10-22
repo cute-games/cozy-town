@@ -1,0 +1,2 @@
+s3_ipad-landscape_dark_ipad-landscape-dark_016_treepark-easy-deck.png | ipad-landscape, Tree Park easy deck | a large yellow outlined star floats in mid-air above the crosshair, not attached to anything and not explained by the "should look like" lines (may be a goal marker, but it looks like a stray floating object; same star in picture 017) | 1
+count: 1

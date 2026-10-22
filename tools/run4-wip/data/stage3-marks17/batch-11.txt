@@ -1,0 +1,5 @@
+s3_pc-1366_dark_pc-1366-dark_010_big-map.png | pc-1366 dark, city, the big map's place list | the ⬇️ "more places" arrow at the bottom of the list is a bare ~22 px emoji with no round button (the bag, settings and shop cards use a round ~44 px ⬇️). It sits on the right edge of the faded Beach button and is too small to tap | 1
+s3_pc-1366_dark_pc-1366-dark_021_shop-pets.png | pc-1366 dark, city, Pet Shop card | the Midnight cat tree picture is dark navy on the dark purple tile and is hard to make out | 1
+s3_pc-1366_dark_pc-1366-dark_024_big-house.png | pc-1366 dark, city bus stop, behind the Bigger house card | a far-off speech bubble over the bus shelter glass ("The park is the heart of our town.") is shrunk to about 6 px text and can't be read, and no speaker is visible. The same tiny bubble is in 025, 026, 027 and 028 | 1
+s3_pc-1366_dark_pc-1366-dark_029_tutorial-pizza.png | pc-1366 dark, city, pizza tutorial step 1 | a small white tip sticks out in the gap between the corner map and the notepad (it is not in the hair or photo tutorial shots), as if a label under the map is hidden behind the notepad | 1
+count: 4

@@ -1,0 +1,4 @@
+s3_pc-1366_dark_pc-1366-dark_034_photo-result.png | pc-1366 dark, photographer result card over the park sky | a bird seen edge-on shows as a black stick like a "!" right above the "+120" coin (the same black stick and tick-mark birds cross the sky in 032 and 033) | 1
+s3_pc-1366_dark_pc-1366-dark_039_town-duck-pond.png | pc-1366 dark, duck pond in the park | the two ducks sit jammed together (the yellow duck's bill against the white duck's head), and the white duck shows no eye or bill from this side, so it reads as a plain white blob | 1
+s3_pc-1366_dark_pc-1366-dark_044_inside-market.png | pc-1366 dark, inside the market | a big dark half-circle shadow covers the front of the fruit counter and the crates, with nothing in front to cast it | 1
+count: 3

@@ -1,0 +1,5 @@
+M-026 | DROP | sky is dull grey-blue full of clouds, fits the cloudy chip; no mismatch a parent would see
+M-027 | KEEP | spooky sign really cut by right edge under Clover pill and bunny button; pink sign behind notepad
+M-028 | KEEP | same at night: ghost sign sliced by right edge under pill and bunny button
+M-029 | KEEP | pink sign really behind notepad card; only a sliver and its bare post show
+M-030 | DROP | single frame of animated fireworks; one visible burst mid-show is normal, not a glitch

@@ -1,0 +1,7 @@
+s3_iphone-landscape_dark_iphone-landscape-dark_003_phone-jobs.png | iphone-landscape dark, the phone: Rosie's job list | the top row of job cards (Pizza delivery, Interior designer, Teacher) is cut off at the top of the phone screen and runs under the "Rosie" header and the coin pill, their words showing through the header | 2
+s3_iphone-landscape_dark_iphone-landscape-dark_012_settings.png | iphone-landscape dark, settings | the floating ⬇️ scroll button sits on top of the "📖 Show me the tips" button and hides the end of its text ("Show me the ti…") | 2
+s3_iphone-landscape_dark_iphone-landscape-dark_016_house-paint.png | iphone-landscape dark, the house colour card | the floating ⬇️ scroll button covers the pink end of the "Pick any colour" rainbow slider | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_025_photo-pose-card.png | iphone-landscape dark, the photographer's pose card | the card is taller than the screen: the bottom row of pose tiles (Hug, Sit) runs off the bottom edge, with no card bottom and no scroll hint | 1
+s3_iphone-landscape_dark_iphone-landscape-dark_029_town-square-fountain.png | iphone-landscape dark, the park from the square | the camera sits right behind a thick tree trunk and the blank back of a big wooden board, which fill the middle of the picture; the fountain cannot be seen at all (the light-theme twin of this shot shows the same) | 2
+
+5 problems

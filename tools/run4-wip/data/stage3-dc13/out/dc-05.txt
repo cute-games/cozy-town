@@ -1,0 +1,4 @@
+M-017 | DROP | check forces holiday on October date; real-date Easter (s3b) shows blossom; same in live20/kit8
+M-018 | DROP | same forced-holiday autumn; Valentine hearts are at small fountain (kit13 n20-A), not this view
+M-019 | KEEP | salon sign runs off top edge, "Salon" hidden behind top buttons
+M-020 | KEEP | big grey board on brown legs blocks lower middle and fountain front

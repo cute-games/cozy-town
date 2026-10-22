@@ -1,0 +1,15 @@
+M-031 | KEEP | "off" sits alone on line 2, awkward hyphen break
+M-032 | DROP | normal HUD over the world; pond still clearly visible
+M-033 | KEEP | giant pink lamp blob at top, cut by edge and buttons
+M-034 | KEEP | blocky face fills left third, bubble cut to "ce."
+M-035 | KEEP | "off" sits alone on line 2, awkward hyphen break
+M-036 | DROP | normal scroll fade; list goes on below
+M-037 | DROP | normal scroll fade; rest is reached by scrolling
+M-038 | KEEP | close-up blocky head covers left third, "ce." bubble
+M-039 | KEEP | 150 and 80 greyed by fade, look unbuyable next to 180
+M-040 | KEEP | top buttons sit on card edge, gear over its corner
+M-041 | KEEP | card over the shown top bar, food chip cut in half
+M-042 | KEEP | card over the shown top bar, food chip cut in half
+M-043 | KEEP | card over the shown top bar, food chip cut in half
+M-044 | KEEP | blocky face fills left side, bubble cut to "ce."
+M-045 | KEEP | buttons hang over card top, jump button peeks out

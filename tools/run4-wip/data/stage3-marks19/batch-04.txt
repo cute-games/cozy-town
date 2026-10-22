@@ -1,0 +1,4 @@
+s3_ipad-landscape_dark_ipad-landscape-dark_049_big-map.png | ipad-landscape dark, the big map | the "👆 Tap a place to see the way there!" bar floats over the bottom of the map and leaves a thin strip under it where a cut "air Salon" label peeks out; place labels are also cut at the map's edges ("e Station", "othes Shop", "Duck Po") | 1
+s3_ipad-landscape_dark_ipad-landscape-dark_071_photo-pose-card.png | ipad-landscape dark, photo shoot at the fountain, the pose card | the "Pick a pose" card overlaps the dashed photo frame and hides its bottom-right corner (in 072 the snap bar sits clear below the frame) | 1
+s3_iphone-portrait_light_iphone-portrait-light_003_phone-jobs.png | iphone-portrait light, the phone: Rosie's job list | the header slices the earlier mint chat bubble: only its bottom strip shows, and its "Tue · 11:00" time is cut in half | 1
+count: 3
