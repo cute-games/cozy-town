@@ -36,6 +36,11 @@ Why: a viewer used 140k-265k tokens for 38 pictures; a full pass was about 1,070
 7. Hand-off: `HANDOFF.md` is kept to one page and updated at the end of every session.
 8. Measure: log tokens per helper; report where the tokens went at the end of the update.
 9. Before an update: a dated branch `backup-YYYY-MM-DD` made from `main` (no artifact backup).
+10. After each change: the quick kit run (`--only files,counts,saves,night3,run4`). Before each pull request: the full check. Nothing goes live without the full check (owner's OK 23 Oct).
+11. Hand off to a fresh session after each stage's commit or pull request, never in the middle of a fix; update `HANDOFF.md` first.
+12. Helpers only for big reading (long logs, long reports, many pictures): each helper costs about 20-30k tokens just to start. The main session still reads the exact code it edits.
+13. Waiting on the kit: one long wait (up to 10 minutes) per look, then read only the end of `run.log`.
+14. Effort (owner's OK 23 Oct): max for saves, multiplayer, Firebase and new systems; high is enough for small fixes and text or layout tweaks. The session cannot set its own effort: it says in the plan which one a job needs.
 The 21 Oct rules below still hold where v3 does not change them (stop rule, scripts for repeat checks, leftover minor marks listed).
 
 ## Glitch loop rules (agreed with the owner 21 Oct; they replace "loop until one full pass finds nothing new" from pass 20, after pass 19)
