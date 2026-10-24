@@ -61,3 +61,66 @@ How they apply (checked against the real files, 21 Oct):
 - In the full final pass a mark above minor is fixed and re-checked like a pass; minor ones are not fixed. Every leftover minor mark (grade 1, not fixed, the open ones too) goes into `tools/RUN-4-REPORT.md` and as a list section in IDEA's PAGE (the owner's doc, written through the docs connector).
 - The mark filter (`dcfilterN.py`) and the counts, positions and distances (`views_f*.py`) are scripts already.
 - Fresh chat: the session cannot read its own context size, so it hands off at a pass boundary, after a commit. On this branch: the kit as used (`cozy-check-v6.zip`, rebuilt 21 Oct with the finish's kit fixes), the prompts and "should look like" lines (`tools/run4-wip/scripts/stage3/`), the scripts (`tools/run4-wip/scripts/`; 70 carry the old session's scratchpad path, replace it first), the records (`tools/run4-wip/data/`) and the report drafts (`tools/run4-wip/data/finish-drafts/`). At the end of the finish (21 Oct) the drafts went into `RUN-4-REPORT.md` (section 0 says where things stand) and were removed.
+
+## Coding rules (Karpathy guidelines, added by the owner 24 Oct 2026)
+How they fit Cozy Town: the rules above win where they differ. "Ask" means ask only about real choices; make obvious decisions yourself (the owner is not a coder, and night runs have no one to ask). "Tests" means the check kit and its lines.
+
+### 1. Think Before Coding
+
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
+
+Before implementing:
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them - don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
+
+### 2. Simplicity First
+
+**Minimum code that solves the problem. Nothing speculative.**
+
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+
+### 3. Surgical Changes
+
+**Touch only what you must. Clean up only your own mess.**
+
+When editing existing code:
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
+
+When your changes create orphans:
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
+
+The test: Every changed line should trace directly to the user's request.
+
+### 4. Goal-Driven Execution
+
+**Define success criteria. Loop until verified.**
+
+Transform tasks into verifiable goals:
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+```
+
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
+---
+
+**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
