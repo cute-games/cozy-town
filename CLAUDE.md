@@ -1,11 +1,13 @@
 # Cozy Town: project memory for Claude Code
 
-A three.js toon game for kids in one file, `index.html` (GitHub Pages serves `main`). **Start every session with `HANDOFF.md` (one page). Never read `tools/RUN-4-REPORT.md` whole (488 KB): search it.** The owner plans each run in a `NIGHT-PLAN-*.md` file at the root; the run's report is in `tools/` (`RUN-4-REPORT.md` for run 4, its section "0. Progress" is where a restarted session picks up).
+A three.js toon game for kids: `index.html` + `css/` + `js/` since Plan 1 (29 Oct; before that one file, `index.html`). GitHub Pages serves `main`. How to edit and check the split game: `HANDOFF.md`. **Start every session with `HANDOFF.md` (one page). Never read `tools/RUN-4-REPORT.md` whole (488 KB): search it.** The owner plans each run in a `NIGHT-PLAN-*.md` file at the root; the run's report is in `tools/` (`RUN-4-REPORT.md` for run 4, its section "0. Progress" is where a restarted session picks up).
 
-## Status (23 Oct 2026)
+## Status (29 Oct 2026)
 - Run 4 finished: pull request #7 merged into `main` on 22 Oct (stamp 2026102101).
 - 22 Oct (the owner): only the GitHub version exists. The Claude version (artifact) is dropped: no syncing, no publishing, no checks on it. Lines below that mention it are history.
 - 23 Oct (the owner): cheaper update rules v3 (below) and check kit v7 (`cozy-check-v7.zip`). Backups are dated branches `backup-YYYY-MM-DD`.
+- 28 Oct (the owner): effort rules: the main session runs as Opus 5.5 at medium; where the rules below say "Opus at max", read Opus 5.5 at medium.
+- 29 Oct (the owner's OK): Plan 1 splits the game into `index.html` + `css/` + `js/` (scripts in `tools/split/`). Edit the js/css files; before every pull request: join -> kit v7 on the joined file -> split -> `check_split.py` (steps in `HANDOFF.md`).
 
 ## History: status on 21 Oct (run 4 finished, waiting for the owner's merge)
 - Live: run 4 stages 1 to 3 (stamp 2026101802) on GitHub `main` and in the Claude version (the artifact "Cozy Town"). Its full final check ran on 20 Oct: every line PASS but C5 (fixed in the finish), C1-WK not run and G not verified as before (`tools/run4-wip/final-check-2026-10-20-live.txt`).
@@ -17,7 +19,7 @@ A three.js toon game for kids in one file, `index.html` (GitHub Pages serves `ma
 
 ## Rules that hold for every run
 - Keep family names out of this public repo. The title's credit line stays exactly as it is.
-- The 55 online-part lines stay as they are (`strip_online.py` in the kit must find all 55). `index.html` under 1.8 MB.
+- The 55 online-part lines stay as they are (`strip_online.py` in the kit must find all 55). The game under 1.8 MB (the joined one file: `tools/split/split.py join`).
 - Nothing shared between players comes from `Math.random`: only the one clock, data sent online, or a seeded hash. The real calendar only through `realDate()`.
 - Old saves keep everything; old and new versions still see each other. Test data is named ZZTEST.
 - The check kit (`cozy-check-v7.zip` from 23 Oct, read its `README-KIT.md`; v4 to v6 are history). If `cozy-check-v7.zip` is not in the repo yet, build it from v6 with `python3 tools/kit-v7/make_v7.py` (repo root) and commit it in your first pull request. In the kit every line starts as FAIL, no line is ever made weaker; a rewritten line is listed old → new in the report.
