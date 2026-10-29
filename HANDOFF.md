@@ -2,13 +2,13 @@
 
 ## Where things stand
 - Live: `main` (cute-games.github.io/cozy-town), run 4 finished (PR #7, stamp 2026102101), merged 22 Oct.
-- 29 Oct: Plan 1 (split the game file) is in the pull request from `claude/beautiful-noether-vinvf2` (stamp 2026102901), waiting for the owner's merge. Backup: branch `backup-2026-10-29`. Plan 2 (Blender models, another chat) waits for this merge before touching game files.
+- 29 Oct: Plan 1 (split the game file) merged (PR #10, stamp 2026102901; backup branch `backup-2026-10-29`). Plan 2 (Blender models, another chat) can start.
 - Only the GitHub version exists (22 Oct). The old Claude artifact copy is dropped.
 - Rules: `CLAUDE.md` ("Rules that hold for every run" + "Update rules v3"). Check kit: `cozy-check-v7.zip` (README-KIT.md inside; `tools/kit-v7/make_v7.py` rebuilds it from v6). The kit needs Python Playwright: `pip install --break-system-packages playwright==<the version of the node one>` (the container has the browser).
 - Ideas, plan, what is live, open questions: the owner's IDEA's PAGE (link in the Claude project memory, not in this public repo).
 - Open from run 4: G4-205/G4-222 (pets at your heels), G4-279 (salon floor on a big screen), G4-285 (phone job list, sideways iPhone), 15 grade-1 marks ("Leftover minor marks" in `tools/RUN-4-REPORT.md`).
 
-## The game is split (Plan 1, owner's OK 29 Oct; once merged)
+## The game is split (Plan 1, owner's OK 29 Oct; merged 29 Oct)
 - `index.html` (10 KB: page, inline version stamp, small Firebase glue) + `css/style-1.css` + `js/00-core.js` … `js/09-mainloop.js` (the game, in the order of its section banners: core, models, world, game, panels, map, jobs, designer, hud, main loop) + `js/lib-1.js`, `js/lib-2.js` (Firebase). Edit the js/css files; never read a whole big one (02 and 03 are about 250-300 KB).
 - Scripts in `tools/split/`: `split.py` (split / join / verify), `check_split.py` (lines S1-S4), `prepare.py` (one-time, already done: do not run again).
 - The files run one after another. Code that runs while the game loads may only call functions of its own file or an earlier one (in one file every function was known from the start). The split found one such line (the party hats call `realDate`/`nyeParty`); those two functions now sit in models.
@@ -30,6 +30,6 @@
 7. Update this file (keep it one page) and say where the tokens went.
 
 ## Next session should know
-- 29 Oct (Plan 1): full check `tools/split/final-check-2026-10-29.txt`: ALL PASS (102 lines; C1-WK, F3 not run, G not verified); check_split S1-S4 PASS. Kit v7 lines rewritten (old → new in that file): F2a, N19 (its old-version friend is the night-3 game now), S2. After the merge: run the after-merge checks above.
+- 29 Oct (Plan 1): full check `tools/split/final-check-2026-10-29.txt`: ALL PASS (102 lines; C1-WK, F3 not run, G not verified); check_split S1-S4 PASS. Kit v7 lines rewritten (old → new in that file): F2a, N19 (its old-version friend is the night-3 game now), S2. After the merge: kit `--github` ALL PASS (F3 PASS) and check_split S1-S4 PASS on the files GitHub holds on `main` (cute-games.github.io itself is blocked by the container's network policy; read via raw.githubusercontent.com).
 - Known bugs to fix in the next update: none found by this check. The skeleton's "0 sounds" in N19 is NOT a bug: N19 turns sound off for the 2nd scare (the skeleton) to prove scares are silent then; it fails only if that one makes a sound (run 4 report, job 3).
 - Kit timing: B1 can show "spook: missing" (spooky path, October nights) and the teacher stages need game daytime (8:00-20:00 of the 15-minute day): rerun the stage alone, the teacher one just after game 8:00.
