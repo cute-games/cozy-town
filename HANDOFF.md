@@ -2,7 +2,7 @@
 
 ## Where things stand
 - Live: `main` = Plan 1 merged (PR #10, the split game, stamp 2026102901). Backups: `backup-2026-10-29` (before Plan 1), `backup-2026-10-29b` (= main before pet update 1).
-- 29 Oct: **Pet update 1, stage 1** (long shop hours, one-room designer orders, 10 pets with 3 following + 🐾 My pets, give a pet to Ms. Paws) is in the pull request from `claude/pensive-cannon-kuuzyq` (stamp 2026102902), waiting for the owner's merge. Report: `tools/PET-1-REPORT.md` (kit lines N8 and N9 rewritten, old → new there; frame-rate numbers; open points). Next: the night skip has its own plan (not started).
+- 29 Oct: **Pet update 1, stage 1** (long shop hours, one-room designer orders, 10 pets with 3 following + 🐾 My pets, give a pet to Ms. Paws) is pull request #11 (`claude/pensive-cannon-kuuzyq`) (stamp 2026102902), waiting for the owner's merge. Report: `tools/PET-1-REPORT.md` (kit lines N8 and N9 rewritten, old → new there; frame-rate numbers; open points). Next: the night skip has its own plan (not started).
 - Only the GitHub version exists (22 Oct). The old Claude artifact copy is dropped.
 - Rules: `CLAUDE.md` ("Rules that hold for every run" + "Update rules v3"). Check kit: `cozy-check-v7.zip` (README-KIT.md inside; `tools/kit-v7/make_v7.py` rebuilds it from v6, with every rewritten line). The kit needs Python Playwright: `pip install --break-system-packages playwright==<the version of the node one>` (1.63.0 on 29 Oct; the container has the browser). Pass `--fixtures tools/check-fixtures` (the kit's own folder has only 4 saves).
 - Session probes for this update: `tools/pet1-wip/probe_pet1.py` (hours, pets, give-away, two players, frame cost) and `shots_pet1.py` (pictures of the touched spots).
