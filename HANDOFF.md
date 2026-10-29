@@ -30,5 +30,6 @@
 7. Update this file (keep it one page) and say where the tokens went.
 
 ## Next session should know
-- 29 Oct (Plan 1): full check `tools/split/final-check-2026-10-29.txt`: 101 PASS; N19 FAIL (old: its "old-version friend" is the live file, which knows costumes since run 4; fails the same on live; waits for the owner's call); C1-WK, F3 not run, G not verified. check_split S1-S4 PASS. After the merge: run the after-merge checks above.
+- 29 Oct (Plan 1): full check `tools/split/final-check-2026-10-29.txt`: ALL PASS (102 lines; C1-WK, F3 not run, G not verified); check_split S1-S4 PASS. Kit v7 lines rewritten (old → new in that file): F2a, N19 (its old-version friend is the night-3 game now), S2. After the merge: run the after-merge checks above.
+- Known bugs to fix in the next update: none found by this check. The skeleton's "0 sounds" in N19 is NOT a bug: N19 turns sound off for the 2nd scare (the skeleton) to prove scares are silent then; it fails only if that one makes a sound (run 4 report, job 3).
 - Kit timing: B1 can show "spook: missing" (spooky path, October nights) and the teacher stages need game daytime (8:00-20:00 of the 15-minute day): rerun the stage alone, the teacher one just after game 8:00.
