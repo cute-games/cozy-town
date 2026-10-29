@@ -25,7 +25,7 @@ except SystemExit as e: R['S1'] = ['FAIL', str(e)]
 idx = open(os.path.join(A.site, 'index.html'), encoding='utf-8').read()
 named = re.findall(r'(?:href|src)="((?:js|css)/[^"?]+)\?v=([0-9a-f]+)"', idx)
 bad = [p for p, v in named if not os.path.exists(os.path.join(A.site, p)) or SP.H(open(os.path.join(A.site, p), encoding='utf-8', newline='').read()) != v]
-ondisk = sorted(os.path.join(r, f)[len(A.site) + 1:].replace(os.sep, '/') for r, _, fs in os.walk(A.site) for f in fs if f.endswith(('.js', '.css')))
+ondisk = sorted(f'{d}/{f}' for d in ('js', 'css') if os.path.isdir(os.path.join(A.site, d)) for f in os.listdir(os.path.join(A.site, d)) if f.endswith(('.js', '.css')))   # the game's folders (the repo also holds tools/)
 unnamed = sorted(set(ondisk) - {p for p, _ in named})
 R['S2'] = ['PASS', f'{len(named)} files, all hashes match'] if named and not bad and not unnamed else ['FAIL', f'wrong or missing: {bad}; not named: {unnamed}']
 JS = r"""

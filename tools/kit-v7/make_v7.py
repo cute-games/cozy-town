@@ -1,6 +1,6 @@
 """Build cozy-check-v7.zip from cozy-check-v6.zip (owner's OK 23 Oct 2026).
 Run from the repo root:  python3 tools/kit-v7/make_v7.py   -> writes cozy-check-v7.zip next to cozy-check-v6.zip.
-v7 = v6 with the Claude-copy lines out: A1/A2 texts say GitHub, stage 'claude' (C7) and F2 removed, F3 = the GitHub
+v7 = v6 with the Claude-copy lines out: A1/A2 texts say GitHub, stage 'claude' (C7) and F2 removed, F2a = the GitHub file alone (29 Oct), F3 = the GitHub
 file after upload is exactly the tested file, README steps for GitHub only. Stops if any edit does not match exactly once."""
 import io, re, sys, zipfile
 SRC, DST = 'cozy-check-v6.zip', 'cozy-check-v7.zip'
@@ -17,6 +17,9 @@ def fix_check(s):
     m = re.findall(r"\n    if A\.published: p = rb\(A\.published\); lines\.append\(L\('F2'.*?\n    else: lines\.append\(L\('F2'.*?\n", s)
     if len(m) != 1: sys.exit('STOP: F2 lines not found exactly once')
     s = s.replace(m[0], '\n')
+    # F2a (29 Oct, first full v7 check): the Claude copy was only loaded by stage 'claude', removed above, and is no longer published,
+    # so the files to publish are the GitHub file alone (old: the GitHub file and the Claude copy; new: the GitHub file)
+    s = rep(s, "    want = {md5b(new_wb)} | ({md5b(new_c)})\n", "    want = {md5b(new_wb)}   # v7: the Claude copy is no longer published (22 Oct)\n")
     return rep(s, "'GitHub file after upload = new Claude version + same web part, same address'", "'GitHub file after upload is exactly the tested file'", 2)
 def fix_readme(s):
     s = HEAD + s[s.index('Setup notes:'):]
