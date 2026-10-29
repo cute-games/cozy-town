@@ -115,7 +115,7 @@ function updSky(){
   skyU.top.value.copy(C(1));skyU.bot.value.copy(C(2));FOG.color.copy(skyU.bot.value);
   const nf=nightF(h),out=!CUR||CUR.type==='out';
   if(CURTAIN){CURTAIN.color.set(nf>.5?'#7d86d6':'#d6f2ff');JET.color.copy(CURTAIN.color);}
-  WIN.emissive.set(nf>.5?'#ffc66b':'#5ab4e8');WIN.emissiveIntensity=nf>.5?nf*.9:.22*(1-nf);const shut=!!S&&!isDaytime();SWIN.emissive.copy(WIN.emissive);SWIN.emissiveIntensity=WIN.emissiveIntensity*(shut&&nf>.5?.4:1);if(CLOSED)CLOSED.visible=shut;LAMP.emissiveIntensity=nf*1.2;WATER.emissiveIntensity=.3*(1-.85*nf);   /* (water glows less at night, like the grass round it darkens; run 4, stage 3: the pond stayed daytime blue) */
+  WIN.emissive.set(nf>.5?'#ffc66b':'#5ab4e8');WIN.emissiveIntensity=nf>.5?nf*.9:.22*(1-nf);const shut=!!S&&!isDaytime();SWIN.emissive.copy(WIN.emissive);SWIN.emissiveIntensity=WIN.emissiveIntensity*(shut&&nf>.5?.4:1);if(CLOSED){CLOSED.visible=shut;CLOSED_L.visible=!!S&&!longOpen();}LAMP.emissiveIntensity=nf*1.2;WATER.emissiveIntensity=.3*(1-.85*nf);   /* (water glows less at night, like the grass round it darkens; run 4, stage 3: the pond stayed daytime blue) */
   if(NGLOW){NGLOW.uniforms.op.value=nf;NGLOW.visible=out&&nf>.01;}
   {const so=nf*(1-(out?WX.sky:0));stars.material.opacity=so;stars.visible=out&&so>.01;}   /* (run 4 finish: no stars through a grey rainy sky) */
   PANE.color.copy(skyU.bot.value).lerp(_c2.set('#ffffff'),.25);
@@ -145,20 +145,24 @@ function dayLabel(){return(psLeft()?'🏆 ':'')+wdName().slice(0,3);}   /* 🕰�
 /* ☀️ Daytime: the shops, the library, the designer's clients and the school's classes run 8:00–20:00 (the Pizzeria keeps its own hours).
    Your home, Friends Lane, the flats, the park, the school building and the fire station are always open. */
 const DAY_ON=8,DAY_OFF=20,PS_ON=8,PS_OFF=20;
+/* 🛒 six shops keep longer hours, 7:00–23:00 (pet update 1): the Market, the Flower Shop, the Clothes Shop, the Toy Store, the Ice Cream Shop and the Food truck */
+const LONG_SHOP={market:1,flowers:1,clothes:1,toys:1,icecream:1,truck:1},LONG_ON=7,LONG_OFF=23;
 const SHUT={market:['Market','Mr. Bun'],pets:['Pet Shop','Ms. Paws'],flowers:['Flower Shop','Ms. Petal'],cafe:['Café','Mr. Mocha'],clothes:['Clothes Shop','Ms. Stitch'],
   toys:['Toy Store','Mr. Toby'],bakery:['Bakery','Mrs. Crumb'],icecream:['Ice Cream Shop','Mr. Sprinkles'],library:['Library','Ms. Page'],truck:['Food truck','Mr. Patty'],salon:['Hair Salon','Ms. Snippy']};
 function isDaytime(){return!!S&&S.time>=DAY_ON&&S.time<DAY_OFF;}
-function shopOpen(id){return!SHUT[id]||isDaytime();}
+function longOpen(){return!!S&&S.time>=LONG_ON&&S.time<LONG_OFF;}
+function shopOpen(id){return!SHUT[id]||(LONG_SHOP[id]?longOpen():isDaytime());}
+function opensAt(id){return LONG_SHOP[id]?LONG_ON:DAY_ON;}
 function workAt(){return`🌙 Work starts at ${DAY_ON}:00 ☀️`;}
 /* a closed shop: the door says so and you stay outside; inside you can still look, but buying waits for the morning */
-function shutNote(id){return shopOpen(id)?'':`<p class="note">🌙 <b>Closed now.</b> You can look, but buying starts again at ${DAY_ON}:00 ☀️</p>`;}
-function shutBuy(id){if(shopOpen(id))return false;const s=SHUT[id],K=KEEPERS.find(k=>k.name===s[1]);if(K)K.p.wave=1.2;SFX.no();toast(`🌙 ${s[1]}: “Sorry, we're closed! Come back at ${DAY_ON}:00 ☀️”`,3.4);return true;}
+function shutNote(id){return shopOpen(id)?'':`<p class="note">🌙 <b>Closed now.</b> You can look, but buying starts again at ${opensAt(id)}:00 ☀️</p>`;}
+function shutBuy(id){if(shopOpen(id))return false;const s=SHUT[id],K=KEEPERS.find(k=>k.name===s[1]);if(K)K.p.wave=1.2;SFX.no();toast(`🌙 ${s[1]}: “Sorry, we're closed! Come back at ${opensAt(id)}:00 ☀️”`,3.4);return true;}
 function shutDoors(){for(const id in SHUT){const t=LOC.city.inter.find(t=>t.label==='Go into the '+SHUT[id][0]);if(!t||t.shut)continue;const a=t.act,ic=t.icon;t.shut=1;
-  t.icon=()=>shopOpen(id)?ic:'🌙';t.say=()=>shopOpen(id)?'':`🌙 Closed · opens at ${DAY_ON}:00`;t.act=()=>{if(shopOpen(id)){a();return;}SFX.no();toast(`🌙 The ${SHUT[id][0]} is closed now. It opens at ${DAY_ON}:00 ☀️`,3.6);};}}
+  t.icon=()=>shopOpen(id)?ic:'🌙';t.say=()=>shopOpen(id)?'':`🌙 Closed · opens at ${opensAt(id)}:00`;t.act=()=>{if(shopOpen(id)){a();return;}SFX.no();toast(`🌙 The ${SHUT[id][0]} is closed now. It opens at ${opensAt(id)}:00 ☀️`,3.6);};}}
 let DAYW=null,DAYQ=null;
-function dayTick(){const d=isDaytime();if(DAYW===null){DAYW=d;shutDoors();return;}if(d!==DAYW){DAYW=d;DAYQ=!d&&CUR&&SHUT[CUR.id]?CUR.id:null;}
+function dayTick(){const d=isDaytime()+':'+longOpen();if(DAYW===null){DAYW=d;shutDoors();return;}if(d!==DAYW){DAYW=d;DAYQ=CUR&&SHUT[CUR.id]&&!shopOpen(CUR.id)?CUR.id:null;}   /* (a shop's own closing time: 20:00, or 23:00 for the long-hours six) */
   if(DAYQ&&(fading||$('toast').classList.contains('show')))return;const q=DAYQ;DAYQ=null;   /* closing time waits for a fade or a message on screen */
-  if(q&&!d&&CUR&&CUR.id===q){const s=SHUT[CUR.id],K=KEEPERS.find(k=>k.name===s[1]);if(K)K.p.wave=1.2;SFX.talk();toast(`🌙 ${s[1]}: “It's closing time! Buying stops now. See you at ${DAY_ON}:00 ☀️”`,4.2);}}
+  if(q&&CUR&&CUR.id===q&&!shopOpen(q)){const s=SHUT[CUR.id],K=KEEPERS.find(k=>k.name===s[1]);if(K)K.p.wave=1.2;SFX.talk();toast(`🌙 ${s[1]}: “It's closing time! Buying stops now. See you at ${opensAt(q)}:00 ☀️”`,4.2);}}
 /* 🏆 the Pet Show is on Saturdays from 8:00 to 20:00, like the shops (a show that already started always finishes) */
 function psOpen(){return isShowDay()&&!!S&&S.time>=PS_ON&&S.time<PS_OFF;}
 function psLeft(){return isShowDay()&&!showDone()&&!!S&&S.time<PS_OFF;}
@@ -520,14 +524,16 @@ function fanStep(e,dt,idx){const gx=e.fan[0],gz=e.fan[1],dx=gx-e.x,dz=gz-e.z,d=M
   else{const ox=e.x,oz=e.z;fMove(e,ox,oz,idx,3*dt);e.moving=false;e.spd=1;e.face=angLerp(e.face,Math.atan2(P.x-e.x,P.z-e.z),Math.min(1,dt*6));}}
 
 /* ---- pets ---- */
+/* 🏡 a pet at home (d.home, pet update 1) always waits in your yard on Friends Lane, wherever you were when the game saved (S.yq is about you, not the pets) */
+function petFrom(d,x,z){return d.home&&d.stay&&d.loc==='city'&&LANE.mine!=null&&inYardR(x,z)?lotPt(LANE.mine,x,z):fromSave(d.loc,x,z);}
 class Pet{
   constructor(d){this.d=d;this.m=makePet(petKind(d),d.col);addOutfit(this.m,d);this.g=this.m.root;scene.add(this.g);
     const tg=label(d.name,.24);tg.position.y=petTagY(petKind(d));this.g.add(tg);this.tag=tg;
-    [this.x,this.z]=fromSave(d.loc,d.x,d.z);this.loc=d.loc;this.face=0;this.moving=false;this.r=.3;this.wt=0;this.tx=this.x;this.tz=this.z;   /* waiting in your yard: in your yard on Friends Lane */
+    [this.x,this.z]=petFrom(d,d.x,d.z);this.loc=d.loc;this.face=0;this.moving=false;this.r=.3;this.wt=0;this.tx=this.x;this.tz=this.z;   /* waiting in your yard: in your yard on Friends Lane */
     this.target={x:0,z:0,r:2.1,icon:PET_TYPES[petKind(d)].icon,label:()=>'Play with '+d.name,act:()=>openPet(this),obj:this.g};}
   update(dt,idx){const d=this.d;if(this.ps)return;
     if(!d.stay){if(this.loc!==CUR.id)nearMe(this,idx);followStep(this,dt,idx);}
-    else if(this.loc===CUR.id){this.wt-=dt;if(this.wt<=0){this.wt=rand(2,6);const a=rand(0,TAU),r=rand(0,1.6),c=fromSave(this.loc,d.sx,d.sz);[this.tx,this.tz]=collideXZ(c[0]+Math.cos(a)*r,c[1]+Math.sin(a)*r,.6,CUR);[this.x,this.z]=collideXZ(this.x,this.z,this.r,CUR);}   /* 🛋️ never a wander spot inside the furniture */
+    else if(this.loc===CUR.id){this.wt-=dt;if(this.wt<=0){this.wt=rand(2,6);const a=rand(0,TAU),r=rand(0,d.home?.7:1.6),c=petFrom(d,d.sx,d.sz);   /* (a pet at home stays on its patch of the front yard) */[this.tx,this.tz]=collideXZ(c[0]+Math.cos(a)*r,c[1]+Math.sin(a)*r,.6,CUR);[this.x,this.z]=collideXZ(this.x,this.z,this.r,CUR);}   /* 🛋️ never a wander spot inside the furniture */
       const dx=this.tx-this.x,dz=this.tz-this.z,dd=Math.hypot(dx,dz);if(dd>.1){const s=Math.min(dd,1.1*dt),ox=this.x,oz=this.z;[this.x,this.z]=collideXZ(this.x+dx/dd*s,this.z+dz/dd*s,this.r,CUR);this.face=Math.atan2(dx,dz);this.moving=true;if(Math.hypot(this.x-ox,this.z-oz)<s*.3)this.wt=Math.min(this.wt,.4);}else this.moving=false;}
     d.happy=Math.max(0,d.happy-dt/HOUR*2);d.loc=this.loc;[d.x,d.z]=toSave(this.loc,this.x,this.z);
     this.g.visible=this.loc===CUR.id&&!(PHO.on&&this.loc==='city')&&!(DANCE.on||DANCE.res);   /* 🐾 your pets wait out of a photo shoot, a dance-off and its result card (run 4, stage 3) */this.g.position.set(this.x,hopY(this,dt)+brAt(this.loc,this.x,this.z),this.z);this.g.rotation.y=angLerp(this.g.rotation.y,this.face,Math.min(1,dt*8));
@@ -855,14 +861,16 @@ function carPlace(c){let d=((c.d%c.total)+c.total)%c.total;const p=c.path,n=p.le
 /* 🌫️ far away people and cars grow in softly over their last 6 m instead of popping in (at 48 m and 80 m). Scale only: no extra drawing */
 function popFade(g,R){if(!g||!g.visible)return;const d=Math.hypot(g.position.x-camera.position.x,g.position.z-camera.position.z),k=clamp((R-d)/6,0,1);if(k<=0){g.visible=false;return;}if(g.scale.x!==k)g.scale.setScalar(k);}
 function popFades(){for(const w of WALKERS)popFade(w.g,48);for(const f of FRIEND_ACTORS)popFade(f.g,48);for(const c of CARS)popFade(c.g,80);for(const k of FB.k)popFade(k.p.root,55);}   /* (⚽ the football friends too: they are drawn up to 55 m) */
-/* 🌙 a "Closed" sign hangs on the shop and library doors in closed hours (20:00-8:00): one picture, one material, one mesh for all nine doors, drawn only then */
-let CLOSED=null;
-function buildClosedSigns(L){const D=[[18,-10.98,0],[32,-10.98,0],[18,10.98,Math.PI],[31.5,10.98,Math.PI],[59.48,-31,-Math.PI/2],[59.48,-14,-Math.PI/2],[59.98,20,-Math.PI/2],[58.98,36,-Math.PI/2],[-59.98,-12.5,Math.PI/2]];
-  const P=[],U=[],I=[],m=new THREE.Matrix4();
+/* 🌙 a "Closed" sign hangs on the shop and library doors in closed hours (20:00-8:00; 23:00-7:00 on the long-hours shops' doors, CLOSED_L): one picture, one material, two meshes, drawn only then */
+let CLOSED=null,CLOSED_L=null;
+function buildClosedSigns(L){const D=[[32,-10.98,0],[18,10.98,Math.PI],[59.48,-14,-Math.PI/2],[59.98,20,-Math.PI/2]],DL=[[18,-10.98,0],[31.5,10.98,Math.PI],[59.48,-31,-Math.PI/2],[58.98,36,-Math.PI/2],[-59.98,-12.5,Math.PI/2]];
+  const sp=signPlane('🌙 Closed',.92,.34,'#3d2c5e','#fff3c4');sp.geometry.dispose();
+  const mk=D=>{const P=[],U=[],I=[],m=new THREE.Matrix4();
   D.forEach(([x,z,ry],k)=>{const g=new THREE.PlaneGeometry(.92,.34);m.makeRotationY(ry).setPosition(x+Math.sin(ry)*.11,1.78,z+Math.cos(ry)*.11);g.applyMatrix4(m);
     const p=g.attributes.position,u=g.attributes.uv;for(let i=0;i<p.count;i++){P.push(p.getX(i),p.getY(i),p.getZ(i));U.push(u.getX(i),u.getY(i));}for(const i of g.index.array)I.push(i+k*4);g.dispose();});
   const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(P,3));geo.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));geo.setIndex(I);geo.computeBoundingSphere();
-  const sp=signPlane('🌙 Closed',.92,.34,'#3d2c5e','#fff3c4');sp.geometry.dispose();CLOSED=new THREE.Mesh(geo,sp.material);CLOSED.visible=false;CLOSED.userData.keep=1;L.g.add(CLOSED);}
+    const M=new THREE.Mesh(geo,sp.material);M.visible=false;M.userData.keep=1;L.g.add(M);return M;};
+  CLOSED=mk(D);CLOSED_L=mk(DL);}
 function buildCars(){for(const x of[-50,0,50])for(const z of[-50,0,50])XS.push({x,z,occ:[]});
   const loops={A:[[-50,-50],[50,-50],[50,50],[-50,50]],B:[[-50,-50],[-50,50],[50,50],[50,-50]],C:[[0,0],[0,-50],[50,-50],[50,0]],D:[[0,0],[0,50],[-50,50],[-50,0]],E:[[0,0],[-50,0],[-50,-50],[0,-50]],F:[[0,0],[50,0],[50,50],[0,50]]};
   const counts={A:3,B:2,C:2,D:2,E:1,F:2},cols=['#ff8a6b','#7cc8ff','#ffd45c','#b79cff','#5fd4b0','#ff7aa8','#ffffff','#9fe486','#ff6b6b','#c9f2e3'];let ci=0;

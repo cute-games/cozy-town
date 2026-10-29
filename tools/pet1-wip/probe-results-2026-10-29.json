@@ -1,0 +1,27 @@
+[
+ [
+  "hours",
+  true,
+  "9 hours checked; messages {'market@23.05': \"🌙 Mr. Bun: “It's closing time! Buying stops now. See you at 7:00 ☀️”\", 'cafe@20.05': \"🌙 Mr. Mocha: “It's closing time! Buying stops now. See you at 8:00 ☀️”\", 'market@20.05': ''}; buying {'ok': True, 'blocked': True, 'msg': \"🌙 Mr. Bun: “Sorry, we're closed! Come back at 7:00 ☀️”\"}"
+ ],
+ [
+  "pets",
+  true,
+  "adopt ['1:follow', '2:follow', '3:follow', '4:home', '5:home', '6:home', '7:home', '8:home', '9:home', '10:home', \"blocked: You have 10 pets already. That's a full house! 🏠\"]; my pets rows 10, refusal note '3 pets follow you already! Send one home first. (3/3 follow you)'; after swap ['ZZPet1@home', 'ZZPet2', 'ZZPet3', 'ZZPet4@home', 'ZZPet5@home', 'ZZPet6', 'ZZPet7@home', 'ZZPet8@home', 'ZZPet9@home', 'ZZPet10@home']; pet card ' My pets, then ZZPet1 can come along.\\n    💗 Pet🦴 Feed (6)\\n    🎾 Play🎀 Dress up🐾 Follow me�'; yard spots (old yard frame) [[-13, -8.89, True], [-22.45, -8.23, True], [-18.2, -8.83, True], [-15.59, -8.86, True], [-13.25, -9.01, True], [-22.25, -9.22, True], [-16.35, -9.99, True]]; bring {'fol': 3, 'home': 7, 't': '🐾 3 pets are right here with you! The others wait at home 🏡'}"
+ ],
+ [
+  "pets-reload",
+  true,
+  "{'n': 10, 'fol': 3, 'home': 7, 'actors': 10, 'names': ['ZZPet1@home', 'ZZPet2', 'ZZPet3', 'ZZPet4@home', 'ZZPet5@home', 'ZZPet6', 'ZZPet7@home', 'ZZPet8@home', 'ZZPet9@home', 'ZZPet10@home'], 'coins': 7000} []"
+ ],
+ [
+  "pets-old-version",
+  true,
+  "{'n': 10, 'actors': 10, 'fol': 3, 'adopt': ['🟢 You are online! Friends who play will show up here.', False]} []"
+ ],
+ [
+  "give",
+  true,
+  "taps ok ok ok ok ok; list rows 10; card \"🦊 ZZPet5✕\\n    Give ZZPet5 to Ms. Paws? She will find ZZPet5 a loving new family.\\n    You don't get coins back,\", picture 200 px; gave ZZPet5@home: 10 -> 9 pets, coins 7000 -> 7000; Ms. Paws: '💗 Ms. Paws: “I will find ZZPet5 a wonderful new family. Thank you!” Now you have room for 1 more pet.'; adopt again possible True"
+ ]
+]

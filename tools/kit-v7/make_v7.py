@@ -32,11 +32,72 @@ def fix_run4(s):
     # new file. Old: the live file reads a costume in presence. New: the night-3 game reads it (as in every run-4 check). Nothing else changes.
     s = rep(s, "    o = await begin(run, live_w, 'pc-1366', 'n19-old',", "    o = await begin(run, open(os.path.join(HERE, 'night3-game.html'), 'rb').read(), 'pc-1366', 'n19-old',")
     return rep(s, 'det.append(f"an old version reading a costume in presence:', 'det.append(f"an old version (the night-3 game) reading a costume in presence:')
+N8_OLD_START = "    # a new 2-room order, played to the end\n"
+N8_OLD_END = "    if not fin2['done'] or s2['coins'] - r2['c0'] < 40 or s2['done'] != 1 or s2['o']: probs.append('the 2-room order did not finish and pay for both rooms')\n"
+N8_NEW = """    # new orders are one room (pet update 1): 40 new clients, none asks for two rooms (an old caller's dsNew(2) too)
+    r2 = await g.ev(\"\"\"()=>{__setClock(null,11);const out={n:0,two:0,and:0};for(let i=0;i<41;i++){ds().done=0;ds().o=null;i<40?dsNew():dsNew(2);const o=S.ds.o;if(!o)continue;out.n++;if(o.r2)out.two++;
+      const m=msgs().cl.slice(-1)[0];if(m&&/ and an? |other room/.test(m.x))out.and++;}ds().o=null;return out;}\"\"\")
+    det.append(f"{r2['n']} new orders: {r2['two']} with 2 rooms, {r2['and']} messages asking for two rooms")
+    if r2['n'] != 41 or r2['two'] or r2['and']: probs.append('a new order asks for two rooms (or no order was made)')
+    errs = g.errors[:]; await run.close(g)
+    # a 2-room order saved unfinished (room 1 done, room 2 empty) plays to the end and pays for both rooms
+    g = await begin(run, new_wb, 'ipad-landscape', 'n8-designer2', fx(FIX, 'save-prepet1-designer2.json'))
+    r2 = await g.ev(\"\"\"()=>{__goto('city');__setClock(null,11);const o=S.ds&&S.ds.o;if(!o||!o.r2)return {err:'no saved 2-room order'};return {h:o.h,th1:o.th,th2:o.r2.th,n1:o.items.length,c0:S.coins,d0:ds().done};}\"\"\")
+    if r2.get('err'): await run.close(g); return False, '; '.join(det) + ' | ' + r2['err']
+    await g.ev("()=>enterClient()")
+    for _ in range(8):
+        await g.step(6); await g.wait(150)
+        if await g.ev("()=>CUR.id==='client'&&!fading"): break
+    await g.shot('designer-room-1', both=False)
+    # not done yet: room 2 is empty
+    await g.ev("()=>{dsFinishAsk();}"); early = await g.ev("()=>({has:!!document.querySelector('#card [data-a=\\"dsgo\\"]'),txt:$('card').textContent.slice(0,120)})"); await g.ev("()=>closePanel()")
+    det.append(f"saved 2-room order ({r2['h']}: {r2['th1']} + {r2['th2']}), room 1 has {r2['n1']} things; 'All done?' with room 2 empty offers to call the client: {early['has']}")
+    if early['has']: probs.append("'All done?' let you finish with an empty room 2")
+    await g.ev("()=>dsGoRoom(1)")
+    for _ in range(8):
+        await g.step(6); await g.wait(150)
+        if await g.ev("()=>!fading&&(S.ds.o.ri|0)===1"): break
+    a2 = await g.ev(\"\"\"()=>{const T=dsTheme(S.ds.o),R=DROOM[T.room],must=(R.must||[])[0]||[R.items[0]];const t=must[0],F=FURN[t];const it={u:uid(),t,c:F.cols?F.cols[0]:null,x:0,z:-CLD+F.d/2+.02,r:0};dsItems().push(it);addClItem(it);
+      const t2=R.items.find(k=>FURN[k]&&!FURN[k].flat&&k!==t)||t,F2=FURN[t2],it2={u:uid(),t:t2,c:F2.cols?F2.cols[0]:null,x:-CLW+F2.w/2+.02,z:0,r:1};dsItems().push(it2);addClItem(it2);return {ri:S.ds.o.ri|0,n:dsItems().length,T:T.n,r1:S.ds.o.items.length};}\"\"\")
+    await g.shot('designer-room-2', both=False)
+    det.append(f"room 2 ({a2['T']}) has {a2['n']} things, room 1 still {a2['r1']}")
+    if a2['ri'] != 1 or a2['n'] < 2 or a2['r1'] < 2: probs.append('room 2 did not work')
+    await g.ev("()=>{dsFinishAsk();}"); t2 = await g.tap('#card [data-a="dsgo"]'); await g.step(2)
+    fin2 = await g.ev(REV_LOOP)
+    s2 = await g.ev("()=>({coins:S.coins,done:ds().done,o:!!(S.ds&&S.ds.o),last:(msgs().cl.slice(-1)[0]||{}).x||'',st:window.__dsLast||null})")
+    det.append(f"2-room review: go tapped {t2}, ended {fin2['done']} after {fin2['n']} rounds, paid {s2['coins'] - r2['c0']} 🪙, rooms today {r2['d0']} -> {s2['done']}, client said {s2['last'][:80]!r}")
+    if not fin2['done'] or s2['coins'] - r2['c0'] < 40 or s2['done'] != r2['d0'] + 1 or s2['o']: probs.append('the saved 2-room order did not finish and pay for both rooms')
+    errs += g.errors[:]
+"""
+N8_OLD_TAIL = "    errs = g.errors[:]; await run.close(g)\n    if errs: probs.append(f'browser errors: {errs[:2]}')\n    return not probs, '; '.join(det) + (f' | PROBLEMS: {probs}' if probs else '')\n\n# ---------------- N9 food"
+N8_NEW_TAIL = "    await run.close(g)\n    if errs: probs.append(f'browser errors: {errs[:2]}')\n    return not probs, '; '.join(det) + (f' | PROBLEMS: {probs}' if probs else '')\n\n# ---------------- N9 food"
+def fix_night3(s):
+    # N8 (29 Oct, pet update 1, the owner's OK): new designer orders are one room; a 2-room order saved unfinished still finishes.
+    # Old: 'a 2-room order plays to the end and pays' (made new with dsNew(2)). New: 41 new orders (dsNew() x40, dsNew(2) x1) are all one room
+    # with no two-room message, and the saved unfinished 2-room order (fixture save-prepet1-designer2.json) plays to the end and pays for both rooms;
+    # the saved 1-room order part is unchanged.
+    a = s.index(N8_OLD_START); b = s.index(N8_OLD_END) + len(N8_OLD_END)
+    if s.count(N8_OLD_START) != 1 or s.count(N8_OLD_END) != 1: sys.exit('STOP: N8 block not found exactly once')
+    s = s[:a] + N8_NEW + s[b:]
+    s = rep(s, N8_OLD_TAIL, N8_NEW_TAIL)
+    return rep(s, "('N8', 'Designer: a 2-room order plays to the end and pays; a saved 1-room order still finishes',", "('N8', 'Designer: new orders are one room; a saved unfinished 2-room order plays to the end and pays; a saved 1-room order still finishes',")
+N9_OLD = [("        shut = await g.ev(\"\"\"()=>{__setClock(null,21);", "        late = await g.ev(\"\"\"()=>{__setClock(null,21);"),
+          ("        det.append(f\"truck: tap buy burger {tp}, you have {have}; at 21:00: card opens {shut['open']}, bought {shut['bought']} ({shut['toast'][:40]!r})\")\n",
+           "        shut = await g.ev(\"\"\"()=>{__setClock(null,23.5);const t=LOC.city.inter.find(t=>/food truck/i.test(typeof t.label==='function'?t.label():t.label));window.__lastToast='';t.act();const o=UI.open;let bought=false;if(o){S.coins=500;const n=S.bag.fries|0;ACT.buy('fries');bought=(S.bag.fries|0)>n;}closePanel();__setClock(null,12);return {open:o,bought,toast:window.__lastToast};}\"\"\")\n"
+           "        det.append(f\"truck: tap buy burger {tp}, you have {have}; at 21:00: card opens {late['open']}, bought {late['bought']}; at 23:30: card opens {shut['open']}, bought {shut['bought']} ({shut['toast'][:40]!r})\")\n"),
+          ("        if shut['bought']: probs.append('the truck sold food after 20:00')\n",
+           "        if not late['bought']: probs.append('the truck did not sell food at 21:00 (open 7:00-23:00 since pet update 1)')\n        if shut['bought']: probs.append('the truck sold food after 23:00')\n")]
+def fix_n9(s):
+    # N9 (29 Oct, pet update 1: the owner's new hours, the Food truck is open 7:00-23:00). Old: at 21:00 the truck must not sell.
+    # New: at 21:00 it must sell, and at 23:30 it must not (the same closed-hours test at the truck's new closing time). Nothing else changes.
+    for a, b in N9_OLD: s = rep(s, a, b)
+    return s
 src = zipfile.ZipFile(SRC); out = io.BytesIO(); dst = zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED)
 for info in src.infolist():
     data = src.read(info.filename)
     if info.filename == 'cozycheck/cozy_check2.py': data = fix_check(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
     if info.filename == 'cozycheck/README-KIT.md': data = fix_readme(data.decode('utf-8')).encode('utf-8')
+    if info.filename == 'cozycheck/night3.py': data = fix_n9(fix_night3(data.decode('utf-8'))).encode('utf-8'); compile(data, info.filename, 'exec')
     if info.filename == 'cozycheck/run4.py': data = fix_run4(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
     dst.writestr(info, data)
 n3 = open(NIGHT3, 'rb').read()

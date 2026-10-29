@@ -89,7 +89,7 @@ function renderPet(msg){const p=PT,d=p.d,h=Math.round(d.happy/20);
   openPanel(`<div class="who" style="--c:${d.col}">${PET_TYPES[petKind(d)].icon} ${esc(d.name)}</div><div class="hearts">${hearts(clamp(h,0,5))}</div>
     <p class="line">${esc(msg||(d.happy>70?d.name+' is super happy!':d.happy>35?d.name+' wags happily at you.':d.name+' looks a little lonely. Some love would help!'))}</p>
     <div class="row"><button class="btn mint" data-a="ppet">💗 Pet</button>${(()=>{const n=(PET_FOOD[petKind(d)]||PET_FOOD[d.type]).reduce((s,k)=>s+(S.bag[k]||0),0);return`<button class="btn butter" data-a="pfeed">${PET_ITEMS[(PET_FOOD[petKind(d)]||PET_FOOD[d.type])[0]].i} Feed${n?' ('+n+')':''}</button>`;})()}
-    <button class="btn sky" data-a="pplay">${PET_ITEMS[(PET_TOY[petKind(d)]||PET_TOY[d.type])].i} Play</button><button class="btn coral" data-a="pdress">🎀 Dress up</button><button class="btn lilac" data-a="pstay">${d.stay?'🐾 Follow me':'🏠 Stay here'}</button><button class="btn white" data-a="close">Bye!</button></div>`,{bottom:true,onClose:petBye});}
+    <button class="btn sky" data-a="pplay">${PET_ITEMS[(PET_TOY[petKind(d)]||PET_TOY[d.type])].i} Play</button><button class="btn coral" data-a="pdress">🎀 Dress up</button><button class="btn lilac" data-a="pstay">${d.stay?'🐾 Follow me':'🏠 Stay here'}</button>${S.pets.length>PET_FOLLOW?'<button class="btn sky" data-a="mypets">🐾 My pets</button>':''}<button class="btn white" data-a="close">Bye!</button></div>`,{bottom:true,onClose:petBye});}
 ACT.ppet=()=>{const d=PT.d;d.happy=Math.min(100,d.happy+10);qEvent('pet');if(cool('pet'+d.id,3))addXP('pets',2);SFX.pet();floatText('💗',PT.x,1.1,PT.z,{h:.55});renderPet(pick([d.name+' loves that!',d.name+' wiggles happily!','So soft!']));change();};
 ACT.pfeed=()=>{const d=PT.d,list=(PET_FOOD[petKind(d)]||PET_FOOD[d.type]),k=list.find(f=>S.bag[f]>0);
   if(!k){SFX.no();renderPet('No food for '+d.name+' in your bag. The pet shop sells '+list.map(f=>PET_ITEMS[f].i+' '+PET_ITEMS[f].n.toLowerCase()).join(' and ')+'!');return;}
@@ -112,13 +112,13 @@ ACT.pwear=k=>{const p=PT;if(!p||!S.bag[k]||!ACCS[k])return;const d=p.d,o=petOutf
 ACT.poff=sl=>{const p=PT;if(!p)return;const d=p.d,o=petOutfit(d);const list=sl?[sl]:PSLOTS.map(x=>x[0]);let any=false;for(const x of list)if(o[x]){S.bag[o[x]]=(S.bag[o[x]]||0)+1;delete o[x];any=true;}
   if(!any)return;rebuildPet(p);SFX.pop();change();ACT.pdress('Taken off!');};
 ACT.pback=()=>renderPet();
-ACT.pstay=()=>{const p=PT,d=p.d;d.stay=!d.stay;p.far=0;if(d.stay){[d.sx,d.sz]=toSave(p.loc,p.x,p.z);renderPet(d.name+' will stay here and wait for you.');}else renderPet(d.name+' will follow you!');change();};
+ACT.pstay=()=>{const p=PT,d=p.d;if(d.stay&&petFollowers()>=PET_FOLLOW){SFX.no();renderPet(`${PET_FOLLOW} pets follow you already! Send one home in 🐾 My pets, then ${d.name} can come along.`);return;}d.stay=!d.stay;delete d.home;p.far=0;if(d.stay){[d.sx,d.sz]=toSave(p.loc,p.x,p.z);renderPet(d.name+' will stay here and wait for you.');}else renderPet(d.name+' will follow you!');change();};
 
 /* adopting */
 let AD=null;const ADOPT_COST=200;
 /* 🪙 not enough coins? jobs pay the most, quests a little extra */
 const earnTip=()=>S&&S.job?'Go to work and do your 📱 quests to earn more! 💼':'Get a job from Rosie to earn coins! 💼';
-function openAdopt(type,col){if(S.pets.length>=3){toast('You have 3 pets already. That\'s a full house! 🏠');return;}
+function openAdopt(type,col){if(S.pets.length>=PET_MAX){toast(`You have ${PET_MAX} pets already. That\'s a full house! 🏠`);return;}
   const T=PET_TYPES[type];AD={type,col,name:pick(T.names)};SFX[T.snd]();renderAdopt();}
 function renderAdopt(){const T=PET_TYPES[AD.type];
   openPanel(`<div class="hd"><h2>${T.icon} Adopt ${anA(T.name)}</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>${shutNote('pets')}
@@ -130,9 +130,55 @@ ACT.acol=c=>{AD.name=($('petName').value||AD.name);AD.col=c;renderAdopt();};
 function petSpot(){for(const d of [1.7,1.4,1.1])for(const a of [.35,-.35,.7,-.7]){const x=P.x-Math.sin(P.yaw+a)*d,z=P.z-Math.cos(P.yaw+a)*d,q=collideXZ(x,z,.3,CUR);if(Math.hypot(q[0]-x,q[1]-z)<.02)return q;}
   for(const a of [1.2,-1.2,1.6,-1.6,2.2,-2.2]){const x=P.x-Math.sin(P.yaw+a)*1.2,z=P.z-Math.cos(P.yaw+a)*1.2,q=collideXZ(x,z,.3,CUR);if(Math.hypot(q[0]-x,q[1]-z)<.02)return q;}   /* no room in front (right at a pen): beside you */
   return collideXZ(P.x+Math.sin(P.yaw)*1.2,P.z+Math.cos(P.yaw)*1.2,.3,CUR);}
-ACT.adopt=()=>{if(shutBuy('pets'))return;const nm=($('petName').value||'').trim().slice(0,14)||AD.name;if(S.coins<ADOPT_COST)return;S.coins-=ADOPT_COST;
-  const T=PET_TYPES[AD.type],[nx,nz]=petSpot(),d={id:uid(),type:T.base||AD.type,col:AD.col,name:nm,happy:80,stay:false,loc:CUR.id,x:nx,z:nz,sx:0,sz:0};if(T.base)d.kind=AD.type;S.pets.push(d);addPetActor(d);   /* 🐾 saved as the old kind + the real kind */
-  closePanel();SFX.yay();toast(`Welcome home, ${nm}! ${PET_TYPES[AD.type].icon} Look at ${nm} to play.`,4);doneTask('pet');change();};
+ACT.adopt=()=>{if(shutBuy('pets')||S.pets.length>=PET_MAX)return;const nm=($('petName').value||'').trim().slice(0,14)||AD.name;if(S.coins<ADOPT_COST)return;S.coins-=ADOPT_COST;
+  const T=PET_TYPES[AD.type],[nx,nz]=petSpot(),full=petFollowers()>=PET_FOLLOW,d={id:uid(),type:T.base||AD.type,col:AD.col,name:nm,happy:80,stay:false,loc:CUR.id,x:nx,z:nz,sx:0,sz:0};if(T.base)d.kind=AD.type;S.pets.push(d);const pa=addPetActor(d);   /* 🐾 saved as the old kind + the real kind */
+  if(full)petGoHome(pa);   /* 🏡 3 pets follow you already: the new one waits at home in your yard */
+  closePanel();SFX.yay();toast(full?`Welcome home, ${nm}! ${PET_TYPES[AD.type].icon} ${PET_FOLLOW} pets follow you already, so ${nm} waits for you at home in your yard 🏡`:`Welcome home, ${nm}! ${PET_TYPES[AD.type].icon} Look at ${nm} to play.`,4.6);doneTask('pet');change();};
+
+/* 🐾 up to 10 pets (pet update 1). At most 3 follow you; the others wait at home in your yard (stay + home, at a spot in the yard; old versions
+   see them as pets told to stay). 🐾 My pets picks who follows. Ms. Paws at the Pet Shop takes a pet you give away: it finds a new family and frees a spot */
+const PET_MAX=10,PET_FOLLOW=3;
+const PET_HOME=[[-22.4,-8.4],[-18.4,-8.5],[-17.0,-8.9],[-15.6,-8.4],[-13.0,-8.6],[-21.6,-9.3],[-16.3,-9.4],[-12.4,-8.8],[-19.2,-8.0]];   /* spots in your front yard, clear of the flower beds and the bench (the old town-yard frame, like every yard spot in a save) */
+const petFollowers=()=>S.pets.filter(d=>!d.stay).length;
+const petAtHome=d=>!!d.stay&&!!d.home&&d.loc==='city'&&inYardR(d.sx,d.sz);
+function petGoHome(p){const d=p.d,taken=S.pets.filter(q=>q!==d&&petAtHome(q)),s=PET_HOME.find(([x,z])=>!taken.some(q=>Math.hypot(q.sx-x,q.sz-z)<1))||PET_HOME[taken.length%PET_HOME.length];
+  d.stay=true;d.home=1;d.loc=p.loc='city';[d.sx,d.sz]=s;[d.x,d.z]=s;[p.x,p.z]=petFrom(d,s[0],s[1]);p.tx=p.x;p.tz=p.z;p.wt=rand(1,3);p.far=0;}
+/* an old version can let more than 3 follow (its 🐾 Bring my pets calls them all): the first 3 keep following, the others go home */
+function petsCap(){let n=0;for(const p of PET_ACTORS)if(!p.d.stay&&++n>PET_FOLLOW)petGoHome(p);}
+let PETPICS=new Map(),GV=null;
+function petPic(d){const k=[d.id,petKind(d),d.col,JSON.stringify(petOutfit(d))].join('|');if(PETPICS.has(k))return PETPICS.get(k);let url='';
+  try{const sc=shotScene(),m=makePet(petKind(d),d.col);addOutfit(m,d);m.root.rotation.y=.55;sc.add(m.root);m.root.updateMatrixWorld(true);
+    const b=new THREE.Box3().setFromObject(m.root),c=b.getCenter(new THREE.Vector3()),z=b.getSize(new THREE.Vector3()),r=Math.max(z.x,z.y,z.z);
+    const cam=new THREE.PerspectiveCamera(30,1,.05,30);cam.position.set(c.x,c.y+r*.45,c.z+r*2.2);cam.lookAt(c.x,c.y,c.z);url=offShot(sc,cam,200,200,0xfff0f6);}catch(e){console.warn(e);}
+  PETPICS.set(k,url);return url;}
+const petImg=(d,cls)=>{const u=petPic(d);return u?`<img class="${cls}" src="${u}" alt="">`:`<span class="${cls} none">${PET_TYPES[petKind(d)].icon}</span>`;};
+const petWhere=d=>!d.stay?'🐾 Follows you':petAtHome(d)?'🏡 At home':'📍 Waits where you left it';
+function openMyPets(msg){const n=petFollowers();
+  openPanel(`<div class="hd"><h2>🐾 My pets</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
+    <p class="note">${msg?esc(msg):`Pick up to ${PET_FOLLOW} pets to follow you. The others wait for you at home in your yard 🏡`} <b>(${n}/${PET_FOLLOW} follow you)</b></p>
+    <div class="petlist">${S.pets.map((d,i)=>`<div class="petrow">${petImg(d,'petpic')}<span><b>${esc(d.name)}</b><small>${petWhere(d)}</small></span>${d.stay?`<button class="btn mint" data-a="mpfol:${i}">🐾 Follow me</button>`:`<button class="btn lilac" data-a="mphome:${i}">🏡 Go home</button>`}</div>`).join('')}</div>
+    <div class="row"><button class="btn white" data-a="close">Done</button></div>`);$('card').scrollTop=0;}
+ACT.mypets=()=>{petBye();openMyPets();};
+ACT.mpfol=i=>{const d=S.pets[+i],p=d&&PET_ACTORS.find(a=>a.d===d);if(!p)return;if(petFollowers()>=PET_FOLLOW){SFX.no();openMyPets(`${PET_FOLLOW} pets follow you already! Send one home first.`);return;}
+  d.stay=false;delete d.home;p.far=0;SFX[PET_TYPES[petKind(d)].snd]();change();openMyPets(`${d.name} will follow you!`);};
+ACT.mphome=i=>{const d=S.pets[+i],p=d&&PET_ACTORS.find(a=>a.d===d);if(!p)return;petGoHome(p);SFX.tap();change();openMyPets(`${d.name} runs home to your yard 🏡`);};
+/* 💔 giving a pet to Ms. Paws: pick the pet, one yes with its name and picture, no coins back, gone for good */
+function openGiveAway(){if(!S.pets.length){toast('You don\'t have any pets yet! 🐾',3);return;}
+  openPanel(`<div class="hd"><h2>💔 Give a pet to Ms. Paws</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
+    <p class="note">Ms. Paws finds a loving new family for a pet you can't look after. Which one?</p>
+    <div class="petlist">${S.pets.map((d,i)=>`<div class="petrow">${petImg(d,'petpic')}<span><b>${esc(d.name)}</b><small>${petWhere(d)}</small></span><button class="btn white" data-a="gvpick:${i}">Pick</button></div>`).join('')}</div>
+    <div class="row"><button class="btn white" data-a="gvback">Back</button></div>`);$('card').scrollTop=0;}
+ACT.giveaway=()=>openGiveAway();
+ACT.gvback=()=>openShop('pets');
+ACT.gvpick=i=>{const d=S.pets[+i];if(!d)return;GV=d;
+  openPanel(`<div class="hd"><h2>${PET_TYPES[petKind(d)].icon} ${esc(d.name)}</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>${petImg(d,'gvpic')}
+    <p class="line">Give <b>${esc(d.name)}</b> to Ms. Paws? She will find ${esc(d.name)} a loving new family.</p>
+    <p class="note">You don't get coins back, and ${esc(d.name)} won't come back.</p>
+    <div class="row"><button class="btn coral" data-a="gvyes">💔 Yes, give ${esc(d.name)} away</button><button class="btn mint" data-a="giveaway">💗 No, keep ${esc(d.name)}</button></div>`);$('card').scrollTop=0;};
+ACT.gvyes=()=>{const d=GV;GV=null;const i=d?S.pets.indexOf(d):-1;if(i<0){closePanel();return;}
+  const p=PET_ACTORS.find(a=>a.d===d);if(p){scene.remove(p.g);PET_ACTORS.splice(PET_ACTORS.indexOf(p),1);}S.pets.splice(i,1);
+  const K=KEEPERS.find(k=>k.name==='Ms. Paws');if(K)K.p.wave=1.2;SFX.talk();change();saveLocal();closePanel();
+  toast(`💗 Ms. Paws: “I will find ${d.name} a wonderful new family. Thank you!” Now you have room for ${PET_MAX-S.pets.length} more ${PET_MAX-S.pets.length===1?'pet':'pets'}.`,5);};
 
 /* shops */
 let SHOP=null;
@@ -140,7 +186,8 @@ function openShop(k){SHOP=k;const sh=SHOPS[k];SFX.talk();
   const list=(sh.items||[]).map(id=>({id,...itemInfo(id)})).concat((sh.furn||[]).map(t=>({id:t,n:FURN[t].n,i:FURN[t].i,p:FURN[t].p,f:1})));
   openPanel(`<div class="hd"><h2>${sh.title}</h2><div class="chip">🪙 <b id="pc">${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
     ${shutNote(k)}${sh.furn?'<p class="note">Furniture and decorations go to 📦 My stuff. Place them at home with&nbsp;🛋️&nbsp;Decorate.</p>':''}${newInHTML(k)}
-    <div class="grid" style="margin-top:10px">${list.map(it=>`<button class="it" data-a="buy:${it.id}"><span class="em">${it.i}</span><span>${it.n}</span><span class="pr">${it.p} 🪙</span><span class="have" id="hv-${it.id}">${it.f?'':(S.bag[it.id]?'You have '+S.bag[it.id]:'')}</span></button>`).join('')}</div>`);}
+    <div class="grid" style="margin-top:10px">${list.map(it=>`<button class="it" data-a="buy:${it.id}"><span class="em">${it.i}</span><span>${it.n}</span><span class="pr">${it.p} 🪙</span><span class="have" id="hv-${it.id}">${it.f?'':(S.bag[it.id]?'You have '+S.bag[it.id]:'')}</span></button>`).join('')}</div>
+    ${k==='pets'&&S.pets.length?'<div class="row"><button class="btn white" data-a="giveaway">💔 Give a pet to Ms. Paws</button></div>':''}`);}
 ACT.buy=(id,b)=>{if(shutBuy(SHOP))return;const sh=SHOPS[SHOP],F=(sh.furn&&sh.furn.includes(id))?FURN[id]:null,info=F||itemInfo(id);
   if(S.coins<info.p){SFX.no();toast('Not enough coins yet! 🪙 '+earnTip(),3.6);return;}
   S.coins-=info.p;SFX.coin();

@@ -825,7 +825,7 @@ function sitAt(b,i){if(P.ride)stopRide();if(seatTaken(b,i)){if(seatTaken(b,1-i))
 function benchYard(j){for(const b of BENCHES){if(!b.yard)continue;for(const s of b.seats){[s.x,s.z]=lotPt(j,s.lx,s.lz);s.yaw=(LANE_PLOTS[j].s<0?0:Math.PI)+Math.PI+b.ry0;}const c=lotPt(j,b.x0,b.z0);b.x=c[0];b.z=c[1];}}
 
 /* 🍔 the food truck in the park (night 3, job 10): by the fountain benches, off the paths, its window towards the fountain. Burgers, fries, hot dogs
-   and tacos from 8:00 to 20:00 like the shops (SHUT.truck). Mr. Patty stands inside (made with the other keepers). Cheap: toon boxes, one sign */
+   and tacos from 7:00 to 23:00 like the long-hours shops (SHUT.truck, LONG_SHOP). Mr. Patty stands inside (made with the other keepers). Cheap: toon boxes, one sign */
 function foodTruck(st,L,x,z){const B='#ff8a6b',W='#ffffff';
   box(st,2.2,1.9,3.7,B,x,.5,z-.35);box(st,2.3,.12,3.8,W,x,2.4,z-.35,{ol:.015});   /* the body and its roof */
   box(st,2.1,1.25,1.1,B,x,.5,z+2.05);box(st,1.9,.6,.08,'#bfe6ff',x,1.1,z+2.58,{ol:.012});box(st,2.2,.35,.25,'#5a5f8c',x,.4,z+2.72);   /* the cab, the windscreen (2 cm proud of the cab's front: it was flush with it and flickered, run 4, job 6), the bumper */
@@ -840,7 +840,7 @@ function foodTruck(st,L,x,z){const B='#ff8a6b',W='#ffffff';
   box(st,.08,.96,2.6,W,x+1.0,2.5,z-.35,{ol:.015});const sg=signPlane('🍔 Food truck',2.4,.6,'#ff6b6b','#ffffff');sg.position.set(x+1.06,3.1,z-.35);sg.rotation.y=Math.PI/2;L.g.add(sg);   /* 🪧 on the roof's edge above the awning (run 4, job 5: the awning's inner edge used to run through the sign's top) */
   sph(st,.11,null,x+1.75,1.95,z+.95,{mat:LAMP,ol:.012,ws:8,hs:6});   /* a little lamp under the awning's end for the evening (no longer in front of the sign) */
   col(L,x-1.25,z-2.3,x+1.95,z+2.85);
-  inter(L,{x:x+2.1,z:z-.35,r:2.4,icon:()=>shopOpen('truck')?'🍔':'🌙',label:'Food truck',say:()=>shopOpen('truck')?'':`🌙 Closed · opens at ${DAY_ON}:00`,
-    act:()=>{if(shopOpen('truck')){openShop('truck');return;}SFX.no();toast(`🌙 The Food truck is closed now. It opens at ${DAY_ON}:00 ☀️`,3);}});}
+  inter(L,{x:x+2.1,z:z-.35,r:2.4,icon:()=>shopOpen('truck')?'🍔':'🌙',label:'Food truck',say:()=>shopOpen('truck')?'':`🌙 Closed · opens at ${opensAt('truck')}:00`,
+    act:()=>{if(shopOpen('truck')){openShop('truck');return;}SFX.no();toast(`🌙 The Food truck is closed now. It opens at ${opensAt('truck')}:00 ☀️`,3);}});}
 const TRUCK={x:-34.2,z:11.8};   /* the park's south-west corner, by the bench, the window towards the fountain (run 4, job 6: 1.7 m further west, so its counter and awning no longer hang over the flower bed; the tree that stood there moved to the fence) */
 

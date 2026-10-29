@@ -406,16 +406,19 @@ function openSettings(){const fromTitle=!PLAYING;
     <div class="opt"><span>✂️ Hairstylist job</span><button class="btn white" data-a="hstutgo">📖 Show me the tips</button></div>
     <div class="opt"><span>📸 Photographer job</span><button class="btn white" data-a="pttutgo">📖 Show me the tips</button></div>
     <div class="opt"><span>✏️ Notepad</span><span class="row" style="margin:0"><button class="btn ${SET.pad!==false?'mint':'white'}" data-a="spad" aria-pressed="${SET.pad!==false}">${SET.pad!==false?'✏️ On':'Off'}</button><button class="btn ${PAD.del?'butter':'white'}" data-a="padrest"${PAD.del?'':' disabled'}>↩️ Last page</button></span></div>
-    ${PLAYING&&S&&S.pets.length?`<div class="opt"><span>🐾 Pets</span><button class="btn mint" data-a="fetchpets">🐾 Bring my pets to me</button></div>`:''}
+    ${PLAYING&&S&&S.pets.length?`<div class="opt"><span>🐾 Pets</span><span class="row" style="margin:0"><button class="btn mint" data-a="fetchpets">🐾 Bring my pets to me</button>${S.pets.length>1?'<button class="btn sky" data-a="mypets">🐾 My pets</button>':''}</span></div>`:''}
     ${PLAYING?'<div class="opt"><span>Stuck somewhere?</span><button class="btn mint" data-a="gohome">🏠 Take me home</button></div>':''}
     ${MV.on?'<div class="opt"><span>📱 Another iPad or phone</span><button class="btn sky" data-a="mvopen">📦 Move my game</button></div>':''}
     ${mvBefore()?'<div class="opt"><span>↩️ Your old game</span><button class="btn white" data-a="mvundo">↩️ Bring it back</button></div>':''}
     <p class="note">${TOUCHY?'Walk: drag on the left side. Look: drag on the right side. Jump: ⬆️. Run: 🏃. Tap things to use them.':'Walk: WASD. Look: drag with the mouse. Jump: Space. Run: hold Shift. Use things: E or click. Bag: B.'}<br>✏️ Notepad: draw on it! Tap it 2× for a new page, 3× to go back, 4× to delete.</p>
     <div class="row"><button class="btn coral" data-a="wipe">🗑️ Start a new game</button></div>`,{cls:'setcard',onClose:()=>{WIPE=false;}});}
 ACT.fetchpets=()=>{if(!S||!S.pets.length){toast('You don\'t have any pets yet! Adopt one at the Pet Shop. 🐾',3);return;}
-  let n=0;for(const p of PET_ACTORS)p.loc=null;for(const p of PET_ACTORS){const d=p.d;d.stay=false;nearMe(p,++n,1);
+  /* 🐾 up to 3 come (pet update 1): the ones following you first, then pets waiting somewhere, then pets at home; a pet left waiting somewhere else goes home */
+  const go=[...PET_ACTORS.filter(p=>!p.d.stay),...PET_ACTORS.filter(p=>p.d.stay&&!petAtHome(p.d)),...PET_ACTORS.filter(p=>petAtHome(p.d))].slice(0,PET_FOLLOW);
+  let n=0;for(const p of go)p.loc=null;for(const p of go){const d=p.d;d.stay=false;delete d.home;nearMe(p,++n,1);
     d.loc=p.loc;p.tx=p.x;p.tz=p.z;[d.x,d.z]=toSave(p.loc,p.x,p.z);p.g.visible=true;p.g.position.set(p.x,p.g.position.y,p.z);}
-  SFX.yay();change();saveLocal();const nm=S.pets.length===1?S.pets[0].name:S.pets.length+' pets';toast('🐾 '+nm+' '+(S.pets.length===1?'is':'are')+' right here with you!',3);closePanel();};
+  for(const p of PET_ACTORS)if(!go.includes(p)&&!petAtHome(p.d))petGoHome(p);
+  SFX.yay();change();saveLocal();const nm=go.length===1?go[0].d.name:go.length+' pets';toast('🐾 '+nm+' '+(go.length===1?'is':'are')+' right here with you!'+(S.pets.length>go.length?' The others wait at home 🏡':''),3);closePanel();};
 ACT.gohome=()=>{if(CUR.id==='beach'&&!CR){closePanel();if(DECO.on)decoEnd();fade(()=>{const L=LOC.beach,d=DOORS.beach.inside;P.sit=null;P.ride=null;P.x=L.ox+d[0];P.z=L.oz+d[1];P.yaw=d[2];P.pitch=0;bringFollowers();saveLocal();busWarp('city');setNav('home',true);});return;}   /* at the beach: back to the boardwalk (home is by bus), and the pink arrow shows the way to your house */
   closePanel();if(DECO.on)decoEnd();fade(()=>{if(CR){if(CR.av)scene.remove(CR.av.root);CR=null;camera.clearViewOffset();}setLoc('home');const L=LOC.home;P.x=L.ox;P.z=L.oz+DOORS.home.inside[1];P.yaw=0;P.pitch=0;P.sit=null;P.ride=null;
   $('hud').hidden=false;resize();bringFollowers();saveLocal();toast('Home sweet home! 🏡',2.6);});};

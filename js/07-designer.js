@@ -32,7 +32,7 @@ const DTHEMES=[
   {id:'natliv',n:'Forest living room',e:'🌳',room:'living',pal:['green','wood'],plants:2,ask:'Green and leafy, like a forest!',good:'It feels like a forest in here! 💚',ph:[['sofa','#7fdcb5'],['bonsai'],['fern']]},
   {id:'unikids',n:'Unicorn play room',e:'🦄',room:'kids',pal:['purple','pink','white'],ask:'I love unicorns and purple!',good:'Purple and magical! I love it! 🦄',ph:[['unicorn','#e6dbff'],['beanbag','#b79cff'],['castle','#e6dbff']]}];
 function ds(){const d=S.ds||(S.ds={});if(d.day!==S.day){d.day=S.day;d.done=0;}if(!isFinite(d.wait))d.wait=5;return d;}
-/* 🚪 an order has 1 or 2 rooms (night 3, job 9): room 2 is o.r2 = {th, items}, o.ri is the room you are in. An old one-room order has no r2 */
+/* 🚪 an order has 1 or 2 rooms (night 3, job 9; since pet update 1 only saved orders have 2): room 2 is o.r2 = {th, items}, o.ri is the room you are in. An old one-room order has no r2 */
 const dsThemeOf=(o,ri)=>DTHEMES.find(t=>t.id===(ri&&o.r2?o.r2.th:o.th))||DTHEMES[0];
 const dsTheme=o=>{o=o||(S&&S.ds&&S.ds.o)||{};return dsThemeOf(o,o.r2?o.ri|0:0);};
 const dsTwo=()=>!!(S&&S.ds&&S.ds.o&&S.ds.o.r2);
@@ -53,12 +53,11 @@ function dsTray(T){const R=DROOM[T.room],must=new Set([...(R.must||[]).flat(),..
   const order=[...R.items].sort((a,b)=>(must.has(b)-must.has(a))||(DS_PLANTS.includes(a)-DS_PLANTS.includes(b))||(DS_TOYS.includes(a)-DS_TOYS.includes(b)));
   for(const t of order){const F=FURN[t];if(!F)continue;if(!F.cols){out.push([t,'']);continue;}for(const c of F.cols)if(!dsFits(T,t,c))out.push([t,c]);}return out;}
 function nearPlace(H){let b=null,bd=1e9;for(const p of PLACES){if(p.id==='home'||p.id==='garden')continue;const d=Math.hypot(p.door[0]-H.x,p.door[1]-H.z);if(d<bd){bd=d;b=p;}}return bd<40?b:null;}
-function dsNew(n){const d=ds(),H=pick(HOUSES.filter(h=>h.id!==d.last)),T=pick(DTHEMES.filter(t=>t.id!==d.lt));
-  if(n==null)n=Math.random()<1/3?2:1;const T2=n>1?pick(DTHEMES.filter(t=>t.room!==T.room)):null;   /* 🚪 about 1 in 3 clients wants two rooms, never more */
+function dsNew(){const d=ds(),H=pick(HOUSES.filter(h=>h.id!==d.last)),T=pick(DTHEMES.filter(t=>t.id!==d.lt));   /* 🚪 a new order is one room (pet update 1); a saved 2-room order still finishes */
   const flat=isApt(H.id)?(1+Math.floor(Math.random()*3))*10+1+Math.floor(Math.random()*5):0;
-  const o={h:H.id,th:T.id,w:Math.floor(Math.random()*resList(H.id).length),items:[]};if(flat)o.flat=flat;if(T2){o.r2={th:T2.id,items:[]};o.ri=0;}d.o=o;d.last=H.id;d.lt=T2?T2.id:T.id;
+  const o={h:H.id,th:T.id,w:Math.floor(Math.random()*resList(H.id).length),items:[]};if(flat)o.flat=flat;d.o=o;d.last=H.id;d.lt=T.id;
   const W=dsWho(o),np=/ (by|behind) the /.test(H.n)?null:nearPlace(H);   /* (run 4 finish: a name that says where it is gets no "near": "the Apartments behind the Pet Shop, flat 11, near the Pet Shop") */
-  const x=`Hi! I'm ${W.nm} 😊 I live in the ${H.n}${flat?', flat '+flat:''}${np?', near '+theN(np):''}. Can you make me ${aN(T.n.toLowerCase())}${T2?' and '+aN(T2.n.toLowerCase()):''}? ${T.ask}${T2?' And the other room: '+T2.ask:''} ${T.e}${T2?T2.e:''}`;
+  const x=`Hi! I'm ${W.nm} 😊 I live in the ${H.n}${flat?', flat '+flat:''}${np?', near '+theN(np):''}. Can you make me ${aN(T.n.toLowerCase())}? ${T.ask} ${T.e}`;
   addMsg('cl','cl',x,{t2:'🎨 New client: '+W.nm});SFX.ding();try{if(navigator.vibrate)navigator.vibrate([120,80,120]);}catch(e){}
   showNote('🎨 New client!',x,false,'🎨','cl');change();jobHud(true);dcardUpd(true);}
 function jobTarget(){if(!S)return null;if(S.job==='delivery')return hasDlOrder()?dlTarget():null;
@@ -779,7 +778,7 @@ function jobPhone(){let h;
   if(S.job==='delivery'){const d=dl(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${dlMax()}</b> pizzas delivered<br>🕛 ${PZ_TIME} 🍕</p><div class="qcard"><div class="qtop"><span class="qi">🌟</span><div><div class="qt">Pizza stars: ${starsH(dlStars())}</div><div class="qd"><b>${STAR_T[dlStars()]}</b> · <b>${dlPay()} 🪙</b> for every pizza! Extra pizzas: <b>${dlHalf()} 🪙</b>. Be fast for ⭐ RARE customers to win stars. More stars = more coins!</div></div></div></div>`;
     if(o){const H=HOUSE(o.h);h+=`<div class="qcard"><div class="qtop"><span class="qi">🍕</span><div><div class="qt">${o.r?'⭐ RARE · ':''}${esc(oWho(o).nm)}: ${o.pz} pizza</div><div class="qd">${o.st==='wait'?'Pick it up at the Pizzeria first!':`Take it to the <b>${esc(H.n)}</b>${o.flat?', flat <b>'+o.flat+'</b>':''}. ${o.left>0?'⏱️ '+mmss(o.left):'⏰ Late!'}`}</div></div></div></div>`;}
     h+=`<div class="row"><button class="btn butter" data-a="nav:pizza">📍 Show me the Pizzeria</button><button class="btn sky" data-a="dotpick">🎨 Dot color</button></div>`;}
-  if(S.job==='designer'){const d=ds(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${DS_MAX}</b> clients<br>💰 <b>${DS_PAY(0)}–${DS_PAY(3)} 🪙</b> a room: more ⭐ = more coins! Some clients want two rooms.</p>`;
+  if(S.job==='designer'){const d=ds(),o=d.o;h+=`<p class="ph-sub">Today: <b>${d.done} / ${DS_MAX}</b> clients<br>💰 <b>${DS_PAY(0)}–${DS_PAY(3)} 🪙</b> a room: more ⭐ = more coins!</p>`;
     if(o){const T=dsTheme(o),H=HOUSE(o.h),W=dsWho(o);h+=`<div class="qcard"><div class="qtop"><span class="qi">${T.e}</span><div><div class="qt">${esc(W.nm)}: ${esc(dsThemeOf(o,0).n)}${o.r2?' and '+esc(dsThemeOf(o,1).n):''}</div><div class="qd">At the <b>${esc(H.n)}</b>${o.flat?', flat <b>'+o.flat+'</b>':''}. Follow the dot on your map!</div></div></div></div>`;}
     else h+=`<p class="ph-sub">${d.done>=DS_MAX?'🌟 All done for today! More clients tomorrow.':!isDaytime()?workAt()+' Clients message you from 8:00 to 20:00.':'🎨 A client will message you soon!'}</p>`;
     h+=`<div class="row"><button class="btn sky" data-a="dotpick">🎨 Dot color</button><button class="btn white" data-a="dtutgo">📖 Tips</button></div>`;}
