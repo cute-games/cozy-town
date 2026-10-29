@@ -86,7 +86,7 @@ function startGame(){if(S){awResume();return;}   /* back from the away title: th
   clockLoad();   /* 🕰️ the one clock: an old save jumps once to the shared day; a new player starts at the real time (run 4, job 1) */
   applyHouse();houseShrink();rebuildHome();   /* 🏡 a bigger house from before shrinks once (the pieces that don't fit wait in 📦 My stuff) */
   const moved=!S.laneT;if(moved)S.laneT=Date.now();MP.jt=S.laneT;laneRefresh(true);   /* 🏡 your lot on Friends Lane (before pets and you are put in your yard) */
-  for(const d of S.pets)addPetActor(d);
+  for(const d of S.pets)addPetActor(d);petsCap();   /* 🐾 at most 3 follow you (pet update 1) */
   for(const f of FRIEND_ACTORS)f.wake();
   spawnLitter();gardenInit();for(const w of WALKERS)w.init();
   if(HOL.cur==='easter'&&HOL.eggs)eggsRebuild();   /* 🥚 the eggs were drawn for the title's town before the save was read: draw them again without the ones this player already found (run 4, stage 3, G4-001) */

@@ -1,10 +1,11 @@
 # HANDOFF — read this first (one page; updated 29 Oct 2026)
 
 ## Where things stand
-- Live: `main` (cute-games.github.io/cozy-town), run 4 finished (PR #7, stamp 2026102101), merged 22 Oct.
-- 29 Oct: Plan 1 (split the game file) is in the pull request from `claude/beautiful-noether-vinvf2` (stamp 2026102901), waiting for the owner's merge. Backup: branch `backup-2026-10-29`. Plan 2 (Blender models, another chat) waits for this merge before touching game files.
+- Live: `main` = Plan 1 merged (PR #10, the split game, stamp 2026102901). Backups: `backup-2026-10-29` (before Plan 1), `backup-2026-10-29b` (= main before pet update 1).
+- 29 Oct: **Pet update 1, stage 1** (long shop hours, one-room designer orders, 10 pets with 3 following + 🐾 My pets, give a pet to Ms. Paws) is pull request #11 (`claude/pensive-cannon-kuuzyq`) (stamp 2026102902), waiting for the owner's merge. Report: `tools/PET-1-REPORT.md` (kit lines N8 and N9 rewritten, old → new there; frame-rate numbers; open points). Next: the night skip has its own plan (not started).
 - Only the GitHub version exists (22 Oct). The old Claude artifact copy is dropped.
-- Rules: `CLAUDE.md` ("Rules that hold for every run" + "Update rules v3"). Check kit: `cozy-check-v7.zip` (README-KIT.md inside; `tools/kit-v7/make_v7.py` rebuilds it from v6). The kit needs Python Playwright: `pip install --break-system-packages playwright==<the version of the node one>` (the container has the browser).
+- Rules: `CLAUDE.md` ("Rules that hold for every run" + "Update rules v3"). Check kit: `cozy-check-v7.zip` (README-KIT.md inside; `tools/kit-v7/make_v7.py` rebuilds it from v6, with every rewritten line). The kit needs Python Playwright: `pip install --break-system-packages playwright==<the version of the node one>` (1.63.0 on 29 Oct; the container has the browser). Pass `--fixtures tools/check-fixtures` (the kit's own folder has only 4 saves).
+- Session probes for this update: `tools/pet1-wip/probe_pet1.py` (hours, pets, give-away, two players, frame cost) and `shots_pet1.py` (pictures of the touched spots).
 - Ideas, plan, what is live, open questions: the owner's IDEA's PAGE (link in the Claude project memory, not in this public repo).
 - Open from run 4: G4-205/G4-222 (pets at your heels), G4-279 (salon floor on a big screen), G4-285 (phone job list, sideways iPhone), 15 grade-1 marks ("Leftover minor marks" in `tools/RUN-4-REPORT.md`).
 
@@ -30,6 +31,6 @@
 7. Update this file (keep it one page) and say where the tokens went.
 
 ## Next session should know
-- 29 Oct (Plan 1): full check `tools/split/final-check-2026-10-29.txt`: ALL PASS (102 lines; C1-WK, F3 not run, G not verified); check_split S1-S4 PASS. Kit v7 lines rewritten (old → new in that file): F2a, N19 (its old-version friend is the night-3 game now), S2. After the merge: run the after-merge checks above.
-- Known bugs to fix in the next update: none found by this check. The skeleton's "0 sounds" in N19 is NOT a bug: N19 turns sound off for the 2nd scare (the skeleton) to prove scares are silent then; it fails only if that one makes a sound (run 4 report, job 3).
-- Kit timing: B1 can show "spook: missing" (spooky path, October nights) and the teacher stages need game daytime (8:00-20:00 of the 15-minute day): rerun the stage alone, the teacher one just after game 8:00.
+- 29 Oct (pet update 1, stage 1): full check `tools/pet1-wip/final-check-2026-10-29-pet1.txt`: ALL PASS (C1-WK, F3 not run, G not verified); check_split S1-S4 PASS. Kit lines rewritten: N8, N9 (old → new in `tools/PET-1-REPORT.md`). After the merge: the after-merge checks above.
+- On the real iPad (G): stand in front of your yard with 10 pets (7 at home are drawn there: ~150 extra draw calls) and check it stays smooth.
+- Kit timing: B1 can show "spook: missing" (spooky path, October nights) and the teacher stages need game daytime (8:00-20:00 of the 15-minute day): rerun the stage alone, the teacher one just after game 8:00. A kit run dies with the session's worker; rerun the same command in the same folder to continue.

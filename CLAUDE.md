@@ -8,6 +8,7 @@ A three.js toon game for kids: `index.html` + `css/` + `js/` since Plan 1 (29 Oc
 - 23 Oct (the owner): cheaper update rules v3 (below) and check kit v7 (`cozy-check-v7.zip`). Backups are dated branches `backup-YYYY-MM-DD`.
 - 28 Oct (the owner): effort rules: the main session runs as Opus 5.5 at medium; where the rules below say "Opus at max", read Opus 5.5 at medium.
 - 29 Oct (the owner's OK): Plan 1 splits the game into `index.html` + `css/` + `js/` (scripts in `tools/split/`). Edit the js/css files; before every pull request: join -> kit v7 on the joined file -> split -> `check_split.py` (steps in `HANDOFF.md`).
+- 29 Oct: Pet update 1, stage 1 in a pull request (stamp 2026102902; report `tools/PET-1-REPORT.md`). Kit v7 (rebuilt by `make_v7.py`) now has N8 and N9 rewritten for it.
 
 ## History: status on 21 Oct (run 4 finished, waiting for the owner's merge)
 - Live: run 4 stages 1 to 3 (stamp 2026101802) on GitHub `main` and in the Claude version (the artifact "Cozy Town"). Its full final check ran on 20 Oct: every line PASS but C5 (fixed in the finish), C1-WK not run and G not verified as before (`tools/run4-wip/final-check-2026-10-20-live.txt`).
