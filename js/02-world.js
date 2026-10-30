@@ -140,7 +140,7 @@ function wildTick(dt,now){if(!WILD.bf||!S)return;const t=(now/1000)%1e4,out=!!CU
    (their own face with that hair): a length (long, shoulder, short), a style (straight, bob, ponytail, bun, pigtails, curly) and one of 8 colours.
    ✂️ cuts shorter (never back), 🪮 picks the style, 🎨 the colour; the hair changes as you work. ✅ Done gives 1 to 5 stars by how close it is
    (length, style, colour, and not cutting too much) and coins by stars. The customer is always kind. Works by touch and on PC. HS_MAX a day */
-const SALON={x:-63.5,z:40.5,door:[-59.2,40.5]},HS_MAX=4,HS_PAY=[0,15,35,60,90,120];
+const SALON={x:-63.5,z:40.5,door:[-59.2,40.5]},HS_MAX=4,HS_PAY=[0,30,35,60,90,120];
 const HS_COLS=[['#2e2347','black'],['#5a3a24','dark brown'],['#8d6238','brown'],['#e8734a','ginger'],['#f2d16b','blonde'],['#d8d8e4','silver'],['#ff7aa8','pink'],['#7cc8ff','blue']];
 const HS_STYLES=[['straight','Straight','💇'],['bob','Bob','🔔'],['ponytail','Ponytail','🎀'],['bun','Bun','🍩'],['pigtails','Pigtails','🎎'],['curly','Curly','🌀']],HS_LENS=['long','shoulder','short'];
 const HS_NAMES=['Mia','Leo','Zoe','Max','Ava','Tom','Ruby','Ivy','Jack','Nora','Finn','Lily','Ben','Ella','Sam','Mo'];
@@ -1693,7 +1693,7 @@ function buildSchool(){const {L,sh,pr}=room('school',1400,'#fff6dc','wood');
     box(pr,.45,1.9,.58,c,s*5.75,0,z,{ol:.012});for(let k=0;k<3;k++)box(pr,.02,.02,.3,'#3d2c5e',s*5.52,1.62+k*.07,z,{ol:false});sph(pr,.03,'#ffffff',s*5.52,1.05,z-s*.18,{ws:6,hs:5,ol:false});}
   for(const s of[-1,1])col(L,s*5.5,-2.25,s*6,2.3);
   box(pr,1.9,1.2,.06,'#a8714a',3.4,.8,4.44);const nb=signPlane('📌 Fun facts!',1.7,1.0,'#fff6c8','#3d2c5e');nb.position.set(3.4,1.4,4.39);   /* 2 cm in front of its board (run 4, job 5) */nb.rotation.y=Math.PI;L.g.add(nb);
-  inter(L,{x:3.4,z:3.5,r:1.7,icon:'✏️',label:'Learn something new',act:()=>{SFX.pop();toast('✏️ '+pick(BOOK_FACTS),4.6);if(cool('learn',3))addXP('read',4);qEvent('read');}});
+  inter(L,{x:3.4,z:3.5,r:1.7,icon:'✏️',label:'Learn something new',act:()=>{if(!isDaytime()){SFX.no();toast('🌙 School is closed now. Learning starts again at 8:00 ☀️',3.6);return;}SFX.pop();toast('✏️ '+pick(BOOK_FACTS),4.6);if(cool('learn',3))addXP('read',4);qEvent('read');}});
   box(pr,2.0,.95,.5,'#a8714a',-3.4,0,4.15);box(pr,2.06,.05,.56,'#ffffff',-3.4,.95,4.15,{ol:.01});col(L,-4.45,3.85,-2.35,4.5);
   for(const [x,h] of [[-4.0,.34],[-3.4,.46],[-2.8,.3]]){cyl(pr,.07,.09,.06,'#ffc93c',x,1.0,4.15,{seg:10,ol:.008});cyl(pr,.025,.025,h*.4,'#ffc93c',x,1.06,4.15,{seg:6,ol:false});cyl(pr,.13,.07,h*.5,'#ffc93c',x,1.06+h*.4,4.15,{seg:12,ol:.01});}
   const tb=signPlane('🏆 Our trophies',1.4,.3,'#ffffff','#3d2c5e');tb.position.set(-3.4,1.95,4.42);tb.rotation.y=Math.PI;L.g.add(tb);

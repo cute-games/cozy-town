@@ -4,7 +4,7 @@
    from the 🛋️ Furniture app (free for the job) → tap 🎉 Finished! → the client walks in,
    looks around and gives you stars: right vibe, right amount, and neat (or messy!). */
 /* 🪙 a room pays 20 (no ⭐) / 50 (⭐) / 90 (⭐⭐) / 130 🪙 (⭐⭐⭐), 3 rooms a day; the room's Decorating level-up gives no extra coins */
-const DS_MAX=3,CL_ITEMS=new Map(),DS_PAY=st=>st>=2.5?130:st>=1.5?90:st>=.5?50:20;
+const DS_MAX=3,CL_ITEMS=new Map(),DS_PAY=st=>st>=2.5?140:st>=1.5?100:st>=.5?70:40;
 const DS_PLANTS=['plant','fern','bonsai','cactus','sunflower','lavender','flowers','tulips','rosebush'];
 const DS_TOYS=['teddy','toybox','castle','dollhouse','robot','rockinghorse','racecar','unicorn'];
 const DS_SEATS=['sofa','armchair'],DS_WALLY=['bed','bunkbed','wardrobe','shelf','dresser','mirror','tv','fireplace','fridge','stove','sink','washer','piano','desk','computer','gaming','clock','dollhouse','bath','cupboard','cupboardn','drawers','cornercup','tallcup'];
@@ -421,9 +421,9 @@ function clawOpen(){const K=clawK();if(!K||CUT||!S)return;SFX.talk();
     <div class="row"><button class="btn butter" data-a="clawgo" ${S.coins<CLAW_COST?'disabled':''}>🕹️ Play! (${CLAW_COST} 🪙)</button></div>${S.coins<CLAW_COST?'<p class="note">Not enough coins yet. '+earnTip()+'</p>':''}`);}
 function clawNew(K){K.x=K.rx;K.z=K.rz;K.y=K.ry;K.open=.1;clawPose(K);
   CUT={claw:1,t:0,st:0,shake:0,stage:'x',K,t0:performance.now(),hold:null,res:null};clawPanel();}
-ACT.clawgo=()=>{const K=clawK();if(!K||CUT||shutBuy('toys'))return;if(S.coins<CLAW_COST){SFX.no();toast('Not enough coins! 🪙');return;}
+ACT.clawgo=()=>{const K=clawK();if(!K||CUT||shutBuy('toys')||clawEmpty())return;if(S.coins<CLAW_COST){SFX.no();toast('Not enough coins! 🪙');return;}
   S.coins-=CLAW_COST;SFX.coin();change();closePanel();if(P.ride)stopRide();P.sit=null;document.body.classList.add('cut');$('note').hidden=true;clawNew(K);};
-ACT.clawagain=()=>{const C=CUT;if(!C||!C.claw||shutBuy('toys'))return;if(S.coins<CLAW_COST){SFX.no();return;}clawTidy(C);S.coins-=CLAW_COST;SFX.coin();change();clawNew(C.K);};
+ACT.clawagain=()=>{const C=CUT;if(!C||!C.claw||shutBuy('toys')||clawEmpty())return;if(S.coins<CLAW_COST){SFX.no();return;}clawTidy(C);S.coins-=CLAW_COST;SFX.coin();change();clawNew(C.K);};
 ACT.clawdone=()=>{const C=CUT;if(!C||!C.claw)return;clawEnd();};
 function clawPanel(){const C=CUT;
   if(C.stage==='x')openPanel(`<div class="hd"><h2>🕹️ Left or right?</h2><span class="psn">Step 1 of 2</span></div><p class="note">Tap <b>⏹ STOP</b> when the claw is right above a capsule!</p><div class="row"><button class="btn butter psnow" data-a="clawtap">⏹ STOP</button></div>`,{bottom:true,lock:true});
@@ -455,14 +455,17 @@ function clawCut(dt){const C=CUT,K=C.K,L=LOC.toys,t=(C.t+=dt),u=t-C.st,sm=k=>k*k
   if(C.hold){const c=C.hold;c.x=K.x;c.z=K.z;c.y=K.y-.17;c.g.position.set(c.x,c.y,c.z);}
   if(C.fell){const f=C.fell,v=t-f.t,c=f.c;c.y=Math.max(K.fy,f.y-v*v*7);c.g.position.set(c.x,c.y+(c.y<=K.fy?Math.abs(Math.sin(v*14))*.03*Math.max(0,1-v):0),c.z);}
   clawPose(K);}
+/* 🪙 economy rebalance (30 Oct): at most 10 prizes a game day; a level prize gives the level, no coins */
+const CLAW_DAY=10,clawToday=()=>S.clawDay&&S.clawDay[0]===S.day?S.clawDay[1]:0;
+function clawEmpty(){if(clawToday()<CLAW_DAY)return false;SFX.no();toast('🧸 Mr. Toby: “The claw machine is empty for today! New prizes tomorrow.”',3.8);return true;}
 function clawSkill(){const ks=Object.keys(SKILLS).filter(k=>sk(k).lv<MAXLV);return ks.length?pick(ks):null;}
 function clawPrize(cap){const out={};
-  if(cap.gold){const id=pick(GOLD_FURN);S.home.store.push({u:uid(),t:id,c:null,x:0,z:0,r:0});out.gold=1;out.furn=id;const k=clawSkill();if(k){bumpLevel(k,1);out.sk=k;}else{S.coins+=100;out.coins=100;}}
+  if(cap.gold){const id=pick(GOLD_FURN);S.home.store.push({u:uid(),t:id,c:null,x:0,z:0,r:0});out.gold=1;out.furn=id;const k=clawSkill();if(k){bumpLevel(k,1,true);out.sk=k;}else{S.coins+=100;out.coins=100;}}
   else{const r=Math.random();
     if(r<.58){const id=pick(CLAW_FURN),F=FURN[id],c=F.cols?pick(F.cols):null;S.home.store.push({u:uid(),t:id,c,x:0,z:0,r:0});out.furn=id;out.c=c;}
     else if(r<.88){const n=pick([20,25,30,30,40,50]);S.coins+=n;out.coins=n;}
-    else{const k=clawSkill();if(k){bumpLevel(k,1);out.sk=k;}else{S.coins+=40;out.coins=40;}}}
-  S.clawWins=(S.clawWins||0)+1;qEvent('claw');hardEvent('claw',1);change();saveLocal();return out;}
+    else{const k=clawSkill();if(k){bumpLevel(k,1,true);out.sk=k;}else{S.coins+=40;out.coins=40;}}}
+  S.clawWins=(S.clawWins||0)+1;S.clawDay=[S.day,clawToday()+1];qEvent('claw');hardEvent('claw',1);change();saveLocal();return out;}
 function clawPop(){const C=CUT,K=C.K,c=C.won,g=new THREE.Group(),r=.13;
   const top=new THREE.Mesh(new THREE.SphereGeometry(r,14,7,0,TAU,0,Math.PI/2),mat(c.col)),bot=new THREE.Mesh(new THREE.SphereGeometry(r,14,7,0,TAU,Math.PI/2,Math.PI/2),mat(c.gold?'#fff1b8':'#ffffff'));
   g.add(top,bot);K.g.add(g);C.pop={g,top,bot};g.position.set(K.mx+.84,.3,K.mz+.3);C.prize=clawPrize(c);SFX.pop();}
@@ -488,7 +491,7 @@ function clawEnd(){const C=CUT;if(!C||!C.claw)return;const K=C.K,L=LOC.toys;claw
    hallway, sit at your desk and stop kids who goof off (their names float over their heads — write them on your
    notepad!). Then the kids hand in their homework and you mark every answer ✔ or ✗. The game works out the grades. */
 /* 🪙 job pay is even: a weak day ~150, a good day ~270, the best day ~390 🪙 in every job. A class pays 75 / 135 / 195 by ⭐ (2 a day) */
-const TC_MAX=2,TC_PAY=s=>15+60*s,TC_NAMES=['Alexa','Ben','Chloe','Daniel','Emma','Felix','Grace','Henry','Isla','Jack','Lucy','Mason','Nora','Oscar','Pia','Ryan','Sofia','Tom','Zara','Leo'];
+const TC_MAX=2,TC_PAY=s=>30+60*s,TC_NAMES=['Alexa','Ben','Chloe','Daniel','Emma','Felix','Grace','Henry','Isla','Jack','Lucy','Mason','Nora','Oscar','Pia','Ryan','Sofia','Tom','Zara','Leo'];
 const GOOFS=[['talk','🗣️'],['plane','✈️'],['phone','📱'],['sleep','💤'],['dance','💃'],['silly','😜']];
 Object.assign(PLACE_OF,{cl_math:'📐 In Math class',cl_english:'📖 In English class',cl_history:'🏛️ In History class'});
 function tc(){const d=S.tc||(S.tc={});if(d.day!==S.day){d.day=S.day;d.done=0;}if(!isFinite(d.wait))d.wait=5;return d;}

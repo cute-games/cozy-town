@@ -178,13 +178,13 @@ const BOOK_FACTS=['Did you know? Octopuses have three hearts! 🐙','Did you kno
   'Did you know? Snails can sleep for 3 years! 🐌','Did you know? The Moon has moonquakes! 🌙','Did you know? Cows have best friends! 🐄','Did you know? Honey never goes bad! 🍯'];
 function readBook(){if(CUR&&CUR.id==='library'&&shutBuy('library'))return;SFX.pop();toast('📖 '+pick(BOOK_FACTS),4.6);if(cool('book',3))addXP('read',4);qEvent('read');}
 function knock(id){if(id&&dlCarrying()){deliverKnock(id);return;}if(id&&dsGoing(id)){enterClient();return;}SFX.knock();toast(pick(["Knock knock… nobody's home right now.","Knock knock… someone's playing music inside! 🎶","Knock knock… you hear a dog bark hello. 🐶","Knock knock… “Just a minute!” Someone is baking cookies! 🍪"]));}
-const MAXLV=50,xpNeed=lv=>10*lv;   /* ⭐ run 4, item 21: every skill goes to 50 (it was 10); the XP rule and the level-up coins are the same, a player at 10 carries on from 10 */
+const MAXLV=50,xpNeed=lv=>10*lv,lvPay=lv=>2*lv+(lv%10===0?100:0);   /* 🪙 economy rebalance (30 Oct): a level-up pays 2 x the new level, +100 at every 10th level (it was 10 x level) */   /* ⭐ run 4, item 21: every skill goes to 50 (it was 10); the XP rule and the level-up coins are the same, a player at 10 carries on from 10 */
 function sk(k){S.skills=S.skills||{};return S.skills[k]||(S.skills[k]={lv:1,xp:0});}
 function addXP(k,n){if(!S||!SKILLS[k])return;const s=sk(k);if(s.lv>=MAXLV)return;s.xp+=n;let up=false;
   while(s.lv<MAXLV&&s.xp>=xpNeed(s.lv)){s.xp-=xpNeed(s.lv);s.lv++;up=true;}if(s.lv>=MAXLV)s.xp=0;
-  if(up){const r=10*s.lv;S.coins+=r;SFX.yay();setTimeout(()=>toast(SKILLS[k].i+' '+SKILLS[k].n+' level '+s.lv+'! +'+r+' 🪙',3.6),300);floatText('⭐',P.x-Math.sin(P.yaw)*1.4,1.9,P.z-Math.cos(P.yaw)*1.4,{h:.6});change();}}
-function bumpLevel(k,n=1,noPay){if(!S||!SKILLS[k])return;const s=sk(k);for(let i=0;i<n&&s.lv<MAXLV;i++){s.lv++;const r=10*s.lv;if(!noPay)S.coins+=r;}
-  s.xp=0;if(s.lv>=MAXLV)s.xp=0;SFX.yay();setTimeout(()=>toast(SKILLS[k].i+' '+SKILLS[k].n+' is now level '+s.lv+'! ⭐',3.6),300);
+  if(up){const r=lvPay(s.lv);S.coins+=r;SFX.yay();setTimeout(()=>toast(SKILLS[k].i+' '+SKILLS[k].n+' level '+s.lv+'! +'+r+' 🪙',3.6),300);floatText('⭐',P.x-Math.sin(P.yaw)*1.4,1.9,P.z-Math.cos(P.yaw)*1.4,{h:.6});change();}}
+function bumpLevel(k,n=1,noPay){if(!S||!SKILLS[k])return;const s=sk(k);for(let i=0;i<n&&s.lv<MAXLV;i++){s.lv++;const r=lvPay(s.lv);if(!noPay)S.coins+=r;}
+  if(s.lv>=MAXLV)s.xp=0;   /* (a given level keeps the XP already earned toward the next one; it used to reset it to 0) */SFX.yay();setTimeout(()=>toast(SKILLS[k].i+' '+SKILLS[k].n+' is now level '+s.lv+'! ⭐',3.6),300);
   floatText('⭐',P.x-Math.sin(P.yaw)*1.4,1.9,P.z-Math.cos(P.yaw)*1.4,{h:.6});change();}
 const CD={};function cool(k,s){const t=performance.now();if(CD[k]&&t-CD[k]<s*1000)return false;CD[k]=t;return true;}
 /* ---- your backyard garden (behind your house on Friends Lane; it is part of your yard, see buildYard) ---- */
@@ -240,7 +240,7 @@ const QUESTS={
   litter:{i:'🧹',t:'Town cleaner',d:'Pick up 5 pieces of litter',n:5,r:30},
   market:{i:'🍎',t:'Shopping trip',d:'Buy 3 things at the Market',n:3,r:20},
   cafe:{i:'☕',t:'Café time',d:'Buy something at the Café',n:1,r:15},
-  flower:{i:'🌷',t:'Flower power',d:'Buy something at the Flower Shop',n:1,r:40},
+  flower:{i:'🌷',t:'Flower power',d:'Buy something at the Flower Shop',n:1,r:50},
   chat:{i:'💬',t:'Chatterbox',d:'Chat with 3 different friends',n:3,r:25},
   gift:{i:'🎁',t:'Gift giver',d:'Give a present to a friend',n:1,r:20},
   pet:{i:'🐾',t:'Pet lover',d:'Pet, feed or play with your pet 3 times',n:3,r:20,need:()=>S.pets.length>0},
@@ -254,7 +254,7 @@ const QUESTS={
   visit:{i:'🏠',t:'Guest time',d:'Invite a friend to your house',n:1,r:25},
   feed:{i:'🦴',t:'Dinner time',d:'Feed your pet',n:1,r:10,need:()=>S.pets.length>0},
   cook:{i:'🍳',t:'Kitchen helper',d:'Cook something on your stove',n:1,r:20},
-  clothes:{i:'👗',t:'New look',d:'Buy something at the clothing store',n:1,r:40},
+  clothes:{i:'👗',t:'New look',d:'Buy something at the clothing store',n:1,r:80},
   ducks:{i:'🦆',t:'Duck friends',d:'Feed the ducks at a pond',n:1,r:12},
   mproom:{i:'👫',t:'Play together',d:'Send a message to a friend who is online',n:1,r:15,need:()=>MP.peers.size>0},
   goal:{i:'⚽',t:'Goal!',d:'Score a goal on the sports field',n:1,r:15},
@@ -1609,7 +1609,7 @@ function spawnLitter(){
     const sp=label('✨',.32,{bg:null,bw:0,pad:4});sp.position.y=.45;g.add(sp);LOC.city.dyn.add(g);
     const it={g,k,x,z,sp};it.target={x,z,r:1.9,icon:'🗑️',label:'Pick up the litter',obj:g,act:()=>pickLitter(it)};LITTER.push(it);}
 }
-function pickLitter(it){LOC.city.dyn.remove(it.g);LITTER.splice(LITTER.indexOf(it),1);S.litter.got.push(it.k);S.coins+=3;S.picked++;SFX.coin();floatText('+3 🪙',it.x,1.2,it.z);qEvent('litter');addXP('clean',2);
+function pickLitter(it){LOC.city.dyn.remove(it.g);LITTER.splice(LITTER.indexOf(it),1);S.litter.got.push(it.k);S.coins+=3;S.picked++;SFX.coin();floatText('+3 🪙',it.x,1.2,it.z);qEvent('litter');addXP('clean',5);
   if(!LITTER.length)toast('The whole town is clean! You\'re a hero! 🌟');else if(S.picked===1)toast('Thanks for keeping Cozy Town clean! +3 🪙');
   if(S.picked>=5)doneTask('litter');change();}
 function checkMail(){if(S.mail===S.day){toast('No new mail today. Check again tomorrow! 📭');return;}S.mail=S.day;qEvent('mail');const n=pick([10,15,20]);S.coins+=n;SFX.coin();
@@ -2085,7 +2085,7 @@ function updatePlayer(dt){
   let m=Math.hypot(f,s);if(m>1){f/=m;s/=m;m=1;}
   if(P.sit){if(m>.35)standUp();else{P.moving=false;return;}}
   P.run=!!(K.ShiftLeft||K.ShiftRight||IN.run);
-  if(m>.06){const run=P.run,boost=1+(sk('sport').lv-1)*.03,sp=4.3*(run?1.65:1)*boost*(S.hunger<=0?.6:1),sy=Math.sin(P.yaw),cy=Math.cos(P.yaw);
+  if(m>.06){const run=P.run,boost=1+(sk('sport').lv-1)*.006,sp=4.3*(run?1.65:1)*boost*(S.hunger<=0?.6:1),sy=Math.sin(P.yaw),cy=Math.cos(P.yaw);
     const ox=P.x,oz=P.z;[P.x,P.z]=collideXZ(P.x+(-sy*f+cy*s)*sp*dt,P.z+(-cy*f-sy*s)*sp*dt,.3,CUR,solids());P.moving=true;P.bobT+=dt*sp*2.3;P.hd=Math.atan2(-sy*f+cy*s,-cy*f-sy*s);
     if(run){const dd=Math.hypot(P.x-ox,P.z-oz);qEvent('run',dd);P.ra=(P.ra||0)+dd;if(P.ra>=50){P.ra-=50;addXP('sport',1);}}}
   else P.moving=false;
