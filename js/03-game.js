@@ -2085,7 +2085,7 @@ function updatePlayer(dt){
   let m=Math.hypot(f,s);if(m>1){f/=m;s/=m;m=1;}
   if(P.sit){if(m>.35)standUp();else{P.moving=false;return;}}
   P.run=!!(K.ShiftLeft||K.ShiftRight||IN.run);
-  if(m>.06){const run=P.run,boost=1+(sk('sport').lv-1)*.006,sp=4.3*(run?1.65:1)*boost*(S.hunger<=0?.6:1),sy=Math.sin(P.yaw),cy=Math.cos(P.yaw);
+  if(m>.06){const run=P.run,boost=1+Math.min(sk('sport').lv-1,10)*.03,sp=4.3*(run?1.65:1)*boost*(S.hunger<=0?.6:1),sy=Math.sin(P.yaw),cy=Math.cos(P.yaw);
     const ox=P.x,oz=P.z;[P.x,P.z]=collideXZ(P.x+(-sy*f+cy*s)*sp*dt,P.z+(-cy*f-sy*s)*sp*dt,.3,CUR,solids());P.moving=true;P.bobT+=dt*sp*2.3;P.hd=Math.atan2(-sy*f+cy*s,-cy*f-sy*s);
     if(run){const dd=Math.hypot(P.x-ox,P.z-oz);qEvent('run',dd);P.ra=(P.ra||0)+dd;if(P.ra>=50){P.ra-=50;addXP('sport',1);}}}
   else P.moving=false;
