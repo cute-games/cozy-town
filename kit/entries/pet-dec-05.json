@@ -1,0 +1,16 @@
+{
+  "blockedBy": "",
+  "body": "#: 5\nDecision: Garden and pet yard both look nice and are visible to visitors\nNotes: The garden is already shared with visitors; the pet yard must be too",
+  "ch": "rules",
+  "comments": [],
+  "created": 1793323126942,
+  "id": "pet-dec-05",
+  "kind": "decision",
+  "needs": [],
+  "order": 251,
+  "source": "Pet update: plan › Decisions",
+  "stage": "pfu-3",
+  "status": "approved",
+  "title": "Pet decision 5: Garden and pet yard both look nice and are visible to visitors",
+  "updated": 1793323126942
+}

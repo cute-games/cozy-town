@@ -1,0 +1,27 @@
+{
+  "blockedBy": "",
+  "body": "#: 15\nDecision: Body language for needs and moods\nNotes: Needs: play (brings a toy, bounces), rest (yawns, lies down), attention (follows close, looks up, nudges), food (sniffs, sits by the empty bowl). Moods: very very happy, happy, normal, sad. Each pet type shows them its own way",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793397700275,
+      "text": "31 Oct: needs are now two. Food signs = hungry; all other signs = unhappy."
+    },
+    {
+      "act": "chat",
+      "at": 1793408087606,
+      "text": "31 Oct: one need now (happiness). All signs, food ones too, mean unhappy."
+    }
+  ],
+  "created": 1793323126942,
+  "id": "pet-dec-15",
+  "kind": "decision",
+  "needs": [],
+  "order": 261,
+  "source": "Pet update: plan › Decisions",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Pet decision 15: Body language for needs and moods",
+  "updated": 1793408087606
+}

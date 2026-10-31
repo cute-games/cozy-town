@@ -1,0 +1,23 @@
+{
+  "body": "From your note \"but fix the bridge\": the chicken ramp is longer and gentler, hooks on the door sill and lands flat on the ground, with cleats. Also: door with a frame and handle, a real ridge on the roof, tidier nesting boxes.\nPicked in Model Compare.",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793377700000,
+    "id": "farmcoop"
+  },
+  "comments": [],
+  "created": 1793377830000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/coop.jpg",
+    "img/coop-ramp.jpg"
+  ],
+  "short": "Picked: Chicken coop: the bridge fixed",
+  "source": "chat 30 Oct: Non-living things models, round 21",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Chicken coop: the bridge fixed",
+  "updated": 1793402000000
+}

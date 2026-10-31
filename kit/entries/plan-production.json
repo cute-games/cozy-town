@@ -1,0 +1,30 @@
+{
+  "blockedBy": "",
+  "body": "1) Hidden branch: stages are built on GitHub branch 'pfu' (players only see main). Backup branch backup-YYYY-MM-DD of main first.\n2) Night kit: Plan packs every brief, rule, model pack, moves pack, scene and placements into one kit; the first build chat copies it into the pfu branch (pfu/kit/) so later chats read files, not the book.\n3) One fresh Claude Code chat per stage (Opus 5.5 medium), order 1-2-3-4-5-6. Each: read HANDOFF.md + its brief from the kit, build, quick kit, commit to pfu, write HANDOFF.md, stop.\n4) Picture checks only where the stage touched, by Sonnet helpers.\n5) Full check ONCE at the end on pfu (all stages together), two players, iPad + PC; fixes; then ONE pull request pfu -> main. Karolis merges = everyone gets the whole update at once.\n6) Old saves: test with saves from today's main before the merge.\nA) OK, start Tuesday after the usage reset\nB) OK, start now with stage 1",
+  "ch": "plan",
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793484302411,
+      "text": "Picked in chat: B) start now (may pause if usage runs out). Full check once after stage 6; quick check after each stage."
+    }
+  ],
+  "created": 1793484302411,
+  "id": "plan-production",
+  "kind": "plan",
+  "needs": [
+    "plan-brief-pfu-1",
+    "plan-brief-pfu-2",
+    "plan-brief-pfu-3",
+    "plan-brief-pfu-4",
+    "plan-brief-pfu-5",
+    "plan-brief-pfu-6"
+  ],
+  "order": 0,
+  "short": "Build all 6 hidden on branch pfu, start now, one release",
+  "source": "chat 2026-11-01: Plan chat, Karolis asked how to go into production",
+  "stage": "pfu-1",
+  "status": "approved",
+  "title": "Production plan: build all 6, one release",
+  "updated": 1793484302411
+}

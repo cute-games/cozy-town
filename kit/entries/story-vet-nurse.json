@@ -1,0 +1,28 @@
+{
+  "blockedBy": "",
+  "body": "Staff (your 4 keeps, 1 Nov): Nurse Penny (lobby desk), Dr. Rūta (the vet), Vet nurse Leo (treat), Dr. Tomas (also works there).\n\nNURSE PENNY (lobby desk)\nHello: \"Hi! Welcome to the vet station. How can I help?\"\nBook a time (pet sick): \"Come back between {time} and {time+2}. Dr. Rūta will see you!\"\nBook, no pet sick: \"Your pets look healthy! No need for a visit.\"\nFree tip (any pet): \"{Pet} loves {favourite}. Try it today!\" / \"{Pet} looks a bit bored. A toy would help!\" / \"{Pet} is very happy. Great job!\"\nToo early: \"Dr. Rūta is busy. Please wait here. Your time is {time}.\"\nMissed the time: \"You missed your time. Let's book a new one!\"\nPay: \"That's {coins} coins for {n} pets, please.\" / can't pay: \"Don't worry, it's free today.\"\n\nDR. RŪTA (exam room)\nStart: \"Hello, {Pet}! Let's have a look.\"\nChecks (in order): \"Ears... fine.\" → \"Teeth... fine.\" → \"Ah, a little cold.\"\nMore than one sick pet: \"Next one! Hello, {Pet}!\"\n\nVET NURSE LEO (exam room, after the check)\nTreat: \"Here's a treat for being brave!\" (pet is cured)\nReminder: \"Don't let {Pet} get sad. Play, cuddles, toys every day!\"\n\nDR. TOMAS (walks around the station; tap him)\nRandom (never twice in a row): \"Happy pets are healthy pets.\" / \"Toys at home help when you're away.\" / \"A sneeze means: play with me more!\"\n\nRules used: rules-vet-visit (Penny books, Rūta checks, Leo treat + reminder, pay per pet, free if you can't pay), rules-mech-nurse-tip. Price: Schedules and economy chat.",
+  "ch": "story",
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793483758914,
+      "text": ""
+    },
+    {
+      "act": "chat",
+      "at": 1793485139560,
+      "text": "Done: Dr. Fern → Dr. Rūta; Leo gives the treat, Tomas has small talk (your 4 keeps)."
+    }
+  ],
+  "created": 1793483100000,
+  "id": "story-vet-nurse",
+  "kind": "plan",
+  "needs": [],
+  "order": 2,
+  "short": "Penny books and tips; Dr. Rūta checks; Leo gives the treat",
+  "source": "chat 2026-10-31: Characters and story",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Vet station: lines",
+  "updated": 1793485139560
+}

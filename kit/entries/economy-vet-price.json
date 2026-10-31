@@ -1,0 +1,31 @@
+{
+  "blockedBy": "",
+  "body": "A) 30 coins\nB) 50 coins (my pick)\nC) 80 coins\nWhy: Game rules want it well under one job day (about 290).\nA new player starts with 120 coins. 50 leaves room for food.\nAfter the cure the mood is only normal (your pick B), so the vet is no shortcut to happiness.\nPay per pet treated (one visit treats every sick pet with you). Late = book again, no coins lost (How a vet visit works).\nCompare: new pet 200, pet bed 80, bus ride 20.\nToo few coins: the vet is free (you decided 31 Oct).\nStage pfu-2 (Plan's later row; an earlier row said pfu-4).",
+  "ch": "economy",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793404157503,
+      "text": "Done: price is per pet; free with too few coins (your 31 Oct pick)."
+    },
+    {
+      "act": "chat",
+      "at": 1793404435793,
+      "text": "Approved: you decided it in chat (31 Oct): B, 50 coins."
+    }
+  ],
+  "created": 1793397142216,
+  "id": "economy-vet-price",
+  "kind": "plan",
+  "needs": [
+    "plan-vet-station",
+    "rules-vet-visit"
+  ],
+  "order": 3,
+  "short": "Vet visit: 50 coins per pet (free with too few coins)",
+  "source": "chat 2026-10-30: Schedules and economy chat, from board rows of Plan and Game rules",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Vet visit price",
+  "updated": 1793404435793
+}

@@ -1,0 +1,26 @@
+{
+  "blockedBy": "",
+  "body": "Today: 6 beds + Izabele's 30 pots (they stay). Levels 2 and 3 add space at the back.\nA) +3 beds at level 2, +3 at level 3\nB) No extra beds, space and looks only",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793402821888,
+      "text": "Done: A, decided by the Game rules chat at your ask (31 Oct).\nWritten into 'Garden and pet yard levels need skill'."
+    }
+  ],
+  "created": 1793402712224,
+  "id": "rules-q-extra-beds",
+  "kind": "question",
+  "needs": [
+    "rules-garden-levels"
+  ],
+  "old": true,
+  "order": 322,
+  "short": "Garden levels 2 and 3: +3 beds each",
+  "source": "chat 31 Oct 2026: from the Non-living chat (row objects-20261031-extra-beds)",
+  "stage": "pfu-3",
+  "status": "approved",
+  "title": "Garden levels 2 and 3: +3 beds each (decided 31 Oct)",
+  "updated": 1793402821888
+}

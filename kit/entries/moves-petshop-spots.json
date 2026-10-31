@@ -1,0 +1,38 @@
+{
+  "blockedBy": "",
+  "body": "Your ask (31 Oct): cozy spots, no cages.\n- Floor 1: dog naps on the sofa, cat on the window seat, bunny + hamster on the play hill.\n- Floor 2: capybara in the warm tub, duck on the pond, owl on its branch.\n- Floor 3: bear on the sofa watching TV, seal slides into its pool, monkey on the climbing frame.\nUses the Living chat's new sit and lie poses.",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793421631724,
+      "text": "Done: all 9 spots; an independent check found no big problems.\nLeftovers: owl perch inside the leaves, seal bigger than its slide, monkey head brushes the bar."
+    },
+    {
+      "act": "approve",
+      "at": 1793457693528,
+      "text": ""
+    },
+    {
+      "act": "chat",
+      "at": 1793477115355,
+      "text": "Updated: owl on its new perch, seal uses the bigger pool and slide.\nSame moves, new models."
+    }
+  ],
+  "created": 1793421631724,
+  "id": "moves-petshop-spots",
+  "kind": "task",
+  "needs": [
+    "model-petshop-new"
+  ],
+  "order": 124.6,
+  "pics": [
+    "img/moves14-shopSpots.gif"
+  ],
+  "short": "Nine shop pets, each at its own spot. OK?",
+  "source": "Model movements 31 Oct: asks from the Objects chat",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Pet Shop: pets at their cozy spots",
+  "updated": 1793477115355
+}

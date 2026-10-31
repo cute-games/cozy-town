@@ -1,0 +1,23 @@
+{
+  "body": "From your note \"make it better\": a big red village combine at real size (about 8 m long, 4 m wide). Wide header with a reel, glass cab, grain tank, folded unloading pipe.\nPicked in Model Compare.",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793328394000,
+    "id": "only-farm-combine"
+  },
+  "comments": [],
+  "created": 1793352910000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/combine.jpg",
+    "img/combine-side.jpg"
+  ],
+  "short": "Picked: Old combine harvester: redone",
+  "source": "chat 30 Oct: pets and farm audition, round 14",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Old combine harvester: redone",
+  "updated": 1793402000000
+}

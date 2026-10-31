@@ -1,0 +1,24 @@
+{
+  "body": "Plan (30 Oct): you don't do manual work, so the game update clears them.\nRemove: game forest trees on the horse trail, dirt roads, jump field and building spots.\nKeep: the rest, so the farm stays a bit hidden.\nKnown now: 18 trees on trail/roads; 90 inside farm + jump field (not all go).\nHow many go in total: unknown until marked in the Area plan.\nLeft (tool work, sent to Plan): mark them deleted in the Area plan, before/after pictures for your OK.",
+  "ch": "map",
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793410855910,
+      "text": ""
+    }
+  ],
+  "created": 1793397143546,
+  "id": "map-forest-clear",
+  "kind": "task",
+  "needs": [
+    "map-farm-area-plan"
+  ],
+  "order": 1,
+  "short": "Game update removes forest trees on farm paths and fields",
+  "source": "chat 2026-10-30: Map chat, board plan-20261030-map-forest",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Farm forest: clear paths and fields",
+  "updated": 1793410855910
+}

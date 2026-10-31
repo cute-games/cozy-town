@@ -1,0 +1,23 @@
+{
+  "blockedBy": "",
+  "body": "Decided by Karolis in chat, 31 Oct: \"kids hate to keep their pets fed\". Replaces two needs and four needs.\n1. Happiness only. Food, petting, playing, toys, naps and the pet's favourite thing all raise it (like today).\n2. Unhappy signs: brings a toy, bounces, yawns, follows close, nudges, sniffs or sits by the empty bowl.\n3. Moods stay: very very happy, happy, normal, sad.\n4. Old saves: happiness stays.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793408087606,
+      "text": "Approved: you decided it in chat (31 Oct)."
+    }
+  ],
+  "created": 1793408087606,
+  "id": "rules-dec-one-need",
+  "kind": "decision",
+  "needs": [],
+  "order": 323,
+  "short": "Pets have one need: happiness. No hunger.",
+  "source": "chat 31 Oct 2026: Karolis in the Game rules chat",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "One need: happiness (no hunger)",
+  "updated": 1793408087606
+}

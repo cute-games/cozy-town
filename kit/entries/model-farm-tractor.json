@@ -1,0 +1,23 @@
+{
+  "body": "From your note \"make it better\": a red Soviet-era village tractor at real size (about 3.9 m long, 2.8 m to the cab roof). Big treaded rear wheels, long hood, grille, round lights, white-roofed glass cab.\nPicked in Model Compare.",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793328394000,
+    "id": "only-farm-tractor"
+  },
+  "comments": [],
+  "created": 1793352910000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/tractor.jpg",
+    "img/tractor-side.jpg"
+  ],
+  "short": "Picked: Old tractor: redone",
+  "source": "chat 30 Oct: pets and farm audition, round 14",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Old tractor: redone",
+  "updated": 1793402000000
+}

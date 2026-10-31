@@ -50,8 +50,8 @@ body.dancing #joy,body.dancing #moveBtns,body.dancing #actWrap,body.dancing #pad
 @media (orientation:portrait){body:has(#hpCard:not([hidden])) #mmBtn,body:has(#hpCard:not([hidden])) #pad,body:has(#dnCard:not([hidden])) #mmBtn,body:has(#dnCard:not([hidden])) #pad{visibility:hidden}}   /* (run 4, stage 3: the card sat on the map and the notepad) */
 #hpCard,#dnCard{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 74px);transform:translateX(-50%);z-index:9500;background:var(--paper);border:3px solid var(--line);border-radius:22px;padding:14px 16px 16px;box-shadow:0 6px 0 #3d2c5e;text-align:center;width:min(410px,92vw);color:var(--ink);animation:kcPop .2s ease-out}#hpCard .kc-b,#dnCard .kc-b{display:flex;gap:10px;justify-content:center}#hpCard .kc-t,#dnCard .kc-t{font-size:28px;line-height:1.15}#hpCard[hidden],#dnCard[hidden]{display:none}@media (orientation:portrait){#hpCard,#dnCard{top:calc(env(safe-area-inset-top,0px) + 150px)}}#hpCard .kc-b,#dnCard .kc-b{flex-wrap:wrap}#hpCard .kc-b .btn,#dnCard .kc-b .btn{min-height:48px;font-size:17px;padding:8px 14px;white-space:nowrap}`;document.head.appendChild(st);}   /* the cards' and the dance HUD's looks, in at load time */
 const HPT={seen:new Set(),queue:[],cur:null,rem:{},noted:{},ans:null,tiles:null,mats:null,ball:null,lit:false,key:'',t:0,ct:0};
-function hpOn(h){h=h===undefined?S&&S.hp:h;return !!(h&&realMs()>=h.at&&realMs()<h.at+HP_LEN);}
-function hpSoon(h){h=h===undefined?S&&S.hp:h;return !!(h&&realMs()<h.at+HP_LEN);}
+function hpOn(h){h=h===undefined?S&&S.hp:h;return !!(h&&gameMs()>=h.at&&gameMs()<h.at+HP_LEN);}   /* (a party's time is on the one clock: gameMs, so a night skip brings it closer) */
+function hpSoon(h){h=h===undefined?S&&S.hp:h;return !!(h&&gameMs()<h.at+HP_LEN);}
 function hpWhen(h){const d=clockAt(h.at),n=clockNow();return (d.day===n.day?'today':d.day===n.day+1?'tomorrow':'on '+wdName(d.day))+' at '+clockStr(h.h!=null?h.h:d.time);}
 function hpDisco(){return !!(S&&S.home&&S.home.items.some(it=>it.t==='discofloor')&&S.home.items.some(it=>it.t==='discoball'));}
 /* 📬 the mailbox: mail, or a party */
@@ -76,7 +76,7 @@ function hpCard(){if(HPT.cur||!HPT.queue.length)return;const q=HPT.queue.shift()
   el.innerHTML=`<div class="kc-t">🎉 A party!</div><div class="kc-m"><b>${esc(q.nm)}</b> is hosting a party ${esc(when)}!<br>Go check it out?</div><div class="kc-b"><button class="btn mint" id="hpYes">✅ I'll come!</button><button class="btn" id="hpNo">🙅 Not this time</button></div>`;
   el.hidden=false;$('hpYes').onclick=()=>hpAnswer(true);$('hpNo').onclick=()=>hpAnswer(false);clearTimeout(HPT.ct);HPT.ct=setTimeout(()=>{if(HPT.cur===q)hpAnswer(false,true);},40000);}
 function hpAnswer(ok,quiet){const q=HPT.cur;if(!q)return;HPT.cur=null;const el=$('hpCard');if(el)el.hidden=true;clearTimeout(HPT.ct);S.rsvp=S.rsvp||{};S.rsvp[q.id]=ok?'yes':'no';HPT.ans={id:q.id,ok:ok?1:0};change();
-  const a=MP.peers.get(q.peer);if(ok){SFX.yay();if(realMs()>=q.at){HPT.noted[q.id]=1;if(a&&hpNav(a))HPT.rem[q.id]=1;}else if(!quiet)toast('🎉 Yay! I will tell you when '+q.nm+"'s party starts.",3.4);}else if(!quiet)toast('💛 Okay, maybe next time.',2.4);setTimeout(hpCard,600);}
+  const a=MP.peers.get(q.peer);if(ok){SFX.yay();if(gameMs()>=q.at){HPT.noted[q.id]=1;if(a&&hpNav(a))HPT.rem[q.id]=1;}else if(!quiet)toast('🎉 Yay! I will tell you when '+q.nm+"'s party starts.",3.4);}else if(!quiet)toast('💛 Okay, maybe next time.',2.4);setTimeout(hpCard,600);}
 function hpNav(a,quiet){const j=LANE.slotOf.get(a.peer),ln=LOC.city.lane;if(j==null||!ln||!ln[j]){if(!quiet)toast('🏠 '+a.nm+"'s house is not on Friends Lane right now.",3);return false;}const d=ln[j].door;
   setNavTo({id:'party',n:a.nm+"'s party",i:'🎉',x:d[0],z:d[1],w:4,d:4,door:[d[0],d[1]],flat:1,nq:1},true);toast('🎉 Follow the arrow to '+a.nm+"'s house!",3.2);return true;}
 /* 🪩 the disco floor flashes and the ball spins at a party, or while a round is on */
@@ -87,11 +87,11 @@ function hpLights(dt){const L=CUR&&(CUR.id==='home'||CUR.id==='visit')?CUR:null;
   if(on){HPT.t+=dt;const step=Math.floor(HPT.t*3);for(const o of HPT.tiles){const m=M[(o.userData.tile+step)%M.length];if(m&&o.material!==m)o.material=m;}if(HPT.ball)HPT.ball.rotation.y+=dt*2.2;HPT.lit=true;}
   else if(HPT.lit){for(const o of HPT.tiles){const m=HPT.mats[o.userData.tile];if(m)o.material=m;}HPT.lit=false;}}
 function hpTick(dt){if(!S)return;
-  if(S.hp&&realMs()>=S.hp.at+HP_LEN){S.hp=null;S.rsvpIn=null;change();if(PLAYING)toast('🎉 Your party is over. What a day!',3);}
+  if(S.hp&&gameMs()>=S.hp.at+HP_LEN){S.hp=null;S.rsvpIn=null;change();if(PLAYING)toast('🎉 Your party is over. What a day!',3);}
   if(MP.grp)for(const a of MP.peers.values()){const py=a.py;
-    if(py&&typeof py.id==='string'&&Number.isFinite(py.at)&&realMs()<py.at+HP_LEN){const key=a.peer+'|'+py.id,r=S.rsvp&&S.rsvp[py.id];
+    if(py&&typeof py.id==='string'&&Number.isFinite(py.at)&&gameMs()<py.at+HP_LEN){const key=a.peer+'|'+py.id,r=S.rsvp&&S.rsvp[py.id];
       if(!HPT.seen.has(key)&&!r){HPT.seen.add(key);HPT.queue.push({peer:a.peer,id:py.id,at:py.at,h:py.h,nm:a.nm});}
-      if(r==='yes'&&realMs()>=py.at){if(!HPT.noted[py.id]){HPT.noted[py.id]=1;SFX.ding();showNote('🎉 Party time!',a.nm+"'s party is starting! Follow the arrow to their house.",true,'🎉');}
+      if(r==='yes'&&gameMs()>=py.at){if(!HPT.noted[py.id]){HPT.noted[py.id]=1;SFX.ding();showNote('🎉 Party time!',a.nm+"'s party is starting! Follow the arrow to their house.",true,'🎉');}
         if(!HPT.rem[py.id]&&CUR&&CUR.id==='city'&&hpNav(a,true))HPT.rem[py.id]=1;}}   /* (the way is set as soon as the host's house is on Friends Lane) */
     if(S.hp&&a.pa&&a.pa.id===S.hp.id){S.rsvpIn=S.rsvpIn||{};if(S.rsvpIn[a.peer]!==a.pa.ok){S.rsvpIn[a.peer]=a.pa.ok;if(a.pa.ok&&PLAYING)toast('💌 '+a.nm+' is coming to your party!',3);}}}
   if(!HPT.cur&&HPT.queue.length&&PLAYING&&!CUT&&!fading&&!DANCE.on)hpCard();

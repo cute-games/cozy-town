@@ -1,0 +1,22 @@
+{
+  "blockedBy": "",
+  "body": "Date: 30 Oct 2026\nDecision: Farm animals come only as a baby or an adult, no teen. A baby never grows up: it is its own animal. Babies: foal, lamb, calf, piglet, chick. Pets are not affected (they still grow baby → teen → adult).\nSee: https://claude.ai/artifact/6VamW3iTDycZZjZnfTrZa3#living-1",
+  "ch": "decisions",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793394474189,
+      "text": "Recorded as approved: Karolis decided it in the Living things models chat on 30 Oct."
+    }
+  ],
+  "created": 1793394474189,
+  "id": "dec-044",
+  "kind": "decision",
+  "needs": [],
+  "order": 343,
+  "source": "chat 30 Oct 2026: Karolis in the Living things models chat (board living-20261030-farm-ages)",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "30 Oct 2026: Farm animals are only baby or adult, and babies stay babies",
+  "updated": 1793394474189
+}

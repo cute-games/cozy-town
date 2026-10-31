@@ -1,0 +1,40 @@
+{
+  "body": "Your ask: a horse riding instructor at the farm's horse obstacle course (Horse jump field). Same people style as the farmers. All wear a whistle and riding boots.\n- Coach Greta: black riding helmet, red riding jacket, white breeches, riding crop\n- Coach Marius: navy helmet and polo, beige breeches, clipboard\n- Coach Ieva: lilac helmet, green vest, ponytail, hands free (crop removed, your note)\n- Old coach Stan: flat cap, tweed vest, clipboard\nYou kept Ieva and Stan. Ieva changed, so please keep her once more in Model Compare: Farm riding → Riding instructor.",
+  "ch": "living",
+  "cmp": {
+    "at": 1793401000000,
+    "id": "only-farm-coach"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793397085000,
+      "text": "Viewer: 3 passes + final: Greta 8, Marius 7, Ieva 7, Stan 7."
+    },
+    {
+      "act": "chat",
+      "at": 1793397470000,
+      "text": "Ieva without the riding crop (your note). Checked: her hands are empty."
+    },
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Approved: you decided it in Model Compare (31 Oct)."
+    }
+  ],
+  "created": 1793397085000,
+  "kind": "model",
+  "needs": [],
+  "order": 7,
+  "pics": [
+    "img/ride-greta.jpg",
+    "img/ride-marius.jpg",
+    "img/ride-ieva.jpg",
+    "img/ride-stan.jpg"
+  ],
+  "source": "chat 30 Oct: Living things models, round 34",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Riding instructor: 4 to choose from",
+  "updated": 1793409100000
+}

@@ -1,0 +1,16 @@
+{
+  "blockedBy": "",
+  "body": "#: 10\nDecision: Growing up: baby, teen, adult\nNotes: New pets start as babies (smaller, rounder, bigger eyes, clumsy walk); about 5 hours of play time to adult; only looks and size change; pets owned today count as adults; a sparkle and a note when a pet grows",
+  "ch": "rules",
+  "comments": [],
+  "created": 1793323126942,
+  "id": "pet-dec-10",
+  "kind": "decision",
+  "needs": [],
+  "order": 256,
+  "source": "Pet update: plan › Decisions",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Pet decision 10: Growing up: baby, teen, adult",
+  "updated": 1793323126942
+}

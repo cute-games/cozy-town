@@ -1,0 +1,52 @@
+{
+  "blockedBy": "",
+  "body": "Pets have one need: happiness (Game rules, 31 Oct; no hunger).\n- Unhappy signs: walks to the bowl, sniffs, sits by it; brings a toy and play-bows; yawns and lies down; follows you and nudges.\n- Moods: very happy (big jumps, spin), sad (head and tail low, slow walk).\n- Favourite food: the very-happy move plays as a short happy dance.\n- Baby: clumsy walk, trips.\n- One shared set for every pet, settings per type. Naps make pets happier.\nFriends see this move too (Plan, 31 Oct: pets are sent online for real).",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793384442775,
+      "text": "Redone (your ask: bending legs, better physics): legs now bend at hip and knee with real gaits, head and tail move, people swing their arms, jumps follow an arc with crouch and landing squash, blob shadows. 6 critic rounds: best 6.5 of 10, never 8, so not passed yet."
+    },
+    {
+      "act": "approve",
+      "at": 1793386200260,
+      "text": ""
+    },
+    {
+      "act": "chat",
+      "at": 1793404837008,
+      "text": "Done: regrouped as Hungry and Unhappy (your two needs).\nSame moves, new labels. OK if it fits."
+    },
+    {
+      "act": "approve",
+      "at": 1793406273180,
+      "text": ""
+    },
+    {
+      "act": "chat",
+      "at": 1793408753854,
+      "text": "Approved: you decided it in chat (Game rules, 31 Oct): one Unhappy set, no Hungry group.\nLabels changed only; favourite food plays the very-happy move."
+    }
+  ],
+  "created": 1793381015996,
+  "id": "moves-pet-body-language",
+  "kind": "task",
+  "needs": [
+    "pet-dec-15",
+    "pet-redteam-05",
+    "pet-dec-10",
+    "pet-redteam-06",
+    "decision-pet-sizes"
+  ],
+  "order": 100,
+  "pics": [
+    "img/moves9-shared.gif"
+  ],
+  "short": "Pet signs: one Unhappy set, plus moods",
+  "source": "chat 30 Oct: Model movements, first drafts",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Pet moves: one shared set for all pets",
+  "updated": 1793408745968
+}

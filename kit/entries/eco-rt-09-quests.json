@@ -1,0 +1,23 @@
+{
+  "blockedBy": "",
+  "body": "Now: the quest 'New look' pays 40 but clothes cost 60-120. 'Flower power' pays 40 but Flower Shop items cost 30-90. Doing them loses coins.\nNew: a buy quest pays the cheapest fitting item's price + 20 (New look 80, Flower power 50). Other quests stay.",
+  "ch": "economy",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793393902343,
+      "text": "Karolis said 'do the rebalance' in the Schedules and economy chat (30 Oct): approved. Built as a code patch (economy-rebalance.patch, build 2026103101) and checked with the quick kit; goes live through a pull request in the next repo chat."
+    }
+  ],
+  "created": 1793393358117,
+  "id": "eco-rt-09-quests",
+  "kind": "plan",
+  "needs": [],
+  "order": 19,
+  "short": "Buy quests never lose you coins",
+  "source": "chat 2026-10-30: Schedules and economy red team 2",
+  "stage": "pfu-1",
+  "status": "building",
+  "title": "Balance 9: daily 'buy' quests never lose you coins",
+  "updated": 1793393902343
+}

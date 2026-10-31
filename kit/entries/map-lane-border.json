@@ -1,0 +1,28 @@
+{
+  "blockedBy": "",
+  "body": "Karolis (31 Oct): level-3 yards need more room (Non-living layout: back fence at z -35).\nHedges move from 26.6 to 37.5 m off the lane road (2.5 m behind the new level-3 fence). Lots stay 13.2 m wide (neighbours).\nGame code (js/02-world.js): laneRoad hedge z s*26.6 -> s*37.5; L.laneC z 26.15 -> 37.05 (both sides); lane-end hedge length 54.1 -> 75.9; laneFree 31.5 -> 42 so the forest keeps clear (hills start at 44, nothing to move).\njs/05-map.js map lines: 26.6 -> 37.5, 27 -> 38; mapTrees 31.5 -> 42.\nShown in the Area plan (book copy of the town code, marked PLANNED). Trees on the new strip are deleted in the scene.",
+  "ch": "map",
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793407300000,
+      "text": "Asked by Karolis in the Map chat, 31 Oct."
+    },
+    {
+      "act": "chat",
+      "at": 1793408700000,
+      "text": "Approved: you decided it in chat (31 Oct). Deeper: 37.5 m so the level-3 yard can reach z -35."
+    }
+  ],
+  "created": 1793407300000,
+  "id": "map-lane-border",
+  "kind": "task",
+  "needs": [],
+  "order": 3001,
+  "short": "Friends Lane hedges move out from 26.6 m to 37.5 m; level-3 yard to z -35.",
+  "source": "chat 31 Oct 2026: Map chat",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Friends Lane: wider green border so level-3 backyards fit",
+  "updated": 1793408700000
+}

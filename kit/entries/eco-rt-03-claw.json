@@ -1,0 +1,23 @@
+{
+  "blockedBy": "",
+  "body": "Now: 10 a try; 12% of prizes are a level-up paid in coins; no daily limit.\nNew: the level-up prize gives the level but no coins (like the designer room level-up). Coin prizes stay 20-50. Max 10 prizes a game day; after that Mr. Toby says the machine is empty until tomorrow.\nEffect: about break-even for a good player; prizes are furniture and fun.",
+  "ch": "economy",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793393902343,
+      "text": "Karolis said 'do the rebalance' in the Schedules and economy chat (30 Oct): approved. Built as a code patch (economy-rebalance.patch, build 2026103101) and checked with the quick kit; goes live through a pull request in the next repo chat."
+    }
+  ],
+  "created": 1793392672726,
+  "id": "eco-rt-03-claw",
+  "kind": "plan",
+  "needs": [],
+  "order": 13,
+  "short": "Claw machine: 10 prizes a day, level prize no coins",
+  "source": "chat 2026-10-30: Schedules and economy red team",
+  "stage": "pfu-1",
+  "status": "building",
+  "title": "Balance 3: claw machine is fun, not a money printer",
+  "updated": 1793393902343
+}

@@ -1,0 +1,16 @@
+{
+  "blockedBy": "",
+  "body": "#: 3\nDecision: The farm is in update 1\nNotes: Cows are farm animals only, never pets. If update 1 gets too big, the farm moves to its own update",
+  "ch": "rules",
+  "comments": [],
+  "created": 1793323126942,
+  "id": "pet-dec-03",
+  "kind": "decision",
+  "needs": [],
+  "order": 249,
+  "source": "Pet update: plan › Decisions",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Pet decision 3: The farm is in update 1",
+  "updated": 1793323126942
+}

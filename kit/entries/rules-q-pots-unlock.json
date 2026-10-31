@@ -1,0 +1,29 @@
+{
+  "blockedBy": "",
+  "body": "Today: gardening level 10, 20, 30, 40, 50 (Izabele's idea 75).\nA) Gardening level, as today\nB) Buying garden level 2 and 3",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793400859016,
+      "text": "Done: your answer in chat, 31 Oct.\nRed team in 'Rules check 2'."
+    },
+    {
+      "act": "chat",
+      "at": 1793401756412,
+      "text": "Changed (31 Oct): pots untouched, as you asked."
+    }
+  ],
+  "created": 1793400467688,
+  "id": "rules-q-pots-unlock",
+  "kind": "question",
+  "needs": [],
+  "old": true,
+  "order": 315,
+  "short": "Pots keep gardening levels 10-50; garden levels give space",
+  "source": "chat 31 Oct 2026: Game rules chat",
+  "stage": "pfu-3",
+  "status": "approved",
+  "title": "Garden pots: Izabele's rule stays (decided 31 Oct)",
+  "updated": 1793401756412
+}

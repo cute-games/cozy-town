@@ -1,0 +1,65 @@
+{
+  "blockedBy": "",
+  "body": "What moves:\n- Mount and dismount: walk up, tap the horse (iPad) or press E (PC), climb-on step, the camera rises.\n- Walk, trot, gallop: iPad joystick push further = faster; PC W + Shift.\n- Jump: tap jump (iPad) or Space (PC) in the free jump field; the horse lifts its front, then back legs.\n- The big trail around the farm, with friends. You can leave the trail; near town the horse stops and shakes its head.\n- Other players see you ride (horse and rider sent online like walking).\n- Idle horse: tail swish, head down to graze.\nModel: picked; your note \"more from this world, keep the proportions\" still open.\nGame rules (who can ride, how many horses) and Map (trail, jump field, town edge) are sent to the Plan chat.\nStage: 6, Farm Lane.",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793384442775,
+      "text": "Redone (your ask: bending legs, better physics): legs now bend at hip and knee with real gaits, head and tail move, people swing their arms, jumps follow an arc with crouch and landing squash, blob shadows. 6 critic rounds: best 6.5 of 10, never 8, so not passed yet."
+    },
+    {
+      "act": "redo",
+      "at": 1793390614329,
+      "text": "make legs bend in the real life way. not mutant"
+    },
+    {
+      "act": "redo",
+      "at": 1793390627627,
+      "text": "also need image of horse riding with character"
+    },
+    {
+      "act": "chat",
+      "at": 1793391858951,
+      "text": "Fixed from your Redo: legs bend the real-life way. Each leg has 3 joints now (knee or hock, fetlock, hoof). The hind legs keep the hock-back zigzag, the gallop no longer crosses its legs, and the jump tucks more. New: 2 riding cells with a rider in the saddle (walk, and trot with the rider rising). Left: the rider has no hands or reins yet."
+    },
+    {
+      "act": "chat",
+      "at": 1793392101475,
+      "text": "Added for the Plan chat (stage 6 riding): \"Get on\" (the rider climbs up and swings a leg over into the saddle) and \"Stops at the town edge\" (the horse refuses at the posts, rears a little, tosses its head and steps back). The picture now has 8 cells."
+    },
+    {
+      "act": "redo",
+      "at": 1793392860037,
+      "text": "back legs bend in different direction in real life"
+    },
+    {
+      "act": "approve",
+      "at": 1793395428306,
+      "text": ""
+    },
+    {
+      "act": "chat",
+      "at": 1793397092464,
+      "text": "Done: read. You approved after this note, so it stays approved.\nNext: queued, not done: hind legs bend like a real horse (back knee forward, hock back)."
+    }
+  ],
+  "created": 1793381015996,
+  "id": "moves-horse-riding",
+  "kind": "task",
+  "needs": [
+    "pet-scope-u1-02",
+    "pet-dec-13",
+    "map-farm-area-plan"
+  ],
+  "order": 112,
+  "pics": [
+    "img/moves4-horse.gif"
+  ],
+  "short": "Horse walk, trot, gallop, jump, with a rider",
+  "source": "chat 30 Oct: Model movements, first drafts",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Horse riding: mount, ride, jump, trail",
+  "updated": 1793397092464
+}

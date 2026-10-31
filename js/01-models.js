@@ -1,19 +1,30 @@
 'use strict';
 /* ================= models ================= */
+/* 🎩 hats sit ON the hair, not in it (pets and farm update, stage 1): a hat is lifted so it sits on the top of the hairdo (curls stand higher)
+   or of a costume's hood; a hat that covers the head (HAT_COVER) or a costume's hood tucks a bun to the nape and the curls under it
+   (a hood also hides pigtails and a ponytail). HAT_LIFT = how far each hat's own bottom sat below the top of the hair (0.51 of the head) */
+const HAT_COVER={cap:1,beanie:1,cowboy:1,witch:1,tophat:1,chef:1,helmet:1,beret:1,headphones:1};
+const HAT_LIFT={cap:.06,beanie:.06,cowboy:.06,witch:.05,tophat:.06,chef:.07,helmet:.07,beret:.05,party:.11,crown:.03,tiara:.03,flowers:.02,cat:.02,unicorn:.05};
+const hatHood=L=>!!(L.co&&COSTUMES[L.co]),BUN_TOP={none:1,flowers:1,tiara:1,bunny:1,halo:1};
+const bunTop=L=>L.style==='bun'&&!hatHood(L)&&!!BUN_TOP[L.hat||'none'];   /* the bun stays on top with no hat and with these; the New Year party hat then sits on the bun */
+function hatLift(L,k){return (HAT_LIFT[k]||0)+(hatHood(L)?.03:L.style==='curly'&&!HAT_COVER[k]?.12:0)+(k==='party'&&bunTop(L)?.22:0);}
 function hairFor(h,L){
   const c=L.hair,c2=L.hair2||c,s=L.style,len=L.len||(s==='long'?'long':(s==='short'||s==='curly')?'short':'shoulder');   /* ✂️ len: long, shoulder, short (job 15) */
+  const hood=hatHood(L),cov=hood||!!HAT_COVER[L.hat];
   box(h,.54,.14,.48,c,0,.37,0);
   if(L.swoop){box(h,.34,.1,.07,c,-.09,.3,.215,{rz:-.2,ol:false});box(h,.24,.08,.07,c,.14,.34,.215,{rz:.12,ol:false});}
   else box(h,.52,.08,.07,c,0,.32,.215,{ol:false});
-  if(s==='bob'){box(h,.08,.28,.46,c2,-.27,.12,-.02);box(h,.08,.28,.46,c2,.27,.12,-.02);box(h,.56,.1,.29,c2,0,.1,-.125,{ol:false});}   /* the bob's hem wraps round the back only, never over the face; the side panels sit a hair behind the face so they don't flicker on it */
+  if(hood){}   /* (under a costume's hood the hair at the sides is tucked in: it stuck out through the hood) */
+  else if(s==='bob'){box(h,.08,.28,.46,c2,-.27,.12,-.02);box(h,.08,.28,.46,c2,.27,.12,-.02);box(h,.56,.1,.29,c2,0,.1,-.125,{ol:false});}   /* the bob's hem wraps round the back only, never over the face; the side panels sit a hair behind the face so they don't flicker on it */
   else if(s==='short'||s==='curly'||len==='short'){box(h,.06,.2,.42,c2,-.27,.22,-.02);box(h,.06,.2,.42,c2,.27,.22,-.02);}
   else{box(h,.08,.34,.46,c2,-.27,.06,-.02);box(h,.08,.34,.46,c2,.27,.06,-.02);}
   box(h,.54,.4,.08,c2,0,.08,-.25);
-  if(s==='long'||(len==='long'&&s!=='bun'&&s!=='short'&&s!=='bob'&&s!=='long')){box(h,.56,.42,.1,c2,0,-.3,-.25);box(h,.1,.36,.26,c2,-.27,-.28,-.08);box(h,.1,.36,.26,c2,.27,-.28,-.08);}
-  if(s==='ponytail'){sph(h,.07,'#ff7aa8',0,.36,-.31,{ol:.015});box(h,.15,.38,.13,c,0,-.04,-.36,{rx:.22});}
-  if(s==='bun')sph(h,.15,c,0,.58,-.05);
-  if(s==='pigtails'){sph(h,.13,c,-.35,.2,-.05);sph(h,.13,c,.35,.2,-.05);sph(h,.05,'#ffd45c',-.29,.29,.02,{ol:.012});sph(h,.05,'#ffd45c',.29,.29,.02,{ol:.012});}
-  if(s==='curly')for(const [x,z] of [[-.17,.12],[0,.15],[.17,.12],[-.2,-.08],[0,-.05],[.2,-.08],[-.1,-.2],[.1,-.2]])sph(h,.13,c,x,.5,z,{ws:10,hs:8});
+  if(s==='long'||(len==='long'&&s!=='bun'&&s!=='short'&&s!=='bob'&&s!=='long')){box(h,.56,.42,.1,c2,0,-.3,-.25);if(!hood){box(h,.1,.36,.26,c2,-.27,-.28,-.08);box(h,.1,.36,.26,c2,.27,-.28,-.08);}}
+  if(s==='ponytail'&&!hood){sph(h,.07,'#ff7aa8',0,.36,-.31,{ol:.015});box(h,.15,.38,.13,c,0,-.04,-.36,{rx:.22});}
+  if(s==='bun'&&!hood){const top=bunTop(L);sph(h,top?.15:.12,c,0,top?.58:.3,top?-.05:-.33);}   /* (with most hats the bun sits low at the nape, clear of the hat) */
+  if(s==='pigtails'&&!hood){const y=L.hat==='headphones'?-.02:.2;sph(h,.13,c,-.35,y,-.05);sph(h,.13,c,.35,y,-.05);sph(h,.05,'#ffd45c',-.29,y+.09,.02,{ol:.012});sph(h,.05,'#ffd45c',.29,y+.09,.02,{ol:.012});}   /* (under headphones the pigtails sit below the ear cups) */
+  if(s==='curly'&&!cov)for(const [x,z] of [[-.17,.12],[0,.15],[.17,.12],[-.2,-.08],[0,-.05],[.2,-.08],[-.1,-.2],[.1,-.2]])sph(h,.13,c,x,.5,z,{ws:10,hs:8});
+  else if(s==='curly'&&!hood)for(const [x,z] of [[-.22,-.06],[.22,-.06],[-.14,-.2],[.14,-.2]])sph(h,.12,c,x,.37,z,{ws:10,hs:8});   /* (under a hat: the curls peek out at the sides and the back) */
 }
 /* 🎃 Halloween costumes (run 4, job 3): a hooded onesie over the clothes (the face stays open), with ears, a tail, spikes or a ghostly hem. Cheap boxes, baked with the body */
 const COSTUMES={cat:{c:'#8e8e9e',n:'Cat'},dog:{c:'#b07a52',n:'Dog'},ghost:{c:'#f4f2ff',n:'Ghost'},dino:{c:'#5fbf74',n:'Dinosaur'},bunny:{c:'#ffffff',n:'Bunny'}};   /* 🐰 bunny: the Easter egg hunt's prize (run 4, job 11) */
@@ -23,7 +34,7 @@ function costumeFor(b,head,legs,arms,k){const C=COSTUMES[k].c,D=shade(C,-.14),o=
   if(k==='cat'){for(const s of[-1,1]){cone(head,.09,.17,C,s*.17,.5,-.06,{seg:4,...o});cone(head,.05,.1,'#ffb3c7',s*.17,.52,-.03,{seg:4,ol:false});for(const [y,r] of[[.125,.12],[.095,-.1]])box(head,.15,.012,.008,'#3d2c5e',s*.2,y,.231,{rz:s*r,center:true,ol:false});}sph(head,.028,'#ff9ec4',0,.16,.232,{s:[1.2,.8,.6],ws:8,hs:6,ol:false});   /* 🐱 painted whiskers and a pink nose (run 4, stage 3) */cyl(b,.035,.05,.55,C,0,.42,-.26,{rx:-1.1,center:true,seg:6,...o});sph(b,.055,D,0,.69,-.47,{ws:6,hs:5,ol:false});box(b,.26,.32,.02,'#f6f0ff',0,.6,.165,{ol:false});}
   else if(k==='bunny'){for(const s of[-1,1]){sph(head,.075,C,s*.15,.62,-.04,{s:[1,2.8,.75],ws:8,hs:6,...o});sph(head,.04,'#ffb3c7',s*.15,.64,0,{s:[1,2.4,.5],ws:6,hs:5,ol:false});}sph(b,.085,C,0,.4,-.2,{ws:8,hs:6,ol:false});box(b,.26,.32,.02,'#ffe4ee',0,.6,.165,{ol:false});}   /* 🐰 long ears with pink insides, a fluffy tail, a soft tummy */
   else if(k==='dog'){for(const s of[-1,1])box(head,.11,.28,.06,D,s*.31,.06,-.06,{rz:s*.22,...o});cyl(b,.04,.06,.36,C,0,.5,-.2,{rx:-.7,center:true,seg:6,...o});box(b,.26,.34,.02,'#f6e6c8',0,.58,.165,{ol:false});sph(head,.05,'#2e2347',0,-.07,.245,{ws:6,hs:5,ol:false});}
-  else if(k==='ghost'){for(const [x,z] of[[-.17,.12],[.17,.12],[-.17,-.12],[.17,-.12],[0,.17],[0,-.17]])sph(b,.1,C,x,.34,z,{ws:7,hs:5,ol:false});box(head,.6,.1,.54,C,0,.27,-.08,{ol:false});}
+  else if(k==='ghost'){for(const [x,z] of[[-.17,.12],[.17,.12],[-.17,-.12],[.17,-.12],[0,.17],[0,-.17]])sph(b,.1,C,x,.34,z,{ws:7,hs:5,ol:false});box(head,.6,.1,.5,C,0,.27,-.1,{ol:false});}   /* (the ghost's hem stays behind the hood's front edge: it reached into the hair) */
   else if(k==='dino'){for(let i=0;i<3;i++)cone(head,.06,.14,D,0,.31,-.22+i*.12,{seg:4,...o});for(let i=0;i<4;i++)cone(b,.05,.12,D,0,.98-i*.16,-.17,{rx:-.5,seg:4,...o});cone(b,.11,.62,C,0,.4,-.44,{rx:-1.35,center:true,seg:7,...o});for(let i=0;i<3;i++)cone(b,.04,.1,D,0,.5-i*.07,-.36-i*.14,{rx:-.4,seg:4,ol:false});box(b,.3,.4,.02,'#ffe08a',0,.6,.165,{ol:false});}}
 /* 🥳 run 4, job 11: on 31 Dec and 1 Jan everyone wears a party hat. Every person gets one at birth (hidden), in its own little baked group, and an own hat sits in a group too, so the two can swap at midnight without rebuilding anyone */
 function realDate(){return new Date();}
@@ -45,8 +56,8 @@ function makePerson(L){
   else{for(const sx of[-1,1]){box(head,.075,.11,.02,INK,sx*.11,.17,fz,{ol:false});box(head,.03,.035,.01,'#ffffff',sx*.11+.015,.24,fz+.012,{ol:false});box(head,.09,.045,.01,'#ff9ab8',sx*.18,.1,fz,{ol:false});}
   box(head,.1,.028,.01,INK,0,.085,fz,{ol:false});}
   hairFor(head,L);
-  if(L.hat&&L.hat!=='none'){const hg=new THREE.Group();hg.userData.keep=1;head.add(hg);hatFor(hg,L.hat,L.hatc);bake(hg,false);if(!L.nohat){hg.visible=!PARTY.on;PARTY.own.push(hg);}}
-  if(!L.nohat){const ph=new THREE.Group();ph.userData.keep=1;ph.visible=PARTY.on;head.add(ph);hatFor(ph,'party',PARTY.cols[PARTY.hats.length%PARTY.cols.length]);bake(ph,false);PARTY.hats.push(ph);}   /* 🥳 the New Year party hat (run 4, job 11) */
+  if(L.hat&&L.hat!=='none'){const hg=new THREE.Group();hg.userData.keep=1;head.add(hg);hg.position.y=hatLift(L,L.hat);hatFor(hg,L.hat,L.hatc);bake(hg,false);if(!L.nohat){hg.visible=!PARTY.on;PARTY.own.push(hg);}}
+  if(!L.nohat){const ph=new THREE.Group();ph.userData.keep=1;ph.visible=PARTY.on;head.add(ph);ph.position.y=hatLift(L,'party');hatFor(ph,'party',PARTY.cols[PARTY.hats.length%PARTY.cols.length]);bake(ph,false);PARTY.hats.push(ph);}   /* 🥳 the New Year party hat (run 4, job 11) */
   if(L.glasses&&L.glasses!=='none')glassesFor(head,L.glasses,L.glc);
   if(L.co&&COSTUMES[L.co])costumeFor(b,head,legs,arms,L.co);   /* 🎃 a costume over the clothes (run 4, job 3) */
   root.traverse(o=>{if(o.isMesh&&o.material===OL)o.material=OLP;});
@@ -82,14 +93,15 @@ function hatFor(h,k,c){const o={ol:.015};c=c||HAT_DEF[k]||'#ff7aa8';const d=shad
   else if(k==='beanie'){sph(h,.3,c,0,.45,0,{s:[1,.75,1],ws:14,hs:8,...o});box(h,.6,.09,.52,d,0,.4,0,o);sph(h,.08,'#ffffff',0,.7,0,{ws:8,hs:6,...o});}
   else if(k==='bow'){const g=new THREE.Group();g.position.set(.19,.54,.03);g.rotation.set(0,.3,-.38);h.add(g);bowShape(g,1.3,c,{ol:.012});}
   else if(k==='flowers')flowerRing(h,c,.275,.255,.5,7,.07,{ol:.008});
-  else if(k==='flower'){const g=new THREE.Group();g.position.set(.2,.44,.13);h.add(g);flowerShape(g,.13,c,0,0,0,{nrm:[.55,.3,.78],leaves:1,ol:.01});flowerShape(g,.065,shade(c,.3),.05,-.12,.03,{nrm:[.6,.1,.8],spin:.6,ol:.008});}
+  else if(k==='flower'){const g=new THREE.Group();g.position.set(.16,.6,.08);h.add(g);flowerShape(g,.13,c,0,0,0,{nrm:[.3,.9,.3],leaves:1,ol:.01});flowerShape(g,.065,shade(c,.3),-.15,-.01,.06,{nrm:[-.2,.9,.4],spin:.6,ol:.008});}   /* (on top of the hair at the side; it sat in the hair) */
   else if(k==='halo'){const a=new THREE.Mesh(new THREE.TorusGeometry(.2,.035,8,26),mat(c));a.rotation.x=Math.PI/2-.12;a.position.set(0,.78,-.02);h.add(a);for(let i=0;i<4;i++){const b=i/4*TAU+.4;sph(h,.025,'#ffffff',Math.cos(b)*.2,.8+Math.sin(b)*.024,Math.sin(b)*.2-.02,{ws:6,hs:5,ol:false});}}
-  else if(k==='unicorn'){const a=new THREE.Mesh(new THREE.TorusGeometry(.27,.025,6,20,Math.PI),mat('#ff9ec4'));a.position.set(0,.26,0);h.add(a);cone(h,.06,.3,c==='#ffffff'?'#ffd45c':c,0,.5,.14,{rx:.35,seg:10,ol:.012});
+  else if(k==='unicorn'){const a=new THREE.Mesh(new THREE.TorusGeometry(.925,.025,6,20,.66),mat('#ff9ec4'));a.rotation.z=Math.PI/2-.33;a.position.set(0,-.405,0);h.add(a);   /* (a flat arc resting on the hair, ends at the hair's edges; the round band went into the hair) */cone(h,.06,.3,c==='#ffffff'?'#ffd45c':c,0,.5,.14,{rx:.35,seg:10,ol:.012});
     for(let i=0;i<3;i++)cyl(h,.062-i*.016,.062-i*.016,.016,'#ff9ec4',0,.54+i*.075,.155+i*.026,{rx:.35,seg:10,ol:false});for(const s of[-1,1]){cone(h,.06,.12,'#ffffff',s*.17,.48,0,{seg:4,ol:.01});cone(h,.03,.07,'#ff9ec4',s*.17,.49,.03,{seg:4,ol:false});}
     for(const [x,cc] of [[-.09,'#b79cff'],[.09,'#7cc8ff']])flowerShape(h,.06,cc,x,.48,.16,{nrm:[x*2,.6,1],ol:.006});}
   else if(k==='beret'){sph(h,.3,c,-.04,.5,0,{s:[1,.32,1],rz:.12,ws:16,hs:8,...o});cyl(h,.018,.022,.07,shade(c,-.15),-.06,.6,0,{seg:6,ol:.008});}
   else if(k==='crown'){cyl(h,.2,.21,.12,c,0,.48,0,{seg:14,...o});for(let i=0;i<6;i++){const a=i/6*TAU;cone(h,.045,.12,c,Math.cos(a)*.18,.6,Math.sin(a)*.18,{seg:5,ol:.01});sph(h,.022,'#ffffff',Math.cos(a)*.18,.735,Math.sin(a)*.18,{ws:6,hs:5,ol:false});sph(h,.03,['#ff4d6d','#5fa8ff','#5fd4b0'][i%3],Math.cos(a+.52)*.207,.54,Math.sin(a+.52)*.207,{s:[1,1,.55],ws:8,hs:6,ol:false});}}
-  else if(k==='headphones'){const a=new THREE.Mesh(new THREE.TorusGeometry(.31,.03,6,18,Math.PI),mat('#3d2c5e'));a.position.set(0,.24,0);h.add(a);for(const s of[-1,1])cyl(h,.1,.1,.08,c,s*.3,.2,0,{rz:Math.PI/2,center:true,seg:12,...o});}
+  else if(k==='headphones'){const a=new THREE.Mesh(new THREE.TorusGeometry(1.508,.03,6,18,.462),mat('#3d2c5e'));a.rotation.z=Math.PI/2-.231;a.position.set(0,-.938,0);h.add(a);   /* (a flat band over the hair and bars down outside it: the round band went into the hair) */
+    for(const s of[-1,1]){cyl(h,.028,.028,.28,'#3d2c5e',s*.345,.26,0,{seg:8,ol:false});cyl(h,.1,.1,.08,c,s*.37,.2,0,{rz:Math.PI/2,center:true,seg:12,...o});}}
   else if(k==='bunny'){for(const s of[-1,1]){sph(h,.07,c,s*.11,.68,0,{s:[1,3,.6],ws:10,hs:8,...o});sph(h,.035,'#ff9ec4',s*.11,.68,.035,{s:[1,3.2,.4],ws:8,hs:6,ol:false});}}
   else if(k==='cat'){for(const s of[-1,1]){cone(h,.1,.18,c,s*.17,.5,0,{seg:4,...o});cone(h,.05,.1,'#ff9ec4',s*.17,.52,.04,{seg:4,ol:false});}}
   else if(k==='cowboy'){cyl(h,.44,.44,.04,c,0,.45,0,{seg:20,...o});cyl(h,.22,.25,.22,c,0,.48,0,{seg:14,...o});cyl(h,.255,.255,.05,d,0,.5,0,{seg:14,ol:false});}

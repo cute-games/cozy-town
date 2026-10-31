@@ -619,8 +619,9 @@ function updBeach(dt){updBus(dt);if(!S||!PLAYING||!LOC.beach)return;
    1.5 game hours (about 1 real minute) at each stop: park -> beach -> back to the park (the morning trip home, for campers too).
    On bus days the bus home waits at the beach from 19:30 and leaves at 21:00. A brand-new player's first day has a free
    Welcome Bus at both stops from 8:00 to 12:00 that goes as soon as you hop on. You sit inside the waiting bus (Driver Dot says
-   hello); when it leaves, a little ride picture plays and you get off at the other stop. Missed it? Camp at the beach. */
-const BUS_FARE=20,BUS_W=1.5,BUS_D=.25,BUS_EV=19.5,BV=8,BA=2.5,BB=2,BUS_WK={},BUS_DAY={};
+   hello); when it leaves, a little ride picture plays and you get off at the other stop. Missed it? Camp at the beach.
+   Every morning a bus home waits at the beach 8:00-9:30 (on bus days that is the bus's own morning trip home; same fare, free with under 20 coins) */
+const BUS_FARE=20,BUS_W=1.5,BUS_D=.25,BUS_EV=19.5,BUS_MA=8,BV=8,BA=2.5,BB=2,BUS_WK={},BUS_DAY={};
 const BUSP={park:{loc:'city',x:-16.5,z:2.1,ry:0,get pre(){return Math.max(110,-28-laneEnd());},post:225},   /* in town it comes from the far end of 🏡 Friends Lane */
   beach:{loc:'beach',x:BEACH_X-35.5,z:2.25,ry:Math.PI/2,pre:110,post:95}};
 const BSEAT=[[.95,.68],[-.15,.68],[-1.25,.68],[.95,-.68],[-.15,-.68],[-1.25,-.68]],CAMP={x:-25.4,z:6,fx:-21.6,fz:5.4};
@@ -652,6 +653,7 @@ function busWelcome(){const h=S.time,a=h<8?8:Math.ceil(h*6)/6;S.wb=h>=17?[S.day+
 function busSess(d){let o=BUS_DAY[d];if(o)return o;o=[];const a=busArr(d),W=BUS_W,wb=busWB(d);
   if(wb)o.push({p:'park',a:S.wb[1],l:S.wb[2],go:'beach',wb:1},{p:'beach',a:S.wb[1],l:S.wb[2],go:'town',wb:1});
   else if(a!==undefined)o.push({p:'park',a,l:a+W,go:'beach'},{p:'beach',a:a+W,l:a+2*W,go:'town'},{p:'park',a:a+2*W,l:a+2*W+BUS_D,go:null});
+  else o.push({p:'beach',a:BUS_MA,l:BUS_MA+BUS_W,go:'town',mb:1},{p:'park',a:BUS_MA+BUS_W,l:BUS_MA+BUS_W+BUS_D,go:null});   /* 🌅 the morning bus home (pets and farm update): every day with no other trip, it waits at the beach 8:00-9:30 and goes to town */
   if(wb||a!==undefined)o.push({p:'beach',a:BUS_EV,l:21,go:'town'},{p:'park',a:21,l:21+BUS_D,go:null});
   return BUS_DAY[d]=o;}
 const busHM=h=>{const m=Math.round(h*60),H=Math.floor(m/60)%24,M=m%60;return H+':'+(M<10?'0':'')+M;};
@@ -841,7 +843,7 @@ function busBoardDraw(B){const day=S?S.day:1,x=B.c.getContext('2d'),Wd=512,Ht=30
     const L=(today?'⭐ ':'')+wdName(d),R=B.bch?(busWB(d)?'🎉 until '+busHM(S.wb[2]):busHM(busArr(d)+2*BUS_W))+' · 21:00':busWB(d)?'🎉 '+busHM(S.wb[1])+'–'+busHM(S.wb[2]):busHM(busArr(d));   /* 🏖️ the board at the beach: when the buses home leave (the same times as its card and the pill) */
     x.fillStyle='#3d2c5e';x.font=`800 32px ${FONT}`;const lw=x.measureText(L).width;x.textAlign='left';x.fillText(L,28,y);x.textAlign='right';
     x.font=`800 ${Math.max(20,Math.min(32,Math.floor(32*(Wd-80-lw)/x.measureText(R).width)))}px ${FONT}`;x.fillText(R,Wd-28,y);});
-  x.fillStyle='#3d2c5e';x.font=`700 25px ${FONT}`;x.textAlign='center';x.fillText(B.bch?`🏘️ Bus to town · a ride is ${BUS_FARE} 🪙`:`🏖️ Bus home 21:00 · a ride is ${BUS_FARE} 🪙`,Wd/2,Ht-26);B.t.needsUpdate=true;}
+  x.fillStyle='#3d2c5e';x.textAlign='center';const ft=B.bch?`🌅 Every morning 9:30 to town · ${BUS_FARE} 🪙`:`🏖️ Bus home 21:00 · a ride is ${BUS_FARE} 🪙`;x.font=`700 25px ${FONT}`;x.font=`700 ${Math.min(25,Math.floor(25*(Wd-24)/x.measureText(ft).width))}px ${FONT}`;x.fillText(ft,Wd/2,Ht-26);B.t.needsUpdate=true;}
 /* ---- the timetable card ---- */
 function busDays(from,n){const out=[];for(let d=from;out.length<n&&d<from+15;d++)if(busArr(d)!==undefined||busWB(d))out.push(d);return out;}
 function openBusTable(){const beach=CUR.id==='beach',w=Math.floor((S.day-1)/7);SFX.tap();
@@ -853,7 +855,7 @@ function openBusTable(){const beach=CUR.id==='beach',w=Math.floor((S.day-1)/7);S
   const c=busCur(beach?'beach':'park'),here=c&&c.u===0&&c.s.go?`🚌 The bus is here! It leaves at ${busHM(c.s.l)}.`:beach?'🏘️ Next bus home: '+busWhen(busNext('beach','town'),1)+'.':'🏖️ Next bus to the beach: '+busWhen(busNext('park','beach'))+'.';
   openPanel(`<div class="hd"><h2>🚌 Beach Bus</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div><p class="line" style="margin-top:2px">${here}</p>
     <div class="sec">This week</div>${wk(w).map(row).join('')}${left<2?`<div class="sec">Next week</div>${wk(w+1).map(row).join('')}`:''}
-    <p class="note" style="margin-top:12px">🚏 The bus waits about a minute at each stop, so be on time!<br>${busR1()?`🪙 A ride is ${BUS_FARE} coins.`:`🎟️ Your first ride is free! After that, a ride is ${BUS_FARE} coins.`}<br>🏖️ On bus days the bus home leaves the beach at 21:00.<br>⛺ Missed it? Camp at the beach. The next bus takes you home!</p>`,{cls:'bustab'});}   /* (bustab: its ⬇️ "more below" sits in the middle, between the days and the times) */
+    <p class="note" style="margin-top:12px">🚏 The bus waits about a minute at each stop, so be on time!<br>${busR1()?`🪙 A ride is ${BUS_FARE} coins.`:`🎟️ Your first ride is free! After that, a ride is ${BUS_FARE} coins.`}<br>🏖️ On bus days the bus home leaves the beach at 21:00.<br>🌅 Every morning a bus home waits at the beach from 8:00 to 9:30.<br>⛺ Missed it? Camp at the beach. The next bus takes you home!</p>`,{cls:'bustab'});}   /* (bustab: its ⬇️ "more below" sits in the middle, between the days and the times) */
 /* ---- riding ---- */
 function busInfo(p){const c=busCur(p);SFX.pop();
   if(c&&c.u===0&&c.s.go&&busThere(p)&&!BUS.ride){toast('🚌 The bus is here! Walk to its door to get on 🚪 It leaves at '+busHM(c.s.l)+'.',4);return;}

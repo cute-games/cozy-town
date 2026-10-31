@@ -1,0 +1,22 @@
+{
+  "body": "From your note \"they need one more turn\": the corner braces leaned outward. Now they run from the posts up to the beam, longer and thicker.\nPicked in Model Compare.",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793328394000,
+    "id": "only-farm-arch"
+  },
+  "comments": [],
+  "created": 1793352910000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/arch.jpg"
+  ],
+  "short": "Picked: FARM arch: braces turned the right way",
+  "source": "chat 30 Oct: pets and farm audition, round 14",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "FARM arch: braces turned the right way",
+  "updated": 1793402000000
+}

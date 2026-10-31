@@ -1,0 +1,27 @@
+{
+  "blockedBy": "",
+  "body": "Date: 31 Oct 2026\nDecision (Model Compare and chat):\n- Seal: Spotted harbour seal\n- Pug: the new pug (nose and mouth, no rings)\n- Pomchi: today's game pomchi\n- Sheep: more wool\n- Capybara: one body, 7 faces\n- Vet station lobby nurse: Nurse Penny (Leo gives the treat)\n- Riding instructor: looks Ieva and Stan (one character entry)\n- Trail riders: Cody, Hank, Rose\nSee: https://claude.ai/artifact/6VamW3iTDycZZjZnfTrZa3#living-1",
+  "ch": "decisions",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793459474199,
+      "text": "Approved: you decided it in chat (31 Oct)."
+    },
+    {
+      "act": "chat",
+      "at": 1793485300000,
+      "text": "Done: lobby nurse = Nurse Penny (your pick, 1 Nov)."
+    }
+  ],
+  "created": 1793459474199,
+  "id": "dec-045",
+  "kind": "decision",
+  "needs": [],
+  "order": 344,
+  "short": "Model picks: seal, pug, pomchi, sheep, capybara, nurse, riders",
+  "source": "chat 31 Oct 2026: Karolis in Living things models (board living-20261031-decisions)",
+  "status": "approved",
+  "title": "31 Oct 2026: Model picks for the Pets and Farm Update",
+  "updated": 1793485300000
+}

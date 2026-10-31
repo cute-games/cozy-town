@@ -1,0 +1,13 @@
+#!/bin/sh
+# rebuild the three test sets from the pack + test bodies, render them (run9.js loads c13.html).
+#   packTest = round 1 (zpackTest.body.js), packTest2 = round 2 (zpackTest2.body.js), packTest3 = round 3 (zpackTest3.body.js), packTest4 = the rest of round 3 (zpackTest4.body.js), packTest5 = everything else (zpackTest5.body.js), packTest6 = round 4 (zpackTest6.body.js)
+# usage: build.sh [set ...]   (default: both)
+D=/tmp/claude-0/-home-claude/03bcb129-e23f-5805-992d-da53e260c961/scratchpad
+(echo "/* packTest — built file: movespack/moves-pack.js (copied in unchanged) + movespack/zpackTest.body.js. Rebuild: movespack/build.sh */"; cat $D/movespack/moves-pack.js $D/movespack/zpackTest.body.js) > $D/mv/sets/zpackTest.js
+(echo "/* packTest2 — built file: movespack/zpackTest2.body.js only (the pack itself comes from zpackTest.js, loaded first). Rebuild: movespack/build.sh */"; cat $D/movespack/zpackTest2.body.js) > $D/mv/sets/zpackTest2.js
+(echo "/* packTest3 — built file: movespack/zpackTest3.body.js only (the pack comes from zpackTest.js). Rebuild: movespack/build.sh */"; cat $D/movespack/zpackTest3.body.js) > $D/mv/sets/zpackTest3.js
+(echo "/* packTest4 — built file: movespack/zpackTest4.body.js only. Rebuild: movespack/build.sh */"; cat $D/movespack/zpackTest4.body.js) > $D/mv/sets/zpackTest4.js
+(echo "/* packTest5 — built file: movespack/zpackTest5.body.js only. Rebuild: movespack/build.sh */"; cat $D/movespack/zpackTest5.body.js) > $D/mv/sets/zpackTest5.js
+(echo "/* packTest6 — built file: movespack/zpackTest6.body.js only. Rebuild: movespack/build.sh */"; cat $D/movespack/zpackTest6.body.js) > $D/mv/sets/zpackTest6.js
+SETS="${*:-packTest packTest2 packTest3 packTest4 packTest5 packTest6}"
+cd $D/mv && timeout 1500 node run9.js $SETS 2>&1 | tail -60

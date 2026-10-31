@@ -1,0 +1,20 @@
+{
+  "body": "Asked by Plan (Moves needs them): the game's Pet Shop sells a frisbee and a toy mouse but they had no 3D model.\nFrisbee: a soft disc with a rim, white rings and a paw, 4 colours (about 25 cm).\nToy mouse: a small grey mouse with pink ears and a long tail, 3 colours (about 30 cm with the tail).\nDecide in Model Compare → Toys (🔔).",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793459984853,
+    "id": "only-toy-frisbee"
+  },
+  "comments": [],
+  "created": 1793460200000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [],
+  "short": "Pick: frisbee and toy mouse",
+  "source": "board plan-20261031-toys-gear",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Toys: frisbee (monkey) and toy mouse (snake)",
+  "updated": 1793460200000
+}

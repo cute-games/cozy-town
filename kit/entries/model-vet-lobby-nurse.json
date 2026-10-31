@@ -1,0 +1,22 @@
+{
+  "body": "Lobby desk: Nurse Penny (white coat, clipboard).\nThe vet: Dr. Rūta (older, round glasses). Your words 1 Nov: Dr. Rūta, not Dr. Fern.\nDr. Tomas and Vet nurse Leo also work there. No new model.",
+  "ch": "living",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793403700000,
+      "text": "Done: Leo is the lobby nurse. Sent to Plan and Game rules."
+    }
+  ],
+  "created": 1793397093496,
+  "id": "model-vet-lobby-nurse",
+  "kind": "model",
+  "needs": [],
+  "order": 10,
+  "short": "Lobby nurse = Nurse Penny. Vet = Dr. Rūta",
+  "source": "chat 30 Oct: board rows from Game rules and Plan (lobby nurse)",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Lobby nurse (vet station)",
+  "updated": 1793485000000
+}

@@ -1,0 +1,21 @@
+{
+  "body": "Stan's 5-step lesson (you OK'd it) needs a blue and a red flag in the jump field.\nNew (book v162): a 1.5 m wooden pole stuck in a little sand mound, yellow knob on top, a pennant flag; Colour option Blue / Red. Model Compare → Farm Lane · training field.\nPick in Model Compare (🔔).",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793482474781,
+    "id": "only-course-flag"
+  },
+  "comments": [],
+  "created": 1793482550000,
+  "id": "objects-lesson-flag",
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [],
+  "short": "OK'd: both flags kept, blue and red (can be used for other things later)",
+  "source": "board map-20261031-lesson-models",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "New: blue and red lesson flags for Stan's lesson",
+  "updated": 1793482550000
+}

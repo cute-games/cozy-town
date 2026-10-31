@@ -1,0 +1,51 @@
+{
+  "blockedBy": "",
+  "body": "First trick = known from the start. Shared moves (the game's 6 today: Spin, Big jump, Flip, Dance, Roll over, High five) get settings per pet (size, speed, which parts move). Gear tricks play on the pet's yard gear.\n- Dog, pug, pomchi, sausage dog: High five · Agility jump · Roll over\n- Cat: Spin · Tower climb and leap down · High five (paw wave)\n- Bunny: Big jump (happy hop) · Hurdle hops · Spin\n- Hamster: Spin · Maze run in and out · Roll over (ball curl)\n- Capybara: Dance (slow sway) · Spin · Roll over. Gear unknown.\n- Duck: Dance (waddle) · Big jump with wing flap · Spin. Gear unknown.\n- Owl: Head turn · Perch hop, wings open · Spin\n- Monkey: Clap · Swing on the monkey bars · Flip\n- Seal: Flipper clap · Ball on the nose · Roll over\n- Bear: Sit up and wave · Walk the log · Roll over\n- Snake: Sway to the flute · Rise from the charmer basket · Coil spin\nDuck and owl wings and a snake tongue now exist (Living chat, 31 Oct), so those tricks can use them.\nPlan only today: the GIF comes after your OK.\nA) All four dogs share one set\nB) Each dog gets its own first trick",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793462400000,
+      "text": "Picked in chat: A) All four dogs share one set"
+    },
+    {
+      "act": "chat",
+      "at": 1793462400000,
+      "text": "Approved: you decided it in chat (31 Oct): 3 tricks per pet, dogs share one set.\nPictures come next."
+    },
+    {
+      "act": "chat",
+      "at": 1793467300000,
+      "text": "Done: all tricks for 14 pets (dogs share one set); check found no big problems.\nLeftover: High five paw only reaches the chin (short legs)."
+    },
+    {
+      "act": "approve",
+      "at": 1793480306595,
+      "text": ""
+    },
+    {
+      "act": "chat",
+      "at": 1793480775701,
+      "text": "Fixed: the trio now uses the pomchi you kept (today's), not the rejected new one.\nIts tail stays on; checked in every frame."
+    }
+  ],
+  "created": 1793459629784,
+  "id": "moves-show-tricks",
+  "kind": "task",
+  "needs": [
+    "rules-tricks",
+    "pet-dec-17",
+    "moves-pet-yard-gear"
+  ],
+  "order": 126,
+  "pics": [
+    "img/moves15-tricksA.gif",
+    "img/moves13-tricksB.gif"
+  ],
+  "short": "All 33 Pet Show tricks in pictures. OK?",
+  "source": "Board rules-20261031-tricks-ok-moves (rules-tricks approved 31 Oct)",
+  "stage": "pfu-5",
+  "status": "approved",
+  "title": "Pet Show tricks per pet",
+  "updated": 1793480775701
+}

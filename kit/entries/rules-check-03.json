@@ -1,0 +1,24 @@
+{
+  "blockedBy": "",
+  "body": "Pick:\n1. Bear and seal are real size and follow you into every shop, house and classroom (pets jump to you at every door).\nA) They wait outside buildings\nB) They stay home, come only when called\nC) They follow everywhere, like today\nFixes:\n2. Ribbon is per pet, license per player. Fix: one healthy week per player (no pet sick, care on 3+ days): all your pets wear the ribbon and it counts for the license.\n3. The live game already allows 10 pets on yard level 1. Fix: yard levels never limit how many pets you keep.\n4. Several things missing at once. Fix: Ms. Paws names the first one, in order: Pet care level, pet yard level, home, license.\n5. A license is never taken away.\n6. Top 3 of 4 pets = everyone but last place. License 1 and 2 are easy; the bear's 1st place and the healthy weeks are the real test. No change.\nIdeas:\n7. License card in 🐾 My pets: your level and what's next.\n8. Sir Barkley hands it over on the Pet Show podium.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793402471510,
+      "text": "Done: your answers in chat, 31 Oct (1 A, fixes OK, ideas OK).\nWritten into the rules."
+    }
+  ],
+  "created": 1793402309878,
+  "id": "rules-check-03",
+  "kind": "rule",
+  "needs": [],
+  "old": true,
+  "order": 320,
+  "short": "Rules check 3: 5 fixes, 1 pick, 2 ideas",
+  "source": "chat 31 Oct 2026: Game rules red team (Karolis asked)",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Rules check 3: big-needs pets, license, yard",
+  "updated": 1793402471510
+}

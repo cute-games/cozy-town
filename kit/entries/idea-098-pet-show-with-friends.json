@@ -1,0 +1,25 @@
+{
+  "blockedBy": "",
+  "body": "#: 98\nIdea: Pet Show with friends\nFrom: Gamers Board (24 Oct)\nStatus: Wish list\nNotes: \nSource status: Wish list",
+  "ch": "ideas",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793459564603,
+      "text": "Approved: you decided it in chat (30 Oct).\nHow it works: Game rules entry 'Pet Show with friends'."
+    }
+  ],
+  "created": 1793323126942,
+  "id": "idea-098-pet-show-with-friends",
+  "kind": "idea",
+  "needs": [
+    "rules-pet-show-friends"
+  ],
+  "order": 99,
+  "short": "Pet Show with friends: planned for pet update stage 5",
+  "source": "IDEA's PAGE › Ideas",
+  "stage": "pfu-5",
+  "status": "approved",
+  "title": "Idea 98: Pet Show with friends",
+  "updated": 1793459564603
+}

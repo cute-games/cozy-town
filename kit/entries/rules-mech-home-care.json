@@ -1,0 +1,40 @@
+{
+  "blockedBy": "",
+  "body": "Fill the bowl, put out a toy: pets at home lose happiness at half speed. One food keeps the bowl full for one game day of play.\nWhy: 7 of your 10 pets stay home. Without this they get sick while you're out.\nUses the bowls and toy box already made.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793396474945,
+      "text": "Done: approved by you in chat, 30 Oct."
+    },
+    {
+      "act": "chat",
+      "at": 1793397700275,
+      "text": "Done: worded for the two needs, 31 Oct."
+    },
+    {
+      "act": "chat",
+      "at": 1793408087606,
+      "text": "Done: worded for one need (happiness)."
+    },
+    {
+      "act": "chat",
+      "at": 1793458112931,
+      "text": "Done: the bowl lasts one game day of play (rules check 5)."
+    }
+  ],
+  "created": 1793395983846,
+  "id": "rules-mech-home-care",
+  "kind": "rule",
+  "needs": [
+    "rules-sickness"
+  ],
+  "order": 298,
+  "short": "Pets at home eat from the bowl, play with home toys",
+  "source": "chat 30 Oct 2026: Game rules red team, suggested mechanic",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Pets at home eat from the bowl and play with home toys",
+  "updated": 1793458112931
+}

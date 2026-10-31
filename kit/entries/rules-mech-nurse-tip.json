@@ -1,0 +1,35 @@
+{
+  "blockedBy": "",
+  "body": "Walk in with any pet. Nurse Penny (lobby desk) says in one line what it wants.\nWhy: kids learn the body language before a pet gets sick.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793396474945,
+      "text": "Done: approved by you in chat, 30 Oct."
+    },
+    {
+      "act": "chat",
+      "at": 1793407889299,
+      "text": "Done: the nurse is Leo."
+    },
+    {
+      "act": "chat",
+      "at": 1793485139560,
+      "text": "Done: the tip comes from Nurse Penny at the lobby desk (1 Nov)."
+    }
+  ],
+  "created": 1793395983846,
+  "id": "rules-mech-nurse-tip",
+  "kind": "rule",
+  "needs": [
+    "rules-vet-visit"
+  ],
+  "order": 301,
+  "short": "Free quick tip from the nurse about any pet",
+  "source": "chat 30 Oct 2026: Game rules red team, suggested mechanic",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Free quick tip from the nurse about any pet",
+  "updated": 1793485139560
+}

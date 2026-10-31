@@ -1,0 +1,1847 @@
+{
+ "made": "31 Oct 2026 (book v162)",
+ "by": "Non-living things models chat",
+ "unit": "size_m in metres (1 m = 1.23 game units), bounding box x/y/z",
+ "items": [
+  {
+   "card": "only-farm-brush",
+   "group": "Farm Lane \u00b7 stable",
+   "name": "Grooming brush (Ieva)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "farm:brush",
+   "opts": {},
+   "meshes": 47,
+   "size_m": [
+    0.23,
+    0.12,
+    0.11
+   ]
+  },
+  {
+   "card": "only-acc-orange",
+   "group": "Pet accessories",
+   "name": "Orange",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "acc:orange",
+   "opts": {
+    "pet": "capybara"
+   },
+   "meshes": 47,
+   "size_m": [
+    0.73,
+    0.98,
+    1.02
+   ]
+  },
+  {
+   "card": "only-acc-sprout",
+   "group": "Pet accessories",
+   "name": "Green sprout",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "acc:sprout",
+   "opts": {
+    "pet": "capybara"
+   },
+   "meshes": 48,
+   "size_m": [
+    0.73,
+    0.95,
+    1.02
+   ]
+  },
+  {
+   "card": "only-acc-boba",
+   "group": "Pet accessories",
+   "name": "Bubble tea",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "acc:boba",
+   "opts": {
+    "pet": "capybara"
+   },
+   "meshes": 57,
+   "size_m": [
+    0.73,
+    1.09,
+    1.02
+   ]
+  },
+  {
+   "card": "only-acc-honey",
+   "group": "Pet accessories",
+   "name": "Honey pot",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "acc:honey",
+   "opts": {
+    "pet": "capybara"
+   },
+   "meshes": 55,
+   "size_m": [
+    0.73,
+    1.11,
+    1.02
+   ]
+  },
+  {
+   "card": "petbed_small",
+   "group": "Pet needs",
+   "name": "Pet bed",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "bed",
+   "opts": {
+    "size": "s"
+   },
+   "meshes": 5,
+   "size_m": [
+    0.54,
+    0.21,
+    0.54
+   ]
+  },
+  {
+   "card": "petbed_medium",
+   "group": "Pet needs",
+   "name": "Pet bed",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "bed",
+   "opts": {
+    "size": "m"
+   },
+   "meshes": 5,
+   "size_m": [
+    0.75,
+    0.23,
+    0.75
+   ]
+  },
+  {
+   "card": "petbed_large",
+   "group": "Pet needs",
+   "name": "Pet bed",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "bed",
+   "opts": {
+    "size": "l"
+   },
+   "meshes": 5,
+   "size_m": [
+    1.06,
+    0.26,
+    1.06
+   ]
+  },
+  {
+   "card": "foodbowl_empty",
+   "group": "Pet needs",
+   "name": "Food bowl",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "foodbowl",
+   "opts": {
+    "full": "0"
+   },
+   "meshes": 6,
+   "size_m": [
+    0.35,
+    0.12,
+    0.35
+   ]
+  },
+  {
+   "card": "foodbowl_full",
+   "group": "Pet needs",
+   "name": "Food bowl",
+   "pick": "claude",
+   "note": "okay, but make a bit less food.",
+   "source": "claude",
+   "id": "foodbowl",
+   "opts": {
+    "full": "1"
+   },
+   "meshes": 95,
+   "size_m": [
+    0.35,
+    0.16,
+    0.35
+   ]
+  },
+  {
+   "card": "waterbowl",
+   "group": "Pet needs",
+   "name": "Water bowl",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "waterbowl",
+   "opts": {},
+   "meshes": 3,
+   "size_m": [
+    0.27,
+    0.09,
+    0.27
+   ]
+  },
+  {
+   "card": "pettoybox",
+   "group": "Pet needs",
+   "name": "Pet toy box",
+   "pick": "claude",
+   "note": "but chatgpts is better with open top",
+   "source": "claude",
+   "id": "toybox",
+   "opts": {},
+   "meshes": 55,
+   "size_m": [
+    0.62,
+    0.45,
+    0.45
+   ]
+  },
+  {
+   "card": "only-doghouse",
+   "group": "Pet needs",
+   "name": "Dog house",
+   "pick": "claude",
+   "note": "better",
+   "source": "claude",
+   "id": "doghouse",
+   "opts": {},
+   "meshes": 51,
+   "size_m": [
+    1,
+    1.09,
+    1.04
+   ]
+  },
+  {
+   "card": "petball",
+   "group": "Toys",
+   "name": "Ball",
+   "pick": "chatgpt",
+   "note": "",
+   "source": "chatgpt",
+   "id": "petball",
+   "opts": {},
+   "meshes": 3,
+   "size_m": [
+    0.19,
+    0.19,
+    0.19
+   ]
+  },
+  {
+   "card": "ropetoy",
+   "group": "Toys",
+   "name": "Rope toy",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "toy:rope",
+   "opts": {},
+   "meshes": 11,
+   "size_m": [
+    0.29,
+    0.08,
+    0.08
+   ]
+  },
+  {
+   "card": "squeakybone",
+   "group": "Toys",
+   "name": "Squeaky bone",
+   "pick": "chatgpt",
+   "note": "Bu tclaudes nicer jsut the middle part is too brickky",
+   "source": "chatgpt",
+   "id": "squeakybone",
+   "opts": {},
+   "meshes": 10,
+   "size_m": [
+    0.29,
+    0.08,
+    0.13
+   ]
+  },
+  {
+   "card": "yarnball",
+   "group": "Toys",
+   "name": "Yarn ball",
+   "pick": "chatgpt",
+   "note": "",
+   "source": "chatgpt",
+   "id": "yarnball",
+   "opts": {},
+   "meshes": 6,
+   "size_m": [
+    0.23,
+    0.16,
+    0.16
+   ]
+  },
+  {
+   "card": "chewstick",
+   "group": "Toys",
+   "name": "Chew stick",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "toy:stick",
+   "opts": {},
+   "meshes": 10,
+   "size_m": [
+    0.25,
+    0.07,
+    0.07
+   ]
+  },
+  {
+   "card": "feathertoy",
+   "group": "Toys",
+   "name": "Feather toy",
+   "pick": "chatgpt",
+   "note": "",
+   "source": "chatgpt",
+   "id": "feathertoy",
+   "opts": {},
+   "meshes": 7,
+   "size_m": [
+    0.09,
+    0.03,
+    0.27
+   ]
+  },
+  {
+   "card": "only-toy-frisbee",
+   "group": "Toys",
+   "name": "Frisbee (monkey toy)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "toy:frisbee",
+   "opts": {},
+   "meshes": 9,
+   "size_m": [
+    0.26,
+    0.03,
+    0.26
+   ]
+  },
+  {
+   "card": "only-toy-mouse",
+   "group": "Toys",
+   "name": "Toy mouse (snake toy)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "toy:mouse",
+   "opts": {},
+   "meshes": 15,
+   "size_m": [
+    0.11,
+    0.11,
+    0.31
+   ]
+  },
+  {
+   "card": "climbingtree",
+   "group": "Pet homes",
+   "name": "Climbing tree (monkey home)",
+   "pick": "claude",
+   "note": "i like the jungle giant",
+   "source": "claude",
+   "id": "home:tree",
+   "opts": {
+    "look": "jungle"
+   },
+   "meshes": 402,
+   "size_m": [
+    7.28,
+    9.16,
+    7.79
+   ]
+  },
+  {
+   "card": "petpond",
+   "group": "Pet homes",
+   "name": "Pond (seal home)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "home:pond",
+   "opts": {},
+   "meshes": 64,
+   "size_m": [
+    5.12,
+    0.79,
+    4.6
+   ]
+  },
+  {
+   "card": "caveden",
+   "group": "Pet homes",
+   "name": "Cave den (bear home)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "home:den",
+   "opts": {},
+   "meshes": 26,
+   "size_m": [
+    3.7,
+    2.47,
+    2.82
+   ]
+  },
+  {
+   "card": "warmtank",
+   "group": "Pet homes",
+   "name": "Snake terrarium (indoor, open front, adult size)",
+   "pick": "claude",
+   "note": "31 Oct: all terrarium approved (adult size, open front, all colours). Earlier: Need something open not a cage. Something like charmer basket",
+   "source": "claude",
+   "id": "home:tank",
+   "opts": {
+    "light": "day"
+   },
+   "lights": "all 11 light colours approved: day,warm,uv,cyber,pink,sun,sky,mint,lilac,coral,off (opts.light)",
+   "meshes": 97,
+   "size_m": [
+    2.08,
+    1.04,
+    0.78
+   ]
+  },
+  {
+   "card": "dogagility",
+   "group": "Training gear",
+   "name": "Dog agility course",
+   "pick": "both",
+   "note": "both are nice but needs to be interactive",
+   "source": "claude",
+   "id": "train:dog",
+   "opts": {},
+   "meshes": 28,
+   "size_m": [
+    3.32,
+    0.88,
+    1.56
+   ]
+  },
+  {
+   "card": "dogagility",
+   "group": "Training gear",
+   "name": "Dog agility course",
+   "pick": "both",
+   "note": "both are nice but needs to be interactive",
+   "source": "chatgpt",
+   "id": "dogagility",
+   "opts": {},
+   "meshes": 64,
+   "size_m": [
+    3.06,
+    0.75,
+    1.89
+   ]
+  },
+  {
+   "card": "catwandtower",
+   "group": "Training gear",
+   "name": "Cat tower with feather wand",
+   "pick": "both",
+   "note": "both are nice needs to be intereacitve",
+   "source": "claude",
+   "id": "train:cat",
+   "opts": {},
+   "meshes": 35,
+   "size_m": [
+    1,
+    1.36,
+    0.67
+   ]
+  },
+  {
+   "card": "catwandtower",
+   "group": "Training gear",
+   "name": "Cat tower with feather wand",
+   "pick": "both",
+   "note": "both are nice needs to be intereacitve",
+   "source": "chatgpt",
+   "id": "catwandtower",
+   "opts": {},
+   "meshes": 22,
+   "size_m": [
+    1.02,
+    1.51,
+    0.78
+   ]
+  },
+  {
+   "card": "bunnyhurdles",
+   "group": "Training gear",
+   "name": "Bunny hop hurdles",
+   "pick": "both",
+   "note": "both are nice needs to be intereacitve",
+   "source": "claude",
+   "id": "train:bunny",
+   "opts": {},
+   "meshes": 30,
+   "size_m": [
+    0.71,
+    0.33,
+    1.77
+   ]
+  },
+  {
+   "card": "bunnyhurdles",
+   "group": "Training gear",
+   "name": "Bunny hop hurdles",
+   "pick": "both",
+   "note": "both are nice needs to be intereacitve",
+   "source": "chatgpt",
+   "id": "bunnyhurdles",
+   "opts": {},
+   "meshes": 33,
+   "size_m": [
+    0.88,
+    0.44,
+    1.27
+   ]
+  },
+  {
+   "card": "hamsterplay",
+   "group": "Training gear",
+   "name": "Hamster wheel and tube maze",
+   "pick": "claude",
+   "note": "both are nice needs to be intereacitve",
+   "source": "claude",
+   "id": "train:hamster",
+   "opts": {},
+   "meshes": 26,
+   "size_m": [
+    0.75,
+    0.5,
+    0.43
+   ]
+  },
+  {
+   "card": "monkeybars",
+   "group": "Training gear",
+   "name": "Monkey climbing bars and rings",
+   "pick": "both",
+   "note": "both are nice needs to be intereacitve",
+   "source": "claude",
+   "id": "train:monkey",
+   "opts": {},
+   "meshes": 34,
+   "size_m": [
+    1.71,
+    1.35,
+    0.94
+   ]
+  },
+  {
+   "card": "monkeybars",
+   "group": "Training gear",
+   "name": "Monkey climbing bars and rings",
+   "pick": "both",
+   "note": "both are nice needs to be intereacitve",
+   "source": "chatgpt",
+   "id": "monkeybars",
+   "opts": {},
+   "meshes": 78,
+   "size_m": [
+    1.55,
+    1.53,
+    1.24
+   ]
+  },
+  {
+   "card": "sealballstand",
+   "group": "Training gear",
+   "name": "Seal beach ball (for the pond)",
+   "pick": "claude",
+   "note": "Just give him a ball and pond to chill in",
+   "source": "claude",
+   "id": "train:seal",
+   "opts": {},
+   "meshes": 11,
+   "size_m": [
+    0.48,
+    0.48,
+    0.48
+   ]
+  },
+  {
+   "card": "bearlogtyre",
+   "group": "Training gear",
+   "name": "Bear log and tyre swing",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "train:bear",
+   "opts": {},
+   "meshes": 14,
+   "size_m": [
+    2.9,
+    1.83,
+    0.85
+   ]
+  },
+  {
+   "card": "snakebasket",
+   "group": "Training gear",
+   "name": "Snake flute and woven basket",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "train:snake",
+   "opts": {},
+   "meshes": 20,
+   "size_m": [
+    1.43,
+    0.38,
+    0.69
+   ]
+  },
+  {
+   "card": "only-train-capybara",
+   "group": "Training gear",
+   "name": "Capybara zen bath",
+   "pick": "claude",
+   "note": "moe sauna like chilll with green leaves more zen",
+   "source": "claude",
+   "id": "train:capybara",
+   "opts": {},
+   "meshes": 128,
+   "size_m": [
+    1.88,
+    1.16,
+    1.65
+   ]
+  },
+  {
+   "card": "only-train-duck",
+   "group": "Training gear",
+   "name": "Duck ramp and splash tub",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "train:duck",
+   "opts": {},
+   "meshes": 14,
+   "size_m": [
+    1.59,
+    0.37,
+    0.76
+   ]
+  },
+  {
+   "card": "only-train-owl",
+   "group": "Training gear",
+   "name": "Owl perch with flight hoops",
+   "pick": "claude",
+   "note": "all toys and stations needs to be interactive by respective animals",
+   "source": "claude",
+   "id": "train:owl",
+   "opts": {},
+   "meshes": 18,
+   "size_m": [
+    1.73,
+    1.45,
+    0.59
+   ]
+  },
+  {
+   "card": "only-fx-hearts",
+   "group": "Mood effects",
+   "name": "Little hearts",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "fx:hearts",
+   "opts": {},
+   "meshes": 18,
+   "size_m": [
+    0.34,
+    0.29,
+    0.1
+   ]
+  },
+  {
+   "card": "only-fx-sparkle",
+   "group": "Mood effects",
+   "name": "Sparkle",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "fx:sparkle",
+   "opts": {},
+   "meshes": 8,
+   "size_m": [
+    0.35,
+    0.31,
+    0.12
+   ]
+  },
+  {
+   "card": "only-fx-zzz",
+   "group": "Mood effects",
+   "name": "Zzz",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "fx:zzz",
+   "opts": {},
+   "meshes": 18,
+   "size_m": [
+    0.31,
+    0.34,
+    0.04
+   ]
+  },
+  {
+   "card": "only-shop-building",
+   "group": "Pet Shop \u00b7 building",
+   "name": "Pet Shop (outside, 3 floors)",
+   "pick": "claude",
+   "note": "all aproved (said in chat)",
+   "source": "claude",
+   "id": "shop:building",
+   "opts": {},
+   "meshes": 417,
+   "size_m": [
+    11.77,
+    8.27,
+    9.47
+   ]
+  },
+  {
+   "card": "only-shop-pc_counter",
+   "group": "Pet Shop \u00b7 inside",
+   "name": "Pet Shop counter",
+   "pick": "claude",
+   "note": "all aproved (said in chat)",
+   "source": "claude",
+   "id": "shop:pc_counter",
+   "opts": {},
+   "meshes": 21,
+   "size_m": [
+    2.21,
+    1.16,
+    0.67
+   ]
+  },
+  {
+   "card": "only-shop-dogsofa",
+   "group": "Pet Shop \u00b7 inside",
+   "name": "Dog corner: rug + low sofa",
+   "pick": "claude",
+   "note": "all aproved (said in chat)",
+   "source": "claude",
+   "id": "shop:dogsofa",
+   "opts": {},
+   "meshes": 17,
+   "size_m": [
+    2.2,
+    0.49,
+    2.21
+   ]
+  },
+  {
+   "card": "only-shop-catseat",
+   "group": "Pet Shop \u00b7 inside",
+   "name": "Cat window seat + cat tree",
+   "pick": "claude",
+   "note": "all aproved (said in chat)",
+   "source": "claude",
+   "id": "shop:catseat",
+   "opts": {},
+   "meshes": 21,
+   "size_m": [
+    2.66,
+    1.75,
+    0.67
+   ]
+  },
+  {
+   "card": "only-shop-playhill",
+   "group": "Pet Shop \u00b7 inside",
+   "name": "Bunny + hamster play hill",
+   "pick": "claude",
+   "note": "all aproved (said in chat)",
+   "source": "claude",
+   "id": "shop:playhill",
+   "opts": {},
+   "meshes": 28,
+   "size_m": [
+    3.28,
+    1.16,
+    2.63
+   ]
+  },
+  {
+   "card": "only-shop-capytub",
+   "group": "Pet Shop \u00b7 inside",
+   "name": "Capybara warm tub",
+   "pick": "claude",
+   "note": "all aproved (said in chat)",
+   "source": "claude",
+   "id": "shop:capytub",
+   "opts": {},
+   "meshes": 26,
+   "size_m": [
+    2.25,
+    0.73,
+    1.72
+   ]
+  },
+  {
+   "card": "only-shop-duckpond",
+   "group": "Pet Shop \u00b7 inside",
+   "name": "Duck pond with a bridge",
+   "pick": "claude",
+   "note": "all aproved (said in chat)",
+   "source": "claude",
+   "id": "shop:duckpond",
+   "opts": {},
+   "meshes": 39,
+   "size_m": [
+    2.05,
+    0.87,
+    2.05
+   ]
+  },
+  {
+   "card": "only-shop-tree",
+   "group": "Pet Shop \u00b7 inside",
+   "name": "Shop tree (owl branch, monkey ropes)",
+   "pick": "claude",
+   "note": "all aproved (said in chat)",
+   "source": "claude",
+   "id": "shop:tree",
+   "opts": {},
+   "meshes": 54,
+   "size_m": [
+    3.11,
+    9.09,
+    3.15
+   ]
+  },
+  {
+   "card": "only-shop-bearlounge",
+   "group": "Pet Shop \u00b7 inside",
+   "name": "Bear lounge: sofa + TV",
+   "pick": "claude",
+   "note": "all aproved (said in chat)",
+   "source": "claude",
+   "id": "shop:bearlounge",
+   "opts": {},
+   "meshes": 32,
+   "size_m": [
+    3.14,
+    1.44,
+    2.82
+   ]
+  },
+  {
+   "card": "only-shop-sealpool",
+   "group": "Pet Shop \u00b7 inside",
+   "name": "Seal pool with a slide",
+   "pick": "claude",
+   "note": "all aproved (said in chat)",
+   "source": "claude",
+   "id": "shop:sealpool",
+   "opts": {},
+   "meshes": 29,
+   "size_m": [
+    3.78,
+    1.51,
+    2.14
+   ]
+  },
+  {
+   "card": "only-shop-monkeyframe",
+   "group": "Pet Shop \u00b7 inside",
+   "name": "Monkey climbing frame",
+   "pick": "claude",
+   "note": "all aproved (said in chat)",
+   "source": "claude",
+   "id": "shop:monkeyframe",
+   "opts": {},
+   "meshes": 55,
+   "size_m": [
+    1.74,
+    2.16,
+    1.09
+   ]
+  },
+  {
+   "card": "only-shop-room",
+   "group": "Pet Shop \u00b7 inside",
+   "name": "Pet Shop inside (3 floors, one open room)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "shop:room",
+   "opts": {
+    "floor": "3",
+    "pets": "no"
+   },
+   "meshes": 914,
+   "size_m": [
+    11.43,
+    9.09,
+    8.18
+   ]
+  },
+  {
+   "card": "only-vet-table",
+   "group": "Pet clinic",
+   "name": "Exam table",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "vet:table",
+   "opts": {},
+   "meshes": 23,
+   "size_m": [
+    1.53,
+    1.7,
+    0.65
+   ]
+  },
+  {
+   "card": "only-vet-scale",
+   "group": "Pet clinic",
+   "name": "Pet scale",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "vet:scale",
+   "opts": {},
+   "meshes": 13,
+   "size_m": [
+    0.67,
+    0.98,
+    0.5
+   ]
+  },
+  {
+   "card": "only-vet-shelf",
+   "group": "Pet clinic",
+   "name": "Medicine shelf",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "vet:shelf",
+   "opts": {},
+   "meshes": 88,
+   "size_m": [
+    1.19,
+    1.54,
+    0.33
+   ]
+  },
+  {
+   "card": "only-vet-counter",
+   "group": "Pet clinic",
+   "name": "Front desk",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "vet:counter",
+   "opts": {},
+   "meshes": 24,
+   "size_m": [
+    1.73,
+    1.11,
+    0.59
+   ]
+  },
+  {
+   "card": "only-vet-bench",
+   "group": "Pet clinic",
+   "name": "Waiting seats",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "vet:bench",
+   "opts": {},
+   "meshes": 28,
+   "size_m": [
+    1.48,
+    0.85,
+    0.43
+   ]
+  },
+  {
+   "card": "only-vet-bigtable",
+   "group": "Pet clinic",
+   "name": "Big-pet exam platform",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "vet:bigtable",
+   "opts": {},
+   "meshes": 23,
+   "size_m": [
+    3.46,
+    2.08,
+    1.28
+   ]
+  },
+  {
+   "card": "only-vet-coffee",
+   "group": "Pet clinic",
+   "name": "Staff coffee table",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "vet:coffee",
+   "opts": {},
+   "meshes": 44,
+   "size_m": [
+    1.77,
+    0.57,
+    1.77
+   ]
+  },
+  {
+   "card": "only-vet-treat",
+   "group": "Pet clinic",
+   "name": "Pet treat (from the nurse)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "vet:treat",
+   "opts": {},
+   "meshes": 10,
+   "size_m": [
+    0.15,
+    0.05,
+    0.08
+   ]
+  },
+  {
+   "card": "only-vet-room",
+   "group": "Pet clinic",
+   "name": "Vet clinic inside (2 floors)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "vet:room",
+   "opts": {},
+   "meshes": 660,
+   "size_m": [
+    8.99,
+    5.14,
+    6.55
+   ]
+  },
+  {
+   "card": "only-vet-clinic",
+   "group": "Pet clinic",
+   "name": "Vet clinic (outside)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "vet:clinic",
+   "opts": {},
+   "meshes": 318,
+   "size_m": [
+    10.35,
+    8.07,
+    8.86
+   ]
+  },
+  {
+   "card": "only-show-podium",
+   "group": "Pet Show",
+   "name": "Pet Show podium (1st, 2nd, 3rd)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "show:podium",
+   "opts": {},
+   "meshes": 25,
+   "size_m": [
+    3.19,
+    0.82,
+    1.3
+   ]
+  },
+  {
+   "card": "only-show-stage",
+   "group": "Pet Show",
+   "name": "Pet Show stage for Sir Barkley",
+   "pick": "claude",
+   "note": "31 Oct: Pet show stage is nice too. But podium cannot be in the way of the stage (blocks the show view). Area reworked: card show:area.",
+   "source": "claude",
+   "id": "show:stage",
+   "opts": {
+    "with": "stage"
+   },
+   "meshes": 112,
+   "size_m": [
+    3.8,
+    2.81,
+    1.83
+   ]
+  },
+  {
+   "card": "only-show-license",
+   "group": "Pet Show",
+   "name": "Animal license card (hand-held)",
+   "pick": "claude",
+   "note": "31 Oct: licence card - nice.",
+   "source": "claude",
+   "id": "show:license",
+   "opts": {},
+   "meshes": 4,
+   "size_m": [
+    0.3,
+    0.2,
+    0.02
+   ]
+  },
+  {
+   "card": "only-show-judges",
+   "group": "Pet Show",
+   "name": "Judges' table (3 judges)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "show:judges",
+   "opts": {},
+   "meshes": 72,
+   "size_m": [
+    2.46,
+    0.9,
+    1.05
+   ]
+  },
+  {
+   "card": "only-show-area",
+   "group": "Pet Show",
+   "name": "Pet Show area in Cozy Park (stage, podium, judges)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "show:area",
+   "opts": {
+    "people": "no"
+   },
+   "meshes": 1393,
+   "size_m": [
+    26.64,
+    3.48,
+    26.56
+   ]
+  },
+  {
+   "card": "only-yard-fence",
+   "group": "Backyard",
+   "name": "Pet yard fence",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "yard:fence",
+   "opts": {},
+   "meshes": 12,
+   "size_m": [
+    0.13,
+    0.68,
+    3.38
+   ]
+  },
+  {
+   "card": "only-yard-gate",
+   "group": "Backyard",
+   "name": "Pet yard gate",
+   "pick": "claude",
+   "note": "More english like, but same style and colous as fence ofc",
+   "source": "claude",
+   "id": "yard:gate",
+   "opts": {},
+   "meshes": 33,
+   "size_m": [
+    1.43,
+    0.96,
+    0.17
+   ]
+  },
+  {
+   "card": "only-yard-ground",
+   "group": "Backyard",
+   "name": "Pet yard ground tile",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "yard:ground",
+   "opts": {},
+   "meshes": 1,
+   "size_m": [
+    1.63,
+    0,
+    1.63
+   ]
+  },
+  {
+   "card": "only-yard-path",
+   "group": "Backyard",
+   "name": "Pet yard path",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "yard:path",
+   "opts": {},
+   "meshes": 1,
+   "size_m": [
+    0.81,
+    0,
+    1.63
+   ]
+  },
+  {
+   "card": "only-yard-deco",
+   "group": "Backyard",
+   "name": "Pet yard decoration",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "yard:deco",
+   "opts": {},
+   "meshes": 3,
+   "size_m": [
+    0.32,
+    0.27,
+    0.32
+   ]
+  },
+  {
+   "card": "only-garden-bed",
+   "group": "Backyard",
+   "name": "Garden raised bed (plot 1.8 \u00d7 1.2 m)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "garden:bed",
+   "opts": {},
+   "meshes": 21,
+   "size_m": [
+    1.5,
+    0.22,
+    1.01
+   ]
+  },
+  {
+   "card": "only-garden-pot",
+   "group": "Backyard",
+   "name": "Garden pot (today's pot spot)",
+   "pick": "claude",
+   "note": "more real life like progression but good still redo",
+   "source": "claude",
+   "id": "garden:pot",
+   "opts": {},
+   "meshes": 10,
+   "size_m": [
+    0.47,
+    0.39,
+    0.47
+   ]
+  },
+  {
+   "card": "only-garden-fence",
+   "group": "Backyard",
+   "name": "Garden fence",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "garden:fence",
+   "opts": {},
+   "meshes": 14,
+   "size_m": [
+    0.11,
+    0.72,
+    3.37
+   ]
+  },
+  {
+   "card": "only-garden-path",
+   "group": "Backyard",
+   "name": "Garden path",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "garden:path",
+   "opts": {},
+   "meshes": 6,
+   "size_m": [
+    0.49,
+    0.04,
+    1.58
+   ]
+  },
+  {
+   "card": "only-garden-edge",
+   "group": "Backyard",
+   "name": "Edge flowers",
+   "pick": "claude",
+   "note": "pls more beutiful like ral magestic flowers",
+   "source": "claude",
+   "id": "garden:edge",
+   "opts": {},
+   "meshes": 61,
+   "size_m": [
+    1.63,
+    0.35,
+    0.24
+   ]
+  },
+  {
+   "card": "only-yard-design",
+   "group": "Backyard",
+   "name": "Backyard: pet yard + garden (levels 1-3)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "yard:design",
+   "opts": {
+    "v": "1",
+    "items": "full",
+    "view": "yard"
+   },
+   "meshes": 960,
+   "size_m": [
+    13.9,
+    5.33,
+    34.55
+   ]
+  },
+  {
+   "card": "only-yard-design",
+   "group": "Backyard",
+   "name": "Backyard: pet yard + garden (levels 1-3)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "yard:design",
+   "opts": {
+    "v": "2",
+    "items": "full",
+    "view": "yard"
+   },
+   "meshes": 1305,
+   "size_m": [
+    13.9,
+    5.33,
+    34.55
+   ]
+  },
+  {
+   "card": "only-yard-design",
+   "group": "Backyard",
+   "name": "Backyard: pet yard + garden (levels 1-3)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "yard:design",
+   "opts": {
+    "v": "3",
+    "items": "full",
+    "view": "yard"
+   },
+   "meshes": 3515,
+   "size_m": [
+    13.9,
+    9.74,
+    34.55
+   ]
+  },
+  {
+   "card": "farmstable",
+   "group": "Farm",
+   "name": "Stable with stalls",
+   "pick": "claude",
+   "note": "size is claudes better, openes is chatgpts",
+   "source": "claude",
+   "id": "farm:stable",
+   "opts": {},
+   "meshes": 164,
+   "size_m": [
+    7.92,
+    3.86,
+    4.62
+   ]
+  },
+  {
+   "card": "farmbarn",
+   "group": "Farm",
+   "name": "Barn",
+   "pick": "claude",
+   "note": "needs to be enterable",
+   "source": "claude",
+   "id": "farm:barn",
+   "opts": {},
+   "meshes": 42,
+   "size_m": [
+    7.91,
+    5.19,
+    6.24
+   ]
+  },
+  {
+   "card": "farmcoop",
+   "group": "Farm",
+   "name": "Chicken coop with nesting boxes",
+   "pick": "claude",
+   "note": "but fix the bridge",
+   "source": "claude",
+   "id": "farm:coop",
+   "opts": {},
+   "meshes": 59,
+   "size_m": [
+    2.11,
+    1.98,
+    2.51
+   ]
+  },
+  {
+   "card": "farmpaddock",
+   "group": "Farm",
+   "name": "paddock",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "farm:fence",
+   "opts": {},
+   "meshes": 10,
+   "size_m": [
+    0.16,
+    1.01,
+    3.41
+   ]
+  },
+  {
+   "card": "farmpaddock",
+   "group": "Farm",
+   "name": "paddock",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "farm:gate",
+   "opts": {},
+   "meshes": 14,
+   "size_m": [
+    2.8,
+    1.13,
+    0.2
+   ]
+  },
+  {
+   "card": "farmtrough",
+   "group": "Farm",
+   "name": "Water trough",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "farm:trough",
+   "opts": {},
+   "meshes": 7,
+   "size_m": [
+    1.5,
+    0.29,
+    0.59
+   ]
+  },
+  {
+   "card": "farmhay",
+   "group": "Farm",
+   "name": "Hay bale",
+   "pick": "both",
+   "note": "",
+   "source": "claude",
+   "id": "farm:hay",
+   "opts": {},
+   "meshes": 4,
+   "size_m": [
+    0.86,
+    0.86,
+    0.86
+   ]
+  },
+  {
+   "card": "farmhay",
+   "group": "Farm",
+   "name": "Hay bale",
+   "pick": "both",
+   "note": "",
+   "source": "chatgpt",
+   "id": "farmhay",
+   "opts": {},
+   "meshes": 10,
+   "size_m": [
+    0.76,
+    0.44,
+    0.48
+   ]
+  },
+  {
+   "card": "farmfeedbucket",
+   "group": "Farm",
+   "name": "Feed bucket",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "farm:bucket",
+   "opts": {},
+   "meshes": 4,
+   "size_m": [
+    0.29,
+    0.39,
+    0.3
+   ]
+  },
+  {
+   "card": "farmeggbasket",
+   "group": "Farm",
+   "name": "Egg basket",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "farm:eggs",
+   "opts": {},
+   "meshes": 14,
+   "size_m": [
+    0.31,
+    0.29,
+    0.32
+   ]
+  },
+  {
+   "card": "farmmilkcan",
+   "group": "Farm",
+   "name": "Milk can",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "farm:milk",
+   "opts": {},
+   "meshes": 7,
+   "size_m": [
+    0.28,
+    0.49,
+    0.28
+   ]
+  },
+  {
+   "card": "farmsign",
+   "group": "Farm",
+   "name": "Farm sign",
+   "pick": "chatgpt",
+   "note": "",
+   "source": "chatgpt",
+   "id": "farmsign",
+   "opts": {},
+   "meshes": 21,
+   "size_m": [
+    0.87,
+    0.95,
+    0.27
+   ]
+  },
+  {
+   "card": "only-farm-road",
+   "group": "Farm",
+   "name": "Farm Lane road",
+   "pick": "claude",
+   "note": "same like all roads.. but woudl be nice that inside the farm it changes into dirt paths...",
+   "source": "claude",
+   "id": "farm:road",
+   "opts": {},
+   "meshes": 12,
+   "size_m": [
+    11.38,
+    0.15,
+    13.03
+   ]
+  },
+  {
+   "card": "only-farm-windmill",
+   "group": "Farm",
+   "name": "Farm windmill",
+   "pick": "claude",
+   "note": "do it better, and make it make second version that is like form courage the cowardly dog",
+   "source": "claude",
+   "id": "farm:windmill",
+   "opts": {
+    "v": "old"
+   },
+   "meshes": 309,
+   "size_m": [
+    4.6,
+    10.51,
+    3.45
+   ]
+  },
+  {
+   "card": "only-farm-arch",
+   "group": "Farm",
+   "name": "Farm entrance arch",
+   "pick": "claude",
+   "note": "can tu see? they need one more turn....",
+   "source": "claude",
+   "id": "farm:arch",
+   "opts": {},
+   "meshes": 20,
+   "size_m": [
+    6.29,
+    4.01,
+    0.42
+   ]
+  },
+  {
+   "card": "only-farm-tractor",
+   "group": "Farm",
+   "name": "Old tractor",
+   "pick": "claude",
+   "note": "jeezus plz make it better",
+   "source": "claude",
+   "id": "farm:tractor",
+   "opts": {},
+   "meshes": 319,
+   "size_m": [
+    1.86,
+    2.73,
+    3.62
+   ]
+  },
+  {
+   "card": "only-farm-combine",
+   "group": "Farm",
+   "name": "Old combine harvester",
+   "pick": "claude",
+   "note": "MAKE IT BEETER THIS I SHSIT",
+   "source": "claude",
+   "id": "farm:combine",
+   "opts": {},
+   "meshes": 376,
+   "size_m": [
+    4.29,
+    4.29,
+    7.04
+   ]
+  },
+  {
+   "card": "only-farm-watertower",
+   "group": "Farm",
+   "name": "Water tower",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "farm:watertower",
+   "opts": {},
+   "meshes": 43,
+   "size_m": [
+    2.99,
+    6.95,
+    2.99
+   ]
+  },
+  {
+   "card": "only-course-x",
+   "group": "Horse jump field",
+   "name": "Jump: Crossed poles",
+   "pick": "claude",
+   "note": "the dark parts wtf. needs to be more slim and country like.",
+   "source": "claude",
+   "id": "course:x",
+   "opts": {},
+   "meshes": 28,
+   "size_m": [
+    2.94,
+    1.14,
+    0.28
+   ]
+  },
+  {
+   "card": "only-course-v",
+   "group": "Horse jump field",
+   "name": "Jump: Straight bar",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "course:v",
+   "opts": {},
+   "meshes": 28,
+   "size_m": [
+    2.94,
+    1.14,
+    0.28
+   ]
+  },
+  {
+   "card": "only-course-o",
+   "group": "Horse jump field",
+   "name": "Jump: Wide oxer",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "course:o",
+   "opts": {},
+   "meshes": 49,
+   "size_m": [
+    2.94,
+    1.14,
+    1.18
+   ]
+  },
+  {
+   "card": "only-course-s",
+   "group": "Horse jump field",
+   "name": "Jump: Little cross (ponies)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "course:s",
+   "opts": {},
+   "meshes": 28,
+   "size_m": [
+    2.05,
+    0.53,
+    0.28
+   ]
+  },
+  {
+   "card": "only-course-flag",
+   "group": "Horse jump field",
+   "name": "Lesson flag (blue / red)",
+   "pick": "claude",
+   "note": "31 Oct: red and blue flags are kept because both are good, and can later be used in other things.",
+   "source": "claude",
+   "id": "course:flag",
+   "opts": {
+    "c": "blue"
+   },
+   "meshes": 7,
+   "size_m": [
+    0.71,
+    1.56,
+    0.32
+   ]
+  },
+  {
+   "card": "only-course-flag",
+   "group": "Horse jump field",
+   "name": "Lesson flag (blue / red)",
+   "pick": "claude",
+   "note": "31 Oct: red and blue flags are kept because both are good, and can later be used in other things.",
+   "source": "claude",
+   "id": "course:flag",
+   "opts": {
+    "c": "red"
+   },
+   "meshes": 7,
+   "size_m": [
+    0.71,
+    1.56,
+    0.32
+   ]
+  },
+  {
+   "card": "only-course-log",
+   "group": "Horse jump field",
+   "name": "Little log jump",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "course:log",
+   "opts": {},
+   "meshes": 18,
+   "size_m": [
+    2.53,
+    0.46,
+    0.3
+   ]
+  },
+  {
+   "card": "only-nature-oak",
+   "group": "Nature",
+   "name": "Big old oak",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "nature:oak",
+   "opts": {},
+   "meshes": 18,
+   "size_m": [
+    5.14,
+    5.5,
+    4.74
+   ]
+  },
+  {
+   "card": "only-nature-fir",
+   "group": "Nature",
+   "name": "Tall fir (snow option)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "nature:fir",
+   "opts": {},
+   "meshes": 12,
+   "size_m": [
+    2.38,
+    4.94,
+    2.5
+   ]
+  },
+  {
+   "card": "only-nature-birch",
+   "group": "Nature",
+   "name": "Birch",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "nature:birch",
+   "opts": {},
+   "meshes": 14,
+   "size_m": [
+    2.11,
+    3.77,
+    1.58
+   ]
+  },
+  {
+   "card": "only-nature-shrub",
+   "group": "Nature",
+   "name": "Wild shrub (5 kinds)",
+   "pick": "claude",
+   "note": "",
+   "source": "claude",
+   "id": "nature:shrub",
+   "opts": {},
+   "meshes": 14,
+   "size_m": [
+    1.84,
+    1.06,
+    1.61
+   ]
+  }
+ ]
+}

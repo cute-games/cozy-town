@@ -1,0 +1,60 @@
+{
+  "blockedBy": "",
+  "body": "Build brief. Game rules approved by Karolis 30-31 Oct.\nRIDING (rules-riding): 10 farm horses, nobody owns one. First time: lesson with the horse instructor (paid); rides after are free. One rider per horse; all taken = wait. Ride the trail and jump field; you can leave the trail; near town the horse stops. Get off at the stable: horse to its stall. Leave the game while riding: it walks back. Your pets wait at the stable while you ride. Foals can't be ridden. Friends see you ride.\nFARM ANIMALS: baby or adult only, babies stay babies. Farm dog = sleeping St. Bernard.\nFARM CHORES (rules-farm-chores): eggs and milk once per game day per player.\nTREES: the update removes trees on the trail, roads, jump field and building spots; the rest stay (Map shows before/after).\nPRICES AND HOURS (approved 31 Oct): riding lesson 100 coins once, rides free after. Stable 7:00-21:00 for riding and lessons; at closing riders get off and the horse walks back. Market pays 10 each for farm eggs and milk. Feeding farm animals is free.\nRIDERS: cowboy Cody, Hank and cowgirl Rose (dec-045) are in the living pack (farm:cowboy, farm:cowgirl). Rider ids: claude/pfu-scene-README.md wins over pfu-placements.json.\nWAITING FOR KAROLIS: jump field instructor (map-coach-pick: Ieva, Stan or both). The run must not guess it.\nMOVES: moves-farm-wait-stable, moves-farm-chores (eggs, milk), moves-horse-stall, moves-farm-riders; grazing waits on sheep and cow necks (Living).\nSCREENS: screens-riding (lesson card, tips, stable messages), screens-market-sell (Market pays 10 for eggs and milk).\nPLACEMENTS + SCENE: claude/pfu-placements.json (game metres, city frame) and the Map scene (book db cmp_wb); the run builds the scene loader (wb-10). Farm animals wander in groups near their spots. Feeding farm animals is free (economy-farm-feed).\nPEOPLE (living pack v5): Ieva at the stable lends horses and grooms them (brush model: Objects); first time she sends you to Stan at the jump field. Stan's lesson = 5 steps: get on, walk, trot, small jump, stop (story-ieva-stan, approved); props: blue flag, red flag, little log (Map). Trail riders Cody, Hank, Rose. FARM FEEDING + PETTING with the free feed bucket (moves-farm-feed, approved); pig needs a lower trough (Objects). Horse has no neck: eats from the hand with the head barely lowered (not blocking). MAP: game must match the Area plan 1:1 (vet clinic, truck, slide, farm); horse trail fixed off Friends Lane; keep forest generation as today; files claude/pfu-placements.json + pfu-scene.json (refreshed 31 Oct).",
+  "ch": "plan",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793402295737,
+      "text": "What changed: free rides after lesson; chores; pets wait at stable."
+    },
+    {
+      "act": "approve",
+      "at": 1793402295737,
+      "text": "Approved by Plan: every line you already decided (your rule, 31 Oct). Open picks wait as its needs."
+    },
+    {
+      "act": "chat",
+      "at": 1793410821985,
+      "text": "Added: moves, screens and placements for this stage."
+    },
+    {
+      "act": "chat",
+      "at": 1793459656438,
+      "text": "Plan: lesson price, stable hours, market price in. Still approved.\nWaits: your instructor pick (map-coach-pick)."
+    },
+    {
+      "act": "chat",
+      "at": 1793480741963,
+      "text": "Added: latest moves, people and map notes (31 Oct)."
+    }
+  ],
+  "created": 1793397122256,
+  "id": "plan-brief-pfu-6",
+  "kind": "plan",
+  "needs": [
+    "rules-riding",
+    "rules-farm-chores",
+    "map-farm-area-plan",
+    "map-forest-clear",
+    "economy-riding-lesson-price",
+    "economy-stable-hours",
+    "model-farm-coach",
+    "model-farm-sheep",
+    "model-farm-calf",
+    "model-farm-chick",
+    "model-farm-piglet",
+    "model-farm-joints",
+    "model-farm-trail-riders",
+    "economy-eggs-milk-price",
+    "economy-farm-feed",
+    "map-coach-pick"
+  ],
+  "order": 16,
+  "short": "Stage 6: shared horses, free rides after lesson, chores",
+  "source": "chat 2026-10-30: Plan chat, game rules approved 30 Oct (board rules-20261030-all-approved, -approved2)",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Stage 6 build brief: game rules",
+  "updated": 1793480741963
+}

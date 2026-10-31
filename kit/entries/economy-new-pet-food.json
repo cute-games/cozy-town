@@ -1,0 +1,41 @@
+{
+  "blockedBy": "",
+  "body": "Decided: B, like today's food system.\nMonkey: fruit mix. Seal: fish. Bear: honey & berries. Snake: snake food. 8 coins each.\nEach also eats pet food and treats, like cats and bunnies today (own food first = favourite).\nCost check (Economy): about 1 food a pet a game day; 4 big pets = 32 a day of about 585.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793407500000,
+      "text": "Moved to Game rules (Karolis, 31 Oct). Prices follow whatever rule is picked."
+    },
+    {
+      "act": "chat",
+      "at": 1793407889299,
+      "text": "Done: B, decided by Game rules (same as today's foods: own food + pet food + treats).\nPress Redo to change."
+    },
+    {
+      "act": "chat",
+      "at": 1793408087606,
+      "text": "Red team: see 'Pet food: one rule for all pets'.\nIf you OK it, it replaces this."
+    },
+    {
+      "act": "chat",
+      "at": 1793408639553,
+      "text": "Replaced 31 Oct by 'Pet food: 3 food groups' (you OK'd it)."
+    }
+  ],
+  "created": 1793405330000,
+  "id": "economy-new-pet-food",
+  "kind": "question",
+  "needs": [
+    "rules-dec-two-needs"
+  ],
+  "old": true,
+  "order": 7,
+  "short": "New pets: own food (8 coins), also eat pet food and treats",
+  "source": "chat 2026-10-31: Schedules and economy, gap found checking the update",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Food for the new pets: own food, 8 coins (decided 31 Oct)",
+  "updated": 1793408087606
+}

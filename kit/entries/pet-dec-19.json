@@ -1,0 +1,16 @@
+{
+  "blockedBy": "",
+  "body": "#: 19\nDecision: Need speed\nNotes: About 20 minutes of play from happy to \"wants something\"; about an hour of being ignored to sad. Only while you play",
+  "ch": "rules",
+  "comments": [],
+  "created": 1793323126942,
+  "id": "pet-dec-19",
+  "kind": "decision",
+  "needs": [],
+  "order": 265,
+  "source": "Pet update: plan › Decisions",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Pet decision 19: Need speed",
+  "updated": 1793323126942
+}

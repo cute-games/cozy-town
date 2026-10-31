@@ -1,0 +1,22 @@
+{
+  "body": "Buyable head accessory (Pet Shop). Fits every pet; try it on other animals under \"On\".",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793374000000,
+    "id": "only-acc-orange"
+  },
+  "comments": [],
+  "created": 1793372500000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/acc-orange.jpg"
+  ],
+  "short": "Picked: Pet accessory: Orange (head)",
+  "source": "chat 30 Oct: capybara accessories",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Pet accessory: Orange (head)",
+  "updated": 1793402000000
+}

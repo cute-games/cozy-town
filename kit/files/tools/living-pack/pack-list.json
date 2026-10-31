@@ -1,0 +1,1414 @@
+{
+ "made": "2026-10-31",
+ "by": "Living things models chat",
+ "unit": "size_m in metres (1 m = 1.23 game units), bounding box x/y/z, at the default age",
+ "items": [
+  {
+   "card": "only-pet-monkey",
+   "group": "Pets",
+   "name": "Monkey · Brown capuchin",
+   "id": "pet:monkey",
+   "opts": {
+    "v": "capuchin"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "mouth fas fine, it was more of a borws, but now they are good",
+   "size_m": [
+    0.29,
+    0.76,
+    1
+   ],
+   "meshes": 55
+  },
+  {
+   "card": "only-pet-monkey",
+   "group": "Pets",
+   "name": "Monkey · White-faced capuchin",
+   "id": "pet:monkey",
+   "opts": {
+    "v": "whiteface"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "mouth fas fine, it was more of a borws, but now they are good",
+   "size_m": [
+    0.29,
+    0.76,
+    1
+   ],
+   "meshes": 46
+  },
+  {
+   "card": "only-pet-monkey",
+   "group": "Pets",
+   "name": "Monkey · Squirrel monkey",
+   "id": "pet:monkey",
+   "opts": {
+    "v": "squirrel"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "mouth fas fine, it was more of a borws, but now they are good",
+   "size_m": [
+    0.29,
+    0.76,
+    1
+   ],
+   "meshes": 56
+  },
+  {
+   "card": "only-pet-monkey",
+   "group": "Pets",
+   "name": "Monkey · Vervet monkey",
+   "id": "pet:monkey",
+   "opts": {
+    "v": "vervet"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "mouth fas fine, it was more of a borws, but now they are good",
+   "size_m": [
+    0.29,
+    0.76,
+    1
+   ],
+   "meshes": 57
+  },
+  {
+   "card": "only-pet-monkey",
+   "group": "Pets",
+   "name": "Monkey · Ring-tailed lemur",
+   "id": "pet:monkey",
+   "opts": {
+    "v": "ringtail"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "mouth fas fine, it was more of a borws, but now they are good",
+   "size_m": [
+    0.29,
+    0.76,
+    1
+   ],
+   "meshes": 66
+  },
+  {
+   "card": "only-pet-monkey",
+   "group": "Pets",
+   "name": "Monkey · Red ruffed lemur",
+   "id": "pet:monkey",
+   "opts": {
+    "v": "redruffed"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "mouth fas fine, it was more of a borws, but now they are good",
+   "size_m": [
+    0.29,
+    0.76,
+    1
+   ],
+   "meshes": 58
+  },
+  {
+   "card": "only-pet-monkey",
+   "group": "Pets",
+   "name": "Monkey · Black-and-white ruffed lemur",
+   "id": "pet:monkey",
+   "opts": {
+    "v": "bwruffed"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "mouth fas fine, it was more of a borws, but now they are good",
+   "size_m": [
+    0.29,
+    0.76,
+    1
+   ],
+   "meshes": 58
+  },
+  {
+   "card": "only-pet-monkey",
+   "group": "Pets",
+   "name": "Monkey · Classic brown (the old colour)",
+   "id": "pet:monkey",
+   "opts": {
+    "v": "classic"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "mouth fas fine, it was more of a borws, but now they are good",
+   "size_m": [
+    0.29,
+    0.76,
+    1
+   ],
+   "meshes": 45
+  },
+  {
+   "card": "only-pet-seal",
+   "group": "Pets",
+   "name": "Seal · Spotted harbour seal",
+   "id": "pet:seal",
+   "opts": {
+    "look": "spotted"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#a7b4c9",
+    "#8c96b0",
+    "#d9dde8",
+    "#6f7891"
+   ],
+   "status": "picked",
+   "note": "Spotted seal (your pick 31 Oct).",
+   "his_note": "keep this but make 1 more variant more seallish",
+   "size_m": [
+    1.41,
+    0.88,
+    1.86
+   ],
+   "meshes": 43
+  },
+  {
+   "card": "only-pet-bear",
+   "group": "Pets",
+   "name": "Bear · Teddy brown bear",
+   "id": "pet:bear",
+   "opts": {
+    "v": "teddy"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "Make it cuttier. give 6 options each different.",
+   "size_m": [
+    0.84,
+    1.29,
+    1.72
+   ],
+   "meshes": 63
+  },
+  {
+   "card": "only-pet-bear",
+   "group": "Pets",
+   "name": "Bear · Sleepy honey bear",
+   "id": "pet:bear",
+   "opts": {
+    "v": "honey"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "Make it cuttier. give 6 options each different.",
+   "size_m": [
+    0.84,
+    1.28,
+    1.72
+   ],
+   "meshes": 60
+  },
+  {
+   "card": "only-pet-bear",
+   "group": "Pets",
+   "name": "Bear · Fluffy grizzly",
+   "id": "pet:bear",
+   "opts": {
+    "v": "grizzly"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "Make it cuttier. give 6 options each different.",
+   "size_m": [
+    0.84,
+    1.24,
+    1.78
+   ],
+   "meshes": 71
+  },
+  {
+   "card": "only-pet-bear",
+   "group": "Pets",
+   "name": "Bear · Panda",
+   "id": "pet:bear",
+   "opts": {
+    "v": "panda"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "Make it cuttier. give 6 options each different.",
+   "size_m": [
+    0.84,
+    1.28,
+    1.72
+   ],
+   "meshes": 66
+  },
+  {
+   "card": "only-pet-bear",
+   "group": "Pets",
+   "name": "Bear · Polar bear",
+   "id": "pet:bear",
+   "opts": {
+    "v": "polar"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "Make it cuttier. give 6 options each different.",
+   "size_m": [
+    0.84,
+    1.23,
+    1.78
+   ],
+   "meshes": 62
+  },
+  {
+   "card": "only-pet-bear",
+   "group": "Pets",
+   "name": "Bear · Moon bear",
+   "id": "pet:bear",
+   "opts": {
+    "v": "moon"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "Make it cuttier. give 6 options each different.",
+   "size_m": [
+    0.84,
+    1.28,
+    1.72
+   ],
+   "meshes": 63
+  },
+  {
+   "card": "only-pet-snake",
+   "group": "Pets",
+   "name": "Snake",
+   "id": "pet:snake",
+   "opts": {},
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#6b4a9a",
+    "#4a3a6e",
+    "#3f7a5a",
+    "#8a5a36"
+   ],
+   "status": "picked",
+   "note": "",
+   "his_note": "bit longer",
+   "size_m": [
+    0.3,
+    0.11,
+    1.91
+   ],
+   "meshes": 142
+  },
+  {
+   "card": "only-age-dog",
+   "group": "Pets",
+   "name": "Puppy",
+   "id": "age:dog",
+   "opts": {},
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#e8b765",
+    "#9a6a43",
+    "#f5efe6",
+    "#4a4058"
+   ],
+   "status": "picked",
+   "note": "",
+   "his_note": "",
+   "size_m": [
+    0.47,
+    0.53,
+    0.73
+   ],
+   "meshes": 25
+  },
+  {
+   "card": "only-age-pomchi",
+   "group": "Pets",
+   "name": "Pomchi · Today (game)",
+   "id": "age:pomchi",
+   "opts": {
+    "v": "game"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#f2c38b",
+    "#e8b765",
+    "#f8f5f0",
+    "#9a6a43"
+   ],
+   "status": "picked",
+   "note": "Today's game pomchi (your pick 31 Oct).",
+   "his_note": "moe pomchi like .redo all models",
+   "size_m": [
+    0.31,
+    0.58,
+    0.56
+   ],
+   "meshes": 24
+  },
+  {
+   "card": "only-age-pug",
+   "group": "Pets",
+   "name": "Pug · New, easy to recognise",
+   "id": "age:pug",
+   "opts": {
+    "v": "new"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#e8c9a0",
+    "#4a4058",
+    "#c49a74",
+    "#f8f5f0"
+   ],
+   "status": "picked",
+   "note": "New pug, face fixed in round 41 (nose and mouth, no rings); you kept it 31 Oct.",
+   "his_note": "more pug plz. need to reconise all models. but keep it cartoon ofc",
+   "size_m": [
+    0.32,
+    0.46,
+    0.58
+   ],
+   "meshes": 42
+  },
+  {
+   "card": "only-age-sausage",
+   "group": "Pets",
+   "name": "Sausage dog",
+   "id": "age:sausage",
+   "opts": {},
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#9a6a43",
+    "#4a4058",
+    "#e8b765",
+    "#c47a4a"
+   ],
+   "status": "picked",
+   "note": "",
+   "his_note": "",
+   "size_m": [
+    0.38,
+    0.46,
+    0.96
+   ],
+   "meshes": 25
+  },
+  {
+   "card": "only-age-cat",
+   "group": "Pets",
+   "name": "Kitten",
+   "id": "age:cat",
+   "opts": {},
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#f3a25b",
+    "#a7a3b5",
+    "#3f3a4f",
+    "#f7f2ec"
+   ],
+   "status": "picked",
+   "note": "",
+   "his_note": "",
+   "size_m": [
+    0.3,
+    0.59,
+    0.58
+   ],
+   "meshes": 23
+  },
+  {
+   "card": "only-age-bunny",
+   "group": "Pets",
+   "name": "Bunny",
+   "id": "age:bunny",
+   "opts": {},
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#f8f5f0",
+    "#c49a74",
+    "#b9b4c8",
+    "#ffc9dc"
+   ],
+   "status": "picked",
+   "note": "",
+   "his_note": "",
+   "size_m": [
+    0.37,
+    0.7,
+    0.58
+   ],
+   "meshes": 23
+  },
+  {
+   "card": "only-age-hamster",
+   "group": "Pets",
+   "name": "Hamster",
+   "id": "age:hamster",
+   "opts": {},
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#f2c38b",
+    "#ffffff",
+    "#c49a74",
+    "#9a8f86"
+   ],
+   "status": "picked",
+   "note": "",
+   "his_note": "",
+   "size_m": [
+    0.29,
+    0.28,
+    0.37
+   ],
+   "meshes": 24
+  },
+  {
+   "card": "only-age-capybara",
+   "group": "Pets",
+   "name": "Capybara · Calm",
+   "id": "age:capybara",
+   "opts": {
+    "v": "real"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#df9656",
+    "#c98a52",
+    "#b07848",
+    "#d9a06a"
+   ],
+   "status": "picked",
+   "note": "",
+   "his_note": "MAke 10 versions.....lol this capybarra is imposible",
+   "size_m": [
+    0.49,
+    0.69,
+    1.21
+   ],
+   "meshes": 45
+  },
+  {
+   "card": "only-age-capybara",
+   "group": "Pets",
+   "name": "Capybara · Sleepy",
+   "id": "age:capybara",
+   "opts": {
+    "v": "r_sleepy"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#df9656",
+    "#c98a52",
+    "#b07848",
+    "#d9a06a"
+   ],
+   "status": "picked",
+   "note": "",
+   "his_note": "MAke 10 versions.....lol this capybarra is imposible",
+   "size_m": [
+    0.49,
+    0.66,
+    1.24
+   ],
+   "meshes": 43
+  },
+  {
+   "card": "only-age-capybara",
+   "group": "Pets",
+   "name": "Capybara · Sleepy smile and blush",
+   "id": "age:capybara",
+   "opts": {
+    "v": "s_smile"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#df9656",
+    "#c98a52",
+    "#b07848",
+    "#d9a06a"
+   ],
+   "status": "picked",
+   "note": "",
+   "his_note": "MAke 10 versions.....lol this capybarra is imposible",
+   "size_m": [
+    0.49,
+    0.67,
+    1.24
+   ],
+   "meshes": 45
+  },
+  {
+   "card": "only-age-capybara",
+   "group": "Pets",
+   "name": "Capybara · Yawning",
+   "id": "age:capybara",
+   "opts": {
+    "v": "s_yawn"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#df9656",
+    "#c98a52",
+    "#b07848",
+    "#d9a06a"
+   ],
+   "status": "picked",
+   "note": "",
+   "his_note": "MAke 10 versions.....lol this capybarra is imposible",
+   "size_m": [
+    0.49,
+    0.68,
+    1.21
+   ],
+   "meshes": 43
+  },
+  {
+   "card": "only-age-capybara",
+   "group": "Pets",
+   "name": "Capybara · Happy",
+   "id": "age:capybara",
+   "opts": {
+    "v": "r_happy"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#df9656",
+    "#c98a52",
+    "#b07848",
+    "#d9a06a"
+   ],
+   "status": "picked",
+   "note": "",
+   "his_note": "MAke 10 versions.....lol this capybarra is imposible",
+   "size_m": [
+    0.49,
+    0.69,
+    1.21
+   ],
+   "meshes": 43
+  },
+  {
+   "card": "only-age-capybara",
+   "group": "Pets",
+   "name": "Capybara · Curious",
+   "id": "age:capybara",
+   "opts": {
+    "v": "r_curious"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#df9656",
+    "#c98a52",
+    "#b07848",
+    "#d9a06a"
+   ],
+   "status": "picked",
+   "note": "",
+   "his_note": "MAke 10 versions.....lol this capybarra is imposible",
+   "size_m": [
+    0.49,
+    0.68,
+    1.22
+   ],
+   "meshes": 45
+  },
+  {
+   "card": "only-age-capybara",
+   "group": "Pets",
+   "name": "Capybara · Sauna zen (training)",
+   "id": "age:capybara",
+   "opts": {
+    "v": "zen"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#df9656",
+    "#c98a52",
+    "#b07848",
+    "#d9a06a"
+   ],
+   "status": "picked",
+   "note": "",
+   "his_note": "MAke 10 versions.....lol this capybarra is imposible",
+   "size_m": [
+    0.49,
+    1.16,
+    1.22
+   ],
+   "meshes": 52
+  },
+  {
+   "card": "only-age-duck",
+   "group": "Pets",
+   "name": "Duck",
+   "id": "age:duck",
+   "opts": {},
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#f8f5f0",
+    "#ffe08a",
+    "#c49a74",
+    "#8fd3ff"
+   ],
+   "status": "picked",
+   "note": "",
+   "his_note": "",
+   "size_m": [
+    0.36,
+    0.57,
+    0.57
+   ],
+   "meshes": 24
+  },
+  {
+   "card": "only-age-owl",
+   "group": "Pets",
+   "name": "Owl",
+   "id": "age:owl",
+   "opts": {},
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#8a5a36",
+    "#c49a74",
+    "#a7a3b5",
+    "#f8f5f0"
+   ],
+   "status": "picked",
+   "note": "",
+   "his_note": "",
+   "size_m": [
+    0.41,
+    0.66,
+    0.38
+   ],
+   "meshes": 24
+  },
+  {
+   "card": "only-farm-horse",
+   "group": "Farm animals",
+   "name": "Horse · Game style",
+   "id": "farm:horse",
+   "opts": {
+    "look": "game"
+   },
+   "ages": [
+    "baby",
+    "adult"
+   ],
+   "colours": [
+    "#c98f5e",
+    "#f6efe0",
+    "#5c4033",
+    "#3d3550"
+   ],
+   "status": "picked",
+   "note": "Game style. Ages: foal (baby) and adult. rider: yes puts a rider on.",
+   "his_note": "almost good try making horse more from this world. but keep the rpoportions",
+   "size_m": [
+    0.5,
+    1.95,
+    2.03
+   ],
+   "meshes": 66
+  },
+  {
+   "card": "only-farm-cow",
+   "group": "Farm animals",
+   "name": "Cow",
+   "id": "farm:cow",
+   "opts": {},
+   "ages": [
+    "baby",
+    "adult"
+   ],
+   "colours": [
+    "#f6efe0",
+    "#c98f5e"
+   ],
+   "status": "picked",
+   "note": "",
+   "his_note": "",
+   "size_m": [
+    0.74,
+    1.4,
+    1.69
+   ],
+   "meshes": 63
+  },
+  {
+   "card": "only-farm-sheep",
+   "group": "Farm animals",
+   "name": "Sheep",
+   "id": "farm:sheep",
+   "opts": {},
+   "ages": [
+    "baby",
+    "adult"
+   ],
+   "colours": [
+    "#f6f2ec",
+    "#3d3550"
+   ],
+   "status": "picked",
+   "note": "More wool (round 41, your note); you kept it 31 Oct.",
+   "his_note": "Moore wool",
+   "size_m": [
+    0.73,
+    0.92,
+    1.27
+   ],
+   "meshes": 187
+  },
+  {
+   "card": "only-farm-pig",
+   "group": "Farm animals",
+   "name": "Pig",
+   "id": "farm:pig",
+   "opts": {},
+   "ages": [
+    "baby",
+    "adult"
+   ],
+   "colours": [
+    "#ffb3c7",
+    "#e8b0a0"
+   ],
+   "status": "picked",
+   "note": "",
+   "his_note": "",
+   "size_m": [
+    0.54,
+    0.63,
+    0.91
+   ],
+   "meshes": 25
+  },
+  {
+   "card": "only-farm-chicken",
+   "group": "Farm animals",
+   "name": "Chicken",
+   "id": "farm:chicken",
+   "opts": {},
+   "ages": [
+    "baby",
+    "adult"
+   ],
+   "colours": [
+    "#ffffff",
+    "#e8b765",
+    "#a8714a"
+   ],
+   "status": "picked",
+   "note": "",
+   "his_note": "",
+   "size_m": [
+    0.29,
+    0.5,
+    0.43
+   ],
+   "meshes": 47
+  },
+  {
+   "card": "only-farm-farmer",
+   "group": "Farm people",
+   "name": "Farmers · Farmer Hugo",
+   "id": "farm:farmer",
+   "opts": {
+    "who": "b"
+   },
+   "ages": [],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "Love all of them. Keep all just fix grammas head.",
+   "size_m": [
+    0.85,
+    1.8,
+    0.85
+   ],
+   "meshes": 40
+  },
+  {
+   "card": "only-farm-farmer",
+   "group": "Farm people",
+   "name": "Farmers · Farmer Fern",
+   "id": "farm:farmer",
+   "opts": {
+    "who": "a"
+   },
+   "ages": [],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "Love all of them. Keep all just fix grammas head.",
+   "size_m": [
+    0.83,
+    1.63,
+    0.86
+   ],
+   "meshes": 44
+  },
+  {
+   "card": "only-farm-farmer",
+   "group": "Farm people",
+   "name": "Farmers · Grandma Ona",
+   "id": "farm:farmer",
+   "opts": {
+    "who": "ona"
+   },
+   "ages": [],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "Love all of them. Keep all just fix grammas head.",
+   "size_m": [
+    0.63,
+    1.54,
+    0.63
+   ],
+   "meshes": 44
+  },
+  {
+   "card": "only-farm-farmer",
+   "group": "Farm people",
+   "name": "Farmers · Jonas the farmhand",
+   "id": "farm:farmer",
+   "opts": {
+    "who": "jonas"
+   },
+   "ages": [],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "Love all of them. Keep all just fix grammas head.",
+   "size_m": [
+    0.79,
+    1.66,
+    0.95
+   ],
+   "meshes": 38
+  },
+  {
+   "card": "only-farm-lab",
+   "group": "Farm animals",
+   "name": "Farm dog: sleeping St. Bernard · Asleep, curled up (your photo)",
+   "id": "farm:lab",
+   "opts": {
+    "v": "curl"
+   },
+   "ages": [],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "make it like Senbernaras (St. Bernhardshund / Bernhardiner) and make it sleep like in my message photo",
+   "size_m": [
+    1.65,
+    1.14,
+    1.03
+   ],
+   "meshes": 56
+  },
+  {
+   "card": "only-farm-lab",
+   "group": "Farm animals",
+   "name": "Farm dog: sleeping St. Bernard · Asleep, flat on its side",
+   "id": "farm:lab",
+   "opts": {
+    "v": "side"
+   },
+   "ages": [],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "make it like Senbernaras (St. Bernhardshund / Bernhardiner) and make it sleep like in my message photo",
+   "size_m": [
+    2.04,
+    0.83,
+    0.92
+   ],
+   "meshes": 56
+  },
+  {
+   "card": "only-farm-lab",
+   "group": "Farm animals",
+   "name": "Farm dog: sleeping St. Bernard · Standing (walks between spots)",
+   "id": "farm:lab",
+   "opts": {
+    "v": "stand"
+   },
+   "ages": [],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "make it like Senbernaras (St. Bernhardshund / Bernhardiner) and make it sleep like in my message photo",
+   "size_m": [
+    0.55,
+    1.12,
+    1.75
+   ],
+   "meshes": 163
+  },
+  {
+   "card": "only-vet-vet",
+   "group": "Pet clinic people",
+   "name": "Veterinarian · Dr. Mila (white coat)",
+   "id": "vet:vet",
+   "opts": {
+    "v": "mila"
+   },
+   "ages": [],
+   "colours": [],
+   "status": "picked",
+   "note": "Leo is also the lobby nurse.",
+   "his_note": "",
+   "size_m": [
+    0.7,
+    1.44,
+    0.74
+   ],
+   "meshes": 70,
+   "game_name": "Nurse Penny (lobby desk: books visits, gives the treat)"
+  },
+  {
+   "card": "only-vet-vet",
+   "group": "Pet clinic people",
+   "name": "Veterinarian · Dr. Tomas (teal scrubs)",
+   "id": "vet:vet",
+   "opts": {
+    "v": "tomas"
+   },
+   "ages": [],
+   "colours": [],
+   "status": "picked",
+   "note": "Leo is also the lobby nurse.",
+   "his_note": "",
+   "size_m": [
+    0.79,
+    1.52,
+    0.74
+   ],
+   "meshes": 64,
+   "game_name": "Dr. Tomas"
+  },
+  {
+   "card": "only-vet-vet",
+   "group": "Pet clinic people",
+   "name": "Veterinarian · Dr. Rūta (older, round glasses)",
+   "id": "vet:vet",
+   "opts": {
+    "v": "ruta"
+   },
+   "ages": [],
+   "colours": [],
+   "status": "picked",
+   "note": "Leo is also the lobby nurse.",
+   "his_note": "",
+   "size_m": [
+    0.63,
+    1.54,
+    0.76
+   ],
+   "meshes": 73,
+   "game_name": "Dr. Rūta (the vet)"
+  },
+  {
+   "card": "only-vet-vet",
+   "group": "Pet clinic people",
+   "name": "Veterinarian · Vet nurse Leo (paw-print scrubs)",
+   "id": "vet:vet",
+   "opts": {
+    "v": "leo"
+   },
+   "ages": [],
+   "colours": [],
+   "status": "picked",
+   "note": "Leo is also the lobby nurse.",
+   "his_note": "",
+   "size_m": [
+    0.69,
+    1.6,
+    0.75
+   ],
+   "meshes": 82,
+   "game_name": "Vet nurse Leo"
+  },
+  {
+   "card": "only-farm-coach",
+   "group": "Farm riding people",
+   "name": "Riding instructor · Coach Ieva (green vest)",
+   "id": "farm:coach",
+   "opts": {
+    "v": "ieva"
+   },
+   "ages": [],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "",
+   "size_m": [
+    0.66,
+    1.55,
+    0.71
+   ],
+   "meshes": 61
+  },
+  {
+   "card": "only-farm-coach",
+   "group": "Farm riding people",
+   "name": "Riding instructor · Old coach Stan (tweed vest, flat cap)",
+   "id": "farm:coach",
+   "opts": {
+    "v": "stan"
+   },
+   "ages": [],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "",
+   "size_m": [
+    0.77,
+    1.63,
+    0.93
+   ],
+   "meshes": 56
+  },
+  {
+   "card": "only-farm-cowboy",
+   "group": "Farm riding people",
+   "name": "Cowboy · Cowboy Cody (red checked shirt, brown horse)",
+   "id": "farm:cowboy",
+   "opts": {
+    "v": "cody"
+   },
+   "ages": [],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "",
+   "size_m": [
+    0.89,
+    2.36,
+    2.03
+   ],
+   "meshes": 122
+  },
+  {
+   "card": "only-farm-cowboy",
+   "group": "Farm riding people",
+   "name": "Cowboy · Cowboy Hank (denim shirt, leather vest, black horse)",
+   "id": "farm:cowboy",
+   "opts": {
+    "v": "hank"
+   },
+   "ages": [],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "",
+   "size_m": [
+    0.89,
+    2.36,
+    2.03
+   ],
+   "meshes": 113
+  },
+  {
+   "card": "only-farm-cowgirl",
+   "group": "Farm riding people",
+   "name": "Cowgirl · Cowgirl Rose (turquoise shirt, suede vest, dark horse)",
+   "id": "farm:cowgirl",
+   "opts": {
+    "v": "rose"
+   },
+   "ages": [],
+   "colours": [],
+   "status": "picked",
+   "note": "",
+   "his_note": "",
+   "size_m": [
+    0.89,
+    2.36,
+    2.03
+   ],
+   "meshes": 119
+  },
+  {
+   "card": "only-pet-dogjoint",
+   "group": "Pets",
+   "name": "Puppy: jointed movement test · Standing (same as today)",
+   "id": "pet:dogjoint",
+   "opts": {
+    "v": "stand"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#e8b765",
+    "#9a6a43",
+    "#f5efe6",
+    "#4a4058"
+   ],
+   "status": "picked",
+   "note": "Movement test only (jointed puppy). Not a new pet. For Model movements.",
+   "his_note": "",
+   "size_m": [
+    0.47,
+    0.53,
+    0.73
+   ],
+   "meshes": 38
+  },
+  {
+   "card": "only-pet-dogjoint",
+   "group": "Pets",
+   "name": "Puppy: jointed movement test · Mid-step",
+   "id": "pet:dogjoint",
+   "opts": {
+    "v": "walk"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#e8b765",
+    "#9a6a43",
+    "#f5efe6",
+    "#4a4058"
+   ],
+   "status": "picked",
+   "note": "Movement test only (jointed puppy). Not a new pet. For Model movements.",
+   "his_note": "",
+   "size_m": [
+    0.47,
+    0.54,
+    0.73
+   ],
+   "meshes": 38
+  },
+  {
+   "card": "only-pet-dogjoint",
+   "group": "Pets",
+   "name": "Puppy: jointed movement test · Sitting",
+   "id": "pet:dogjoint",
+   "opts": {
+    "v": "sit"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#e8b765",
+    "#9a6a43",
+    "#f5efe6",
+    "#4a4058"
+   ],
+   "status": "picked",
+   "note": "Movement test only (jointed puppy). Not a new pet. For Model movements.",
+   "his_note": "",
+   "size_m": [
+    0.47,
+    0.6,
+    0.69
+   ],
+   "meshes": 38
+  },
+  {
+   "card": "only-pet-dogjoint",
+   "group": "Pets",
+   "name": "Puppy: jointed movement test · Sniffing the ground",
+   "id": "pet:dogjoint",
+   "opts": {
+    "v": "sniff"
+   },
+   "ages": [
+    "baby",
+    "teen",
+    "adult"
+   ],
+   "colours": [
+    "#e8b765",
+    "#9a6a43",
+    "#f5efe6",
+    "#4a4058"
+   ],
+   "status": "picked",
+   "note": "Movement test only (jointed puppy). Not a new pet. For Model movements.",
+   "his_note": "",
+   "size_m": [
+    0.47,
+    0.51,
+    0.81
+   ],
+   "meshes": 38
+  }
+ ]
+}

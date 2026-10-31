@@ -1,0 +1,36 @@
+{
+  "body": "Pet Shop: south-east block (east of the middle road, south of the main street).\nSpace in that block, from the town code (NOT VERIFIED in a picture):\nA) Corner east of the Flower Shop\nB) Strip south of the apartments\nC) Behind the Pet Shop (small, about 6 m)\nA has a walking line through it; C has rocks and the apartment path.\nClinic size: unknown (Non-living models).\nLeft (tool work, sent to Plan): place it in the Area plan, picture for your pick.",
+  "ch": "map",
+  "cmp": {
+    "pg": "pres"
+  },
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793407300000,
+      "text": "Karolis in the Map chat, 31 Oct: 'all looks good in map'."
+    },
+    {
+      "act": "chat",
+      "at": 1793466300000,
+      "text": "Pictures renewed: the clinic as in the Area plan (x 14.2, z -77.2). The game builds it there."
+    }
+  ],
+  "created": 1793397143546,
+  "id": "map-vet-spot",
+  "kind": "task",
+  "needs": [
+    "plan-vet-station"
+  ],
+  "order": 2,
+  "pics": [
+    "img/vet-spot.jpg",
+    "img/vet-spot-top.jpg"
+  ],
+  "short": "Vet clinic in town at x 14.2, z -77.2 (Karolis's spot, nudged 3.2 m so it touches nothing).",
+  "source": "chat 2026-10-30: Map chat, board plan-20261030-vet-map",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Vet clinic spot in town",
+  "updated": 1793466300000
+}

@@ -1,0 +1,60 @@
+{
+  "blockedBy": "",
+  "body": "Build brief. Game rules approved by Karolis 30-31 Oct.\nPET SHOW WITH FRIENDS (rules-pet-show-friends): Saturdays 8:00-20:00 in the park. Someone enters: friends in the park get 45 seconds to join. Friends' pets take NPC places (4 per show); more than 4: next show right after. Everyone watches the same show. Judges: style, tricks, happiness; healthy-week ribbon helps. NPC scores from the shared clock, no dice. Sick pets can't enter. One pet per player per show; one show per player per Saturday.\nHEALTHY WEEK (rules-mech-ribbon): per player, no pet sick + care on 3+ days Mon-Fri -> all your pets wear the ribbon.\nANIMAL LICENSE (rules-animal-license): level 1 = 1 win + 1 healthy week, level 2 = 2 + 2, level 3 = 3 wins (one 1st place) + 3 healthy weeks. Top 3 counts as a win only for the license; prizes and the 'Win the Pet Show' quest stay 1st place. Counted from the update, never taken away. Sir Barkley hands it over on the podium; license card in My pets. Unlocks big pets (stage 4).\nMOVES: moves-show-license (Sir Barkley on the podium; Pet Show tricks exist already).\nSCREENS: screens-show-join (45 s join card + waiting list), screens-license-card (vintage paper card; needs Google fonts Alfa Slab One + Roboto Slab 700/800; the test kit must serve them locally).\nTRICKS (rules-tricks, approved 31 Oct): each pet type has 3 tricks and starts knowing 1; 5 practice days on its training gear (one counts per game day) teach the next; only known tricks at the show, practised ones get a bigger gold zone; sick pets can't practise. Old saves: every pet knows its first trick.\nWAITING FOR KAROLIS: Pet Show podium + small 3D license card models (objects-petshow-podium); Moves uses marked stand-ins until they exist. Trick moves: 3 per pet type (14 types), Moves drafting.\nTRICKS (approved 31 Oct): 3 per pet type, the 4 dogs share one set (moves-show-tricks A); COZY_MOVES.TRICKS + play(m,'trick',...) replace psTrickAnim and today's 3 random of 6 (js/07-designer.js TRICKS); tricks last 5 s. PET SHOW AREA: placed in Cozy Park (map-petshow-park); slide moved 1.8 m W / 2 m back; food truck turned along the south park fence (townCodeChanges in claude/pfu-placements.json). Podium + hand-held license card: plan approved (A), models by Objects.",
+  "ch": "plan",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793402295737,
+      "text": "What changed: next show if over 4; wins earn the license."
+    },
+    {
+      "act": "chat",
+      "at": 1793403524940,
+      "text": "Game rules chat: updated with today's last rules (license levels with healthy weeks, top 3 only for the license, one pet per show).\nReady for your OK."
+    },
+    {
+      "act": "chat",
+      "at": 1793403631542,
+      "text": "Approved: everything in it you already decided in chat (30-31 Oct).\nRecorded by the Game rules chat; Plan told."
+    },
+    {
+      "act": "chat",
+      "at": 1793410821985,
+      "text": "Added: moves, screens and placements for this stage."
+    },
+    {
+      "act": "chat",
+      "at": 1793459080507,
+      "text": "Game rules chat: tricks rule added (Karolis OK'd). Still approved."
+    },
+    {
+      "act": "chat",
+      "at": 1793459656438,
+      "text": "Plan: podium + card models still to pick and build. Still approved."
+    },
+    {
+      "act": "chat",
+      "at": 1793480741963,
+      "text": "Added: latest moves, people and map notes (31 Oct)."
+    }
+  ],
+  "created": 1793397122256,
+  "id": "plan-brief-pfu-5",
+  "kind": "plan",
+  "needs": [
+    "rules-pet-show-friends",
+    "rules-mech-ribbon",
+    "rules-sickness",
+    "rules-animal-license",
+    "objects-petshow-podium",
+    "rules-tricks"
+  ],
+  "order": 15,
+  "short": "Stage 5: Pet Show with friends; wins earn animal license",
+  "source": "chat 2026-10-30: Plan chat, game rules approved 30 Oct (board rules-20261030-all-approved, -approved2)",
+  "stage": "pfu-5",
+  "status": "approved",
+  "title": "Stage 5 build brief: game rules",
+  "updated": 1793480741963
+}

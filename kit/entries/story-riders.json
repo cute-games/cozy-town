@@ -1,0 +1,23 @@
+{
+  "blockedBy": "",
+  "body": "Tap a rider (they slow down, say one line, ride on). Never the same line twice in a row.\n\nCODY (friendly, walks): \"Howdy, neighbour!\" / \"The trail is extra pretty today.\" / \"Did you see the cows by the big trees?\"\nHANK (calm, slow jog): \"Easy does it.\" / \"This old horse knows every turn.\" / \"Mind the mud by the pigs!\"\nROSE (fast, lopes): \"Race you to the farm arch!\" / \"Stan taught me to jump too!\" / \"Yee-haw! See you around!\"\nPlayer on a horse too: all three: \"Nice horse! Ride with us!\"\n\nNot riders who teach: lessons are Stan only.",
+  "ch": "story",
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793483731749,
+      "text": ""
+    }
+  ],
+  "created": 1793483100000,
+  "id": "story-riders",
+  "kind": "plan",
+  "needs": [],
+  "order": 5,
+  "short": "Cody, Hank, Rose say hi from their horses on the trail",
+  "source": "chat 2026-10-31: Characters and story",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Riders Cody, Hank, Rose: lines",
+  "updated": 1793483731749
+}

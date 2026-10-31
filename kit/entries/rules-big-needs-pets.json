@@ -1,0 +1,46 @@
+{
+  "blockedBy": "",
+  "body": "1. Monkey, seal and bear need pet yard level 3 and their home first: climbing tree, pond, cave den.\n2. The pet shop shows them with 🔒 Pet yard level 3 until you have both.\n3. Tap one: Ms. Paws names the first thing missing, in this order: Pet care level, pet yard level, home, license. \"A monkey needs a big pet yard. Make yours level 3!\" Then: \"Almost! She needs a climbing tree in your yard.\"\n4. Never called \"exotic\" in the game. No group name: Ms. Paws names the pet and what it needs.\n5. Snake: no yard level. Needs animal license level 1 and its glass tank in your house.\n6. Monkey and seal also need animal license level 1. Bear needs level 3.\n7. Bear and seal wait outside buildings (except the vet station). Monkey and snake follow you everywhere.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793400314482,
+      "text": "Done: your rule (31 Oct), with Ms. Paws's lines.\nOne pick left: the snake."
+    },
+    {
+      "act": "chat",
+      "at": 1793400859016,
+      "text": "Done: snake added (line 5), your rule 31 Oct."
+    },
+    {
+      "act": "chat",
+      "at": 1793401756412,
+      "text": "Done: snake = license level 1 + tank; bear = license level 3 (31 Oct)."
+    },
+    {
+      "act": "chat",
+      "at": 1793402165952,
+      "text": "Done: monkey and seal = license level 1 (your A)."
+    },
+    {
+      "act": "chat",
+      "at": 1793402471510,
+      "text": "Done: bear and seal wait outside buildings (your A); Ms. Paws hint order."
+    }
+  ],
+  "created": 1793400314482,
+  "id": "rules-big-needs-pets",
+  "kind": "rule",
+  "needs": [
+    "pet-dec-09",
+    "pet-dec-14"
+  ],
+  "order": 312,
+  "short": "Yard level 3 + home + license (monkey, seal 1; bear 3)",
+  "source": "chat 31 Oct 2026: Karolis in the Game rules chat",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Big-needs pets: pet yard level 3 and their home first",
+  "updated": 1793402471510
+}

@@ -1,0 +1,37 @@
+{
+  "body": "From your note \"make it cozier, cutier\". Real sheep size and shape (it was too small next to the cow and horse): body about 1.1 m, back about 0.75 m. A round cloud of wool, a soft face with big shiny eyes, rosy cheeks, a wool fringe, ears out to the sides with pink insides, the nose joined to a little mouth by one line, wool trousers on the legs and dark hooves. Black sheep: charcoal wool, lighter face. Lamb: bigger head, shorter legs, rounder body (Age: Baby). Pick in Model Compare (Farm animals → Sheep).",
+  "ch": "living",
+  "cmp": {
+    "at": 1793423000000,
+    "id": "only-farm-sheep"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793390758657,
+      "text": "Redone from your note. Viewer: 3 passes, last 8.5/10, nothing above minor left."
+    },
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Done: more wool (your note). Pick in Model Compare."
+    }
+  ],
+  "created": 1793390758657,
+  "kind": "model",
+  "needs": [],
+  "order": 2,
+  "pics": [
+    "img/sheep-wool.jpg",
+    "img/sheep-white.jpg",
+    "img/sheep-lamb.jpg",
+    "img/sheep-black.jpg",
+    "img/sheep-side.jpg"
+  ],
+  "short": "You kept the woolly sheep",
+  "source": "chat 30 Oct: Living things models, round 29",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Sheep: cozier and cuter, real size",
+  "updated": 1793409800000
+}

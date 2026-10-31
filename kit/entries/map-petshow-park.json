@@ -1,0 +1,26 @@
+{
+  "blockedBy": "",
+  "body": "Stage, podium and judges' table kept exactly as Non-living laid them out, on one smooth sand oval.\nTree at -37.4,16.2 moved to -39.2,13.4 (room for the podium).\nPlayground slide moved 1.8 m west and 2 m back (it was cramped behind the judges).\nGame code for the update: slide group (-37.2,31.5) -> (-39.0,33.5); col box -> (-39.7,30.4,-38.3,35.8); slide spot -> (-39.0,30.1); startSlide path x -37.2 -> -39.0, z +2.\nChecked in pictures: no overlaps; food truck close to the podium but not touching.",
+  "ch": "map",
+  "cmp": {
+    "pg": "pres"
+  },
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793465500000,
+      "text": "Approved: you decided it in chat (31 Oct): check it and keep the three elements as they are."
+    }
+  ],
+  "created": 1793465500000,
+  "id": "map-petshow-park",
+  "kind": "plan",
+  "needs": [],
+  "order": 3002,
+  "short": "New Pet Show area placed in the park; slide moved out of the judges' corner.",
+  "source": "chat 31 Oct 2026: Map chat, board objects-20261031-showarea-map",
+  "stage": "pfu-7",
+  "status": "approved",
+  "title": "Pet Show area in Cozy Park",
+  "updated": 1793465500000
+}

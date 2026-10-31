@@ -82,7 +82,7 @@ $('tPlay').addEventListener('click',async()=>{audioInit();const b=$('tPlay');b.d
 function startGame(){if(S){awResume();return;}   /* back from the away title: the game is still here, nothing is built twice */
   const local=readLocal(),remote=CSAVE.remote;let st=local;if(remote&&(!local||(remote.t||0)>(local.t||0)))st=remote;
   S=Object.assign(freshState(),st||{});S.home=Object.assign(freshState().home,S.home||{});
-  S.look=Object.assign({},DEFAULT_LOOK,S.look||{});buildPlayerBody();
+  S.look=Object.assign({},DEFAULT_LOOK,S.look||{});saveMigrate();buildPlayerBody();   /* 💾 sv 2: the pets and farm update's new fields (stage 1) */
   clockLoad();   /* 🕰️ the one clock: an old save jumps once to the shared day; a new player starts at the real time (run 4, job 1) */
   applyHouse();houseShrink();rebuildHome();   /* 🏡 a bigger house from before shrinks once (the pieces that don't fit wait in 📦 My stuff) */
   const moved=!S.laneT;if(moved)S.laneT=Date.now();MP.jt=S.laneT;laneRefresh(true);   /* 🏡 your lot on Friends Lane (before pets and you are put in your yard) */
@@ -91,7 +91,7 @@ function startGame(){if(S){awResume();return;}   /* back from the away title: th
   spawnLitter();gardenInit();for(const w of WALKERS)w.init();
   if(HOL.cur==='easter'&&HOL.eggs)eggsRebuild();   /* 🥚 the eggs were drawn for the title's town before the save was read: draw them again without the ones this player already found (run 4, stage 3, G4-001) */
   S.outfits=S.outfits||[];if(S.wardrobe)for(const k of Object.keys(S.wardrobe)){const C=CLOTHES[k];if(C&&(C.hat||C.gl)){if(!S.outfits.some(v=>v.k===k))S.outfits.push({k,c:C.cols[0]});delete S.wardrobe[k];}}
-  delete S.mpcode;drawScore();mpConnect();bdInit();
+  delete S.mpcode;drawScore();mpConnect();bdInit();nsInit();
   psRefresh();S.hard=S.hard||{};hardMigrate();if(!S.q||S.q.day!==S.day)qNewDay(!!st);else{if(!S.q.used)S.q.used=S.q.list.slice();S.q.list=S.q.list.filter(k=>getQ(k));updPhoneBadge();}
   $('title').hidden=true;$('hud').hidden=false;PLAYING=true;if(innerWidth<600)$('tasks').classList.add('min');
   if(!S.intro){setLoc('city');startIntro();}

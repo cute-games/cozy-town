@@ -1,0 +1,33 @@
+{
+  "blockedBy": "",
+  "body": "Your decision (31 Oct): Ieva stands by the stable and grooms the horses; you talk to her to borrow a horse; the first time she sends you to Stan at the jump field.\n- Ieva brushes a horse with long strokes; the horse swishes its tail and turns its head to her.\n- You walk up; she nods, then points to Stan; Stan waves.\nThe brush is a marked stand-in (asked Objects for a brush model). Pictures: the two lower cells.",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793477115355,
+      "text": "Done: Ieva grooms a horse and points you to Stan (lower two pictures).\nBrush is a stand-in until Objects makes one."
+    },
+    {
+      "act": "approve",
+      "at": 1793480344872,
+      "text": ""
+    }
+  ],
+  "created": 1793477115355,
+  "id": "moves-farm-ieva",
+  "kind": "task",
+  "needs": [
+    "map-coach-pick"
+  ],
+  "order": 128.7,
+  "pics": [
+    "img/moves14-showStaff.gif"
+  ],
+  "short": "Ieva brushes a horse, points you to Stan. OK?",
+  "source": "Your words in chat (31 Oct, map-coach-pick): Ieva grooms horses by the stable; first time she sends you to Stan",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Ieva grooms horses and sends you to Stan",
+  "updated": 1793480344872
+}

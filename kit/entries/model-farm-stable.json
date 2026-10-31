@@ -1,0 +1,23 @@
+{
+  "body": "From your note \"size is version 1's better, openness is version 2's\": kept the 9 m stable with four stalls. Now open like version 2: open front, end walls only half high with open air up to the roof, open gable ends, light inside with hay and water you can see. The back wall stays closed, like version 2.\nPicked in Model Compare.",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793377700000,
+    "id": "farmstable"
+  },
+  "comments": [],
+  "created": 1793377830000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/stable.jpg",
+    "img/stable-front.jpg"
+  ],
+  "short": "Picked: Stable: big size, open front",
+  "source": "chat 30 Oct: Non-living things models, round 21",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Stable: big size, open front",
+  "updated": 1793402000000
+}

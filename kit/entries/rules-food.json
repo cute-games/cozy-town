@@ -1,0 +1,35 @@
+{
+  "blockedBy": "",
+  "body": "1. Food is one way to make a pet happy, like petting and toys. Never needed.\n2. 3 food groups, each pet loves one:\n🥩 Meat: dog, pug, pomchi, sausage dog, owl, bear, snake.\n🐟 Fish: cat, seal.\n🥕 Fruit & veggies: bunny, hamster, capybara, duck, monkey.\n🍖 Treats: every pet, cheaper, same +30 as other food.\n3. Every pet eats every food. Its group's food gives the bigger boost (+40 vs +30, as today) and a happy dance.\n4. No new items: today's Pet food becomes Meat, Cat food becomes Fish, Bunny & hamster food becomes Fruit & veggies. Same items, so food already in bags keeps working.\n5. No current pet changes favourite.\n6. Prices as today: 6 coins, treats 5.\n7. The bowl at home takes any food. One food fills it for one game day of play, then it's empty.\n8. No food at all in your bag: \"Ms. Paws sells meat, fish, fruit & veggies.\"\n9. In the pet shop, each food says who loves it (\"Fish: cats and seals love it\").\n10. Build: each pet type has one food-group word, not its own food list.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793408392057,
+      "text": "Changed to your food groups (cat + seal fish, dog + bear meat).\nNeed your OK."
+    },
+    {
+      "act": "chat",
+      "at": 1793408639553,
+      "text": "Approved: you said OK in chat (31 Oct).\nSmall fixes in 'Rules check 5'."
+    },
+    {
+      "act": "chat",
+      "at": 1793458112931,
+      "text": "Done: rules check 5 written in (lines 2, 7-10)."
+    }
+  ],
+  "created": 1793408087606,
+  "id": "rules-food",
+  "kind": "rule",
+  "needs": [
+    "rules-dec-one-need"
+  ],
+  "order": 324,
+  "short": "3 food groups: meat, fish, fruit & veggies. No new items.",
+  "source": "chat 31 Oct 2026: Game rules red team of the new-pet food (Karolis asked)",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Pet food: 3 food groups",
+  "updated": 1793458112931
+}

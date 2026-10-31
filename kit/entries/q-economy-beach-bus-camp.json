@@ -1,0 +1,22 @@
+{
+  "blockedBy": "",
+  "body": "Now (checked on main 30 Oct): miss the 21:00 bus home from the beach → you camp at the beach until the next bus. The bus runs 3 days a week, so a kid can be stuck 3-4 game days (about 45-60 real minutes).\nOption A: keep it as it is.\nOption B: a small morning bus home every day (suggested by night 2's reviewer, 9 Oct).\nNever decided.",
+  "ch": "economy",
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793380374958,
+      "text": "daily morning bus home"
+    }
+  ],
+  "created": 1793380267494,
+  "id": "q-economy-beach-bus-camp",
+  "kind": "question",
+  "needs": [],
+  "order": 200,
+  "short": "Decided: a morning bus home from the beach daily",
+  "source": "chat 2026-10-30: board row from Bugs and fixes (night 2 report, 9 Oct)",
+  "status": "approved",
+  "title": "Missed the 21:00 beach bus: camp until the next bus, or a daily morning bus home?",
+  "updated": 1793380374958
+}

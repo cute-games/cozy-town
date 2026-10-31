@@ -1,0 +1,16 @@
+{
+  "blockedBy": "",
+  "body": "#: 13\nDecision: Farm: \"Farm Lane\", animals and things to do\nNotes: One of the 8 roads that end at the town's edge continues into a short Farm Lane through cleared forest (not the east road: it leads to the beach gate). Animals: horses, cows, sheep, pigs, chickens. Cows are farm animals only, never pets (Karolis 29 Oct). Feed and pet them, ride a horse around the farm, collect eggs and milk and sell them at the Market. A farm job from Rosie later",
+  "ch": "rules",
+  "comments": [],
+  "created": 1793323126942,
+  "id": "pet-dec-13",
+  "kind": "decision",
+  "needs": [],
+  "order": 259,
+  "source": "Pet update: plan › Decisions",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Pet decision 13: Farm: \"Farm Lane\", animals and things to do",
+  "updated": 1793323126942
+}

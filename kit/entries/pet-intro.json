@@ -1,0 +1,23 @@
+{
+  "blockedBy": "",
+  "body": "Pets become real care: needs, signs, growth, a pet yard and a farm, with buyable upgrades. The split is merged (pull request #10, 29 Oct), so building can start once this plan is agreed.",
+  "ch": "plan",
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793396042815,
+      "text": ""
+    }
+  ],
+  "created": 1793323126942,
+  "id": "pet-intro",
+  "kind": "plan",
+  "needs": [],
+  "order": 228,
+  "short": "Pets and Farm Update: the whole plan, stages 1-6",
+  "source": "Pet update: plan › Intro",
+  "stage": "pfu-1",
+  "status": "approved",
+  "title": "Pets become real care: needs, signs, growth, a pet yard and…",
+  "updated": 1793396042815
+}

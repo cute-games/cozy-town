@@ -1,0 +1,41 @@
+{
+  "blockedBy": "",
+  "body": "Vet visit moves (rule rules-vet-visit, Plan entry plan-vet-station):\n- Lobby: the nurse stands at the desk for booking.\n- Cabinet: the vet listens with the stethoscope, checks ears and teeth, weighs the pet.\n- Pet reacts: a bit nervous, wiggles, licks, sits still.\n- The nurse gives a treat; the pet eats it, happy again; the sick look ends.\nVets: you kept all 4. Dr. Rūta examines, vet nurse Leo gives the treat (his bandage hidden here).\nStage: 4, pet clinic.",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793404837008,
+      "text": "Done: exam table, scale, nurse treat, lobby desk.\nNot seen again after a late fix: the vet's hands at the exam (checked by numbers)."
+    },
+    {
+      "act": "approve",
+      "at": 1793406519527,
+      "text": ""
+    },
+    {
+      "act": "chat",
+      "at": 1793485139560,
+      "text": "Done: Dr. Rūta examines (your pick, 1 Nov). Lobby desk = Nurse Penny."
+    }
+  ],
+  "created": 1793397092464,
+  "id": "moves-vet-exam",
+  "kind": "task",
+  "needs": [
+    "plan-vet-station",
+    "model-vet",
+    "rules-vet-visit",
+    "moves-pet-sick"
+  ],
+  "order": 115,
+  "pics": [
+    "img/moves7-vet.gif"
+  ],
+  "short": "Vet exam, scale, nurse treat, lobby. OK?",
+  "source": "board 30 Oct: plan-20261030-vet-moves, rules-20261030-treat-moves",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Vet visit: exam, treat, happy",
+  "updated": 1793485139560
+}

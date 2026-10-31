@@ -1,0 +1,33 @@
+{
+  "blockedBy": "",
+  "body": "Picked: B) 5-step lesson.\n\nIEVA (by the stable, grooms horses)\nFirst time: \"Hi! I'm Ieva. These horses are my best friends.\" → \"Want a ride? First a lesson. Stan is at the jump field!\" (Stan gets a ⭐ on the map.)\nBefore the lesson, again: \"Stan is waiting at the jump field!\"\nAfter the lesson: \"Stan says you did great! Pick a horse.\" → \"Bring her back to the stable when you're done.\"\nAll horses out: \"Every horse is out. Come back soon!\"\nWith pets: \"Your pets can wait here with me.\"\nBringing a horse back: \"Thank you! She had fun.\"\nFoal: \"She's too little to ride. You can pet her!\"\nRandom (never the same twice in a row): \"Brushing makes their coat shine.\" / \"Clover loves apples.\" / \"The trail goes all around the farm.\"\n\nSTAN (jump field, lesson horse)\nStart: \"Howdy! I'm Stan. Ready for your first lesson?\" (Yes / Later)\nSteps, one short line each:\n1. \"Tap the horse to get on.\"\n2. \"Walk to the blue flag.\"\n3. \"Now trot to the red flag!\"\n4. \"Now jump that one!\" (the lowest jump of the existing course, course:x/v/o/s; no new log)\n5. \"Stop by me. Easy does it.\"\nEnd: \"You're a natural! Ieva will lend you a horse anytime.\" 🎉\nAfter: \"Practise jumps here any time!\"\n\nHORSE (near town, it stops)\n\"Your horse won't go closer to town.\" (shown once per ride)\n\nRules used: rules-* riding (lesson first, 10 shared horses, one rider each, back to stable, stops near town, foals can't be ridden, pets wait at the stable).",
+  "ch": "story",
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793480640050,
+      "text": "b"
+    },
+    {
+      "act": "chat",
+      "at": 1793480760000,
+      "text": "Done: B) 5-step lesson recorded."
+    },
+    {
+      "act": "chat",
+      "at": 1793482900000,
+      "text": "Picked in chat: A) existing course jump, no log (31 Oct)."
+    }
+  ],
+  "created": 1793480487168,
+  "id": "story-ieva-stan",
+  "kind": "plan",
+  "needs": [],
+  "order": 1,
+  "short": "Ieva lends horses; Stan gives a 5-step first lesson",
+  "source": "chat 2026-10-31: Characters and story (from Map row map-20261031-ieva-story)",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Ieva and Stan: talk, lesson",
+  "updated": 1793482900000
+}

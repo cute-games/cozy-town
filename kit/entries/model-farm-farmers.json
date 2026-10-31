@@ -1,0 +1,30 @@
+{
+  "body": "From your note \"Keep all, just fix grandma's head\": Grandma Ona now has a real headscarf: snug round her head, a big knot under the chin, the corner hanging at the back, white dots all round. Hugo, Fern and Jonas unchanged.",
+  "ch": "living",
+  "cmp": {
+    "at": 1793372000000,
+    "id": "only-farm-farmer"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Approved: you decided it in Model Compare (31 Oct)."
+    }
+  ],
+  "created": 1793364500000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/farmer-ona.jpg",
+    "img/farmer-hugo.jpg",
+    "img/farmer-fern.jpg",
+    "img/farmer-jonas.jpg"
+  ],
+  "source": "chat 30 Oct: pets and farm audition, round 15",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Farmers: Hugo, Fern, Grandma Ona, Jonas",
+  "updated": 1793409100000
+}

@@ -1,0 +1,32 @@
+{
+  "body": "Your decision: farm animals come only as babies and adults (no teen), and babies never grow up. New baby calf made from the adult cow you kept: smaller (about hip height on the player), bigger head, shorter legs, rounder body. Pick in Model Compare: Farm animals → Cow, Age: Baby.",
+  "ch": "living",
+  "cmp": {
+    "at": 1793395000000,
+    "id": "only-farm-cow"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793393090000,
+      "text": "Viewer: 2 passes, 8/10, nothing above minor."
+    },
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Approved: you decided it in Model Compare (31 Oct)."
+    }
+  ],
+  "created": 1793393090000,
+  "kind": "model",
+  "needs": [],
+  "order": 3,
+  "pics": [
+    "img/farm-calf.jpg"
+  ],
+  "source": "chat 30 Oct: Living things models, round 32",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Calf: baby cow",
+  "updated": 1793409100000
+}

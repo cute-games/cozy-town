@@ -1,0 +1,21 @@
+{
+  "body": "The pig's snout is at 0.45-0.5, the trough rim was 0.52, so the pig could not eat or drink from it.\nNow (book v161): rim 0.34, water just under it. Horses and cows still reach it.\nPick in Model Compare → Water trough (🔔).",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793482315646,
+    "id": "farmtrough"
+  },
+  "comments": [],
+  "created": 1793482400000,
+  "id": "objects-fix-trough",
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [],
+  "short": "Check: trough rim 0.52 → 0.34",
+  "source": "board moves-20261031-trough-basket-maze",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Farm water trough: low enough for the pig",
+  "updated": 1793482400000
+}

@@ -1,0 +1,23 @@
+{
+  "body": "From your note: a better steel windmill (ladder, platform, thicker wheel) and a second version, \"Old and creaky, alone on the field\" (wooden, leaning, blades missing). Switch between them on the card.\nPicked in Model Compare.",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793328394000,
+    "id": "only-farm-windmill"
+  },
+  "comments": [],
+  "created": 1793352910000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/windmill.jpg",
+    "img/windmill-old.jpg"
+  ],
+  "short": "Picked: Farm windmill: better + old creaky version",
+  "source": "chat 30 Oct: pets and farm audition, round 14",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Farm windmill: better + old creaky version",
+  "updated": 1793402000000
+}

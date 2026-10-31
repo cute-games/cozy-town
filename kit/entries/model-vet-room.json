@@ -1,0 +1,29 @@
+{
+  "body": "Floor 1 lobby: booking desk (nurse gives a treat), waiting seats, shelves, paw rug, posters. Stairs up the left wall. Floor 2: Room 1 (small pets), Room 2 (big pets), staff coffee corner for the 4 vets. No kennels, no X-ray.\nPicked in Model Compare.",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793395754000,
+    "id": "only-vet-room"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793395900000,
+      "text": "Done: purple/violet + butter yellow, bigger, no cages or X-ray."
+    }
+  ],
+  "created": 1793394700000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/vet3-room-0.jpg",
+    "img/vet3-room-1.jpg"
+  ],
+  "short": "Picked: Vet station inside: lobby + vet rooms + staff corner",
+  "source": "chat 30 Oct: Non-living things models, vet clinic",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Vet station inside: lobby + vet rooms + staff corner",
+  "updated": 1793402000000
+}

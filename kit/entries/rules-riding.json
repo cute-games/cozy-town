@@ -1,0 +1,35 @@
+{
+  "blockedBy": "",
+  "body": "1. 10 farm horses, nobody owns one.\n2. First time: a lesson with the horse instructor. After that, ride any time.\n3. Take a free horse at the stable. One rider per horse. All taken: wait until one comes back.\n4. Ride the trail around the farm and the jump field. You can leave the trail.\n5. Near town the horse stops and won't go further.\n6. Get off at the stable: the horse goes back to its stall. Leave the game while riding: it walks back by itself.\n7. Foals can't be ridden. Friends see you ride. Your pets wait at the stable and come back when you get off.\n8. Rides after the lesson are free. Lesson price and stable hours: Schedules and economy chat.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793396708589,
+      "text": "Done: approved by you in chat, 30 Oct."
+    },
+    {
+      "act": "chat",
+      "at": 1793397700275,
+      "text": "Done: fix 5 in (pets wait at the stable)."
+    },
+    {
+      "act": "chat",
+      "at": 1793397867921,
+      "text": "Done: line 8, rides after the lesson are free (your A)."
+    }
+  ],
+  "created": 1793396506885,
+  "id": "rules-riding",
+  "kind": "rule",
+  "needs": [
+    "q-pfu-riding"
+  ],
+  "order": 306,
+  "short": "Lesson first, take a free horse, bring it back to the stable",
+  "source": "chat 30 Oct 2026: Game rules chat, from q-pfu-riding and Karolis's farm vision",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Horse riding: how it works",
+  "updated": 1793397867921
+}

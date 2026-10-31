@@ -8,11 +8,12 @@ const hourLen=h=>h>=7&&h<21?600/14:300/10;let HOUR=hourLen(12);
    A game day is 15 real minutes at the old speed: 7:00-21:00 take 600 s (hourLen), 21:00-7:00 take 300 s. Days count from 1 Jan 2026 (UTC); the
    day number is only used for the weekday, the weather blocks, the bus week and the quest draw: it is never shown anywhere (only "9:40 Wed").
    The clock never pauses. An old save jumps once to the shared day when it loads (clockLoad). The tests replace realMs() in a test copy, like realDate() */
-const CLK={off:0,EP:Date.UTC(2026,0,1),DAY:900000};
+const CLK={off:0,EP:Date.UTC(2026,0,1),DAY:900000,sk:0};   /* sk: the night skips, added up (ms; shared online, see the night skip) */
 function realMs(){return Date.now()+CLK.off;}
+const gameMs=()=>realMs()+CLK.sk;   /* 🌙 the one clock's own time: the real time plus every night skipped so far (pets and farm update, stage 1) */
 function clockAt(ms){const k=Math.floor((ms-CLK.EP)/CLK.DAY),r=(ms-CLK.EP-k*CLK.DAY)/1000;return{day:k+1,time:r<210?r/30:r<810?7+(r-210)*14/600:21+(r-810)/30};}
 function msAt(day,time){const r=time<7?time*30:time<21?210+(time-7)*600/14:810+(time-21)*30;return CLK.EP+(day-1)*CLK.DAY+r*1000;}
-const clockNow=()=>clockAt(realMs());
+const clockNow=()=>clockAt(gameMs());
 function clockSync(){if(!S)return false;const c=clockNow();HOUR=hourLen(c.time);if(c.day===S.day){if(Math.abs(c.time-S.time)>.1)hudT=1;S.time=c.time;return false;}   /* (run 4 finish: after a jump of the clock, a phone waking up, the chip is right at once, not half a second later) */const d0=S.day;S.day=c.day;S.time=c.time;dayJump(d0);return true;}   /* true = a new day began */
 function dayJump(d0){if(!S.garden)return;for(const st of S.garden)if(st&&st.seed&&st.g<1&&st.w>0&&st.w<S.day)st.g=1;}   /* 🌱 a plant watered on a day that has passed finished growing */
 function clockLoad(){for(const k in BUS_DAY)delete BUS_DAY[k];if(!S.intro){const c=clockNow();S.day=c.day;S.time=c.time;busWelcome();}else clockSync();}   /* a new player starts at the real time; an old save jumps once to the shared day */
@@ -58,6 +59,17 @@ const TASKS=[
 function freshState(){return{v:1,t:0,name:'',day:1,time:8,coins:120,hunger:85,bag:{apple:2,cookie:1},
   home:{wall:'#ffd6e0',floor:'wood',items:[{u:'b1',t:'bed',c:'#ff9ec4',x:-4.6,z:-3.85,r:0},{u:'r1',t:'rug',c:'#b79cff',x:0,z:-.5,r:0},{u:'l1',t:'lamp',c:'#ffd45c',x:-2.9,z:-4.5,r:0,on:1}],store:[]},
   pets:[],fr:{},tasks:{},litter:{day:0,got:[]},mail:0,picked:0,intro:false,loc:'city',px:-17,pz:-4.8,yaw:0,look:Object.assign({},DEFAULT_LOOK),q:{day:0,list:[],st:{}},hard:{}};}
+
+/* 💾 the save version of the pets and farm update (stage 1): sv 2. One step for the whole update: an older save (and a new game) gets every new
+   field with its default once, and nothing it has changes (v stays 1, older versions read the same save). The fields, by stage: each pet
+   sick (0/1) and sad (play minutes at 0-1 hearts, toward sickness: stage 2), tr (tricks known: the first one) and tp (practice days toward the
+   next: stage 5); hw = this healthy week (w: week number, cd: care days Mon-Fri as bits, sick: a pet was sick; stage 2); vet = the vet booking
+   (bk: null; stage 2); yard = the pet yard and garden levels (1 and 1; stage 3); lic = the animal license (lv, wins, firsts, weeks: all 0; stage 5);
+   ride = riding (lesson: 0; stage 6); farm = the last game day you took eggs and milk (0; stage 6) */
+const SAVE_V=2;
+function saveMigrate(){if((S.sv|0)>=SAVE_V)return;const o=(k,v)=>{if(!S[k]||typeof S[k]!=='object')S[k]=v;};
+  for(const d of S.pets){if(d.sick===undefined)d.sick=0;if(d.sad===undefined)d.sad=0;if(d.tr===undefined)d.tr=1;if(d.tp===undefined)d.tp=0;}
+  o('hw',{w:0,cd:0,sick:0});o('vet',{bk:null});o('yard',{pet:1,garden:1});o('lic',{lv:0,wins:0,firsts:0,weeks:0});o('ride',{lesson:0});o('farm',{eggs:0,milk:0});S.sv=SAVE_V;}
 
 /* ---- saving: this device + your claude.ai account ---- */
 const LS='cozytown-save-1';
@@ -1284,7 +1296,7 @@ function mpUpsert(p){const pr=p.presence||{};if(!pr.nm)return;let a=MP.peers.get
   const s=pr.say;if(s&&typeof s==='object'&&s.id!==a.sayId){a.sayId=s.id;const txt=Number.isInteger(s.m)&&QUICK[s.m]?QUICK[s.m]:Number.isInteger(s.e)&&EMOS[s.e]?EMOS[s.e]:null;if(txt&&!fresh)mpBubble(a,txt);}
   const bk=JSON.stringify(pr.bl||null);if(bk!==a.bk){a.bk=bk;if(pr.bl)ballFrom(a,pr.bl);else if(!BS.mine&&BS.own===a.peer)ballOwnerGone();}
   const ck=JSON.stringify(pr.sc||null);if(ck!==a.ck){a.ck=ck;if(pr.sc)scoreFrom(a,pr.sc);}
-  a.zz=pr.zz===1?1:0;a.aw=pr.aw===1?1:0;a.st=pr.st===1?1:0;mpExtra(a,pr,fresh);}
+  a.zz=pr.zz===1?1:0;a.ob=pr.ob===1?1:0;a.aw=pr.aw===1?1:0;a.st=pr.st===1?1:0;mpExtra(a,pr,fresh);}
 /* 🕰️ run 4, job 1: there is one clock for everyone (clockNow), so nobody takes a friend's clock any more and presence carries no ck */
 function mpBuildAv(a,look){mpDropAv(a);const p=makePerson(lookToPerson(look));bakePerson(p);const txt='⭐ '+a.nm+(a.old?' · ⏳ older version':''),tg=label(txt,.3);tg.userData.txt=txt;tg.position.y=2.0;p.root.add(tg);p.tag=tg;scene.add(p.root);a.av=p;a.av.root.position.set(a.x,0,a.z);}
 function mpDropAv(a){if(a.av){scene.remove(a.av.root);a.av=null;}a.bub=null;a.lie=false;a.lieK='';if(a.zzs){a.zzs.material.map.dispose();a.zzs.material.dispose();a.zzs=null;}mpPetsDrop(a);}
@@ -1428,7 +1440,8 @@ function hostAnswer(ok,quiet){const q=HOST.cur;if(!q)return;HOST.cur=null;const 
 function mpTick(dt){if(!MP.grp)return;const loc=CUR?CUR.id:'city';
   MP.t+=dt;if(MP.t>=.15){MP.t=0;const st={nm:S.name||'Friend',lk:packLook(),loc,x:Math.round(P.x*100)/100,z:Math.round(P.z*100)/100,ry:Math.round((P.sit&&P.sit.bus?P.sit.yaw:P.yaw)*100)/100,mv:P.moving?1:0,v:COZY_BUILD};   /* v: my version stamp (run 4, job 2): a friend with none or a smaller one shows ⏳ older version */   /* (on the bus your body faces forward on the seat, wherever you look) */
     {const b=LOC.city.ball,m=S.match||{l:0,r:0,v:0},r2=v=>Math.round(v*100)/100;st.sc=[m.l|0,m.r|0,m.v|0];st.bl=BS.mine&&b?[r2(b.x),r2(b.z),r2(b.vx),r2(b.vz),BS.k,Math.round((b.reset||0)*10)/10]:null;}
-    st.zz=zzIn()?1:null;st.aw=AW.on?1:null;st.st=P.sit&&!P.sit.bed&&!P.sit.bus?1:null;   /* 🪑 sitting on a bench or a chair; 😴 zz: in bed (optional; null clears them: presence merges) */
+    st.zz=zzIn()?1:null;st.ob=nsMine()?1:null;st.aw=AW.on?1:null;   /* 🌙 ob: in my own bed at home (the night skip) */
+    st.st=P.sit&&!P.sit.bed&&!P.sit.bus?1:null;   /* 🪑 sitting on a bench or a chair; 😴 zz: in bed (optional; null clears them: presence merges) */
     mpStamp(st);   /* 🦘 jumps, 🐾 pets with me (optional) */
     laneStamp(st);hpStamp(st);const key=JSON.stringify(st);if(key!==MP.lastKey){MP.lastKey=key;MP.grp.presence(st).catch(()=>{});}}
   for(const a of MP.peers.values()){if(!a.av)continue;let sp=peerSpot(a);const vis=!!sp,lie=vis&&!!a.zz;a.av.root.visible=vis;if(lie)sp=mpBedSpot(a,sp);if(sp){a.tx=sp[0];a.tz=sp[1];a.ry=sp[2];}
@@ -1843,15 +1856,31 @@ function sleep(rec,fx,fz){
   P.x=P.sit.x;P.z=P.sit.z;P.yaw=P.sit.yaw;P.pitch=-.12;ZZ.t=0;SFX.pop();floatText('💤',g.x+fx*(f+.6),.72,g.z+fz*(f+.6),{h:.4});toast('💤 Good night!',2);}   /* the 💤 floats up in the middle of the view (not onto the clock) */
 function zzTick(dt){const dh=CUR.id!=='home'||zzIn();if($('bDeco').hidden!==dh)$('bDeco').hidden=dh;   /* 🛋️ no decorating from bed */
   if(zzIn()&&S.time>=7&&S.time<21){zzMorning();return;}   /* 7:00 came on the one clock */
-  zzScreen(zzIn());}
+  nsTick(dt);zzScreen(zzIn());}
+/* 🌙 the night skip (pets and farm update, stage 1; the owner's rules, 30 Oct): at night, when every player online is in their own bed, the night
+   skips to 7:00. Alone, your bed is enough. A friend visiting your house counts only once they are in their own bed; a player who is away
+   ("Still there?", presence aw) does not count, and neither does an older version (it sends no ob, so it counts as awake: it updates itself first).
+   Not everyone in bed: the night goes on as before (5 real minutes). The skip is saved online once: CLK.sk, the total of all skipped time, in the
+   players' list under the name 'clock' (it has no player name, so every version leaves it out of the players), so every clock jumps together */
+const NS={ref:null,t:0};
+const nsMine=()=>zzIn()&&!!CUR&&CUR.id==='home';
+function nsAwake(){let n=0;for(const a of MP.peers.values())if(!a.aw&&a.ob!==1)n++;return n;}   /* players online who are not in their own bed */
+function nsInit(){if(NS.ref||!(window.WEBNET&&WEBNET.on)||typeof window.WEBROOM!=='function')return;
+  WEBROOM().then(()=>{NS.ref=window.firebase.database().ref('worlds/cozy-town/'+WORLD+'/peers/clock');
+    NS.ref.on('value',s=>{const v=s&&s.val(),k=v&&Number(v.sk);if(Number.isFinite(k)&&k>CLK.sk&&k<1e11)CLK.sk=k;},()=>{});}).catch(()=>{});}
+function nsTick(dt){const t=S.time;if(!(t>=21||t<7)||!nsMine()||nsAwake()){NS.t=0;return;}
+  if((NS.t+=dt)<2)return;NS.t=-3;nsSkip();}   /* (everyone has been in bed for 2 s; then at most one try in 5 s) */
+function nsSkip(){const c=clockNow(),d=c.time>=21?c.day+1:c.day,add=msAt(d,7)+1500-gameMs();if(!(add>0))return;   /* to 7:00 (and a second and a half) */
+  const sk=CLK.sk+add;CLK.sk=sk;if(NS.ref)NS.ref.set({sk,d,at:Date.now()}).catch(()=>{});}
 function zzMorning(){standUp();S.hunger=Math.max(S.hunger,40);toast('Good morning! It\'s '+wdName()+' ☀️',4);doneTask('sleep');change();}
 /* the sleep screen: a soft night over the game, 💤 drifting up, the time and the weekday, and a Wake up button (at least 44 px) */
 function zzScreen(on){let el=$('zzScr');
   if(!on){if(el&&!el.hidden){el.hidden=true;document.body.classList.remove('zz');}return;}
   if(!el){el=document.createElement('div');el.id='zzScr';el.hidden=true;$('hud').appendChild(el);
-    el.innerHTML='<div class="zzc"><div class="zzz" aria-hidden="true"><span>💤</span><span>💤</span><span>💤</span></div><div class="zt"></div><div class="zs">Sleeping until 7:00 🌙</div><div class="zb"><button class="btn butter" id="zzUp">🌅 Wake up</button></div></div>';
+    el.innerHTML='<div class="zzc"><div class="zzz" aria-hidden="true"><span>💤</span><span>💤</span><span>💤</span></div><div class="zt"></div><div class="zs"></div><div class="zb"><button class="btn butter" id="zzUp">🌅 Wake up</button></div></div>';
     $('zzUp').onclick=()=>{audioInit();SFX.tap();standUp();};}
   const t=clockStr(S.time)+' · '+wdName().slice(0,3),z=el.querySelector('.zt');if(z.textContent!==t)z.textContent=t;
+  const n=nsMine()?nsAwake():0,u=n?'Sleeping until 7:00 🌙 · '+n+(n>1?' friends are':' friend is')+' still awake':'Sleeping until 7:00 🌙',zs=el.querySelector('.zs');if(zs.textContent!==u)zs.textContent=u;   /* 🌙 who keeps the night going (the night skip) */
   if(el.hidden){el.hidden=false;document.body.classList.add('zz');}}
 
 /* ---- away or offline ---- */

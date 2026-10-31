@@ -1,0 +1,35 @@
+{
+  "blockedBy": "",
+  "body": "In bed at night, your pets nap near you. A nap makes them happier.\nWhy: nights never hurt your pets.\nBear and seal nap in their own home (cave den, pond).",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793396474945,
+      "text": "Done: approved by you in chat, 30 Oct."
+    },
+    {
+      "act": "chat",
+      "at": 1793397700275,
+      "text": "Done: no rest need now; a nap makes them happier."
+    },
+    {
+      "act": "chat",
+      "at": 1793402712224,
+      "text": "Done: bear and seal nap at home (rules check 4)."
+    }
+  ],
+  "created": 1793395983846,
+  "id": "rules-mech-sleep",
+  "kind": "rule",
+  "needs": [
+    "rules-sickness"
+  ],
+  "order": 299,
+  "short": "When you sleep, your pets nap too and get happier",
+  "source": "chat 30 Oct 2026: Game rules red team, suggested mechanic",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "When you sleep, your pets sleep too",
+  "updated": 1793402712224
+}

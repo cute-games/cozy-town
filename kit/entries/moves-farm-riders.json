@@ -1,0 +1,38 @@
+{
+  "blockedBy": "",
+  "body": "From the Living chat (board, 30 Oct):\n- Cody walks, Hank jogs, Rose lopes round the horse trail, now and then (the game decides when).\n- Riding pose: the calmer pose from Model Compare (same for every rider).\n- Coach Ieva and Coach Stan at the jump field: point at the jumps, blow the whistle, cheer.\n- Where they stand and the trail path: Map chat (row living-20261030-riders-map).\nStage: 6, Farm Lane.",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793404837008,
+      "text": "Done: 3 riders on the trail and 2 coaches at the jumps.\nNot seen again after a late fix: Stan's cheer arm (checked by numbers)."
+    },
+    {
+      "act": "chat",
+      "at": 1793407100654,
+      "text": "Done: Hank's jog is slower and smooth now (viewer: smooth).\nApproved in chat (31 Oct): Cody, Rose, Coach Ieva, Coach Stan."
+    },
+    {
+      "act": "approve",
+      "at": 1793407656415,
+      "text": ""
+    }
+  ],
+  "created": 1793404837008,
+  "id": "moves-farm-riders",
+  "kind": "task",
+  "needs": [
+    "moves-horse-riding"
+  ],
+  "order": 117,
+  "pics": [
+    "img/moves9-riders.gif"
+  ],
+  "short": "Hank's jog is smooth now. OK?",
+  "source": "board 30 Oct: living-20261030-riders, living-20261030-ride-pose",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Riders on the trail; riding instructor",
+  "updated": 1793407656415
+}

@@ -1,0 +1,44 @@
+{
+  "blockedBy": "",
+  "body": "ONE capybara model (body: \"Real, game style\"). Only colour variants are allowed. Faces only from the other versions. Karolis, 30 Oct.\nLEFT, good moods (you said these are good): Normal, Curious, Very happy, Content, Tired, Yawn, Lies down, Asleep, Wakes up.\nRIGHT, bad moods (redone, much sadder):\n- Sad: head and ears droop low, a big sigh, a blue tear.\n- Lonely: walks up to you, looks up sadly with a tear, nudges your leg.\n- Hungry: noses the EMPTY bowl and pushes it, sits, a tear.\n- Bored: nudges its ball once, sighs, flops with its chin by the ball.\n- Very sad (ignored a long time): lies flat, head on the ground, tears, slow breaths.\n- Cheers up: you came back, happy face and a little hop.\nLying is a pose of the same body. Body language only, no text (pet decision 15).\nStage: 2, pet brain.\nFriends see this move too (Plan, 31 Oct: pets are sent online for real).",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793392524757,
+      "text": "Fixed from your note \"ONLY EXPRESSIONS ARE GOOD, MODEL SHOULD BE ONLY ONE, except colour differences\": the 13 capybaras are gone. Now it is one capybara (the Real, game-style body) going through its moods in one 12-second loop. Only the face and the pose change. The cute set is dropped. Viewer: the same body in every frame. Minor: the blush is faint, and Content looks close to Normal."
+    },
+    {
+      "act": "redo",
+      "at": 1793392741183,
+      "text": "all positive emotions are good. the negatives needs more"
+    },
+    {
+      "act": "chat",
+      "at": 1793394121784,
+      "text": "Read your Redo (\"all positive emotions are good, the negatives need more\"). Kept the good moods as they were (left). Redid the bad moods (right) much sadder: drooping head and ears, big sighs, blue tears, the empty bowl pushed around, a sulky flop by the ball, and lying flat when ignored for a long time. Viewer: Sad, Hungry, Bored and Very sad read clearly. Lonely reads as sad but weaker. Minor: the small mouth always looks a bit smiley (that is the model's mouth; only the Living chat can add a sad mouth)."
+    },
+    {
+      "act": "approve",
+      "at": 1793395379537,
+      "text": ""
+    }
+  ],
+  "created": 1793386438664,
+  "id": "moves-pet-capy-reactions",
+  "kind": "task",
+  "needs": [
+    "model-capybara-real",
+    "pet-dec-15"
+  ],
+  "order": 100.5,
+  "pics": [
+    "img/moves5-capy.gif"
+  ],
+  "short": "Capybara moods as body language",
+  "source": "chat 30 Oct: from your note \"save those versions for movements\" (Living things chat board row)",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Capybara moods: one capybara, good and bad moods",
+  "updated": 1793395379537
+}

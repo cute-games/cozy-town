@@ -1,0 +1,40 @@
+{
+  "blockedBy": "",
+  "body": "1. Garden level 2: you can buy it only at gardening level 20.\n2. Garden level 3: only at gardening level 40.\n3. Each garden level adds 3 new beds at the back, open as soon as you buy it. They work like today's beds. New save spots after 35, so old saves keep working.\n4. Garden levels also give more space and nicer looks (the Non-living chat designs them).\n5. Pots keep Izabele's rule (idea 75): 6 open at each gardening level 10, 20, 30, 40, 50, in today's spots.\n6. A pot appears only when it opens.\n7. Pet yard level 2: only at Pet care level 20. Level 3: only at Pet care level 40.\n8. Training gear: small gear for each pet fits at pet yard level 1; the agility course needs level 2.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793400859016,
+      "text": "Done: your rule (31 Oct)."
+    },
+    {
+      "act": "chat",
+      "at": 1793401756412,
+      "text": "Changed (31 Oct, your ask): pots keep Izabele's rule.\nGarden levels give space and looks only."
+    },
+    {
+      "act": "chat",
+      "at": 1793402712224,
+      "text": "Done: pet yard skill gate and training gear added (31 Oct, your A)."
+    },
+    {
+      "act": "chat",
+      "at": 1793402821888,
+      "text": "Done: +3 beds per garden level (line 3). You asked me to decide, 31 Oct."
+    }
+  ],
+  "created": 1793400859016,
+  "id": "rules-garden-levels",
+  "kind": "rule",
+  "needs": [
+    "pet-dec-04"
+  ],
+  "order": 316,
+  "short": "Garden levels: +3 beds each; pet yard 20/40 Pet care; pots unchanged",
+  "source": "chat 31 Oct 2026: Karolis in the Game rules chat",
+  "stage": "pfu-3",
+  "status": "approved",
+  "title": "Garden and pet yard levels need skill",
+  "updated": 1793402821888
+}

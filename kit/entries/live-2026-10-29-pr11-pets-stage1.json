@@ -1,0 +1,16 @@
+{
+  "body": "Merged 29 Oct 2026 11:08 (commit a47bb1a). Long shop hours (6 shops 7:00-23:00), interior designer one room for new orders, up to 10 pets with 3 following (My pets), give a pet to Ms. Paw at the pet shop. Check lines N8/N9 rewritten.",
+  "ch": "live",
+  "comments": [],
+  "created": 1793395800000,
+  "id": "live-2026-10-29-pr11-pets-stage1",
+  "kind": "log",
+  "needs": [],
+  "order": 2,
+  "short": "Pets stage 1 live: 10 pets, give-away, shop hours",
+  "source": "chat 2026-10-30: Plan chat, checked GitHub main",
+  "stage": "pfu-1",
+  "status": "live",
+  "title": "Live 29 Oct: Pets and Farm Update stage 1 (pull request #11, version 2026102902)",
+  "updated": 1793395800000
+}

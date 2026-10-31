@@ -131,7 +131,7 @@ function petSpot(){for(const d of [1.7,1.4,1.1])for(const a of [.35,-.35,.7,-.7]
   for(const a of [1.2,-1.2,1.6,-1.6,2.2,-2.2]){const x=P.x-Math.sin(P.yaw+a)*1.2,z=P.z-Math.cos(P.yaw+a)*1.2,q=collideXZ(x,z,.3,CUR);if(Math.hypot(q[0]-x,q[1]-z)<.02)return q;}   /* no room in front (right at a pen): beside you */
   return collideXZ(P.x+Math.sin(P.yaw)*1.2,P.z+Math.cos(P.yaw)*1.2,.3,CUR);}
 ACT.adopt=()=>{if(shutBuy('pets')||S.pets.length>=PET_MAX)return;const nm=($('petName').value||'').trim().slice(0,14)||AD.name;if(S.coins<ADOPT_COST)return;S.coins-=ADOPT_COST;
-  const T=PET_TYPES[AD.type],[nx,nz]=petSpot(),full=petFollowers()>=PET_FOLLOW,d={id:uid(),type:T.base||AD.type,col:AD.col,name:nm,happy:80,stay:false,loc:CUR.id,x:nx,z:nz,sx:0,sz:0};if(T.base)d.kind=AD.type;S.pets.push(d);const pa=addPetActor(d);   /* 🐾 saved as the old kind + the real kind */
+  const T=PET_TYPES[AD.type],[nx,nz]=petSpot(),full=petFollowers()>=PET_FOLLOW,d={id:uid(),type:T.base||AD.type,col:AD.col,name:nm,happy:80,stay:false,loc:CUR.id,x:nx,z:nz,sx:0,sz:0,sick:0,sad:0,tr:1,tp:0};   /* (sick, sad, tr, tp: save version 2, see saveMigrate) */if(T.base)d.kind=AD.type;S.pets.push(d);const pa=addPetActor(d);   /* 🐾 saved as the old kind + the real kind */
   if(full)petGoHome(pa);   /* 🏡 3 pets follow you already: the new one waits at home in your yard */
   closePanel();SFX.yay();toast(full?`Welcome home, ${nm}! ${PET_TYPES[AD.type].icon} ${PET_FOLLOW} pets follow you already, so ${nm} waits for you at home in your yard 🏡`:`Welcome home, ${nm}! ${PET_TYPES[AD.type].icon} Look at ${nm} to play.`,4.6);doneTask('pet');change();};
 

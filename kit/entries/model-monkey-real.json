@@ -1,0 +1,50 @@
+{
+  "body": "From your note \"redo the monkey like the capybara; movement looks bad; kinds like the bears, one model, colour only; lemurs too\". Built from real small-monkey and lemur proportions, then the game style on top (head 1.5x real, big shiny eyes, ink outlines). Stands on all fours; each leg swings from the shoulder or hip, so walking looks right (last picture: mid-stride). Long tail that curls at the tip. Kinds you kept (only colours change): brown capuchin, white-faced capuchin, squirrel monkey, vervet, ring-tailed lemur, red ruffed lemur, black-and-white ruffed lemur, classic brown. Golden spider monkey dropped (your decision, 30 Oct).",
+  "ch": "living",
+  "cmp": {
+    "at": 1793392000000,
+    "id": "only-pet-monkey"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793386800000,
+      "text": "New monkey from real proportions, 9 kinds as colours on one model, built for walking. Viewer: 3 passes, last 8/10, nothing above minor left."
+    },
+    {
+      "act": "chat",
+      "at": 1793390758657,
+      "text": "Golden spider monkey (your Redo): real Geoffroy's colours: golden body, black hands, feet, lower legs and tail tip, dark face with pale eye rings and muzzle. Other kinds unchanged."
+    },
+    {
+      "act": "chat",
+      "at": 1793392197265,
+      "text": "Golden spider monkey dropped on your word. The 8 kinds you kept are recorded as Keep; the Monkey card is decided."
+    },
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Approved: you decided it in Model Compare (31 Oct)."
+    }
+  ],
+  "created": 1793386800000,
+  "kind": "model",
+  "needs": [],
+  "order": 1,
+  "pics": [
+    "img/monkey-capuchin.jpg",
+    "img/monkey-ringtail.jpg",
+    "img/monkey-squirrel.jpg",
+    "img/monkey-whiteface.jpg",
+    "img/monkey-vervet.jpg",
+    "img/monkey-redruffed.jpg",
+    "img/monkey-bwruffed.jpg",
+    "img/monkey-classic.jpg",
+    "img/monkey-walk.jpg"
+  ],
+  "source": "chat 30 Oct: Living things models, round 28",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Monkey: one real-proportion model, 8 kinds by colour",
+  "updated": 1793409100000
+}

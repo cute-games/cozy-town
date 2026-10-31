@@ -1,0 +1,21 @@
+{
+  "body": "Built (book v146), Model Compare → Pet Show → Pet Show area (with people / empty). There is also a new card for the judges' table alone.\nLayout, all on one sand show lawn on the west side of the park, facing the fountain:\n1) Stage: at today's spot (-36.5, 22), front toward the fountain.\n2) Podium: BESIDE the stage, not in front, at (-36.0, 16.9). It faces the fountain too, so it never blocks the view.\n3) Judges' table: at the other front corner (-33.8, 27.3), turned toward the stage, outside the rope. 3 judges, name plates, score paddles 9/10/8, a gold bell. 3.0 x 1.1 x 1.3 units.\n4) Low gold rope with a gap in the middle. The audience stands between the rope and the fountain.\nChange to the park: the tree at (-37.4, 16.2) moves to (-39.2, 13.4) to make room for the podium. Map chat to confirm.\nReviewer: 7 → 8 → 9/10. Nothing blocks the stage from the audience. Leftover: the playground slide stands close behind the judges (not touching).",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793462632870,
+    "id": "only-show-area"
+  },
+  "comments": [],
+  "created": 1793462700000,
+  "id": "objects-petshow-area",
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [],
+  "short": "OK'd 31 Oct: the whole Pet Show area. In the model pack",
+  "source": "Karolis 31 Oct: podium cannot be in the way of the stage; see the whole area in the park",
+  "stage": "pfu-5",
+  "status": "approved",
+  "title": "Pet Show area in Cozy Park: stage, podium, judges' table",
+  "updated": 1793463700000
+}

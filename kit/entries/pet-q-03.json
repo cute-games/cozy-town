@@ -1,0 +1,33 @@
+{
+  "blockedBy": "",
+  "body": "Which body-language signs for each need.\nAnswered by pet decision 15: play = brings a toy, bounces; rest = yawns, lies down; attention = follows close, looks up, nudges; food = sniffs, sits by the empty bowl. Approve to close.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793380762989,
+      "text": "Decisions chat: already settled by pet decision 15. Approve to close."
+    },
+    {
+      "act": "comment",
+      "at": 1793392551138,
+      "text": "So it is answered or not???"
+    },
+    {
+      "act": "chat",
+      "at": 1793394435143,
+      "text": "Game rules chat: Yes, answered. Your pet decision 15 (approved 29 Oct) already says it: play = brings a toy, bounces; rest = yawns, lies down; attention = follows close, looks up, nudges; food = sniffs, sits by the empty bowl. Nothing was left to decide, so I closed it like the other answered pet questions. Press Redo if you want it open again."
+    }
+  ],
+  "created": 1793323126942,
+  "id": "pet-q-03",
+  "kind": "question",
+  "needs": [],
+  "old": true,
+  "order": 287,
+  "source": "Pet update: plan › Open questions",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Body language for each need: decided (decision 15).",
+  "updated": 1793394435143
+}

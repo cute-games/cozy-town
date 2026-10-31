@@ -1,0 +1,2 @@
+for s in "$@"; do ffmpeg -loglevel error -y -framerate 12 -i fr2/$s/%03d.png -vf "split[a][b];[a]palettegen=max_colors=128[p];[b][p]paletteuse=dither=bayer:bayer_scale=4" -loop 0 gif2/moves-$s.gif
+ convert \( fr2/$s/000.png fr2/$s/008.png fr2/$s/016.png +append \) \( fr2/$s/024.png fr2/$s/032.png fr2/$s/040.png +append \) -append -resize '1800x>' chk2/$s.jpg; done

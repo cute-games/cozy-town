@@ -1,0 +1,29 @@
+{
+  "blockedBy": "dropped: Karolis picked in Story chat 31 Oct: use the existing course jump",
+  "body": "Stan's lesson needs one low jump.\nNew (book v162): one log 2.5 m long, top 0.35 m high, resting in two crossed wooden stands; same wood and outline as the pole jumps. Model Compare → Farm Lane · training field.\nPick in Model Compare (🔔).",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793482474781,
+    "id": "only-course-log"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793482900000,
+      "text": "Dropped: you picked the existing course jump in chat (31 Oct)."
+    }
+  ],
+  "created": 1793482550000,
+  "id": "objects-lesson-log",
+  "kind": "model",
+  "needs": [],
+  "old": true,
+  "order": 0,
+  "pics": [],
+  "short": "Pick: the little log jump",
+  "source": "board map-20261031-lesson-models",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "New: little log jump for Stan's lesson",
+  "updated": 1793482550000
+}

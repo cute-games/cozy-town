@@ -1,0 +1,22 @@
+{
+  "body": "Buyable head accessory (Pet Shop). Fits every pet; try it on other animals under \"On\".",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793374000000,
+    "id": "only-acc-boba"
+  },
+  "comments": [],
+  "created": 1793372500000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/acc-boba.jpg"
+  ],
+  "short": "Picked: Pet accessory: Bubble tea (head)",
+  "source": "chat 30 Oct: capybara accessories",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Pet accessory: Bubble tea (head)",
+  "updated": 1793402000000
+}

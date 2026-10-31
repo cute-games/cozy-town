@@ -1,0 +1,21 @@
+{
+  "body": "Model movements found the climbing branch's low end and a rock inside the half-log hide, so the coiled sleeping snake went through them.\nNow (book v161): the branch is turned round, low end on the right, rising over the hide; the rock moved to the right front corner. The hide is empty.\nPick in Model Compare → Snake terrarium (🔔).",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793482315646,
+    "id": "warmtank"
+  },
+  "comments": [],
+  "created": 1793482400000,
+  "id": "objects-fix-tank-branch",
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [],
+  "short": "Check: the hide is empty for the sleeping snake",
+  "source": "board moves-20261031-brush-branch",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Snake terrarium: branch and rock out of the hide",
+  "updated": 1793482400000
+}

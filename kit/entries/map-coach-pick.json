@@ -1,0 +1,28 @@
+{
+  "body": "You kept two riding instructors: Ieva and Stan. The map has one spot at the jump field.\nA) Ieva at the jump field\nB) Stan at the jump field\nC) Both, side by side\nTrail riders are set: Cody, Hank and Rose, each on a horse.",
+  "ch": "map",
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793463758980,
+      "text": "Ieva next to stables grooms horses. And you talk to her to borrow horse for a stroll. For the first time - she directs u to Stan (who is in  the field) to take you rfirst lesson"
+    },
+    {
+      "act": "chat",
+      "at": 1793465500000,
+      "text": "Done: Ieva stands in front of the stable, Stan at the jump field. The borrow-a-horse talk and first lesson went to Story and Plan."
+    }
+  ],
+  "created": 1793459584015,
+  "id": "map-coach-pick",
+  "kind": "question",
+  "needs": [
+    "model-farm-coach",
+    "map-farm-area-plan"
+  ],
+  "short": "Pick who teaches at the jump field",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Jump field instructor: who stands there?",
+  "updated": 1793465500000
+}

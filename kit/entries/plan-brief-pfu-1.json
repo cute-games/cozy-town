@@ -1,0 +1,31 @@
+{
+  "blockedBy": "",
+  "body": "Build brief. Game rules approved by Karolis 30 Oct. Read each rule entry before building.\nNIGHT SKIP (#rules, rules-night-skip):\n- Skips to 7:00 when every player online is in their own bed. Alone: your bed is enough.\n- A visiting friend counts only once in their own bed.\n- Not everyone in bed: night goes on as today (5 real minutes).\n- Skip saved online once, so all clocks jump together.\n- Old game versions update themselves first, at the next calm moment.\n- 'Pets sleep too' comes with stage 2 (rules-mech-sleep).\nAlso in stage 1: morning bus home (economy-morning-bus-home): every day the bus waits at the beach 8:00-9:30 and goes to town; fare 20, free under 20 coins; nothing new saved. Hats-in-hair fix on all hats and cosmetics.\nECONOMY REBALANCE: already BUILT as a patch (book db collection 'kits', doc 'economy-rebalance'; same text in project doc claude/economy-rebalance-kit.md; 2 commits on main a47bb1a, COZY_BUILD 2026103101). Covers eco-rt-01..05, 07, 08, 09 and the designer XP bug (eco-rt-10). Apply it, then build the rest on top. Kit note: quick kit line N8 fails on today's main too (fixture save-prepet1-designer2.json missing from the kit): fix the kit, never weaken the line.",
+  "ch": "plan",
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793403411708,
+      "text": ""
+    },
+    {
+      "act": "chat",
+      "at": 1793459656438,
+      "text": "Plan: approved bus numbers added (8:00-9:30). Still approved."
+    }
+  ],
+  "created": 1793397122256,
+  "id": "plan-brief-pfu-1",
+  "kind": "plan",
+  "needs": [
+    "rules-night-skip",
+    "economy-morning-bus-home"
+  ],
+  "order": 11,
+  "short": "Stage 1 rules: night skip to 7:00",
+  "source": "chat 2026-10-30: Plan chat, game rules approved 30 Oct (board rules-20261030-all-approved, -approved2)",
+  "stage": "pfu-1",
+  "status": "approved",
+  "title": "Stage 1 build brief: game rules",
+  "updated": 1793459656438
+}

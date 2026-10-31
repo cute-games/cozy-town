@@ -1,0 +1,26 @@
+{
+  "body": "Your notes (31 Oct): adult snake size; all light colours approved (kept: daylight, warm, ultraviolet, cyberpunk, pink, sunny, sky, mint, lilac, coral, off); open terrarium: no front glass, the other three glass sides stay.\nNow 2.5 x 0.9 x 1.15 units (about 2.0 x 0.75 x 0.95 m); the adult snake (2.35 units) lies inside full length. Front open with a low glass lip so the gravel stays in. New: a half-log hide on the left to sleep in. Branch, plants, rocks and water bowl moved to fit.\nAnimations (sleeping, going in, going out) sent to the Living and Moves chats.\nCheck in Model Compare → Big-needs homes → Snake home (🔔).",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793413686536,
+    "id": "warmtank"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793414000000,
+      "text": "Karolis: \"all terrarium approved\". In the model pack."
+    }
+  ],
+  "created": 1793413800000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [],
+  "short": "Picked: snake terrarium, adult size, open front",
+  "source": "chat 31 Oct: Non-living things models",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Snake terrarium: adult size, open front",
+  "updated": 1793414000000
+}

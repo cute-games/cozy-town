@@ -1,0 +1,25 @@
+{
+  "blockedBy": "",
+  "body": "1. New pets' favourite toys (the Play button needs one): monkey frisbee, seal ball, bear squeaky toy, snake toy mouse. Today's pets keep theirs.\n2. A big-needs pet's home counts as its toy at home (tree, pond, den, tank).\n3. Moods follow today's hearts (happiness ÷ 20): 5 hearts very very happy, 3-4 happy, 2 normal, 0-1 sad.\n4. Sick after about 1 more hour of play at 0-1 hearts.\n5. Babies can enter the Pet Show. Growing up keeps counting while a pet is sick.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793458677972,
+      "text": "Decided by Game rules (obvious gaps, 31 Oct). Press Redo to change.\nWithout line 1 the Play button breaks for new pets."
+    }
+  ],
+  "created": 1793458677972,
+  "id": "rules-pet-brain-details",
+  "kind": "rule",
+  "needs": [
+    "rules-dec-one-need"
+  ],
+  "order": 326,
+  "short": "New pets' favourite toys; moods follow today's hearts",
+  "source": "chat 31 Oct 2026: Game rules pet brain check (Karolis asked)",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Pet brain: favourite toys and moods",
+  "updated": 1793458677972
+}

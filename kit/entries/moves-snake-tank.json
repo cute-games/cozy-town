@@ -1,0 +1,38 @@
+{
+  "blockedBy": "",
+  "body": "Your ask (31 Oct): the snake goes in and out of its open terrarium by itself and sleeps inside.\n- Out over the low front lip, looks round, back in.\n- Sleeps in the half-log hide, eyes closed.\n- Needs a free spot about 1.5 in front of the tank.\nThe coiled sleep pose is too wide for the hide (asked Objects), so it sleeps stretched, head at the opening.",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793421631724,
+      "text": "Done: out, look round, back in, sleep in the hide; nothing clips.\nLeftovers: 'Back in' jumps at the loop; sleeping eyes small from above."
+    },
+    {
+      "act": "approve",
+      "at": 1793457681888,
+      "text": ""
+    },
+    {
+      "act": "chat",
+      "at": 1793477115355,
+      "text": "Updated: the hide is wider now, so the snake sleeps coiled, as you OK'd.\nIt goes over the lip between the posts; nothing clips."
+    }
+  ],
+  "created": 1793421631724,
+  "id": "moves-snake-tank",
+  "kind": "task",
+  "needs": [
+    "model-snake-terrarium"
+  ],
+  "order": 124.2,
+  "pics": [
+    "img/moves14-snakeTank.gif"
+  ],
+  "short": "Snake slides out, looks round, sleeps in its hide. OK?",
+  "source": "Model movements 31 Oct: asks from the Objects chat",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Snake goes in and out of its terrarium",
+  "updated": 1793477115355
+}

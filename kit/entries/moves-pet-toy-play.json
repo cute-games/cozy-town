@@ -1,0 +1,42 @@
+{
+  "blockedBy": "",
+  "body": "One shared play-with-toy move, settings per pet:\n- Monkey: throws the frisbee, runs, catches it, claps.\n- Seal: bounces the ball on its nose, flipper clap.\n- Bear: sits, squeezes the squeaky toy, squeak, rolls back.\n- Snake: noses the toy mouse, coils round it.\nRaises happiness like other toys. Friends see it too.\nToy models: frisbee and toy mouse are made; they wait for your pick (Objects chat).\nPlan only today: the GIF comes after your OK.",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793462400000,
+      "text": "Approved: you decided it in chat (31 Oct).\nPictures come next."
+    },
+    {
+      "act": "chat",
+      "at": 1793467300000,
+      "text": "Done: frisbee, ball, squeaky toy and toy mouse; check found no big problems.\nLeftover: seal eyes small from the front."
+    },
+    {
+      "act": "approve",
+      "at": 1793480318077,
+      "text": ""
+    }
+  ],
+  "created": 1793459629784,
+  "id": "moves-pet-toy-play",
+  "kind": "task",
+  "needs": [
+    "rules-20261031-tricks-moves",
+    "moves-pet-monkey",
+    "moves-pet-seal",
+    "moves-pet-bear",
+    "moves-pet-snake"
+  ],
+  "order": 127,
+  "pics": [
+    "img/moves13-toyPlay.gif"
+  ],
+  "short": "Monkey, seal, bear, snake play with their toy. OK?",
+  "source": "Board rules-20261031-tricks-moves (favourite toys approved 31 Oct)",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Big pets play with toys",
+  "updated": 1793480318077
+}

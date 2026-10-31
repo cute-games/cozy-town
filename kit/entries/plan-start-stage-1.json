@@ -1,0 +1,20 @@
+{
+  "blockedBy": "",
+  "body": "Stage 1 = economy rebalance patch, night skip to 7:00, morning bus home 8:00-9:30, hats-in-hair fix (plan-brief-pfu-1).\n1. Open claude.ai/code. Pick repo cute-games/cozy-town, branch main.\n2. Model: Opus 5.5, effort medium.\n3. Type this one line:\nBuild stage 1 of the Pets and Farm Update. Brief: Cozy Town Main Book https://claude.ai/artifact/6VamW3iTDycZZjZnfTrZa3, entries, doc plan-brief-pfu-1. Patch: same book, collection kits, doc economy-rebalance. Read HANDOFF.md and CLAUDE.md first.\n4. Claude makes a backup branch backup-YYYY-MM-DD, applies the patch, builds the rest, runs the quick kit after each change and the full check, then opens a pull request. Kit line N8: it adds the missing fixture, never weakens the line.\n5. You: read the pull request, play it on iPad and PC, merge.\n6. Say 'live 1' in the Plan chat: Plan writes the Live log.\nBefore stage 2: say 'pre-mortem stage 2' in Plan (pet brain is the biggest new system).\nIf the Claude Code chat can't read the book: say so in Plan; Plan makes a build page it can read.\nOpen picks, not blocking stage 1: Pet Shop fixes (stage 4), Pet Show podium (stage 5), jump field instructor (stage 6).",
+  "ch": "plan",
+  "comments": [],
+  "created": 1793459656438,
+  "id": "plan-start-stage-1",
+  "kind": "plan",
+  "needs": [
+    "plan-brief-pfu-1"
+  ],
+  "old": true,
+  "order": 10,
+  "short": "Start stage 1: open Claude Code, type one line",
+  "source": "chat 2026-10-31: Plan chat, board rows rules-20261031-all-stages-set, rules-20261031-rules-complete",
+  "stage": "pfu-1",
+  "status": "draft",
+  "title": "Start stage 1: click steps",
+  "updated": 1793459656438
+}

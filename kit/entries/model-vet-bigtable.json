@@ -1,0 +1,22 @@
+{
+  "body": "A big low padded platform with a ramp, for bears, seals and big dogs.\nPicked in Model Compare.",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793395754000,
+    "id": "only-vet-bigtable"
+  },
+  "comments": [],
+  "created": 1793395900000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/vet3-bigtable-0.jpg"
+  ],
+  "short": "Picked: Big-pet exam platform",
+  "source": "chat 30 Oct: Non-living things models, vet station round 2",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Big-pet exam platform",
+  "updated": 1793402000000
+}

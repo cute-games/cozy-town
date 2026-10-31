@@ -1,0 +1,34 @@
+{
+  "blockedBy": "",
+  "body": "What moves: pet walks to its bed or dog house, turns once, curls up, slow breathing, z z Z.\nWhen: tired (rest need) and when you sleep. Wakes up when you wake.\nNo bed: curls up on the floor near you.\nModels: pet beds (small, medium, large) and dog house in Model Compare.\nStage: beds are pet-yard items, so this waits for the backyard (stage 3).\nFriends see this move too (Plan, 31 Oct: pets are sent online for real).",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793384442775,
+      "text": "Redone (your ask: bending legs, better physics): legs now bend at hip and knee with real gaits, head and tail move, people swing their arms, jumps follow an arc with crouch and landing squash, blob shadows. 6 critic rounds: best 6.5 of 10, never 8, so not passed yet."
+    },
+    {
+      "act": "approve",
+      "at": 1793386192385,
+      "text": ""
+    }
+  ],
+  "created": 1793381015996,
+  "id": "moves-pet-sleep",
+  "kind": "task",
+  "needs": [
+    "pet-scope-u1-06",
+    "idea-090-pets-sleep-in-beds"
+  ],
+  "order": 101,
+  "pics": [
+    "img/moves2-sleep.gif"
+  ],
+  "short": "Pets sleep in beds and dog houses",
+  "source": "chat 30 Oct: Model movements, first drafts",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Pets sleep in beds and dog houses",
+  "updated": 1793386192385
+}

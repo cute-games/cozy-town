@@ -1,0 +1,30 @@
+{
+  "blockedBy": "",
+  "body": "A) 50 coins\nB) 100 coins (my pick)\nC) Free\nThe lesson is once, the first time only (Horse riding: how it works).\nAfter it, rides are free (you decided 31 Oct).\n100 = about a third of a job day (290).\nCompare: Tree Adventure Park free, bus ride 20, new pet 200.\nStage pfu-6.",
+  "ch": "economy",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793404157503,
+      "text": "Done: rides after the lesson are free (your 31 Oct pick)."
+    },
+    {
+      "act": "chat",
+      "at": 1793404435793,
+      "text": "Approved: you decided it in chat (31 Oct): B, 100 coins."
+    }
+  ],
+  "created": 1793397142216,
+  "id": "economy-riding-lesson-price",
+  "kind": "plan",
+  "needs": [
+    "rules-riding"
+  ],
+  "order": 5,
+  "short": "Riding lesson 100 coins once; rides after it free",
+  "source": "chat 2026-10-30: Schedules and economy chat, from board rows of Plan and Game rules",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Riding lesson price",
+  "updated": 1793404435793
+}

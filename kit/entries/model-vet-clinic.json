@@ -1,0 +1,29 @@
+{
+  "body": "Bigger cat-ear clinic, two floors: lobby downstairs, vet rooms upstairs. Purple and violet with butter yellow. Round window, paw board between the ears.\nPicked in Model Compare.",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793395754000,
+    "id": "only-vet-clinic"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793395900000,
+      "text": "Done: purple/violet + butter yellow, bigger, no cages or X-ray."
+    }
+  ],
+  "created": 1793394700000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/vet3-clinic-0.jpg",
+    "img/vet3-clinic-1.jpg"
+  ],
+  "short": "Picked: Vet station outside: bigger, 2 floors, cat ears",
+  "source": "chat 30 Oct: Non-living things models, vet clinic",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Vet station outside: bigger, 2 floors, cat ears",
+  "updated": 1793402000000
+}

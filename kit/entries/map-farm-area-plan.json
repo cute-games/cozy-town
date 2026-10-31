@@ -1,0 +1,35 @@
+{
+  "body": "The 3D plan follows Karolis' drawn lines (Map → Area plan, 10 slides with keep/redo and a comment each).\nChanges 30 Oct:\n- No trees inside the farm or the jump field; trees only around them.\n- Roads and the horse trail are smooth and join each other cleanly, with round ends; the gate junction was redone.\n- The horse trail no longer touches the lake.\n- Nothing big stands on roads or trails.\nLeft to do: mountains plain, labrador body plain, a faint green line on the lawn.",
+  "ch": "map",
+  "cmp": {
+    "pg": "pres"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793394900000,
+      "text": "Pictures renewed with the real game town (30 Oct). Red rings = game forest trees on the new trail and roads."
+    },
+    {
+      "act": "approve",
+      "at": 1793407300000,
+      "text": "Karolis in the Map chat, 31 Oct: 'all looks good in map'. He placed the farm himself in the Area plan; that saved scene is the plan."
+    }
+  ],
+  "created": 1793326000000,
+  "kind": "plan",
+  "needs": [
+    "idea-104-a-farm-horses-stables"
+  ],
+  "order": 0,
+  "pics": [
+    "img/plan-all.jpg#all",
+    "img/plan-farm.jpg#farm",
+    "img/plan-trail.jpg#trail"
+  ],
+  "source": "chat 30 Oct: area plan fixes",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Farm, horse trail and jump field: 3D area plan",
+  "updated": 1793407300000
+}

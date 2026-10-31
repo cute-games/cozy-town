@@ -1,0 +1,35 @@
+{
+  "body": "Your note: bigger paddles. Keeps the round seal you picked.\nBuilt: front flippers are wide paddles, back flippers are 2 real tail flippers. Each one turns where it meets the body.\nNew variant: Spotted (harbour seal look), same round body with flat grey spots.\nCard looks: Round, Spotted, Real.",
+  "ch": "living",
+  "cmp": {
+    "at": 1793419000000,
+    "id": "only-pet-seal"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793403023241,
+      "text": "Built round 39."
+    },
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Approved: you decided it in Model Compare (31 Oct)."
+    }
+  ],
+  "created": 1793397093496,
+  "id": "model-seal-flippers",
+  "kind": "model",
+  "needs": [],
+  "order": 9,
+  "pics": [
+    "img/seal-flippers.jpg",
+    "img/seal-spotted.jpg"
+  ],
+  "short": "You kept the Spotted seal",
+  "source": "chat 30 Oct: board rows from Model movements and Plan (seal)",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Seal: bigger flippers",
+  "updated": 1793409100000
+}

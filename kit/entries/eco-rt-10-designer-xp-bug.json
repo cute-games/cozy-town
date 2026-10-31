@@ -1,0 +1,28 @@
+{
+  "blockedBy": "",
+  "body": "Found in the economy red team (30 Oct). Finishing a designer room gives +1 Decorating level, but it also sets the XP toward the next level back to 0 (js/03-game.js:187, bumpLevel). Any Decorating XP you earned at home is lost. Pet Show 1st place (+2 Pet care levels) and claw level prizes do the same.\nFix: keep the XP when a level is given. Clearly broken, so it is fixed in the next update.",
+  "ch": "bugs",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793393358117,
+      "text": "Clearly broken game behaviour: project rules say fix, then tell. Recorded as approved for that reason."
+    },
+    {
+      "act": "chat",
+      "at": 1793393902343,
+      "text": "Karolis said 'do the rebalance' in the Schedules and economy chat (30 Oct): approved. Built as a code patch (economy-rebalance.patch, build 2026103101) and checked with the quick kit; goes live through a pull request in the next repo chat."
+    }
+  ],
+  "created": 1793393358117,
+  "id": "eco-rt-10-designer-xp-bug",
+  "kind": "bug",
+  "needs": [],
+  "order": 50,
+  "short": "Level prizes reset XP to 0; fix keeps it. Built, not live.",
+  "source": "chat 2026-10-30: Schedules and economy red team 2",
+  "stage": "pfu-1",
+  "status": "building",
+  "title": "Bug: finishing a designer room wipes your Decorating progress",
+  "updated": 1793397090000
+}

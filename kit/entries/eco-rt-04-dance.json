@@ -1,0 +1,23 @@
+{
+  "blockedBy": "",
+  "body": "Now: 15 coins every round, win or lose, no limit.\nNew: the first 3 rounds a game day pay 15 each; after that it's just for fun (XP still counts, with Balance 2's limit). Same as football and tennis, which already pay once a day.",
+  "ch": "economy",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793393902343,
+      "text": "Karolis said 'do the rebalance' in the Schedules and economy chat (30 Oct): approved. Built as a code patch (economy-rebalance.patch, build 2026103101) and checked with the quick kit; goes live through a pull request in the next repo chat."
+    }
+  ],
+  "created": 1793392672726,
+  "id": "eco-rt-04-dance",
+  "kind": "plan",
+  "needs": [],
+  "order": 14,
+  "short": "Dance-off pays only the first 3 rounds a day",
+  "source": "chat 2026-10-30: Schedules and economy red team",
+  "stage": "pfu-1",
+  "status": "building",
+  "title": "Balance 4: dance-off coins once a day",
+  "updated": 1793393902343
+}

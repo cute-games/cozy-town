@@ -1,0 +1,23 @@
+{
+  "blockedBy": "",
+  "body": "Ms. Paws names only the FIRST missing thing (rules-* big-needs pets).\n\nPet care level: \"{Pet}s need a lot of care. Reach Pet care {n} first!\"\nPet yard level: \"A {pet} needs lots of space. Grow your pet yard to level 3!\"\nHome: \"Where would it live? Get a {home} first!\" (monkey: climbing tree, seal: pond, bear: cave den, snake: glass tank in your house)\nAnimal license: \"You need an animal license, level {n}. Win at the Pet Show!\"\nAll ready: \"Everything is ready. {Pet} will love your home!\"\nSick pet given away: \"Oh no, {Pet} is sick. Take {Pet} to the vet first.\"\n\nNever says 'exotic' (rule).",
+  "ch": "story",
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793483754954,
+      "text": ""
+    }
+  ],
+  "created": 1793483100000,
+  "id": "story-paws-locked",
+  "kind": "plan",
+  "needs": [],
+  "order": 3,
+  "short": "Ms. Paws says the first thing a locked pet needs",
+  "source": "chat 2026-10-31: Characters and story",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Ms. Paws: locked pet lines",
+  "updated": 1793483754954
+}

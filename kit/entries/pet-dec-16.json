@@ -1,0 +1,16 @@
+{
+  "blockedBy": "",
+  "body": "#: 16\nDecision: Pet Show with friends\nNotes: Friends in the park on Saturday enter the same show; their pets take the places NPC pets have today (4 per show); everyone watches the same show; the three judges stay (style = outfits, tricks, happiness); tricks matter too; winner gets the prize, everyone else a smaller reward",
+  "ch": "rules",
+  "comments": [],
+  "created": 1793323126942,
+  "id": "pet-dec-16",
+  "kind": "decision",
+  "needs": [],
+  "order": 262,
+  "source": "Pet update: plan › Decisions",
+  "stage": "pfu-5",
+  "status": "approved",
+  "title": "Pet decision 16: Pet Show with friends",
+  "updated": 1793323126942
+}

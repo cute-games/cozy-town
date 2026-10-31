@@ -1,0 +1,38 @@
+{
+  "blockedBy": "",
+  "body": "Rule (approved 31 Oct): Sir Barkley hands the animal license card to the player on the podium. Player steps up, takes the card, cheers; pet hops.",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793421631724,
+      "text": "Done: Sir Barkley hands the card, player cheers, pet hops.\nPodium and card are marked stand-ins (asked Objects); hand stops 25 cm short."
+    },
+    {
+      "act": "approve",
+      "at": 1793457698937,
+      "text": ""
+    },
+    {
+      "act": "chat",
+      "at": 1793477115355,
+      "text": "Updated: real podium, stage and license card (no stand-ins).\nPlayer holds the card at chest height on step 1."
+    }
+  ],
+  "created": 1793410479321,
+  "id": "moves-show-license",
+  "kind": "task",
+  "needs": [
+    "rules-animal-license"
+  ],
+  "order": 125,
+  "pics": [
+    "img/moves14-showStaff.gif"
+  ],
+  "short": "License hand-over on the podium (stand-ins). OK?",
+  "source": "Model movements 31 Oct: gap check against the stage briefs",
+  "stage": "pfu-5",
+  "status": "approved",
+  "title": "Sir Barkley hands over the license",
+  "updated": 1793477115355
+}

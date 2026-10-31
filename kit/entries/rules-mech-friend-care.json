@@ -1,0 +1,35 @@
+{
+  "blockedBy": "",
+  "body": "Friends can pet and play with your pets. No feeding.\nIt makes your pet happier. The friend gets a little pet XP.\nCost: a new message between players, a bigger build.\nFriends see your pets as the real thing: mood, sick look and moves, not a stiff copy.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793396474945,
+      "text": "Done: approved by you in chat, 30 Oct.\nChanged: pet and play only, no feeding."
+    },
+    {
+      "act": "chat",
+      "at": 1793397700275,
+      "text": "Done: worded for the two needs, 31 Oct."
+    },
+    {
+      "act": "chat",
+      "at": 1793407889299,
+      "text": "Done: friends see your pets as the real thing (you decided, 31 Oct)."
+    }
+  ],
+  "created": 1793395983846,
+  "id": "rules-mech-friend-care",
+  "kind": "rule",
+  "needs": [
+    "rules-sickness"
+  ],
+  "order": 300,
+  "short": "Visiting friends can pet and play with your pets (no feeding)",
+  "source": "chat 30 Oct 2026: Game rules red team, suggested mechanic",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Visiting friends can pet and play with your pets",
+  "updated": 1793407889299
+}

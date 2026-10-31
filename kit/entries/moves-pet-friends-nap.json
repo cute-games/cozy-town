@@ -1,0 +1,36 @@
+{
+  "blockedBy": "",
+  "body": "From rules you approved (pfu-2):\n- When you sleep, your pet walks over and naps near you (rules-mech-sleep). Uses the pet sleep moves.\n- Visiting friends can pet and play with your pet, no feeding (rules-mech-friend-care). Your pet reacts the same way it reacts to you.\nPicture made. You nap on a blanket here; the real sleep spot comes from the game.\n- Friends see the real move too (Plan, 31 Oct).\nStage: 2, pet brain.",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793404837008,
+      "text": "Done: pet naps beside you; a friend pets it and plays ball.\nFriends see the real move now. Limit: no elbow, so the hand can't reach the floor."
+    },
+    {
+      "act": "approve",
+      "at": 1793406525985,
+      "text": ""
+    }
+  ],
+  "created": 1793397092464,
+  "id": "moves-pet-friends-nap",
+  "kind": "task",
+  "needs": [
+    "rules-mech-sleep",
+    "rules-mech-friend-care",
+    "moves-pet-sleep",
+    "moves-pet-body-language"
+  ],
+  "order": 116,
+  "pics": [
+    "img/moves8-friends.gif"
+  ],
+  "short": "Pet naps beside you; friends pet and play. OK?",
+  "source": "board 30 Oct: rules-20261030-mech-moves",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Pets nap near you; greet friends",
+  "updated": 1793406525985
+}

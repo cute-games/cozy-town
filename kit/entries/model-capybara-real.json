@@ -1,0 +1,53 @@
+{
+  "body": "Your word (in Model movements): \"only expressions are good; model should be only one, except colour differences.\"\nSo: ONE body (Real, game style) with colour variants only.\nSleepy, smile and blush, yawn, tilt, chin down, happy, curious, lying = faces on that one body, not separate models.\nThe cute set is not a second capybara.\nNext build: the Capybara card shows one body + a face picker; no body versions to pick.",
+  "ch": "living",
+  "cmp": {
+    "at": 1793415000000,
+    "id": "only-age-capybara"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793384495000,
+      "text": "Real: lower rump, cuter eyes, nose-to-mouth line. 4 versions from it."
+    },
+    {
+      "act": "chat",
+      "at": 1793385860000,
+      "text": "Sleepy family: 4 new versions like Sleepy. Critic: tilted 8, lying chin down 8, others 6-7."
+    },
+    {
+      "act": "chat",
+      "at": 1793397093496,
+      "text": "Changed: one body + faces, no body versions.\nCard update sent to the building chat (Plan)."
+    },
+    {
+      "act": "chat",
+      "at": 1793403023241,
+      "text": "Built: one body. Face picker: Calm, Sleepy, Sleepy smile and blush, Yawning, Happy, Curious, Sauna zen (steam puffs + rosy cheeks). Age and Colour pickers stay."
+    },
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Approved: you decided it in Model Compare (31 Oct)."
+    }
+  ],
+  "created": 1793326000000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/capy-r-sleepy.jpg",
+    "img/capy-s-smile.jpg",
+    "img/capy-s-yawn.jpg",
+    "img/capy-s-tilt.jpg",
+    "img/capy-s-chin.jpg",
+    "img/capy-real.jpg"
+  ],
+  "short": "One capybara body + 7 faces (Sauna zen added). Pick in Model Compare",
+  "source": "chat 30 Oct: Living things models, round 27",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Capybara: sleepy family (from your note)",
+  "updated": 1793409100000
+}

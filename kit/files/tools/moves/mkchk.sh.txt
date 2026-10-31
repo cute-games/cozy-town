@@ -1,0 +1,2 @@
+for s in "$@"; do ffmpeg -loglevel error -y -framerate 12 -i fr2/$s/%03d.png -vf "split[a][b];[a]palettegen=max_colors=128[p];[b][p]paletteuse=dither=bayer:bayer_scale=4" -loop 0 gif2/moves-$s.gif
+ if [ $s = shared ]; then convert fr2/$s/000.png fr2/$s/007.png fr2/$s/014.png fr2/$s/021.png fr2/$s/028.png fr2/$s/035.png -resize 1100x -append chk2/$s.jpg; else convert \( fr2/$s/000.png fr2/$s/007.png fr2/$s/014.png +append \) \( fr2/$s/021.png fr2/$s/028.png fr2/$s/035.png +append \) -append -resize '1600x>' chk2/$s.jpg; fi; done
