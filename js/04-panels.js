@@ -36,7 +36,7 @@ document.addEventListener('focusin',()=>setTimeout(kbFit,0));document.addEventLi
    without pushing the top of the text box (keep) out of sight */
 function cardShow(el,keep){const c=$('card');if(!el||$('panel').hidden||!c.contains(el))return;const cr=c.getBoundingClientRect(),r=el.getBoundingClientRect();
   let d=r.bottom-(Math.min(cr.bottom,visH())-8);if(d<=1)return;if(keep)d=Math.min(d,keep.getBoundingClientRect().top-Math.max(cr.top,0)-8);if(d>1)c.scrollTop+=d;}
-const ACT={};
+const ACT={};ACT.flesson=()=>farmActLesson();ACT.fsell=()=>farmActSell();   /* 🐴 the riding lesson and selling farm goods (stage 6, js/03-game.js) */
 const quietCard=()=>!!(typeof FR!=='undefined'&&FR&&quietFriend(FR))||!!(typeof PH!=='undefined'&&PH.app==='msg'&&PH.chat==='ro');   /* 🤫 a card of Rosie's: even the button tap is silent */
 $('card').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||b.disabled)return;const [k,...r]=b.dataset.a.split(':');if(k!=='buy'&&!quietCard())SFX.tap();if(ACT[k])ACT[k](r.join(':'),b);});
 ACT.close=()=>closePanel();
@@ -189,7 +189,7 @@ let SHOP=null;
 function openShop(k){SHOP=k;const sh=SHOPS[k];SFX.talk();
   const list=(sh.items||[]).map(id=>({id,...itemInfo(id)})).concat((sh.furn||[]).map(t=>({id:t,n:FURN[t].n,i:FURN[t].i,p:FURN[t].p,f:1})));
   openPanel(`<div class="hd"><h2>${sh.title}</h2><div class="chip">🪙 <b id="pc">${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
-    ${shutNote(k)}${sh.furn?'<p class="note">Furniture and decorations go to 📦 My stuff. Place them at home with&nbsp;🛋️&nbsp;Decorate.</p>':''}${newInHTML(k)}
+    ${shutNote(k)}${k==='market'?farmSellHTML():''}${sh.furn?'<p class="note">Furniture and decorations go to 📦 My stuff. Place them at home with&nbsp;🛋️&nbsp;Decorate.</p>':''}${newInHTML(k)}
     <div class="grid" style="margin-top:10px">${list.map(it=>`<button class="it" data-a="buy:${it.id}"><span class="em">${it.i}</span><span>${it.n}</span>${k==='pets'&&PET_LOVE[it.id]?`<span class="lv" title="${PET_LOVE[it.id][1]}" aria-label="${PET_LOVE[it.id][1]}">${PET_LOVE[it.id][0]}</span>`:''}<span class="pr">${it.p} 🪙</span><span class="have" id="hv-${it.id}">${it.f?'':(S.bag[it.id]?'You have '+S.bag[it.id]:'')}</span></button>`).join('')}</div>
     ${k==='pets'?gearShopHTML()+homeShopHTML():''}
     ${k==='pets'&&S.pets.length?'<div class="row"><button class="btn white" data-a="giveaway">💔 Give a pet to Ms. Paws</button></div>':''}`);}

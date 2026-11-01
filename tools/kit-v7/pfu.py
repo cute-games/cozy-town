@@ -8,6 +8,7 @@ Stage 4 (1 Nov): P17 the vet station and the visit, P18 big-needs pets locked; P
 Stage 3 (1 Nov): P12 Friends Lane's wider border, P13 yard levels by skill at the yard sign, P14 only owned things show, P15 training gear and pets playing
 on it, P16 friends see your yard. Rewritten: P10 (old: every move's lowest point within -0.07..0.012 m; new: the same for every move on the floor (a yard-gear move: on the pet kinds that play it, e.g. cat.wand on cats), and a
 move in water or the air (r.noGround: capy.tub, owl.fly) is measured by its highest point instead, which must stay above 0.05 m).
+Stage 6 (1 Nov): P31 the farm on the map, P32 riding, P33 chores and the Market, P34 feeding and petting, P35 friends see you ride.
 Stage 5 (1 Nov): P25 not slower than live (the owner's ask: P19 stays for the real iPad), P26 the Pet Show area, P27 tricks, P28 the Pet Show alone (town results
 from the one clock, the ribbon), P29 the Pet Show with friends, P30 the animal license. Rewritten (old -> new): P18 Ms. Paws' line for the bear's license
 (old: 'You need an animal license, level 3. Win at the Pet Show!', the stage-4 stand-in; new: the approved rules-animal-license line 8, 'A bear needs an animal
@@ -420,7 +421,7 @@ P10_JS = r"""()=>{const bad=[],bb=new THREE.Box3(),wet={},USE={},need0=['pet.idl
   if(typeof TOY_MV!=='undefined')for(const k in TOY_MV)(USE[TOY_MV[k]]=USE[TOY_MV[k]]||[]).push(k);
   const _v=new THREE.Vector3(),lowY=r=>{let y=9;r.updateMatrixWorld(true);r.traverse(o=>{if(!o.isMesh||!o.visible||o.userData.noGround)return;const p=o.geometry.attributes.position;for(let i=0;i<p.count;i++){_v.fromBufferAttribute(p,i).applyMatrix4(o.matrixWorld);if(_v.y<y)y=_v.y;}});return y;};   /* (stage 4b: the real lowest point, not the corners of turned pieces' boxes) */
   for(const k of Object.keys(PET_TYPES)){const m=makePet(k,PET_TYPES[k].cols[0]);addOutfit(m,{outfit:{head:'tophat',back:'cape'}});scene.add(m.root);
-    for(const nm of COZY_MOVES.list){if(USE[nm]&&!USE[nm].includes(k))continue;if(/^person\./.test(nm))continue;   /* (stage 5: a person's move is played on a person below, not on pets) */let lo=9,hi=-9,top=9;for(let t=0;t<4.5;t+=.25){const r=COZY_MOVES.play(m,nm,t,{kind:k,dist:t*.8,mood:nm==='pet.walk'&&t>2?'sad':undefined});n++;m.root.updateMatrixWorld(true);bb.setFromObject(m.root);if(r.noGround){top=Math.min(top,bb.max.y);wet[nm]=1;}else if(!r.lift){const ly=lowY(m.root);lo=Math.min(lo,ly);hi=Math.max(hi,ly);}}
+    for(const nm of COZY_MOVES.list){if(USE[nm]&&!USE[nm].includes(k))continue;if(/^person\./.test(nm))continue;   /* (stage 5: a person's move is played on a person below, not on pets) */if(/^(coach|farm|cow|sheep|pig|chicken|horse|farmdog)\./.test(nm))continue;   /* (stage 6: the farm animals' and the coaches' moves are played on their own models in P34, not on pets) */let lo=9,hi=-9,top=9;for(let t=0;t<4.5;t+=.25){const r=COZY_MOVES.play(m,nm,t,{kind:k,dist:t*.8,mood:nm==='pet.walk'&&t>2?'sad':undefined});n++;m.root.updateMatrixWorld(true);bb.setFromObject(m.root);if(r.noGround){top=Math.min(top,bb.max.y);wet[nm]=1;}else if(!r.lift){const ly=lowY(m.root);lo=Math.min(lo,ly);hi=Math.max(hi,ly);}}
       if(m.__mv.warned){bad.push(k+' '+nm+': error');m.__mv.warned=0;}worst=Math.min(worst,lo);if(lo<-.07||hi>.012)bad.push(k+' '+nm+': lowest point '+lo.toFixed(3)+'..'+hi.toFixed(3)+' m');if(top<.05)bad.push(k+' '+nm+': sinks out of view (highest point '+top.toFixed(3)+' m)');}scene.remove(m.root);}
   {const pm=makePerson(PS_JUDGES[1].look);scene.add(pm.root);for(const nm of COZY_MOVES.list.filter(x=>/^person\./.test(x))){for(let t=0;t<4.5;t+=.25){COZY_MOVES.play(pm,nm,t,{target:[.1,1.15,.45],showTo:[0,1.5,3]});n++;}if(pm.__mv&&pm.__mv.warned){bad.push('person '+nm+': error');pm.__mv.warned=0;}}scene.remove(pm.root);}   /* (stage 5: the license hand-over moves, on a person) */
   const need=['pet.idle','pet.walk','pet.sad','pet.unhappyBowl','pet.unhappyPlay','pet.unhappyNap','pet.unhappyNudge','pet.veryHappy','pet.happyDance','pet.sickWalk','pet.sickLie','pet.sneeze','pet.warnSneeze','pet.nap','pet.takeFood'];
@@ -487,7 +488,9 @@ async def p11(run, new_wb, FIX):
 P12_JS = r"""()=>{__goto('city');const L=LOC.city,bad=[],o={};const [a,b,c]=L.laneC;o.laneC=[a.z2,b.z1,c.z1,c.z2];
   if(a.z2!==-37.05||b.z1!==37.05||c.z1!==-37.05||c.z2!==37.05)bad.push('lane end walls '+o.laneC);
   o.free=[laneFree(-90,41.5),laneFree(-90,-41.5),laneFree(-90,43)];if(!o.free[0]||!o.free[1]||o.free[2])bad.push('laneFree '+o.free);
-  o.mapTrees=mapTrees().filter(([x,z])=>x<-78&&Math.abs(z)<42).length;if(o.mapTrees)bad.push(o.mapTrees+' map trees in the lane valley');
+  /* (stage 6 rewrite: the farm plan (pfu-placements townMoved) moves 2 forest trees off its new road to just behind the north hedge (z -41.5 and -37.9, outside every backyard); old: no map tree at |z| < 42 west of x -78; new: none but those 2 planned spots, each still behind the hedge, |z| > 37.5) */
+  const planned=([x,z])=>typeof FARMD==='object'&&FARMD.mv.some(q=>Math.abs(q[2]-x)<.05&&Math.abs(q[3]-z)<.05)&&Math.abs(z)>37.5;o.planned=mapTrees().filter(t=>t[0]<-78&&Math.abs(t[1])<42&&planned(t)).length;
+  o.mapTrees=mapTrees().filter(t=>t[0]<-78&&Math.abs(t[1])<42&&t[2]>0&&!planned(t)).length;if(o.mapTrees)bad.push(o.mapTrees+' map trees in the lane valley');
   /* walk the strip behind every lot: free up to the new hedge, the hedge stops you at 37.5 (both sides of the road) */
   const blocked=[],through=[];for(const p of LANE_PLOTS){if(p.j===LANE.mine)continue;for(const tz of[-28,-31,-34,-36.4]){const [x,z]=lotPt(p.j,-11,tz),q=collideXZ(x,z,.3,L);if(Math.hypot(q[0]-x,q[1]-z)>.05)blocked.push([p.j,tz]);}
     const [x,z]=lotPt(p.j,-17,-37.5),q=collideXZ(x,z,.3,L);if(Math.hypot(q[0]-x,q[1]-z)<.05)through.push(p.j);}
@@ -501,7 +504,7 @@ async def p12(run, new_wb, FIX):
         await run.close(g)
     bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
     o = r['o']
-    return not bad, f"lane end walls at z {o['laneC']}; forest kept off |z| < 42 ({o['free']}), map trees in the valley {o['mapTrees']}; {o['lots']} lots: the strip behind each is free to z -36.4 and the hedge stands at 37.5" + (f' | PROBLEMS: {bad}' if bad else '')
+    return not bad, f"lane end walls at z {o['laneC']}; forest kept off |z| < 42 ({o['free']}), map trees in the valley {o['mapTrees']} (and {o.get('planned', 0)} moved there by the farm plan, behind the hedge); {o['lots']} lots: the strip behind each is free to z -36.4 and the hedge stands at 37.5" + (f' | PROBLEMS: {bad}' if bad else '')
 
 # ---------------- P13 yard levels by skill, bought at the yard sign ----------------
 SIGN = r"""()=>{const t=YARD.ints.find(i=>i.icon==='🏡'&&/My yard/.test(typeof i.label==='function'?i.label():i.label));if(!t)return null;P.x=t.x;P.z=t.z+.3;t.act();
@@ -633,7 +636,8 @@ async def p16(run, new_wb, FIX):
 # ================= stage 4 (1 Nov 2026): the vet station, big-needs pets locked =================
 # ---------------- P17 the vet station: the building, inside, the four staff, the visit ----------------
 TREES_JS = r"""()=>{const out=(x,z)=>!(x>6&&x<21.5&&z>-86&&z<-68.5),r=v=>Math.round(v*100)/100,C=LOC.city;
-  return {groups:(C.treeGroups||[]).map(g=>g.map(r)),map:mapTrees().filter(([x,z])=>out(x,z)).map(t=>t.map(r)),cols:C.cols.filter(c=>c.cr!==undefined?out(c.cx,c.cz):out((c.x1+c.x2)/2,(c.z1+c.z2)/2)).length,
+  const F=typeof FARMD==='object'?FARMD:{del:[],mv:[]};
+  return {groups:(C.treeGroups||[]).map(g=>g.map(r)),map:mapTrees().filter(([x,z])=>out(x,z)).map(t=>t.map(r)),farm:F.del.concat(F.mv.map(q=>[q[0],q[1]]),F.mv.map(q=>[q[2],q[3]])).map(q=>q.map(r)),farmWalls:C.cols.filter(c=>c.fw&&out((c.x1+c.x2)/2,(c.z1+c.z2)/2)).length,cols:C.cols.filter(c=>c.cr!==undefined?out(c.cx,c.cz):out((c.x1+c.x2)/2,(c.z1+c.z2)/2)).length,
   park:C.cols.filter(c=>{const x=c.cr!==undefined?c.cx:(c.x1+c.x2)/2,z=c.cr!==undefined?c.cz:(c.z1+c.z2)/2;return x>-41&&x<-29&&z>8&&z<41;}).length};}"""
 P17_JS = r"""()=>{const o={},bad=[],V=LOC.vet,C=LOC.city;if(!V)return {bad:['no vet station in the game']};
   const lab=t=>typeof t.label==='function'?t.label():t.label,door=C.inter.find(t=>/Vet Station/.test(lab(t)));o.door=door?[r2(door.x),r2(door.z)]:null;
@@ -700,7 +704,13 @@ async def p17(run, live_w, new_wb, FIX):
     # (P17 rewritten in stage 5: the approved Pet Show area (map-petshow-park) changes the walls in the park's west part (x -41..-29, z 8..41): stage, podium,
     # judges, rope posts, the moved tree, slide and truck. Old: every wall outside the clinic counted; new: the same, without that part of the park (17 walls
     # there in the stage-3/4b build, measured 1 Nov: 'park' in the reference); trees, bushes and groups are compared exactly as before)
-    same = trees_new['groups'] == trees_live['groups'] and trees_new['map'] == trees_live['map'] and trees_new['cols'] - trees_new['park'] == trees_live['cols'] - trees_live['park']
+    # (P17 rewritten in stage 6: the approved farm plan (map-forest-clear, pfu-placements townDeleted/townMoved) takes 64 forest trees out and moves 3, and the farm
+    # adds its walls (the town's north edge, the land behind the lane's hedge, the farm's east side, west of the lane end: marked fw). Old: every map tree and every wall
+    # outside the clinic as in the stage-3 build; new: the same, without the map trees within 0.6 m of a planned removal or move (P31 checks those exactly) and without the farm's
+    # own walls. Groups, every other map tree (position and size) and every other wall are compared exactly as before)
+    near = lambda t: any(abs(t[0] - q[0]) < .6 and abs(t[1] - q[1]) < .6 for q in trees_new.get('farm', []))
+    map_new = [t for t in trees_new['map'] if not near(t)]; map_live = [t for t in trees_live['map'] if not near(t)]
+    same = trees_new['groups'] == trees_live['groups'] and map_new == map_live and trees_new['cols'] - trees_new['park'] - trees_new.get('farmWalls', 0) == trees_live['cols'] - trees_live['park']
     if not same: bad.append(f"the town's trees and bushes outside the clinic moved: groups {trees_live['groups'][:2]} -> {trees_new['groups'][:2]}, map trees {len(trees_live['map'])} -> {len(trees_new['map'])}, walls outside the Pet Show area {trees_live['cols'] - trees_live['park']} -> {trees_new['cols'] - trees_new['park']}")
     if errs: bad.append(f'browser errors {errs[:2]}')
     o, v = a.get('o', {}), b['o']
@@ -1153,6 +1163,170 @@ async def p30(run, new_wb, FIX):
     if errs: probs.append(f'browser errors {errs[:2]}')
     return not probs, '; '.join(det) + (f' | PROBLEMS: {probs}' if probs else '')
 
+# ================= stage 6 (1 Nov 2026): the farm, riding, chores =================
+FARM_GO = """()=>{__goto('city');const c=clockNow();let d=c.day;while(wdIdx(d)!==1)d++;__setClock(d,12);__run(4);closePanel();S.coins=Math.max(S.coins,2000);S.ride={lesson:0};S.farm={eggs:0,milk:0};P.x=-100;P.z=-101;P.yaw=Math.PI/2;__run(4);return FARM.on;}"""
+# ---------------- P31 the farm on the map: placements 1:1, trees taken out, walls, hills, the town's edge; nothing runs far away ----------------
+P31_JS = r"""()=>{const bad=[],o={};farmLiveAll();o.lazy=FARM.lazy===true;o.liveMs=FARM.msLive;o.bootMs=FARM.ms;const want={};for(const [k] of FARMD.p)want[k]=(want[k]||0)+1;
+  o.things=FARMD.p.length;o.kinds=Object.keys(want).length;o.built={an:FARM.an.length,horses:FARM.hs.length,people:FARM.ppl.map(p=>p.who),riders:FARM.riders.map(h=>h.rider.who),stables:FARM.stables.length,jumps:Object.keys(FARM.jumps).length,flags:Object.keys(FARM.flags).sort()};
+  const nat=['pine','tree','bush','rock','nat.oak','nat.fir','nat.firs','nat.birch','mtn'].reduce((a,k)=>a+(want[k]||0),0),inst=FARM.inst.reduce((a,m)=>a,0);o.natural=nat;
+  const animals=FARMD.p.filter(q=>q[0].startsWith('fa.')&&!q[0].startsWith('fa.horse.adult')).length;if(FARM.an.length!==animals)bad.push('farm animals '+FARM.an.length+' of '+animals);
+  if(FARM.hs.length!==10)bad.push('horses '+FARM.hs.length+' (want 10)');if(FARM.hs.filter(h=>h.kind==='pad').length!==4)bad.push('paddock horses');
+  if(o.built.people.join()!=='stan,ieva'&&o.built.people.join()!=='ieva,stan')bad.push('people '+o.built.people);if(o.built.riders.join()!=='cody,hank,rose')bad.push('riders '+o.built.riders);
+  if(o.built.jumps!==12||o.built.flags.join()!=='blue,red'||o.built.stables!==2)bad.push('jumps/flags/stables '+JSON.stringify(o.built));
+  const J=FARM.jumps.o122;if(!J||Math.hypot(J.x+175.72,J.z+94.42)>.05)bad.push('lesson jump o122 at '+JSON.stringify(J));
+  if(Math.hypot(FARM.flags.blue.x+174,FARM.flags.blue.z+116)>.05||Math.hypot(FARM.flags.red.x+189,FARM.flags.red.z+114)>.05)bad.push('flags at '+JSON.stringify(FARM.flags));
+  const IV=FARM.ppl.find(p=>p.who==='ieva'),SN=FARM.ppl.find(p=>p.who==='stan');if(Math.hypot(SN.x+167.2,SN.z+98)>.05||Math.hypot(IV.x+113,IV.z+111.5)>.05)bad.push('Stan/Ieva spots');
+  /* the trees taken out (map-forest-clear) are gone from the world and the map, the others stay */
+  const all=[...mapTrees().filter(t=>t[2]>0).map(t=>[t[0],t[1]]),...FAR_TREES];let left=0;for(const q of FARMD.del)if(all.some(t=>Math.hypot(t[0]-q[0],t[1]-q[1])<.6))left++;o.taken=FARM.deln;o.moved=FARM.mvn;
+  if(left)bad.push(left+' trees to take out still stand');if(FARM.deln<53)bad.push('only '+FARM.deln+' trees taken out (53 of the 64 stand in the forest today; the other 11 went with the lane border, stage 3)');
+  /* walls: the farm road is open, the rest of the town's north edge and the lane's hedge are not; hills stepped aside */
+  const walk=(x,z,tx,tz)=>{P.x=x;P.z=z;for(let i=0;i<400;i++){const dx=tx-P.x,dz=tz-P.z,d=Math.hypot(dx,dz);if(d<.3)break;[P.x,P.z]=collideXZ(P.x+dx/d*.25,P.z+dz/d*.25,.3,LOC.city,solids());}return [+P.x.toFixed(1),+P.z.toFixed(1)];};
+  o.road=walk(-50,-70,-50,-95);if(o.road[1]>-94)bad.push('the farm road is blocked at '+o.road);
+  o.edge=walk(0,-70,0,-95);if(o.edge[1]<-80.5)bad.push('walked out of town at x 0: '+o.edge);
+  o.hedge=walk(-120,-30,-120,-60);if(o.hedge[1]<-38.5)bad.push('walked through the lane hedge: '+o.hedge);
+  o.west=walk(-185,-20,-200,-20);if(o.west[0]<laneEnd()-3.5)bad.push('walked past the lane end: '+o.west);
+  o.barn=walk(-95,-111.1,-104.3,-111.1);if(Math.abs(o.barn[0]+104.3)<2)bad.push('walked into the barn: '+o.barn);
+  let hill=0;for(let x=-224;x<=-46;x+=4)for(let z=-194;z<=-82;z+=4)if(farmZone(x,z)&&groundY(x,z)>.01)hill++;if(hill)bad.push(hill+' spots of the farm stand on a hill');
+  /* speed: in town the farm's living things are hidden and nothing of the farm runs */
+  __goto('city');P.x=18;P.z=4;__run(10);const t0=FARM.tick;__run(30);o.townTicks=FARM.tick-t0;o.dynShown=FARM.dyn.visible;if(o.townTicks||o.dynShown)bad.push('the farm works while you are in town');if(!o.lazy)bad.push('the farm animals were made while the game loaded (want: on the way to the farm)');
+  const tri=g=>g.index?g.index.count/3:g.attributes.position.count/3;let st=0,sn=0;FARM.st.traverse(q=>{if(q.isMesh){st+=tri(q.geometry);sn++;}});o.drawn={static:[sn,st],inst:FARM.inst.map(m=>m.count+'x'+tri(m.geometry)),ground:FARM.ground.length};
+  o.bad=bad;return o;}"""
+async def p31(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p31', FIX=FIX, name='ZZTEST-FARM')
+    try:
+        r = await g.ev(P31_JS)
+        for nm, js in (('farm-yard', "()=>{__goto('city');__setClock(null,12);P.x=-92;P.z=-104;P.yaw=Math.PI*.55;P.pitch=-.08;}"), ('jump-field', "()=>{P.x=-166;P.z=-88;P.yaw=Math.PI*.35;P.pitch=-.1;}"),
+                       ('farm-road', "()=>{P.x=-50;P.z=-72;P.yaw=0;P.pitch=-.05;}")):
+            await g.ev(js); await g.step(8); await g.shot(nm, both=(nm == 'farm-yard'))
+        errs = g.errors[:]
+    finally: await run.close(g)
+    bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
+    return not bad, (f"{r['things']} placed things of {r['kinds']} kinds ({r['natural']} trees, bushes, rocks and mountains instanced); built {r['built']}; trees taken out {r['taken']}, moved {r['moved']}; "
+                     f"walks: farm road {r['road']}, town edge {r['edge']}, lane hedge {r['hedge']}, lane end {r['west']}, into the barn {r['barn']}; in town the farm ran {r['townTicks']} times, living things shown {r['dynShown']}, made on the way there {r['lazy']} ({r['liveMs']} ms; the rest of the farm while loading: {r['bootMs']} ms); drawn {r['drawn']}") + (f' | PROBLEMS: {bad}' if bad else '')
+
+# ---------------- P32 riding: lesson with Stan (5 steps, 100 once), then free rides, gaits, town edge, get off at the stable, hours, pets wait ----------------
+P32_JS = r"""()=>{const bad=[],o={},now=()=>gameMs()/1000,msg=()=>(TQ.q.length?String(TQ.q[TQ.q.length-1].m):($('toast').textContent||''));
+  const H=FARM.hs.find(h=>h.kind==='pad'),LH=FARM.hs.find(h=>h.kind==='lesson');
+  farmMount(H);o.before=[!!P.horse,msg()];if(P.horse)bad.push('rode before the lesson');
+  farmIeva();o.ieva1=msg();farmIeva();o.ieva2=msg();
+  const c0=S.coins;farmLessonStart();o.card=$('card').innerText.replace(/\s+/g,' ').slice(0,160);ACT.flesson();o.paid=c0-S.coins;if(o.paid!==100)bad.push('lesson paid '+o.paid);
+  const step=()=>FARM.lesson?FARM.lesson.step:-1,log=[];log.push(step());
+  const tg=()=>{const out=[];farmTargets(out);return out;};P.x=LH.x+1;P.z=LH.z+1;FARM.on=true;const t1=tg().find(t=>t.label==='Get on');if(!t1)bad.push('no Get on button by the lesson horse');else t1.act();log.push(step());
+  const go=(x,z)=>{for(let i=0;i<300&&P.horse&&Math.hypot(P.x-x,P.z-z)>1;i++){const r=P.horse;P.yaw=Math.atan2(-(x-P.x),-(z-P.z));IN.keys.KeyW=true;farmRide(1/30);farmLessonTick(1/30);}IN.keys.KeyW=false;};
+  go(FARM.flags.blue.x,FARM.flags.blue.z);log.push(step());go(FARM.flags.red.x,FARM.flags.red.z);log.push(step());
+  const J=FARM.jumps.o122;go(J.x+3*Math.sin(J.ry),J.z+3*Math.cos(J.ry));P.x=J.x;P.z=J.z;P.horse.j=-9;farmLessonTick(.1);o.noJump=[step(),msg()];
+  P.x=J.x;P.z=J.z;P.horse.sp=4;P.horse.j=now();farmLessonTick(.1);log.push(step());
+  const SN=FARMD.lesson.stan;go(SN[0],SN[1]);for(let i=0;i<60;i++){P.horse&&(P.horse.sp=0);farmLessonTick(1/30);}log.push(step());o.steps=log.join(' ');o.done=[S.ride.lesson,!!P.horse,LH.st,msg().slice(0,60)];
+  if(o.steps!=='0 1 2 3 4 -1'||S.ride.lesson!==1||P.horse)bad.push('lesson steps '+o.steps);if(o.noJump[0]!==3)bad.push('passed the jump without jumping');
+  /* free rides after: a paddock horse, the gaits */
+  const c1=S.coins;P.x=H.x+1;P.z=H.z;FARM.on=true;const rb=tg().find(t=>t.label==='Ride');if(!rb)bad.push('no Ride button by a free horse');else rb.act();o.free=c1-S.coins;if(!P.horse||o.free)bad.push('a free ride did not start (or cost '+o.free+')');
+  const sp=keys=>{Object.assign(IN.keys,keys);const x0=P.x,z0=P.z;for(let i=0;i<60;i++)farmRide(1/30);for(const k in keys)IN.keys[k]=false;return +(Math.hypot(P.x-x0,P.z-z0)/2).toFixed(2);};
+  P.x=-120;P.z=-100;P.yaw=Math.PI/2;sp({KeyW:true});o.trot=sp({KeyW:true});o.gallop=sp({KeyW:true,ShiftLeft:true});o.gaits=[o.trot,o.gallop];if(!(o.trot>3.5&&o.gallop>o.trot+1.5))bad.push('gaits '+o.gaits);
+  /* the town edge: the horse stops and says so */
+  P.horse.said=false;P.x=-50;P.z=-88;P.yaw=Math.PI;for(let i=0;i<90;i++){IN.keys.KeyW=true;farmRide(1/30);}IN.keys.KeyW=false;o.edge=[+P.z.toFixed(2),P.horse.said,msg()];if(P.z>-79.9||!P.horse.said||!/won't go into town/.test(msg()))bad.push('town edge '+o.edge);
+  /* pets wait at the stable */
+  o.wait=PET_ACTORS.filter(e=>e.fw).length;const fol=PET_ACTORS.filter(e=>!e.d.stay&&e.loc==='city').length;if(o.wait!==fol)bad.push('pets waiting '+o.wait+' of '+fol);
+  /* get off: only at the stable */
+  P.x=-150;P.z=-100;o.offFar=!!tg().find(t=>t.label==='Get off');const S0=FARM.stables[0];P.x=S0.x+2;P.z=S0.z+5;const off=tg().find(t=>t.label==='Get off');o.offNear=!!off;if(o.offFar||!off)bad.push('Get off far '+o.offFar+' near '+o.offNear);
+  const hh=P.horse.h;off.act();o.after=[!!P.horse,hh.st,PET_ACTORS.filter(e=>e.fw).length];if(P.horse||hh.st!=='back'||o.after[2])bad.push('after getting off '+o.after);
+  for(let i=0;i<2000&&hh.st==='back';i++)farmAnimal(hh,.05,gameMs(),now());o.home=[hh.st,+Math.hypot(hh.x-hh.hx,hh.z-hh.hz).toFixed(2)];if(hh.st!=='home')bad.push('the horse did not walk home '+o.home);
+  /* hours: closed at night, and at closing you get off */
+  P.x=H.x+1;P.z=H.z;farmMount(H);__setClock(null,21.2);P.horse&&farmRide(1/30);o.closing=[!!P.horse,msg().slice(0,40)];if(P.horse)bad.push('still riding after 21:00');
+  farmMount(H);o.night=[!!P.horse,msg().slice(0,40)];if(P.horse)bad.push('rode at night');__setClock(null,12);
+  /* a foal is not ridden; one rider a horse (a friend on it) */
+  const foal=FARM.an.find(a=>a.type==='horse');P.x=foal.x+1;P.z=foal.z;o.foal=tg().filter(t=>Math.hypot(t.x-foal.x,t.z-foal.z)<.01).map(t=>t.label);if(o.foal.some(l=>/Ride/.test(l)))bad.push('a foal can be ridden');
+  MP.peers.set('zzpeer',{peer:'zzpeer',rd:[H.i,'w',0]});o.taken=farmHorseFree(H);MP.peers.delete('zzpeer');if(o.taken)bad.push('a horse a friend rides is offered');
+  o.saved=JSON.stringify(S).includes('"horse"');if(o.saved)bad.push('riding is saved (leaving the game must leave the horse at the farm)');
+  o.bad=bad;return o;}"""
+async def p32(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p32', FIX=FIX, name='ZZTEST-RIDE')
+    try:
+        await g.ev(FARM_GO); r = await g.ev(P32_JS)
+        await g.ev("()=>{const H=FARM.hs.find(h=>h.kind==='pad');P.x=H.x;P.z=H.z;farmMount(H);P.yaw=Math.PI*.6;P.pitch=-.2;}"); await g.step(8); await g.shot('riding', both=True)
+        errs = g.errors[:]
+    finally: await run.close(g)
+    bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
+    return not bad, (f"before the lesson {r['before']}; Ieva {r['ieva1']!r} / {r['ieva2']!r}; Stan's card {r['card']!r}, paid {r['paid']}; steps {r['steps']} (no jump: {r['noJump']}), done {r['done']}; free ride cost {r['free']}, "
+                     f"m/s trot/gallop {r['gaits']}; town edge {r['edge']}; pets waiting {r['wait']}; Get off far/near {r['offFar']}/{r['offNear']}, after {r['after']}, horse {r['home']}; closing {r['closing']}, night {r['night']}; foal {r['foal']}") + (f' | PROBLEMS: {bad}' if bad else '')
+
+# ---------------- P33 chores and the Market: eggs and milk once a game day, sold for 10 each ----------------
+P33_JS = r"""()=>{const bad=[],o={},msg=()=>(TQ.q.length?String(TQ.q[TQ.q.length-1].m):($('toast').textContent||''));const d0=S.day;
+  farmEggs();farmEggs();o.eggs=[S.farm.eggs,msg().slice(0,40)];farmMilk();farmMilk();o.milk=[S.farm.milk,msg().slice(0,40)];if(S.farm.eggs!==1||S.farm.milk!==1)bad.push('twice a day '+JSON.stringify(S.farm));
+  S.day=d0+1;farmEggs();farmMilk();o.next=[S.farm.eggs,S.farm.milk];S.day=d0;if(S.farm.eggs!==2||S.farm.milk!==2)bad.push('next day '+o.next);
+  const back=JSON.parse(JSON.stringify(S.farm));o.saved=back;
+  __goto('market');openShop('market');o.card=($('card').querySelector('.farmsell')||{}).innerText||'';const c0=S.coins;ACT.fsell();o.sold=[S.coins-c0,S.farm.eggs,S.farm.milk];if(o.sold[0]!==40||S.farm.eggs||S.farm.milk)bad.push('sold '+o.sold);
+  o.after=!!$('card').querySelector('.farmsell');closePanel();if(o.after)bad.push('the Sell part shows with nothing to sell');if(!/Farm eggs × 2/.test(o.card)||!/Farm milk × 2/.test(o.card)||!/40/.test(o.card))bad.push('sell card '+o.card);
+  o.buy=SHOPS.market.items.includes('egg')||SHOPS.market.items.includes('milk');o.bad=bad;return o;}"""
+async def p33(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p33', FIX=FIX, name='ZZTEST-CHORE')
+    try:
+        await g.ev(FARM_GO); r = await g.ev(P33_JS)
+        await g.ev("()=>{S.farm.eggs=1;S.farm.milk=1;openShop('market');}"); await g.step(2); await g.shot('market-sell', both=True); await g.ev("()=>closePanel()")
+        errs = g.errors[:]
+    finally: await run.close(g)
+    bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
+    return not bad, f"eggs [count, 2nd try] {r['eggs']}; milk {r['milk']}; next day {r['next']}; saved {r['saved']}; Market card {r['card']!r}; sold [coins, eggs, milk] {r['sold']}" + (f' | PROBLEMS: {bad}' if bad else '')
+
+# ---------------- P34 feeding and petting (free bucket); every farm move on its model ----------------
+P34_JS = r"""()=>{const bad=[],o={};const t=FARM.troughs[0],now=()=>gameMs()/1000;const near=k=>FARM.an.filter(a=>a.type===k);
+  const d0=near('cow').map(a=>Math.hypot(a.x-t.x,a.z-t.z));farmFeed(t.x,t.z,['cow','sheep'],1.6,'x');for(let i=0;i<700;i++){FARM.an.forEach(a=>farmAnimal(a,.05,gameMs(),now()));}
+  const d1=near('cow').map(a=>Math.hypot(a.x-t.x,a.z-t.z));o.cows=[Math.max(...d0).toFixed(1),Math.max(...d1).toFixed(1)];if(Math.max(...d1)>2.6)bad.push('cows did not come to the trough '+o.cows);
+  const c=near('cow')[0];P.x=c.x+1;P.z=c.z;farmPet(c);o.pat=c.act&&c.act.mv;if(o.pat!=='cow.patLean')bad.push('pet a cow: '+o.pat);
+  const h=FARM.hs.find(q=>q.kind==='pad');farmHandFeed(h);o.hand=h.act&&h.act.mv;if(o.hand!=='horse.handEat')bad.push('hand feed: '+o.hand);
+  const ch=near('chicken')[0];farmPet(ch);o.puff=ch.act.mv;
+  /* every farm move on its own model without errors */
+  const M={cow:['farm.walk','cow.graze','cow.stand','farm.troughEat','cow.patLean','farm.lookAtYou'],sheep:['farm.walk','sheep.graze','sheep.look','farm.troughEat','sheep.patLean'],pig:['farm.walk','pig.root','pig.roll','pig.bucketEat'],
+    chicken:['chicken.walk','chicken.peck','chicken.run','chicken.grainPeck','chicken.puff'],horse:['horse.walk','horse.trot','horse.gallop','horse.jump','horse.idle','horse.refuse','horse.overGate','horse.handEat','horse.groomed'],lab:['farmdog.sleep']};
+  let n=0;const warn=[];for(const a of FARM.an.concat(FARM.hs,FARM.riders)){for(const mv of M[a.type]||[]){for(let s=0;s<6;s+=.7){COZY_MOVES.play(a.m,mv,s,{kind:a.type,dist:s,h:.55});n++;}if(a.m.__mv&&a.m.__mv.warned){warn.push(a.type+' '+mv);a.m.__mv.warned=0;}}}
+  for(const p of FARM.ppl.concat(FARM.riders.map(h=>h.rider)))for(const mv of p.type==='rider'?['person.ride']:['person.groom','coach.point','coach.whistle','coach.cheer','coach.directTo','person.idle']){for(let s=0;s<5;s+=.7){COZY_MOVES.play(p.m,mv,s,{kind:'person',horse:p.horse&&p.horse.m,target:[1,0,2]});n++;}if(p.m.__mv&&p.m.__mv.warned){warn.push(p.who+' '+mv);p.m.__mv.warned=0;}}
+  o.plays=n;if(warn.length)bad.push('moves with errors: '+warn.slice(0,8));o.bad=bad;return o;}"""
+async def p34(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p34', FIX=FIX, name='ZZTEST-FEED')
+    try:
+        await g.ev(FARM_GO); r = await g.ev(P34_JS)
+        await g.ev("()=>{const t=FARM.troughs[0];farmFeed(t.x,t.z,['cow','sheep'],1.6,'x');P.x=t.x+4;P.z=t.z+3;P.yaw=Math.atan2(-(t.x-P.x),-(t.z-P.z));P.pitch=-.25;}"); await g.step(40); await g.shot('trough')
+        errs = g.errors[:]
+    finally: await run.close(g)
+    bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
+    return not bad, f"cows furthest from the trough before/after feeding {r['cows']} m; pat {r['pat']}, hand {r['hand']}, hen {r['puff']}; {r['plays']} farm move plays" + (f' | PROBLEMS: {bad}' if bad else '')
+
+# ---------------- P35 friends see you ride; the trail riders come from the one clock ----------------
+async def p35(run, live_w, new_wb, FIX):
+    probs = []; det = []; A = B = O = None
+    try:
+        A = await pet_page(run, new_wb, 'p35-A', FIX=FIX, name='ZZTEST-RDA'); B = await pet_page(run, new_wb, 'p35-B', prof='pc-1366', FIX=FIX, name='ZZTEST-RDB')
+        for g in (A, B): await g.ev(FARM_GO); await g.ev("()=>{S.ride.lesson=1;P.x=-110;P.z=-104;}")
+        await B.ev("(ms)=>{__clockMs(ms);}", await A.ev("()=>realMs()"))   # (the same clock, as in P29)
+        for _ in range(8): await A.step(6); await B.step(6); await asyncio.sleep(.25)
+        det.append(f"online: A sees {await A.ev('()=>[...MP.peers.values()].map(q=>q.nm)')}")
+        a = await A.ev("()=>{const H=FARM.hs.find(h=>h.kind==='pad');farmMount(H);P.yaw=Math.PI/2;IN.keys.KeyW=true;return H.i;}")
+        for _ in range(10): await A.step(3); await B.step(3); await asyncio.sleep(.3)
+        b = await B.ev("()=>{const a=[...MP.peers.values()].find(q=>q.nm==='ZZTEST-RDA');if(!a)return null;const H=FARM.hs[a.rd?a.rd[0]:-1];return {rd:a.rd,horse:!!(a.fh&&a.fh.root.visible),y:+a.av.root.position.y.toFixed(2),st:H&&H.st,free:H?farmHorseFree(H):null,d:a.fh?+Math.hypot(a.fh.root.position.x-a.x,a.fh.root.position.z-a.z).toFixed(2):null};}")
+        det.append(f"A rides horse {a}; B sees {b}")
+        if not b or not b['rd'] or b['rd'][0] != a or not b['horse'] or b['y'] < .8 or b['st'] != 'peer' or b['free'] or (9 if b['d'] is None else b['d']) > .05: probs.append(f'B does not see A ride: {b}')
+        await A.ev("()=>{IN.keys.KeyW=false;farmOff(true);}")
+        for _ in range(8): await A.step(3); await B.step(3); await asyncio.sleep(.3)
+        b2 = await B.ev(f"()=>{{const H=FARM.hs[{a}];const a=[...MP.peers.values()].find(q=>q.nm==='ZZTEST-RDA');return {{st:H.st,rd:a&&a.rd,horse:!!(a&&a.fh&&a.fh.root.visible)}};}}")
+        det.append(f'after A got off, B: {b2}')
+        if b2['rd'] or b2['horse'] or b2['st'] not in ('back', 'home'): probs.append(f'after getting off B still sees a rider: {b2}')
+        rid = await A.ev("()=>{const out=[];for(const ms of [1e12,1e12+123456,1e12+400000]){out.push(FARM.riders.map(h=>{const p=farmRiderAt(h,ms);return p?[+p.x.toFixed(2),+p.z.toFixed(2)]:null;}));}return out;}")
+        rid2 = await B.ev("()=>{const out=[];for(const ms of [1e12,1e12+123456,1e12+400000]){out.push(FARM.riders.map(h=>{const p=farmRiderAt(h,ms);return p?[+p.x.toFixed(2),+p.z.toFixed(2)]:null;}));}return out;}")
+        det.append(f'trail riders at 3 clock times (A): {rid}')
+        if rid != rid2: probs.append('the two players see the riders at different spots')
+        if not any(p for row in rid for p in row): probs.append('no rider on the trail at any of the 3 times')
+        O = await begin(run, live_w, 'pc-1366', 'p35-old', dict(fx(FIX, PETS_SAVE) or FIX[0][1], name='ZZTEST-RDO'))
+        await A.ev("()=>{const H=FARM.hs.find(h=>h.kind==='pad'&&farmHorseFree(h));farmMount(H);}")
+        for _ in range(6): await A.step(3); await O.step(3); await asyncio.sleep(.3)
+        seen = await O.ev("()=>[...MP.peers.values()].map(q=>q.nm)")
+        det.append(f'the live version online with a rider: sees {seen}, errors {O.errors[:1]}')
+        if O.errors: probs.append(f'the live version has errors: {O.errors[:2]}')
+        errs = A.errors[:] + B.errors[:]
+        if errs: probs.append(f'browser errors {errs[:2]}')
+    finally:
+        for g in (A, B, O):
+            if g: await run.close(g)
+    return not probs, '; '.join(det) + (f' | PROBLEMS: {probs}' if probs else '')
+
 # ---------------- the stage ----------------
 async def s_pfu(run, d, live_w, new_wb, FIX):
     tests = [('P1', 'Saves (pets and farm update): every save of the kit (from older versions, today\'s main and the update\'s stages) and a fresh one from the live version loads as save version 2 with every new field at its default; saved again and loaded, it is exactly the same', lambda: p1(run, live_w, new_wb, FIX)),
@@ -1185,6 +1359,11 @@ async def s_pfu(run, d, live_w, new_wb, FIX):
              ('P28', "The Pet Show alone (stage 5): starts at once, you last; the town pets' results come from the one clock (the same second = the same results, never dice); your pet does its own known tricks, each played to its end; the healthy-week ribbon gives 1 more from Granny Daisy (at most 10); the show ends with your place saved, then one show a Saturday", lambda: p28(run, new_wb, FIX)),
              ('P29', "The Pet Show with friends (stage 5, rules-pet-show-friends, screens-show-join): a friend in the park entering gives you a join card (who, countdown, a button per following pet, Just watch, 44 px); the one who entered sees the places fill; after 45 s the same show starts on both screens with friends' pets in the town pets' places, and both screens show the same town results and the same final results; more than 4: the next show right after; an older version in the park is never asked", lambda: p29(run, live_w, new_wb, FIX)),
              ('P30', "The animal license (stage 5, rules-animal-license): level 1 = 1 top-3 + 1 healthy week, 2 = 2 + 2, 3 = 3 (one 1st) + 3, never taken away; top 3 counts only for the license; Sir Barkley hands a new level over on the podium (the card goes from his hand to yours) with his lines; the license card (paper, the same in dark mode, its fonts loaded) in My pets (strip 44 px); big pets unlock by level (bear 3)", lambda: p30(run, new_wb, FIX))]
+    tests += [('P31', "The farm on the map (stage 6, map-farm-area-plan, pfu-placements): every placed thing at its spot (farm animals baby or adult, 10 horses, Ieva by the stable, Stan at the jump field, Cody, Hank and Rose, 12 jumps, the lesson flags blue (-174,-116) and red (-189,-114), 2 stables); the forest trees on the trail, roads, fields and building spots taken out (from the world and the map), the rest kept; the farm road open from the x -50 road, the town's north edge, the lane's hedge and its end still closed; buildings solid; no hill on the farm; in town nothing of the farm runs (speed guard)", lambda: p31(run, new_wb, FIX)),
+              ('P32', "Riding (stage 6, rules-riding, story-ieva-stan, screens-riding, economy-riding-lesson-price, economy-stable-hours): no ride before the lesson; Ieva's first lines send you to Stan; Stan's lesson card costs 100 once; the 5 steps (get on, blue flag, red flag, jump o122 - not passed without jumping -, stop by Stan); then any free horse for free; walk/trot/gallop speeds; the horse stops at the town edge and says so; your pets wait at the stable; Get off only at the stable, the horse walks back to its spot; at 21:00 you get off, closed at night; a foal is not ridden; a horse a friend rides is not offered; riding is never saved", lambda: p32(run, new_wb, FIX)),
+              ('P33', "Farm chores and the Market (stage 6, rules-farm-chores, economy-eggs-milk-price, screens-market-sell): eggs and milk once a game day each, again the next day, kept in the save; Mr. Bun's card shows a Sell part only with farm goods (rows and the total), Sell all pays 10 each", lambda: p33(run, new_wb, FIX)),
+              ('P34', "Feeding and petting (stage 6, economy-farm-feed, moves-farm-feed, moves-farm-graze-necks): the free bucket fills the trough and the cows and sheep come to eat; petting (cow leans in, the hen puffs up), the horse eats from your hand; every farm move on every farm model and person without an error", lambda: p34(run, new_wb, FIX)),
+              ('P35', "Friends see you ride (stage 6, rules-riding 7, guard 4): your horse and gait go online as a short code; a friend sees you on that horse (seated, the horse under you) and that horse is taken for them; you get off, it is free again; the trail riders stand at the same spot for both (the one clock); the live version online with a rider has no errors", lambda: p35(run, live_w, new_wb, FIX))]
     only = [x for x in os.environ.get('PFU_ONLY', '').split(',') if x]
     for cid, name, fn in tests:
         if only and cid not in only: continue

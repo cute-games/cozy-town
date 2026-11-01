@@ -207,6 +207,14 @@ const SFX={
   /* 🏆🪪 the Pet Show's join countdown and the license stamp (stage 5): tools/sounds.html recipes as they are */
   tick(){tone(880,.06,'triangle',.09);},
   stamp(){tone(140,.12,'triangle',.3,0,70);tone(85,.12,'sine',.28,.01);},
+  /* 🐴 the farm (stage 6): tools/sounds.html recipes as they are */
+  neigh(p=1){[1150,1080,1180,1020,1100,940,980,820].forEach((f,i)=>tone(f*p,.07,'sawtooth',.04,i*.055));tone(420*p,.16,'square',.035,.5,260*p);},
+  clop(){tone(760,.04,'triangle',.09,0,520);tone(640,.04,'triangle',.08,.13,460);tone(760,.04,'triangle',.09,.3,520);tone(640,.04,'triangle',.08,.43,460);},
+  snort(){tone(260,.2,'sawtooth',.05,0,170);for(let i=0;i<3;i++)tone(1800+Math.random()*900,.04,'sawtooth',.01,.05+i*.04);},
+  moo(p=1){tone(150*p,.65,'sawtooth',.05,0,118*p);tone(300*p,.65,'sine',.05,0,236*p);},
+  baa(p=1){for(let i=0;i<6;i++)tone((430+(i%2?35:0))*p,.08,'sawtooth',.04,i*.07);},
+  oink(p=1){tone(300*p,.09,'square',.06,0,430*p);tone(280*p,.09,'square',.05,.14,390*p);},
+  cluck(){[0,.1,.2].forEach(d=>tone(820,.05,'square',.04,d,620));tone(1100,.16,'square',.04,.34,1350);},
   squeak(){tone(1400,.08,'sine',.08,0,1800);tone(1500,.08,'sine',.07,.1,1900);},
   quack(){tone(520,.12,'square',.07,0,380);tone(480,.1,'square',.06,.14,340);},yip(){tone(900,.07,'square',.06,0,1200);tone(950,.07,'square',.05,.11,1250);},
   jump(){tone(330,.16,'triangle',.14,0,660);},

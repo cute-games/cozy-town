@@ -1,4 +1,4 @@
-# HANDOFF — read this first (one page; updated 1 Nov 2026, Pets and Farm Update stage 4b)
+# HANDOFF — read this first (one page; updated 1 Nov 2026, Pets and Farm Update stage 6: all 6 stages built)
 
 ## Where things stand
 - Live: `main` = a47bb1a (pet update 1, stamp 2026102902). Backups: `backup-2026-10-31` and `backup-2026-11-01` = main a47bb1a (A2 wants today's date: a new dated backup each day).
@@ -34,7 +34,19 @@
   the clinic, without the park's west part where the approved Pet Show area stands). Joined game 1,973,272 -> 2,049,426 bytes (+76 KB: moves +35 KB, show models, code).
   Quick kit 79 of 80 PASS, only P19 FAIL (no GPU) (`tools/pfu-wip/quick-kit-stage5.log`); check_split S1-S4 PASS. **P25 is borderline**: fps medians 3.8 vs 4.2 = 90%
   (one earlier run 82%, fps swing up to 30% here); the CPU side of a frame is 136-151% of live main's (the whole update, stages 1-5): worth a look in stage 6.
-- **Next: stage 6** (`kit/entries/plan-brief-pfu-6.json`).
+- **Stage 6 done** (stamp 2026110202, commit see git log): the farm, horse trail and jump field from the Map plan (pfu-placements 1:1: 548 things, 64 forest trees
+  taken out/3 moved, hills stepped back), farm animals (baby/adult), 10 shared horses, Ieva (stable) and Stan (jump field), Cody/Hank/Rose on the trail (the clock), riding
+  (Stan's 5-step lesson 100 once, free rides after, 7:00-21:00, stops at the town edge, get off at the stable, pets wait there), eggs and milk once a game day, Market sells
+  them (10 each), free feed bucket, petting, friends see you ride (presence `rd`), the farm on the map. Kit P31-P35; rewritten (old -> new): P17 (see stage 6 notes).
+  Joined game 2,049,426 -> 2,332,697 bytes (+283 KB: farm models as data +176 KB, moves +25 KB, placements 35 KB, code). Quick kit 85 lines: 79 PASS; after the P10/P12 rewrites
+  (re-run alone, PASS) the FAILs are **N14, N40** (the town with Halloween+rain: 497 -> 553 pieces +11%, 732,586 -> 860,076 triangles +17%, limit 10%: the farm's ~62k
+  triangles do not fit the ~8k left after stages 1-5; E1 at the title passes at +9.4% / +9.85%: **needs Karolis's OK**, e.g. `--e1-limits pets:0.10:=45000,city:0.15:0.20`),
+  **P19** (no GPU) and **P25** (fps 86% / 78% of live in two runs, CPU side of a frame 121-124% (stage 5: 136-151%), first load 116-132%) (`tools/pfu-wip/quick-kit-stage6.log`);
+  check_split S1-S4 PASS. **P25 root cause** (guard 5, stopped here): in P25's view (town, looking north) the plan's scenery north of the town (pines/firs out to z -197,
+  x +90, ~33k triangles instanced) and the farm pieces in view add ~60-70k triangles to every frame; the software-drawn test browser is triangle/fill bound. The CPU work
+  is lower than stage 5 (pets out of sight not posed, the farm does nothing in town). First load: +283 KB file and the farm's ~170 ms build at load. Choices for Karolis
+  / the foreman: allow it (real iPad numbers first, P19), or show the far plan scenery only near the farm, or build the farm after the title shows.
+- **Next: the foreman's full check** (all 6 stages built), then the one pull request. `tools/PFU-TRY-IT.md` = the "Try it for real" list for Karolis and Izabele (guard 7).
 
 ## Read first (each stage)
 1. `CLAUDE.md`, this file. 2. The run doc `kit/kits/pfu-night-run.json` (field `text`; its Guards and Corrections hold). 3. Your brief
@@ -117,6 +129,24 @@
   `openLicense`, My pets strip `.licstrip`. Ribbon at the show: +1 Granny Daisy (`psScore10`). Map: Pet Show area pieces in `LOC.city.show`; the park's new walls are
   marked `ps5` and the nature scatter still sees the old park (`PS5_OLD`) so every bush keeps its place. Food truck `TRUCK.ry` (turned); `packBuild(key,txt)` swaps sign texts.
 - Moves re-cut with `trick,pet.greet,person.giveCard,person.takeCard` and EXTRA=stairH,tankPath,TRICKS,trickGear,TRICK_LEN,TRICK_KIND,TT.
+
+## Stage 6 notes (the farm)
+- Build: `buildFarm` (js/02-world.js, before `FARMD` = the placements as data, made by `python3 tools/pfu-wip/put-farm.py` from kit/kits/pfu-placements.json). Statics baked
+  (160 m pieces; props/machines without outline hulls, plain colours merged: `farmLite`), nature instanced (one draw a kind, `farmProto`), ground/roads 2 flat pieces, walls
+  (`fw:1`) + an 8 m collider grid `L.fgrid` (turned boxes `farmPush`) that collideXZ reads only out there. Lane: the block north of the hedge is now a thin hedge strip, a new
+  block `laneC[4]` shuts the land west of the lane end; city bounds reach x -226, z -196 (`FARM_X1/Z1`); the x -50 road's north barrier is gone; hills step back behind the farm.
+  Forest trees on the trail/roads/fields: same random order, drawn into VDUMP (53 of the 64 found; the other 11 went with stage 3's lane border).
+- Life (js/03-game.js end): `FARM`, `farmLive` (made lazily within 70 m of the farm: `FARM.q`), `farmTick` (nothing when far; far LOD = one baked piece past 22 m; animals hidden
+  past 70 m), `farmRide` (P.horse; `P.cy` = seat height), lesson `farmLessonTick` (S.ride.lesson/paid/met/picked), chores `farmEggs/farmMilk` (S.farm.eggs/milk/ed/md), Market
+  `farmSellHTML`/`ACT.fsell`, presence `rd=[horse,gait,heading]` (`farmStamp/farmExtra/farmPeer`, peer fields a.fh..., `a.hm` is the house map!). Models: export-pack.js
+  (farm keys, `packBuild` low-detail `PK_LO` for farm keys), moves re-cut with the farm moves (tools/pfu-wip lists in the commit message).
+- Speed: pets out of sight are not posed (`petPlay`), the farm leaves the scene graph when far. Rewrites (old -> new): P17 map trees and walls outside the clinic as in the
+  stage-3 build -> the same without the map trees within 0.6 m of a planned removal/move and without the farm's own walls (`fw`); P10 every move on every pet kind -> the same
+  without the farm animals' and coaches' moves (played on their own models in P34); P12 no map tree at |z|<42 west of x -78 -> none but the 2 the plan moved behind the hedge.
+  Fixture `tools/check-fixtures/save-pfu6-stage6.json` (made by this build: lesson done, farm goods).
+- NOT VERIFIED (stage 6): how riding feels (camera, speeds, jump) on a real iPad; the farm at night and in snow (no lights); friends riding together on real devices; every
+  farm move by eye (only the moves check); Ieva's brush in her hand (pose from the moves pack); animals walk through each other and through you (no animal colliders);
+  feeding moves of the player (first person: not drawn); the lesson has no map star for Stan; sounds.
 
 ## Open / not verified
 - Stage 5 NOT VERIFIED: a shared show with real friends on real devices (clock and presence lag), 3+ players and the next show right after (only a unit test of the

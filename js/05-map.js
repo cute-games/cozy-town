@@ -24,7 +24,7 @@ const MAP_AT={park:[-33.4,14.6],beach:[91,0]};   /* where a place's badge sits w
 const MAP_MQ=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
 function mapDark(){const t=document.documentElement.getAttribute('data-theme');return t==='dark'||(t!=='light'&&!!(MAP_MQ&&MAP_MQ.matches));}
 function mixC(a,b,t){const p=s=>[1,3,5].map(i=>parseInt(s.slice(i,i+2),16)),A=p(a),B=p(b);return'#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('');}
-const mapB=()=>({x1:laneEnd()-8,x2:110,z1:-92,z2:92});   /* how far the map moves: the town, all of Friends Lane, the beach sign */
+const mapB=()=>({x1:Math.min(laneEnd()-8,-214),x2:110,z1:-168,z2:92});   /* (🐴 stage 6: the farm, the trail and the jump field are on the map) */   /* how far the map moves: the town, all of Friends Lane, the beach sign */
 const mapShown=p=>!((p.id==='home'||p.id==='garden')&&p.x>-84);   /* your house and garden are on Friends Lane (not in town) */
 let MAP_TR=null;
 function mapTrees(){if(MAP_TR)return MAP_TR;const r=seeded(66),T=[];   /* soft round trees on the hills around town (not on Friends Lane or the beach path) */
@@ -42,7 +42,8 @@ function mapPaint(x,ox,oz,k,w,h,o){const P=o.dark?MAP_PAL.dark:MAP_PAL.light,u=o
   if(!mini){x.beginPath();for(const [tx,tz,tr] of mapTrees())if(vis(tx-tr,tz-tr,tx+tr,tz+tr)){x.moveTo(X(tx)+tr*k,Z(tz));x.arc(X(tx),Z(tz),tr*k,0,TAU);}
     stroke(P.treeE,2.4*u);x.fillStyle=P.tree;x.fill();}
   x.fillStyle=P.gr;R(-88,-88,88,88,7);x.fill();if(!mini){R(le-4,-28.5,-80,28.5,5);x.fill();}   /* the town, and Friends Lane's valley */
-  if(!mini){x.fillStyle=P.sand;C(97,0,7.5);x.fill();x.fillStyle=P.water;C(108,0,8.5);x.fill();}   /* 🏖️ a bit of beach past the east edge */
+  if(!mini){x.fillStyle=P.sand;C(97,0,7.5);x.fill();x.fillStyle=P.water;C(108,0,8.5);x.fill();}
+  if(!mini&&vis(-216,-170,-44,-37))farmMap(x,o.dark,X,Z,k,u,vis,pl,stroke);   /* 🐴 the farm (stage 6) */   /* 🏖️ a bit of beach past the east edge */
   /* 🌳 the park, the football field, ponds and the lake (flat PLACES, by shape) */
   for(const p of PLACES){if(!p.flat||!mapShown(p)||p.id==='beach'||p.id==='garden'||p.id==='bus')continue;const rr0=p.r||Math.max(p.w,p.d)/2;if(!vis(p.x-rr0,p.z-rr0,p.x+rr0,p.z+rr0))continue;
     if(p.id==='park'){R(p.x-p.w/2,p.z-p.d/2,p.x+p.w/2,p.z+p.d/2,2.6);x.fillStyle=P.park;x.fill();stroke(P.parkE,1.6*u);
@@ -632,4 +633,11 @@ function crCam(dt){const w=innerWidth,h=innerHeight,port=w/h<.95,th=Math.tan(15*
 $('panel').addEventListener('pointerdown',e=>{if(CR&&e.target===$('panel')){CR.drag=e.clientX;try{$('panel').setPointerCapture(e.pointerId);}catch(_){}}});
 $('panel').addEventListener('pointermove',e=>{if(CR&&CR.drag!==null){CR.rot+=(e.clientX-CR.drag)*.012;CR.drag=e.clientX;}});
 for(const ev of['pointerup','pointercancel'])$('panel').addEventListener(ev,()=>{if(CR)CR.drag=null;});
-
+/* 🐴 the farm on the map (stage 6): trodden ground and mud, the dirt roads and the horse trail, the barn, stables and coop, the jumps; its name */
+function farmMap(x,dark,X,Z,k,u,vis,pl,stroke){const dirt=dark?'#6f5d45':'#e6d3a3',mud=dark?'#5a4636':'#b48f66';
+  for(const [kk,gx,gz,r,sm,sx] of FARMD.ground){if(kk===2||!vis(gx-r,gz-r,gx+r,gz+r))continue;x.beginPath();x.ellipse(X(gx),Z(gz),r*(sx||1)*k,r*k,0,0,TAU);x.fillStyle=kk===1?mud:dirt;x.fill();}
+  for(const [kind,w,...pts] of FARMD.roads){const q=[];for(let i=0;i<pts.length;i+=2)q.push([pts[i],pts[i+1]]);x.beginPath();pl(q);stroke(kind===2?(dark?'#8a7656':'#dcc395'):(dark?'#7d6a52':'#d4b98c'),Math.max(u,w*k));}
+  const B={'farm.barn':[7.9,6.2,'#d9645a'],'farm.stable':[9,4.4,'#c98f5e'],'farm.coop':[2.1,2.5,'#e8b765'],'farm.windmill':[2,2,'#9aa3b5']};
+  for(const [kk,gx,gz,ry,s] of FARMD.p){const b=B[kk];if(b){x.save();x.translate(X(gx),Z(gz));x.rotate(-ry);x.fillStyle=dark?mixC(b[2],'#241b42',.38):b[2];x.fillRect(-b[0]*s*k/2,-b[1]*s*k/2,b[0]*s*k,b[1]*s*k);x.restore();}
+    else if(kk.startsWith('course.')){x.beginPath();x.arc(X(gx),Z(gz),Math.max(u,.9*k),0,TAU);x.fillStyle='#ff6b6b';x.fill();}}
+  if(k>.9*u){x.font=`800 ${Math.round(13*u)}px "Baloo 2",sans-serif`;x.textAlign='center';x.fillStyle=dark?'#fff6e4':'#5a3e2b';x.fillText('🐴 Farm',X(-110),Z(-128));x.fillText('🏇 Jump field',X(-186),Z(-127));}}
