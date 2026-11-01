@@ -10,7 +10,7 @@
 - **Stage 2 done** (stamp 2026103103, commit ddfda17): the pet brain (one need = happiness, moods, body language from the moves
   pack), food groups, home bowl, pets nap when you sleep, healthy-week ribbon, sickness (built, OFF), vet booking on the phone, friends see your pets for
   real and pet/play with them. New kit lines P5-P11. Joined game 1,614,292 -> 1,663,820 bytes. Quick kit 60 of 61 PASS (only A2, see Open) `tools/pfu-wip/quick-kit-stage2.log`; check_split PASS.
-- **Stage 3 done** (stamp 2026110101, commit see git log): Friends Lane hedges at 37.5 m, yard levels (🏡 My yard sign), 6 new beds (spots 36-41), only open
+- **Stage 3 done** (stamp 2026110101, commit 13067b2): Friends Lane hedges at 37.5 m, yard levels (🏡 My yard sign), 6 new beds (spots 36-41), only open
   pots/owned things drawn, training gear (10 pieces at Ms. Paws, pets play on it), friends see your yard (presence `yd`). Kit lines P12-P16; P10 and N33 rewritten.
   Joined game 1,663,820 -> 1,702,559 bytes (+38,739: moves +10.6 KB, gear models 9.4 KB, code). Quick kit 66 of 66 PASS (N3 failed once on timing in the
   full run, the night3 stage run again alone: all PASS; N3 alone 3 of 3) `tools/pfu-wip/quick-kit-stage3.log`; check_split S1-S4 PASS.
