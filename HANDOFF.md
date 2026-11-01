@@ -1,7 +1,7 @@
 # HANDOFF — read this first (one page; updated 1 Nov 2026, Pets and Farm Update stage 4b)
 
 ## Where things stand
-- Live: `main` = a47bb1a (pet update 1, stamp 2026102902). Backups: `backup-2026-10-31` and `backup-2026-11-01` = main a47bb1a (A2 wants today's date).
+- Live: `main` = a47bb1a (pet update 1, stamp 2026102902). Backups: `backup-2026-10-31` and `backup-2026-11-01` = main a47bb1a (A2 wants today's date: a new dated backup each day).
 - Building the **Pets and Farm Update** (PFU) on branch `claude/exciting-feynman-ea1031` (stands in for the run doc's `pfu` branch). Six stages, one
   helper each; no pull request until all six pass and the foreman's full check is done. Never push to main.
 - **Stage 1 done** (stamp 2026103102): economy rebalance patch (2 commits, as written: it targets the split js/ files), night skip, morning bus home,
@@ -24,7 +24,17 @@
   the new 3-floor Pet Shop (one room, real stairs), today's pets redrawn (new pug, real capybara, pomchi tail, duck/owl wing joints). Joined game 1,733,495 -> 1,973,272 bytes (pack models as data ~190 KB, moves +35 KB).
   Quick kit 70 of 74 PASS (`tools/pfu-wip/quick-kit-stage4b.log`); check_split S1-S4 PASS. FAIL: E1, N14, N40 only on the Pet Shop's triangles 15,363 -> 40,544
   (the approved 3-floor room; pieces 14 -> 13): needs Karolis's OK as `--e1-limits pets:...`; P19 3.7 fps in the software-drawn test browser (live 3.5): measure on a real iPad.
-- **Next: stage 5** (`kit/entries/plan-brief-pfu-5.json`: Pet Show with friends, license, tricks). Size left: about 1 MB (limit 3.0 MB).
+- **Owner decisions 1 Nov (Karolis, foreman's chat)**: (1) the Pet Shop room may use up to **45,000 triangles** (was +10% of 15,363): kit `--e1-limits` default is now
+  `pets:0.10:=45000` (E1, N14, N40; town and every other area keep their limits). (2) P19 (30+ fps, iPad view, 2 players) stays a real line, FAIL in the cloud
+  (no GPU), NOT VERIFIED until Karolis measures on the real iPad; new **P25** = not slower than live in the same test browser (fps >= 90%, first load <= 115%).
+- **Stage 5 done** (stamp 2026110201, commit STAGE5COMMIT): Pet Show area in the park (book's stage, podium beside it, judges' table, sand lawn, rope; tree, slide and
+  food truck moved/turned), tricks (3 per kind from the moves pack, practice on gear, bigger gold zone), Pet Show with friends (45 s join card, waiting list,
+  shared timeline, next show right after for >4), town results from the one clock, ribbon +1, animal license (counting, Barkley hand-over, card, My pets strip).
+  Kit P25-P30; rewritten (old -> new): P18 (bear's license line: stand-in -> approved rules text), P10 (person moves on a person, not on pets), P17 (walls outside
+  the clinic, without the park's west part where the approved Pet Show area stands). Joined game 1,973,272 -> 2,049,426 bytes (+76 KB: moves +35 KB, show models, code).
+  Quick kit 79 of 80 PASS, only P19 FAIL (no GPU) (`tools/pfu-wip/quick-kit-stage5.log`); check_split S1-S4 PASS. **P25 is borderline**: fps medians 3.8 vs 4.2 = 90%
+  (one earlier run 82%, fps swing up to 30% here); the CPU side of a frame is 136-151% of live main's (the whole update, stages 1-5): worth a look in stage 6.
+- **Next: stage 6** (`kit/entries/plan-brief-pfu-6.json`).
 
 ## Read first (each stage)
 1. `CLAUDE.md`, this file. 2. The run doc `kit/kits/pfu-night-run.json` (field `text`; its Guards and Corrections hold). 3. Your brief
@@ -97,7 +107,21 @@
   GEAR ids appended: monkey, monkey2, seal, bear, snake (letters k-o). Psrivals (Pet Show) leave big pets out (same draw as old versions).
 - Kit rewrites (old -> new): N14/N40 size, B1 sad within 0.1, P10 (real-shape lowest point; big-pet/toy moves on their kind), P15 (15 gear pieces), N28 (the new shop).
 
+## Stage 5 notes the next stages need
+- Pet Show (js/07-designer.js, rewritten): `PS` (stage spot -36.3,22 top .56; lawn spot for gear tricks; podium steps `PS.pod`; judges' table `PS.jt`), `psShow(plan,p)`
+  runs one show (`plan.ts` null = alone, at your pace, skip allowed; a number = shared timeline on the one clock, `psTurnAt`), `psPlan(r,i,seed)` = town results from
+  a seed (the show's start second, never Math.random). Tricks: `trList`, `trLen`, `trSpot` (stage or lawn + gear via `GEAR_B`), `trPractice` (from `gearEnd`; pet
+  fields `tr` known 1-3, `tp` practice days, `tq` last practice day), `psGoldW` (.08, .12 for learned tricks). Friends: `PSM`, presence `ps=[t0,jt,pet,style,happy,known,grades]`,
+  `psFriendsHere` (version >= `PS_V`=2026110201, in the park), `psJoinCard`, `psWaitCard`, `psmTick`, `psGroups` (4 a show, next right after).
+- License: `LIC_NEED`, `licReach`, `licShow(place)` (S.lic wins/firsts; S.lic.seen), hand-over `psLicStart/psLicCut` (moves person.giveCard/takeCard, pet.greet),
+  `openLicense`, My pets strip `.licstrip`. Ribbon at the show: +1 Granny Daisy (`psScore10`). Map: Pet Show area pieces in `LOC.city.show`; the park's new walls are
+  marked `ps5` and the nature scatter still sees the old park (`PS5_OLD`) so every bush keeps its place. Food truck `TRUCK.ry` (turned); `packBuild(key,txt)` swaps sign texts.
+- Moves re-cut with `trick,pet.greet,person.giveCard,person.takeCard` and EXTRA=stairH,tankPath,TRICKS,trickGear,TRICK_LEN,TRICK_KIND,TT.
+
 ## Open / not verified
+- Stage 5 NOT VERIFIED: a shared show with real friends on real devices (clock and presence lag), 3+ players and the next show right after (only a unit test of the
+  grouping), how every trick looks on its kind (looked at: the dog's high five, agility on its gear, roll over; the rest only by the moves check), the hand-over on an
+  iPad (looked at once in the test copy), sounds (tick, stamp), the license card on a phone, P19 on the real iPad.
 - Stage 4b NOT VERIFIED (by eye/real device): big pets walking/playing and their gear moves, the bear/seal waiting pose, the vet platform view, the snake in its tank,
   the shop's stairs on an iPad (camera, feel), the tank card on a phone, friends see your floor in the shop (presence has no height: a friend upstairs is drawn on floor 1),
   capybara faces (only the 'real' face is used), sounds (monkey, seal, bear, hiss, click). An old version (main) cannot place a saved glass tank (unknown furniture).

@@ -204,6 +204,9 @@ const SFX={
   bear(){tone(105,.4,'sawtooth',.05,0,80);tone(160,.3,'triangle',.09,.04,110);},
   hiss(){for(let i=0;i<8;i++)tone(2800+Math.random()*1800,.05,'sawtooth',.012,i*.035);},
   click(){tone(1800,.03,'square',.04);tone(1200,.03,'square',.03,.05);},
+  /* 🏆🪪 the Pet Show's join countdown and the license stamp (stage 5): tools/sounds.html recipes as they are */
+  tick(){tone(880,.06,'triangle',.09);},
+  stamp(){tone(140,.12,'triangle',.3,0,70);tone(85,.12,'sine',.28,.01);},
   squeak(){tone(1400,.08,'sine',.08,0,1800);tone(1500,.08,'sine',.07,.1,1900);},
   quack(){tone(520,.12,'square',.07,0,380);tone(480,.1,'square',.06,.14,340);},yip(){tone(900,.07,'square',.06,0,1200);tone(950,.07,'square',.05,.11,1250);},
   jump(){tone(330,.16,'triangle',.14,0,660);},

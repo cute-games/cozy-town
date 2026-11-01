@@ -319,37 +319,33 @@ function buildCity(){
   for(const [a,b] of [[22,25],[23,26],[24,26]]){const A=WP[a],B=WP[b],len=Math.hypot(B[0]-A[0],B[1]-A[1]);flat(st,1.8,len,'#f6e2b8',(A[0]+B[0])/2,.022,(A[1]+B[1])/2,{ry:Math.atan2(B[0]-A[0],B[1]-A[1])});}
   const fx=-22,fz=22;buildFountain(st,L,fx,fz);
   L.benches=[];for(let i=0;i<4;i++){const a=Math.PI/4+i*Math.PI/2,bx=fx+Math.cos(a)*9.6,bz=fz+Math.sin(a)*9.6,ry=Math.atan2(fx-bx,fz-bz);bench(st,bx,bz,ry);colC(L,bx,bz,.75);L.benches.push({x:bx,z:bz,ry,b:BENCHES[BENCHES.length-1]});}
-  for(const [x,z] of [[-37.6,9.2],[-11.5,16],[-37.4,16.2],[-37.6,27.7],[-11.5,28],[-16,37.5],[-26,37.5],[-20,35.5],[-36,37.5],[-12.5,37.5]]){tree(st,x,z,1);colC(L,x,z,.28);}   /* (run 4, stage 3: the corner tree a metre further from the food truck: from the stage its crown sat right on the truck's cab) */
-  foodTruck(st,L,TRUCK.x,TRUCK.z);   /* 🍔 the food truck, by the fountain benches */
+  for(const [x,z] of [[-37.6,9.2],[-11.5,16],[-39.2,13.4],[-37.6,27.7],[-11.5,28],[-16,37.5],[-26,37.5],[-20,35.5],[-36,37.5],[-12.5,37.5]]){tree(st,x,z,1);colC(L,x,z,.28);if(x===-39.2)L.cols[L.cols.length-1].ps5=1;}   /* (run 4, stage 3: the corner tree a metre further from the food truck: from the stage its crown sat right on the truck's cab; stage 5: the tree at -37.4,16.2 moved to -39.2,13.4 for the podium, map-petshow-park) */
+  foodTruck(st,L,TRUCK.x,TRUCK.z,TRUCK.ry);   /* 🍔 the food truck, by the fountain benches */
   L.beds=[{id:'h1',x:-19.8,z:-10.6,ix:-19.8,iz:-9.9,yard:1},{id:'h2',x:-14.2,z:-10.6,ix:-14.2,iz:-9.9,yard:1}];   /* h1, h2: the flower beds in front of your house (on Friends Lane) */
   for(const [i,sx,sz] of [[1,1,-1],[2,-1,-1],[3,-1,1],[4,1,1]]){const x=fx+sx*8.84,z=fz+sz*8.84;flowerBed(st,x,z,1.8,1.0);col(L,x-.95,z-.55,x+.95,z+.55);RAISED.push({x,z,w:1.8,d:1.0,h:.22});L.beds.push({id:'p'+i,x,z,ix:x,iz:z+(sz>0?-.9:.9)});}
   bench(st,-13,34.6,Math.PI);bench(st,-10,34.6,Math.PI);col(L,-14,34.2,-9,35.1);
   // playground
-  const sl=new THREE.Group();sl.position.set(-37.2,0,31.5);st.add(sl);
+  const sl=new THREE.Group();sl.position.set(-39.0,0,33.5);st.add(sl);   /* (stage 5, map-petshow-park: 1.8 m west and 2 m back, it was cramped behind the judges) */
   box(sl,1.2,1.8,1.2,'#ffd45c',0,0,-1.6);for(let i=0;i<5;i++)box(sl,1,.06,.12,'#ffffff',0,.3+i*.32,-2.25,{ol:.015});
   const sp=new THREE.Group();sp.position.set(0,1.8,-1);sp.rotation.x=.58;sl.add(sp);box(sp,.9,.08,3.2,'#ff7aa8',0,0,1.6,{center:true});box(sp,.08,.25,3.2,'#ff7aa8',-.45,0,1.6,{center:true});box(sp,.08,.25,3.2,'#ff7aa8',.45,0,1.6,{center:true});
-  col(L,-37.9,28.4,-36.5,33.8);
+  col(L,-39.7,30.4,-38.3,35.8);L.cols[L.cols.length-1].ps5=1;
   const sw=new THREE.Group();sw.position.set(-29,0,37.4);st.add(sw);
   for(const s of[-1,1]){box(sw,.12,2.6,.12,'#7cc8ff',s*1.8,0,-.6,{rx:s*0+.22});box(sw,.12,2.6,.12,'#7cc8ff',s*1.8,0,.6,{rx:-.22});}
   cyl(sw,.07,.07,3.8,'#7cc8ff',0,2.5,0,{rz:Math.PI/2,center:true,seg:8});col(L,-31,36.6,-27,38.2);
   L.swings=[];for(const s of[-.8,.8]){const p=new THREE.Group();p.position.set(-29+s,2.45,37.4);L.dyn.add(p);box(p,.03,1.8,.03,'#3d2c5e',-.25,-1.85,0,{ol:false});box(p,.03,1.8,.03,'#3d2c5e',.25,-1.85,0,{ol:false});box(p,.6,.06,.3,'#ff8a6b',0,-1.95,0,{ol:.015});L.swings.push(p);}
-  // 🏆 the Pet Show stage: west side of the park, facing the fountain
-  {const SX=-36.5,SZ=22,TOP=.55;
-    box(st,3.0,TOP,4.4,'#c98f5e',SX,0,SZ);box(st,2.92,.03,4.32,'#ff9ec4',SX,TOP,SZ,{ol:false});box(st,.45,.26,1.4,'#b97f4e',-34.77,0,SZ);
-    cyl(st,.58,.58,.012,'#ffd45c',-36.15,TOP+.03,SZ,{seg:28,ol:false});
-    for(const [x,z,c] of [[-37.3,20.3,'#7cc8ff'],[-37.45,21.45,'#ffd45c'],[-37.45,22.55,'#b79cff'],[-37.3,23.7,'#7fdcb5']])cyl(st,.3,.32,.07,c,x,TOP,z,{seg:16,ol:.015});
-    box(st,.16,2.8,4.5,'#b79cff',-37.92,TOP,SZ);
-    for(const s of[-1,1]){box(st,.14,2.65,.75,'#ff4d6d',-37.78,TOP+.02,SZ+s*1.82,{ol:.02});box(st,.16,.22,.8,'#ffd45c',-37.76,TOP+2.6,SZ+s*1.82,{ol:.015});}
-    for(const z of[19.85,24.15]){cyl(st,.11,.13,3.75,'#ffd45c',-37.8,0,z,{seg:10});sph(st,.2,'#ffd45c',-37.8,3.85,z,{ws:10,hs:8});}
-    for(let i=0;i<10;i++){const z=20.1+i*.44;cone(st,.13,.26,['#ff4d6d','#ffd45c','#7cc8ff','#7fdcb5','#b79cff'][i%5],-37.74,3.42,z,{rz:Math.PI,center:true,seg:3,ol:false,s:[.6,1,1]});}
-    box(st,.03,.03,4.3,'#3d2c5e',-37.74,3.55,SZ,{ol:false});
-    for(const [bx,z] of[[-34.6,19.95],[-34.6,24.05]]){box(st,.015,1.5,.015,'#ffffff',bx,TOP,z,{ol:false});   /* (run 4, stage 3: the balloons at the stage's front corners, never in front of the sign) */for(const [dx,dy,dz,c] of [[0,2.15,0,'#ff7aa8'],[.12,1.95,.14,'#ffd45c'],[-.1,1.98,-.12,'#7cc8ff']])sph(st,.17,c,bx+dx,dy,z+dz,{s:[1,1.18,1],ws:10,hs:8,ol:.015});}
-    const sg=signPlane('🏆 Pet Show',2.8,.8,'#ffd45c','#3d2c5e',.13);   /* (2.8 m: clear of the pillars, which stand 1.45 m from the middle) */sg.position.set(-37.82,2.62,SZ);sg.rotation.y=Math.PI/2;L.g.add(sg);   /* 2 cm in front of the stage's back wall (run 4, job 5: it was flush with it) */
-    const sg2=signPlane('Every Saturday!',1.9,.38,'#ffffff','#ff4d8d',.12);sg2.position.set(-37.82,1.98,SZ);sg2.rotation.y=Math.PI/2;L.g.add(sg2);
-    box(st,.7,.74,3.3,'#ffffff',-32.75,0,SZ);box(st,.05,.62,3.34,'#ff4d6d',-33.12,.1,SZ,{ol:.015});box(st,.06,.06,3.36,'#ffd45c',-33.12,.7,SZ,{ol:false});
-    for(const z of[21.05,22,22.95]){box(st,.44,.44,.44,'#9a6a43',-32.02,0,z);box(st,.48,.07,.48,'#ff9ec4',-32.02,.44,z,{ol:.012});box(st,.07,.62,.48,'#9a6a43',-31.76,.5,z);}
-    col(L,-38.05,19.7,-34.5,24.3);col(L,-33.15,20.3,-31.7,23.7);
-    inter(L,{x:-34.25,z:SZ,r:2.7,icon:'🏆',label:()=>psTargetLabel(),act:()=>openShow(),pri:()=>psOpen()&&!showDone()});}
+  // 🏆 the Pet Show area (pets and farm update, stage 5: objects-petshow-area, map-petshow-park): the book's stage, podium and judges' table on one sand show lawn
+  // on the park's west side, all facing the fountain; the podium BESIDE the stage (never in front of it), the judges at the other front corner, a low gold rope with a gap
+  {const c0=L.cols.length;L.show={};const add=(k,x,z,ry,t)=>{const o=packBuild(k,t).root;o.position.set(x,0,z);o.rotation.y=ry;o.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(o),r=v=>Math.round(v*100)/100;
+      L.show[k]=[r(b.min.x),r(b.max.x),r(b.min.z),r(b.max.z),r(b.max.y)];st.add(o);return o;};   /* (L.show: where each piece stands, for the check) */
+    const sand=new THREE.Mesh(new THREE.CircleGeometry(7.8,48),mat('#f2dcae'));sand.rotation.x=-Math.PI/2;sand.scale.set(.7,1,1);sand.position.set(-35.0,.026,22);st.add(sand);
+    add('show.stage',-34.9,22,Math.PI/2,{'Pet Show':'🏆 Pet Show'});add('show.podium',-36.0,16.9,Math.PI/2);add('show.judges',PS.jt[0],PS.jt[1],PS.jt[2],{Judge:['Lady Fluffington','Sir Barkley','Granny Daisy']});
+    const sg=signPlane('Every Saturday!',1.05,.26,'#ffffff','#ff4d8d',.12);sg.position.set(-37.262,1.62,22);sg.rotation.y=Math.PI/2;L.g.add(sg);   /* under the stage's 🏆 Pet Show banner, between the paw signs */
+    const rp=[];for(let i=0;i<=8;i++){const a=-Math.PI*.3+i/8*Math.PI*.6;rp.push([-36.2+Math.cos(a)*5.2,22+Math.sin(a)*5.2]);}
+    for(let i=0;i<rp.length;i++){const [x,z]=rp[i];if(Math.abs(z-22)<1.2)continue;cyl(st,.05,.06,.75,'#ffd45c',x,0,z,{seg:8,ol:.006});sph(st,.07,'#ffd45c',x,.78,z,{ws:8,hs:6,ol:.005});colC(L,x,z,.12);
+      if(i<rp.length-1&&Math.abs(rp[i+1][1]-22)>=1.2){const [x2,z2]=rp[i+1];tube(st,[[x,.62,z],[(x+x2)/2,.56,(z+z2)/2],[x2,.62,z2]],.02,.02,'#ff7aa8',{seg:8,rad:5,ol:false});}}
+    col(L,-37.5,19.6,-35.5,24.4);col(L,-36.65,14.9,-35.35,18.9);   /* the stage and the podium are solid (the show puts you up there itself) */
+    {const [jx,jz,ja]=PS.jt;for(const k of[-1.2,-.4,.4,1.2])colC(L,jx+k*Math.cos(ja)-.25*Math.sin(ja),jz-k*Math.sin(ja)-.25*Math.cos(ja),.55);}   /* the judges' table and its chairs */
+    inter(L,{x:-34.3,z:22,r:2.7,icon:'🏆',label:()=>psTargetLabel(),act:()=>openShow(),pri:()=>psOpen()&&!showDone()});for(let i=c0;i<L.cols.length;i++)L.cols[i].ps5=1;}
   buildBoard(L,st);   /* 📌 the ideas board and a big old oak, just inside the park's north gate */
   busStopCity(L,st);   /* 🚌 the Beach Bus stop, just east of the park's north gate */
   /* ===== paved paths to every shop and front door ===== */
@@ -473,8 +469,9 @@ function buildCity(){
    for(const [x,z,s] of [[76.6,-41.2,1.2],[77.0,-34.6,1.15],[70.6,-33.4,1.0],[80.6,-42.4,1.3]]){tree(st,x,z,s);colC(L,x,z,.3);}   /* (the big tree behind the gate stepped aside: it stood dead centre in the gateway) */
    inter(L,{x:GX-1.6,z:GZ,r:1.8,rect:{x1:GX-3.6,z1:GZ-2.3,x2:GX-.2,z2:GZ+2.3},icon:'🌲',label:'Climb into the Tree Park',act:()=>enter('treepark')});}
   // scatter nature along the edges of town, away from paths and buildings
-  {const r=seeded(77);let placed=0;
-    const free=(x,z,rad)=>{if(x>63&&x<82&&z>-41&&z<-35)return false;   /* (run 4, stage 3: the Tree Park's gate path stays clear) */if(Math.abs(x)<8.5||Math.abs(z)<8.5||Math.abs(x)>79.3||Math.abs(z)>79.3)return false;if(Math.abs(Math.abs(x)-50)<8.5||Math.abs(Math.abs(z)-50)<8.5)return false;if(x>-41&&x<-9&&z>58&&z<79)return false;if(x>-23.5&&x<-10&&z>-25&&z<-8)return false;for(const c of L.cols)if(pushOut(x,z,rad+.4,c))return false;for(const [a,b] of WE)if(segDist(x,z,WP[a],WP[b])<rad+1.1)return false;return true;};
+  /* (stage 5: the nature scatter still sees the park as it was before the Pet Show area (its walls marked ps5 are skipped, the old ones stand in), so every bush and rock keeps its place) */
+  {const r=seeded(77);let placed=0;const PS5_OLD=[{x1:-37.9,z1:28.4,x2:-36.5,z2:33.8},{x1:-38.05,z1:19.7,x2:-34.5,z2:24.3},{x1:-33.15,z1:20.3,x2:-31.7,z2:23.7},{x1:-35.45,z1:9.5,x2:-32.25,z2:14.65},{cx:-37.4,cz:16.2,cr:.28}];
+    const free=(x,z,rad)=>{if(x>63&&x<82&&z>-41&&z<-35)return false;   /* (run 4, stage 3: the Tree Park's gate path stays clear) */if(Math.abs(x)<8.5||Math.abs(z)<8.5||Math.abs(x)>79.3||Math.abs(z)>79.3)return false;if(Math.abs(Math.abs(x)-50)<8.5||Math.abs(Math.abs(z)-50)<8.5)return false;if(x>-41&&x<-9&&z>58&&z<79)return false;if(x>-23.5&&x<-10&&z>-25&&z<-8)return false;for(const c of L.cols)if(!c.ps5&&pushOut(x,z,rad+.4,c))return false;for(const c of PS5_OLD)if(pushOut(x,z,rad+.4,c))return false;for(const [a,b] of WE)if(segDist(x,z,WP[a],WP[b])<rad+1.1)return false;return true;};
     for(let tries=0;tries<2600&&placed<190;tries++){const edge=r();let x,z,forest=false;if(edge<.15){x=-40+r()*80;z=33+r()*7;}else if(edge<.3){x=-40+r()*80;z=-40+r()*7;}else if(edge<.38){x=33+r()*7;z=-40+r()*80;}else if(edge<.46){x=-40+r()*7;z=-40+r()*80;}
         else{x=(r()<.5?-1:1)*(57+r()*23);z=-80+r()*160;if(r()<.5){const t=x;x=z;z=t;}forest=Math.abs(x)>57&&Math.abs(z)>57;}
       let kind=r();const q=vetSpot(x,z,1.5)?VDUMP:st;if(forest&&kind<.75)kind=.9;
@@ -500,7 +497,7 @@ function buildCity(){
   inter(L,{x:31.5,z:10.1,r:2.3,icon:'🌷',label:'Go into the Flower Shop',act:()=>enter('flowers')});
   for(const [dx,dz] of [[0,5.3],[0,-5.3],[5.3,0],[-5.3,0]])inter(L,{x:fx+dx,z:fz+dz,r:2.2,icon:'✨',label:'Make a wish (1 🪙)',act:wish});
   L.swings.forEach((s,i)=>inter(L,{x:s.position.x,z:36.1,r:1.5,icon:'🎠',label:'Go on the swing',act:()=>startSwing(i)}));
-  inter(L,{x:-37.2,z:28.1,r:1.8,icon:'🛝',label:'Go down the slide',act:startSlide});
+  inter(L,{x:-39.0,z:30.1,r:1.8,icon:'🛝',label:'Go down the slide',act:startSlide});
   for(const b of L.beds){const t=inter(L,{x:b.ix,z:b.iz,r:1.9,icon:'💧',label:()=>S&&S.water&&S.water[b.id]===S.day?'These flowers are happy today':'Water the flowers',act:()=>waterBed(b)});if(b.yard)yardInt(t,b);}
   return L;
 }

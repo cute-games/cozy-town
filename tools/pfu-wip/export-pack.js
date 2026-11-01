@@ -79,7 +79,8 @@ for(const it of LP.filter(i=>i.id==='pet:bear'))OUT['bear.'+it.opts.v]=pet('pet:
 for(const [k,id,o] of [['seal','pet:seal',{look:'spotted'}],['snake','pet:snake',{}],['pug','age:pug',{v:'new'}],['capybara','age:capybara',{v:'real'}]]){
   const it=LP.find(i=>i.id===id&&JSON.stringify(i.opts)===JSON.stringify(o));it.colours.forEach((c,i)=>{OUT[k+'.'+i]=pet(id,Object.assign({},o,{c}));});}
 for(const [k,id,o,src] of [['home.tree','home:tree',{look:'jungle'}],['home.pond','home:pond'],['home.den','home:den'],['gear.monkey','train:monkey',null,'claude'],['gear.monkey2','monkeybars',null,'chatgpt'],
-  ['gear.seal','train:seal'],['gear.bear','train:bear'],['gear.snake','train:snake'],['shop.room','shop:room',{floor:'3',pets:'no'}]])OUT[k]=thing(id,o,src);
+  ['gear.seal','train:seal'],['gear.bear','train:bear'],['gear.snake','train:snake'],['shop.room','shop:room',{floor:'3',pets:'no'}],
+  ['show.stage','show:stage',{with:'stage'}],['show.podium','show:podium'],['show.judges','show:judges'],['show.license','show:license',{lv:'1'}]])OUT[k]=thing(id,o,src);   /* (stage 5: the Pet Show area's stage, podium, judges' table and the hand-held license card) */
 const cols={};const FUR={monkey:vm.runInContext('MONKEYS.map(m=>[m[0],m[2].fur])',LIV),bear:vm.runInContext('BEARS.map(m=>[m[0],m[2].c])',LIV)};
 for(const k of['monkey','bear'])cols[k]=LP.filter(i=>i.id==='pet:'+k).map(i=>[i.opts.v,i.name.split(' · ')[1],FUR[k].find(f=>f[0]===i.opts.v)[1]]);
 for(const [k,id] of [['seal','pet:seal'],['snake','pet:snake'],['pug','age:pug'],['capybara','age:capybara']])cols[k]=LP.find(i=>i.id===id&&i.status==='picked').colours;

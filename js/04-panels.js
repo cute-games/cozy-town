@@ -89,7 +89,7 @@ function renderPet(msg){const p=PT,d=p.d,h=Math.round(d.happy/20);
   openPanel(`<div class="who" style="--c:${d.col}">${PET_TYPES[petKind(d)].icon} ${esc(d.name)}</div><div class="hearts">${hearts(clamp(h,0,5))}</div>
     <p class="line">${esc(msg||(d.happy>70?d.name+' is super happy!':d.happy>35?d.name+' wags happily at you.':d.name+' looks a little lonely. Some love would help!'))}</p>
     <div class="row"><button class="btn mint" data-a="ppet">💗 Pet</button>${(()=>{const n=PET_FOODS.reduce((s,k)=>s+(S.bag[k]||0),0);return`<button class="btn butter" data-a="pfeed">${PET_ITEMS[petFood(petKind(d))].i} Feed${n?' ('+n+')':''}</button>`;})()}
-    <button class="btn sky" data-a="pplay">${PET_ITEMS[(PET_TOY[petKind(d)]||PET_TOY[d.type])].i} Play</button><button class="btn coral" data-a="pdress">🎀 Dress up</button><button class="btn lilac" data-a="pstay">${d.stay?'🐾 Follow me':'🏠 Stay here'}</button>${S.pets.length>PET_FOLLOW?'<button class="btn sky" data-a="mypets">🐾 My pets</button>':''}<button class="btn white" data-a="close">Bye!</button></div>`,{bottom:true,onClose:petBye});}
+    <button class="btn sky" data-a="pplay">${PET_ITEMS[(PET_TOY[petKind(d)]||PET_TOY[d.type])].i} Play</button><button class="btn coral" data-a="pdress">🎀 Dress up</button><button class="btn lilac" data-a="pstay">${d.stay?'🐾 Follow me':'🏠 Stay here'}</button>${S.pets.length>PET_FOLLOW?'<button class="btn sky" data-a="mypets">🐾 My pets</button>':''}<button class="btn white" data-a="close">Bye!</button></div><p class="note trk">🎩 ${trLine(d)}</p>`,{bottom:true,onClose:petBye});}
 ACT.ppet=()=>{const d=PT.d;d.happy=Math.min(100,d.happy+10);if(!PT.nap)petMove(PT,'pet.happyDance');qEvent('pet');if(cool('pet'+d.id,3))addXP('pets',2);SFX.pet();floatText('💗',PT.x,1.1,PT.z,{h:.55});renderPet(pick([d.name+' loves that!',d.name+' wiggles happily!','So soft!']));change();};
 ACT.pfeed=()=>{const p=PT,d=p.d,fav=petFood(petKind(d)),k=[fav,'treat',...PET_FOODS].find(f=>S.bag[f]>0);   /* 🥩 its own group's food first, then a treat, then any food (stage 2: every pet eats every food) */
   if(!k){SFX.no();renderPet('No food in your bag. Ms. Paws sells meat, fish, fruit & veggies.');return;}
@@ -160,6 +160,7 @@ function openMyPets(msg){const n=petFollowers();
   openPanel(`<div class="hd"><h2>🐾 My pets</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
     <p class="note">${msg?esc(msg):`Pick up to ${PET_FOLLOW} pets to follow you. The others wait for you at home in your yard 🏡`} <b>(${n}/${PET_FOLLOW} follow you)</b></p>
     <div class="petlist">${S.pets.map((d,i)=>`<div class="petrow">${petImg(d,'petpic')}<span><b>${esc(d.name)}</b><small>${petWhere(d)}</small></span>${d.stay?`<button class="btn mint" data-a="mpfol:${i}">🐾 Follow me</button>`:`<button class="btn lilac" data-a="mphome:${i}">🏡 Go home</button>`}</div>`).join('')}</div>
+    <button class="licstrip" data-a="lic">🪪 <b>ANIMAL LICENSE</b> · ${(S.lic&&S.lic.lv)?'Level '+S.lic.lv:'No level yet'} <span>${licStars(S.lic?S.lic.lv|0:0)}</span> ›</button>
     <div class="row"><button class="btn white" data-a="close">Done</button></div>`);$('card').scrollTop=0;}
 ACT.mypets=()=>{petBye();openMyPets();};
 ACT.mpfol=i=>{const d=S.pets[+i],p=d&&PET_ACTORS.find(a=>a.d===d);if(!p)return;if(petFollowers()>=PET_FOLLOW){SFX.no();openMyPets(`${PET_FOLLOW} pets follow you already! Send one home first.`);return;}
@@ -327,7 +328,7 @@ function bigLock(k){const [,n,N,h,lv,y]=BIGP[k];
   if(y&&sk('pets').lv<40)return['Pet care 40',`${N} need a lot of care. Reach Pet care 40 first!`];
   if(y&&yLv('pet')<3)return['Pet yard level 3',`A ${n} needs lots of space. Grow your pet yard to level 3!`];
   if(!bigHome(k))return[h[0].toUpperCase()+h.slice(1).replace(' in your house',''),`Where would it live? Get a ${h} first!`];
-  if((S.lic.lv|0)<lv)return['Animal license '+lv,`You need an animal license, level ${lv}. Win at the Pet Show!`];
+  if((S.lic.lv|0)<lv)return['Animal license '+lv,lv>=3?`A ${n} needs an animal license level 3. Finish top 3 at 3 Pet Shows, once in 1st place!`:`A ${n} needs an animal license level ${lv}. Finish top 3 at a Pet Show and have a healthy week!`];   /* (stage 5: rules-animal-license line 8) */
   return null;}
 function openBig(){SFX.talk();openPanel(`<div class="who" style="--c:#ffd45c">🐾 Ms. Paws</div><p class="line">Big pets need a little more. Tap one!</p><div class="row">${Object.keys(BIGP).map(k=>{const l=bigLock(k);
   return`<button class="btn ${l?'white':'mint'}" data-a="bigp:${k}">${BIGP[k][0]} ${l?'🔒 '+l[0]:'Ready!'}</button>`;}).join('')}<button class="btn white" data-a="close">Bye!</button></div>`,{bottom:true});}

@@ -8,6 +8,12 @@ Stage 4 (1 Nov): P17 the vet station and the visit, P18 big-needs pets locked; P
 Stage 3 (1 Nov): P12 Friends Lane's wider border, P13 yard levels by skill at the yard sign, P14 only owned things show, P15 training gear and pets playing
 on it, P16 friends see your yard. Rewritten: P10 (old: every move's lowest point within -0.07..0.012 m; new: the same for every move on the floor (a yard-gear move: on the pet kinds that play it, e.g. cat.wand on cats), and a
 move in water or the air (r.noGround: capy.tub, owl.fly) is measured by its highest point instead, which must stay above 0.05 m).
+Stage 5 (1 Nov): P25 not slower than live (the owner's ask: P19 stays for the real iPad), P26 the Pet Show area, P27 tricks, P28 the Pet Show alone (town results
+from the one clock, the ribbon), P29 the Pet Show with friends, P30 the animal license. Rewritten (old -> new): P18 Ms. Paws' line for the bear's license
+(old: 'You need an animal license, level 3. Win at the Pet Show!', the stage-4 stand-in; new: the approved rules-animal-license line 8, 'A bear needs an animal
+license level 3. Finish top 3 at 3 Pet Shows, once in 1st place!'; the check is otherwise the same); P10 (old: every move in the pack on every pet
+kind; new: the same for every pet move, and a person's move (person.giveCard / person.takeCard, the license hand-over, stage 5) on a person, never on a pet); P17 (old: every wall outside
+the clinic as in the stage-3 build; new: the same without the park's west part, where the approved Pet Show area changes walls: 640 there before and after).
 Stage 4b (1 Nov): P19 speed guard (with the owner's new size limit, 3.0 MB), P20 big-needs pets, P21 their homes and the snake's tank, P22 waiting outside and the
 big-pet platform, P23 the new 3-floor Pet Shop, P24 today's pets redrawn. Rewritten (old -> new): P10 (old: the lowest point from each piece's bounding box, every
 move on every kind except gear moves; new: the lowest point on the real shape (a turned round piece's box reaches below it: the bear sitting measured -0.18 m
@@ -414,8 +420,9 @@ P10_JS = r"""()=>{const bad=[],bb=new THREE.Box3(),wet={},USE={},need0=['pet.idl
   if(typeof TOY_MV!=='undefined')for(const k in TOY_MV)(USE[TOY_MV[k]]=USE[TOY_MV[k]]||[]).push(k);
   const _v=new THREE.Vector3(),lowY=r=>{let y=9;r.updateMatrixWorld(true);r.traverse(o=>{if(!o.isMesh||!o.visible||o.userData.noGround)return;const p=o.geometry.attributes.position;for(let i=0;i<p.count;i++){_v.fromBufferAttribute(p,i).applyMatrix4(o.matrixWorld);if(_v.y<y)y=_v.y;}});return y;};   /* (stage 4b: the real lowest point, not the corners of turned pieces' boxes) */
   for(const k of Object.keys(PET_TYPES)){const m=makePet(k,PET_TYPES[k].cols[0]);addOutfit(m,{outfit:{head:'tophat',back:'cape'}});scene.add(m.root);
-    for(const nm of COZY_MOVES.list){if(USE[nm]&&!USE[nm].includes(k))continue;let lo=9,hi=-9,top=9;for(let t=0;t<4.5;t+=.25){const r=COZY_MOVES.play(m,nm,t,{kind:k,dist:t*.8,mood:nm==='pet.walk'&&t>2?'sad':undefined});n++;m.root.updateMatrixWorld(true);bb.setFromObject(m.root);if(r.noGround){top=Math.min(top,bb.max.y);wet[nm]=1;}else if(!r.lift){const ly=lowY(m.root);lo=Math.min(lo,ly);hi=Math.max(hi,ly);}}
+    for(const nm of COZY_MOVES.list){if(USE[nm]&&!USE[nm].includes(k))continue;if(/^person\./.test(nm))continue;   /* (stage 5: a person's move is played on a person below, not on pets) */let lo=9,hi=-9,top=9;for(let t=0;t<4.5;t+=.25){const r=COZY_MOVES.play(m,nm,t,{kind:k,dist:t*.8,mood:nm==='pet.walk'&&t>2?'sad':undefined});n++;m.root.updateMatrixWorld(true);bb.setFromObject(m.root);if(r.noGround){top=Math.min(top,bb.max.y);wet[nm]=1;}else if(!r.lift){const ly=lowY(m.root);lo=Math.min(lo,ly);hi=Math.max(hi,ly);}}
       if(m.__mv.warned){bad.push(k+' '+nm+': error');m.__mv.warned=0;}worst=Math.min(worst,lo);if(lo<-.07||hi>.012)bad.push(k+' '+nm+': lowest point '+lo.toFixed(3)+'..'+hi.toFixed(3)+' m');if(top<.05)bad.push(k+' '+nm+': sinks out of view (highest point '+top.toFixed(3)+' m)');}scene.remove(m.root);}
+  {const pm=makePerson(PS_JUDGES[1].look);scene.add(pm.root);for(const nm of COZY_MOVES.list.filter(x=>/^person\./.test(x))){for(let t=0;t<4.5;t+=.25){COZY_MOVES.play(pm,nm,t,{target:[.1,1.15,.45],showTo:[0,1.5,3]});n++;}if(pm.__mv&&pm.__mv.warned){bad.push('person '+nm+': error');pm.__mv.warned=0;}}scene.remove(pm.root);}   /* (stage 5: the license hand-over moves, on a person) */
   const need=['pet.idle','pet.walk','pet.sad','pet.unhappyBowl','pet.unhappyPlay','pet.unhappyNap','pet.unhappyNudge','pet.veryHappy','pet.happyDance','pet.sickWalk','pet.sickLie','pet.sneeze','pet.warnSneeze','pet.nap','pet.takeFood'];
   for(const x of need)if(!COZY_MOVES.list.includes(x))bad.push('missing move '+x);
   return {kinds:Object.keys(PET_TYPES).length,poses:n,worst:+worst.toFixed(3),wet:Object.keys(wet),bad};}"""
@@ -626,7 +633,8 @@ async def p16(run, new_wb, FIX):
 # ================= stage 4 (1 Nov 2026): the vet station, big-needs pets locked =================
 # ---------------- P17 the vet station: the building, inside, the four staff, the visit ----------------
 TREES_JS = r"""()=>{const out=(x,z)=>!(x>6&&x<21.5&&z>-86&&z<-68.5),r=v=>Math.round(v*100)/100,C=LOC.city;
-  return {groups:(C.treeGroups||[]).map(g=>g.map(r)),map:mapTrees().filter(([x,z])=>out(x,z)).map(t=>t.map(r)),cols:C.cols.filter(c=>c.cr!==undefined?out(c.cx,c.cz):out((c.x1+c.x2)/2,(c.z1+c.z2)/2)).length};}"""
+  return {groups:(C.treeGroups||[]).map(g=>g.map(r)),map:mapTrees().filter(([x,z])=>out(x,z)).map(t=>t.map(r)),cols:C.cols.filter(c=>c.cr!==undefined?out(c.cx,c.cz):out((c.x1+c.x2)/2,(c.z1+c.z2)/2)).length,
+  park:C.cols.filter(c=>{const x=c.cr!==undefined?c.cx:(c.x1+c.x2)/2,z=c.cr!==undefined?c.cz:(c.z1+c.z2)/2;return x>-41&&x<-29&&z>8&&z<41;}).length};}"""
 P17_JS = r"""()=>{const o={},bad=[],V=LOC.vet,C=LOC.city;if(!V)return {bad:['no vet station in the game']};
   const lab=t=>typeof t.label==='function'?t.label():t.label,door=C.inter.find(t=>/Vet Station/.test(lab(t)));o.door=door?[r2(door.x),r2(door.z)]:null;
   function r2(v){return Math.round(v*10)/10;}
@@ -689,8 +697,11 @@ async def p17(run, live_w, new_wb, FIX):
     # the live game is no reference: stage 3's wider Friends Lane valley already moved the forest)
     trees_live = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'pfu-trees-stage3.json')))
     bad = a.get('bad', []) + b['bad']
-    same = trees_new == trees_live
-    if not same: bad.append(f"the town's trees and bushes outside the clinic moved: groups {trees_live['groups'][:2]} -> {trees_new['groups'][:2]}, map trees {len(trees_live['map'])} -> {len(trees_new['map'])}, walls {trees_live['cols']} -> {trees_new['cols']}")
+    # (P17 rewritten in stage 5: the approved Pet Show area (map-petshow-park) changes the walls in the park's west part (x -41..-29, z 8..41): stage, podium,
+    # judges, rope posts, the moved tree, slide and truck. Old: every wall outside the clinic counted; new: the same, without that part of the park (17 walls
+    # there in the stage-3/4b build, measured 1 Nov: 'park' in the reference); trees, bushes and groups are compared exactly as before)
+    same = trees_new['groups'] == trees_live['groups'] and trees_new['map'] == trees_live['map'] and trees_new['cols'] - trees_new['park'] == trees_live['cols'] - trees_live['park']
+    if not same: bad.append(f"the town's trees and bushes outside the clinic moved: groups {trees_live['groups'][:2]} -> {trees_new['groups'][:2]}, map trees {len(trees_live['map'])} -> {len(trees_new['map'])}, walls outside the Pet Show area {trees_live['cols'] - trees_live['park']} -> {trees_new['cols'] - trees_new['park']}")
     if errs: bad.append(f'browser errors {errs[:2]}')
     o, v = a.get('o', {}), b['o']
     det = (f"door {o.get('door')}, walk-in spots inside the walls {o.get('walkIn')}, trees/bushes left there {o.get('stray')}; staff {o.get('staff')}; people's feet {o.get('feet')}; "
@@ -709,7 +720,7 @@ P18_JS = r"""()=>{const o={},bad=[],L=LOC.pets;__goto('pets');const it=L.inter.f
   const steps=[['start',()=>{sk('pets').lv=1;S.yard.pet=1;S.lic.lv=0;},['🐒 🔒 Pet care 40','🦭 🔒 Pet care 40','🐻 🔒 Pet care 40','🐍 🔒 Glass tank'],{monkey:'Monkeys need a lot of care. Reach Pet care 40 first!',snake:'Where would it live? Get a glass tank in your house first!'}],
     ['Pet care 40',()=>{sk('pets').lv=40;},['🐒 🔒 Pet yard level 3','🦭 🔒 Pet yard level 3','🐻 🔒 Pet yard level 3','🐍 🔒 Glass tank'],{seal:'A seal needs lots of space. Grow your pet yard to level 3!'}],
     ['pet yard 3',()=>{S.yard.pet=3;},['🐒 🔒 Climbing tree','🦭 🔒 Pond','🐻 🔒 Cave den','🐍 🔒 Glass tank'],{bear:'Where would it live? Get a cave den first!'}],
-    ['homes',()=>{window.bigHome=()=>true;},['🐒 🔒 Animal license 1','🦭 🔒 Animal license 1','🐻 🔒 Animal license 3','🐍 🔒 Animal license 1'],{bear:'You need an animal license, level 3. Win at the Pet Show!'}],
+    ['homes',()=>{window.bigHome=()=>true;},['🐒 🔒 Animal license 1','🦭 🔒 Animal license 1','🐻 🔒 Animal license 3','🐍 🔒 Animal license 1'],{bear:'A bear needs an animal license level 3. Finish top 3 at 3 Pet Shows, once in 1st place!'}],
     ['license 1',()=>{S.lic.lv=1;},['🐒 Ready!','🦭 Ready!','🐻 🔒 Animal license 3','🐍 Ready!'],{snake:'Everything is ready. A snake will love your home!'}],
     ['license 3',()=>{S.lic.lv=3;},['🐒 Ready!','🦭 Ready!','🐻 Ready!','🐍 Ready!'],{bear:'Everything is ready. A bear will love your home!'}]];
   o.seen=[];for(const [n,f,want,lines] of steps){f();const r=rows();o.seen.push(n+': '+r.join(', '));if(JSON.stringify(r)!==JSON.stringify(want))bad.push(n+': '+r.join(', '));
@@ -758,6 +769,42 @@ async def p19(run, live_w, new_wb, FIX):
         if A: await run.close(A)
         if B: await run.close(B)
     det.append('NOT VERIFIED on a real iPad (the test browser draws without a GPU)')
+    return not probs, '; '.join(det) + (f' | PROBLEMS: {probs}' if probs else '')
+
+# ---------------- P25 relative speed (stage 5, the owner's ask 1 Nov): the new build is not slower than the live game in the same test browser ----------------
+# P19 (30+ fps) needs a real iPad (no GPU here), so this line lets the cloud kit still catch slowdowns: same view, same players, same spot, measured in turns
+# live, new, new, live(, live, new for fps: the median of 3, so one slow minute of the machine does not decide); passes when the new build's fps is at least 90% of live's and its mean first
+# load at most 115% of live's (the allowance is the test browser's own run-to-run spread, printed with the numbers).
+# for information: the CPU side of a whole frame (the game's update and handing its drawing to the browser), the median of 80 frames
+FRAME_JS = r"""()=>{const q=[];for(let i=0;i<90;i++){const t=performance.now();window.__t=Math.max(window.__t||0,performance.now())+16;frame(window.__t);const d=performance.now()-t;if(i>=10)q.push(d);}q.sort((a,b)=>a-b);return +q[40].toFixed(2);}"""
+async def p25(run, live_w, new_wb, FIX):
+    probs = []; det = []; A = B = None; fps = {'live': [], 'new': []}; load = {'live': [], 'new': []}; seen = []; ft = {'live': [], 'new': []}
+    try:
+        for tag in ('live', 'new', 'new', 'live'):
+            wb = live_w if tag == 'live' else new_wb
+            g = await run.open(wb, 'web', 'ipad-landscape', 'light', f'p25-load-{tag}-{len(load[tag])}'); await g.manual(); load[tag].append((await g.ev(LOAD_JS))['load']); await run.close(g)
+        for tag in ('live', 'new', 'new', 'live', 'live', 'new'):
+            wb = live_w if tag == 'live' else new_wb; sv = fx(FIX, PETS_SAVE) or FIX[0][1]; i = len(fps[tag])
+            A = await begin(run, wb, 'ipad-landscape', f'p25-A-{tag}-{i}', dict(sv, name='ZZTEST-SPA')); B = await begin(run, wb, 'pc-1366', f'p25-B-{tag}-{i}', dict(sv, name='ZZTEST-SPB'))
+            for g in (A, B): await g.ev("()=>{__goto('city');__setClock(null,12);P.x=18;P.z=4;P.yaw=0;P.pitch=0;bringFollowers(true);}")
+            for _ in range(8): await A.step(4); await B.step(4); await asyncio.sleep(.3)
+            seen.append(await A.ev("()=>[...MP.peers.values()].length"))
+            fps[tag].append((await A.ev(FPS_JS, 6000))['fps']); ft[tag].append(await A.ev(FRAME_JS))
+            errs = A.errors[:] + B.errors[:]
+            if errs and tag == 'new': probs.append(f'browser errors {errs[:2]}')
+            await run.close(A); await run.close(B); A = B = None
+        mean = lambda v: sorted(v)[len(v) // 2] if len(v) % 2 else sum(v) / len(v)   # (fps: the median of 3 turns each; first load: the mean of 2)
+        fl, fn, ll, ln = mean(fps['live']), mean(fps['new']), mean(load['live']), mean(load['new']); tl, tn = mean(ft['live']), mean(ft['new'])
+        det.append(f"2 players in town in front of the Pet Shop (iPad view + a PC), the game's own loop 6 s each, turns live/new/new/live/live/new: live {fps['live']} fps (median {fl:.2f}), new {fps['new']} (median {fn:.2f}) = {100 * fn / fl if fl else 0:.0f}% of live (want 90%+); for information, the CPU side of one frame (the update and handing the drawing over, median of 80 frames each turn): live {ft['live']} ms (median {tl}), new {ft['new']} ms (median {tn}) = {100 * tn / tl if tl else 0:.0f}% of live's")
+        det.append(f"first load (page loaded after it was opened, iPad view), turns live/new/new/live: live {load['live']} ms (mean {ll:.0f}), new {load['new']} ms (mean {ln:.0f}) = {100 * ln / ll if ll else 0:.0f}% of live (want 115% or less)")
+        if min(seen) < 1: probs.append('the second player was not online with the first')
+        if not fl or not fn: probs.append('fps not measured')
+        elif fn < 0.9 * fl: probs.append(f'the new build draws slower than live: {fn:.2f} vs {fl:.2f} frames a second (medians)')
+        if not ll or not ln: probs.append('first load not measured')
+        elif ln > 1.15 * ll: probs.append(f'the new build loads slower than live: {ln:.0f} vs {ll:.0f} ms')
+    finally:
+        if A: await run.close(A)
+        if B: await run.close(B)
     return not probs, '; '.join(det) + (f' | PROBLEMS: {probs}' if probs else '')
 
 # ---------------- P20 big-needs pets: models, rows, adoption only when ready, 400 coins, toys ----------------
@@ -881,6 +928,231 @@ async def p24(run, new_wb, FIX):
     return not bad, (f"pug (new) {r['pug']} pieces; capybara (real, an old saved colour picks {r['capy'][1]}) {r['capy'][0]}; pomchi tail at {r['pom']}; duck and owl wings [joints, joints, pieces, pieces] {r['wings']}; "
                      f"unchanged (the kept version is today's): {', '.join(r['same'])}") + (f' | PROBLEMS: {bad}' if bad else '')
 
+# ============ stage 5 (1 Nov): the Pet Show with friends, tricks, the healthy-week ribbon at the show, the animal license ============
+SAT = """()=>{__goto('city');const c=clockNow();let d=c.day;while(wdIdx(d)!==5)d++;__clockMs(msAt(d,12)-CLK.sk);__run(4);closePanel();
+  for(const p of PET_ACTORS){p.d.happy=90;p.d.sick=0;p.d.sad=0;}PBR.sick=false;S.show=null;P.x=-31;P.z=22.6;P.yaw=Math.PI/2;bringFollowers(true);__run(6);return {day:S.day,wd:wdName(),t:Math.round(S.time*10)/10};}"""
+# one frame loop for a show: taps 'perfect' (or the given grade's spot) when aiming, OK on the results, Yay on the license card; stops at a stage or at the end
+SHOWRUN = r"""([until,gr,skip,max])=>{let n=0;const at=g=>g===2?.25:g===1?.12:0;while(n<(max||6000)){__run(1);n++;const C=CUT;if(!C||!C.show)return {end:true,n};if(until&&C.stage===until)return {stage:C.stage,n,ri:C.ri,round:C.round};
+    if(C.stage==='aim'&&C.t-C.st>.3){C.t0=performance.now()-((at(gr==null?2:gr)+1-C.ph)%1)*[1.8,1.5,1.25][C.round]*1000;ACT.pstap();}
+    if(skip&&/^(intro|r|wait)/.test(C.stage)&&C.ri<C.me&&C.ts==null)ACT.psskip();
+    if(C.stage==='res'&&C.paid)ACT.psbye();if(C.stage==='lic'&&C.licOpen)ACT.licok();}
+  return {timeout:true,stage:CUT&&CUT.stage,n};}"""
+
+# ---------------- P26 the Pet Show area in Cozy Park (objects-petshow-area, map-petshow-park) ----------------
+P26_JS = r"""()=>{const L=LOC.city,A=L.show||{},bad=[],o={};
+  const inb=(k,x,z)=>A[k]&&x>=A[k][0]-.05&&x<=A[k][1]+.05&&z>=A[k][2]-.05&&z<=A[k][3]+.05;
+  if(!inb('show.stage',-36.5,22)||!inb('show.podium',-36.0,16.9)||!inb('show.judges',-33.8,27.3))bad.push('stage/podium/judges not at their places '+JSON.stringify(A));
+  o.area=A;const pod=A['show.podium'],st=A['show.stage'];if(pod&&st&&pod[0]<st[1]&&pod[3]>st[2]&&pod[1]>st[0]&&pod[2]<st[3]&&pod[1]>st[1])bad.push('the podium stands in front of the stage');
+  if(st&&!(st[0]>-37.6&&st[1]<-35.0))bad.push('stage depth '+st);
+  const signs=[];L.g.traverse(m=>{if(m.isMesh&&m.userData.sign)signs.push(m.userData.sign.text);});o.signs=['🏆 Pet Show','Every Saturday!','Lady Fluffington','Sir Barkley','Granny Daisy'].map(t=>t+':'+signs.filter(s=>s===t).length);
+  for(const t of ['🏆 Pet Show','Every Saturday!','Lady Fluffington','Sir Barkley','Granny Daisy'])if(signs.filter(s=>s===t).length!==1)bad.push('sign '+t+' x'+signs.filter(s=>s===t).length);
+  const solid=(x,z)=>{const q=collideXZ(x,z,.3,L);return Math.hypot(q[0]-x,q[1]-z)>.05;};
+  o.solid={stage:solid(-36.5,22),podium:solid(-36.0,16.9),judges:solid(PS.jt[0],PS.jt[1]),lawn:solid(-33.2,22),out:solid(PS.out[0],PS.out[1])};
+  if(!o.solid.stage||!o.solid.podium||!o.solid.judges||o.solid.lawn||o.solid.out)bad.push('solid '+JSON.stringify(o.solid));
+  const trees=L.cols.filter(c=>c.cr===.28).map(c=>[c.cx,c.cz]);o.tree=[trees.some(t=>Math.hypot(t[0]+39.2,t[1]-13.4)<.01),trees.some(t=>Math.hypot(t[0]+37.4,t[1]-16.2)<.01)];if(!o.tree[0]||o.tree[1])bad.push('park tree not moved to -39.2,13.4');
+  const sl=L.inter.find(i=>i.label==='Go down the slide');o.slide=sl&&[sl.x,sl.z];if(!sl||Math.hypot(sl.x+39.0,sl.z-30.1)>.01)bad.push('slide spot '+o.slide);
+  o.slideCol=L.cols.some(c=>c.x1===-39.7&&c.z1===30.4&&c.x2===-38.3&&c.z2===35.8);if(!o.slideCol)bad.push('slide collider not moved');
+  o.truck=[TRUCK.x,TRUCK.z,+TRUCK.ry.toFixed(3)];if(TRUCK.x!==-32.7||TRUCK.z!==10.3||Math.abs(TRUCK.ry+Math.PI/2)>1e-6)bad.push('food truck '+o.truck);
+  const ti=L.inter.find(i=>i.label==='Food truck');o.truckSpot=ti&&[+ti.x.toFixed(2),+ti.z.toFixed(2)];if(!ti||Math.abs(ti.x+32.35)>.01||Math.abs(ti.z-12.4)>.01)bad.push('truck order spot '+o.truckSpot+' (want -32.35, 12.4: the window faces the park)');
+  const K=KEEPERS.find(k=>k.name==='Mr. Patty');o.patty=K&&[+K.x.toFixed(2),+K.z.toFixed(2)];if(!K||Math.abs(K.x+32.35)>.01||Math.abs(K.z-10.5)>.01)bad.push('Mr. Patty not in the turned truck '+o.patty);
+  const sg=[];L.g.traverse(m=>{if(m.isMesh&&m.userData.sign&&m.userData.sign.text==='🍔 Food truck'){const v=new THREE.Vector3();m.getWorldPosition(v);const n=new THREE.Vector3(0,0,1).applyQuaternion(m.getWorldQuaternion(new THREE.Quaternion()));sg.push([+v.x.toFixed(2),+v.z.toFixed(2),+n.x.toFixed(2),+n.z.toFixed(2)]);}});
+  o.truckSign=sg;if(sg.length!==1||sg[0][3]<.9)bad.push('the truck sign does not face the park '+JSON.stringify(sg));
+  const ins=L.inter.find(i=>i.icon==='🏆');o.enter=ins&&[ins.x,ins.z];if(!ins||ins.x<-35.2||ins.x>-33)bad.push('enter spot '+o.enter);
+  const J=PSX.judges.map(j=>{const p=j.p.root.position;return [+p.x.toFixed(2),+p.z.toFixed(2)];});o.judges=J;if(J.some(p=>Math.hypot(p[0]-PS.jt[0],p[1]-PS.jt[1])>1.6))bad.push('judges not at their table '+J);
+  o.bad=bad;return o;}"""
+async def p26(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p26', FIX=FIX, name='ZZTEST-AREA')
+    try:
+        await g.ev(SAT); r = await g.ev(P26_JS)
+        await g.ev("()=>{P.x=-29.6;P.z=22;P.yaw=Math.PI/2;P.pitch=-.12;}"); await g.step(6); await g.shot('show-area', both=True)
+        await g.ev("()=>{P.x=-31.5;P.z=6.8;P.yaw=Math.PI*.85;P.pitch=-.15;}"); await g.step(6); await g.shot('truck-turned')
+        errs = g.errors[:]
+    finally: await run.close(g)
+    bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
+    return not bad, (f"pieces (x0,x1,z0,z1,top): {r['area']}; signs {r['signs']}; solid {r['solid']}; tree moved {r['tree']}; slide {r['slide']} (collider moved {r['slideCol']}); "
+                     f"food truck {r['truck']}, order spot {r['truckSpot']}, Mr. Patty {r['patty']}, sign {r['truckSign']}; enter at {r['enter']}; judges seated at {r['judges']}") + (f' | PROBLEMS: {bad}' if bad else '')
+
+# ---------------- P27 tricks (rules-tricks, moves-show-tricks) ----------------
+P27_JS = r"""()=>{const bad=[],o={};const want={dog:'highFive,agility,rollOver',cat:'spin,tower,highFive',bunny:'bigJump,hurdles,spin',hamster:'spin,maze,rollOver',capybara:'dance,bathSpin,rollOver',duck:'dance,bigJump,spin',owl:'headTurn,perchHop,spin',monkey:'clap,bars,flip',seal:'clap,ballNose,rollOver',bear:'wave,logWalk,rollOver',snake:'sway,basket,coilSpin'};
+  const kinds=Object.keys(PET_TYPES);o.kinds=kinds.length;const plays=[];
+  for(const k of kinds){const L=trList(k).map(t=>t[0]).join(','),w=want[COZY_MOVES.TRICK_KIND(k)];if(L!==w)bad.push(k+' tricks '+L);
+    const m=makePet(k,PET_TYPES[k].cols[0]);for(const [id] of trList(k)){const len=trLen(k,id);if(len<5)bad.push(k+'.'+id+' lasts '+len+' s (want 5+)');const sp=trSpot(k,id),gO=trGear(sp);
+      if(sp.G&&!gO&&TR_GEAR[sp.G.id])bad.push(k+'.'+id+' gear not built');for(const gr of[0,1,2])for(let t=0;t<=len;t+=.5)COZY_MOVES.play(m,'trick',t,{kind:k,trick:id,gr,h:sp.G&&sp.G.h,water:sp.G&&sp.G.water});
+      if(m.__mv&&m.__mv.warned){bad.push(k+'.'+id+' errors');m.__mv.warned=0;}trGearOff(gO);plays.push(k+'.'+id+(sp.G?'@lawn':''));}}
+  o.plays=plays.length;o.gear=plays.filter(x=>x.endsWith('@lawn')).length;
+  const e=PET_ACTORS.find(p=>!p.d.stay&&petKind(p.d)==='dog')||PET_ACTORS.find(p=>!p.d.stay),d=e.d;d.tr=1;d.tp=0;delete d.tq;o.start=trKnown(d);
+  const day0=S.day,log=[];for(let i=0;i<7;i++){S.day=day0+i;trPractice(e);if(i===0)trPractice(e);log.push(d.tr+'/'+d.tp);}S.day=day0;o.practice=log.join(' ');
+  if(log[3]!=='1/4'||log[4]!=='2/0')bad.push('5 practice days (one a game day) should teach the 2nd trick: '+o.practice);
+  d.tr=2;d.tp=3;d.sick=1;delete d.tq;trPractice(e);if(d.tp!==3)bad.push('a sick pet practised');d.sick=0;
+  openPet(e);o.card=([...document.querySelectorAll('#card .trk')].map(x=>x.innerText)[0]||'');closePanel();if(!/✅ High five/.test(o.card)||!/🔒 Roll over \(practice 3\/5\)/.test(o.card))bad.push('pet card tricks: '+o.card);
+  d.tr=1;o.show1=psTrs(petKind(d),trKnown(d)).map(t=>t[0]).join('/');d.tr=2;o.show2=psTrs(petKind(d),trKnown(d)).map(t=>t[0]).join('/');d.tr=3;o.show3=psTrs(petKind(d),3).map(t=>t[0]).join('/');
+  if(o.show1!=='highFive/highFive/highFive'||o.show2!=='highFive/agility/highFive'||o.show3!=='highFive/agility/rollOver')bad.push('show tricks by what it knows '+[o.show1,o.show2,o.show3]);
+  CUT={tr:psTrs('dog',3),round:0,d};o.gold=[0,1,2].map(r=>{CUT.round=r;return psGoldW(CUT);});CUT=null;if(o.gold.join()!=='0.08,0.12,0.12')bad.push('gold zones '+o.gold);
+  d.tr=1;d.tp=0;o.bad=bad;return o;}"""
+async def p27(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p27', FIX=FIX, name='ZZTEST-TRK')
+    try:
+        r = await g.ev(P27_JS); old = await g.ev("()=>S.pets.map(d=>d.tr)")
+        errs = g.errors[:]
+    finally: await run.close(g)
+    bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
+    if any(t != 1 for t in old): bad.append(f'an old save\'s pets do not all know their first trick: {old}')
+    return not bad, (f"{r['kinds']} pet kinds x 3 tricks = {r['plays']} tricks played (oopsie, good, perfect) without errors, {r['gear']} on their gear in front of the stage; old save's pets know {old}; "
+                     f"practice (tr/tp, game day by game day, the 1st day twice) {r['practice']}; sick: no practice; pet card: {r['card']!r}; at the show: 1 known {r['show1']}, 2 {r['show2']}, 3 {r['show3']}; gold zone by trick {r['gold']}") + (f' | PROBLEMS: {bad}' if bad else '')
+
+# ---------------- P28 the Pet Show alone: town pets from the one clock, every trick from the moves pack, the ribbon, one show a Saturday ----------------
+P28_JS = r"""()=>{const bad=[],o={};if(PSX.dirty||!PSX.rivals.length)psRefresh();const r0=Math.random;let calls=0;Math.random=function(){calls++;return r0();};
+  const A=PSX.rivals.map((r,i)=>psPlan(r,i,123456)),B=PSX.rivals.map((r,i)=>psPlan(r,i,123456)),C2=PSX.rivals.map((r,i)=>psPlan(r,i,123457));Math.random=r0;
+  const sig=L=>L.map(x=>[x.form,x.flop||'',(x.g||[]).join(''),(x.tr||[]).map(t=>t[0]).join('/'),x.tot||0].join(':')).join(' | ');o.a=sig(A);o.c=sig(C2);o.rnd=calls;
+  if(sig(A)!==sig(B))bad.push('the same second gives other town results');if(calls)bad.push('dice: Math.random was used '+calls+' times');
+  let diff=0;for(let s=1;s<40;s++)if(sig(PSX.rivals.map((r,i)=>psPlan(r,i,s)))!==o.a)diff++;if(diff<30)bad.push('the town results hardly change from show to show ('+diff+'/39)');
+  const d=PET_ACTORS.find(p=>!p.d.stay).d;d.happy=85;S.hw.rb=0;const a=psScore10(d,3).happy;S.hw.rb=petWeek()+1;const b=psScore10(d,3).happy;d.happy=100;const c=psScore10(d,3).happy;S.hw.rb=0;o.rib=[a,b,c];
+  if(b!==a+1||c!==10)bad.push('ribbon: Granny Daisy '+o.rib+' (want +1, at most 10)');o.bad=bad;return o;}"""
+async def p28(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p28', FIX=FIX, name='ZZTEST-SHOW'); probs = []; det = []
+    try:
+        await g.ev(SAT); r = await g.ev(P28_JS); probs += r['bad']
+        det.append(f"town pets for the show at second 123456: {r['a']}; at 123457: {r['c']}; dice used {r['rnd']}; ribbon (happy 85 without/with, 100 with) {r['rib']}")
+        st = await g.ev("()=>{const p=PET_ACTORS.find(q=>!q.d.stay);p.d.tr=3;p.d.outfit={head:'tophat',back:'cape'};S.hw.rb=petWeek()+1;window.__tr=[];const f=COZY_MOVES.play;COZY_MOVES.play=function(m,n,t,o){if(n==='trick'&&o)window.__tr.push(o.kind+'.'+o.trick+'.'+Math.round(t*10));return f.apply(this,arguments);};psStart(p);return {ts:CUT.ts,order:CUT.order.map(x=>x.you?'you':x.kind)};}")
+        run1 = await g.ev(SHOWRUN, ['res', 2, False, 9000])
+        mid = await g.ev("()=>{const C=CUT,me=C.order[C.me];const by={};for(const k of window.__tr){const [a,b,t]=k.split('.');const id=a+'.'+b;by[id]=Math.max(by[id]||0,+t);}COZY_MOVES.play=COZY_MOVES.play;return {me:me.sc,tot:me.tot,res:C.res,tr:C.tr.map(t=>t[0]),longest:by,place:C.place,placed:C.placed.map(x=>(x.you?'you':x.kind)+' '+x.tot)};}")
+        await g.shot('show-results')
+        end = await g.ev(SHOWRUN, [None, 2, False, 3000])
+        after = await g.ev("()=>{const sh=S.show;window.__lastToast='';openShow();return {show:sh,again:window.__lastToast,cut:!!CUT,p:[P.x,P.z]};}")
+        det.append(f"alone: starts at once ({st['ts']} = no shared timeline), order {st['order']}; ran {run1}; you {mid['me']} = {mid['tot']} (taps {mid['res']}, tricks {mid['tr']}); placed {mid['placed']}; each trick played up to (tenths of a second) {mid['longest']}; after: {after}")
+        if st['ts'] is not None or st['order'][-1] != 'you': probs.append('a show alone did not start at once with you last')
+        if mid['res'] != [2, 2, 2] or mid['me']['trick'] != 10: probs.append('three perfect taps did not give a 10 from Sir Barkley')
+        if mid['me']['happy'] != min(10, 9 + 1): probs.append(f"the ribbon did not add 1 to happiness: {mid['me']}")
+        short = {k: v for k, v in mid['longest'].items() if v < 48}
+        if short: probs.append(f'tricks cut short (under 4.8 s): {short}')
+        if not any(k.startswith('dog.agility') or k.startswith('dog.highFive') for k in mid['longest']): probs.append('your dog\'s own tricks were not played')
+        if not end.get('end') or not after['show'] or after['show']['place'] != mid['place'] or 'already' not in after['again']: probs.append(f'the show did not end with S.show saved and one show a Saturday: {end} {after}')
+        errs = g.errors[:]
+    finally: await run.close(g)
+    if errs: probs.append(f'browser errors {errs[:2]}')
+    return not probs, '; '.join(det) + (f' | PROBLEMS: {probs}' if probs else '')
+
+# ---------------- P29 the Pet Show with friends (rules-pet-show-friends, screens-show-join) ----------------
+P29_RUN = r"""([max])=>{let n=0;const C0=CUT;while(n<max){__run(1);n++;const C=CUT;if(!C||!C.show)return {end:true,n};if(C.stage==='aim'&&C.t-C.st>.3&&!C.tapd){C.t0=performance.now()-((1.25-C.ph)%1)*[1.8,1.5,1.25][C.round]*1000;ACT.pstap();}
+    if(C.stage==='res'&&C.paid)return {res:true,n};}return {stage:CUT&&CUT.stage,ri:CUT&&CUT.ri,n};}"""
+P29_RES = r"""()=>{const C=CUT;return {placed:C.placed.map(x=>psNm(x)+' '+x.tot),me:C.me,place:C.place,ts:C.ts,order:C.order.map(x=>x.you?'you:'+psNm(x):x.peer?'friend:'+psNm(x):'town:'+x.kind),npc:C.order.filter(x=>x.npc).map(x=>[x.form,(x.g||[]).join('')].join(':'))};}"""
+async def p29(run, live_w, new_wb, FIX):
+    probs = []; det = []; A = B = O = None
+    async def flow(*gs, k=4, f=6):
+        for _ in range(k):
+            for g in gs: await g.step(f)
+            await asyncio.sleep(.25)
+    try:
+        A = await pet_page(run, new_wb, 'p29-A', FIX=FIX, name='ZZTEST-SHA'); B = await pet_page(run, new_wb, 'p29-B', prof='pc-1366', FIX=FIX, name='ZZTEST-SHB', theme='dark')
+        await A.ev(SAT); await B.ev(SAT)
+        await B.ev("(ms)=>{__clockMs(ms);}", await A.ev("()=>realMs()"))
+        await B.ev("()=>{P.x=-30.5;P.z=24.5;const d=PET_ACTORS.find(p=>!p.d.stay).d;d.name='Biscuit';bringFollowers(true);change();}"); await flow(A, B, k=6)
+        here = await A.ev("()=>psFriendsHere().map(a=>a.nm)")
+        await A.ev("()=>{openShow();ACT.psgo(0);}"); await flow(A, B, k=4)
+        a1 = await A.ev("()=>({g:PSM.g&&{t0:PSM.g.t0,pi:PSM.g.pi},card:$('card').innerText,ps:JSON.parse(MP.lastKey).ps})")
+        b1 = await B.ev("()=>({card:UI.open?$('card').innerText:'',btn:[...document.querySelectorAll('#card [data-a^=\"psjoin\"]')].map(b=>[b.innerText,Math.round(b.getBoundingClientRect().height)])})")
+        await B.shot('join-card', both=False)
+        det.append(f"friends A sees in the park {here}; A entered: {a1['g']}, ps {a1['ps']}; B's card: {b1['card'][:120]!r}, buttons {b1['btn']}")
+        if not a1['g'] or 'starts in' not in a1['card']: probs.append('A did not wait for friends (45 s)')
+        if 'entered the Pet Show' not in b1['card'] or not any('Just watch' in t for t, h in b1['btn']) or len(b1['btn']) < 2: probs.append('B did not get the join card with its pets and Just watch')
+        if any(h < 44 for t, h in b1['btn']): probs.append('join buttons under 44 px')
+        await B.ev("()=>ACT.psjoin('0')"); await flow(A, B, k=4)
+        a2 = await A.ev("()=>({card:$('card').innerText,players:psPlayers(PSM.g.t0).map(x=>x.me?'me':x.peer.nm)})"); await A.shot('waiting-list', both=False)
+        det.append(f"after B joined, A's waiting list: {a2['players']}")
+        if len(a2['players']) != 2: probs.append('A does not see B in the waiting list')
+        # the 45 seconds pass on both (the test clocks run with each page's frames), then the same show runs on both screens
+        for _ in range(24):
+            for g in (A, B): await g.ev("()=>__run(40)")
+            await asyncio.sleep(.15)
+            if await A.ev("()=>!!(CUT&&CUT.show)") and await B.ev("()=>!!(CUT&&CUT.show)"): break
+        sa = await A.ev("()=>CUT&&CUT.show?{ts:CUT.ts,order:CUT.order.map(x=>x.you?'you':x.peer?'friend':'town:'+x.kind)}:null"); sb = await B.ev("()=>CUT&&CUT.show?{ts:CUT.ts,order:CUT.order.map(x=>x.you?'you':x.peer?'friend':'town:'+x.kind)}:null")
+        det.append(f"the show started: A {sa}, B {sb}")
+        if not sa or not sb or sa['ts'] != sb['ts']: probs.append('the show did not start on both screens at the same time')
+        ra = rb = None
+        for i in range(400):
+            ra = await A.ev(P29_RUN, [12]); rb = await B.ev(P29_RUN, [12]); await asyncio.sleep(.05)
+            if i == 60: await A.shot('friend-show', both=False)
+            if (ra.get('res') or ra.get('end')) and (rb.get('res') or rb.get('end')): break
+        xa = await A.ev(P29_RES) if ra.get('res') else None; xb = await B.ev(P29_RES) if rb.get('res') else None
+        await A.shot('friend-results', both=False)
+        det.append(f"results on A: {xa}; on B: {xb}")
+        if not xa or not xb: probs.append(f'the show did not reach the results on both: {ra} {rb}')
+        else:
+            if xa['placed'] != xb['placed']: probs.append('the two screens show different results')
+            if xa['npc'] != xb['npc']: probs.append('the town pets did differently on the two screens')
+            if sorted(o.split(':')[0] for o in xa['order']) != ['friend', 'town', 'town', 'you']: probs.append(f"not 2 town pets + you + the friend: {xa['order']}")
+            if [o.split(':', 1)[1] for o in xa['order']] != [o.split(':', 1)[1] for o in xb['order']]: probs.append('the order differs between the screens')
+        for g in (A, B): await g.ev(SHOWRUN, [None, 2, False, 3000])
+        await B.ev("()=>{__goto('city');P.x=10;P.z=-40;}")   # (B leaves the park)
+        # more than 4: the next show right after (6 players sorted the same way: 4, then 2 + 2 town pets, the second starting at the end of the first)
+        gr = await A.ev("""()=>{const fake=i=>({me:0,peer:{nm:'F'+i,pets:null},t0:1000,jt:1000+i,id:'z'+i,q:{nm:'P'+i,col:PET_TYPES.dog.cols[0],of:'',kind:'dog'},kind:'dog',sc:{style:2,trick:0,happy:5},tk:1});
+          const L=[0,1,2,3,4,5].map(fake);const G=psGroups(L,1045);const o=G.map(g=>({ts:g.ts,len:Math.round(g.len),who:g.o.map(x=>x.npc?'town':x.R.owner)}));for(const g of G)for(const x of g.o)if(x.own){scene.remove(x.r.m.root);}return o;}""")
+        det.append(f"6 players: {gr}")
+        if len(gr) != 2 or gr[0]['who'] != ['F0', 'F1', 'F2', 'F3'] or gr[1]['who'] != ['town', 'town', 'F4', 'F5'] or abs(gr[1]['ts'] - (gr[0]['ts'] + gr[0]['len'])) > 1: probs.append('more than 4 players: not the next show right after')
+        # an older version in the park: never asked, the show starts at once
+        O = await begin(run, live_w, 'pc-1366', 'p29-old', dict(fx(FIX, PETS_SAVE) or FIX[0][1], name='ZZTEST-SHO'))
+        await O.ev("()=>{__goto('city');P.x=-30.5;P.z=24.5;}"); await A.ev("()=>{S.show=null;}"); await flow(A, B, O, k=6)
+        old = await A.ev("()=>{const n=[...MP.peers.values()].filter(a=>a.loc==='city'&&a.rx>-41&&a.rx<-8&&a.rz>8&&a.rz<41).length,f=psFriendsHere().length;openShow();ACT.psgo(0);return {peers:n,asked:f,cut:!!(CUT&&CUT.show),ts:CUT&&CUT.ts,g:!!PSM.g};}")
+        det.append(f"with an older version in the park: peers {old['peers']}, friends asked {old['asked']}, the show started at once {old['cut']} (timeline {old['ts']})")
+        if not old['peers'] or old['asked'] or not old['cut'] or old['ts'] is not None or old['g']: probs.append('an older version in the park changed the show')
+        errs = A.errors[:] + B.errors[:]
+        if errs: probs.append(f'browser errors {errs[:2]}')
+    finally:
+        for g in (A, B, O):
+            if g: await run.close(g)
+    return not probs, '; '.join(det) + (f' | PROBLEMS: {probs}' if probs else '')
+
+# ---------------- P30 the animal license (rules-animal-license, story-barkley-license, screens-license-card, moves-show-license) ----------------
+P30_JS = r"""()=>{const bad=[],o={};const L=(w,k,f,lv)=>licReach({wins:w,weeks:k,firsts:f,lv:lv||0});
+  o.table=[[0,0,0],[1,0,0],[0,1,0],[1,1,0],[2,1,0],[2,2,0],[3,3,0],[3,3,1],[3,2,1],[5,5,2]].map(a=>a.join('/')+'='+L(...a));
+  const want='0/0/0=0 1/0/0=0 0/1/0=0 1/1/0=1 2/1/0=1 2/2/0=2 3/3/0=2 3/3/1=3 3/2/1=2 5/5/2=3';if(o.table.join(' ')!==want)bad.push('levels '+o.table.join(' '));
+  if(L(0,0,0,2)!==2)bad.push('a level was taken away');
+  S.lic={lv:0,wins:0,firsts:0,weeks:0};const p4=licShow(4);const p3=licShow(3);S.lic.weeks=1;const p2=licShow(2);o.count=[p4,p3,p2,Object.assign({},S.lic)];
+  if(S.lic.wins!==2||S.lic.firsts!==0||!p2.up||S.lic.lv!==1||p4.up||p3.up)bad.push('counting top 3 '+JSON.stringify(o.count));
+  if(p3.near!=='One more healthy week and your license grows!')bad.push('almost-there line: '+p3.near);
+  const f1=licShow(1);o.first=[f1,Object.assign({},S.lic)];if(S.lic.firsts!==1||S.lic.wins!==3)bad.push('1st place counts as a win and a first');
+  sk('pets').lv=40;S.yard={pet:3,garden:1,home:['tree','pond','den']};S.home.store.push({u:'zztank',t:'snaketank',c:'#7a2bff',x:0,z:0,r:0});
+  S.lic={lv:1,wins:1,firsts:0,weeks:1};o.locks=Object.keys(BIGP).map(k=>{const l=bigLock(k);return k+':'+(l?l[0]:'ok');});S.lic={lv:3,wins:3,firsts:1,weeks:3};o.locks3=Object.keys(BIGP).map(k=>{const l=bigLock(k);return k+':'+(l?l[0]:'ok');});
+  if(o.locks.some(x=>/license 1/.test(x))||!o.locks.some(x=>/bear:Animal license 3/.test(x))||o.locks3.some(x=>/license/.test(x)))bad.push('big pets by license '+o.locks+' | '+o.locks3);
+  S.lic={lv:0,wins:0,firsts:0,weeks:0};openMyPets();const st=document.querySelector('#card .licstrip');o.strip=st&&[st.innerText.replace(/\s+/g,' '),Math.round(st.getBoundingClientRect().height)];closePanel();
+  if(!st||!/ANIMAL LICENSE · No level yet ☆☆☆/.test(o.strip[0])||o.strip[1]<44)bad.push('My pets strip '+o.strip);
+  S.lic={lv:2,wins:2,firsts:0,weeks:2};openMyPets();ACT.lic();const c=document.querySelector('#card .lic');const cs=c&&getComputedStyle(c);o.card=c&&c.innerText.replace(/\s+/g,' ');o.bg=cs&&cs.backgroundColor;
+  closePanel();S.home.store=S.home.store.filter(i=>i.u!=='zztank');
+  if(!c||!/Level 2/.test(o.card)||!/1st place 0\/1/.test(o.card)||!/CERTIFIED/.test(o.card)||!/Signed: Sir Barkley/.test(o.card))bad.push('license card '+o.card);
+  o.bad=bad;return o;}"""
+async def p30(run, new_wb, FIX):
+    probs = []; det = []
+    g = await pet_page(run, new_wb, 'p30', FIX=FIX, name='ZZTEST-LIC', theme='dark')
+    try:
+        await g.ev(SAT); r = await g.ev(P30_JS); probs += r['bad']
+        await g.ev("()=>{openMyPets();ACT.lic();}"); await g.step(4)
+        r['fonts'] = await g.ev("""()=>Promise.race([document.fonts.ready.then(()=>[document.fonts.check('25px "Alfa Slab One"'),document.fonts.check('800 20px "Roboto Slab"'),document.fonts.check('700 20px "Roboto Slab"')]),new Promise(r=>setTimeout(()=>r(['timeout']),8000))])""")
+        det.append(f"levels (wins/weeks/firsts) {' '.join(r['table'])}; counting {r['count']}; 1st {r['first']}; big pets at level 1 {r['locks']}, level 3 {r['locks3']}; strip {r['strip']}; card {r['card']!r} on {r['bg']} in dark mode; fonts loaded {r['fonts']}")
+        if r['bg'] != 'rgb(243, 230, 196)': probs.append(f"the card is not paper-coloured in dark mode: {r['bg']}")
+        if not all(r['fonts']): probs.append(f"the license fonts are not loaded: {r['fonts']}")
+        await g.ev("()=>{openMyPets();ACT.lic();}"); await g.step(4); await g.shot('license-card', both=True); await g.ev("()=>closePanel()")
+        # a show that brings level 1: Sir Barkley hands the card over on the podium
+        await g.ev("()=>{S.lic={lv:0,wins:0,firsts:0,weeks:1};const p=PET_ACTORS.find(q=>!q.d.stay);p.d.happy=100;p.d.outfit={head:'tophat',back:'cape',neck:'bow',face:'shades'};psStart(p);}")
+        await g.ev(SHOWRUN, ['res', 2, True, 9000]); await g.ev("()=>{let n=0;while(!CUT.paid&&n++<2000)__run(1);}")
+        pl = await g.ev("()=>({place:CUT.place,lic:CUT.lic})")
+        await g.ev("()=>ACT.psbye()")
+        seq = await g.ev(r"""()=>{const out=[];let n=0;while(n++<200){__run(1);const C=CUT;if(!C||C.stage!=='lic')break;const L=C.lb,u=C.t-C.st;if(!L)break;
+          const v=new THREE.Vector3();L.card.getWorldPosition(v);const b=L.B.root.position,y=L.Y.root.position;if(n%6===0)out.push([+u.toFixed(1),L.card.visible,+Math.hypot(v.x-b.x,v.z-b.z).toFixed(2),+Math.hypot(v.x-y.x,v.z-y.z).toFixed(2),+v.y.toFixed(2)]);if(C.licOpen)break;}
+          return {seq:out,stage:CUT&&CUT.stage,card:UI.open?$('card').innerText.replace(/\s+/g,' ').slice(0,420):'',B:CUT&&CUT.lb&&[CUT.lb.B.root.position.x,CUT.lb.B.root.position.y,CUT.lb.B.root.position.z].map(v=>+v.toFixed(2)),toast:window.__lastToast};}""")
+        await g.shot('license-given', both=False)
+        end = await g.ev(SHOWRUN, [None, 2, False, 3000]); lic = await g.ev("()=>S.lic")
+        det.append(f"the show: place {pl['place']}, {pl['lic']}; hand-over (time, card shown, from Sir Barkley, from you, height): {seq['seq']}; Sir Barkley on step 2 at {seq['B']}; said {seq['toast']!r}; card {seq['card']!r}; after {lic}")
+        if not pl['lic'] or not pl['lic']['up'] or pl['place'] > 3: probs.append('top 3 with a healthy week did not bring level 1')
+        s = seq['seq']
+        if not s or not any(x[1] and x[2] < .7 for x in s[:4]) or not any(x[1] and x[3] < .7 and x[0] > 1.5 for x in s): probs.append('the card did not go from Sir Barkley\'s hand to yours')
+        if 'Splendid! Here is your animal license, level 1' not in seq['toast'] or 'Find your license in My pets' not in seq['card']: probs.append('Sir Barkley\'s lines are missing')
+        if not seq['B'] or abs(seq['B'][1] - .70) > .05: probs.append('Sir Barkley is not on podium step 2')
+        if lic['lv'] != 1 or not end.get('end'): probs.append(f'the license is not level 1 after the show: {lic} {end}')
+        errs = g.errors[:]
+    finally: await run.close(g)
+    if errs: probs.append(f'browser errors {errs[:2]}')
+    return not probs, '; '.join(det) + (f' | PROBLEMS: {probs}' if probs else '')
+
 # ---------------- the stage ----------------
 async def s_pfu(run, d, live_w, new_wb, FIX):
     tests = [('P1', 'Saves (pets and farm update): every save of the kit (from older versions, today\'s main and the update\'s stages) and a fresh one from the live version loads as save version 2 with every new field at its default; saved again and loaded, it is exactly the same', lambda: p1(run, live_w, new_wb, FIX)),
@@ -906,7 +1178,13 @@ async def s_pfu(run, d, live_w, new_wb, FIX):
              ('P21', "Big pet homes (stage 4b): climbing tree 400, pond 700, cave den 700 sold only at pet yard level 3, drawn and solid in the big-pets area, sent to friends as letters and drawn on their lot (a bad letter draws nothing); the snake's glass tank (400) is furniture with a Glass tank card: light on/off and 8 colours, saved as its colour; a snake at home lives in it, sleeps in the hide and goes out over the lip", lambda: p21(run, new_wb, FIX)),
              ('P22', "Waiting outside (stage 4b): bear and seal wait by the door of a building (Market) and join you again when you come out; at the vet station they come in; the monkey follows everywhere; a bear's vet visit is on the big-pet platform (it climbs on, Dr. Rūta comes over and goes back)", lambda: p22(run, new_wb, FIX)),
              ('P23', "The new Pet Shop (stage 4b): one room with 3 open floors (no fade), both stairs walked up and down with a following pet, the open middle and the stairs' sides stop you, each kind at its own spot (big pets on floor 3) and staying there, buttons only on their floor, Ms. Paws at the counter, the building in town 14 x 10", lambda: p23(run, new_wb, FIX)),
-             ('P24', "Today's pets redrawn (stage 4b): the new pug, the real capybara (old saved colours map to the new ones), the pomchi's tail on its rump, duck and owl wings on joints; the others are the kept versions of today's", lambda: p24(run, new_wb, FIX))]
+             ('P24', "Today's pets redrawn (stage 4b): the new pug, the real capybara (old saved colours map to the new ones), the pomchi's tail on its rump, duck and owl wings on joints; the others are the kept versions of today's", lambda: p24(run, new_wb, FIX)),
+             ('P25', "Not slower than live (stage 5, the owner's ask 1 Nov; P19 stays for the real iPad): in the same test browser, the same iPad-sized view with 2 players online in town, the new build draws at least 90% of the live game's frames a second (medians of turns live/new/new/live/live/new; the CPU time of a frame reported) and its first load takes at most 115% of live's (means of live/new/new/live)", lambda: p25(run, live_w, new_wb, FIX)),
+             ('P26', "The Pet Show area (stage 5, objects-petshow-area, map-petshow-park): the book's stage at (-36.5, 22), the podium BESIDE it at (-36, 16.9), the judges' table at (-33.8, 27.3) with the judges seated, on one sand lawn with a low rope; solid; the signs 🏆 Pet Show, Every Saturday! and the judges' names; the park tree moved to (-39.2, 13.4), the slide 1.8 m west and 2 m back, the food truck turned along the south fence with its window, order spot, Mr. Patty and sign facing the park", lambda: p26(run, new_wb, FIX)),
+             ('P27', "Tricks (stage 5, rules-tricks): every pet kind has its 3 tricks from the moves pack (the 4 dogs share one set), each lasting 5 s or more and played (oopsie, good, perfect) without errors, gear tricks with their gear; a pet starts knowing 1 (old saves too); 5 practice days on its gear (one counts a game day) teach the next, never while sick; the pet card lists them; at the show only known tricks; a trick learned by practice has a bigger gold zone", lambda: p27(run, new_wb, FIX)),
+             ('P28', "The Pet Show alone (stage 5): starts at once, you last; the town pets' results come from the one clock (the same second = the same results, never dice); your pet does its own known tricks, each played to its end; the healthy-week ribbon gives 1 more from Granny Daisy (at most 10); the show ends with your place saved, then one show a Saturday", lambda: p28(run, new_wb, FIX)),
+             ('P29', "The Pet Show with friends (stage 5, rules-pet-show-friends, screens-show-join): a friend in the park entering gives you a join card (who, countdown, a button per following pet, Just watch, 44 px); the one who entered sees the places fill; after 45 s the same show starts on both screens with friends' pets in the town pets' places, and both screens show the same town results and the same final results; more than 4: the next show right after; an older version in the park is never asked", lambda: p29(run, live_w, new_wb, FIX)),
+             ('P30', "The animal license (stage 5, rules-animal-license): level 1 = 1 top-3 + 1 healthy week, 2 = 2 + 2, 3 = 3 (one 1st) + 3, never taken away; top 3 counts only for the license; Sir Barkley hands a new level over on the podium (the card goes from his hand to yours) with his lines; the license card (paper, the same in dark mode, its fonts loaded) in My pets (strip 44 px); big pets unlock by level (bear 3)", lambda: p30(run, new_wb, FIX))]
     only = [x for x in os.environ.get('PFU_ONLY', '').split(',') if x]
     for cid, name, fn in tests:
         if only and cid not in only: continue

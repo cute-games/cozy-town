@@ -24,7 +24,25 @@ def fix_check(s):
     # stage 'pfu' (31 Oct 2026, the Pets and Farm Update): new lines P1.. in pfu.py (tools/kit-v7/pfu.py), run after 'run4'. Nothing else changes.
     s = rep(s, "import run4 as R4\n", "import run4 as R4\nimport pfu as PF   # stage 'pfu' (31 Oct 2026): the Pets and Farm Update's lines P1..\n")
     s = rep(s, "ORDER = ['files', 'counts', 'saves', 'players', 'book', 'night3', 'run4'] +", "ORDER = ['files', 'counts', 'saves', 'players', 'book', 'night3', 'run4', 'pfu'] +")
-    return rep(s, "'run4': lambda run, d: R4.s_run4(run, d, live_w, new_wb, FIX, A.e1_limits)}", "'run4': lambda run, d: R4.s_run4(run, d, live_w, new_wb, FIX, A.e1_limits), 'pfu': lambda run, d: PF.s_pfu(run, d, live_w, new_wb, FIX)}")
+    s = rep(s, "'run4': lambda run, d: R4.s_run4(run, d, live_w, new_wb, FIX, A.e1_limits)}", "'run4': lambda run, d: R4.s_run4(run, d, live_w, new_wb, FIX, A.e1_limits), 'pfu': lambda run, d: PF.s_pfu(run, d, live_w, new_wb, FIX)}")
+    # E1 / N14 / N40 (1 Nov 2026, the owner Karolis in the foreman's chat, Pets and Farm Update stage 5): the Pet Shop room ('pets') may use up to 45,000 triangles
+    # (the approved new 3-floor shop; was: +10% of the live shop's 15,363). Pieces stay +10%; the town and every other area keep their limits.
+    # Old: --e1-limits default '' (every area +10%). New: default 'pets:0.10:=45000' ('=N' = an absolute cap); a value given on the command line replaces it as before.
+    s = rep(s, "ap.add_argument('--e1-limits', default='',", "ap.add_argument('--e1-limits', default='pets:0.10:=45000',")
+    return rep(s, "    lim_txt = ', '.join(f'{a} +{round(p*100)}% pieces / +{round(t*100)}% triangles' for a, (p, t) in per.items())\n",
+               "    lim_txt = ', '.join(f'{a} {C.limit_txt(p)} pieces / {C.limit_txt(t)} triangles' for a, (p, t) in per.items())\n")
+def fix_limits(s):
+    # 1 Nov 2026 (stage 5, the owner's OK for the Pet Shop: up to 45,000 triangles): a per-area limit may be an absolute cap '=N' instead of a fraction.
+    # Fractions work exactly as before; nothing else changes.
+    s = rep(s, "        a, p, t = part.strip().split(':'); out[a] = (float(p), float(t))\n",
+               "        a, p, t = part.strip().split(':'); out[a] = (lim_val(p), lim_val(t))\n")
+    s = rep(s, "def parse_limits(spec):\n",
+            "def lim_val(x):\n    x = x.strip()\n    return ('=', int(x[1:])) if x.startswith('=') else float(x)\n"
+            "def limit_txt(v):\n    return f'up to {v[1]:,}' if isinstance(v, tuple) else f'+{round(v*100)}%'\n"
+            "def parse_limits(spec):\n")
+    return rep(s, "            if o[f] and n[f] > o[f] * (1 + lim): worse.append(f'{k} {\"pieces\" if f == \"meshes\" else \"triangles\"} {o[f]} -> {n[f]} (limit +{round(lim*100)}%)')\n",
+               "            cap = lim[1] if isinstance(lim, tuple) else o[f] * (1 + lim)\n"
+               "            if o[f] and n[f] > cap: worse.append(f'{k} {\"pieces\" if f == \"meshes\" else \"triangles\"} {o[f]} -> {n[f]} (limit {limit_txt(lim)})')\n")
 def fix_readme(s):
     s = HEAD + s[s.index('Setup notes:'):]
     m = re.findall(r'Since 17 Oct the artifact service.*?report F2 as printed and explain it\.\n', s, flags=re.S)
@@ -44,7 +62,13 @@ def fix_readme(s):
                 'Added 1 Nov 2026 (stage 4b, owner\'s OK 1 Nov): size limit N14/N40 old -> new: index.html under 1.8 MB -> the joined game up to 3.0 MB, with the speed\n'
                 'guard P19 (30+ fps on an iPad-sized view with 2 players, first load measured). P20 big-needs pets, P21 their homes and the snake tank, P22 waiting\n'
                 'outside and the big-pet platform, P23 the new 3-floor Pet Shop, P24 today\'s pets redrawn. Rewritten (old -> new): B1 (sad only still there -> still\n'
-                'there and within 0.1), P15 (10 gear pieces -> 15), P18 (board upstairs: old shop floor 2 -> top floor of the new shop), N28 (2 floors with 7 fenced areas -> one room with 3 floors and a spot per kind). Fixture save-pfu4b-*.json.\n')
+                'there and within 0.1), P15 (10 gear pieces -> 15), P18 (board upstairs: old shop floor 2 -> top floor of the new shop), N28 (2 floors with 7 fenced areas -> one room with 3 floors and a spot per kind). Fixture save-pfu4b-*.json.\n'
+                'Added 1 Nov 2026 (stage 5, the owner Karolis in the foreman\'s chat): E1/N14/N40 old -> new: the Pet Shop room (\'pets\') may use up to 45,000 triangles\n'
+                '(was +10% of 15,363; pieces still +10%; every other area keeps its limit): --e1-limits now defaults to "pets:0.10:=45000" (\'=N\' = an absolute cap; a value\n'
+                'given on the command line replaces it as before). P19 (30+ fps, iPad view, 2 players) stays and stays FAIL in a cloud browser with no GPU (NOT VERIFIED:\n'
+                'measure on the real iPad); new P25: the new build is not slower than the live game in the same test browser (fps at least 90% of live\'s, first load at\n'
+                'most 115%; fps: medians of 3 turns each (they swing up to 30% run to run here), the CPU time of a frame reported; first load: means of 2). P26 the Pet Show area, P27 tricks, P28 the Pet Show alone, P29 the Pet Show with friends, P30 the animal\n'
+                'license. Rewritten (old -> new): P18 the bear\'s license line (stand-in -> the approved rules text), P10 (person moves on a person, not on pets), P17 (walls outside the clinic, without the park\'s west part where the approved Pet Show area stands). The license card\'s fonts (Alfa Slab One, Roboto Slab 700/800) are served locally like Baloo 2 (fonts.css). Fixture save-pfu5-stage5.json.\n')
 def fix_checks(s):
     # B1 (1 Nov 2026, pets and farm update stage 4): sickness is switched on now, so a pet's sickness timer (pets.N.sad: minutes played at 0-1 hearts)
     # moves on every frame played, like happiness, and two loads a few frames apart differ in the third decimal (save-pfu2-stage2.json: 12.5 -> 12.513).
@@ -154,8 +178,11 @@ for info in src.infolist():
     if info.filename == 'cozycheck/README-KIT.md': data = fix_readme(data.decode('utf-8')).encode('utf-8')
     if info.filename == 'cozycheck/night3.py': data = fix_size(fix_n9(fix_night3(data.decode('utf-8')))).encode('utf-8'); compile(data, info.filename, 'exec')
     if info.filename == 'cozycheck/house4.py': data = fix_house4(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
-    if info.filename == 'cozycheck/checks.py': data = fix_checks(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
+    if info.filename == 'cozycheck/checks.py': data = fix_limits(fix_checks(data.decode('utf-8'))).encode('utf-8'); compile(data, info.filename, 'exec')
     if info.filename == 'cozycheck/run4.py': data = fix_n28_title(fix_n40(fix_run4(data.decode('utf-8')))).encode('utf-8'); compile(data, info.filename, 'exec')
+    if info.filename == 'cozycheck/fonts.css': data = data + (b"@font-face{font-family:'Alfa Slab One';font-style:normal;font-weight:400;font-display:swap;src:url(https://fonts.gstatic.com/__cozytest/alfaslabone-400.woff2) format('woff2')}\n"
+                                                             b"@font-face{font-family:'Roboto Slab';font-style:normal;font-weight:700;font-display:swap;src:url(https://fonts.gstatic.com/__cozytest/robotoslab-700.woff2) format('woff2')}\n"
+                                                             b"@font-face{font-family:'Roboto Slab';font-style:normal;font-weight:800;font-display:swap;src:url(https://fonts.gstatic.com/__cozytest/robotoslab-800.woff2) format('woff2')}\n")
     if info.filename == 'cozycheck/pets4.py': data = fix_n28(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
     dst.writestr(info, data)
 # fixtures that were only in tools/check-fixtures (31 Oct 2026): N8's save-prepet1-designer2.json, the save made by main before the
@@ -166,7 +193,10 @@ for f in sorted(glob.glob('tools/check-fixtures/save-prepet1-designer2.json') + 
     if n in have: sys.exit(f'STOP: {n} is already in {SRC}')
     json.load(open(f)); dst.write(f, n)
 pf = open('tools/kit-v7/pfu.py', 'rb').read(); compile(pf, 'cozycheck/pfu.py', 'exec'); dst.writestr('cozycheck/pfu.py', pf)
-dst.write('tools/kit-v7/pfu-trees-stage3.json', 'cozycheck/pfu-trees-stage3.json')   # P17's reference: the town's trees outside the vet station (stage 4)
+dst.write('tools/kit-v7/pfu-trees-stage3.json', 'cozycheck/pfu-trees-stage3.json')
+# the license card's fonts (1 Nov 2026, stage 5, screens-license-card: Alfa Slab One + Roboto Slab 700/800 from Google Fonts): the test copy serves them locally
+# like Baloo 2 (npm @fontsource/alfa-slab-one 5.0.21 and @fontsource/roboto-slab 5.0.21, latin files); fonts.css gets their faces
+for f in ('alfaslabone-400', 'robotoslab-700', 'robotoslab-800'): dst.write(f'tools/kit-v7/fonts/{f}.woff2', f'cozycheck/{f}.woff2')   # P17's reference: the town's trees outside the vet station (stage 4)
 n3 = open(NIGHT3, 'rb').read()
 if hashlib.md5(n3).hexdigest() != '709bf763d51be0160c118e2f9249f9f6': sys.exit(f'STOP: {NIGHT3} is not the night-3 game')
 dst.writestr('cozycheck/night3-game.html', n3)
