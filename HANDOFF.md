@@ -7,9 +7,9 @@
 - **Stage 1 done** (stamp 2026103102): economy rebalance patch (2 commits, as written: it targets the split js/ files), night skip, morning bus home,
   hats sit on the hair, save version 2 + migration, kit N8 fixture fixed, new kit stage `pfu` (P1-P4). Quick kit: 54 of 54 PASS
   (`tools/pfu-wip/quick-kit-stage1.log`); check_split S1-S4 PASS. Joined game 1,606,558 -> 1,614,292 bytes (limit 1.8 MB).
-- **Stage 2 done** (stamp 2026103103, commit: see `git log`, message "stage 2"): the pet brain (one need = happiness, moods, body language from the moves
+- **Stage 2 done** (stamp 2026103103, commit ddfda17): the pet brain (one need = happiness, moods, body language from the moves
   pack), food groups, home bowl, pets nap when you sleep, healthy-week ribbon, sickness (built, OFF), vet booking on the phone, friends see your pets for
-  real and pet/play with them. New kit lines P5-P11. Joined game 1,614,292 -> 1,663,820 bytes. Quick kit: see `tools/pfu-wip/quick-kit-stage2.log`.
+  real and pet/play with them. New kit lines P5-P11. Joined game 1,614,292 -> 1,663,820 bytes. Quick kit 60 of 61 PASS (only A2, see Open) `tools/pfu-wip/quick-kit-stage2.log`; check_split PASS.
 - **Next: stage 3** (`kit/entries/plan-brief-pfu-3.json`: yard levels by skill, garden beds, only owned things show).
 
 ## Read first (each stage)
