@@ -18,7 +18,7 @@
   big-needs pets locked at a Ms. Paws board. Kit P17-P18; rewritten (old -> new): P6 (sickness off until the clinic -> on with the station in, switch still
   proven both ways), P1 (new pet field sad exactly 0 -> under 0.1 minute: it starts counting at once), B1 (pets' sad compared exactly -> like happiness, only 'still there'). Joined game 1,702,559 -> 1,733,495 bytes (+30,936). NOT in (size): the big pets' models,
   homes and gear, wait-outside, new 3-floor Pet Shop, today's pets redrawn. Quick kit 68 of 68 PASS (`tools/pfu-wip/quick-kit-stage4.log`); check_split S1-S4 PASS.
-- **Stage 4b done** (stamp 2026110103, commit see below): what stage 4 left out. Size limit now 3.0 MB + speed guard (owner's OK 1 Nov; CLAUDE.md, kit N14/N40, new P19).
+- **Stage 4b done** (stamp 2026110103, commit 6f424b5): what stage 4 left out. Size limit now 3.0 MB + speed guard (owner's OK 1 Nov; CLAUDE.md, kit N14/N40, new P19).
   Big-needs pets (monkey 8 looks, seal 4, bear 6, snake 4) from the book's picked models, adoption when bigLock is null (400), homes (jungle tree 400, pond 700, den 700 in the
   big-pets area; snake glass tank 400 = furniture with light on/off + 8 colours), big-pet gear (5 pieces), bear/seal wait outside (not at the vet), big-pet platform at the vet,
   the new 3-floor Pet Shop (one room, real stairs), today's pets redrawn (new pug, real capybara, pomchi tail, duck/owl wing joints). Joined game 1,733,495 -> 1,973,272 bytes (pack models as data ~190 KB, moves +35 KB).
