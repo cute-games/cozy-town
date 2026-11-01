@@ -33,7 +33,10 @@ def fix_readme(s):
     return s + ('\nAdded 31 Oct 2026 (Pets and Farm Update, stage 1): stage \'pfu\' (pfu.py) with lines P1 saves (save version 2 and a round trip), P2 night skip,\n'
                 'P3 morning bus home, P4 hats sit on the hair; later stages add their lines there. Quick kit: --only files,counts,saves,night3,run4,pfu.\n'
                 'Fixtures added: save-prepet1-designer2.json (N8 needs it; it was only in tools/check-fixtures), save-prepfu-main.json (made by main a47bb1a, 31 Oct)\n'
-                'and the saves of each finished stage of the update (save-pfu<N>-*.json).\n')
+                'and the saves of each finished stage of the update (save-pfu<N>-*.json).\n'
+                'Added 1 Nov 2026 (stage 2, the pet brain): P5 one need and food groups, P6 sickness (built, switched off until the vet clinic), P7 vet booking,\n'
+                'P8 bowl, naps and the healthy week, P9 friends see your pets for real and pet them, P10 the moves pack on every pet and its cost, P11 pets not\n'
+                'left behind on long walks. PFU_ONLY=P5,P9 runs some of them. Fixture save-pfu2-stage2.json.\n')
 NIGHT3 = 'tools/prerun4-index.html'   # the night-3 game (md5 709bf763), the live file of run 4: it does not know costumes
 def fix_run4(s):
     # N19 (29 Oct, the owner's decision): its old-version friend was the live file, which knows costumes since run 4, so the line failed for every

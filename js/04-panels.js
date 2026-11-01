@@ -88,14 +88,16 @@ function petBye(){if(PT&&PT.lk0!=null){if(!CUT&&!P.sit)P.pitch=PT.lk0;PT.lk0=nul
 function renderPet(msg){const p=PT,d=p.d,h=Math.round(d.happy/20);
   openPanel(`<div class="who" style="--c:${d.col}">${PET_TYPES[petKind(d)].icon} ${esc(d.name)}</div><div class="hearts">${hearts(clamp(h,0,5))}</div>
     <p class="line">${esc(msg||(d.happy>70?d.name+' is super happy!':d.happy>35?d.name+' wags happily at you.':d.name+' looks a little lonely. Some love would help!'))}</p>
-    <div class="row"><button class="btn mint" data-a="ppet">💗 Pet</button>${(()=>{const n=(PET_FOOD[petKind(d)]||PET_FOOD[d.type]).reduce((s,k)=>s+(S.bag[k]||0),0);return`<button class="btn butter" data-a="pfeed">${PET_ITEMS[(PET_FOOD[petKind(d)]||PET_FOOD[d.type])[0]].i} Feed${n?' ('+n+')':''}</button>`;})()}
+    <div class="row"><button class="btn mint" data-a="ppet">💗 Pet</button>${(()=>{const n=PET_FOODS.reduce((s,k)=>s+(S.bag[k]||0),0);return`<button class="btn butter" data-a="pfeed">${PET_ITEMS[petFood(petKind(d))].i} Feed${n?' ('+n+')':''}</button>`;})()}
     <button class="btn sky" data-a="pplay">${PET_ITEMS[(PET_TOY[petKind(d)]||PET_TOY[d.type])].i} Play</button><button class="btn coral" data-a="pdress">🎀 Dress up</button><button class="btn lilac" data-a="pstay">${d.stay?'🐾 Follow me':'🏠 Stay here'}</button>${S.pets.length>PET_FOLLOW?'<button class="btn sky" data-a="mypets">🐾 My pets</button>':''}<button class="btn white" data-a="close">Bye!</button></div>`,{bottom:true,onClose:petBye});}
-ACT.ppet=()=>{const d=PT.d;d.happy=Math.min(100,d.happy+10);qEvent('pet');if(cool('pet'+d.id,3))addXP('pets',2);SFX.pet();floatText('💗',PT.x,1.1,PT.z,{h:.55});renderPet(pick([d.name+' loves that!',d.name+' wiggles happily!','So soft!']));change();};
-ACT.pfeed=()=>{const d=PT.d,list=(PET_FOOD[petKind(d)]||PET_FOOD[d.type]),k=list.find(f=>S.bag[f]>0);
-  if(!k){SFX.no();renderPet('No food for '+d.name+' in your bag. The pet shop sells '+list.map(f=>PET_ITEMS[f].i+' '+PET_ITEMS[f].n.toLowerCase()).join(' and ')+'!');return;}
-  const fav=k===list[0]&&list.length>1;S.bag[k]--;d.happy=Math.min(100,d.happy+(fav?40:30));qEvent('pet');qEvent('feed');addXP('pets',3);SFX.eat();floatText(fav?PET_ITEMS[k].i:'😋',PT.x,1.1,PT.z,{h:.55});
-  renderPet(fav?d.name+' LOVES '+PET_ITEMS[k].n.toLowerCase()+'! Yum yum!':'Munch munch! '+d.name+' loved it!');change();};
+ACT.ppet=()=>{const d=PT.d;d.happy=Math.min(100,d.happy+10);if(!PT.nap)petMove(PT,'pet.happyDance');qEvent('pet');if(cool('pet'+d.id,3))addXP('pets',2);SFX.pet();floatText('💗',PT.x,1.1,PT.z,{h:.55});renderPet(pick([d.name+' loves that!',d.name+' wiggles happily!','So soft!']));change();};
+ACT.pfeed=()=>{const p=PT,d=p.d,fav=petFood(petKind(d)),k=[fav,'treat',...PET_FOODS].find(f=>S.bag[f]>0);   /* 🥩 its own group's food first, then a treat, then any food (stage 2: every pet eats every food) */
+  if(!k){SFX.no();renderPet('No food in your bag. Ms. Paws sells meat, fish, fruit & veggies.');return;}
+  const love=k===fav;S.bag[k]--;d.happy=Math.min(100,d.happy+(love?40:30));qEvent('pet');qEvent('feed');addXP('pets',3);petCare();SFX.eat();floatText(love?PET_ITEMS[k].i:'😋',p.x,1.1,p.z,{h:.55});
+  if(!p.nap)petMove(p,'pet.takeFood',null,love?'pet.happyDance':null);   /* takes it from your hand; its favourite food: a happy dance after */
+  renderPet(love?d.name+' LOVES '+PET_ITEMS[k].n.toLowerCase()+'! Yum yum!':'Munch munch! '+d.name+' loved it!');change();};
 ACT.pplay=()=>{const d=PT.d,fav=(PET_TOY[petKind(d)]||PET_TOY[d.type]),toy=S.bag[fav]?fav:['ball','yarn','squeaky','frisbee','mouse'].find(k=>S.bag[k]);if(!toy){SFX.no();renderPet('You need a toy! The pet shop has '+PET_ITEMS[fav].i+' '+PET_ITEMS[fav].n.toLowerCase()+'s.');return;}
+  petCare();if(!PT.nap)petMove(PT,toy===fav?'pet.veryHappy':'pet.happyDance');
   if(toy===fav){d.happy=Math.min(100,d.happy+30);SFX[PET_TYPES[petKind(d)].snd]();floatText(PET_ITEMS[toy].i,PT.x,1.2,PT.z,{h:.55});qEvent('pet');qEvent('play');addXP('pets',3);renderPet(d.name+' LOVES the '+PET_ITEMS[toy].n.toLowerCase()+'! So much fun!');change();return;}
   d.happy=Math.min(100,d.happy+20);qEvent('pet');qEvent('play');addXP('pets',3);SFX[PET_TYPES[petKind(d)].snd]();floatText(PET_ITEMS[toy].i,PT.x,1.2,PT.z,{h:.55});renderPet(d.name+' plays with the '+PET_ITEMS[toy].n.toLowerCase()+'!');change();};
 function starRow(n){n=clamp(Math.round(n),0,5);return'⭐'.repeat(n)+'<span class="st0">'+'★'.repeat(5-n)+'</span>';}
@@ -170,7 +172,7 @@ function openGiveAway(){if(!S.pets.length){toast('You don\'t have any pets yet! 
     <div class="row"><button class="btn white" data-a="gvback">Back</button></div>`);$('card').scrollTop=0;}
 ACT.giveaway=()=>openGiveAway();
 ACT.gvback=()=>openShop('pets');
-ACT.gvpick=i=>{const d=S.pets[+i];if(!d)return;GV=d;
+ACT.gvpick=i=>{const d=S.pets[+i];if(!d)return;if(d.sick){SFX.no();toast(`💗 Ms. Paws: “Let's get ${d.name} well first.”`,3.4);return;}GV=d;   /* 🩺 never a sick pet (stage 2) */
   openPanel(`<div class="hd"><h2>${PET_TYPES[petKind(d)].icon} ${esc(d.name)}</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>${petImg(d,'gvpic')}
     <p class="line">Give <b>${esc(d.name)}</b> to Ms. Paws? She will find ${esc(d.name)} a loving new family.</p>
     <p class="note">You don't get coins back, and ${esc(d.name)} won't come back.</p>
@@ -186,14 +188,14 @@ function openShop(k){SHOP=k;const sh=SHOPS[k];SFX.talk();
   const list=(sh.items||[]).map(id=>({id,...itemInfo(id)})).concat((sh.furn||[]).map(t=>({id:t,n:FURN[t].n,i:FURN[t].i,p:FURN[t].p,f:1})));
   openPanel(`<div class="hd"><h2>${sh.title}</h2><div class="chip">🪙 <b id="pc">${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
     ${shutNote(k)}${sh.furn?'<p class="note">Furniture and decorations go to 📦 My stuff. Place them at home with&nbsp;🛋️&nbsp;Decorate.</p>':''}${newInHTML(k)}
-    <div class="grid" style="margin-top:10px">${list.map(it=>`<button class="it" data-a="buy:${it.id}"><span class="em">${it.i}</span><span>${it.n}</span><span class="pr">${it.p} 🪙</span><span class="have" id="hv-${it.id}">${it.f?'':(S.bag[it.id]?'You have '+S.bag[it.id]:'')}</span></button>`).join('')}</div>
+    <div class="grid" style="margin-top:10px">${list.map(it=>`<button class="it" data-a="buy:${it.id}"><span class="em">${it.i}</span><span>${it.n}</span>${k==='pets'&&PET_LOVE[it.id]?`<span class="lv" title="${PET_LOVE[it.id][1]}" aria-label="${PET_LOVE[it.id][1]}">${PET_LOVE[it.id][0]}</span>`:''}<span class="pr">${it.p} 🪙</span><span class="have" id="hv-${it.id}">${it.f?'':(S.bag[it.id]?'You have '+S.bag[it.id]:'')}</span></button>`).join('')}</div>
     ${k==='pets'&&S.pets.length?'<div class="row"><button class="btn white" data-a="giveaway">💔 Give a pet to Ms. Paws</button></div>':''}`);}
 ACT.buy=(id,b)=>{if(shutBuy(SHOP))return;const sh=SHOPS[SHOP],F=(sh.furn&&sh.furn.includes(id))?FURN[id]:null,info=F||itemInfo(id);
   if(S.coins<info.p){SFX.no();toast('Not enough coins yet! 🪙 '+earnTip(),3.6);return;}
   S.coins-=info.p;SFX.coin();
   if(F){S.home.store.push({u:uid(),t:id,c:F.cols?pick(F.cols):null,x:0,z:0,r:0});toast(F.i+' '+F.n+' is waiting in 📦 My stuff at home!');}
   else{S.bag[id]=(S.bag[id]||0)+1;const hv=$('hv-'+id);if(hv)hv.textContent='You have '+S.bag[id];if(FOODS[id])doneTask('buy');}
-  qEvent({market:'market',cafe:'cafe',flowers:'flower'}[SHOP]||'none');if(id.startsWith('seed_'))qEvent('buy:seed');if(ACCS[id])qEvent('buyacc');if(SHOP==='flowers')addXP('garden',1);qEvent('buy:'+id);if(id==='petfood'||id==='catfood')qEvent('buy:food');
+  qEvent({market:'market',cafe:'cafe',flowers:'flower'}[SHOP]||'none');if(id.startsWith('seed_'))qEvent('buy:seed');if(ACCS[id])qEvent('buyacc');if(SHOP==='flowers')addXP('garden',1);qEvent('buy:'+id);if(id==='petfood'||id==='catfood'||id==='bunnyfood')qEvent('buy:food');
   if($('pc'))$('pc').textContent=S.coins;b&&b.animate&&b.animate([{transform:'scale(1.08)'},{transform:'scale(1)'}],{duration:180});change();};
 
 /* ✨ "New in!" shelves: buy one and a brand-new thing pops up in its place, so the shops never run out */
@@ -234,7 +236,7 @@ function openBag(){const foods=Object.keys(S.bag).filter(k=>S.bag[k]>0);
     ${foods.length?`<p class="note">Tap food to eat it.</p><div class="grid" style="margin-top:8px">${foods.map(k=>{const it=itemInfo(k);return`<button class="it" data-a="eat:${k}"><span class="em">${it.i}</span><span>${it.n}</span><span class="have">×${S.bag[k]}</span></button>`;}).join('')}</div>`:'<p class="line">Your bag is empty. The market and the café have yummy food!</p>'}
     <div class="sec">Friends</div>${FRIENDS.filter(f=>frSt(f.id).met).map(f=>`<div class="opt"><span>${esc(f.name)}</span><span class="hearts" style="position:static">${hearts(heartsOf(f.id))}</span></div>`).join('')||'<p class="note">Say hi to the kids in town to make friends!</p>'}
     <div class="sec">Pets</div>${S.pets.map(d=>`<div class="opt"><span>${PET_TYPES[petKind(d)].icon} ${esc(d.name)}</span><span class="hearts" style="position:static">${hearts(clamp(Math.round(d.happy/20),0,5))}</span></div>`).join('')||'<p class="note">Visit the pet shop to adopt a pet!</p>'}`);}
-ACT.eat=k=>{const it=itemInfo(k);if(!FOODS[k]){toast(k==='petfood'?'That\'s for your pet! Look at your pet and tap 🦴 Feed.':k==='catfood'?'That\'s for your kitten! Look at your kitten and tap 🐟 Feed.':k.startsWith('seed_')?'Plant these in your garden behind your house! 🌱':PET_ITEMS[k]?'That\'s for your pet! Look at your pet to use it. 🐾':'Look at your pet and tap 🎾 Play!');return;}
+ACT.eat=k=>{const it=itemInfo(k);if(!FOODS[k]){toast(k==='petfood'||k==='catfood'||k==='bunnyfood'?'That\'s for your pets! Look at a pet and tap Feed. 🐾':k.startsWith('seed_')?'Plant these in your garden behind your house! 🌱':PET_ITEMS[k]?'That\'s for your pet! Look at your pet to use it. 🐾':'Look at your pet and tap 🎾 Play!');return;}
   if(S.hunger>=99){toast("You're full! Save it for later.");return;}S.bag[k]--;S.hunger=Math.min(100,S.hunger+it.f);SFX.eat();toast('Yum! '+it.i);qEvent('eat');qEvent('eat:'+k);doneTask('eat');change();openBag();};
 
 /* decorate catalog */
@@ -285,3 +287,10 @@ PLACES.push({id:'treepark',n:'Tree Park',i:'🌲',x:75.6,z:-40.6,w:9,d:9,c:'#9fd
 const theN=pl=>pl.nt?pl.n:'the '+pl.n;
 const BLDS=[[-31,-15,7,7,'#bff0dc'],[-22,-31,18,8,'#ffd0b5'],[23,-31,20,8,'#c7e6ff'],[24,31,18,8,'#ffe0c4'],[13,-61.5,8,7,'#ffd6e0'],[25,-61.5,8,7,'#c9f2e3'],[37,-61.5,8,7,'#fff1b8'],[13,61.5,8,7,'#e6dbff'],[25,61.5,8,7,'#d9e8ff'],[37,61.5,8,7,'#ffe0c4'],[-66,25,10,20,'#ffd0b5']];
 const INSIDE_AT={beach:'beach',home:'home',market:'market',pets:'pets',flowers:'flowers',cafe:'cafe',clothes:'clothes',toys:'toys',bakery:'bakery',icecream:'icecream',library:'library',school:'school',fire:'fire',pizza:'pizza',treepark:'treepark'};
+/* 💗 a friend's pet, 🩺 the vet booking (the pet brain, stage 2: js/03-game.js) */
+ACT.fpet=k=>{if(!FPT)return;const {a,q}=FPT;if(!MP.peers.has(a.peer)){closePanel();return;}PBR.pc={to:a.peer,i:q.i,k:k==='y'?'y':'p',n:++PBR.pcN};PBR.pcT=performance.now();
+  if(cool('fpet'+a.peer,4))addXP('pets',1);SFX[k==='y'?PET_TYPES[q.kind].snd:'pet']();floatText(k==='y'?PET_ITEMS[PET_TOY[q.kind]||'ball'].i:'💗',q.x,1.1,q.z,{h:.55});
+  renderFPet(k==='y'?q.nm+' plays with you! So much fun!':pick([q.nm+' loves that!',q.nm+' wiggles happily!','So soft!']));};
+ACT.vetbk=i=>{const s=vetSlots()[+i],sick=vetSick();if(!s||!sick.length||vetTaken(s[0],s[1]))return;S.vet.bk={d:s[0],h:s[1],ids:sick.map(d=>d.id)};SFX.ding();change();
+  toast(`🩺 Nurse Penny: “Come back between ${clockStr(s[1])} and ${clockStr(s[1]+2)}. Dr. Rūta will see you!”`,4);renderPhone();};
+ACT.vetx=()=>{S.vet.bk=null;SFX.tap();change();renderPhone();};

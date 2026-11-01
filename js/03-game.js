@@ -283,7 +283,7 @@ const QUESTS={
   parkday:{i:'🎡',t:'Park day',d:'Have fun at the park!',r:35,steps:[{d:'Go on the swings',ev:'swing',n:1},{d:'Go down the slide',ev:'slide',n:1},{d:'Make a wish at the fountain',ev:'wish',n:1}]},
   party:{i:'🎂',t:'Party time',d:'Throw a little party!',r:50,steps:[{d:'Buy a cake',ev:'buy:cake',n:1},{d:'Invite a friend to your house',ev:'visit',n:1},{d:'Give a present to a friend',ev:'gift',n:1}]},
   chef:{i:'🥪',t:'Little chef',d:'Make a yummy sandwich.',r:45,steps:[{d:'Buy bread at the Market',ev:'buy:bread',n:1},{d:'Buy cheese at the Market',ev:'buy:cheese',n:1},{d:'Cook a sandwich on your stove',ev:'cook',n:1}]},
-  spa:{i:'🛁',t:'Pet spa day',d:'Spoil your pet!',r:45,need:()=>S.pets.length>0,steps:[{d:'Buy pet food or cat food',ev:'buy:food',n:1},{d:'Feed your pet',ev:'feed',n:1},{d:'Play ball with your pet',ev:'play',n:1}]},
+  spa:{i:'🛁',t:'Pet spa day',d:'Spoil your pet!',r:45,need:()=>S.pets.length>0,steps:[{d:'Buy meat, fish or fruit & veggies for your pet',ev:'buy:food',n:1},{d:'Feed your pet',ev:'feed',n:1},{d:'Play ball with your pet',ev:'play',n:1}]},
   garden:{i:'🌷',t:'Flower house',d:'Make your house bloom.',r:80,steps:[{d:'Buy 2 things at the Flower Shop',ev:'flower',n:2},{d:'Put 2 flowers or plants in your house',ev:'placeflower',n:2}]},
   cafedate:{i:'☕',t:'Café friends',d:'Take a friend out for a treat.',r:50,steps:[{d:'Hang out with a friend',ev:'hang',n:1},{d:'Take your friend to the Café',ev:'cafevisit',n:1},{d:'Sit down at a Café table',ev:'cafesit',n:1}]},
   treat:{i:'🍩',t:'Clean & treat',d:'Work hard, then get a treat.',r:40,steps:[{d:'Pick up 5 pieces of litter',ev:'litter',n:5},{d:'Buy a donut at the Café',ev:'buy:donut',n:1},{d:'Eat the donut',ev:'eat:donut',n:1}]},
@@ -330,7 +330,7 @@ function hardEvent(type,amt){if(!S||!S.hard)return;for(const k in HARD){const st
 function hardCheck(){if(!S||!S.hard)return;let hit=false;for(const k in HARD){const st=S.hard[k];if(!st||st.s!=='on')continue;const H=hq(k);if(!H||!H.prog)continue;st.n=Math.min(H.n,H.prog());if(st.n>=H.n){st.s='ready';hit=true;hardDone(H);}}
   if(hit){saveLocal();if(CSAVE.ref){CSAVE.dirty=true;clearTimeout(CSAVE.tm);CSAVE.tm=setTimeout(cloudFlush,4000);}if(PH.app==='quest'&&!$('panel').hidden)renderPhone();}}
 const QCACHE={};
-const SOME=new Set(['flour','milk','cheese','honey','popcorn','candy','chocolate','tea','eggs','grapes','cherries','bread','corn','pet food','cat food','bunny & hamster food','pet treats','pancakes','hot cocoa','lemonade','pumpkin soup','fruit salad','garden salad','flowers','herb pots','building blocks','candles','drawers']);   /* (the furniture names that are many things: "Put some herb pots in your house", not "a herb pots"; run 4, stage 3) */
+const SOME=new Set(['flour','milk','cheese','honey','popcorn','candy','chocolate','tea','eggs','grapes','cherries','bread','corn','meat','fish','fruit & veggies','pet treats','pancakes','hot cocoa','lemonade','pumpkin soup','fruit salad','garden salad','flowers','herb pots','building blocks','candles','drawers']);   /* (the furniture names that are many things: "Put some herb pots in your house", not "a herb pots"; run 4, stage 3) */
 const PAIR=new Set(['fairy wings','bunny ears','cat ears','headphones','glasses','sunglasses','heart glasses','pet sunglasses']);   /* (run 4 finish: "Buy a fairy wings" read wrong) */
 ['fries','noodles','dumplings','chocolate cookies','hot chocolate'].forEach(n=>SOME.add(n));   /* (run 4 finish: the recipes cooked in a quest: "Cook some chocolate cookies") */
 const aAn=n=>{const l=n.toLowerCase();return(PAIR.has(l)?'a pair of ':SOME.has(l)?'some ':/^[aeiou]/.test(l)?'an ':'a ')+l;};
@@ -547,12 +547,115 @@ class Pet{
     if(!d.stay){if(this.loc!==CUR.id)nearMe(this,idx);followStep(this,dt,idx);}
     else if(this.loc===CUR.id){this.wt-=dt;if(this.wt<=0){this.wt=rand(2,6);const a=rand(0,TAU),r=rand(0,d.home?.7:1.6),c=petFrom(d,d.sx,d.sz);   /* (a pet at home stays on its patch of the front yard) */[this.tx,this.tz]=collideXZ(c[0]+Math.cos(a)*r,c[1]+Math.sin(a)*r,.6,CUR);[this.x,this.z]=collideXZ(this.x,this.z,this.r,CUR);}   /* 🛋️ never a wander spot inside the furniture */
       const dx=this.tx-this.x,dz=this.tz-this.z,dd=Math.hypot(dx,dz);if(dd>.1){const s=Math.min(dd,1.1*dt),ox=this.x,oz=this.z;[this.x,this.z]=collideXZ(this.x+dx/dd*s,this.z+dz/dd*s,this.r,CUR);this.face=Math.atan2(dx,dz);this.moving=true;if(Math.hypot(this.x-ox,this.z-oz)<s*.3)this.wt=Math.min(this.wt,.4);}else this.moving=false;}
-    d.happy=Math.max(0,d.happy-dt/HOUR*2);d.loc=this.loc;[d.x,d.z]=toSave(this.loc,this.x,this.z);
+    petNeed(this,dt);d.loc=this.loc;[d.x,d.z]=toSave(this.loc,this.x,this.z);
     this.g.visible=this.loc===CUR.id&&!(PHO.on&&this.loc==='city')&&!(DANCE.on||DANCE.res);   /* 🐾 your pets wait out of a photo shoot, a dance-off and its result card (run 4, stage 3) */this.g.position.set(this.x,hopY(this,dt)+brAt(this.loc,this.x,this.z),this.z);this.g.rotation.y=angLerp(this.g.rotation.y,this.face,Math.min(1,dt*8));
-    animPet(this.m,dt,this.moving,d.stay?1:this.spd);this.target.x=this.x;this.target.z=this.z;this.tag.visible=Math.hypot(P.x-this.x,P.z-this.z)>1.3;}
+    petAnim(this,dt);this.target.x=this.x;this.target.z=this.z;this.tag.visible=Math.hypot(P.x-this.x,P.z-this.z)>1.3;}
 }
 function addPetActor(d){const p=new Pet(d);PET_ACTORS.push(p);return p;}
-function rebuildPet(p){const pos=p.g.position.clone(),rot=p.g.rotation.y;scene.remove(p.g);p.m=makePet(petKind(p.d),p.d.col);addOutfit(p.m,p.d);p.g=p.m.root;p.g.add(p.tag);p.g.position.copy(pos);p.g.rotation.y=rot;scene.add(p.g);p.target.obj=p.g;}
+function rebuildPet(p){const pos=p.g.position.clone(),rot=p.g.rotation.y;scene.remove(p.g);p.m=makePet(petKind(p.d),p.d.col);addOutfit(p.m,p.d);p.g=p.m.root;p.g.add(p.tag);p.g.position.copy(pos);p.g.rotation.y=rot;scene.add(p.g);p.target.obj=p.g;p.rb=undefined;}
+/* 🐾 the pet brain (pets and farm update, stage 2; the owner's rules, 30-31 Oct). ONE need: happiness (rules-dec-one-need). Moods follow the hearts
+   (happiness / 20): 5 very very happy, 3-4 happy, 2 normal, 0-1 sad. Happiness only drops while you play (away or in bed = paused): about an hour of
+   play from full to sad (pet decision 19); pets at home with a full bowl and a toy box or cat tree in your house lose it at half speed. Food, petting,
+   playing, naps and friends raise it. Body language only, no text: unhappy pets bring a toy and bounce (play bow), yawn and lie down, nudge you, or sniff
+   and sit by an empty bowl; very happy ones jump and spin; sad ones droop. When you sleep, the pets with you nap (no pet loses happiness at night) and
+   wake happier. SICKNESS is built but switched off (PBR.sick) until the vet clinic is in the game (stage 4): about one more hour of play at 0-1 hearts
+   makes a pet sick (d.sad = those minutes); it sneezes now and then for the last 15 minutes before (fix the mood and it stops). Only the vet cures it.
+   Friends see your pets for real: each pet's hearts, sick look, ribbon and current move go online as one short code at the END of its row in the
+   presence (old versions read only the first five fields). Moves come from the moves pack (COZY_MOVES), so every screen plays the same move */
+const PBR={sick:false,V:2026103103,RATE:70/3600,old:false,hc:false,t:0,pc:null,pcT:0,pcN:Date.now()%1e6|0,pcSeen:{}};
+const petHearts=d=>clamp(Math.round(d.happy/20),0,5);
+const SMS=[['a','pet.unhappyBowl',6],['b','pet.unhappyPlay',3],['c','pet.unhappyNap',7],['d','pet.unhappyNudge',3],['e','pet.veryHappy',2.4],['f','pet.happyDance',2],
+  ['g','pet.sneeze',1.2],['h','pet.warnSneeze',1.4],['i','pet.nap',0],['j','pet.takeFood',2]];   /* the moves friends see: [code, move, how long it plays (0 = until the pet moves)] */
+const SM_LEN={},SM_CODE={},SM_OF={};for(const [c,n,l] of SMS){SM_LEN[n]=l;SM_CODE[n]=c;SM_OF[c]=n;}
+const homeHas=(...ts)=>!!(S&&S.home&&S.home.items.some(it=>ts.includes(furnOf(it))));
+const homeCare=()=>(S.yard&&S.yard.bw>0)&&homeHas('toybox','cattree');   /* 🥣 a full bowl and a toy at home */
+const petWeek=()=>(((S&&S.day)||1)-1)/7|0;
+const petRib=()=>!!(S&&S.hw&&S.hw.rb===petWeek()+1&&wdIdx()>=5);   /* 🎀 the healthy-week ribbon: worn on Saturday and Sunday */
+function petMove(e,n,now,next){if(!e)return;e.sm=n;e.sm0=now==null?gameMs()/1000:now;e.smN=next||null;
+  if((n==='pet.sneeze'||n==='pet.warnSneeze')&&e.loc===CUR.id&&Math.hypot(P.x-e.x,P.z-e.z)<9)SFX.sneeze();}
+/* happiness (and the way to sickness) for one of your pets, every frame */
+function petNeed(e,dt){const d=e.d;if(AW.on)return;   /* away = paused */
+  if(zzIn()){if(e.nap)d.happy=Math.min(100,d.happy+dt/HOUR*3);return;}   /* 😴 nights never hurt your pets: the ones with you nap */
+  d.happy=Math.max(0,d.happy-dt*PBR.RATE*(PBR.hc&&petAtHome(d)?.5:1));
+  if(PBR.sick&&!d.sick){if(petHearts(d)<=1){d.sad=(d.sad||0)+dt/60;if(d.sad>=60){d.sick=1;d.sad=0;change();}}else if(d.sad)d.sad=0;}}
+/* what your pet does when it stands about (its body language), now and then */
+function petBrain(e,dt,now){const d=e.d,h=petHearts(d);
+  e.nap=zzIn()&&e.loc===CUR.id&&!d.stay;   /* 😴 you sleep: the pets with you nap */
+  if(e.nap){if(e.sm!=='pet.nap')petMove(e,'pet.nap',now);return;}if(e.sm==='pet.nap')e.sm=null;
+  if(e.moving||e.sm)return;if((e.bt=(e.bt==null?rand(3,8):e.bt)-dt)>0)return;e.bt=rand(7,15);
+  if(e.loc!==CUR.id||!e.g.visible)return;
+  if(d.sick){if(Math.random()<.5)petMove(e,'pet.sneeze',now);return;}
+  if(PBR.sick&&d.sad>=45){petMove(e,'pet.warnSneeze',now);return;}   /* 🤧 a fair last chance */
+  if(h>=5){petMove(e,'pet.veryHappy',now);return;}
+  if(h<=3&&Math.random()<(h<=1?.9:h===2?.7:.4)){const L=['pet.unhappyPlay','pet.unhappyNap'];if(Math.hypot(P.x-e.x,P.z-e.z)<2.6)L.push('pet.unhappyNudge');
+    if(CUR.id==='home'&&!(S.yard.bw>0)&&homeHas('petbowl'))L.push('pet.unhappyBowl','pet.unhappyBowl');petMove(e,pick(L),now);}}
+/* the pose of a pet this frame, from its move (yours and your friends' pets alike). look: 's' sick, 'd' sad (0-1 hearts), '' anything else */
+function petPose(m,k,e,now,moving,look){if(!m.root.visible)return;let n=e.sm,t=now-e.sm0;
+  if(n&&moving){if(e.cp);else if(n==='pet.nap')e.sm0=now;else e.sm=null;n=null;}   /* (a friend's copy trots along its owner's trail: it keeps the move it was sent) */
+  if(n&&SM_LEN[n]&&t>=SM_LEN[n]){n=e.sm=e.smN||null;e.smN=null;e.sm0=t=now;if(n)t=0;}
+  if(!n){n=moving?(look==='s'?'pet.sickWalk':'pet.walk'):look==='s'?'pet.sickLie':look==='d'?'pet.sad':'pet.idle';t=now%600;}
+  const far=Math.hypot(m.root.position.x-camera.position.x,m.root.position.z-camera.position.z)>8;
+  COZY_MOVES.play(m,n,t,{kind:k,dist:e.wk||0,mood:moving&&look==='d'?'sad':undefined,fast:far});}
+const petLk=d=>d.sick?'s':petHearts(d)<=1?'d':'';
+function petAnim(e,dt){const d=e.d,now=gameMs()/1000,mv=Math.hypot(e.x-(e.lx===undefined?e.x:e.lx),e.z-(e.lz===undefined?e.z:e.lz));e.lx=e.x;e.lz=e.z;if(mv<1)e.wk=(e.wk||0)+mv;
+  petBrain(e,dt,now);const rb=petRib();if(e.rb!==rb){e.rb=rb;petRibbon(e.m,rb);}petPose(e.m,petKind(d),e,now,e.moving,petLk(d));}
+/* 🎀 the green ribbon (the Pet Show rosette from the book's model pack, in green) on the pet's side */
+function rosette(g,x,y,z,s,c){const p=new THREE.Group();p.position.set(x,y,z);p.scale.setScalar(s);g.add(p);
+  for(let k=0;k<12;k++){const a=k/12*TAU;const m=new THREE.Mesh(new THREE.CircleGeometry(.09,6),mat(k%2?c:shade(c,.12)));m.position.set(Math.cos(a)*.11,Math.sin(a)*.11,0);p.add(m);}
+  const d=new THREE.Mesh(new THREE.CircleGeometry(.11,20),mat('#ffd45c'));d.position.z=.005;p.add(d);
+  for(const s2 of[-1,1]){const t=new THREE.Mesh(new THREE.PlaneGeometry(.07,.26),mat(c));t.position.set(s2*.05,-.22,-.003);t.rotation.z=s2*.18;p.add(t);}
+  return p;}
+function petRibbon(m,on){if(m.rib){m.b.remove(m.rib);m.rib=null;}if(!on)return;const R=m.root,b=m.b,k=[R.position.clone(),R.quaternion.clone(),b.position.clone(),b.quaternion.clone(),b.scale.clone()];
+  R.position.set(0,0,0);R.quaternion.identity();b.position.set(0,0,0);b.quaternion.identity();b.scale.set(1,1,1);R.updateMatrixWorld(true);const bb=new THREE.Box3().setFromObject(b);   /* (measured in the body's own frame) */
+  R.position.copy(k[0]);R.quaternion.copy(k[1]);b.position.copy(k[2]);b.quaternion.copy(k[3]);b.scale.copy(k[4]);
+  m.rib=rosette(b,bb.max.x+.01,(bb.min.y+bb.max.y)/2,(bb.min.z+bb.max.z)/2+.04,.42,'#3fbf6b');m.rib.rotation.y=Math.PI/2;m.rib.traverse(o=>{if(o.isMesh)o.userData.noGround=1;});}
+/* once a frame for all your pets: the bowl empties with play, the healthy week, the vet booking */
+function petTick(dt){if(!S)return;PBR.hc=homeCare();if(S.yard&&S.yard.bw>0&&!AW.on&&!zzIn()&&S.pets.some(petAtHome))S.yard.bw=Math.max(0,S.yard.bw-dt);
+  if((PBR.t-=dt)>0)return;PBR.t=1;hwTick();vetTick();PBR.old=[...MP.peers.values()].some(a=>!(a.v>=PBR.V));}
+/* 💚 a healthy week (rules-mech-ribbon): Monday to Friday none of your pets got sick, and you fed or played with your pets on 3 or more of those days.
+   Then on Saturday and Sunday all your pets wear the green ribbon (the judges like it), and the week counts for the animal license (S.lic.weeks) */
+function hwTick(){const hw=S.hw,wk=petWeek()+1,wd=wdIdx();if(!hw)return;const mine=()=>{if(hw.w!==wk){hw.w=wk;hw.cd=0;hw.sick=0;}};   /* (a week with nothing in it is never written: a save only changes when you care or a pet is sick) */
+  if(wd<5&&S.pets.some(d=>d.sick)){mine();hw.sick=1;}
+  if(wd>=5&&hw.w===wk&&hw.ev!==wk){hw.ev=wk;let n=0;for(let i=0;i<5;i++)if(hw.cd&1<<i)n++;
+    if(!hw.sick&&n>=3&&S.pets.length){hw.rb=wk;S.lic.weeks=(S.lic.weeks|0)+1;if(PLAYING){SFX.yay();toast('💚 A healthy week! Your pets wear a green ribbon this weekend 🎀',4.6);}}change();}}
+function petCare(){if(!S.hw)return;const wd=wdIdx(),wk=petWeek()+1;if(S.hw.w!==wk){S.hw.w=wk;S.hw.cd=0;S.hw.sick=0;}if(wd<5)S.hw.cd|=1<<wd;}   /* a care day: you fed or played with your pets */
+/* online: one short code per pet, at the end of its row (hearts, s = sick, w = sneezes, r = ribbon, then .move + start in tenths of a second on the one clock) */
+function petCode(e){const d=e.d;let c=String(petHearts(d))+(d.sick?'s':'')+(PBR.sick&&!d.sick&&d.sad>=45?'w':'')+(petRib()?'r':'');
+  if(e.sm&&SM_CODE[e.sm])c+='.'+SM_CODE[e.sm]+(Math.round(e.sm0*10)%100000);return c;}
+function petUncode(q,c){const m=typeof c==='string'&&/^([0-5])(s?)(w?)(r?)(?:\.([a-j])(\d{1,5}))?$/.exec(c);if(!m){q.h=null;q.look='';q.rib=false;q.sm=null;return;}
+  q.h=+m[1];q.look=m[2]?'s':q.h<=1?'d':'';q.rib=!!m[4];const n=m[5]?SM_OF[m[5]]:null,st=m[6]?+m[6]:0;
+  if(n!==q.smC||st!==q.smS){q.smC=n;q.smS=st;q.sm=n;q.smN=null;if(n){const now=gameMs()/1000,ago=((Math.round(now*10)%100000-st)+100000)%100000/10;q.sm0=now-ago;}}}
+/* 💗 friends pet and play with your pets (rules-mech-friend-care): no feeding. It makes the pet happier; the friend gets a little pet XP */
+let FPT=null;
+function openFPet(a,q){FPT={a,q};SFX[PET_TYPES[q.kind].snd]();renderFPet();}
+function renderFPet(msg){const {a,q}=FPT;openPanel(`<div class="who" style="--c:${q.col}">${PET_TYPES[q.kind].icon} ${esc(a.nm)}'s ${esc(q.nm)}</div>${q.h!=null?`<div class="hearts">${hearts(q.h)}</div>`:''}
+    <p class="line">${esc(msg||q.nm+' sniffs your hand and wags. Hi!')}</p><div class="row"><button class="btn mint" data-a="fpet:p">💗 Pet</button><button class="btn sky" data-a="fpet:y">${PET_ITEMS[PET_TOY[q.kind]||'ball'].i} Play</button><button class="btn white" data-a="close">Bye!</button></div>`,{bottom:true,onClose:()=>{FPT=null;}});}
+function petByFriend(a,pc){const L=S.pets.filter(d=>!d.stay&&PET_TYPES[d.type]).slice(0,3),d=L[pc.i|0];if(!d)return;const y=pc.k==='y';
+  d.happy=Math.min(100,d.happy+(y?20:10));const e=PET_ACTORS.find(p=>p.d===d);if(e&&!e.nap)petMove(e,petHearts(d)>=5?'pet.veryHappy':'pet.happyDance');
+  toast(`💗 ${a.nm} ${y?'played with':'petted'} ${d.name}!`,2.6);change();}
+/* 🩺 the vet (rules-vet-visit, screens-vet-app): book a 2-hour time between 7:00 and 23:00 (8 windows a day) for your sick pets, on the phone (any time)
+   or at Nurse Penny's desk (stage 4). Nobody booked: walk in. Late: book again, no coins lost. One list for everyone in the room: each player's booking
+   goes in their presence (vb), so a time a friend has is taken. A reminder comes one game hour before. 50 coins a pet, free if you can't pay */
+const VET={open:7,close:23,price:50};
+const vetSick=()=>S.pets.filter(d=>d.sick);
+function vetSlots(){const now=gameMs(),c=clockNow(),out=[];for(let day=c.day;day<=c.day+1;day++)for(let h=VET.open;h<VET.close;h+=2)if(msAt(day,h+2)>now&&out.length<8)out.push([day,h]);return out;}
+const vetTaken=(day,h)=>[...MP.peers.values()].some(a=>Array.isArray(a.vb)&&a.vb[0]===day&&a.vb[1]===h);
+const vetWhen=(day,h)=>(day===S.day?'':wdName(day).slice(0,3)+' ')+clockStr(h)+'-'+clockStr(h+2);
+function vetTick(){const b=S.vet&&S.vet.bk;if(!b)return;const now=gameMs();
+  if(now>msAt(b.d,b.h+2)){S.vet.bk=null;change();if(PLAYING)toast("🩺 You missed your vet time. Let's book a new one! No coins lost.",4);return;}
+  if(!b.rm&&now>=msAt(b.d,b.h)-(msAt(b.d,b.h)-msAt(b.d,b.h-1))){b.rm=1;change();const nm=S.pets.filter(d=>b.ids.includes(d.id)).map(d=>d.name).join(', ')||'your pets';
+    if(PLAYING)showNote('🩺 Vet time soon!',`Bring ${nm} to the vet station between ${clockStr(b.h)} and ${clockStr(b.h+2)}. Dr. Rūta will see you!`,false,'🩺');}}
+function vetPhone(){const sick=vetSick(),b=S.vet&&S.vet.bk;let h=`<p class="ph-sub">🩺 Dr. Rūta, open ${clockStr(VET.open)}-${clockStr(VET.close)}. ${VET.price} 🪙 a pet, paid at the vet. Free if you can't pay.</p>`;
+  if(b){const L=S.pets.filter(d=>b.ids.includes(d.id));return h+`<div class="qcard vetbk"><div class="qt">🗓️ Your time: ${vetWhen(b.d,b.h)}</div><div class="qd">Bring ${L.map(d=>PET_TYPES[petKind(d)].icon+' '+esc(d.name)).join(', ')||'your pets'} to the vet station.</div>
+    <div class="row"><button class="btn white" data-a="vetx">✕ Cancel</button></div></div>`;}
+  if(!sick.length)return h+'<p class="ph-sub vetok">💚 All your pets are well</p>';
+  return h+`<p class="ph-sub">To bring: ${sick.map(d=>PET_TYPES[petKind(d)].icon+' '+esc(d.name)).join(', ')}. Pick a time:</p><div class="vetslots">${vetSlots().map(([day,hh],i)=>vetTaken(day,hh)?
+    `<button class="btn white" disabled>${vetWhen(day,hh)} · taken</button>`:`<button class="btn mint" data-a="vetbk:${i}">${vetWhen(day,hh)}</button>`).join('')}</div>`;}
+function openVetBook(){PH.app='vet';PH.chat=null;PH.jobs=false;renderPhone();}   /* (Nurse Penny's desk opens the same screen: stage 4) */
+/* at the vet (stage 4 calls this): every sick pet with you is cured, mood normal; pay per pet, free if you can't pay. Gives the coins paid */
+function vetCure(list){const n=list.length,cost=S.coins>=VET.price*n?VET.price*n:0;S.coins-=cost;for(const d of list){d.sick=0;d.sad=0;d.happy=40;}S.vet.bk=null;change();return cost;}
+/* Nurse Penny's free tip about any pet (rules-mech-nurse-tip, stage 4's desk) */
+function petTip(d){const h=petHearts(d);return h>=5?`${d.name} is very happy. Great job!`:h<=2?`${d.name} looks a bit bored. A toy would help!`:`${d.name} loves the ${PET_ITEMS[PET_TOY[petKind(d)]||'ball'].n.toLowerCase()}. Try it today!`;}
 const TOWNFOLK=[{skin:'#f5cfb0',hair:'#3d2c5e',style:'short',top:'#7cc8ff',bottom:'#4a4f7a',shoes:'#2e2347',scale:1.15},
   {skin:'#c98d63',hair:'#1f1a2e',style:'bun',top:'#ff8a6b',bottom:'#3f4c86',shoes:'#ffffff',scale:1.12,dress:true},
   {skin:'#8a5a3c',hair:'#2e2347',style:'short',top:'#ffd45c',bottom:'#5b5f8c',shoes:'#3d2c5e',scale:1.16},
@@ -1453,10 +1556,15 @@ function mpTick(dt){if(!MP.grp)return;const loc=CUR?CUR.id:'city';
    In their bed (zz) they lie down on it; away ("Still there?") or asleep, a little 💤 floats over their head */
 function mpStamp(st){if(P.jn)st.jp=P.jn;const pt=[];
   for(const d of S.pets){if(d.stay||!PET_TYPES[d.type]||pt.length>=3)continue;const o=d.outfit&&typeof d.outfit==='object'?d.outfit:{};
-    const row=[d.type,HEX.test(d.col)?d.col:PET_TYPES[d.type].cols[0],String(d.name||'').slice(0,14),Object.values(o).filter(k=>ACCS[k]).join('.')];if(petKind(d)!==d.type)row.push(petKind(d));pt.push(row);}
-  st.pt=pt.length?pt:null;}
+    const row=[d.type,HEX.test(d.col)?d.col:PET_TYPES[d.type].cols[0],String(d.name||'').slice(0,14),Object.values(o).filter(k=>ACCS[k]).join('.')],e=PET_ACTORS.find(q=>q.d===d);
+    if(petKind(d)!==d.type||!PBR.old)row.push(petKind(d));if(!PBR.old&&e)row.push(petCode(e));pt.push(row);}   /* 🐾 [5]: hearts, sick look, ribbon, move (stage 2; left out while an older version is online: its pets would be rebuilt at every change) */
+  st.pt=pt.length?pt:null;
+  st.pc=PBR.pc&&performance.now()-PBR.pcT<6000?PBR.pc:null;const b=S.vet&&S.vet.bk;st.vb=b?[b.d,b.h]:null;}   /* 💗 I petted or played with a friend's pet; 🩺 my vet time (one list for the room) */
 function mpExtra(a,pr,fresh){const jp=Number.isInteger(pr.jp)?pr.jp:null;if(!fresh&&jp!==null&&jp!==a.jp)mpHop(a);a.jp=jp;
-  const pk=JSON.stringify(Array.isArray(pr.pt)?pr.pt.slice(0,3):null);if(pk!==a.pk){mpPetsBuild(a,pr.pt);a.pk=pk;}
+  const pk=JSON.stringify(Array.isArray(pr.pt)?pr.pt.slice(0,3).map(x=>Array.isArray(x)?x.slice(0,5):x):null);if(pk!==a.pk){mpPetsBuild(a,pr.pt);a.pk=pk;}   /* (a pet's code [5] changes often: never a rebuild) */
+  if(a.pets)for(const q of a.pets)petUncode(q,Array.isArray(pr.pt)&&Array.isArray(pr.pt[q.i])?pr.pt[q.i][5]:null);
+  a.vb=Array.isArray(pr.vb)&&pr.vb.length===2&&pr.vb.every(Number.isInteger)?pr.vb:null;
+  const pc=pr.pc;if(pc&&typeof pc==='object'&&MP.me&&pc.to===MP.me&&Number.isFinite(pc.n)){const last=PBR.pcSeen[a.peer];PBR.pcSeen[a.peer]=pc.n;if(!fresh&&last!==pc.n)petByFriend(a,pc);}
   a.bed=a.zz?mpBed(a):null;}
 function mpHop(a){if(a.zz||a.jy>0)return;a.jv=5.4;a.jy=.0001;if(a.pets)for(const q of a.pets)if(!q.hopT&&!q.hopA)q.hopT=.05+Math.random()*.15;}
 /* which bed they lie in: their house layout (hm, sent while they have a visitor) lists every bed; take the one whose pillow is closest to them.
@@ -1484,10 +1592,11 @@ function mpPetsBuild(a,pt){mpPetsDrop(a);if(!Array.isArray(pt))return;const L=[]
   for(const x of pt.slice(0,3)){if(!Array.isArray(x)||!mpOwn(PET_TYPES,x[0]))continue;const T=PET_TYPES[x[0]];
     const kind=typeof x[4]==='string'&&mpOwn(PET_TYPES,x[4])&&PET_TYPES[x[4]].base===x[0]?x[4]:x[0];   /* 🐾 a friend's breed or new animal (night 3, job 14) */
     const d={type:x[0],kind,col:HEX.test(x[1])?x[1]:T.cols[0],outfit:{}};if(typeof x[3]==='string')for(const k of x[3].split('.').slice(0,4))if(mpOwn(ACCS,k))d.outfit[ACCS[k].s]=k;
-    const m=makePet(kind,d.col);addOutfit(m,d);const keep=[...m.legs,m.tail].filter(Boolean);for(const g of keep)g.userData.keep=1;bake(m.b,false);for(const g of keep)bake(g,false);   /* few draw calls: only the legs and tail move */
+    const m=makePet(kind,d.col);addOutfit(m,d);const keep=[...m.legs,m.tail,m.head].filter(Boolean);for(const g of keep)g.userData.keep=1;bake(m.b,false);for(const g of keep)bake(g,false);   /* few draw calls: only the legs and tail move */
     const nm=(typeof x[2]==='string'?x[2]:'').replace(/[^\p{L}\p{N} _.'-]/gu,'').trim().slice(0,14),tg=label(nm&&!bdBad(nm)?nm:T.name,.24);   /* a name that isn't kind shows as just "puppy" */
     tg.position.y=petTagY(kind);m.root.add(tg);m.root.visible=false;scene.add(m.root);
-    L.push({m,g:m.root,tag:tg,x:a.x,z:a.z,face:0,mv:false,spd:1});}
+    const q={m,g:m.root,tag:tg,x:a.x,z:a.z,face:0,mv:false,spd:1,i:pt.indexOf(x),kind,col:d.col,nm:nm&&!bdBad(nm)?nm:T.name,wk:0,sm:null,sm0:0,look:'',h:null,cp:1};
+    q.target={x:0,z:0,r:2.1,icon:T.icon,label:()=>'Pet '+q.nm,act:()=>openFPet(a,q),obj:m.root};L.push(q);}   /* 💗 friends pet and play with your pets (stage 2) */
   a.pets=L.length?L:null;a.trl=null;}
 function mpPetsDrop(a){if(a.pets)for(const q of a.pets){scene.remove(q.g);q.g.traverse(o=>{if(o.isMesh)o.geometry.dispose();});q.tag.material.map.dispose();q.tag.material.dispose();}a.pets=null;a.pk='';}
 /* a point s metres back along the way they walked (past its end: straight behind them), then o metres to the side */
@@ -1503,9 +1612,9 @@ function mpPetsTick(a,dt,vis){const L=a.pets;if(!L)return;
   for(let i=0;i<L.length;i++){const q=L[i],[gx,gz]=mpTrail(a,1.4+i*.75,i===1?-.35:i===2?.35:0);
     if(fresh||Math.hypot(gx-q.x,gz-q.z)>9){[q.x,q.z]=collideXZ(gx,gz,.3,CUR);q.mv=false;q.face=Math.atan2(a.x-q.x,a.z-q.z);q.g.rotation.y=q.face;}
     else{const dx=gx-q.x,dz=gz-q.z,dd=Math.hypot(dx,dz);
-      if(dd>.06){const sp=Math.min(7,1+dd*3.2),s=Math.min(dd,sp*dt);let nx=q.x+dx/dd*s,nz=q.z+dz/dd*s;if(near)[nx,nz]=collideXZ(nx,nz,.3,CUR);q.x=nx;q.z=nz;q.face=Math.atan2(dx,dz);q.mv=dd>.15;q.spd=clamp(sp/3,.6,1.8);}
+      if(dd>.06){const sp=Math.min(7,1+dd*3.2),s=Math.min(dd,sp*dt);let nx=q.x+dx/dd*s,nz=q.z+dz/dd*s;if(near)[nx,nz]=collideXZ(nx,nz,.3,CUR);q.wk+=Math.min(1,Math.hypot(nx-q.x,nz-q.z));q.x=nx;q.z=nz;q.face=Math.atan2(dx,dz);q.mv=dd>.15;q.spd=clamp(sp/3,.6,1.8);}
       else{q.mv=false;q.face=angLerp(q.face,Math.atan2(a.x-q.x,a.z-q.z),Math.min(1,dt*3));}}
-    q.g.visible=true;q.g.position.set(q.x,hopY(q,dt)+brAt(CUR.id,q.x,q.z),q.z);q.g.rotation.y=angLerp(q.g.rotation.y,q.face,Math.min(1,dt*8));animPet(q.m,dt,q.mv,q.spd);q.tag.visible=!a.lie&&Math.hypot(P.x-q.x,P.z-q.z)>1.3;}}   /* (their owner asleep in bed or in the tent: no pet names floating on the pillow) */
+    q.g.visible=true;q.g.position.set(q.x,hopY(q,dt)+brAt(CUR.id,q.x,q.z),q.z);q.g.rotation.y=angLerp(q.g.rotation.y,q.face,Math.min(1,dt*8));if(q.rb!==q.rib){q.rb=q.rib;petRibbon(q.m,q.rib);}petPose(q.m,q.kind,q,gameMs()/1000,q.mv,q.look);q.tag.visible=!a.lie&&Math.hypot(P.x-q.x,P.z-q.z)>1.3;}}   /* (their owner asleep in bed or in the tent: no pet names floating on the pillow) */
 /* jump right next to a friend, even into the shop they are in */
 function warpTo(loc,fx,fz,nm){if(!LOC[loc]||busWarp(loc,nm))return;if(DECO.on)decoEnd();if(P.ride)stopRide();if(P.sit)standUp();closePanel();SFX.door();
   fade(()=>{setLoc(loc);let x=fx+2.4,z=fz;const fr=[...MP.peers.values()].find(a=>a.nm===nm),ry=fr?fr.ry:0;
@@ -1637,8 +1746,8 @@ function addHomeItem(it){
   const rec={it,g,col:null,inter:null};
   if(!F.flat&&!F.hang){const R=fpRect(it.t,it.x,it.z,it.r);rec.col={x1:ox+R.x1,z1:oz+R.z1,x2:ox+R.x2,z2:oz+R.z2};L.dcols.push(rec.col);}
   if(F.use){const fx=Math.sin(it.r*Math.PI/2),fz=Math.cos(it.r*Math.PI/2),reach=Math.max(F.w,F.d)/2+1.1;
-    const R2=fpRect(it.t,it.x,it.z,it.r);rec.inter={x:ox+it.x,z:oz+it.z,r:1.7,rect:{x1:ox+R2.x1,z1:oz+R2.z1,x2:ox+R2.x2,z2:oz+R2.z2},obj:g,icon:{sleep:'😴',sit:'🪑',tv:'📺',lamp:'💡',piano:'🎹',fridge:'🧊',bath:'🛁',cook:'🍳',dress:'👗',shells:'🐚'}[F.use],
-      label:()=>({sleep:'Sleep',sit:'Sit down',tv:rec.on?'Turn off the TV':'Watch TV',lamp:it.on?'Turn off the lamp':'Turn on the lamp',piano:'Play the piano',fridge:'Grab a snack',bath:'Take a bubble bath',cook:'Cook something',dress:'Change your look',shells:'Look at your shells'}[F.use]),
+    const R2=fpRect(it.t,it.x,it.z,it.r);rec.inter={x:ox+it.x,z:oz+it.z,r:1.7,rect:{x1:ox+R2.x1,z1:oz+R2.z1,x2:ox+R2.x2,z2:oz+R2.z2},obj:g,icon:{sleep:'😴',sit:'🪑',tv:'📺',lamp:'💡',piano:'🎹',fridge:'🧊',bath:'🛁',cook:'🍳',dress:'👗',shells:'🐚',bowl:'🥣'}[F.use],
+      label:()=>({sleep:'Sleep',sit:'Sit down',tv:rec.on?'Turn off the TV':'Watch TV',lamp:it.on?'Turn off the lamp':'Turn on the lamp',piano:'Play the piano',fridge:'Grab a snack',bath:'Take a bubble bath',cook:'Cook something',dress:'Change your look',shells:'Look at your shells',bowl:S.yard&&S.yard.bw>0?'The bowl is full':'Fill the bowl'}[F.use]),
       act:()=>useFurn(rec,fx,fz)};L.inter.push(rec.inter);
     if(F.use==='lamp')setLamp(rec);}
   HOME_ITEMS.set(it.u,rec);return rec;
@@ -1706,6 +1815,9 @@ function useFurn(rec,fx,fz){const F=FURN[furnOf(rec.it)];
     case 'dress':return openCreator('edit');
     case 'bath':SFX.splash();floatText('🫧',rec.g.position.x,1.2,rec.g.position.z,{h:.7});toast('Splish splash! So many bubbles! 🫧');return;
     case 'cook':return openRecipes();
+    case 'bowl':{if(S.yard.bw>0){SFX.tap();toast('🥣 The bowl is full! Your pets at home have food for the day.',3);return;}const k=PET_FOODS.find(f=>S.bag[f]>0);   /* 🥣 one food fills it for one game day of play (stage 2) */
+      if(!k){SFX.no();toast('No food in your bag. Ms. Paws sells meat, fish, fruit & veggies.',3.4);return;}S.bag[k]--;S.yard.bw=CLK.DAY/1000;petCare();SFX.eat();floatText(PET_ITEMS[k].i,rec.g.position.x,.8,rec.g.position.z,{h:.4});
+      toast('🥣 The bowl is full! With a toy box or a cat tree at home too, your pets at home stay happy for longer.',4);change();return;}
     case 'clock':{const h=Math.floor(S.time),m=Math.floor((S.time%1)*60);SFX.tap();toast('🕰️ Tick tock! It\'s '+h+':'+String(m).padStart(2,'0')+'.');return;}
     case 'fire':SFX.pop();floatText('🔥',rec.g.position.x,1.3,rec.g.position.z,{h:.6});toast(pick(['So warm and cozy! 🔥','Crackle crackle… 🪵','You warm your hands by the fire. ✨']));return;
     case 'game':SFX.yay();floatText('🎮',rec.g.position.x,1.5,rec.g.position.z,{h:.6});toast(pick(['You beat level 1! 🏆','New high score! ⭐','You found a secret level! 🗝️','Your team won the race! 🏁']));return;
@@ -1872,7 +1984,8 @@ function nsTick(dt){const t=S.time;if(!(t>=21||t<7)||!nsMine()||nsAwake()){NS.t=
   if((NS.t+=dt)<2)return;NS.t=-3;nsSkip();}   /* (everyone has been in bed for 2 s; then at most one try in 5 s) */
 function nsSkip(){const c=clockNow(),d=c.time>=21?c.day+1:c.day,add=msAt(d,7)+1500-gameMs();if(!(add>0))return;   /* to 7:00 (and a second and a half) */
   const sk=CLK.sk+add;CLK.sk=sk;if(NS.ref)NS.ref.set({sk,d,at:Date.now()}).catch(()=>{});}
-function zzMorning(){standUp();S.hunger=Math.max(S.hunger,40);toast('Good morning! It\'s '+wdName()+' ☀️',4);doneTask('sleep');change();}
+function zzMorning(){for(const e of PET_ACTORS)if(e.nap)e.d.happy=Math.min(100,e.d.happy+15);   /* 😴 a nap makes them happier (stage 2) */
+  standUp();S.hunger=Math.max(S.hunger,40);toast('Good morning! It\'s '+wdName()+' ☀️',4);doneTask('sleep');change();}
 /* the sleep screen: a soft night over the game, 💤 drifting up, the time and the weekday, and a Wake up button (at least 44 px) */
 function zzScreen(on){let el=$('zzScr');
   if(!on){if(el&&!el.hidden){el.hidden=true;document.body.classList.remove('zz');}return;}
@@ -2058,6 +2171,7 @@ function tapAt(cx,cy){if(CUT){if(CUT.tch)tcTap(cx,cy);return;}if(DECO.on){decoTa
 function targets(){const out=CUR.inter.slice();
   for(const f of FRIEND_ACTORS)if(f.mode!=='away'&&f.loc===CUR.id&&f.g.visible)out.push(f.target);   /* (a friend waiting out of a photo or a dance offers no button: run 4, stage 3) */
   for(const p of PET_ACTORS)if(p.loc===CUR.id&&p.g.visible)out.push(p.target);
+  for(const a of MP.peers.values())if(a.pets)for(const q of a.pets)if(q.g.visible){q.target.x=q.x;q.target.z=q.z;out.push(q.target);}   /* 💗 a friend's pet */
   if(CUR.id==='pets')for(const a of PEN)out.push(a.target);
   if(S.time>=8&&S.time<20)for(const s of SHOPPERS)if(s.L===CUR)out.push(s.target);
   if(CUR.id==='city'){for(const l of LITTER)out.push(l.target);for(const w of WALKERS)if(w.state!=='home')out.push(w.target);for(const q of GRAN.g)if(q.on)out.push(q.target);if(sittersOut())for(const s of SITTERS)out.push(s.target);if(PSX.on)for(const j of PSX.judges)out.push(j.target);for(const k of FB.k)if(fbTgOn(k))out.push(k.tg);out.push(BALLT);}

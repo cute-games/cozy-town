@@ -1,4 +1,4 @@
-# HANDOFF — read this first (one page; updated 31 Oct 2026, Pets and Farm Update stage 1)
+# HANDOFF — read this first (one page; updated 1 Nov 2026, Pets and Farm Update stage 2)
 
 ## Where things stand
 - Live: `main` = a47bb1a (pet update 1, stamp 2026102902). Backup: `backup-2026-10-31` = main a47bb1a.
@@ -7,7 +7,10 @@
 - **Stage 1 done** (stamp 2026103102): economy rebalance patch (2 commits, as written: it targets the split js/ files), night skip, morning bus home,
   hats sit on the hair, save version 2 + migration, kit N8 fixture fixed, new kit stage `pfu` (P1-P4). Quick kit: 54 of 54 PASS
   (`tools/pfu-wip/quick-kit-stage1.log`); check_split S1-S4 PASS. Joined game 1,606,558 -> 1,614,292 bytes (limit 1.8 MB).
-- **Next: stage 2** (`kit/entries/plan-brief-pfu-2.json`: one need = happiness, sickness kept switched off until the vet clinic, food groups, care helpers, moves pack, vet app screen).
+- **Stage 2 done** (stamp 2026103103, commit: see `git log`, message "stage 2"): the pet brain (one need = happiness, moods, body language from the moves
+  pack), food groups, home bowl, pets nap when you sleep, healthy-week ribbon, sickness (built, OFF), vet booking on the phone, friends see your pets for
+  real and pet/play with them. New kit lines P5-P11. Joined game 1,614,292 -> 1,663,820 bytes. Quick kit: see `tools/pfu-wip/quick-kit-stage2.log`.
+- **Next: stage 3** (`kit/entries/plan-brief-pfu-3.json`: yard levels by skill, garden beds, only owned things show).
 
 ## Read first (each stage)
 1. `CLAUDE.md`, this file. 2. The run doc `kit/kits/pfu-night-run.json` (field `text`; its Guards and Corrections hold). 3. Your brief
@@ -35,8 +38,22 @@
 - **Hats**: `HAT_COVER`, `HAT_LIFT`, `hatLift()`, `bunTop()` in js/01-models.js; headphones, unicorn band and the kids' flower were reshaped; under
   a costume hood the side hair is tucked in. Kit P4 checks every hairdo x hat x costume from above.
 
+## Stage 2 notes the next stages need
+- Pet brain: js/03-game.js after `rebuildPet` (`PBR`, `petNeed`, `petBrain`, `petPose`, `petAnim`, `petTick`, `hwTick`, `petCare`, `petCode`/`petUncode`,
+  vet functions). `PBR.sick=false`: **stage 4 sets it true when the vet clinic is in** and calls `vetCure(list)` (pay 50 a pet, free if broke, mood 2 hearts),
+  `petTip(d)` (Nurse Penny's line) and `openVetBook()` (Penny's desk opens the phone screen). Bookings: `S.vet.bk={d,h,ids,rm}`, presence `vb`.
+- Rate: 70 happiness per real hour of play (pet decision 19), half at home with `S.yard.bw>0` (bowl, seconds of play left) and a toy box or cat tree in the
+  house (`homeCare`; stage 3/4: add yard toys and big-pet homes there). Pets with you nap in bed (`e.nap`), +15 at the morning (`zzMorning`).
+- Moves: `COZY_MOVES` at the end of js/01-models.js, cut from the book's pack by `tools/pfu-wip/extract-moves.py <pack> <out> <move,list>` (only the 15
+  pet moves used). Stage 4 adds bear/seal/snake/monkey moves (bear.denNap, seal.nap, toy plays...) by re-running it with the longer list.
+- Online: pet row = [type, col, name, outfit, kind, code]; code = hearts + s(sick) w(sneeze) r(ribbon) + `.<move letter><start tenths>` (`SMS` table);
+  left out while an older version (v < PBR.V) is online. Friend care: presence `pc={to,i,k,n}`. Food: `PET_GROUP`, `GROUP_FOOD`, `PET_LOVE`, `petFood()`;
+  `PET_FOOD` kept as an alias (kit N11 reads it). Healthy week: `S.hw.{w,cd,sick,ev,rb}`, written only when you care or a pet is sick; `S.lic.weeks`++.
+
 ## Open / not verified
-- Night skip with real friends on real devices, and with the real Firebase (the kit uses a fake one). Not checked: the visit-a-friend's-bed case
-  directly (a friend asleep in the beach tent stands in for "not in their own bed"). Away players (aw) and older versions behave as in P2.
-- Hats looked at in two contact sheets only (helper pictures not run); the foreman's picture pass covers them.
+- A2 fails on 1 Nov only because the backup branch is dated 31 Oct (the kit wants today's date in the title); main is unchanged (same md5).
+- Stage 2: real iPad frame rate (P10 measures 0.5-0.9 ms a frame for 6 pets' moves; whole frames only in the software-drawn test copy); moves seen by
+  friends on real devices (clocks a second apart can shorten a short move); one player on two devices; sounds (sneeze) not listened to; no pictures looked at.
+  Sick pets, the vet visit itself and bear/seal waiting outside / napping at home: stage 4. The ribbon's Pet Show bonus: stage 5.
+- Night skip with real friends on real devices, and with the real Firebase (the kit uses a fake one). Hats: only contact sheets (stage 1).
 - Older items from run 4 and pet update 1 stay open (G4-205/222, G4-279, G4-285, 15 grade-1 marks; iPad smoothness with 10 pets).

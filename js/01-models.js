@@ -338,7 +338,7 @@ const FURN={
   cattree:{n:'Cat tree',i:'🐈',p:150,w:.9,d:.9,cols:['#c98f5e','#b79cff','#7cc8ff'],b(g,c){box(g,.9,.12,.9,c,0,0,0);cyl(g,.09,.09,1.5,'#e8d6b0',-.2,.12,-.2,{seg:10});cyl(g,.09,.09,1.0,'#e8d6b0',.25,.12,.2,{seg:10});
     box(g,.6,.08,.5,c,-.1,1.62,-.15);box(g,.55,.08,.45,c,.2,1.12,.2);cyl(g,.25,.25,.22,shade(c,.1),-.1,1.7,-.15,{seg:16});sph(g,.06,'#ff7aa8',.38,.9,.35,{ws:8,hs:6,ol:.012});cyl(g,.006,.006,.2,'#3d2c5e',.38,.96,.35,{seg:4,ol:false});}},
   doghouse:{n:'Dog house',i:'🏠',p:180,w:1.1,d:1.1,cols:['#ff8a6b','#7cc8ff','#5fd4b0','#ffd45c'],b(g,c){box(g,1.0,.85,1.0,c,0,0,0);prism(g,1.1,1.25,.5,'#ffffff',0,.85,0,{ry:Math.PI/2});box(g,.42,.55,.02,'#2e2347',0,.05,.505,{ol:false});box(g,.4,.12,.02,'#ffffff',0,.68,.51,{ol:.01});}},
-  petbowl:{n:'Food bowl',i:'🥣',p:30,w:.5,d:.5,cols:['#ff7aa8','#7cc8ff','#ffd45c'],b(g,c){cyl(g,.18,.14,.1,c,0,0,0,{seg:14});for(let k=0;k<5;k++)sph(g,.04,'#9b6b4a',(k%3-1)*.06,.1,(k>2?.05:-.03),{ws:6,hs:5,ol:false});}},
+  petbowl:{n:'Food bowl',i:'🥣',p:30,w:.5,d:.5,use:'bowl',cols:['#ff7aa8','#7cc8ff','#ffd45c'],b(g,c){cyl(g,.18,.14,.1,c,0,0,0,{seg:14});for(let k=0;k<5;k++)sph(g,.04,'#9b6b4a',(k%3-1)*.06,.1,(k>2?.05:-.03),{ws:6,hs:5,ol:false});}},
   rockinghorse:{n:'Rocking horse',i:'🐴',p:150,w:1.2,d:.5,cols:['#ffffff','#ffd45c','#ff9ec4'],b(g,c){for(const s of[-.15,.15]){const r=new THREE.Mesh(new THREE.TorusGeometry(.8,.03,6,20,Math.PI*.5),mat('#c98f5e'));r.rotation.z=Math.PI*1.25;r.position.set(0,.82,s);g.add(r);}
     for(const x of[-.3,.3])for(const s of[-.13,.13])box(g,.06,.35,.06,c,x,.08,s,{ol:.012});box(g,.75,.28,.3,c,0,.42,0);box(g,.18,.38,.18,c,.38,.6,0,{rz:-.3});box(g,.3,.18,.2,c,.5,.85,0);box(g,.08,.3,.05,'#ff7aa8',.32,.75,0,{rz:-.3,ol:.01});box(g,.12,.12,.05,'#ff7aa8',-.42,.5,0,{rz:.6,ol:.01});}},
   dollhouse:{n:'Dollhouse',i:'🏡',p:200,w:1.0,d:.5,cols:['#ffd6e0','#c9f2e3','#fff1b8'],b(g,c){box(g,1.0,.9,.5,c,0,0,0);prism(g,1.08,.6,.4,'#ff7aa8',0,.9,0);for(const [x,y] of [[-.25,.2],[.25,.2],[-.25,.6],[.25,.6]])box(g,.22,.18,.02,'#9fd4f2',x,y,.255,{ol:.01});box(g,.16,.26,.02,'#5fd4b0',0,0,.255,{ol:.01});}},
@@ -682,12 +682,18 @@ const SHOPS={
   beach:{title:'Beach kiosk',items:['popsicle','icecream','coconut','watermelon']},
   truck:{title:'Food truck',items:['burger','fries','hotdog','taco']},
 };
-const PET_ITEMS={petfood:{n:'Pet food',i:'🦴',p:6},catfood:{n:'Cat food',i:'🐟',p:6},bunnyfood:{n:'Bunny & hamster food',i:'🥕',p:6},ball:{n:'Ball',i:'🎾',p:10},yarn:{n:'Yarn ball',i:'🧶',p:8},squeaky:{n:'Squeaky toy',i:'🐤',p:8},
+const PET_ITEMS={petfood:{n:'Meat',i:'🥩',p:6},catfood:{n:'Fish',i:'🐟',p:6},bunnyfood:{n:'Fruit & veggies',i:'🥕',p:6},ball:{n:'Ball',i:'🎾',p:10},yarn:{n:'Yarn ball',i:'🧶',p:8},squeaky:{n:'Squeaky toy',i:'🐤',p:8},
   bow:{n:'Pink bow',i:'🎀',p:30},hat:{n:'Party hat',i:'🥳',p:35},collar:{n:'Bell collar',i:'🔔',p:25},scarf:{n:'Cozy scarf',i:'🧣',p:30},
   treat:{n:'Pet treats',i:'🍖',p:5},frisbee:{n:'Frisbee',i:'🥏',p:10},mouse:{n:'Toy mouse',i:'🐭',p:8},pcrown:{n:'Pet crown',i:'👑',p:50},shades:{n:'Pet sunglasses',i:'🕶️',p:35},
   tophat:{n:'Tiny top hat',i:'🎩',p:55},flowerc:{n:'Flower crown',i:'🌸',p:45},pflower:{n:'Big flower',i:'🌺',p:35},bowtie:{n:'Fancy bow tie',i:'🤵',p:40},hglasses:{n:'Heart glasses',i:'💖',p:40},monocle:{n:'Fancy monocle',i:'🧐',p:50},cape:{n:'Super cape',i:'🦸',p:60},wings:{n:'Fairy wings',i:'🧚',p:70},bpack:{n:'Tiny backpack',i:'🎒',p:45}};
-const PET_FOOD={dog:['petfood','treat'],cat:['catfood','petfood','treat'],bunny:['bunnyfood','petfood','treat'],hamster:['bunnyfood','petfood','treat'],
-  pomchi:['petfood','treat'],pug:['petfood','treat'],sausage:['petfood','treat'],capybara:['bunnyfood','petfood','treat'],duck:['bunnyfood','petfood','treat'],owl:['petfood','catfood','treat']};
+/* 🥩 food groups (pets and farm update, stage 2; rules-food): each pet type loves one group. Same items as before (old Pet food = meat, Cat food = fish,
+   Bunny & hamster food = fruit & veggies), so food in bags keeps working. Every pet eats every food: its group's food +40 and a happy dance, any other food
+   or a treat +30. The shop shows who loves each food (PET_LOVE) */
+const PET_GROUP={dog:'meat',pug:'meat',pomchi:'meat',sausage:'meat',owl:'meat',bear:'meat',snake:'meat',cat:'fish',seal:'fish',bunny:'veg',hamster:'veg',capybara:'veg',duck:'veg',monkey:'veg'};
+const GROUP_FOOD={meat:'petfood',fish:'catfood',veg:'bunnyfood'},PET_FOODS=['petfood','catfood','bunnyfood','treat'];
+const PET_LOVE={petfood:['🐶 🦉 🐻 🐍','dogs, owls, bears and snakes love it'],catfood:['🐱 🦭','cats and seals love it'],bunnyfood:['🐰 🐹 🦫 🦆 🐒','bunnies, hamsters, capybaras, ducks and monkeys love it'],treat:['🐾 all love it','every pet loves it']};
+const petFood=k=>GROUP_FOOD[PET_GROUP[k]||'meat'];   /* the food a pet kind loves */
+const PET_FOOD=Object.fromEntries(Object.keys(PET_GROUP).map(k=>[k,[petFood(k),'treat']]));   /* (each kind's food, the loved one first, as before: older code and the check kit read it) */
 const PET_TOY={dog:'ball',cat:'yarn',bunny:'squeaky',hamster:'squeaky',pomchi:'squeaky',pug:'ball',sausage:'frisbee',capybara:'ball',duck:'squeaky',owl:'mouse'};
 function itemInfo(id){if(id&&id.startsWith('seed_')){const K=SEEDS[id.slice(5)];return K&&{n:K.n+' seeds',i:K.i,p:K.p};}return FOODS[id]||PET_ITEMS[id];}
 function foodModel(g,k,x,y,z){
@@ -856,3 +862,314 @@ function foodTruck(st,L,x,z){const B='#ff8a6b',W='#ffffff';
     act:()=>{if(shopOpen('truck')){openShop('truck');return;}SFX.no();toast(`🌙 The Food truck is closed now. It opens at ${opensAt('truck')}:00 ☀️`,3);}});}
 const TRUCK={x:-34.2,z:11.8};   /* the park's south-west corner, by the bench, the window towards the fountain (run 4, job 6: 1.7 m further west, so its counter and awning no longer hang over the flower bed; the tree that stood there moved to the fence) */
 
+
+/* 🐾 the moves pack (pets and farm update, stage 2): the book's tools/moves-pack v4 (31 Oct, every move OK'd by the owner), cut down to the pet moves
+   the game uses (run doc guard 3: only what the update uses; tools/pfu-wip/extract-moves.py cuts it). It turns the model's own groups (legs, head, tail,
+   body), never bends a mesh, and puts the feet on the floor. COZY_MOVES.play(model, name, seconds since the move began, {kind, dist, mood}).
+   Later stages add the moves they use with the same script (seal, bear, snake, tricks, farm). */
+/* Cozy Town moves pack (31 Oct 2026, round 3: every approved preview, Pet Show tricks, toy play, farm feeding) — window.COZY_MOVES
+   Every approved movement, written for the game's own models (three.js r128, no imports).
+   Rules it keeps (Karolis): parts move only as rigid pieces at their joints (group rotations and positions, never a bent mesh);
+   feet stay on the ground (ground fix by bounding box after every pose); knees bend only on models that have lower[] groups.
+
+   Use:   COZY_MOVES.play(model, 'pet.walk', tSeconds, {dist, kind, mood})  ->  {lift, done, name}
+          model = what the builders return: {root, b, legs[], lower[]?, neck?, head, tail, ears[]?, rear[]?, segs[]?, arms[]?}
+          t     = seconds since this move started (send name + start time online: friends get the same pose)
+   Every move: resets the model to its rest pose, sets its groups, puts the lowest point on the ground (root y = floor),
+   then lifts the body for jumps. A missing group is skipped, never an error.                                              */
+(function(){
+'use strict';
+const PI=Math.PI,TAU=2*PI;
+/* ---------- core: time helpers ---------- */
+const cl=(x,a=0,b=1)=>x<a?a:x>b?b:x;
+const ease=x=>{x=cl(x);return x*x*(3-2*x);};
+const seg=(t,a,b)=>ease((t-a)/(b-a));                                   /* 0 → 1 between a and b, eased */
+const bell=(t,a,b)=>{const u=(t-a)/(b-a);return u<=0||u>=1?0:Math.sin(PI*u);};   /* 0 → 1 → 0 between a and b */
+const frac=x=>x-Math.floor(x);
+const arc=(t,a,b,h)=>{const u=(t-a)/(b-a);return u>0&&u<1?4*h*u*(1-u):0;};       /* jump height: a parabola from a to b */
+/* phase clock: one loop of length dur seconds → 0..1 */
+const clock=(t,dur)=>frac(t/dur);
+/* planted-foot leg angle (rotation.x, + = foot back): the foot sweeps back at an even speed while on the ground (62% of the step), then swings forward */
+const STANCE=.62;
+function legAng(ph,A){ph=frac(ph);if(ph<STANCE)return -A+2*A*(ph/STANCE);const u=(ph-STANCE)/(1-STANCE);return A-2*A*ease(u);}
+/* how much a knee bends in the step: 0 on the ground, 1 at mid-swing */
+function swingK(ph){ph=frac(ph);return ph<STANCE?0:Math.sin(PI*(ph-STANCE)/(1-STANCE));}
+/* ---------- per-type settings (the "settings per type" of the shared set) ---------- */
+/* A: leg swing (rad); f: steps per second when no distance is given; gait: walk|trot|bound|waddle|hop|bob|galumph|slither;
+   wag: tail wag size, wagF: wags per second; knee: knee bend in a step (only models with lower[]); sway: body roll in a step */
+const KIND={
+  dog:{A:.5,f:2.2,gait:'walk',wag:.6,wagF:2.2,knee:.9,sway:.04},
+  pug:{A:.5,f:2.4,gait:'walk',wag:.5,wagF:2.6,sway:.05},
+  pomchi:{A:.55,f:2.6,gait:'walk',wag:.6,wagF:2.4,sway:.04},
+  sausage:{A:.6,f:2.8,gait:'walk',wag:.6,wagF:2.2,sway:.03},
+  cat:{A:.45,f:1.8,gait:'walk',wag:.25,wagF:.6,sway:.03},
+  bunny:{A:.6,f:1.8,gait:'bound',wag:.15,wagF:1,hop:.18},
+  hamster:{A:.7,f:3.4,gait:'walk',wag:.1,wagF:1,sway:.05},
+  capybara:{A:.4,f:1.5,gait:'walk',wag:0,wagF:0,sway:.04},
+  duck:{A:.45,f:2.4,gait:'waddle',wag:.2,wagF:2,sway:.15},
+  owl:{A:.3,f:1.6,gait:'hop',wag:.1,wagF:1,hop:.12},
+  bear:{A:.38,f:1.3,gait:'walk',wag:.1,wagF:1,sway:.07,headSwing:.12},
+  monkey:{A:.5,f:2,gait:'walk',wag:.3,wagF:.8,sway:.05},
+  seal:{A:0,f:1.4,gait:'galumph',wag:.2,wagF:1},
+  snake:{A:0,f:.8,gait:'slither',wag:0,wagF:0},
+  cow:{A:.24,f:1.0,gait:'walk',wag:.3,wagF:.5,knee:.85,sway:.03},
+  sheep:{A:.36,f:1.4,gait:'walk',wag:.4,wagF:3,sway:.05},
+  chicken:{A:.5,f:2.6,gait:'bob',wag:.15,wagF:2,knee:.9},
+  pig:{A:.45,f:2.4,gait:'trot',wag:.5,wagF:3,sway:.07},
+  horse:{A:.3,f:1.2,gait:'walk',wag:.2,wagF:.4,sway:.03},
+  farmdog:{A:.4,f:1.4,gait:'walk',wag:.3,wagF:1,knee:.8,sway:.04},
+  person:{A:.55,f:1.35,gait:'biped'}
+};
+const kindOf=R=>KIND[R.kind]||KIND.dog;
+/* ---------- core: bounding box in the model's own (root) space ---------- */
+const _inv=new THREE.Matrix4(),_m=new THREE.Matrix4(),_v=new THREE.Vector3(),_bx=new THREE.Box3(),_q=new THREE.Quaternion(),_q2=new THREE.Quaternion();
+/* lowest/highest points of obj, measured in root's frame. precise: real vertices (rotated spheres would float on a loose box) */
+function boxIn(root,obj,out,skip,precise){root.updateMatrixWorld(true);_inv.copy(root.matrixWorld).invert();out.makeEmpty();
+  const walk=o=>{if(!o.visible||(skip&&skip.has(o)))return;
+    if(o.isMesh&&!o.userData.noGround&&o.geometry){const g=o.geometry;_m.multiplyMatrices(_inv,o.matrixWorld);const pa=g.attributes&&g.attributes.position;
+      if(precise!==false&&pa&&pa.count<=1200){const st=pa.count>400?2:1;for(let i=0;i<pa.count;i+=st)out.expandByPoint(_v.fromBufferAttribute(pa,i).applyMatrix4(_m));}
+      else{if(!g.boundingBox)g.computeBoundingBox();_bx.copy(g.boundingBox).applyMatrix4(_m);out.union(_bx);}}
+    for(const c of o.children)walk(c);};
+  walk(obj);return out;}
+/* ---------- core: rig (rest pose snapshot) ---------- */
+const GROUP_LISTS=['legs','lower','arms','ears','rear','segs','hips','wings'];   /* wings: c14 duck/owl   /* hips: added by c13 petPose (posed models) */
+function headCore(m){const h=m.head;if(!h)return null;const c=h.children&&h.children[0];return c&&c.isGroup&&!c.isMesh?c:null;}
+function rig(m,o){o=o||{};if(m.__mv&&!o.force){if(o.kind)m.__mv.kind=o.kind;return m.__mv;}
+  const root=m.root||m,b=m.b||(m.isObject3D&&m.children&&m.children[0])||m;
+  const R={m,root,b,kind:o.kind||m.kind||m.type||'dog',rest:new Map(),legs:[],cache:{},last:null};
+  const snap=g=>{if(g&&g.isObject3D&&!R.rest.has(g))R.rest.set(g,{p:g.position.clone(),q:g.quaternion.clone(),s:g.scale.clone()});};
+  /* legs that pivot at the foot (the c14 bear): the pack hangs each on a hip joint at the top of the leg (like c14 petPose), so legs swing from the hip. A posed model's own m.hips are used */
+  R.legG=(m.legs||[]).map((l,i)=>{if(m.hips&&m.hips[i])return m.hips[i];if(!l||!l.isObject3D||!l.parent)return l;l.updateWorldMatrix(true,true);const inv=new THREE.Matrix4().copy(l.matrixWorld).invert();const lb=new THREE.Box3(),vv=new THREE.Vector3();
+    l.traverse(q=>{if(q.isMesh&&q.geometry&&q.geometry.attributes.position){const pa=q.geometry.attributes.position;for(let k=0;k<pa.count;k++)lb.expandByPoint(vv.fromBufferAttribute(pa,k).applyMatrix4(q.matrixWorld).applyMatrix4(inv));}});
+    if(lb.isEmpty()||lb.min.y<-.25*(lb.max.y-lb.min.y))return l;const top=lb.max.y-.04*(lb.max.y-lb.min.y);
+    const Hj=new THREE.Group();Hj.position.copy(l.position).add(new THREE.Vector3(0,top,0).multiply(l.scale).applyQuaternion(l.quaternion));l.parent.add(Hj);Hj.updateWorldMatrix(true,false);Hj.attach(l);Hj.userData.packHip=1;return Hj;});
+  R.legG.forEach(snap);
+  snap(b);snap(m.neck);snap(m.head);snap(m.tail);snap(headCore(m));snap(m.sitPivot);snap(m.tongue);for(const k of GROUP_LISTS)(m[k]||[]).forEach(snap);
+  R.top=m.sitPivot&&m.sitPivot.parent===root?m.sitPivot:b;   /* the piece the ground fix moves (petPose 'sit' hangs b under sitPivot) */
+  R.posed=m.sitPivot?'sit':m.hips?'lie':null;R.hide=[];R.show=[];
+  if(m.arms&&m.arms.length&&!o.kind)R.kind='person';
+  m.__mv=R;
+  /* sizes at rest (root frame) */
+  const bb=boxIn(root,b,new THREE.Box3());R.H=bb.max.y-bb.min.y;R.Lz=bb.max.z-bb.min.z;R.base=bb.min.y;R.center=bb.getCenter(new THREE.Vector3());
+  R.bCenter=b.worldToLocal(root.localToWorld(R.center.clone()));
+  /* legs: which are front/back and left/right, and how long (hip to the floor) */
+  const L=R.legG;const mz=L.reduce((s,g)=>s+g.position.z,0)/(L.length||1);
+  const seal=R.kind==='seal';R.biped=L.length===2&&!seal;
+  L.forEach((g,i)=>{const lb=boxIn(root,g,new THREE.Box3());const hip=root.worldToLocal(g.getWorldPosition(new THREE.Vector3()));
+    R.legs.push({g,lower:(m.lower||[])[i]||null,front:seal||(!R.biped&&g.position.z>mz+1e-6),left:g.position.x<0,len:Math.max(.02,hip.y-lb.min.y),hip});});
+  R.legLen=R.legs.length?R.legs.reduce((s,l)=>s+l.len,0)/R.legs.length:R.H*.3;
+  R.front=R.legs.filter(l=>l.front);R.hind=R.legs.filter(l=>!l.front);
+  /* tail direction: a tail that points up or hangs down wags on z; one that points back wags on y */
+  if(m.tail){const tb=boxIn(m.tail,m.tail,new THREE.Box3()),c=tb.getCenter(new THREE.Vector3());R.tailAxis=Math.abs(c.y)>=Math.abs(c.z)?'z':'y';R.tailHang=c.y<-Math.abs(c.z);}
+  return R;}
+/* back to the rest pose (call once per frame before a move; play() does it) */
+function reset(m){const R=rig(m);R.rest.forEach((s,g)=>{g.position.copy(s.p);g.quaternion.copy(s.q);g.scale.copy(s.s);});R.hide.forEach(o=>{o.visible=false;});R.show.forEach(o=>{o.visible=true;});return R;}
+/* ground fix: puts the lowest point of the body on the floor (root y = 0). Returns how far it moved. */
+function ground(m,o){const R=rig(m);if(R.b===R.root)return 0;const T=R.top||R.b;const bb=boxIn(R.root,T,_gb,null,o&&o.fast?false:undefined);if(bb.isEmpty())return 0;T.position.y-=bb.min.y;return bb.min.y;}
+const _gb=new THREE.Box3();
+/* the lowest point of a set of groups (root frame) */
+function lowY(R,objs,skip){let y=Infinity;for(const o of objs){if(!o)continue;const bb=boxIn(R.root,o,_gb,skip);if(!bb.isEmpty())y=Math.min(y,bb.min.y);}return y;}
+/* turn the body group about a point given in body space (so a pitch pivots at the hips or the rump, not at the floor centre) */
+function rotAbout(R,axis,ang,px,py,pz){const b=R.b;const p=new THREE.Vector3(px,py,pz).multiply(b.scale);   /* composes with what is already set this frame */
+  const piv=p.clone().applyQuaternion(b.quaternion).add(b.position);
+  _q.setFromAxisAngle(axis==='x'?X:axis==='y'?Y:Z,ang);b.quaternion.multiply(_q);
+  b.position.copy(piv).sub(p.applyQuaternion(b.quaternion));}
+const X=new THREE.Vector3(1,0,0),Y=new THREE.Vector3(0,1,0),Z=new THREE.Vector3(0,0,1),DOWN=new THREE.Vector3(0,-1,0);
+/* solve a body tilt so two groups touch the floor together (e.g. sitting: front feet and rump). Cached per model and pose. */
+function solveTilt(R,key,apply,A,B,lo,hi){if(R.cache[key]!=null)return R.cache[key];let a=lo,b=hi;const skipA=new Set(A);
+  const f=th=>{reset(R.m);apply(th);return lowY(R,A)-lowY(R,[R.b],skipA);};
+  const fa=f(a);for(let i=0;i<16;i++){const m=(a+b)/2,fm=f(m);if((fm>0)===(fa>0))a=m;else b=m;}reset(R.m);return R.cache[key]=(a+b)/2;}
+/* ---------- core: legs ---------- */
+const OFF={walk:{FL:.25,FR:.75,BL:0,BR:.5},trot:{FL:0,BR:0,FR:.5,BL:.5},gallop:{BL:0,BR:.1,FL:.45,FR:.55},bound:{FL:0,FR:.06,BL:.5,BR:.56},together:{FL:0,FR:0,BL:0,BR:0}};
+const legId=l=>(l.front?'F':'B')+(l.left?'L':'R');
+/* knee sign: front knees (carpus) fold the foot back, hind hocks fold it forward (the hock points back, real life) */
+const kneeSign=l=>l.front?1:-1;
+function gaitLegs(R,ph,A,amp,gait,knee){const off=OFF[gait]||OFF.walk;
+  R.legs.forEach((l,i)=>{const o=R.biped?(i?.5:0):off[legId(l)];l.g.rotation.x+=legAng(ph+o,A)*amp;
+    if(l.lower&&knee)l.lower.rotation.x+=kneeSign(l)*knee*swingK(ph+o)*amp;});}
+/* distance of one full step cycle in world units (so feet do not slide: phase = distance / stride) */
+function stride(m,A){const R=rig(m);A=A==null?kindOf(R).A:A;const s=(R.root.scale&&R.root.scale.y)||1;return Math.max(.05,2*R.legLen*s*Math.sin(Math.max(.05,A))/STANCE);}
+function phaseOf(R,t,o,A){const K=kindOf(R);if(o&&o.dist!=null)return o.dist/stride(R.m,A);return t*(o&&o.f||K.f)*(o&&o.speed||1);}
+/* tail */
+function wag(R,amt,freq,t){const tl=R.m.tail;if(!tl||!amt)return;tl.rotation[R.tailAxis||'z']+=amt*Math.sin(TAU*freq*t);}
+function tailUp(R,k){const tl=R.m.tail;if(!tl)return;tl.rotation.x+=R.tailHang?Math.max(k,-.35):k;}   /* + up, - down (a hanging tail only tucks a little) */
+/* head: pitch (+ = nose down), with the neck when the model has one */
+function headDown(R,k,neckShare){const m=R.m;if(m.neck&&neckShare!==0){const s=neckShare==null?.6:neckShare;m.neck.rotation.x+=k*s;if(m.head)m.head.rotation.x+=k*(1-s);}else if(m.head)m.head.rotation.x+=k;}
+function ears(R,k){(R.m.ears||[]).forEach(e=>{e.rotation.x+=k;});}
+/* breathing: a tiny rise of the chest (scale of the whole body piece, no bending) */
+function breathe(R,t,per,amt){const b=R.b;const s=Math.sin(TAU*t/per);b.scale.y*=1+amt*s;b.scale.x*=1+amt*.6*s;}
+/* sit: rump down, front legs straight, chest up. Solved per model so front feet and rump both touch the floor */
+function sitPose(R,k){const m=R.m;if(!R.front.length||!R.hind.length){lieDown(R,k*.6);return;}
+  const hz=R.hind[0].g.position.z,hy=R.hind[0].g.position.y;
+  const apply=th=>{rotAbout(R,'x',-th,0,hy,hz);R.front.forEach(l=>{l.g.rotation.x+=th;});
+    R.hind.forEach(l=>{if(l.lower){l.g.rotation.x+=th+.95;l.lower.rotation.x-=2.1;}else{l.g.rotation.x+=th-1.35;}});};
+  const th=solveTilt(R,'sit',apply,R.front.map(l=>l.g),null,0,1.25);
+  reset(m);apply(th*k);if(m.head)m.head.rotation.x+=th*.75*k;if(m.neck)m.neck.rotation.x+=th*.15*k;tailUp(R,-.5*k);}
+/* lie: legs fold under, body down (sphinx), head low */
+function lieDown(R,k){const m=R.m;
+  if(R.biped){R.legs.forEach(l=>{l.g.rotation.x+=-1.4*k;});return;}
+  R.front.forEach(l=>{l.g.rotation.x+=-1.45*k;if(l.lower)l.lower.rotation.x+=.1*k;});
+  R.hind.forEach(l=>{if(l.lower){l.g.rotation.x+=-1.15*k;l.lower.rotation.x+=2.3*k;l.g.rotation.z+=(l.left?-1:1)*.25*k;}else{l.g.rotation.x+=-1.3*k;l.g.rotation.z+=(l.left?-1:1)*.45*k;}});
+  headDown(R,.15*k);}
+/* play bow: chest down on the front legs, rump up */
+function bowPose(R,k){const m=R.m;if(!R.front.length||!R.hind.length){headDown(R,.3*k);return;}
+  const fz=R.front[0].g.position.z,fy=R.front[0].g.position.y;
+  const apply=th=>{rotAbout(R,'x',th,0,fy,fz);R.front.forEach(l=>{l.g.rotation.x+=-th-1.25;if(l.lower)l.lower.rotation.x+=.4;});R.hind.forEach(l=>{l.g.rotation.x+=-th;});};
+  const th=solveTilt(R,'bow',apply,R.front.map(l=>l.g),null,0,.9);
+  reset(m);apply(th*k);if(m.head)m.head.rotation.x+=-th*.9*k;if(m.neck)m.neck.rotation.x+=-.1*k;tailUp(R,.5*k);}
+/* in the air: front legs reach forward, hind legs back, knees tucked */
+function airLegs(R,u){const s=Math.sin(PI*cl(u));R.legs.forEach(l=>{if(R.biped){l.g.rotation.x+=.5*s;return;}l.g.rotation.x+=(l.front?-.7:.6)*s;if(l.lower)l.lower.rotation.x+=kneeSign(l)*.9*s;});}
+/* a crouch before a jump and a squash on landing (whole-body scale only) */
+function squash(R,k){R.b.scale.y*=1-.12*k;R.b.scale.x*=1+.06*k;R.b.scale.z*=1+.06*k;}
+/* ---------- pet moves ---------- */
+/* walk (per type: walk, trot, bunny bound, duck waddle, owl hop, chicken head-bob, seal galumph, snake slither). o.dist = metres walked (feet planted); o.mood: 'sad'|'sick'|'happy' */
+function petWalk(m,t,o){const R=rig(m),K=kindOf(R);o=o||{};const mood=o.mood;
+  if(K.gait==='slither')return snakeSlither(m,t,o);
+  if(K.gait==='galumph')return sealGalumph(m,t,o);
+  const amp=(mood==='sad'?.6:mood==='sick'?.5:1)*(o.amp==null?1:o.amp);const A=K.A*(o.big||1);const ph=phaseOf(R,t,o,A*(mood==='sad'?.6:mood==='sick'?.5:1));let lift=0;   /* o.amp only fades the legs in/out; the stride follows the mood */
+  if(K.gait==='bob')return chickenWalk(m,t,o);
+  if(K.gait==='hop'){const u=frac(ph);lift=arc(u,0,.7,R.H*K.hop*amp);R.legs.forEach(l=>{l.g.rotation.x+=.35*Math.sin(PI*cl(u/.7))*amp;});}
+  else if(K.gait==='bound'){gaitLegs(R,ph,A,amp,'bound',K.knee);const u=frac(ph+.75);lift=arc(u,0,.62,R.H*K.hop*amp);rotAbout(R,'x',.18*Math.sin(TAU*ph)*amp,0,R.bCenter.y,R.bCenter.z);}
+  else if(K.gait==='waddle'){gaitLegs(R,ph,A,amp,'walk');rotAbout(R,'z',K.sway*Math.sin(TAU*ph)*amp,0,0,0);}
+  else{gaitLegs(R,ph,A,amp,K.gait==='trot'?'trot':'walk',K.knee);rotAbout(R,'z',(K.sway||.03)*Math.sin(TAU*ph)*amp,0,R.bCenter.y,R.bCenter.z);
+    if(m.head){m.head.rotation.x+=.08*Math.sin(TAU*2*ph+.4)*amp;if(K.headSwing)m.head.rotation.y+=K.headSwing*Math.sin(TAU*ph);}}
+  moodOverlay(R,t,mood);if(!mood)wag(R,K.wag,K.wagF,t);
+  return {lift};}
+/* moods on top of any pose: sad = head and tail low; sick = lower still; happy = tail high, fast wag */
+function moodOverlay(R,t,mood){const K=kindOf(R);if(!mood)return;
+  if(mood==='sad'){headDown(R,.45);tailUp(R,-1.0);ears(R,.35);wag(R,.08,.4,t);}
+  else if(mood==='sick'){headDown(R,.6);tailUp(R,-1.2);ears(R,.45);}
+  else if(mood==='happy'){if(R.m.head)R.m.head.rotation.x-=.15;tailUp(R,.4);wag(R,K.wag*1.4+.2,K.wagF*1.8+2,t);ears(R,-.2);}}
+/* idle: breathes, looks around slowly, small tail wag */
+function petIdle(m,t,o){const R=rig(m),K=kindOf(R);o=o||{};if(R.kind==='snake')return snakeIdle(m,t,o);
+  breathe(R,t,2.6,.012);if(m.head)m.head.rotation.y+=.3*Math.sin(t*.37*TAU/2.2);wag(R,K.wag*.5,K.wagF*.5,t);moodOverlay(R,t,o.mood);return {};}
+/* UNHAPPY 1 — at the bowl: sniffs (head down, little sniffs), then sits by it, head low. 4 s, then holds the sit (walking to the bowl is the game's) */
+function unhappyBowl(m,t,o){const R=rig(m),K=kindOf(R);if(R.kind==='snake')return snakeLook(m,t,o);
+  const sn=seg(t,.1,.6)*(1-seg(t,1.7,2.1));const sit=seg(t,2.0,2.7);
+  if(sit>0)sitPose(R,sit);if(R.kind==='seal')R.b.rotation.x-=.25*sit;
+  headDown(R,.65*sn+(sn>.9?.06*Math.sin(TAU*7*t):0)+.25*sit);tailUp(R,-.5*sit);ears(R,.3*sit);wag(R,K.wag*.3,K.wagF*.5,t);if(sit>.95)breathe(R,t,3,.012);
+  return {done:t>=4,hold:true};}
+/* UNHAPPY 2 — play: play bow, then two hops. 3 s loop */
+function unhappyPlay(m,t,o){const R=rig(m),K=kindOf(R);const u=clock(t,3)*3;let lift=0;
+  if(R.kind==='snake'){const r=snakeLook(m,t,o);return r;}
+  const bow=bell(u,0,1.05);if(bow>0)bowPose(R,bow);
+  for(const [a,b] of[[1.1,1.75],[1.95,2.6]]){const v=(u-a)/(b-a);if(v>0&&v<1){lift=arc(u,a,b,R.H*.35);airLegs(R,v);rotAbout(R,'x',-.25*Math.cos(PI*v),0,R.bCenter.y,R.bCenter.z);}
+    const c=bell(u,a-.12,a)+bell(u,b,b+.12);if(c>0){squash(R,c);}}
+  wag(R,K.wag+.3,K.wagF+2,t);if(R.kind==='seal')sealClapPose(R,bell(u,1.1,2.6));
+  return {lift};}
+/* UNHAPPY 3 — tired: a big yawn (head up, front stretch), then lies down and breathes slowly. 4 s, then holds lying */
+function unhappyNap(m,t,o){const R=rig(m),K=kindOf(R);if(R.kind==='snake')return snakeCoil(m,t,o);
+  const yawn=bell(t,0,1.0);const lie=seg(t,1.0,1.9);
+  if(lie>0)lieDown(R,lie);if(m.head)m.head.rotation.x+=-.55*yawn;R.front.forEach(l=>{l.g.rotation.x+=-.35*yawn;});
+  headDown(R,.25*lie);tailUp(R,-.4*lie);if(lie>.95)breathe(R,t,3,.018);
+  return {done:t>=4,hold:true};}
+/* UNHAPPY 4 — wants attention: looks up at you, nudges your leg twice. 3 s loop (following you is the game's walk) */
+function unhappyNudge(m,t,o){const R=rig(m),K=kindOf(R);const u=clock(t,3)*3;if(R.kind==='snake')return snakeLook(m,t,o);
+  const up=seg(u,0,.4)*(1-seg(u,2.6,3));if(m.head)m.head.rotation.x+=-.5*up;if(m.neck)m.neck.rotation.x+=-.2*up;
+  const nud=Math.max(0,Math.sin(TAU*(u-.8)/1.0))*(u>.8&&u<2.6?1:0);
+  R.b.position.z+=R.Lz*.09*nud;if(m.head)m.head.rotation.x+=.35*nud;R.hind.forEach(l=>{l.g.rotation.x+=.18*nud;});R.front.forEach(l=>{l.g.rotation.x+=-.12*nud;});
+  wag(R,(K.wag+.2)*up,K.wagF+1,t);ears(R,-.2*up);return {};}
+/* VERY HAPPY — two big jumps, the second with a spin. 2.4 s loop. Favourite food plays this as the happy dance */
+function veryHappy(m,t,o){const R=rig(m),K=kindOf(R);const u=clock(t,2.4)*2.4;let lift=0;
+  if(R.kind==='snake')return snakeLook(m,t,Object.assign({},o,{happy:1}));
+  for(const [a,b,spin] of[[.15,.95,0],[1.25,2.15,1]]){const v=(u-a)/(b-a);if(v>0&&v<1){lift=arc(u,a,b,R.H*.42);airLegs(R,v);if(spin)rotAbout(R,'y',TAU*ease(v),0,0,R.bCenter.z);}
+    const c=bell(u,a-.15,a)+bell(u,b,b+.15);if(c>0){squash(R,c);R.legs.forEach(l=>{l.g.rotation.x+=(l.front?.15:-.15)*c;});}}
+  moodOverlay(R,t,'happy');if(R.kind==='seal')sealClapPose(R,bell(u,0,2.4));return {lift};}
+/* favourite food: the very-happy move as a short dance (wiggle, two little hops). 2 s */
+function happyDance(m,t,o){const R=rig(m),K=kindOf(R);const u=clock(t,2)*2;let lift=0;
+  rotAbout(R,'y',.45*Math.sin(TAU*u),0,0,R.bCenter.z);rotAbout(R,'z',.08*Math.sin(TAU*2*u),0,R.bCenter.y,R.bCenter.z);
+  for(const [a,b] of[[.3,.75],[1.25,1.7]]){const v=(u-a)/(b-a);if(v>0&&v<1){lift=arc(u,a,b,R.H*.22);airLegs(R,v*.7);}}
+  if(R.kind==='seal')sealClapPose(R,bell(u,0,2));moodOverlay(R,t,'happy');return {lift,done:t>=2};}
+/* SAD (standing): head and tail low, ears down, a slow sigh. Walking sad: pet.walk with mood:'sad' (half-speed legs) */
+function petSad(m,t,o){const R=rig(m);if(R.kind==='snake'){snakeIdle(m,t,o);headDown(R,.2);return {};}
+  const sigh=bell(clock(t,4),.3,.7);breathe(R,t,4,.02*sigh+.006);moodOverlay(R,t,'sad');headDown(R,.1*sigh);return {};}
+/* SICK: droops lower, slow walk (pet.walk mood:'sick'), lies down a lot, sneezes */
+function sickLie(m,t,o){const R=rig(m);if(R.kind==='snake'){const r=snakeCoil(m,99,o);headDown(R,.25);return r;}
+  const k=seg(t,0,.8);lieDown(R,k);headDown(R,.35+.25*k);tailUp(R,-.5-.3*k);ears(R,.45);breathe(R,t,3.4,.02*k);
+  const sn=clock(t,6)*6;if(sn>4.6&&sn<5.8)sneezeHead(R,(sn-4.6)/1.2,.7);return {};}
+/* sneeze: head pulls back and up, snaps down, a little shake. 1.2 s. o.sick: drooped between sneezes */
+function sneezeHead(R,u,amt){const m=R.m;const up=bell(u,0,.42),snap=bell(u,.4,.62),shake=bell(u,.62,1);
+  if(m.head){m.head.rotation.x+=(-.4*up+.55*snap)*amt;m.head.rotation.y+=.3*shake*Math.sin(TAU*4*u)*amt;}
+  if(m.neck)m.neck.rotation.x+=(-.15*up+.2*snap)*amt;R.b.position.z+=-R.Lz*.04*snap*amt;ears(R,.3*snap*amt);}
+function sneeze(m,t,o){const R=rig(m);o=o||{};const u=cl(t/1.2);if(o.sick)moodOverlay(R,t,'sick');sneezeHead(R,u,1);if(R.front.length)R.front.forEach(l=>{l.g.rotation.x+=-.1*bell(u,.4,.62);});return {done:t>=1.2};}
+/* warning sneeze: a healthy pet sneezes now and then before it gets sick (healthy look, a head shake after) */
+function warnSneeze(m,t,o){const R=rig(m),K=kindOf(R);sneezeHead(R,cl(t/1.2),1.2);wag(R,K.wag*.5,K.wagF,t);return {done:t>=1.4};}
+/* NAP / SLEEP: turns once in its spot, lies down, curls (head round to the side, tail wrapped), slow breathing. 2.4 s, then sleeps (loops breathing) */
+function petNap(m,t,o){const R=rig(m),K=kindOf(R);if(R.kind==='snake')return snakeCoil(m,t,o);
+  const turn=seg(t,0,1.2),lie=seg(t,1.2,2.2);
+  if(turn<1){rotAbout(R,'y',TAU*turn,0,0,R.bCenter.z);gaitLegs(R,t*K.f*.8,K.A*.5,1-lie,'walk');}
+  if(lie>0){lieDown(R,lie);headDown(R,.2*lie);if(m.head)m.head.rotation.y+=.65*lie;const tl=m.tail;if(tl){tl.rotation.y+=.9*lie;tailUp(R,-.6*lie);}ears(R,.3*lie);}
+  if(t>2.2)breathe(R,t,3,.02);return {hold:true,sleeping:t>2.2};}
+/* seal (sealNew preview, the new flippers: m.legs = front flippers turning at the shoulder, m.rear = back flippers on the tail).
+   galumph on land: bunches up, the front flippers push, the back flippers lift; the body surges forward on the push. o.dist like a walk */
+function sealGalumph(m,t,o){const R=rig(m);o=o||{};const s=(R.root.scale&&R.root.scale.y)||1;const len=R.Lz*s*.27;const c=o.dist!=null?o.dist/len:t*.5;const u=frac(c);
+  const bunch=Math.sin(PI*cl(u/.45)),push=Math.sin(PI*cl((u-.45)/.55));
+  R.b.rotation.x+=.13*bunch-.1*push;if(m.head)m.head.rotation.x+=-.12*bunch+.12*push;
+  (m.legs||[]).forEach(l=>{l.rotation.x+=u<.45?-.55*ease(u/.45)+.7*(1-ease(u/.45)):-.55+1.25*ease(cl((u-.45)/.5));l.rotation.z+=Math.sign(l.position.x)*.1*push;});
+  if(m.tail)m.tail.rotation.x+=.38*bunch-.08*push;(m.rear||[]).forEach((r,i)=>{r.rotation.y+=(i?1:-1)*(.15+.25*bunch);r.rotation.x+=-.2*bunch;});
+  if(o.dist!=null){const de=len*(Math.floor(c)+ease(cl((u-.4)/.55)));R.b.position.z+=(de-o.dist)/s;}   /* surge: ahead or behind the game's even motion by under one push */
+  return {};}
+/* front flipper turns solved once: 'open' (out to the side, raised) and 'clapped' (the paddles meet in front of the chest) */
+function sealFits(R){if(R.cache.sealFit)return R.cache.sealFit;const m=R.m,e=new THREE.Euler(),v=new THREE.Vector3();
+  const fit=(l,T)=>{const sd=Math.sign(l.position.x),tip=new THREE.Vector3(sd*.2,-.1,.03);let best=[0,0,0,1e9];
+    for(let x=-2.4;x<=.4;x+=.08)for(let y=-1.2;y<=1.2;y+=.08)for(let z=-1.6;z<=1.6;z+=.08){e.set(x,y,z);v.copy(tip).applyEuler(e).add(l.position);const d=v.distanceTo(T);if(d<best[3])best=[x,y,z,d];}return best;};
+  const L=m.legs||[];return R.cache.sealFit={clap:L.map(l=>fit(l,new THREE.Vector3(Math.sign(l.position.x)*.035,.24,.36))),open:L.map(l=>fit(l,new THREE.Vector3(Math.sign(l.position.x)*.36,.22,.2)))};}
+/* clap: k = how far into the clap pose (0 rest .. 1), c = 0 open .. 1 paddles together */
+function sealClapPose(R,k,c){const F=sealFits(R);(R.m.legs||[]).forEach((l,i)=>{const o=F.clap[i],w=F.open[i];const q=c==null?Math.abs(Math.sin(TAU*3*k)):c;
+  l.rotation.x+=(w[0]+(o[0]-w[0])*q)*k;l.rotation.y+=(w[1]+(o[1]-w[1])*q)*k;l.rotation.z+=(w[2]+(o[2]-w[2])*q)*k;});}
+/* snake (segs[] are separate pieces along the body: positions only) — slither: an S-wave runs down the body. o.dist like a walk */
+function snakeWave(R,ph,A,env0){const m=R.m,S=m.segs||[];const k=.42;const xs=[];
+  S.forEach((g,i)=>{const r=R.rest.get(g);const e=env0+(1-env0)*cl(i/6);const x=A*e*Math.sin(i*k-TAU*ph);g.position.x=x;xs.push(x);});
+  S.forEach((g,i)=>{const a=xs[Math.max(0,i-1)],b=xs[Math.min(S.length-1,i+1)];g.rotation.y=Math.atan2(a-b,.11);});
+  if(m.head&&S.length){m.head.position.x=xs[0]*1.1;m.head.rotation.y=Math.atan2(xs[0]-xs[1],.055)*.7;}}
+function snakeSlither(m,t,o){const R=rig(m);o=o||{};const lam=(TAU/.42)*.055*((R.root.scale&&R.root.scale.y)||1);const ph=o.dist!=null?o.dist/lam:t*kindOf(R).f;snakeWave(R,ph,.1,.35);return {};}
+function snakeIdle(m,t,o){const R=rig(m);snakeWave(R,t*.15,.08,.4);if(m.head)m.head.rotation.y+=.25*Math.sin(TAU*t*.2);return {};}
+/* snake: coils up (under the tank light) — the body winds into a spiral, head rests on top. 1.5 s in, then holds */
+function snakeCoil(m,t,o){const R=rig(m),S=m.segs||[];const k=seg(t,0,1.5);if(!S.length)return {};
+  let r=.035,a=0;const pos=[];for(let i=0;i<S.length;i++){pos.push([Math.cos(a)*r,Math.sin(a)*r,i]);const dr=.055;a+=dr/Math.max(r,.04);r=Math.min(.2,r+.055*dr/(TAU*Math.max(r,.04))*1.6);}
+  const n=S.length;S.forEach((g,i)=>{const rs=R.rest.get(g);const q=pos[i];   /* seg 0 (head end) in the middle, the tail outside */
+    const tx=q[0],tz=q[1],ty=rs.p.y+Math.max(0,.05*(1-Math.hypot(tx,tz)/.2))*1.4;g.position.set(rs.p.x+(tx-rs.p.x)*k,rs.p.y+(ty-rs.p.y)*k,rs.p.z+(tz-rs.p.z)*k);
+    const nx=pos[Math.min(n-1,i+1)];g.rotation.y=k*Math.atan2(q[0]-nx[0],q[1]-nx[1]);});
+  if(m.head){const rs=R.rest.get(m.head);m.head.position.set(rs.p.x+(-.0-rs.p.x)*k,rs.p.y+(.12-rs.p.y)*k,rs.p.z+(.0-rs.p.z)*k);m.head.rotation.x+=.15*k;}
+  breathe(R,t,3.2,.01*k);return {hold:true};}
+/* snake: lifts its head to look at you (attention, curious). o.happy: a little bounce */
+function snakeLook(m,t,o){const R=rig(m),S=m.segs||[];const k=seg(clock(t,3)*3,0,.5);snakeWave(R,t*.1,.05,.4);
+  for(let i=0;i<Math.min(8,S.length);i++){S[i].position.y+=(.2*(1-i/8))*k;}if(m.head){m.head.position.y+=.24*k+(o&&o.happy?.03*Math.abs(Math.sin(TAU*2*t)):0);m.head.rotation.x+=-.25*k;m.head.rotation.y+=.3*Math.sin(TAU*t*.4)*k;}return {};}
+/* chicken walk: the head holds still in the air, then jerks forward; legs step and bend at the hock */
+function chickenWalk(m,t,o){const R=rig(m),K=KIND.chicken;o=o||{};const A=K.A*(o.amp||1);const ph=phaseOf(R,t,o,A);gaitLegs(R,ph,A,1,'walk',K.knee);
+  const half=frac(ph*2);const sc=(R.root.scale&&R.root.scale.y)||1;const step=stride(m,A)/2/sc;const hold=.7;const bob=Math.min(.06,step*hold*.9);
+  const off=half<hold?bob*(.5-half/hold):bob*(-.5+(half-hold)/(1-hold));
+  if(m.neck)m.neck.position.z+=off;else if(m.head)m.head.position.z+=off;rotAbout(R,'z',.06*Math.sin(TAU*ph),0,R.bCenter.y,0);if(m.tail)m.tail.rotation.x+=.1*Math.sin(TAU*2*ph);return {};}
+/* tilt the body to a slope and put it on the sloped floor (o.slope = {pitch, roll}: + pitch = the ground rises ahead, + roll = it rises to the model's left (+x)) */
+function slopeGround(R,sl){const T=R.top||R.b;const p=sl.pitch||0,r=sl.roll||0;const c=R.center;
+  _q.setFromEuler(new THREE.Euler(-p,0,r,'XYZ'));T.position.sub(c).applyQuaternion(_q).add(c);T.quaternion.premultiply(_q);
+  R.root.updateMatrixWorld(true);_inv.copy(R.root.matrixWorld).invert();const tp=Math.tan(p),tr=Math.tan(r);let mn=Infinity;
+  T.traverse(o=>{if(!o.visible||!o.isMesh||o.userData.noGround||!o.geometry)return;const pa=o.geometry.attributes.position;if(!pa)return;_m.multiplyMatrices(_inv,o.matrixWorld);const st=pa.count>400?2:1;
+    for(let i=0;i<pa.count;i+=st){_v.fromBufferAttribute(pa,i).applyMatrix4(_m);const d=_v.y-_v.z*tp-_v.x*tr;if(d<mn)mn=d;}});if(isFinite(mn))T.position.y-=mn;}
+function sitPivot(R){const zs=R.legs.map(l=>l.g.position.z);const hind=R.hind[0]||R.legs[0];return {y:hind?hind.g.position.y:R.bCenter.y,z:zs.length?Math.min(...zs):0};}
+/* pet.takeFood: food from your hand — leans up to the hand, takes it, chews, steps back. 2 s, then the game plays pet.happyDance (favourite) */
+function takeFood(m,t,o){const R=rig(m),K=kindOf(R);const ln=bell(t,0,1.3);if(m.head)m.head.rotation.x+=-.18*ln;R.b.position.z+=R.Lz*.06*ln;
+  const chew=t>.6&&t<1.6?.08*Math.abs(Math.sin(TAU*3*t)):0;headDown(R,chew,.3);wag(R,K.wag*1.3+.2,K.wagF+2,t);return {done:t>=2};}
+const M={
+ 'pet.idle':[petIdle,0],
+ 'pet.walk':[petWalk,0],
+ 'pet.sad':[petSad,0],
+ 'pet.unhappyBowl':[unhappyBowl,4],
+ 'pet.unhappyPlay':[unhappyPlay,0],
+ 'pet.unhappyNap':[unhappyNap,4],
+ 'pet.unhappyNudge':[unhappyNudge,0],
+ 'pet.veryHappy':[veryHappy,0],
+ 'pet.happyDance':[happyDance,2],
+ 'pet.sickWalk':[(m,t,o)=>petWalk(m,t,Object.assign({},o,{mood:'sick'})),0],
+ 'pet.sickLie':[sickLie,0],
+ 'pet.sneeze':[sneeze,1.2],
+ 'pet.warnSneeze':[warnSneeze,1.4],
+ 'pet.nap':[petNap,0],
+ 'pet.takeFood':[takeFood,2]
+};
+function play(m,name,t,o){o=o||{};const R=rig(m,o.kind?{kind:o.kind}:null);reset(m);const e=M[name]||M[R.kind==='person'?'person.idle':'pet.idle'];
+  let r;try{r=e[0](m,Math.max(0,t),o)||{};}catch(err){if(!R.warned){R.warned=1;console.warn('COZY_MOVES',name,err);}reset(m);r={};}
+  if(!r.noGround&&!o.noGround){if(o.slope)slopeGround(R,o.slope);else ground(m,o);}if(r.lift)(R.top||R.b).position.y+=r.lift;
+  r.name=name;if(e[1]&&t>=e[1])r.done=true;return r;}
+window.COZY_MOVES={version:'2026-10-31d (pets: the moves the game uses)',play,list:Object.keys(M),KIND};
+})();

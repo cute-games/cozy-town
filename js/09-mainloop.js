@@ -669,7 +669,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     {if(clockSync()){newDay();change();}   /* 🕰️ the one clock (run 4, job 1): the time and the day come from the real time, the same for everyone */
       S.hunger=Math.max(0,S.hunger-dt/HOUR*4);if(S.hunger<20&&!hungryWarn){hungryWarn=true;toast('Your tummy is rumbling! Eat something from your 🎒 bag.',4);}if(S.hunger>30)hungryWarn=false;}
     updatePlayer(dt);tpTick(dt);   /* 🌲 the Tree Park's floor physics (run 4, job 16) */
-    fanTick(dt);let fi=0;for(const f of FRIEND_ACTORS)f.update(dt,f.mode==='follow'?fi++:0);PET_ACTORS.forEach((p,i)=>p.update(dt,fi+i+(fi?0:1)));tagsApart([...FRIEND_ACTORS,...PET_ACTORS].filter(f=>f.g.visible&&f.loc===CUR.id&&f.tag).map(f=>({tag:f.tag,bub:f.bub||null})));   /* (run 4 finish: your pets' tags too; indoors three of them piled up) */
+    fanTick(dt);let fi=0;for(const f of FRIEND_ACTORS)f.update(dt,f.mode==='follow'?fi++:0);PET_ACTORS.forEach((p,i)=>p.update(dt,fi+i+(fi?0:1)));petTick(dt);tagsApart([...FRIEND_ACTORS,...PET_ACTORS].filter(f=>f.g.visible&&f.loc===CUR.id&&f.tag).map(f=>({tag:f.tag,bub:f.bub||null})));   /* (run 4 finish: your pets' tags too; indoors three of them piled up) */
     if(CUR.id==='pets')updatePen(dt);
     if(CUR.id==='toys'&&CUR.train){const T=CUR.train;T.userData.t=(T.userData.t||0)+dt*.9;T.children.forEach((c,i)=>{const a=T.userData.t-i*.32;c.position.set(Math.cos(a)*.88,0,Math.sin(a)*.55);c.rotation.y=Math.atan2(-Math.sin(a)*.88,Math.cos(a)*.55);});}
     wkStat();for(const w of WALKERS)w.update(dt);walkersApart(dt);granTick(dt);   /* 🚶 townspeople give way to each other and walk round people who stand or sit about */

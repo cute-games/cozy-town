@@ -240,8 +240,8 @@ function openShow(){if(!S)return;
   if(S.time<PS_ON){SFX.talk();toast(`🏆 The Pet Show starts at ${PS_ON}:00! The judges are on their way. Dress up your pet! 🎀`,4.6);return;}
   if(S.time>=PS_OFF){SFX.talk();toast(`🏆 Today's Pet Show is over (${clockStr(PS_ON)} to ${clockStr(PS_OFF)}). The next one is next Saturday!`,4.6);return;}
   if(!S.pets.length){SFX.no();toast('You need a pet for the Pet Show! Adopt one at the 🐾 Pet Shop.',4);return;}
-  const here=PET_ACTORS.filter(p=>p.loc==='city'&&Math.hypot(p.x-P.x,p.z-P.z)<18);
-  if(!here.length){SFX.no();toast('Bring a pet to the park! Tip: ⚙️ Settings → 🐾 Bring my pets to me',4.8);return;}
+  const near=PET_ACTORS.filter(p=>p.loc==='city'&&Math.hypot(p.x-P.x,p.z-P.z)<18),here=near.filter(p=>!p.d.sick);   /* 🩺 no Pet Show while sick (stage 2) */
+  if(!here.length){SFX.no();toast(near.length?`🩺 ${near[0].d.name} doesn't feel well. Get well at the vet first!`:'Bring a pet to the park! Tip: ⚙️ Settings → 🐾 Bring my pets to me',4.8);return;}
   if(PSX.dirty||!PSX.rivals.length)psRefresh();
   SFX.yay();PSX.pick=here;const rv=PSX.rv||[];if(!PSX.pc)PSX.pc=()=>{};
   openPanel(`<div class="hd"><h2>🏆 Pet Show!</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>

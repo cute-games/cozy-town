@@ -222,6 +222,7 @@ const SFX={
   aww(){tone(587,.16,'sine',.08,0,466);tone(466,.24,'sine',.07,.15,392);},
   ring(){for(let k=0;k<2;k++)for(let i=0;i<8;i++)tone(i%2?1047:1319,.06,'triangle',.11,k*.75+i*.07);},
   boo(){tone(190,.34,'sine',.11,0,95);tone(760,.14,'triangle',.035,.04,260);},   /* 👻 a soft, friendly BOO */
+  sneeze(){tone(700,.16,'sine',.07,0,1150);tone(1500,.1,'square',.045,.22,450);for(let i=0;i<4;i++)tone(2500+Math.random()*1500,.04,'sawtooth',.012,.24+i*.03);},   /* 🤧 a pet that will soon get sick (the book's sounds page, as given) */
   spook(k){if(k==='skel'){for(let i=0;i<4;i++)tone(1400+i*120,.03,'triangle',.05,i*.07);}else if(k==='zombie')tone(120,.5,'sine',.1,0,88);else if(k==='bats'){for(let i=0;i<6;i++)tone(900+(i%2)*200,.025,'square',.018,i*.06);}else if(k==='pumpkin'){tone(240,.4,'sine',.09,0,180);tone(480,.12,'triangle',.03,.1,360);}else this.boo();},   /* 👻💀🧟🦇🎃 soft scare sounds (run 4): quiet and short */
 };
 function playTune(){const s=[0,4,7,12,7,4,5,9,12,9,7,4,0];s.forEach((n,i)=>tone(523.25*Math.pow(2,n/12),.3,'triangle',.13,i*.2));}
