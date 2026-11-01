@@ -14,10 +14,10 @@
   pots/owned things drawn, training gear (10 pieces at Ms. Paws, pets play on it), friends see your yard (presence `yd`). Kit lines P12-P16; P10 and N33 rewritten.
   Joined game 1,663,820 -> 1,702,559 bytes (+38,739: moves +10.6 KB, gear models 9.4 KB, code). Quick kit 66 of 66 PASS (N3 failed once on timing in the
   full run, the night3 stage run again alone: all PASS; N3 alone 3 of 3) `tools/pfu-wip/quick-kit-stage3.log`; check_split S1-S4 PASS.
-- **Stage 4 done in part** (stamp 2026110102, commit see git log): vet station (outside at Map x 14.2 z -77.2, 2 floors inside, Penny/Rūta/Leo/Tomas, the visit), sickness ON,
+- **Stage 4 done in part** (stamp 2026110102, commit 2699548): vet station (outside at Map x 14.2 z -77.2, 2 floors inside, Penny/Rūta/Leo/Tomas, the visit), sickness ON,
   big-needs pets locked at a Ms. Paws board. Kit P17-P18; rewritten (old -> new): P6 (sickness off until the clinic -> on with the station in, switch still
   proven both ways), P1 (new pet field sad exactly 0 -> under 0.1 minute: it starts counting at once), B1 (pets' sad compared exactly -> like happiness, only 'still there'). Joined game 1,702,559 -> 1,733,495 bytes (+30,936). NOT in (size): the big pets' models,
-  homes and gear, wait-outside, new 3-floor Pet Shop, today's pets redrawn. Quick kit: `tools/pfu-wip/quick-kit-stage4.log`.
+  homes and gear, wait-outside, new 3-floor Pet Shop, today's pets redrawn. Quick kit 68 of 68 PASS (`tools/pfu-wip/quick-kit-stage4.log`); check_split S1-S4 PASS.
 - **Next: stage 5** (`kit/entries/plan-brief-pfu-5.json`: Pet Show with friends, license, tricks). Size left: about 66 KB for stages 5 and 6.
 
 ## Read first (each stage)
