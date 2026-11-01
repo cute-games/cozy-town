@@ -34,7 +34,7 @@
   the clinic, without the park's west part where the approved Pet Show area stands). Joined game 1,973,272 -> 2,049,426 bytes (+76 KB: moves +35 KB, show models, code).
   Quick kit 79 of 80 PASS, only P19 FAIL (no GPU) (`tools/pfu-wip/quick-kit-stage5.log`); check_split S1-S4 PASS. **P25 is borderline**: fps medians 3.8 vs 4.2 = 90%
   (one earlier run 82%, fps swing up to 30% here); the CPU side of a frame is 136-151% of live main's (the whole update, stages 1-5): worth a look in stage 6.
-- **Stage 6 done** (stamp 2026110202, commit see git log): the farm, horse trail and jump field from the Map plan (pfu-placements 1:1: 548 things, 64 forest trees
+- **Stage 6 done** (stamp 2026110202, commit 3ed56af): the farm, horse trail and jump field from the Map plan (pfu-placements 1:1: 548 things, 64 forest trees
   taken out/3 moved, hills stepped back), farm animals (baby/adult), 10 shared horses, Ieva (stable) and Stan (jump field), Cody/Hank/Rose on the trail (the clock), riding
   (Stan's 5-step lesson 100 once, free rides after, 7:00-21:00, stops at the town edge, get off at the stable, pets wait there), eggs and milk once a game day, Market sells
   them (10 each), free feed bucket, petting, friends see you ride (presence `rd`), the farm on the map. Kit P31-P35; rewritten (old -> new): P17 (see stage 6 notes).
