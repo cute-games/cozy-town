@@ -207,7 +207,7 @@ function buildPetShow(){
     const n=signPlane(['1','2','3'][i],.34,Math.min(.3,h*.85),c,'#3d2c5e');n.position.set(.375,h*.5,0);n.rotation.y=Math.PI/2;b.add(n);});}
 /* today's three other pets (the same all day, so they're there before the show starts) */
 function psRivals(){const r=seeded(S.day*53+7),pk=a=>a[Math.floor(r()*a.length)],wp=w=>{let x=r()*w.reduce((a,b)=>a+b[0],0);for(const [p,v] of w){x-=p;if(x<=0)return v;}return w[w.length-1][1];};
-  const types=Object.keys(PET_TYPES).sort(()=>r()-.5),kids=PS_KIDS.slice().sort(()=>r()-.5),out=[],used=new Set();
+  const types=Object.keys(PET_TYPES).filter(k=>!PET_TYPES[k].big).sort(()=>r()-.5),kids=PS_KIDS.slice().sort(()=>r()-.5),out=[],used=new Set();
   for(let i=0;i<3;i++){const t=types[i%types.length],T=PET_TYPES[t];let name=pk(T.names);for(let k=0;used.has(name)&&k<8;k++)name=pk(T.names);used.add(name);
     const o={},n=wp([[5,1],[20,2],[35,3],[40,4]]),slots=PSLOTS.map(x=>x[0]).sort(()=>r()-.5).slice(0,n);
     for(const sl of slots)o[sl]=pk(Object.keys(ACCS).filter(k=>ACCS[k].s===sl));

@@ -1,4 +1,4 @@
-# HANDOFF — read this first (one page; updated 1 Nov 2026, Pets and Farm Update stage 4)
+# HANDOFF — read this first (one page; updated 1 Nov 2026, Pets and Farm Update stage 4b)
 
 ## Where things stand
 - Live: `main` = a47bb1a (pet update 1, stamp 2026102902). Backups: `backup-2026-10-31` and `backup-2026-11-01` = main a47bb1a (A2 wants today's date).
@@ -18,7 +18,13 @@
   big-needs pets locked at a Ms. Paws board. Kit P17-P18; rewritten (old -> new): P6 (sickness off until the clinic -> on with the station in, switch still
   proven both ways), P1 (new pet field sad exactly 0 -> under 0.1 minute: it starts counting at once), B1 (pets' sad compared exactly -> like happiness, only 'still there'). Joined game 1,702,559 -> 1,733,495 bytes (+30,936). NOT in (size): the big pets' models,
   homes and gear, wait-outside, new 3-floor Pet Shop, today's pets redrawn. Quick kit 68 of 68 PASS (`tools/pfu-wip/quick-kit-stage4.log`); check_split S1-S4 PASS.
-- **Next: stage 5** (`kit/entries/plan-brief-pfu-5.json`: Pet Show with friends, license, tricks). Size left: about 66 KB for stages 5 and 6.
+- **Stage 4b done** (stamp 2026110103, commit see below): what stage 4 left out. Size limit now 3.0 MB + speed guard (owner's OK 1 Nov; CLAUDE.md, kit N14/N40, new P19).
+  Big-needs pets (monkey 8 looks, seal 4, bear 6, snake 4) from the book's picked models, adoption when bigLock is null (400), homes (jungle tree 400, pond 700, den 700 in the
+  big-pets area; snake glass tank 400 = furniture with light on/off + 8 colours), big-pet gear (5 pieces), bear/seal wait outside (not at the vet), big-pet platform at the vet,
+  the new 3-floor Pet Shop (one room, real stairs), today's pets redrawn (new pug, real capybara, pomchi tail, duck/owl wing joints). Joined game 1,733,495 -> 1,973,272 bytes (pack models as data ~190 KB, moves +35 KB).
+  Quick kit 70 of 74 PASS (`tools/pfu-wip/quick-kit-stage4b.log`); check_split S1-S4 PASS. FAIL: E1, N14, N40 only on the Pet Shop's triangles 15,363 -> 40,544
+  (the approved 3-floor room; pieces 14 -> 13): needs Karolis's OK as `--e1-limits pets:...`; P19 3.7 fps in the software-drawn test browser (live 3.5): measure on a real iPad.
+- **Next: stage 5** (`kit/entries/plan-brief-pfu-5.json`: Pet Show with friends, license, tricks). Size left: about 1 MB (limit 3.0 MB).
 
 ## Read first (each stage)
 1. `CLAUDE.md`, this file. 2. The run doc `kit/kits/pfu-night-run.json` (field `text`; its Guards and Corrections hold). 3. Your brief
@@ -80,7 +86,21 @@
   bigHome read them, adopt when bigLock is null, and the wait-outside rule (bear, seal). PET_TOY already has their favourite toys.
 - Kit: P17 compares the town's trees outside the clinic with `tools/kit-v7/pfu-trees-stage3.json` (stage-3 build; zipped by make_v7.py).
 
+## Stage 4b notes the next stages need
+- Pack models as data: `PACKM` (end of js/01-models.js) made by `node tools/pfu-wip/export-pack.js <three-r128.min.js> > x.js; python3 tools/pfu-wip/put-packm.py x.js`
+  (the book's packs in kit/files/tools, kept versions). `packBuild(key)` draws one with the game's shapes; `makePet` uses it for monkey/seal/bear/snake/pug/capybara
+  (`PACKM.cols`; monkey/bear kinds = fur colour). Add a model: a line in export-pack.js's OUT list, rerun both commands. Moves: extract-moves.py with EXTRA=stairH,tankPath.
+- New Pet Shop (js/02-world.js `PSH`, `psSupport`, `psFl`, `buildPetShop`; js/09-mainloop.js `psTick`): floors at 0 / 3.34 / 6.54, P.cy = your height, pets `e.cy`;
+  colliders with `.fl` collide only on that floor (`CFL` in collideXZ); targets/inter use `when:()=>psFl(P.cy)===fl`. Pens: `L.pens` with fl, y, hill, face, mv (big pets).
+- Big pets: PET_TYPES rows have `big:1`; `BHOME` (homes, yard frame), `S.yard.home` (list, made on first purchase), presence yd + T/P/D letters; `bigHome`, `bigRest`
+  (pets at home rest at their home), `snakeTank`/`snakeTankPose` (snake at home lives in the tank), `petWaitOut` (e.wo), `vetBigStaff`. Toy moves `TOY_MV` (not sent online).
+  GEAR ids appended: monkey, monkey2, seal, bear, snake (letters k-o). Psrivals (Pet Show) leave big pets out (same draw as old versions).
+- Kit rewrites (old -> new): N14/N40 size, B1 sad within 0.1, P10 (real-shape lowest point; big-pet/toy moves on their kind), P15 (15 gear pieces), N28 (the new shop).
+
 ## Open / not verified
+- Stage 4b NOT VERIFIED (by eye/real device): big pets walking/playing and their gear moves, the bear/seal waiting pose, the vet platform view, the snake in its tank,
+  the shop's stairs on an iPad (camera, feel), the tank card on a phone, friends see your floor in the shop (presence has no height: a friend upstairs is drawn on floor 1),
+  capybara faces (only the 'real' face is used), sounds (monkey, seal, bear, hiss, click). An old version (main) cannot place a saved glass tank (unknown furniture).
 - Stage 4: pictures looked at: clinic from the road, lobby, upstairs, a dog on the exam table (all look right). NOT VERIFIED: friends seeing the visit (the pet on the
   table is drawn only for you), phone/dark mode/iPad layout of the new cards, the clinic at night, sounds, the toast queue on a real device. A town tree on the
   pavement stands 0.8 m from the clinic's door path (x 4.75, z -78; walkable). Big-pet platform used only by bear/seal (none can be owned yet).

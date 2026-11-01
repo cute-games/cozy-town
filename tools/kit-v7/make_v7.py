@@ -40,16 +40,24 @@ def fix_readme(s):
                 'Added 1 Nov 2026 (stage 4): P17 the vet station and the visit, P18 big-needs pets locked at Ms. Paws; P6 rewritten (old: sickness switched off\n'
                 'until the vet clinic; new: switched on with the vet station in, the switch still proven both ways). Fixture save-pfu4-stage4.json,\n'
                 'P17 reference pfu-trees-stage3.json. B1 rewritten (old: a pet\'s sickness timer "sad" compared exactly; new: like happiness, only\n'
-                'as still there, because it moves while you play now that sickness is on).\n')
+                'as still there, because it moves while you play now that sickness is on).\n'
+                'Added 1 Nov 2026 (stage 4b, owner\'s OK 1 Nov): size limit N14/N40 old -> new: index.html under 1.8 MB -> the joined game up to 3.0 MB, with the speed\n'
+                'guard P19 (30+ fps on an iPad-sized view with 2 players, first load measured). P20 big-needs pets, P21 their homes and the snake tank, P22 waiting\n'
+                'outside and the big-pet platform, P23 the new 3-floor Pet Shop, P24 today\'s pets redrawn. Rewritten (old -> new): B1 (sad only still there -> still\n'
+                'there and within 0.1), P15 (10 gear pieces -> 15), P18 (board upstairs: old shop floor 2 -> top floor of the new shop), N28 (2 floors with 7 fenced areas -> one room with 3 floors and a spot per kind). Fixture save-pfu4b-*.json.\n')
 def fix_checks(s):
     # B1 (1 Nov 2026, pets and farm update stage 4): sickness is switched on now, so a pet's sickness timer (pets.N.sad: minutes played at 0-1 hearts)
     # moves on every frame played, like happiness, and two loads a few frames apart differ in the third decimal (save-pfu2-stage2.json: 12.5 -> 12.513).
     # Old: compared exactly. New: compared like happiness, only as 'still there'. Everything else is compared as before.
+    # B1 again (1 Nov 2026, stage 4b, the owner's ask): old (stage 4): 'sad' only as 'still there'; new: still there AND within 0.1 (minutes) of the saved value,
+    # the same small tolerance P1 uses for a new pet's sad (it starts counting at once)
     return rep(s, "            if path.startswith('pets.') and path.count('.') == 2 and k == 'happy': continue\n",
                "            if path.startswith('pets.') and path.count('.') == 2 and k == 'happy': continue\n"
                "            # 1 Nov 2026 (kit v7, pets and farm update stage 4): the sickness timer 'sad' drifts like happiness now that sickness is on: compared only as 'still there'\n"
                "            if path.startswith('pets.') and path.count('.') == 2 and k == 'sad':\n"
                "                if k not in b: out.append(f'{path}{k}: missing')\n"
+               "                # 1 Nov 2026 (stage 4b, the owner's ask): the value is compared too, with a small tolerance like P1's (0.1 minute): two loads a few frames apart\n"
+               "                elif not isinstance(b[k], (int, float)) or not isinstance(v, (int, float)) or abs(b[k] - v) > 0.1: out.append(f'{path}{k}: {v} -> {b[k]} (more than 0.1 apart)')\n"
                "                continue\n")
 NIGHT3 = 'tools/prerun4-index.html'   # the night-3 game (md5 709bf763), the live file of run 4: it does not know costumes
 def fix_run4(s):
@@ -112,6 +120,23 @@ N9_OLD = [("        shut = await g.ev(\"\"\"()=>{__setClock(null,21);", "       
            "        det.append(f\"truck: tap buy burger {tp}, you have {have}; at 21:00: card opens {late['open']}, bought {late['bought']}; at 23:30: card opens {shut['open']}, bought {shut['bought']} ({shut['toast'][:40]!r})\")\n"),
           ("        if shut['bought']: probs.append('the truck sold food after 20:00')\n",
            "        if not late['bought']: probs.append('the truck did not sell food at 21:00 (open 7:00-23:00 since pet update 1)')\n        if shut['bought']: probs.append('the truck sold food after 23:00')\n")]
+def fix_size(s):
+    # N14 (1 Nov 2026, the owner's OK, Pets and Farm Update stage 4b): the size limit. Old: index.html (the joined game) under 1.8 MB. New: the joined game
+    # up to 3.0 MB (3,000,000 bytes); the speed guard that goes with it is the new line P19 (30+ fps on an iPad-sized view with 2 players, first load measured).
+    s = rep(s, "    if size >= 1.8e6: probs.append('index.html is 1.8 MB or more')\n", "    if size > 3.0e6: probs.append('the joined game is over 3.0 MB (limit since 1 Nov: 3.0 MB, owner\\'s OK; speed guard: P19)')\n")
+    return rep(s, "a new area at most the beach\\'s size), measured against the starting file; index.html under 1.8 MB',", "a new area at most the beach\\'s size), measured against the starting file; the joined game up to 3.0 MB (owner\\'s OK 1 Nov; was under 1.8 MB; speed guard P19)',")
+def fix_n40(s):
+    # N40 (1 Nov 2026, as N14): old: index.html under 1.8 MB; new: the joined game up to 3.0 MB (it runs N14's own code)
+    return rep(s, "others 10%); index.html under 1.8 MB'", "others 10%); the joined game up to 3.0 MB (owner\\'s OK 1 Nov; was under 1.8 MB; speed guard P19)'")
+def fix_n28(s):
+    # N28 (1 Nov 2026, Pets and Farm Update stage 4b, the owner's approved new Pet Shop: one room, 3 open floors, a cozy spot per kind, no pens).
+    # Old: 2 floors, 7 fenced areas upstairs, each kind in its own area, shelves downstairs, the stairs (a fade), adopting a pug. New: tools/kit-v7/n28_new.py.
+    i = s.index('async def n28(run, new_wb, FIX):')
+    if s.count('async def n28(run, new_wb, FIX):') != 1: sys.exit('STOP: N28 not found exactly once')
+    return s[:i] + open('tools/kit-v7/n28_new.py', encoding='utf-8').read()
+def fix_n28_title(s):
+    return rep(s, "('N28', 'Pet shop: two floors; each kind in its own area upstairs, no kind in another\\'s area; clothes and snacks on shelves downstairs; adopting and buying still work'",
+               "('N28', 'Pet shop (rewritten 1 Nov, stage 4b: the new shop): 3 open floors in one room; each kind at its own cozy spot, no kind at another\\'s spot, nobody leaves its spot; a shelf of snacks and the clothes rack on floor 1; the stairs walked up and down; adopting and buying still work'")
 def fix_n9(s):
     # N9 (29 Oct, pet update 1: the owner's new hours, the Food truck is open 7:00-23:00). Old: at 21:00 the truck must not sell.
     # New: at 21:00 it must sell, and at 23:30 it must not (the same closed-hours test at the truck's new closing time). Nothing else changes.
@@ -127,10 +152,11 @@ for info in src.infolist():
     data = src.read(info.filename)
     if info.filename == 'cozycheck/cozy_check2.py': data = fix_check(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
     if info.filename == 'cozycheck/README-KIT.md': data = fix_readme(data.decode('utf-8')).encode('utf-8')
-    if info.filename == 'cozycheck/night3.py': data = fix_n9(fix_night3(data.decode('utf-8'))).encode('utf-8'); compile(data, info.filename, 'exec')
+    if info.filename == 'cozycheck/night3.py': data = fix_size(fix_n9(fix_night3(data.decode('utf-8')))).encode('utf-8'); compile(data, info.filename, 'exec')
     if info.filename == 'cozycheck/house4.py': data = fix_house4(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
     if info.filename == 'cozycheck/checks.py': data = fix_checks(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
-    if info.filename == 'cozycheck/run4.py': data = fix_run4(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
+    if info.filename == 'cozycheck/run4.py': data = fix_n28_title(fix_n40(fix_run4(data.decode('utf-8')))).encode('utf-8'); compile(data, info.filename, 'exec')
+    if info.filename == 'cozycheck/pets4.py': data = fix_n28(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
     dst.writestr(info, data)
 # fixtures that were only in tools/check-fixtures (31 Oct 2026): N8's save-prepet1-designer2.json, the save made by main before the
 # Pets and Farm Update, and the saves made by each of its stages; and the stage 'pfu' module

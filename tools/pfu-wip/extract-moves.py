@@ -53,6 +53,9 @@ for w in WANT:
     v = table[w]; rows.append(f" '{w}':[{v}]"); todo.append(v)
 ip0 = next(i for i, l in enumerate(src) if l.startswith('function play('))
 todo.append('\n'.join(src[ip0:ip0+4]))
+import os
+EXTRA = [x for x in os.environ.get('EXTRA', '').split(',') if x]   # stage 4b: helpers the game calls too (stairH, tankPath)
+todo.append(' '.join(EXTRA))
 seen = set()
 while todo:
     txt = todo.pop()
@@ -67,7 +70,7 @@ out.append('const M={'); out.append(',\n'.join(rows)); out.append('};')
 ip = next(i for i, l in enumerate(src) if l.startswith('function play('))
 k = ip
 while not src[k].startswith('window.COZY_MOVES'): out.append(src[k]); k += 1
-out.append("window.COZY_MOVES={version:'2026-10-31d (pets: the moves the game uses)',play,list:Object.keys(M),KIND};")
+out.append("window.COZY_MOVES={version:'2026-10-31d (pets: the moves the game uses)',play,list:Object.keys(M),KIND" + (',' + ','.join(EXTRA) if EXTRA else '') + "};")
 out.append('})();')
 open(sys.argv[2], 'w', encoding='utf-8').write('\n'.join(out) + '\n')
 print(len('\n'.join(out)), 'bytes;', len(seen), 'definitions')

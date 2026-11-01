@@ -7,7 +7,13 @@ healthy week), P9 friends see your pets for real and can pet them, P10 the moves
 Stage 4 (1 Nov): P17 the vet station and the visit, P18 big-needs pets locked; P6 rewritten (old: sickness switched off until the vet clinic; new: switched on with the vet station in, the switch still proven both ways).
 Stage 3 (1 Nov): P12 Friends Lane's wider border, P13 yard levels by skill at the yard sign, P14 only owned things show, P15 training gear and pets playing
 on it, P16 friends see your yard. Rewritten: P10 (old: every move's lowest point within -0.07..0.012 m; new: the same for every move on the floor (a yard-gear move: on the pet kinds that play it, e.g. cat.wand on cats), and a
-move in water or the air (r.noGround: capy.tub, owl.fly) is measured by its highest point instead, which must stay above 0.05 m)."""
+move in water or the air (r.noGround: capy.tub, owl.fly) is measured by its highest point instead, which must stay above 0.05 m).
+Stage 4b (1 Nov): P19 speed guard (with the owner's new size limit, 3.0 MB), P20 big-needs pets, P21 their homes and the snake's tank, P22 waiting outside and the
+big-pet platform, P23 the new 3-floor Pet Shop, P24 today's pets redrawn. Rewritten (old -> new): P10 (old: the lowest point from each piece's bounding box, every
+move on every kind except gear moves; new: the lowest point on the real shape (a turned round piece's box reaches below it: the bear sitting measured -0.18 m
+while touching the floor), and a big-needs pet's own, toy and home moves only on that kind, like the gear moves); P15 (old: 10 gear pieces; new: 15, the 5
+big-pet pieces with their prices, each played to the end like the others); P18 (old: the Big pets board 'upstairs' = 40 m along, the old shop's
+floor 2; new: in the one-room shop, a board that can be used only on the top floor)."""
 import asyncio, json, os, re, time
 from crawl import INSTR
 from checks import start_from_save, save_diff
@@ -403,8 +409,12 @@ async def p9(run, live_w, new_wb, FIX):
 # ---------------- P10 the moves pack on every pet, and its cost ----------------
 P10_JS = r"""()=>{const bad=[],bb=new THREE.Box3(),wet={},USE={},need0=['pet.idle','pet.walk','pet.sad','pet.unhappyBowl','pet.unhappyPlay','pet.unhappyNap','pet.unhappyNudge','pet.veryHappy','pet.happyDance','pet.sickWalk','pet.sickLie','pet.sneeze','pet.warnSneeze','pet.nap','pet.takeFood'];let n=0,worst=0;
   if(typeof GEAR_PLAY!=='undefined')for(const id in GEAR_PLAY)for(const sg of GEAR_PLAY[id])if(!need0.includes(sg.m))(USE[sg.m]=USE[sg.m]||[]).push(...GEAR[id].k);   /* (stage 3: a yard-gear move is checked on the kinds that play it) */
+  /* (stage 4b: a big-needs pet's own moves, toy and home moves likewise: named after the kind, or in TOY_MV / HOME_NAP) */
+  for(const nm of COZY_MOVES.list){const k=nm.split('.')[0];if(PET_TYPES[k]&&PET_TYPES[k].big)(USE[nm]=USE[nm]||[]).push(k);}
+  if(typeof TOY_MV!=='undefined')for(const k in TOY_MV)(USE[TOY_MV[k]]=USE[TOY_MV[k]]||[]).push(k);
+  const _v=new THREE.Vector3(),lowY=r=>{let y=9;r.updateMatrixWorld(true);r.traverse(o=>{if(!o.isMesh||!o.visible||o.userData.noGround)return;const p=o.geometry.attributes.position;for(let i=0;i<p.count;i++){_v.fromBufferAttribute(p,i).applyMatrix4(o.matrixWorld);if(_v.y<y)y=_v.y;}});return y;};   /* (stage 4b: the real lowest point, not the corners of turned pieces' boxes) */
   for(const k of Object.keys(PET_TYPES)){const m=makePet(k,PET_TYPES[k].cols[0]);addOutfit(m,{outfit:{head:'tophat',back:'cape'}});scene.add(m.root);
-    for(const nm of COZY_MOVES.list){if(USE[nm]&&!USE[nm].includes(k))continue;let lo=9,hi=-9,top=9;for(let t=0;t<4.5;t+=.25){const r=COZY_MOVES.play(m,nm,t,{kind:k,dist:t*.8,mood:nm==='pet.walk'&&t>2?'sad':undefined});n++;m.root.updateMatrixWorld(true);bb.setFromObject(m.root);if(r.noGround){top=Math.min(top,bb.max.y);wet[nm]=1;}else if(!r.lift){lo=Math.min(lo,bb.min.y);hi=Math.max(hi,bb.min.y);}}
+    for(const nm of COZY_MOVES.list){if(USE[nm]&&!USE[nm].includes(k))continue;let lo=9,hi=-9,top=9;for(let t=0;t<4.5;t+=.25){const r=COZY_MOVES.play(m,nm,t,{kind:k,dist:t*.8,mood:nm==='pet.walk'&&t>2?'sad':undefined});n++;m.root.updateMatrixWorld(true);bb.setFromObject(m.root);if(r.noGround){top=Math.min(top,bb.max.y);wet[nm]=1;}else if(!r.lift){const ly=lowY(m.root);lo=Math.min(lo,ly);hi=Math.max(hi,ly);}}
       if(m.__mv.warned){bad.push(k+' '+nm+': error');m.__mv.warned=0;}worst=Math.min(worst,lo);if(lo<-.07||hi>.012)bad.push(k+' '+nm+': lowest point '+lo.toFixed(3)+'..'+hi.toFixed(3)+' m');if(top<.05)bad.push(k+' '+nm+': sinks out of view (highest point '+top.toFixed(3)+' m)');}scene.remove(m.root);}
   const need=['pet.idle','pet.walk','pet.sad','pet.unhappyBowl','pet.unhappyPlay','pet.unhappyNap','pet.unhappyNudge','pet.veryHappy','pet.happyDance','pet.sickWalk','pet.sickLie','pet.sneeze','pet.warnSneeze','pet.nap','pet.takeFood'];
   for(const x of need)if(!COZY_MOVES.list.includes(x))bad.push('missing move '+x);
@@ -549,8 +559,8 @@ async def p14(run, new_wb, FIX):
 # ---------------- P15 training gear: bought at Ms. Paws, stands in the yard, pets play on it ----------------
 P15_SHOP = r"""()=>{__goto('city');const bad=[],o={};S.yard={pet:1,garden:1};yardLv();S.coins=5000;openShop('pets');
   const btn=id=>document.querySelector('#card [data-a="gear:'+id+'"]');o.n=GEAR_IDS.filter(btn).length;o.dog=btn('dog')&&btn('dog').innerText.replace(/\s+/g,' ');
-  if(o.n!==10||!/🔒 Pet yard level 2/.test(o.dog||''))bad.push('gear in the shop: '+o.n+', dog '+o.dog);
-  const W={dog:300,dog2:300,cat:200,cat2:200,bunny:150,bunny2:150,hamster:150,duck:200,owl:200,capy:250};for(const k in W)if(GEAR[k].p!==W[k])bad.push('price '+k+' '+GEAR[k].p);
+  if(o.n!==15||!/🔒 Pet yard level 2/.test(o.dog||''))bad.push('gear in the shop: '+o.n+', dog '+o.dog);
+  const W={dog:300,dog2:300,cat:200,cat2:200,bunny:150,bunny2:150,hamster:150,duck:200,owl:200,capy:250,monkey:250,monkey2:250,seal:150,bear:250,snake:150};   /* (stage 4b: + the big-needs pets' 5 pieces) */for(const k in W)if(GEAR[k].p!==W[k])bad.push('price '+k+' '+GEAR[k].p);
   let c=S.coins;btn('dog').click();o.dogL1=[c-S.coins,(S.yard.gear||[]).length];if(o.dogL1[0]||o.dogL1[1])bad.push('dog course bought at pet yard 1');
   c=S.coins;btn('cat').click();o.cat=c-S.coins;c=S.coins;btn('bunny').click();o.full=[c-S.coins,S.yard.gear.join()];if(o.cat!==200||o.full[0]||o.full[1]!=='cat')bad.push('pet yard 1: '+JSON.stringify([o.cat,o.full]));
   o.own=btn('cat').disabled&&/In your yard/.test(btn('cat').innerText);if(!o.own)bad.push('the cat tower does not say it is yours');
@@ -569,7 +579,9 @@ P15_PLAY = r"""([id])=>{__goto('city');S.yard={pet:3,garden:1,gear:[id]};yardLv(
     if(e2.gp&&e2.gp.i>0){if(e2.x<B.min.x||e2.x>B.max.x||e2.z<B.min.z||e2.z>B.max.z)out++;y0=Math.min(y0,e2.gy);y1=Math.max(y1,e2.gy);}}}finally{renderer.render=real;}
   return {id,label:t,moves:seen,frames,s:+(frames*.05).toFixed(1),done:!e2.gp,happy:Math.round(e2.d.happy-50),after:e2.sm,out,y:[+y0.toFixed(2),+y1.toFixed(2)],warned:!!(e2.m.__mv&&e2.m.__mv.warned)};}"""
 GEAR_WANT = {'dog': ['dog.agility'], 'dog2': ['dog.agility'], 'cat': ['cat.wand'], 'cat2': ['cat.wand'], 'bunny': ['bunny.hurdles'], 'bunny2': ['bunny.hurdles'],
-             'hamster': ['hamster.wheel'], 'duck': ['duck.splash', 'duck.paddle'], 'owl': ['owl.fly', 'owl.perch'], 'capy': ['capy.hopIn', 'capy.tub']}
+             'hamster': ['hamster.wheel'], 'duck': ['duck.splash', 'duck.paddle'], 'owl': ['owl.fly', 'owl.perch'], 'capy': ['capy.hopIn', 'capy.tub'],
+             # stage 4b: the big-needs pets' gear (P15 rewritten: 10 pieces -> 15, each played to the end like the others)
+             'monkey': ['monkey.climb', 'monkey.bars'], 'monkey2': ['monkey.climb', 'monkey.bars'], 'seal': ['seal.ball'], 'bear': ['bear.logPush', 'bear.sitUp'], 'snake': ['snake.basket']}
 async def p15(run, new_wb, FIX):
     g = await pet_page(run, new_wb, 'p15', FIX=FIX); bad = []; det = []
     try:
@@ -689,7 +701,8 @@ async def p17(run, live_w, new_wb, FIX):
     return not bad, det + (f' | PROBLEMS: {bad}' if bad else '')
 
 # ---------------- P18 big-needs pets: locked at Ms. Paws, the first missing thing named ----------------
-P18_JS = r"""()=>{const o={},bad=[],L=LOC.pets;__goto('pets');const it=L.inter.find(t=>t.label==='Big pets');if(!it||Math.abs(it.z-L.oz-UPZ)>2)bad.push('no Big pets board upstairs in the Pet Shop');
+P18_JS = r"""()=>{const o={},bad=[],L=LOC.pets;__goto('pets');const it=L.inter.find(t=>t.label==='Big pets');   /* (P18 rewritten in stage 4b: old: upstairs = the old shop's floor 2, 40 m along; new: in the new one-room shop, the board can be used only on the top floor) */
+  const up=!!it&&(L.psh?!!it.when&&(()=>{const c=P.cy;P.cy=PSH.F[2];const a=it.when();P.cy=0;const b=it.when();P.cy=c;return a&&!b;})():Math.abs(it.z-L.oz-UPZ)<=2);if(!up)bad.push('no Big pets board upstairs in the Pet Shop');
   const keep=[sk('pets').lv,S.yard.pet,S.lic.lv,window.bigHome],K=['monkey','seal','bear','snake'],texts=[];
   const rows=()=>{openBig();const B=[...document.querySelectorAll('#card [data-a^="bigp:"]')];o.small=(o.small||0)+B.filter(b=>b.getBoundingClientRect().height<44).length;texts.push($('card').innerText);const r=B.map(b=>b.innerText.replace(/\s+/g,' ').trim());closePanel();return r;};
   const say=k=>{let m='';const t0=window.toast;window.toast=x=>{m=x;};bigPaws(k);window.toast=t0;texts.push(m);return m.replace(/^🐾 Ms\. Paws: “|”$/g,'');};
@@ -711,6 +724,163 @@ async def p18(run, new_wb, FIX):
     bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
     return not bad, f"Big pets board upstairs; {' | '.join(r['o']['seen'])}" + (f' | PROBLEMS: {bad}' if bad else '')
 
+# ================= stage 4b (1 Nov 2026): the big-needs pets, their homes and gear, waiting outside, the big-pet table, the new 3-floor Pet Shop,
+# today's pets redrawn, and the speed guard that goes with the new size limit (owner's OK 1 Nov: the joined game up to 3.0 MB) =================
+
+# ---------------- P19 speed guard: 30+ fps on an iPad-sized view with 2 players online, the first load measured ----------------
+FPS_JS = r"""(ms)=>new Promise(res=>{const L=window.__loop,R=renderer.render;let k=0;renderer.render=function(a,b){k++;return R.call(this,a,b);};L.manual=false;if(L.cb){const cb=L.cb;L.cb=null;requestAnimationFrame(cb);}const t0=performance.now();
+  setTimeout(()=>{L.manual=true;renderer.render=R;res({fps:+(k*1000/(performance.now()-t0)).toFixed(1),calls:renderer.info.render.calls,tris:renderer.info.render.triangles});},ms);})"""   # the game's own loop on the browser's real frames for ms, counting the frames drawn
+LOAD_JS = r"""()=>{const n=performance.getEntriesByType('navigation')[0]||{};return {dom:Math.round(n.domContentLoadedEventEnd||0),load:Math.round(n.loadEventEnd||0),ready:Math.round(window.__p19ready||0)}}"""
+async def p19(run, live_w, new_wb, FIX):
+    probs = []; det = []; A = B = None
+    try:
+        out = {}
+        for tag, wb in (('live', live_w), ('new', new_wb)):
+            t0 = time.time(); g = await run.open(wb, 'web', 'ipad-landscape', 'light', 'p19-load-' + tag); await g.manual(); out[tag] = (round(time.time() - t0, 2), await g.ev(LOAD_JS)); await run.close(g)
+        det.append(f"first load on an iPad-sized view (test copy): the page loaded at live {out['live'][1]['load']} ms / new {out['new'][1]['load']} ms after it was opened (the test's own wait for the title screen: live {out['live'][0]} s, new {out['new'][0]} s, it varies 6-13 s run to run)")
+        if not out['new'][1]['load']: probs.append('the first load was not measured')
+        res = {}
+        for tag, wb in (('live', live_w), ('new', new_wb)):
+            sv = fx(FIX, PETS_SAVE) or FIX[0][1]
+            A = await begin(run, wb, 'ipad-landscape', 'p19-A-' + tag, dict(sv, name='ZZTEST-SPA')); B = await begin(run, wb, 'pc-1366', 'p19-B-' + tag, dict(sv, name='ZZTEST-SPB'))
+            for g in (A, B): await g.ev("()=>{__goto('city');__setClock(null,12);P.x=18;P.z=4;P.yaw=0;P.pitch=0;bringFollowers(true);}")
+            for _ in range(8): await A.step(4); await B.step(4); await asyncio.sleep(.3)
+            seen = await A.ev("()=>[...MP.peers.values()].length")
+            f = await A.ev(FPS_JS, 6000); res[tag] = (f, seen)
+            if tag == 'live': await run.close(A); await run.close(B); A = B = None
+        f, seen = res['new']
+        det.append(f"2 players in town in front of the Pet Shop (iPad view, the other on a PC; the other online: {seen > 0}), the game's own loop for 6 s: new {f['fps']} frames a second ({f['calls']} draws, {f['tris']} triangles), live {res['live'][0]['fps']} ({res['live'][0]['calls']} draws) in the same test browser (software drawing, no GPU)")
+        if seen < 1: probs.append('the second player was not online with the first')
+        if f['fps'] < 30: probs.append(f"only {f['fps']} fps in this test browser (want 30+; live: {res['live'][0]['fps']}): measure on a real iPad or a machine with a GPU")
+        errs = A.errors[:] + B.errors[:]
+        if errs: probs.append(f'browser errors {errs[:2]}')
+    finally:
+        if A: await run.close(A)
+        if B: await run.close(B)
+    det.append('NOT VERIFIED on a real iPad (the test browser draws without a GPU)')
+    return not probs, '; '.join(det) + (f' | PROBLEMS: {probs}' if probs else '')
+
+# ---------------- P20 big-needs pets: models, rows, adoption only when ready, 400 coins, toys ----------------
+P20_JS = r"""()=>{__goto('pets');const bad=[],o={seen:[]};const K={monkey:['cat',8],seal:['dog',4],bear:['dog',6],snake:['hamster',4]};
+  for(const k in K){const T=PET_TYPES[k];if(!T||T.base!==K[k][0]||T.cols.length!==K[k][1]||!T.big||typeof SFX[T.snd]!=='function'||!PET_TOY[k]||!PET_GROUP[k]){bad.push('row '+k);continue;}
+    let nm=[];for(const c of T.cols){const m=makePet(k,c);let n=0;m.root.traverse(q=>{if(q.isMesh)n++;});nm.push(n);if(n<30||!m.head||!m.b||(k==='snake'?!(m.segs&&m.segs.length>20&&m.tongue):!(m.legs.length>=2))||(k==='seal'&&!(m.rear&&m.rear.length===2)))bad.push(k+' model '+c+' '+n+' pieces');}
+    o.seen.push(k+': '+T.cols.length+' looks ('+nm.join('/')+' pieces), saved as '+T.base);}
+  S.coins=5000;S.lic.lv=0;S.yard={pet:1,garden:1};sk('pets').lv=1;const n0=S.pets.length;
+  openAdopt('bear',PET_TYPES.bear.cols[0]);ACT.adopt();closePanel();if(S.pets.length!==n0)bad.push('adopted a locked bear');
+  sk('pets').lv=40;S.yard={pet:3,garden:1,home:['tree','pond','den']};yardLv();S.lic.lv=3;S.home.store.push({u:'zztank',t:'snaketank',c:'#7a2bff',x:0,z:0,r:0});
+  for(const k in K){const l=bigLock(k);if(l)bad.push(k+' still locked: '+l[0]);const c0=S.coins;openAdopt(k,PET_TYPES[k].cols[1]);ACT.adopt();const d=S.pets[S.pets.length-1];
+    if(c0-S.coins!==400||d.kind!==k||d.type!==K[k][0])bad.push('adopt '+k+': paid '+(c0-S.coins)+', saved '+d.type+'/'+d.kind);}
+  o.seen.push('adopted when ready for 400 each (locked: refused)');
+  const toys=[];for(const k in K){const e=PET_ACTORS.find(p=>petKind(p.d)===k);S.bag[PET_TOY[k]]=1;e.sm=null;openPet(e);ACT.pplay();toys.push(k+' '+e.sm);if(e.sm!==TOY_MV[k])bad.push(k+' plays '+e.sm);closePanel();}
+  o.seen.push('favourite toys: '+toys.join(', '));
+  const w=[];for(const k in K){const e=PET_ACTORS.find(p=>petKind(p.d)===k);for(let t=0;t<5;t+=.5)COZY_MOVES.play(e.m,TOY_MV[k],t,{kind:k});if(e.m.__mv&&e.m.__mv.warned)w.push(k);}if(w.length)bad.push('toy moves with errors: '+w);
+  o.bad=bad;return o;}"""
+async def p20(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p20', FIX=FIX, name='ZZTEST-BIGP')
+    try: r = await g.ev(P20_JS); errs = g.errors[:]
+    finally: await run.close(g)
+    bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
+    return not bad, '; '.join(r['seen']) + '; NOT VERIFIED: how each looks walking and playing (only a line-up picture looked at)' + (f' | PROBLEMS: {bad}' if bad else '')
+
+# ---------------- P21 homes: tree, pond, den in the big-pets area; the snake's glass tank; friends see them ----------------
+P21_JS = r"""()=>{__goto('city');const bad=[],o={};S.coins=9000;sk('pets').lv=40;S.yard={pet:2,garden:1};yardLv();openShop('pets');ACT.bhome('den');o.l2=[(S.yard.home||[]).length,S.coins];closePanel();if(o.l2[0])bad.push('a home sold at pet yard 2');
+  S.yard.pet=3;yardLv();const cnt=()=>{let v=0;YARD.lvg.traverse(m=>{if(m.isMesh)v+=m.geometry.attributes.position.count;});return v;},v0=cnt(),c0=LOC.city.cols.length;
+  const paid={};for(const id of BHOME_IDS){const c=S.coins;openShop('pets');ACT.bhome(id);paid[id]=c-S.coins;closePanel();}o.paid=paid;if(paid.tree!==400||paid.pond!==700||paid.den!==700)bad.push('prices '+JSON.stringify(paid));
+  const v1=cnt(),c1=LOC.city.cols.length;o.drawn=v1>v0+5000;o.solid=c1-c0;if(!o.drawn||o.solid<3)bad.push('homes not drawn or not solid: '+[v0,v1,c0,c1]);
+  for(const id of BHOME_IDS){const H=BHOME[id],[x,z]=lotPt(LANE.mine,H.x,H.z);if(Math.hypot(...collideXZ(x,z,.3,LOC.city).map((q,i)=>q-[x,z][i]))<.2)bad.push(id+': you can walk into its middle');}
+  const st={};laneStamp(st);o.yd=st.yd;if(!/^13TPD$/.test(st.yd||''))bad.push('presence yd '+st.yd);
+  const lp=LOC.city.lane.find(l=>l.j!==LANE.mine),fc=()=>{let v=0;lp.g.traverse(m=>{if(m.isMesh&&m.geometry&&m.geometry.attributes.position)v+=m.geometry.attributes.position.count;});return v;};
+  const base={k:'zz',nm:'Zed',big:0,fl:1,col:'',gd:''};laneHouse(lp,Object.assign({},base,{yd:'13'}));const f0=fc();laneHouse(lp,Object.assign({},base,{yd:'13TPD'}));const f1=fc();laneHouse(lp,Object.assign({},base,{yd:'13Q'}));const f2=fc();
+  o.friend=[f0,f1,f2];if(!(f1>f0+5000)||f2!==fc())bad.push('a friend\'s homes: '+o.friend);laneHouse(lp,null);
+  /* the snake's tank: furniture at Ms. Paws (400), placed in your house; light on/off and 8 colours, saved as the piece's colour */
+  const c2=S.coins;S.home.store=S.home.store.filter(i=>i.t!=='snaketank');openShop('pets');const b=document.querySelector('#card [data-a="buy:snaketank"]');if(b)b.click();closePanel();o.tank=[c2-S.coins,S.home.store.filter(i=>i.t==='snaketank').length];
+  if(o.tank[0]!==400||o.tank[1]!==1)bad.push('tank bought '+o.tank);const it=S.home.store.find(i=>i.t==='snaketank');S.home.store=S.home.store.filter(i=>i!==it);it.x=0;it.z=-3;it.r=0;S.home.items.push(it);rebuildHome();
+  let rec=[...HOME_ITEMS.values()].find(r=>r.it===it);if(!rec||!rec.inter||rec.inter.label()!=='Glass tank')bad.push('no Glass tank button');
+  rec.inter.act();o.panel=!!document.querySelector('#card [data-a="tank:off"]')&&document.querySelectorAll('#card .sw').length;ACT.tank('off');const off=it.c;ACT.tank('on');const on=it.c;ACT.tank('3');const pink=it.c;closePanel();
+  o.light=[o.panel,off,on,pink];if(o.panel!==8||off!=='#5a5f72'||on!=='#7a2bff'||pink!=='#ff7aa8')bad.push('tank light '+o.light);
+  /* a snake at home lives in its tank: it sleeps in the hide and goes out over the lip and back */
+  S.lic.lv=1;openAdopt('snake',PET_TYPES.snake.cols[0]);ACT.adopt();closePanel();const d=S.pets[S.pets.length-1],e=PET_ACTORS.find(p=>p.d===d);d.stay=true;d.home=1;__goto('home');for(let i=0;i<10;i++)__run(1);
+  rec=[...HOME_ITEMS.values()].find(r=>r.it===it);const T=rec.g.position;o.snake=[e.loc,!!e.tk,+Math.hypot(e.x-T.x,e.z-T.z).toFixed(2)];if(e.loc!=='home'||!e.tk||o.snake[2]>.05)bad.push('the snake is not in its tank: '+o.snake);
+  const box=new THREE.Box3(),inHide=[];for(const s of[2,30,35,41]){window.__clk=s;snakeTankPose(e.m,e,s);e.m.root.updateMatrixWorld(true);rec.g.updateWorldMatrix(true,false);box.setFromObject(e.m.head);const p=rec.g.worldToLocal(box.getCenter(new THREE.Vector3()));inHide.push([s,+p.x.toFixed(2),+p.z.toFixed(2)]);}
+  o.path=inHide;if(!(Math.abs(inHide[0][1]+.6)<.5&&inHide[0][2]<.5))bad.push('asleep: the head is not in the hide '+JSON.stringify(inHide[0]));if(!inHide.some(q=>q[2]>.6))bad.push('the snake never comes out over the lip');
+  o.bad=bad;return o;}"""
+async def p21(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p21', FIX=FIX, name='ZZTEST-HOMES')
+    try: r = await g.ev(P21_JS); errs = g.errors[:]
+    finally: await run.close(g)
+    o = r; bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
+    det = (f"at pet yard 2 no home is sold {o['l2']}; at 3: paid {o['paid']}, drawn {o['drawn']}, {o['solid']} new solid parts, presence '{o['yd']}', a friend's lot [no homes, homes, a bad letter] {o['friend']} vertices; "
+           f"the glass tank: bought [coins, in My stuff] {o['tank']}, its card [colours, off, on, pink] {o['light']}; a snake at home [where, in the tank, m from it] {o['snake']}, head [s, x, z in the tank] {o['path']}")
+    return not bad, det + ' NOT VERIFIED: the snake moving in and out by eye' + (f' | PROBLEMS: {bad}' if bad else '')
+
+# ---------------- P22 bear and seal wait outside buildings (not at the vet); the big-pet platform ----------------
+P22_JS = r"""()=>{__goto('city');const bad=[],o={};S.coins=9000;sk('pets').lv=40;S.yard={pet:3,garden:1,home:['tree','pond','den']};S.lic.lv=3;yardLv();for(const d of S.pets)d.stay=true;
+  for(const k of['seal','bear','monkey']){openAdopt(k,PET_TYPES[k].cols[0]);ACT.adopt();closePanel();}const A=PET_ACTORS.filter(e=>!e.d.stay);
+  const D=DOORS.market.city;P.x=D[0];P.z=D[1];P.yaw=D[2];bringFollowers(true);__run(20);setLoc('market');bringFollowers();__run(40);
+  o.inside=A.map(e=>[petKind(e.d),e.loc,!!e.wo,+Math.hypot(e.x-D[0],e.z-D[1]).toFixed(1)]);
+  for(const q of o.inside)if(q[0]==='monkey'?q[1]!=='market':(q[1]!=='city'||!q[2]||q[3]>4))bad.push('in the Market: '+q);
+  setLoc('city');P.x=D[0];P.z=D[1];bringFollowers();__run(40);o.back=A.map(e=>[petKind(e.d),e.loc,!!e.wo,+Math.hypot(e.x-P.x,e.z-P.z).toFixed(1)]);for(const q of o.back)if(q[1]!=='city'||q[2]||q[3]>4)bad.push('back outside: '+q);
+  setLoc('vet');const L=LOC.vet;P.x=L.ox-1.6;P.z=L.oz+UPZ-1.2;bringFollowers();__run(10);o.vet=A.map(e=>[petKind(e.d),e.loc]);for(const q of o.vet)if(q[1]!=='vet')bad.push('at the vet: '+q);
+  const b=A.find(e=>petKind(e.d)==='bear');b.d.sick=1;VX={L:[b],i:0,t:0,said:0};const R=VK('Dr. Rūta'),r0=[R.x,R.z];let up=0,climb=0,near=9;
+  for(let i=0;i<260&&VX;i++){__run(1);if(VX&&VX.pm==='pet.climbOn')climb++;if(b.ps&&Math.abs(b.g.position.y-.54)<.01)up++;if(b.ps)near=Math.min(near,Math.hypot(R.x-b.x,R.z-b.z));}
+  o.platform=[climb,up,+near.toFixed(2),b.d.sick,+Math.hypot(R.x-r0[0],R.z-r0[1]).toFixed(2)];if(!climb||!up||near>2.2||b.d.sick||o.platform[4]>.01)bad.push('the big-pet platform: '+o.platform);
+  o.bad=bad;return o;}"""
+async def p22(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p22', FIX=FIX, name='ZZTEST-WAIT')
+    try: r = await g.ev(P22_JS); errs = g.errors[:]
+    finally: await run.close(g)
+    bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
+    det = (f"in the Market [kind, where, waiting, m from the door]: {r['inside']}; back outside: {r['back']}; at the vet station: {r['vet']}; "
+           f"the bear on the big-pet platform [frames climbing on, frames on top at .54 m, Dr. Rūta's closest m, sick after, Dr. Rūta back at her place m]: {r['platform']}")
+    return not bad, det + ' NOT VERIFIED: the waiting and the platform by eye' + (f' | PROBLEMS: {bad}' if bad else '')
+
+# ---------------- P23 the new Pet Shop: 3 open floors, stairs, rails, cozy spots ----------------
+P23_JS = r"""()=>{__goto('pets');__setClock(null,12);const bad=[],o={},L=LOC.pets;o.room=[!!L.psh,!L.fls,PSH.F.join('/')];if(!L.psh||L.fls)bad.push('not one 3-floor room');
+  const go=(x,z,n)=>{const sx=P.x,sz=P.z;for(let i=1;i<=n;i++){P.x=sx+(L.ox+x-sx)*i/n;P.z=sz+(L.oz+z-sz)*i/n;__run(1);}return [+(P.x-L.ox).toFixed(2),+(P.z-L.oz).toFixed(2),+(P.cy||0).toFixed(2)];};
+  const e=PET_ACTORS.find(p=>!p.d.stay);P.x=L.ox;P.z=L.oz+3.7;P.cy=0;bringFollowers(true);__run(5);
+  const path=[[-4.6,4.5,40],[-5.95,4.5,20],[-5.95,2.2,40],[-5.95,-.3,40],[-4.2,-.5,30],[-4.0,-2.2,30],[-2.9,-2.25,30],[3.0,-2.3,60],[4.4,-1.2,30],[4.4,4.6,60],[5.95,4.6,20],[5.95,-.3,80],[4.0,-1.0,30]];
+  o.up=path.map(q=>go(...q));if(o.up[3][2]!==3.34||o.up[11][2]!==6.54)bad.push('up the stairs: '+JSON.stringify(o.up));o.pet=[+(e.cy||0).toFixed(2),+Math.hypot(e.x-P.x,e.z-P.z).toFixed(1)];
+  if(Math.abs((e.cy||0)-6.54)>.05||o.pet[1]>4.5)bad.push('the pet did not follow up: '+o.pet);
+  o.hole=go(0,0,30);if(o.hole[2]!==6.54||Math.abs(o.hole[0])<3.2&&o.hole[1]>-2&&o.hole[1]<2.6)bad.push('walked into the open middle: '+o.hole);
+  const down=[[5.95,-.3,30],[5.95,4.6,80],[4.4,4.6,20],[3.0,-2.3,60],[-2.9,-2.25,60],[-4.2,-.5,30],[-5.95,-.3,30],[-5.95,4.6,80],[-4.6,4.5,20],[0,3.7,40]];o.down=down.map(q=>go(...q)).slice(-1)[0];if(o.down[2]!==0)bad.push('down again: '+o.down);
+  o.side=go(-5.95,2.0,30);if(o.side[2]!==0||o.side[0]<-5.1&&o.side[1]<3.9)bad.push('walked into the side of the stairs: '+o.side);
+  const pens=L.pens.map(p=>[p.type,p.fl|0]);o.kinds=[...new Set(pens.map(p=>p[0]))].sort().join(',');if(o.kinds!=='bear,bunny,capybara,cat,dog,duck,hamster,monkey,owl,seal')bad.push('spots '+o.kinds);
+  for(const a of PEN)if(a.pen.type==='bear'||a.pen.type==='seal'||a.pen.type==='monkey'){if((a.pen.fl|0)!==2)bad.push(a.t+' not on floor 3');}
+  let off=0,n=0;for(let f=0;f<600;f++){__run(1);for(const a of PEN){n++;const q=a.pen,x=a.x-L.ox,z=a.z-L.oz;if(x<q.x0-.45||x>q.x1+.45||z<q.z0-.45||z>q.z1+.45)off++;}}o.wander=[off,n];if(off)bad.push('animals off their spots: '+off);
+  P.x=L.ox;P.z=L.oz+3.7;P.cy=0;__run(2);const bear=PEN.find(a=>a.t==='bear');P.x=bear.x+1;P.z=bear.z+1.5;__run(1);o.bearT=targets().includes(bear.target)&&bear.target.when();if(o.bearT)bad.push('the bear on floor 3 can be tapped from floor 1');
+  P.x=L.ox+4.4;P.z=L.oz+2.4;P.cy=0;__run(2);const shop=L.inter.find(t=>/Buy pet food/.test(typeof t.label==='function'?t.label():t.label));o.buy=!!shop&&shop.when();if(!o.buy)bad.push('no Buy button on floor 1');
+  const K=KEEPERS.find(k=>k.name==='Ms. Paws');o.paws=[+(K.x-L.ox).toFixed(2),+(K.z-L.oz).toFixed(2)];if(Math.abs(K.x-L.ox-6.25)>.01)bad.push('Ms. Paws is not behind the counter');
+  const c=LOC.city.cols.find(q=>q.x1!==undefined&&Math.abs(q.x1-10.9)<.01&&Math.abs(q.z2-20.7)<.01);o.town=!!c;if(!c)bad.push('the shop in town is not 14 x 10');
+  o.bad=bad;return o;}"""
+async def p23(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p23', FIX=FIX, name='ZZTEST-SHOP3')
+    try:
+        r = await g.ev(P23_JS); errs = g.errors[:]
+        await g.ev("()=>{const L=LOC.pets;P.x=L.ox;P.z=L.oz+4.3;P.cy=0;P.yaw=0;P.pitch=.3;}"); await g.step(3); await g.shot('petshop-3floors', both=False)
+    finally: await run.close(g)
+    bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
+    det = (f"one room, floors at {r['room'][2]} m; walked up both stairs [x, z, height]: {r['up'][3]} and {r['up'][11]}, the following pet [height, m from you] {r['pet']}; the open middle stops you {r['hole']}; "
+           f"down again {r['down']}; the stairs' side stops you {r['side']}; spots for {r['kinds']}; 30 s of animals: {r['wander'][0]} of {r['wander'][1]} off their spot; "
+           f"floor 3 bear tappable from floor 1: {r['bearT']}; Buy on floor 1 {r['buy']}; Ms. Paws at {r['paws']}; the 14 x 10 building in town {r['town']}")
+    return not bad, det + ' NOT VERIFIED: the camera on the stairs and the floors by eye on a real iPad' + (f' | PROBLEMS: {bad}' if bad else '')
+
+# ---------------- P24 today's pets redrawn to the kept versions ----------------
+P24_JS = r"""()=>{const bad=[],o={};const n=m=>{let v=0;m.root.traverse(q=>{if(q.isMesh)v++;});return v;};
+  const pug=makePet('pug',PET_TYPES.pug.cols[0]),capy=makePet('capybara','#c49a74'),pom=makePet('pomchi',PET_TYPES.pomchi.cols[0]),duck=makePet('duck','#ffe08a'),owl=makePet('owl','#8a5a36');
+  o.pug=n(pug);o.capy=[n(capy),packPetKey('capybara','#c49a74')];o.pom=[pom.tail.position.y,pom.tail.position.z];o.wings=[duck.wings&&duck.wings.length,owl.wings&&owl.wings.length,duck.wings&&duck.wings[0].children.length,owl.wings&&owl.wings[0].children.length];
+  if(o.pug!==PACKM.o['pug.0'].n.length&&o.pug<40)bad.push('pug is not the new pug: '+o.pug);if(o.capy[1]!=='capybara.0'||o.capy[0]<40)bad.push('capybara '+o.capy);
+  if(Math.abs(o.pom[0]-.28)>1e-6||Math.abs(o.pom[1]+.17)>1e-6)bad.push('pomchi tail '+o.pom);if(o.wings[0]!==2||o.wings[1]!==2||!o.wings[2]||!o.wings[3])bad.push('wings '+o.wings);
+  for(const [m,k] of[[duck,'duck'],[owl,'owl']]){for(let t=0;t<3;t+=.5)COZY_MOVES.play(m,'pet.veryHappy',t,{kind:k});if(m.__mv&&m.__mv.warned)bad.push(k+' move error');}
+  const old=[];for(const k of['dog','cat','bunny','hamster','sausage']){const m=makePet(k,PET_TYPES[k].cols[0]);old.push(k+' '+n(m));}o.same=old;
+  o.bad=bad;return o;}"""
+async def p24(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p24', FIX=FIX, name='ZZTEST-REDRAW')
+    try: r = await g.ev(P24_JS); errs = g.errors[:]
+    finally: await run.close(g)
+    bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
+    return not bad, (f"pug (new) {r['pug']} pieces; capybara (real, an old saved colour picks {r['capy'][1]}) {r['capy'][0]}; pomchi tail at {r['pom']}; duck and owl wings [joints, joints, pieces, pieces] {r['wings']}; "
+                     f"unchanged (the kept version is today's): {', '.join(r['same'])}") + (f' | PROBLEMS: {bad}' if bad else '')
+
 # ---------------- the stage ----------------
 async def s_pfu(run, d, live_w, new_wb, FIX):
     tests = [('P1', 'Saves (pets and farm update): every save of the kit (from older versions, today\'s main and the update\'s stages) and a fresh one from the live version loads as save version 2 with every new field at its default; saved again and loaded, it is exactly the same', lambda: p1(run, live_w, new_wb, FIX)),
@@ -722,15 +892,21 @@ async def s_pfu(run, d, live_w, new_wb, FIX):
              ('P7', 'Vet booking (stage 2): Book the vet in the Pets app (44 px); all well, or the sick pets and the next 8 two-hour times between 7:00 and 23:00; booked card with time, pets and Cancel; a reminder one game hour before; late = booking gone, no coins lost; one list for the room (a friend sees the time taken)', lambda: p7(run, new_wb, FIX)),
              ('P8', 'Care helpers (stage 2): one food fills the home bowl for one game day of play; the pets with you nap when you sleep (no loss at night) and wake happier; a healthy week (care on 3+ days Mon-Fri, no pet sick) puts the green ribbon on every pet for the weekend and counts for the animal license', lambda: p8(run, new_wb, FIX)),
              ('P9', 'Friends see your pets for real (stage 2): hearts, sick look and the same move at the same time, as a short code at the end of each pet row; friends pet and play with your pets (no feeding), your pet gets happier and they get pet XP; with an older version online the codes are left out and it still shows the pets', lambda: p9(run, live_w, new_wb, FIX)),
-             ('P10', 'Moves pack (stage 2; stage 3 adds the yard-gear moves): every pet move on every pet kind without an error, feet on the floor (a yard-gear move on the kinds that play it; a move in water or in the air: the head stays in view); the moves of 2 players x 3 following pets take under 4 ms a frame', lambda: p10(run, new_wb, FIX)),
+             ('P10', 'Moves pack (stage 2; stage 3 adds the yard-gear moves; stage 4b the big-needs pets\' moves): every pet move on every pet kind without an error, feet on the floor measured on the real shape (a yard-gear move, a big-needs pet\'s own, toy or home move on the kinds that play it; a move in water or in the air: the head stays in view); the moves of 2 players x 3 following pets take under 4 ms a frame', lambda: p10(run, new_wb, FIX)),
              ('P11', 'Pets are not left behind (stage 2 play test): long walks with 3 following pets on Friends Lane round the yard fences, through town corners and along the beach; no pet more than 9 m away for over 3 s, all with you after each walk', lambda: p11(run, new_wb, FIX)),
              ('P12', 'Friends Lane border (stage 3, map-lane-border): the hedges stand 37.5 m off the road (were 26.6), the lane ends and walls with them, the forest and the map keep the valley free to 42 m; the strip behind every lot is free', lambda: p12(run, new_wb, FIX)),
              ('P13', 'Yard levels by skill (stage 3): the 🏡 My yard sign sells garden level 2 (600, gardening 20) and 3 (1,500, gardening 40) and pet yard level 2 (800, Pet care 20) and 3 (2,000, Pet care 40), faded with the skill too low, Top level! at 3; the yard grows at once (fence back, big-pets gate at level 3); each garden level opens 3 new beds (spots 36-41) that work like the old ones; the pet limit stays 10', lambda: p13(run, new_wb, FIX)),
              ('P14', 'Only what you own shows (stage 3): a pot is drawn and usable only once it opens (6 at each gardening level 10-50), no lock plates; the new beds only with their garden level; no training gear before it is bought', lambda: p14(run, new_wb, FIX)),
-             ('P15', 'Training gear (stage 3): Ms. Paws sells the 10 pieces at their prices (dog course from pet yard level 2), one of each, refused when the yard has no room; it stands in the yard at once; tapped, a pet of its kind plays on it with its own moves (+20 happiness, then a happy dance); a full bowl and yard gear keep home pets at half speed', lambda: p15(run, new_wb, FIX)),
+             ('P15', 'Training gear (stage 3; stage 4b adds 5 for the big-needs pets): Ms. Paws sells the 15 pieces at their prices (dog course from pet yard level 2), one of each, refused when the yard has no room; it stands in the yard at once; tapped, a pet of its kind plays on it with its own moves (+20 happiness, then a happy dance); a full bowl and yard gear keep home pets at half speed', lambda: p15(run, new_wb, FIX)),
              ('P16', "Friends see your yard (stage 3): your garden level, pet yard level and gear go online as one short code (nothing at levels 1 with no gear); a friend's lot is drawn from it with its fences and gear; an old version's or a bad code draws the lot as before", lambda: p16(run, new_wb, FIX)),
              ('P17', "Vet station (stage 4): the clinic on the town's north edge (Map x 14.2, z -77.2, door to the west, on the map), solid walls, no tree or bush left inside it and every other one where the stage-3 build has it; 2 floors, Nurse Penny, Dr. Rūta, Vet nurse Leo, Dr. Tomas; the visit: sick pets with you go on the exam table one by one, Dr. Rūta checks (ears, teeth, a little cold), Leo gives a treat, cured, normal mood, 50 coins a pet or free with too few; too early, a friend's time or closed: no visit; walking away: no cure, no coins; Penny books, tips and sends you up; the people's feet on the floor", lambda: p17(run, live_w, new_wb, FIX)),
-             ('P18', "Big-needs pets (stage 4): a Big pets board upstairs at Ms. Paws; monkey, seal and bear locked by Pet care 40, then pet yard level 3, then their home, then the animal license (bear 3, others 1); the snake by its glass tank, then license 1; Ms. Paws says the first missing thing in one line; never the word exotic; buttons 44 px", lambda: p18(run, new_wb, FIX))]
+             ('P18', "Big-needs pets (stage 4): a Big pets board upstairs at Ms. Paws; monkey, seal and bear locked by Pet care 40, then pet yard level 3, then their home, then the animal license (bear 3, others 1); the snake by its glass tank, then license 1; Ms. Paws says the first missing thing in one line; never the word exotic; buttons 44 px", lambda: p18(run, new_wb, FIX)),
+             ('P19', "Speed guard (owner's OK 1 Nov, with the 3.0 MB limit): 30+ frames a second on an iPad-sized view with 2 players online in town; the first load measured and reported (live and new)", lambda: p19(run, live_w, new_wb, FIX)),
+             ('P20', "Big-needs pets (stage 4b): monkey (8 looks), seal (4), bear (6), snake (4) from the book's picked models (legs, flippers, the snake's body and tongue), saved as an old kind + their kind; locked ones are never adopted; when ready Ms. Paws lets you adopt them for 400; each plays with its favourite toy (frisbee, ball, squeaky toy, toy mouse) with its own move", lambda: p20(run, new_wb, FIX)),
+             ('P21', "Big pet homes (stage 4b): climbing tree 400, pond 700, cave den 700 sold only at pet yard level 3, drawn and solid in the big-pets area, sent to friends as letters and drawn on their lot (a bad letter draws nothing); the snake's glass tank (400) is furniture with a Glass tank card: light on/off and 8 colours, saved as its colour; a snake at home lives in it, sleeps in the hide and goes out over the lip", lambda: p21(run, new_wb, FIX)),
+             ('P22', "Waiting outside (stage 4b): bear and seal wait by the door of a building (Market) and join you again when you come out; at the vet station they come in; the monkey follows everywhere; a bear's vet visit is on the big-pet platform (it climbs on, Dr. Rūta comes over and goes back)", lambda: p22(run, new_wb, FIX)),
+             ('P23', "The new Pet Shop (stage 4b): one room with 3 open floors (no fade), both stairs walked up and down with a following pet, the open middle and the stairs' sides stop you, each kind at its own spot (big pets on floor 3) and staying there, buttons only on their floor, Ms. Paws at the counter, the building in town 14 x 10", lambda: p23(run, new_wb, FIX)),
+             ('P24', "Today's pets redrawn (stage 4b): the new pug, the real capybara (old saved colours map to the new ones), the pomchi's tail on its rump, duck and owl wings on joints; the others are the kept versions of today's", lambda: p24(run, new_wb, FIX))]
     only = [x for x in os.environ.get('PFU_ONLY', '').split(',') if x]
     for cid, name, fn in tests:
         if only and cid not in only: continue

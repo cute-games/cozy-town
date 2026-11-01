@@ -198,6 +198,12 @@ const SFX={
   pet(){tone(880,.1,'sine',.12,0,1250);tone(1175,.12,'sine',.1,.1,1450);},
   woof(){tone(380,.09,'square',.07,0,240);tone(380,.09,'square',.06,.15,220);},
   meow(){tone(700,.32,'sine',.1,0,520);},
+  /* 🐾 the big-needs pets and the tank light (pets and farm update, stage 4b): the book's tools/sounds.html recipes as they are */
+  monkey(){tone(440,.12,'sine',.12,0,640);tone(460,.12,'sine',.12,.16,660);tone(620,.28,'triangle',.11,.34,980);},
+  seal(){tone(560,.11,'sawtooth',.05,0,380);tone(600,.11,'sawtooth',.05,.17,400);},
+  bear(){tone(105,.4,'sawtooth',.05,0,80);tone(160,.3,'triangle',.09,.04,110);},
+  hiss(){for(let i=0;i<8;i++)tone(2800+Math.random()*1800,.05,'sawtooth',.012,i*.035);},
+  click(){tone(1800,.03,'square',.04);tone(1200,.03,'square',.03,.05);},
   squeak(){tone(1400,.08,'sine',.08,0,1800);tone(1500,.08,'sine',.07,.1,1900);},
   quack(){tone(520,.12,'square',.07,0,380);tone(480,.1,'square',.06,.14,340);},yip(){tone(900,.07,'square',.06,0,1200);tone(950,.07,'square',.05,.11,1250);},
   jump(){tone(330,.16,'triangle',.14,0,660);},

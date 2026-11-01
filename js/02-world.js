@@ -32,9 +32,10 @@ function pushOut(x,z,r,c){
   const l=x-c.x1,rr2=c.x2-x,t=z-c.z1,b=c.z2-z,m=Math.min(l,rr2,t,b);
   if(m===l)return[c.x1-r,z];if(m===rr2)return[c.x2+r,z];if(m===t)return[x,c.z1-r];return[x,c.z2+r];
 }
+let CFL=0;   /* 🐾 the floor whose pieces collide (the new Pet Shop's 3 floors, stage 4b): a piece with .fl only stops someone on that floor */
 function collideXZ(x,z,r,L,extra){
   for(let it=0;it<3;it++){let hit=false;
-    for(const list of [L.cols,L.dcols,extra||[]])for(const c of list){const p=pushOut(x,z,r,c);if(p){x=p[0];z=p[1];hit=true;}}
+    for(const list of [L.cols,L.dcols,extra||[]])for(const c of list){if(c.fl!==undefined&&c.fl!==CFL)continue;const p=pushOut(x,z,r,c);if(p){x=p[0];z=p[1];hit=true;}}
     if(!hit)break;}
   const b=L.bounds;return[clamp(x,b.x1+r,b.x2-r),clamp(z,b.z1+r,b.z2-r)];
 }
@@ -305,7 +306,8 @@ function buildCity(){
   building(st,{x:23,z:-31,w:20,d:8,h:12.6,wall:'#c7e6ff',face:1,door:{x:23,c:'#b79cff'}});col(L,12.9,-35.1,33.1,-26.9);
   bench(st,27,-6.6,0);col(L,26.1,-6.95,27.9,-6.25);bin(st,25.5,-6.7);colC(L,25.5,-6.7,.3);
   // SE block: pet shop, flower shop, apartments
-  building(st,{x:18,z:15,w:11,d:8,h:4.6,wall:'#c9f2e3',face:-1,shop:true,awning:'#ffd45c',sign:'🐾 Pet Shop',door:{x:18,glass:true},win:SWIN});col(L,12.4,10.6,23.6,19.1);
+  building(st,{x:18,z:15.6,w:14,d:10,h:9.6,wall:'#c9f2e3',trim:'#5fd4b0',roof:'#2f8f78',face:-1,shop:true,awning:'#ffd45c',sign:'🐾 Pet Shop',door:{x:18,glass:true},win:SWIN,skip:(dx,i)=>i===1&&Math.abs(dx)<4.3});col(L,10.9,10.5,25.1,20.7);   /* (no floor-2 window behind the sign) */   /* 🐾 the new 3-floor Pet Shop (stage 4b; model-petshop-new: Map x 11..25, z 10.6..20.6) */
+  pawSign(st,18,8.6,10.54,1.2,'#ffd45c','#5fd4b0').rotation.y=Math.PI;
   building(st,{x:31.5,z:14,w:7,d:6,h:4.2,wall:'#e6dbff',face:-1,shop:true,awning:'#b79cff',sign:'🌷 Flower Shop',door:{x:31.5,glass:true},win:SWIN});col(L,27.9,10.6,35.1,17.1);
   building(st,{x:24,z:31,w:18,d:8,h:9.6,wall:'#ffe0c4',face:-1,boxes:true,door:{x:24,c:'#ff8a6b'}});col(L,14.9,26.9,33.1,35.1);
   hydrant(st,10.5,6.6);colC(L,10.5,6.6,.2);bench(st,-27,-7.4,0);col(L,-27.9,-7.75,-26.1,-7.05);
@@ -1436,6 +1438,15 @@ const GEAR={dog:{n:'Dog agility course',i:'🐕',p:300,lv:2,k:['dog','pug','pomc
   bunny:{n:'Bunny hop hurdles',i:'🐇',p:150,lv:1,k:['bunny'],s:1.3},bunny2:{n:'Bunny hop hurdles (style 2)',i:'🐇',p:150,lv:1,k:['bunny'],s:1.1},
   hamster:{n:'Hamster wheel and tube maze',i:'🐹',p:150,lv:1,k:['hamster'],s:4.4},duck:{n:'Duck ramp and splash tub',i:'🦆',p:200,lv:1,k:['duck'],s:1.3},
   owl:{n:'Owl perch with flight hoops',i:'🦉',p:200,lv:1,k:['owl'],s:1.7},capy:{n:'Capybara zen bath',i:'♨️',p:250,lv:1,k:['capybara'],s:1.35}};
+/* 🐒🦭🐻🐍 stage 4b: the big-needs pets' gear (economy-pfu-prices), appended at the END (friends read gear by its place in GEAR_IDS). Monkey, seal and bear gear
+   need pet yard level 3 (where those pets live); the snake's basket fits any yard */
+Object.assign(GEAR,{monkey:{n:'Monkey climbing bars and rings',i:'🐒',p:250,lv:3,k:['monkey'],s:1},monkey2:{n:'Monkey climbing bars and rings (style 2)',i:'🐒',p:250,lv:3,k:['monkey'],s:1},
+  seal:{n:'Seal beach ball',i:'🦭',p:150,lv:3,k:['seal'],s:1.3},bear:{n:'Bear log and tyre swing',i:'🐻',p:250,lv:3,k:['bear'],s:1},snake:{n:'Snake flute and basket',i:'🎶',p:150,lv:1,k:['snake'],s:1.2}});
+/* 🏡 the big-needs pets' homes in the big-pets area of pet yard level 3 (the book's yard:design v3: pond .62 at (-20.8,-32), the 9 m jungle tree at (-16.4,-32.4),
+   the cave den .65 at (-12.15,-32.4); yard frame). Only the ones you bought (S.yard.home). sp = where the pet rests at home, c = what is solid */
+const BHOME={tree:{n:'Climbing tree',i:'🌳',p:400,pet:'monkey',key:'home.tree',x:-16.4,z:-32.4,s:1,sp:[-15.2,-30.6],c:[[0,0,.9]]},pond:{n:'Pond',i:'🌊',p:700,pet:'seal',key:'home.pond',x:-20.8,z:-32,s:.62,sp:[-19.0,-30.4],c:[[0,0,1.55]]},
+  den:{n:'Cave den',i:'🪨',p:700,pet:'bear',key:'home.den',x:-12.15,z:-32.4,s:.65,sp:[-12.2,-30.35],c:[[0,-.3,1.2]]}},BHOME_IDS=Object.keys(BHOME),BHOME_OF={monkey:'tree',seal:'pond',bear:'den'},BHOME_L='TPD';
+function bhomeModel(id){const H=BHOME[id],o=packBuild(H.key).root;o.scale.setScalar(H.s);o.position.set(H.x,0,H.z);return o;}
 const GEAR_IDS=Object.keys(GEAR),GEAR_SLOTS=[{x:-12.85,z:-21.2,w:3.0,d:1.7,lv:1},{x:-12.6,z:-26.0,w:3.6,d:2.2,lv:2},{x:-21.0,z:-29.8,w:2.8,d:1.0,lv:3}],GEAR_BB={};
 function gearBB(id){if(!GEAR_BB[id]){const g=new THREE.Group();GEAR_B[id](g);g.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(g);GEAR_BB[id]={cx:(b.min.x+b.max.x)/2,cz:(b.min.z+b.max.z)/2,w:b.max.x-b.min.x,d:b.max.z-b.min.z};g.traverse(o=>{if(o.geometry)o.geometry.dispose();});}return GEAR_BB[id];}
 /* where each piece of gear stands at pet yard level pl: [{id, k (slot), s (scale), ry}], in the order bought; a piece with no room left is null */
@@ -1452,12 +1463,13 @@ function yardLv(){if(!YARD.lvg||!S)return;const g=YARD.lvg,gl=yLv('garden'),pl=y
   for(const [i,x,z] of YARD_POTS)if(plotOpen(i)){cyl(st,.26,.2,.3,'#c9805a',x,0,z,{seg:10,ol:.015});cyl(st,.29,.29,.05,'#b8704c',x,.28,z,{seg:10,ol:.012});colC(FL,x,z,.32);}   /* 🪴 only the open pots (no more lock plates) */
   bake(st,true);
   YARD.gear=gearPlace((S.yard&&S.yard.gear)||[],pl).filter(Boolean).reduce((a,q)=>{a[q.k]=q;return a;},[]);
+  if(pl>=3)for(const id of (S.yard&&S.yard.home)||[])if(BHOME[id]){const H=BHOME[id],o=bhomeModel(id);g.add(o);bake(o,true);for(const [dx,dz,r] of H.c)colC(FL,H.x+dx,H.z+dz,r);}   /* 🏡 stage 4b */
   for(const q of YARD.gear)if(q){const o=gearModel(q);g.add(o);bake(o,true);q.o=o;const B=gearBB(q.id),sl=GEAR_SLOTS[q.k],hw=(q.ry?B.d:B.w)*q.s/2,hd=(q.ry?B.w:B.d)*q.s/2;col(FL,sl.x-hw*.8,sl.z-hd*.6,sl.x+hw*.8,sl.z+hd*.6);}
   if(typeof PLOTS!=='undefined')for(const r of PLOTS)plotRefresh(r);
   if(YARD.j!=null)yardColsSet(YARD.j);}
 function yardColsSet(j){const C=LOC.city;for(const c of YARD.wc){const i=C.cols.indexOf(c);if(i>=0)C.cols.splice(i,1);}
   YARD.wc=YARD.cols.concat(YARD.lcols).map(c=>{if(c.cr===undefined)return lotRect(j,c);const q=lotPt(j,c.cx,c.cz);return{cx:q[0],cz:q[1],cr:c.cr};});C.cols.push(...YARD.wc);}
-function yardSnap(){if(!S)return null;const gl=yLv('garden'),pl=yLv('pet'),gr=((S.yard&&S.yard.gear)||[]).filter(id=>GEAR[id]).map(id=>String.fromCharCode(97+GEAR_IDS.indexOf(id))).join('');const y=''+gl+pl+gr;return y==='11'?null:y;}   /* 🏡 "garden level, pet yard level, a letter per piece of gear" for friends (stage 3) */
+function yardSnap(){if(!S)return null;const gl=yLv('garden'),pl=yLv('pet'),gr=((S.yard&&S.yard.gear)||[]).filter(id=>GEAR[id]).map(id=>String.fromCharCode(97+GEAR_IDS.indexOf(id))).join('');const hm=((S.yard&&S.yard.home)||[]).filter(id=>BHOME[id]).map(id=>BHOME_L[BHOME_IDS.indexOf(id)]).join('');const y=''+gl+pl+gr+hm;return y==='11'?null:y;}   /* (stage 4b: then a capital letter per big pet home, T P D) */   /* 🏡 "garden level, pet yard level, a letter per piece of gear" for friends (stage 3) */
 function gardenSnap(){if(!S||!Array.isArray(S.garden))return null;const out=[];S.garden.forEach((st,i)=>{if(st&&st.seed&&SEEDS[st.seed])out.push(i+','+st.seed+','+plotStage(st));});return out.length?out.join(';'):null;}   /* "spot,seed,stage;…" (run 4, job 2) */
 function buildYard(L){const g=new THREE.Group(),gin=new THREE.Group(),st=new THREE.Group(),FL={cols:YARD.cols,ox:0,oz:0};
   gin.position.set(17,0,15);g.add(gin);gin.add(st);L.g.add(g);g.visible=false;YARD.g=g;YARD.gin=gin;
@@ -1875,48 +1887,51 @@ function buildStudio(){BENCH_L=null;const L=makeLoc('studio','in',700,0,[-4,-4,4
   const r=seeded(11),C=['#ff7aa8','#ffd45c','#5fd4b0','#7cc8ff','#b79cff'];
   for(let i=0;i<18;i++){const a=r()*TAU,d=2.2+r()*2.6;sph(g,.06+r()*.07,C[i%5],Math.cos(a)*d,.5+r()*2.6,-1.4-r()*2.6,{ws:8,hs:6,ol:.012});}
   bake(g,true);return L;}
-/* 🐾 run 4, job 12 (item 12): the Pet Shop has two floors. Downstairs: the counter, shelves of snacks and toys, a rack of pet clothes, the pet furniture for sale, the birdcage and the stairs
-   in the west wall. Upstairs (40 m further along z, like the floors of your house): every kind of animal in its own fenced area, so they never mix: puppies with their breeds, kittens, bunnies,
-   hamsters on their table, a capybara, ducks at a little pond, an owl on a perch. Adopting (💗 at every animal) and buying (🛒 downstairs) work as before */
+/* 🐾 the new Pet Shop (pets and farm update, stage 4b; the book's model-petshop-new, picked 31 Oct): 3 open floors as ONE room, 14 x 10, no fade between
+   floors. The room is the book's shop:room (PACKM 'shop.room', moved down 8 cm so floor 1 is at 0); the game adds the right and front walls, the door,
+   the ceiling, shelves of snacks and the clothes rack. Floors at PSH.F (0, 3.34, 6.54); stairs 1 to 2 on the left wall, 2 to 3 on the right, both rising
+   from z 4.2 to z .1 in 14 even steps (moves-petshop-stairs); the open middle x -3.2..3.2, z -2..2.6 has rails on floors 2 and 3. psTick (js/09-mainloop.js)
+   is the floor physics: where you stand is your floor (P.cy), a step is at most .45, the open middle and the stair sides are solid. Pieces that stand on a
+   floor collide only on that floor (col .fl, see collideXZ). Animals: each kind at its cozy spot (moves-petshop-spots), no cages */
+const PSH={F:[0,3.34,6.54],R:3.34,SX:[[-6.75,-5.15,0],[5.15,6.75,1]],SZ0:.1,SZ1:4.2,N:14,VX:3.2,VZ0:-2,VZ1:2.6};
+/* the height of the stairs of flight k at z (room frame): the top of the step you stand on */
+function psStairH(k,z){const n=clamp(Math.floor((PSH.SZ1-z)/((PSH.SZ1-PSH.SZ0)/PSH.N)),0,PSH.N-1);return PSH.F[k]+(n+1)*PSH.R/PSH.N;}
+/* where you can stand at x,z (room frame) with your feet at c: the highest floor within a step up; null = solid (a stair's side, or a drop) */
+function psSupport(x,z,c){let h=-1;const inM=Math.abs(x)<PSH.VX&&z>PSH.VZ0&&z<PSH.VZ1;
+  const cand=y=>{if(y<=c+.45&&y>h)h=y;};cand(0);
+  if(!inM&&!(x<-5.2&&z>PSH.SZ0))cand(PSH.F[1]);if(!inM&&!(x>5.2&&z>PSH.SZ0))cand(PSH.F[2]);
+  for(const [x0,x1,k] of PSH.SX)if(x>=x0&&x<=x1&&z>=PSH.SZ0&&z<=PSH.SZ1){const s=psStairH(k,z);if(s>c+.45&&PSH.F[k]<=c+.1)return null;cand(s);}
+  return h<c-.45?null:h;}
+const psFl=c=>c>PSH.F[2]-.6?2:c>PSH.F[1]-.6?1:0;   /* the floor a height is on */
 function buildPetShop(){
-  const L=makeLoc('pets','in',500,0,[-7,-5,7,5]);const W=14,D=10,H=3.4,wm=mat('#b0e6d2'),fm=toon({map:floorTex('mint')});L.W=W/2;L.D=D/2;L.items=new THREE.Group();scene.add(L.items);
-  const fls=[];for(let k=0;k<2;k++){const g=new THREE.Group(),sh=new THREE.Group(),pr=new THREE.Group();g.add(sh,pr);g.position.set(0,0,UPZ*k);const F={k,g,sh,pr,grid:null};fls.push(F);
-    shell({ox:L.ox,oz:L.oz+UPZ*k,cols:L.cols},sh,W,D,H,wm,fm,'#e2f1eb',g,UPG);   /* (run 4, stage 3: the walls and ceiling a little deeper: the shop looked washed out) */
-    if(k===0){doorAt(sh,0,D/2-.02,Math.PI,null,true,true);windowIn(sh,W/2-.02,1.0,2.6,-Math.PI/2,'#ffd45c');stairsIn(sh,1,W,H,wm);}
-    else{for(const z of[2.6,-2.6])windowIn(sh,W/2-.02,1.0,z,-Math.PI/2,'#ffd45c');for(const x of[-2.5,2.5])windowIn(sh,x,1.0,-D/2+.02,0,'#ffd45c');for(const x of[-2.5,2.5])windowIn(sh,x,1.0,D/2-.02,Math.PI,'#ffd45c');stairsIn(sh,0,W,H,wm);}
-    const gh=new THREE.GridHelper(W,W*2,0xb79cff,0xd9c8ff);gh.scale.z=D/W;gh.position.set(0,.012,UPZ*k);gh.visible=false;L.g.add(gh);F.grid=gh;}
-  L.fls=fls;L.g.add(fls[0].g);L.vf=-1;L.grid=fls[0].grid;L.bounds={x1:L.ox-W/2,z1:L.oz-D/2,x2:L.ox+W/2,z2:L.oz+UPZ+D/2};
-  inter(L,{x:-W/2+.9,z:-.6,r:1.6,icon:'⬆️',label:'Upstairs to the animals',act:()=>hclimb(1)});inter(L,{x:-W/2+.9,z:UPZ+.6,r:1.6,icon:'⬇️',label:'Downstairs to the shop',act:()=>hclimb(-1)});
-  /* ---- downstairs: the shop ---- */
-  const pr=fls[0].pr;
-  box(pr,3,1.0,.8,'#ffd45c',-4.9,0,2.0);box(pr,3.1,.08,.9,'#ffffff',-4.9,1.0,2.0);col(L,-6.45,1.55,-3.35,2.45);   /* the counter */
-  shelfUnit(pr,-4.1,-4.55,0,4.6,['petfood','catfood','bunnyfood'],'#ffffff',.5);shelfUnit(pr,.9,-4.55,0,4.6,['treat','ball','squeaky'],'#ffffff',.5);col(L,-6.4,-5,3.2,-4.1);   /* 🦴 snacks and toys along the back wall */
-  petClothesRack(pr,5.1,-4.55,0,3.2,['bow','hat','collar','scarf','pcrown','bowtie','cape','wings']);col(L,3.5,-5,6.7,-4.1);   /* 👒 pet clothes */
-  shelfUnit(pr,6.5,.6,-Math.PI/2,3.6,['petfood','catfood','ball'],'#ffffff',.5);col(L,6.05,-1.3,7,2.5);
-  {const t=buildFurn('cattree','#b79cff');t.position.set(-2.5,0,-1.3);pr.add(t);colC(L,-2.5,-1.3,.55);const d=buildFurn('doghouse','#7cc8ff');d.position.set(-6.1,0,-1.4);d.rotation.y=Math.PI/2;pr.add(d);col(L,-6.7,-2.0,-5.5,-.8);const pb=buildFurn('petbed','#ff9ec4');pb.position.set(2.3,0,-1.5);pr.add(pb);colC(L,2.3,-1.5,.5);}   /* pet furniture for sale, on show */
-  {cyl(pr,.04,.04,1.3,'#c8c8d8',5.8,0,3.9,{seg:6});const cage=new THREE.Group();cage.position.set(5.8,1.3,3.9);pr.add(cage);for(let k=0;k<10;k++){const a=k/10*TAU;cyl(cage,.012,.012,.8,'#c8c8d8',Math.cos(a)*.35,0,Math.sin(a)*.35,{seg:4,ol:false});}
-   cyl(cage,.36,.36,.05,'#ffd45c',0,0,0,{seg:16,ol:.01});cone(cage,.38,.3,'#ffd45c',0,.8,0,{seg:16,ol:.01});sph(cage,.1,'#5fd4b0',0,.35,0,{ws:10,hs:8,ol:.012});sph(cage,.06,'#5fd4b0',0,.49,.06,{ws:8,hs:6,ol:.01});cone(cage,.03,.06,'#ffd45c',0,.47,.14,{rx:Math.PI/2,center:true,seg:5,ol:false});colC(L,5.8,3.9,.45);}
-  {const up=signPlane('🐾 Animals upstairs ⬆️',2.4,.5,'#ffd45c','#3d2c5e');up.position.set(-W/2+.06,2.55,-2.4);up.rotation.y=Math.PI/2;fls[0].g.add(up);}
-  /* ---- upstairs: every kind in its own area (local z, 40 m along) ---- */
-  const pu=fls[1].pr,Z=UPZ;L.pens=[];
-  const pen=(type,kinds,x0,x1,z0,z1,c,o)=>{o=o||{};box(pu,x1-x0,.04,z1-z0,o.floor||'#ffe9a8',(x0+x1)/2,0,(z0+z1)/2,{ol:false});
-    for(const z of[z0,z1])box(pu,x1-x0,.3,.1,c,(x0+x1)/2,0,z,{ol:.02});for(const x of[x0,x1])box(pu,.1,.3,z1-z0,c,x,0,(z0+z1)/2,{ol:.02});
-    for(const x of[x0,x1])for(const z of[z0,z1])box(pu,.14,.5,.14,'#ffffff',x,0,z,{ol:.02});
-    col(L,x0-.08,Z+z0-.08,x1+.08,Z+z1+.08);
-    const s=signPlane(PET_TYPES[type].icon+' '+PET_TYPES[type].many,Math.min(2.6,x1-x0-.3),.5,c,'#3d2c5e');s.position.set((x0+x1)/2,2.95,z1<0?-D/2+.06:D/2-.06);   /* (run 4, stage 3: above the windows, which hid them) */if(z1>0)s.rotation.y=Math.PI;fls[1].g.add(s);   /* (run 4, stage 3: the upstairs group is already 40 m along; the signs added 40 m again and hung outside the room) */
-    L.pens.push(Object.assign({type,kinds,x0:x0+.4,x1:x1-.4,z0:Z+z0+.4,z1:Z+z1-.4},o.y?{y:o.y}:{},o.pz!==undefined?{pz:Z+o.pz}:{},o.swim?{swim:1}:{}));};   /* (run 4 finish: pz: the line of the perch a bird keeps to) */
-  pen('dog',['dog','pug','pomchi','sausage'],-6.7,-2.1,-4.9,-1.9,'#ffd45c');pen('cat',['cat','cat'],-1.7,1.1,-4.9,-1.9,'#ff9ec4');pen('bunny',['bunny','bunny'],1.5,4.1,-4.9,-1.9,'#b79cff');pen('capybara',['capybara'],4.5,6.7,-4.9,-1.9,'#c9a24a');
-  pen('duck',['duck','duck'],-6.7,-3.5,1.9,4.9,'#7cc8ff',{floor:'#9fd8f2',swim:1});disc(pu,1.1,'#7cc8ff',-5.1,.05,3.4,{seg:20});   /* 🦆 a little pond */
-  pen('owl',['owl'],-3.1,-.5,1.9,4.9,'#9a6a43',{y:.95,pz:3.4});{box(pu,.12,.95,.12,'#9a6a43',-2.9,0,3.4,{ol:.015});box(pu,.12,.95,.12,'#9a6a43',-.7,0,3.4,{ol:.015});box(pu,2.3,.08,.1,'#b07a52',-1.8,.9,3.4,{ol:.012});}   /* 🦉 a perch */
-  {box(pu,2.6,.8,2.0,'#c98f5e',1.3,0,3.4);box(pu,2.4,.04,1.8,'#ffe7a3',1.3,.8,3.4,{ol:false});const cg=toon({color:'#cfeeff',transparent:true,opacity:.16});box(pu,2.45,.55,1.85,null,1.3,.8,3.4,{mat:cg,ol:false});   /* no dark outline hull round the glass */
-   const wh=new THREE.Mesh(new THREE.TorusGeometry(.18,.03,6,16),mat('#ff7aa8'));wh.position.set(2.1,1.02,3.0);pu.add(wh);col(L,-.1,Z+2.3,2.7,Z+4.5);
-   const s2=signPlane('🐹 Hamsters',1.6,.4,'#ffd45c','#3d2c5e');s2.position.set(1.3,1.72,2.4);fls[1].g.add(s2);L.pens.push({type:'hamster',x0:.3,x1:2.3,z0:Z+2.7,z1:Z+4.1,y:.82});}   /* 🐹 the hamsters' table */
-  {box(pu,1.8,.08,.5,'#c98f5e',4.9,.45,3.9,{ol:.012});for(const x of[4.1,5.7])box(pu,.1,.45,.5,'#c98f5e',x,0,3.9,{ol:.012});box(pu,1.8,.5,.08,'#c98f5e',4.9,.5,4.12,{ol:.012});col(L,4.0,Z+3.6,5.8,Z+4.2);}   /* a little bench to watch the animals from */
-  {const s=signPlane('🔒 Big pets: 🐒 🦭 🐻 🐍',2.4,.5,'#ffd45c','#3d2c5e');s.position.set(W/2-.06,1.8,0);s.rotation.y=-Math.PI/2;fls[1].g.add(s);inter(L,{x:W/2-1.2,z:Z,r:1.8,icon:'🔒',label:'Big pets',act:openBig});}   /* 🔒 stage 4: what the big-needs pets still need (Ms. Paws says it) */
-  for(const F of fls){bake(F.sh,false);bake(F.pr,true);}
-  inter(L,{x:0,z:4.3,r:1.9,icon:'🚪',label:'Go outside',act:()=>exitTo('pets')});
-  inter(L,{x:5.6,z:.6,r:2,icon:'🛒',label:'Buy pet food, toys & clothes',act:()=>openShop('pets')});
-  inter(L,{x:5.1,z:-3.6,r:1.8,icon:'👒',label:'Pet clothes',act:()=>openShop('pets')});
+  const L=makeLoc('pets','in',500,0,[-6.8,-4.8,6.88,4.94]);const W=14,D=10,H=9.82,F=PSH.F;L.W=W/2;L.D=D/2;L.items=new THREE.Group();scene.add(L.items);L.psh=1;
+  const g=new THREE.Group(),pr=new THREE.Group();g.position.y=-.08;L.g.add(g,pr);const room=packBuild('shop.room').root;g.add(room);
+  /* the right and front walls, the door, the ceiling (the book's room is a cut-away with low walls there) */
+  const wm=mat('#e6f8f0');box(pr,.3,H,D+.6,null,W/2+.15,0,0,{mat:wm,ol:false});box(pr,W+.6,H,.3,null,0,0,D/2+.15,{mat:wm,ol:false});
+  {const ce=new THREE.Mesh(new THREE.PlaneGeometry(W+.4,D+.4),new THREE.MeshBasicMaterial({color:'#e2f1eb'}));ce.rotation.x=Math.PI/2;ce.position.y=H;ce.userData.keep=1;L.g.add(ce);}
+  doorAt(pr,0,D/2-.02,Math.PI,null,true,true);for(const f of[1,2])for(const x of[-3.5,3.5])windowIn(pr,x,F[f]+1.2,D/2-.02,Math.PI,'#ffd45c');windowIn(pr,W/2-.02,1.2,-1.4,-Math.PI/2,'#ffd45c');
+  /* floor 1: snacks and toys on the right wall, the pet clothes rack by the door */
+  shelfUnit(pr,6.45,-1.5,-Math.PI/2,2.6,['petfood','catfood','bunnyfood'],'#ffffff',.5);petClothesRack(pr,3.4,4.45,Math.PI,2.4,['bow','hat','collar','scarf','pcrown','bowtie','cape','wings']);
+  const c1=(x1,z1,x2,z2,fl)=>{col(L,x1,z1,x2,z2);L.cols[L.cols.length-1].fl=fl;},cc=(x,z,r,fl)=>{colC(L,x,z,r);L.cols[L.cols.length-1].fl=fl;};
+  /* what stands on each floor (room frame, from the book's layout) */
+  c1(5.05,1.0,5.95,3.8,0);c1(1.1,-4.8,2.4,-4.35,0);c1(-2.4,-4.8,-1.1,-4.35,0);c1(-5.2,-4.8,-2.6,-3.9,0);c1(3.1,-4.8,6.4,-3.95,0);c1(6.0,-2.85,6.88,-.15,0);c1(2.15,4.0,4.65,4.94,0);
+  cc(0,.3,1.75,0);   /* the play hill with the shop tree */
+  cc(-4.6,-3.5,1.05,1);cc(4.4,-3.5,1.2,1);c1(-1.05,3.6,1.05,4.6,1);
+  c1(-6.8,-4.8,-3.6,-2.9,2);c1(-2.4,-4.8,2.35,-2.1,2);c1(-6.55,2.65,-5.15,4.85,2);
+  bake(g,true);bake(pr,true);   /* (the whole room: few draws, like the old shop) */
+  /* the animals at their spots: pens are small (a bed, a seat, a tub); y = where they stand; fixed = one spot and a move */
+  const hill=(x,z)=>{const q=1-(x*x+((z-.3)/.85)**2)/(1.9*1.9);return q>0?.95*Math.sqrt(q):0;};
+  L.pens=[{type:'dog',kinds:['dog','pug','pomchi','sausage'],x0:-5.0,x1:-2.9,z0:-3.3,z1:-2.2,fl:0,flat:1},{type:'cat',kinds:['cat','cat'],x0:3.4,x1:5.0,z0:-4.45,z1:-4.45,y:.48,fl:0},
+    {type:'bunny',kinds:['bunny','bunny'],x0:-1.5,x1:-.4,z0:-.6,z1:1.3,hill,fl:0},{type:'hamster',kinds:['hamster'],x0:.5,x1:.8,z0:.9,z1:1.2,hill,fl:0},
+    {type:'capybara',kinds:['capybara'],x0:-4.7,x1:-4.7,z0:-3.45,z1:-3.45,y:F[1]+.12,fl:1,swim:1,face:.6},{type:'duck',kinds:['duck','duck'],x0:3.7,x1:5.1,z0:-4.1,z1:-2.9,y:F[1]+.27,fl:1,swim:1},
+    {type:'owl',kinds:['owl'],x0:Math.cos(.3)*.83,x1:Math.cos(.3)*.83,z0:.3+Math.sin(.3)*.83,z1:.3+Math.sin(.3)*.83,y:4.16,fl:1,face:Math.atan2(-Math.cos(.3),-Math.sin(.3))+Math.PI/2},
+    {type:'bear',kinds:['bear'],x0:-5.35,x1:-5.35,z0:-2.4,z1:-2.4,y:F[2]+.42,fl:2,mv:'bear.tv',face:Math.PI},{type:'seal',kinds:['seal'],x0:.95,x1:.95,z0:-3.2,z1:-3.2,y:F[2]+.24,fl:2,mv:'seal.swim',face:.8,swim:1},
+    {type:'monkey',kinds:['monkey'],x0:-5.85,x1:-5.85,z0:3.4,z1:3.4,y:F[2]+2.62,fl:2,mv:'monkey.happy',face:Math.PI/2}];
+  {const s=signPlane('🐒 🦭 🐻 🐍 Big pets',2.2,.45,'#ffd45c','#2f8f78');s.position.set(4.2,F[2]+2.3,-4.76);L.g.add(s);}
+  inter(L,{x:4.2,z:-3.6,r:1.8,icon:'🔒',label:'Big pets',when:()=>psFl(P.cy||0)===2,act:openBig});   /* 🔒 what the big-needs pets still need (Ms. Paws says it), and adopting them */
+  inter(L,{x:0,z:4.3,r:1.9,icon:'🚪',label:'Go outside',when:()=>psFl(P.cy||0)===0,act:()=>exitTo('pets')});
+  inter(L,{x:4.4,z:2.4,r:2,icon:'🛒',label:'Buy pet food, toys & clothes',when:()=>psFl(P.cy||0)===0,act:()=>openShop('pets')});
+  inter(L,{x:3.4,z:3.6,r:1.6,icon:'👒',label:'Pet clothes',when:()=>psFl(P.cy||0)===0,act:()=>openShop('pets')});
   return L;
 }
 /* 🩺 the vet station's models (pets and farm update, stage 4): the book's non-living pack v164 (vet:clinic, vet:table ... vet:treat, picked 31 Oct), copied as they are.

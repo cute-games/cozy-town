@@ -267,6 +267,14 @@ function buildTreePark(){
   const hd=new THREE.Group();box(hd,.6,.05,.05,'#5a5f8c',0,0,0,{ol:false});for(const s of[-.22,.22])box(hd,.04,.5,.04,'#e8d7b0',s,-.5,0,{ol:false});box(hd,.5,.04,.04,'#8f6244',0,-.5,0,{ol:false});hd.visible=false;L.g.add(hd);TP.hand=hd;
   const mk=new THREE.Group();{const m=new THREE.Mesh(starGeo(.42,0,.12),STARM);mk.add(m);hull(mk,starGeo(.42,.042,.12),m,{});}   /* (run 4, stage 3: a turning star; the arrow looked like a floating pencil in two pieces) */mk.visible=false;mk.userData.keep=1;L.g.add(mk);TP.mark=mk;   /* ⬇️ a bobbing yellow arrow over the next deck of your path (run 4, stage 3) */
   return L;}
+/* 🐾 the new Pet Shop's floors (stage 4b; js/02-world.js PSH): you walk up and down the stairs, the floor under you is your height (P.cy); a stair's side,
+   the rails round the open middle and the stair holes stop you (you never fall). Pieces on a floor collide only on that floor (CFL) */
+function psTick(dt){const L=LOC.pets;if(!L||CUR!==L||!L.psh){PSH.in=0;CFL=0;return;}
+  if(!PSH.in){PSH.in=1;PSH.px=P.x;PSH.pz=P.z;}
+  if(!PLAYING||CUT||fading||P.sit){PSH.px=P.x;PSH.pz=P.z;CFL=psFl(P.cy||0);return;}
+  const c=P.cy||0,h=psSupport(P.x-L.ox,P.z-L.oz,c);
+  if(h===null){P.x=PSH.px;P.z=PSH.pz;}else P.cy=Math.abs(h-c)<.01?h:lerp(c,h,Math.min(1,dt*14));
+  PSH.px=P.x;PSH.pz=P.z;CFL=psFl(P.cy||0);}
 /* ---- the floor physics ---- */
 function tpSupport(x,z,feet){let h=0;for(const d of TP.decks){if(d.h<=feet+.5&&Math.abs(x-d.x)<=d.w/2&&Math.abs(z-d.z)<=d.d/2)h=Math.max(h,d.h);}for(const w of TP.walk){if(w.h<=feet+.5&&x>=w.x1&&x<=w.x2&&z>=w.z1&&z<=w.z2)h=Math.max(h,w.h);}return h;}
 function tpDeckAt(x,z,h){return TP.decks.find(d=>Math.abs(d.h-h)<.3&&Math.abs(x-d.x)<=d.w/2&&Math.abs(z-d.z)<=d.d/2)||null;}
@@ -668,7 +676,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
   if(PLAYING){
     {if(clockSync()){newDay();change();}   /* 🕰️ the one clock (run 4, job 1): the time and the day come from the real time, the same for everyone */
       S.hunger=Math.max(0,S.hunger-dt/HOUR*4);if(S.hunger<20&&!hungryWarn){hungryWarn=true;toast('Your tummy is rumbling! Eat something from your 🎒 bag.',4);}if(S.hunger>30)hungryWarn=false;}
-    updatePlayer(dt);tpTick(dt);   /* 🌲 the Tree Park's floor physics (run 4, job 16) */
+    updatePlayer(dt);tpTick(dt);psTick(dt);   /* 🌲 the Tree Park's floor physics (run 4, job 16) */
     fanTick(dt);let fi=0;for(const f of FRIEND_ACTORS)f.update(dt,f.mode==='follow'?fi++:0);PET_ACTORS.forEach((p,i)=>p.update(dt,fi+i+(fi?0:1)));petTick(dt);tagsApart([...FRIEND_ACTORS,...PET_ACTORS].filter(f=>f.g.visible&&f.loc===CUR.id&&f.tag).map(f=>({tag:f.tag,bub:f.bub||null})));   /* (run 4 finish: your pets' tags too; indoors three of them piled up) */
     if(CUR.id==='pets')updatePen(dt);
     if(CUR.id==='toys'&&CUR.train){const T=CUR.train;T.userData.t=(T.userData.t||0)+dt*.9;T.children.forEach((c,i)=>{const a=T.userData.t-i*.32;c.position.set(Math.cos(a)*.88,0,Math.sin(a)*.55);c.rotation.y=Math.atan2(-Math.sin(a)*.88,Math.cos(a)*.55);});}

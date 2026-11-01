@@ -20,7 +20,7 @@ A three.js toon game for kids: `index.html` + `css/` + `js/` since Plan 1 (29 Oc
 
 ## Rules that hold for every run
 - Keep family names out of this public repo. The title's credit line stays exactly as it is.
-- The 55 online-part lines stay as they are (`strip_online.py` in the kit must find all 55). The game under 1.8 MB (the joined one file: `tools/split/split.py join`).
+- The 55 online-part lines stay as they are (`strip_online.py` in the kit must find all 55). The game up to 3.0 MB (the joined one file: `tools/split/split.py join`) plus a speed guard: 30+ fps on an iPad-sized view with 2 players, and the first load measured and reported (owner's OK 1 Nov 2026; kit lines N14/N40 and P19; before: under 1.8 MB).
 - Nothing shared between players comes from `Math.random`: only the one clock, data sent online, or a seeded hash. The real calendar only through `realDate()`.
 - Old saves keep everything; old and new versions still see each other. Test data is named ZZTEST.
 - The check kit (`cozy-check-v7.zip` from 23 Oct, read its `README-KIT.md`; v4 to v6 are history). If `cozy-check-v7.zip` is not in the repo yet, build it from v6 with `python3 tools/kit-v7/make_v7.py` (repo root) and commit it in your first pull request. In the kit every line starts as FAIL, no line is ever made weaker; a rewritten line is listed old → new in the report.
