@@ -36,7 +36,21 @@ def fix_readme(s):
                 'and the saves of each finished stage of the update (save-pfu<N>-*.json).\n'
                 'Added 1 Nov 2026 (stage 2, the pet brain): P5 one need and food groups, P6 sickness (built, switched off until the vet clinic), P7 vet booking,\n'
                 'P8 bowl, naps and the healthy week, P9 friends see your pets for real and pet them, P10 the moves pack on every pet and its cost, P11 pets not\n'
-                'left behind on long walks. PFU_ONLY=P5,P9 runs some of them. Fixture save-pfu2-stage2.json.\n')
+                'left behind on long walks. PFU_ONLY=P5,P9 runs some of them. Fixture save-pfu2-stage2.json.\n'
+                'Added 1 Nov 2026 (stage 4): P17 the vet station and the visit, P18 big-needs pets locked at Ms. Paws; P6 rewritten (old: sickness switched off\n'
+                'until the vet clinic; new: switched on with the vet station in, the switch still proven both ways). Fixture save-pfu4-stage4.json,\n'
+                'P17 reference pfu-trees-stage3.json. B1 rewritten (old: a pet\'s sickness timer "sad" compared exactly; new: like happiness, only\n'
+                'as still there, because it moves while you play now that sickness is on).\n')
+def fix_checks(s):
+    # B1 (1 Nov 2026, pets and farm update stage 4): sickness is switched on now, so a pet's sickness timer (pets.N.sad: minutes played at 0-1 hearts)
+    # moves on every frame played, like happiness, and two loads a few frames apart differ in the third decimal (save-pfu2-stage2.json: 12.5 -> 12.513).
+    # Old: compared exactly. New: compared like happiness, only as 'still there'. Everything else is compared as before.
+    return rep(s, "            if path.startswith('pets.') and path.count('.') == 2 and k == 'happy': continue\n",
+               "            if path.startswith('pets.') and path.count('.') == 2 and k == 'happy': continue\n"
+               "            # 1 Nov 2026 (kit v7, pets and farm update stage 4): the sickness timer 'sad' drifts like happiness now that sickness is on: compared only as 'still there'\n"
+               "            if path.startswith('pets.') and path.count('.') == 2 and k == 'sad':\n"
+               "                if k not in b: out.append(f'{path}{k}: missing')\n"
+               "                continue\n")
 NIGHT3 = 'tools/prerun4-index.html'   # the night-3 game (md5 709bf763), the live file of run 4: it does not know costumes
 def fix_run4(s):
     # N19 (29 Oct, the owner's decision): its old-version friend was the live file, which knows costumes since run 4, so the line failed for every
@@ -115,6 +129,7 @@ for info in src.infolist():
     if info.filename == 'cozycheck/README-KIT.md': data = fix_readme(data.decode('utf-8')).encode('utf-8')
     if info.filename == 'cozycheck/night3.py': data = fix_n9(fix_night3(data.decode('utf-8'))).encode('utf-8'); compile(data, info.filename, 'exec')
     if info.filename == 'cozycheck/house4.py': data = fix_house4(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
+    if info.filename == 'cozycheck/checks.py': data = fix_checks(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
     if info.filename == 'cozycheck/run4.py': data = fix_run4(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
     dst.writestr(info, data)
 # fixtures that were only in tools/check-fixtures (31 Oct 2026): N8's save-prepet1-designer2.json, the save made by main before the
@@ -125,6 +140,7 @@ for f in sorted(glob.glob('tools/check-fixtures/save-prepet1-designer2.json') + 
     if n in have: sys.exit(f'STOP: {n} is already in {SRC}')
     json.load(open(f)); dst.write(f, n)
 pf = open('tools/kit-v7/pfu.py', 'rb').read(); compile(pf, 'cozycheck/pfu.py', 'exec'); dst.writestr('cozycheck/pfu.py', pf)
+dst.write('tools/kit-v7/pfu-trees-stage3.json', 'cozycheck/pfu-trees-stage3.json')   # P17's reference: the town's trees outside the vet station (stage 4)
 n3 = open(NIGHT3, 'rb').read()
 if hashlib.md5(n3).hexdigest() != '709bf763d51be0160c118e2f9249f9f6': sys.exit(f'STOP: {NIGHT3} is not the night-3 game')
 dst.writestr('cozycheck/night3-game.html', n3)

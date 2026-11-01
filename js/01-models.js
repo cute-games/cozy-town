@@ -694,7 +694,7 @@ const GROUP_FOOD={meat:'petfood',fish:'catfood',veg:'bunnyfood'},PET_FOODS=['pet
 const PET_LOVE={petfood:['🐶 🦉 🐻 🐍','dogs, owls, bears and snakes love it'],catfood:['🐱 🦭','cats and seals love it'],bunnyfood:['🐰 🐹 🦫 🦆 🐒','bunnies, hamsters, capybaras, ducks and monkeys love it'],treat:['🐾 all love it','every pet loves it']};
 const petFood=k=>GROUP_FOOD[PET_GROUP[k]||'meat'];   /* the food a pet kind loves */
 const PET_FOOD=Object.fromEntries(Object.keys(PET_GROUP).map(k=>[k,[petFood(k),'treat']]));   /* (each kind's food, the loved one first, as before: older code and the check kit read it) */
-const PET_TOY={dog:'ball',cat:'yarn',bunny:'squeaky',hamster:'squeaky',pomchi:'squeaky',pug:'ball',sausage:'frisbee',capybara:'ball',duck:'squeaky',owl:'mouse'};
+const PET_TOY={dog:'ball',cat:'yarn',bunny:'squeaky',hamster:'squeaky',pomchi:'squeaky',pug:'ball',sausage:'frisbee',capybara:'ball',duck:'squeaky',owl:'mouse',monkey:'frisbee',seal:'ball',bear:'squeaky',snake:'mouse'};   /* (stage 4: the big-needs pets' favourite toys, rules-pet-brain-details) */
 function itemInfo(id){if(id&&id.startsWith('seed_')){const K=SEEDS[id.slice(5)];return K&&{n:K.n+' seeds',i:K.i,p:K.p};}return FOODS[id]||PET_ITEMS[id];}
 function foodModel(g,k,x,y,z){
   const o={ol:.012};
@@ -943,10 +943,45 @@ const GEAR_B={
   for(const [x,z] of[[.15,-1.0],[.3,-.98],[.45,-.92]]){cyl(g,.025,.025,1.3,'#8fc96a',x,0,z,{seg:8,ol:.01});for(let k=1;k<4;k++)cyl(g,.027,.027,.02,'#6fae4f',x,k*.32,z,{seg:8,ol:false});sph(g,.09,'#6fc25a',x+.05,1.3,z,{s:[1.4,.25,.5],rz:-.4,ws:8,hs:5,ol:.006});}
   /* a little wooden bucket */
   cyl(g,.1,.09,.14,Wd,-.85,0,.45,{seg:12,ol:.01});cyl(g,.101,.101,.02,'#5a5f8c',-.85,.08,.45,{seg:12,ol:false});}};
+/* 🩺 the vet station's staff (pets and farm update, stage 4): the book's living pack v7, vet:vet, copied as it is (makeVet, VETS). Nurse Penny = the Dr. Mila
+   look (white coat, clipboard), Dr. Tomas, Dr. Rūta (the vet), Vet nurse Leo. tube/tubeGeo: the pack's smooth bent tube (the stethoscope) */
+function tubeGeo(pts,r0,r1,seg,rad,grow){const cv=new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(p[0],p[1],p[2])));const fr=cv.computeFrenetFrames(seg,false);const P=[],I=[];
+  for(let i=0;i<=seg;i++){const t=i/seg,c=cv.getPointAt(t),r=(typeof r0==='function'?r0(t):r0+(r1-r0)*t)+grow;for(let j=0;j<=rad;j++){const a=j/rad*Math.PI*2,n=fr.normals[i].clone().multiplyScalar(Math.cos(a)).add(fr.binormals[i].clone().multiplyScalar(Math.sin(a)));P.push(c.x+n.x*r,c.y+n.y*r,c.z+n.z*r);}}
+  for(let i=0;i<seg;i++)for(let j=0;j<rad;j++){const a=i*(rad+1)+j,b=a+rad+1;I.push(a,a+1,b,b,a+1,b+1);}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setIndex(I);g.computeVertexNormals();return{g,cv};}
+function tube(g,pts,r0,r1,c,o={}){const seg=o.seg||24,rad=o.rad||12,{g:geo,cv}=tubeGeo(pts,r0,r1,seg,rad,0);const m=new THREE.Mesh(geo,mat(c));g.add(m);
+  const ol=o.ol===false?0:(o.ol||.012);if(ol){const h=new THREE.Mesh(tubeGeo(pts,r0,r1,seg,rad,ol).g,OL);g.add(h);}
+  const rr=t=>typeof r0==='function'?r0(t):r0+(r1-r0)*t;if(o.caps!==false)for(const t of[0,1]){const p=cv.getPointAt(t);sph(g,rr(t),c,p.x,p.y,p.z,{ws:12,hs:8,ol:ol||false});}return m;}
+function makeVet(V){const p=makePerson(Object.assign({nohat:true},V.look)),b=p.b,W='#f7f6f1';
+  if(V.coat){   /* white coat: white top and sleeves come from the look; the coat hangs below the waist, open at the front over the scrubs */
+    box(b,.47,.34,.03,'#ffffff',0,.27,-.135,{ol:.012});for(const s of[-1,1])box(b,.18,.34,.03,W,s*.145,.27,.135,{ol:.012});
+    box(b,.12,.5,.012,V.look.bottom,0,.6,.133,{ol:false});   /* the scrubs showing in the open front */
+    for(const s of[-1,1])box(b,.07,.28,.012,shade(W,-.06),s*.085,.8,.136,{rz:s*-.25,ol:false});   /* lapels */
+    for(const s of[-1,1])box(b,.11,.08,.012,shade(W,-.08),s*.14,.42,.15,{ol:false});}   /* pockets */
+  if(V.paws)for(const [x,y] of[[-.13,.75],[.12,.92],[.14,.68],[-.1,.98]]){sph(b,.022,V.paws,x,y,.135,{s:[1,1,.3],ws:8,hs:6,ol:false});for(const [dx,dy] of[[-.022,.025],[0,.034],[.022,.025]])sph(b,.009,V.paws,x+dx,y+dy,.135,{s:[1,1,.3],ws:6,hs:4,ol:false});}
+  /* stethoscope: round the neck, both ends down the chest, a silver bell */
+  tube(b,[[-.13,1.12,.02],[-.15,1.0,.14],[-.07,.86,.15],[0,.82,.15]],.02,.02,'#4a5470',{seg:16,rad:8,ol:.006,caps:false});
+  tube(b,[[.13,1.12,.02],[.15,1.0,.14],[.1,.9,.15]],.02,.02,'#4a5470',{seg:12,rad:8,ol:.006,caps:false});
+  sph(b,.055,'#c9cdd6',0,.8,.16,{s:[1,1,.45],ws:14,hs:10,ol:.01});sph(b,.032,'#eef0f4',0,.8,.182,{s:[1,1,.3],ws:8,hs:6,ol:false});
+  /* name badge with a little red cross */
+  {const by=V.coat?.66:.9,bx=V.coat?-.15:-.12;box(b,.14,.09,.014,'#ffffff',bx,by,.14,{ol:.008});box(b,.075,.024,.006,'#e03a3a',bx,by+.033,.149,{ol:false});box(b,.024,.075,.006,'#e03a3a',bx,by+.008,.149,{ol:false});}
+  /* in the hand */
+  const hand=p.arms[1];if(V.hold)hand.rotation.x=V.hold==='kitten'?-1.05:-.55;
+  if(V.hold==='clipboard'){const c=new THREE.Group();c.position.set(-.03,-.5,.05);c.rotation.set(.55,0,.08);c.scale.setScalar(1.7);hand.add(c);box(c,.16,.22,.02,'#a8743f',0,-.11,0,{ol:.008});box(c,.13,.17,.006,'#ffffff',0,-.12,.012,{ol:false});box(c,.06,.025,.03,'#c9cdd6',0,0,0,{ol:.005});for(let i=0;i<3;i++)box(c,.09,.008,.004,'#9aa3b5',0,-.07-i*.035,.016,{ol:false});}
+  if(V.hold==='treat'){const c=new THREE.Group();c.position.set(0,-.56,.1);c.rotation.z=.3;c.scale.setScalar(2);hand.add(c);box(c,.11,.03,.03,'#e8c08a',0,0,0,{center:true,ol:.006});for(const s of[-1,1])for(const t of[-1,1])sph(c,.022,'#e8c08a',s*.058,t*.017,0,{ws:8,hs:6,ol:.005});}
+  if(V.hold==='bandage'){const c=new THREE.Group();c.position.set(0,-.58,.09);c.rotation.x=Math.PI/2;c.scale.setScalar(1.9);hand.add(c);cyl(c,.045,.045,.06,'#ffffff',0,0,0,{center:true,seg:14,ol:.006});cyl(c,.016,.016,.062,'#e8e2d8',0,0,0,{center:true,seg:8,ol:false});}
+  if(V.hold==='kitten'){const c=new THREE.Group();c.position.set(-.06,-.4,.16);c.rotation.x=1.05;c.scale.setScalar(1.7);hand.add(c);sph(c,.07,'#f2b26b',0,0,0,{s:[1,.85,1.1],ws:12,hs:9,ol:.008});const hd=new THREE.Group();hd.position.set(0,.07,.05);c.add(hd);sph(hd,.055,'#f2b26b',0,0,0,{ws:12,hs:9,ol:.008});for(const s of[-1,1]){cone(hd,.022,.04,'#f2b26b',s*.033,.05,0,{seg:4,ol:.005});sph(hd,.008,'#141018',s*.02,.01,.048,{ws:6,hs:4,ol:false});}}
+  if(V.pocketPaw){box(b,.15,.07,.012,'#ffffff',0,1.04,.133,{ol:false});box(b,.13,.12,.012,shade(V.look.top,-.12),.12,.86,.135,{ol:.006});sph(b,.032,'#ffffff',.12,.85,.143,{s:[1,1,.3],ws:8,hs:6,ol:false});for(const [dx,dy] of[[-.026,.03],[0,.04],[.026,.03]])sph(b,.013,'#ffffff',.12+dx,.85+dy,.143,{s:[1,1,.3],ws:6,hs:4,ol:false});}
+  return p;}
+const VETS=[
+ ['mila','Dr. Mila (white coat)',{look:{skin:'#f5cfb0',hair:'#7a4a2a',style:'ponytail',top:'#f7f6f1',sleeve:'#f7f6f1',bottom:'#4fb3a6',shoes:'#ffffff',scale:1.06},coat:1,hold:'clipboard'}],
+ ['tomas','Dr. Tomas (teal scrubs)',{look:{skin:'#a8724e',hair:'#1f1a26',style:'short',top:'#4fb3a6',sleeve:'#4fb3a6',bottom:'#4fb3a6',shoes:'#3d3550',scale:1.12},hold:'treat',pocketPaw:1}],
+ ['ruta','Dr. Rūta (older, round glasses)',{look:{skin:'#f2c9a8',hair:'#d9d4cc',style:'bun',top:'#f7f6f1',sleeve:'#f7f6f1',bottom:'#e88aa8',shoes:'#5a4a6a',glasses:'glasses',glc:'#7a4a6a',scale:1.0},coat:1,hold:'kitten'}],
+ ['leo','Vet nurse Leo (paw-print scrubs)',{look:{skin:'#e8b48a',hair:'#c5874a',style:'curly',top:'#a99be0',sleeve:'#a99be0',bottom:'#8a7cc9',shoes:'#ffffff',scale:1.1},paws:'#ffffff',hold:'bandage'}]];
 /* 🐾 the moves pack (pets and farm update, stage 2): the book's tools/moves-pack v4 (31 Oct, every move OK'd by the owner), cut down to the pet moves
    the game uses (stage 3 adds the yard-gear moves: dog.agility, bunny.hurdles, cat.wand, hamster.wheel, capy.hopIn/tub, duck.splash/paddle, owl.perch/fly) (run doc guard 3: only what the update uses; tools/pfu-wip/extract-moves.py cuts it). It turns the model's own groups (legs, head, tail,
    body), never bends a mesh, and puts the feet on the floor. COZY_MOVES.play(model, name, seconds since the move began, {kind, dist, mood}).
-   Later stages add the moves they use with the same script (seal, bear, snake, tricks, farm). */
+   Later stages add the moves they use with the same script (seal, bear, snake, tricks, farm). Stage 4 adds the vet visit: pet.vetNervous, pet.takeTreat, vet.listen, vet.check, nurse.treat. */
 /* Cozy Town moves pack (31 Oct 2026, round 3: every approved preview, Pet Show tricks, toy play, farm feeding) — window.COZY_MOVES
    Every approved movement, written for the game's own models (three.js r128, no imports).
    Rules it keeps (Karolis): parts move only as rigid pieces at their joints (group rotations and positions, never a bent mesh);
@@ -1220,6 +1255,23 @@ function chickenWalk(m,t,o){const R=rig(m),K=KIND.chicken;o=o||{};const A=K.A*(o
   const half=frac(ph*2);const sc=(R.root.scale&&R.root.scale.y)||1;const step=stride(m,A)/2/sc;const hold=.7;const bob=Math.min(.06,step*hold*.9);
   const off=half<hold?bob*(.5-half/hold):bob*(-.5+(half-hold)/(1-hold));
   if(m.neck)m.neck.position.z+=off;else if(m.head)m.head.position.z+=off;rotAbout(R,'z',.06*Math.sin(TAU*ph),0,R.bCenter.y,0);if(m.tail)m.tail.rotation.x+=.1*Math.sin(TAU*2*ph);return {};}
+/* ---------- people (makePerson: legs[] at the hip, arms[] at the shoulder, head; no knees or elbows) ---------- */
+/* point an arm along a direction given in the person's root frame (+z forward, +y up). k = how far (0 rest .. 1) */
+function aimArm(R,i,dir,k){const a=R.m.arms&&R.m.arms[i];if(!a||!k)return;const d=dir.clone().normalize();_q2.copy(R.b.quaternion).invert();d.applyQuaternion(_q2);
+  _q.setFromUnitVectors(DOWN,d);a.quaternion.slerp(_q,cl(k));}
+const v3=(x,y,z)=>new THREE.Vector3(x,y,z);
+/* lean the upper body forward by phi (about the hips) with a lunge stance (feet stay on the floor) — the people model has no waist or knees */
+/* (sweep fix) the lean is 60 % of what is asked, the stance 25 % wider (lowers the hips a little: there are no knees), and the head turns back up so it looks ahead instead of sinking into the chest */
+function lunge(R,phi,legA){phi*=.6;legA*=1.25;const hip=R.legs.length?R.m.legs[0].position.y:.62;rotAbout(R,'x',phi,0,hip,0);R.legs.forEach((l,i)=>{l.g.rotation.x+=(i?legA:-legA)-phi;});if(R.m.head)R.m.head.rotation.x-=phi*.85;}
+/* vet listens with the stethoscope: leans over the table, one hand to the pet's chest, head tilts to listen. 3 s loop. o.reach: how low (0..1) */
+function vetListen(m,t,o){const R=rig(m,{kind:'person'});o=o||{};const u=clock(t,3);const k=seg(u,0,.3)*(1-seg(u,.85,1));const low=o.reach==null?.6:o.reach;
+  lunge(R,.35*k,.22*k);aimArm(R,1,v3(-.15,-low,1),k);aimArm(R,0,v3(.1,-.4,.8),k*.8);if(m.head){m.head.rotation.x+=.25*k;m.head.rotation.z+=.18*k*bell(u,.3,.85);}return {};}
+/* vet checks ears and teeth: both hands forward at the pet's head, small careful moves. 3 s loop */
+function vetCheck(m,t,o){const R=rig(m,{kind:'person'});o=o||{};const u=clock(t,3);const k=seg(u,0,.25)*(1-seg(u,.85,1));const low=o.reach==null?.45:o.reach;
+  lunge(R,.3*k,.2*k);const w=.06*Math.sin(TAU*4*u);aimArm(R,0,v3(.28+w,-low,1),k);aimArm(R,1,v3(-.28+w,-low,1),k);if(m.head)m.head.rotation.x+=.3*k;return {};}
+/* vet nurse gives a treat: lunges down, holds the treat out low, waits, stands up. 3 s, then holds (the treat is the game's prop at the hand) */
+function nurseTreat(m,t,o){const R=rig(m,{kind:'person'});const k=seg(t,0,.8)*(1-seg(t,2.3,3));lunge(R,.4*k,.3*k);aimArm(R,1,v3(0,-.75,1),seg(t,.4,1)*(1-seg(t,2.2,2.8)));if(m.head)m.head.rotation.x+=.3*k;
+  return {done:t>=3};}
 /* ======================= round 2 (31 Oct): the moves of every approved preview (grazeNecks, snakeTank, shopStairs, shopSpots, petsHome, bigPets, farmChores) ======================= */
 const scOf=R=>(R.root.scale&&R.root.scale.y)||1;
 const hexOf=q=>q&&q.material&&q.material.color?q.material.color.getHexString():'';
@@ -1302,6 +1354,14 @@ function duckSplash(m,t,o){const R=rig(m);o=o||{};const u=cl(t);const a=Math.sin
 /* owl.fly: flying pose — body nearly level, legs tucked back, both wings flap (3 a second), a small bob (o.glide: wings out, still). The game moves it along its flight path. No ground fix */
 function owlFly(m,t,o){const R=rig(m);o=o||{};rotAbout(R,'x',.18,0,R.bCenter.y,R.bCenter.z);R.legs.forEach(l=>{l.g.rotation.x+=1.1;});headDown(R,-.12);
   const fl=Math.sin(TAU*3*t);wingTurn(R,o.glide?.9:.35+1.1*(.5+.5*fl));if(m.tail)m.tail.rotation.x+=-.3;return {noGround:true,lift:.04*Math.sin(TAU*3*t-1)/scOf(R)};}
+/* pet.vetNervous: lies on the exam table, trembles, head low, keeps an eye on the vet (o.look angle). Loop */
+function vetNervous(m,t,o){const R=rig(m);o=o||{};const k=seg(t,0,.6);if(R.kind!=='seal')lieDown(R,k);R.b.position.x+=.006*Math.sin(TAU*4.4*t)*k;R.b.position.z+=.004*Math.sin(TAU*3.4*t)*k;
+  headDown(R,.22*k);if(m.head)m.head.rotation.y+=((o.look==null?-.55:o.look)+.2*Math.sin(TAU*.6*t))*k;breathe(R,t,.7,.03*k);return {};}
+/* pet.takeTreat: takes the nurse's treat (head forward to it, chews), then happy (head up, wag; the seal waves its flippers). 2.4 s */
+function takeTreat(m,t,o){const R=rig(m),K=kindOf(R);const take=seg(t,0,.4)*(1-seg(t,1.0,1.3)),chew=t>.4&&t<1.1?Math.max(0,Math.sin(TAU*3*t)):0,happy=seg(t,1.0,1.4);
+  if(R.kind!=='seal')lieDown(R,1);headDown(R,-.1*take+.1*chew-.25*happy);if(m.head)m.head.rotation.y+=-.4*take;
+  if(R.kind==='seal'){(m.legs||[]).forEach(l=>{l.rotation.x+=-.5*Math.max(0,Math.sin(TAU*2*t))*happy;l.rotation.y+=-Math.sign(l.position.x)*.9*Math.max(0,Math.sin(TAU*2*t))*happy;});if(m.tail)m.tail.rotation.x+=-.25*happy*Math.max(0,Math.sin(TAU*t));}
+  else wag(R,(K.wag+.3)*happy,K.wagF+2,t);return {done:t>=2.4};}
 const M={
  'pet.idle':[petIdle,0],
  'pet.walk':[petWalk,0],
@@ -1327,7 +1387,12 @@ const M={
  'duck.splash':[duckSplash,1],
  'duck.paddle':[duckPaddle,0],
  'owl.perch':[owlPerch,0],
- 'owl.fly':[owlFly,0]
+ 'owl.fly':[owlFly,0],
+ 'pet.vetNervous':[vetNervous,0],
+ 'pet.takeTreat':[takeTreat,2.4],
+ 'vet.listen':[vetListen,0],
+ 'vet.check':[vetCheck,0],
+ 'nurse.treat':[nurseTreat,3]
 };
 function play(m,name,t,o){o=o||{};const R=rig(m,o.kind?{kind:o.kind}:null);reset(m);const e=M[name]||M[R.kind==='person'?'person.idle':'pet.idle'];
   let r;try{r=e[0](m,Math.max(0,t),o)||{};}catch(err){if(!R.warned){R.warned=1;console.warn('COZY_MOVES',name,err);}reset(m);r={};}

@@ -561,11 +561,11 @@ function rebuildPet(p){const pos=p.g.position.clone(),rot=p.g.rotation.y;scene.r
    play from full to sad (pet decision 19); pets at home with a full bowl and a toy box or cat tree in your house lose it at half speed. Food, petting,
    playing, naps and friends raise it. Body language only, no text: unhappy pets bring a toy and bounce (play bow), yawn and lie down, nudge you, or sniff
    and sit by an empty bowl; very happy ones jump and spin; sad ones droop. When you sleep, the pets with you nap (no pet loses happiness at night) and
-   wake happier. SICKNESS is built but switched off (PBR.sick) until the vet clinic is in the game (stage 4): about one more hour of play at 0-1 hearts
+   wake happier. SICKNESS (PBR.sick) is on since stage 4 put the vet station in the game: about one more hour of play at 0-1 hearts
    makes a pet sick (d.sad = those minutes); it sneezes now and then for the last 15 minutes before (fix the mood and it stops). Only the vet cures it.
    Friends see your pets for real: each pet's hearts, sick look, ribbon and current move go online as one short code at the END of its row in the
    presence (old versions read only the first five fields). Moves come from the moves pack (COZY_MOVES), so every screen plays the same move */
-const PBR={sick:false,V:2026103103,RATE:70/3600,old:false,hc:false,t:0,pc:null,pcT:0,pcN:Date.now()%1e6|0,pcSeen:{}};
+const PBR={sick:true,V:2026103103,RATE:70/3600,old:false,hc:false,t:0,pc:null,pcT:0,pcN:Date.now()%1e6|0,pcSeen:{}};
 const petHearts=d=>clamp(Math.round(d.happy/20),0,5);
 const SMS=[['a','pet.unhappyBowl',6],['b','pet.unhappyPlay',3],['c','pet.unhappyNap',7],['d','pet.unhappyNudge',3],['e','pet.veryHappy',2.4],['f','pet.happyDance',2],
   ['g','pet.sneeze',1.2],['h','pet.warnSneeze',1.4],['i','pet.nap',0],['j','pet.takeFood',2]];   /* the moves friends see: [code, move, how long it plays (0 = until the pet moves)] */
@@ -614,7 +614,7 @@ function petRibbon(m,on){if(m.rib){m.b.remove(m.rib);m.rib=null;}if(!on)return;c
   R.position.copy(k[0]);R.quaternion.copy(k[1]);b.position.copy(k[2]);b.quaternion.copy(k[3]);b.scale.copy(k[4]);
   m.rib=rosette(b,bb.max.x+.01,(bb.min.y+bb.max.y)/2,(bb.min.z+bb.max.z)/2+.04,.42,'#3fbf6b');m.rib.rotation.y=Math.PI/2;m.rib.traverse(o=>{if(o.isMesh)o.userData.noGround=1;});}
 /* once a frame for all your pets: the bowl empties with play, the healthy week, the vet booking */
-function petTick(dt){if(!S)return;PBR.hc=homeCare();if(S.yard&&S.yard.bw>0&&!AW.on&&!zzIn()&&S.pets.some(petAtHome))S.yard.bw=Math.max(0,S.yard.bw-dt);
+function petTick(dt){if(!S)return;vetStep(dt);PBR.hc=homeCare();if(S.yard&&S.yard.bw>0&&!AW.on&&!zzIn()&&S.pets.some(petAtHome))S.yard.bw=Math.max(0,S.yard.bw-dt);
   if((PBR.t-=dt)>0)return;PBR.t=1;hwTick();vetTick();PBR.old=[...MP.peers.values()].some(a=>!(a.v>=PBR.V));}
 /* 🏋️ pets play on their yard gear (stage 3, moves-pet-yard-gear). Tap a piece of gear in your yard and a pet of its kind (one with you, or one
    waiting at home) runs over and plays: the dog gallops over the bars, the bunny hops the hurdles, the cat swats the feather wand, the hamster runs
@@ -698,6 +698,52 @@ function vetPhone(){const sick=vetSick(),b=S.vet&&S.vet.bk;let h=`<p class="ph-s
 function openVetBook(){PH.app='vet';PH.chat=null;PH.jobs=false;renderPhone();}   /* (Nurse Penny's desk opens the same screen: stage 4) */
 /* at the vet (stage 4 calls this): every sick pet with you is cured, mood normal; pay per pet, free if you can't pay. Gives the coins paid */
 function vetCure(list){const n=list.length,cost=S.coins>=VET.price*n?VET.price*n:0;S.coins-=cost;for(const d of list){d.sick=0;d.sad=0;d.happy=40;}S.vet.bk=null;change();return cost;}
+/* 🩺 the visit (stage 4, rules-vet-visit, story-vet-nurse, moves-vet-exam): Nurse Penny books at her desk (the phone's screen) and gives a free tip; upstairs
+   Dr. Rūta checks every sick pet that came with you, one by one on the exam table (bear and seal on the big-pet platform): ears, teeth, a little cold; then
+   Vet nurse Leo gives a treat and the pet is well (vetCure: normal mood, 50 coins a pet, free if you can't pay). Your own time, or nobody's time now: walk in.
+   Dr. Tomas walks about the staff corner and has a line or two */
+const VSAY=(w,l)=>toast(`🩺 ${w}: “${l}”`,2.3,'vet'),VK=n=>KEEPERS.find(k=>k.name===n);
+const vetHere=()=>PET_ACTORS.filter(e=>!e.d.stay&&e.d.sick&&e.loc==='vet');
+function vetOpenNow(){const t=clockNow().time;return t>=VET.open&&t<VET.close;}
+function vetStaff(){const L=LOC.vet;
+  for(const [v,name,x,z,act,o] of[[0,'Nurse Penny',2.9,-2.2,()=>openVetDesk()],[2,'Dr. Rūta',-3.45,UPZ-2.2,vetStart],[3,'Vet nurse Leo',-1.0,UPZ-1.5,()=>VSAY('Vet nurse Leo',"Don't let your pets get sad. Play, cuddles, toys every day!"),{hold:'treat'}],
+    [1,'Dr. Tomas',4.9,UPZ+.5,()=>{const T=["Happy pets are healthy pets.","Toys at home help when you're away.","A sneeze means: play with me more!"],k=VK('Dr. Tomas');k.ln=((k.ln|0)+1+(Math.random()*2|0))%3;VSAY('Dr. Tomas',T[k.ln]);}]]){
+    const p=bakePerson(makeVet(Object.assign({},VETS[v][2],o)));p.root.position.set(L.ox+x,0,L.oz+z);L.g.parent.add(p.root);const tg=label(name,.3);tg.position.y=2.0;p.root.add(tg);
+    KEEPERS.push({p,L,x:L.ox+x,z:L.oz+z,name});colC(L,x,z,.5);inter(L,{x,z:z+1.1,r:2.2,icon:'💬',label:'Talk to '+name,act:()=>{p.wave=1.2;SFX.talk();act();},obj:p.root});}}
+/* Nurse Penny's desk */
+function openVetDesk(msg){openPanel(`<div class="who" style="--c:#8a5fd6">🩺 Nurse Penny</div><p class="line">${esc(msg||'Hi! Welcome to the vet station. How can I help?')}</p>
+  <div class="row"><button class="btn mint" data-a="vdesk:b">🗓️ Book a time</button>${S.pets.length?'<button class="btn sky" data-a="vdesk:t">💡 A tip</button>':''}<button class="btn white" data-a="close">Bye!</button></div>`,{bottom:true});}
+function vetDesk(k){const b=S.vet.bk,c=clockNow();
+  if(k==='t'){const L=PET_ACTORS.filter(e=>e.loc==='vet'),d=(L.length?pick(L).d:pick(S.pets));openVetDesk(petTip(d));return;}
+  if(!vetSick().length){openVetDesk('Your pets look healthy! No need for a visit.');return;}
+  if(b){openVetDesk(gameMs()>=msAt(b.d,b.h)?'Dr. Rūta will see you now. Go upstairs!':`Come back between ${clockStr(b.h)} and ${clockStr(b.h+2)}. Dr. Rūta will see you!`);return;}
+  if(vetOpenNow()&&!vetTaken(c.day,VET.open+2*Math.floor((c.time-VET.open)/2))){openVetDesk('Nobody is waiting. Go right upstairs to Dr. Rūta!');return;}
+  closePanel();openVetBook();}
+/* Dr. Rūta: may the visit start now? */
+function vetStart(){if(VX)return;const b=S.vet.bk,c=clockNow(),L=vetHere();
+  if(!vetOpenNow()){VSAY('Dr. Rūta',`Sorry, we're closed! Come back at ${clockStr(VET.open)}.`);return;}
+  if(!L.length){const s=vetSick();VSAY('Dr. Rūta',s.length?`Where is ${s[0].name}? Bring your sick pet with you!`:'Your pets look healthy! No need for a visit.');return;}
+  if(b?gameMs()<msAt(b.d,b.h):vetTaken(c.day,VET.open+2*Math.floor((c.time-VET.open)/2))){VSAY('Nurse Penny',b?`Dr. Rūta is busy. Please wait here. Your time is ${vetWhen(b.d,b.h)}.`:'Dr. Rūta is busy. Please book a time at my desk!');return;}
+  VX={L,i:0,t:0,said:0};}
+let VX=null;
+const VXT=[[0,'listen'],[2.2,'Ears... fine.'],[4.2,'Teeth... fine.'],[6.2,'Ah, a little cold.'],[8,'treat'],[11,'off']];
+/* once a frame: the pet on the table, the vet's and the nurse's moves, their lines on time */
+function vetStep(dt){if(!VX)return;const e=VX.L[VX.i],R=VK('Dr. Rūta'),N=VK('Vet nurse Leo'),Lc=LOC.vet;
+  if(CUR!==Lc||Math.hypot(P.x-(Lc.ox-2.2),P.z-(Lc.oz+UPZ-2.6))>7||!e){vetEnd(false);return;}
+  const big=['bear','seal'].includes(petKind(e.d)),T=big?[3.2,.54,-2.6]:[-2.2,.99,-2.6];VX.t+=dt;
+  while(VX.said<VXT.length&&VX.t>=VXT[VX.said][0]){const s=VXT[VX.said++][1],nm=e.d.name;
+    if(s==='listen'){e.ps=true;e.moving=false;e.tag.visible=false;e.x=Lc.ox+T[0];e.z=Lc.oz+UPZ+T[2];e.g.position.set(e.x,T[1],e.z);e.g.rotation.y=0;VX.pm='pet.vetNervous';VX.p0=VX.t;
+      R.mv='vet.listen';R.mv0=gameMs();R.lk=N.lk=[e.x,e.z];VSAY('Dr. Rūta',VX.i?`Next one! Hello, ${nm}!`:`Hello, ${nm}! Let's have a look.`);SFX[PET_TYPES[petKind(e.d)].snd]();}
+    else if(s==='treat'){COZY_MOVES.play(R.p,R.mv,0,{kind:'person'});R.mv=null;N.mv='nurse.treat';N.mv0=gameMs();VX.pm='pet.takeTreat';VX.p0=VX.t+.4;VSAY('Vet nurse Leo',"Here's a treat for being brave!");}
+    else if(s==='off'){vetOff(e);if(++VX.i<VX.L.length){VX.t=0;VX.said=0;return;}vetEnd(true);return;}
+    else{VSAY('Dr. Rūta',s);if(s[0]==='E'){R.mv='vet.check';R.mv0=gameMs();}}}
+  if(e.ps)COZY_MOVES.play(e.m,VX.pm,Math.max(0,VX.t-VX.p0),{kind:petKind(e.d)});}
+function vetOff(e){const L=LOC.vet;e.ps=false;e.x=L.ox-2.2;e.z=L.oz+UPZ-1.4;e.g.position.set(e.x,0,e.z);e.tag.visible=true;}
+function vetEnd(done){const R=VK('Dr. Rūta'),N=VK('Vet nurse Leo');for(const k of[R,N])if(k){if(k.mv)COZY_MOVES.play(k.p,k.mv,0,{kind:'person'});k.mv=null;k.lk=null;}
+  const L=VX.L;for(const e of L)if(e.ps)vetOff(e);VX=null;if(!done)return;
+  const c=vetCure(L.map(e=>e.d)),n=L.length;for(const e of L){e.sm=null;petMove(e,'pet.happyDance');}SFX.yay();
+  VSAY('Vet nurse Leo',`Don't let ${L.map(e=>e.d.name).join(' and ')} get sad. Play, cuddles, toys every day!`);
+  VSAY('Nurse Penny',c?`That's ${c} coins for ${n} pet${n>1?'s':''}, please.`:"Don't worry, it's free today.");}
 /* Nurse Penny's free tip about any pet (rules-mech-nurse-tip, stage 4's desk) */
 function petTip(d){const h=petHearts(d);return h>=5?`${d.name} is very happy. Great job!`:h<=2?`${d.name} looks a bit bored. A toy would help!`:`${d.name} loves the ${PET_ITEMS[PET_TOY[petKind(d)]||'ball'].n.toLowerCase()}. Try it today!`;}
 const TOWNFOLK=[{skin:'#f5cfb0',hair:'#3d2c5e',style:'short',top:'#7cc8ff',bottom:'#4a4f7a',shoes:'#2e2347',scale:1.15},
@@ -1752,6 +1798,7 @@ function buildActors(){
   {const p=makePerson({skin:'#d9a06b',hair:'#3d2c5e',style:'short',top:'#ffffff',sleeve:'#ff8a6b',bottom:'#5a5f8c',shoes:'#3d2c5e',hat:'cap',hatc:'#ff6b6b',apron:'#ff6b6b',eyes:'happy',mouth:'grin'});   /* 🍔 Mr. Patty in the food truck */
     bakePerson(p);const L=LOC.city,x=L.ox+TRUCK.x+.2,z=L.oz+TRUCK.z-.35;p.root.position.set(x,.5,z);p.root.rotation.y=Math.PI/2;scene.add(p.root);const tg=label('Mr. Patty',.3);tg.position.y=1.95;p.root.add(tg);KEEPERS.push({p,L,x,z,name:'Mr. Patty'});}
   {const ct=LOC.pizza.inter.find(t=>t.label==='Talk to Chef Blaze');if(ct){ct.icon=()=>dlWaiting()?'🍕':'💬';ct.label=()=>dlWaiting()?'Pick up the pizza':'Talk to Chef Blaze';}}
+  vetStaff();   /* 🩺 the vet station's four (stage 4) */
   const L=LOC.pets;
   L.pens.forEach((pen,i)=>{const kinds=pen.kinds||[pen.type,pen.type];kinds.forEach((t,k)=>{const col2=PET_TYPES[t].cols[t===pen.type&&k>0?1:0];const m=makePet(t,col2);scene.add(m.root);
     const a={m,t,col:col2,x:L.ox+rand(pen.x0,pen.x1),z:pen.pz!==undefined?L.oz+pen.pz:L.oz+rand(pen.z0,pen.z1-(pen.y?0:.45)),tx:0,tz:0,wt:0,pen,face:0,moving:false};

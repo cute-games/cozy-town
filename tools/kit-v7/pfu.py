@@ -4,6 +4,7 @@ a later stage adds lines (or, with the owner's OK, rewrites one and lists it old
 Stage 1 (31 Oct): P1 saves (save version 2, round trip), P2 night skip, P3 morning bus home, P4 hats sit on the hair.
 Stage 2 (1 Nov): P5 one need and food groups, P6 sickness (switched off until the vet clinic), P7 vet booking, P8 care helpers (bowl, naps,
 healthy week), P9 friends see your pets for real and can pet them, P10 the moves pack on every pet, P11 following pets are not left behind.
+Stage 4 (1 Nov): P17 the vet station and the visit, P18 big-needs pets locked; P6 rewritten (old: sickness switched off until the vet clinic; new: switched on with the vet station in, the switch still proven both ways).
 Stage 3 (1 Nov): P12 Friends Lane's wider border, P13 yard levels by skill at the yard sign, P14 only owned things show, P15 training gear and pets playing
 on it, P16 friends see your yard. Rewritten: P10 (old: every move's lowest point within -0.07..0.012 m; new: the same for every move on the floor (a yard-gear move: on the pet kinds that play it, e.g. cat.wand on cats), and a
 move in water or the air (r.noGround: capy.tub, owl.fly) is measured by its highest point instead, which must stay above 0.05 m)."""
@@ -30,7 +31,9 @@ async def p1(run, live_w, new_wb, FIX):
         txt = await g.ev("()=>{saveLocal();return localStorage.getItem('cozytown-save-1');}"); errs = g.errors[:]; await run.close(g)
         bad = []
         if nf['sv'] != 2: bad.append(f"sv {nf['sv']}")
-        if any(p != [0, 0, 1, 0] and (sv.get('sv') or 0) < 2 for p in nf['pets']): bad.append(f"pet fields {nf['pets'][:3]}")
+        # (stage 4 rewrite: sickness is on, so a pet at 0-1 hearts starts its sickness timer 'sad' from 0 the moment play begins; old: sad exactly 0;
+        #  new: sad from 0 by at most the few seconds played before the read, under 0.1 minute. sick, tr, tp exactly as before)
+        if any((p[0], p[2], p[3]) != (0, 1, 0) or not (0 <= p[1] < 0.1) for p in nf['pets']) and (sv.get('sv') or 0) < 2: bad.append(f"pet fields {nf['pets'][:3]}")
         for k, v in WANT.items():
             if (sv.get('sv') or 0) < 2 and nf[k] != v: bad.append(f'{k} {nf[k]}')
             if not isinstance(nf[k], dict): bad.append(f'{k} missing')
@@ -205,7 +208,7 @@ async def p4(run, new_wb, FIX):
 # ================= stage 2 (1 Nov 2026): the pet brain =================
 PETS_SAVE = 'save-prenight3-pets.json'   # 4 pets: 3 follow you, a hamster waits at home
 NOON = """()=>{__goto('city');const c=clockNow();let d=c.day;while(wdIdx(d)!==1)d++;__setClock(d,12);__run(4);closePanel();
-  for(const p of PET_ACTORS){p.d.happy=60;p.d.sick=0;p.d.sad=0;}PBR.sick=false;S.vet.bk=null;return {day:S.day,wd:wdName(),pets:PET_ACTORS.length,fol:PET_ACTORS.filter(p=>!p.d.stay).length};}"""
+  for(const p of PET_ACTORS){p.d.happy=60;p.d.sick=0;p.d.sad=0;}window.__sk0=PBR.sick;PBR.sick=false;S.vet.bk=null;return {day:S.day,wd:wdName(),pets:PET_ACTORS.length,fol:PET_ACTORS.filter(p=>!p.d.stay).length};}"""
 async def pet_page(run, new_wb, tag, prof='ipad-landscape', name=None, FIX=None, theme='light'):
     base = fx(FIX, PETS_SAVE) or FIX[0][1]
     g = await begin(run, new_wb, prof, tag, dict(base, name=name or 'ZZTEST-' + tag.upper()), theme=theme)
@@ -250,7 +253,7 @@ async def p5(run, new_wb, FIX):
     return not bad, det + (f' | PROBLEMS: {bad}' if bad else '')
 
 # ---------------- P6 sickness (built, switched off until the vet clinic) ----------------
-P6_JS = r"""()=>{const o={},bad=[];const e=PET_ACTORS.find(p=>!p.d.stay),d=e.d;o.off=PBR.sick;if(PBR.sick!==false)bad.push('sickness is switched on before the vet clinic');
+P6_JS = r"""()=>{const o={},bad=[];const e=PET_ACTORS.find(p=>!p.d.stay),d=e.d;o.off=window.__sk0;if(window.__sk0!==true||!LOC.vet)bad.push('sickness is not switched on with the vet station in the game');PBR.sick=false;
   d.happy=0;d.sad=0;for(let i=0;i<120;i++){d.happy=0;petNeed(e,60);}o.offSick=d.sick;if(d.sick)bad.push('a pet got sick while sickness is off');
   PBR.sick=true;d.sick=0;d.sad=0;const at=[];for(let m=1;m<=70;m++){d.happy=10;petNeed(e,60);if(petCode(e).includes('w')&&!at.w)at.w=m;if(d.sick&&!at.s)at.s=m;}
   o.warnAt=at.w;o.sickAt=at.s;if(!(at.s>=58&&at.s<=62))bad.push('sick after '+at.s+' minutes at 0-1 hearts (want about 60)');if(!(at.w>=44&&at.w<=47))bad.push('warning sneeze from minute '+at.w+' (want 15 before)');
@@ -261,7 +264,7 @@ P6_JS = r"""()=>{const o={},bad=[];const e=PET_ACTORS.find(p=>!p.d.stay),d=e.d;o
   const i=S.pets.indexOf(d);window.__lastToast='';ACT.gvpick(i);o.paws=window.__lastToast||($('card')&&$('card').innerText.slice(0,80));closePanel();if(!/well first/.test(o.paws))bad.push('Ms. Paws took a sick pet: '+o.paws);
   S.coins=500;d2.sick=1;let c=vetCure([d,d2]);o.cure=[c,S.coins,d.sick,d2.sick,petHearts(d),petHearts(d2)];if(c!==100||S.coins!==400||d.sick||d2.sick||petHearts(d)!==2)bad.push('vet: '+o.cure);
   d.sick=1;S.coins=30;c=vetCure([d]);o.free=[c,S.coins];if(c!==0||S.coins!==30||d.sick)bad.push('vet with too few coins is not free: '+o.free);
-  PBR.sick=false;o.bad=bad;return o;}"""
+  PBR.sick=true;o.bad=bad;return o;}"""
 SHOW_JS = r"""()=>{const c=clockNow();let d=c.day;while(wdIdx(d)!==5)d++;__setClock(d,10);__run(4);__goto('city');P.x=-36;P.z=2;bringFollowers(true);__run(4);
   const L=PET_ACTORS.filter(p=>!p.d.stay);PBR.sick=true;for(const p of L)p.d.sick=1;window.__lastToast='';closePanel();openShow();const t1=window.__lastToast,open1=UI.open&&$('card').innerText.includes('Pick');closePanel();
   L[0].d.sick=0;openShow();const picks=[...document.querySelectorAll('#card .pscard')].length;closePanel();for(const p of L)p.d.sick=0;PBR.sick=false;return {t1,open1,picks,n:L.length};}"""
@@ -273,7 +276,7 @@ async def p6(run, new_wb, FIX):
     bad = r['bad'][:]
     if sh['open1'] or 'vet' not in sh['t1']: bad.append(f"Pet Show with only sick pets: {sh['t1']!r}")
     if sh['picks'] != 1: bad.append(f"Pet Show with one healthy pet offers {sh['picks']} pets")
-    det = (f"switched off: {r['off']} (2 hours at 0 hearts: sick {r['offSick']}); switched on (as the vet clinic will): warning sneeze from minute {r['warnAt']}, sick at minute {r['sickAt']}, "
+    det = (f"in the game: switched on {r['off']} (with the switch off for the test, 2 hours at 0 hearts: sick {r['offSick']}); switched on: warning sneeze from minute {r['warnAt']}, sick at minute {r['sickAt']}, "
            f"a pet cheered up in time: {r['recover']} minutes left; sick code {r['code']!r}, its move {r['sickMove']}; Ms. Paws: {r['paws']!r}; "
            f"vet for 2 pets with 500 coins: paid {r['cure'][0]}, hearts after {r['cure'][4]}; with 30 coins: paid {r['free'][0]}; "
            f"Pet Show with sick pets only: {sh['t1']!r}, with one well: {sh['picks']} to pick")
@@ -608,6 +611,106 @@ async def p16(run, new_wb, FIX):
                      f"{o['yc']} fence walls, back fence at {o['back']} m; a bad yd and no yd draw it as before; read from presence {o['read']!r}, an old version's {o['old']!r}, on the lane list {o['list']!r}; "
                      "NOT VERIFIED: two real devices (the fake online kit only)") + (f' | PROBLEMS: {bad}' if bad else '')
 
+# ================= stage 4 (1 Nov 2026): the vet station, big-needs pets locked =================
+# ---------------- P17 the vet station: the building, inside, the four staff, the visit ----------------
+TREES_JS = r"""()=>{const out=(x,z)=>!(x>6&&x<21.5&&z>-86&&z<-68.5),r=v=>Math.round(v*100)/100,C=LOC.city;
+  return {groups:(C.treeGroups||[]).map(g=>g.map(r)),map:mapTrees().filter(([x,z])=>out(x,z)).map(t=>t.map(r)),cols:C.cols.filter(c=>c.cr!==undefined?out(c.cx,c.cz):out((c.x1+c.x2)/2,(c.z1+c.z2)/2)).length};}"""
+P17_JS = r"""()=>{const o={},bad=[],V=LOC.vet,C=LOC.city;if(!V)return {bad:['no vet station in the game']};
+  const lab=t=>typeof t.label==='function'?t.label():t.label,door=C.inter.find(t=>/Vet Station/.test(lab(t)));o.door=door?[r2(door.x),r2(door.z)]:null;
+  function r2(v){return Math.round(v*10)/10;}
+  if(!door||Math.hypot(door.x-8.6,door.z+77.2)>1)bad.push('no door into the vet station at x 8.6, z -77.2 (Map: x 14.2, z -77.2, door to the west)');
+  if(!PLACES.some(p=>p.id==='vet'&&p.nq))bad.push('the vet station is not on the map (or counts for quests)');
+  const inBox=(x,z)=>x>9.7&&x<18.7&&z>-83.2&&z<-71.2;o.walkIn=[[14,-76],[12,-74],[17,-79],[10.2,-77.2]].filter(([x,z])=>{const q=collideXZ(x,z,.3,C);return inBox(q[0],q[1]);}).length;
+  if(o.walkIn)bad.push(o.walkIn+' spots inside the clinic you can stand on');
+  o.stray=C.cols.filter(c=>c.cr!==undefined&&inBox(c.cx,c.cz)).length+(C.owlTrees||[]).filter(([x,z])=>x>6&&x<21.5&&z>-86&&z<-68.5).length+mapTrees().filter(([x,z])=>inBox(x,z)).length;if(o.stray)bad.push(o.stray+' trees or bushes left inside the clinic');
+  o.staff=KEEPERS.filter(k=>k.L===V).map(k=>k.name);for(const n of['Nurse Penny','Dr. Rūta','Vet nurse Leo','Dr. Tomas'])if(!o.staff.includes(n))bad.push('missing '+n);
+  if(!V.fls||V.fls.length!==2)bad.push('the station should have 2 floors');
+  /* the people's moves at the table keep their feet on the floor */
+  const bb=new THREE.Box3();o.feet=[];for(const [n,mv] of[['Dr. Rūta','vet.listen'],['Dr. Rūta','vet.check'],['Vet nurse Leo','nurse.treat']]){const k=KEEPERS.find(q=>q.name===n),y0=k.p.root.position.y;let lo=9,hi=-9;
+    for(let t=0;t<3;t+=.25){COZY_MOVES.play(k.p,mv,t,{kind:'person'});k.p.root.updateMatrixWorld(true);bb.setFromObject(k.p.root);lo=Math.min(lo,bb.min.y-y0);hi=Math.max(hi,bb.min.y-y0);}COZY_MOVES.play(k.p,mv,0,{kind:'person'});
+    o.feet.push(n+' '+mv+' '+lo.toFixed(3)+'..'+hi.toFixed(3));if(lo<-.07||hi>.03)bad.push(n+' '+mv+': feet at '+lo.toFixed(3)+'..'+hi.toFixed(3)+' m');}
+  /* in through the door, up the stairs */
+  P.x=door.x;P.z=door.z;door.act();o.in=null;return {o,bad};}"""
+VISIT_JS = r"""()=>{const o={},bad=[],V=LOC.vet;o.loc=CUR.id;o.at=[Math.round((P.x-V.ox)*10)/10,Math.round((P.z-V.oz)*10)/10];if(CUR!==V)bad.push('the door did not take you in: '+CUR.id);
+  const T=[];window.toast=(m)=>{T.push(m);};const F=PET_ACTORS.filter(e=>!e.d.stay),said=()=>T.splice(0).join(' | ');
+  const up=()=>{setT(12);__goto('vet');P.x=V.ox-2.2;P.z=V.oz+UPZ-.4;P.yaw=0;floorVis();bringFollowers(true);__run(2);for(const e of F){e.d.sick=0;e.d.sad=0;}S.vet.bk=null;};
+  const setT=h=>{__clockMs(msAt(S.day,h)-CLK.sk);__run(1);};   /* (the test clock under a night skip that an earlier test left in the shared room) */
+  up();o.fl=flOf(V,P.z);
+  /* a visit with two sick pets and 500 coins */
+  F[0].d.sick=1;F[1].d.sick=1;S.coins=500;said();vetStart();__run(60);const e=F[0];o.table=[e.ps,Math.round((e.g.position.x-V.ox)*100)/100,e.g.position.y,Math.round((e.g.position.z-V.oz-UPZ)*100)/100,VX&&VX.pm];
+  if(!e.ps||Math.abs(e.g.position.y-.99)>.01||Math.hypot(e.g.position.x-(V.ox-2.2),e.g.position.z-(V.oz+UPZ-2.6))>.05)bad.push('the first pet is not on the exam table: '+o.table);
+  o.vetMv=VK('Dr. Rūta').mv;if(!/^vet\./.test(o.vetMv||''))bad.push('Dr. Rūta does not examine (move '+o.vetMv+')');
+  __run(110);o.leo=VK('Vet nurse Leo').mv;if(o.leo!=='nurse.treat')bad.push('Leo does not give the treat (move '+o.leo+')');
+  __run(400);o.after=[!!VX,F[0].d.sick,F[1].d.sick,S.coins,Math.round(F[0].d.happy),F.some(x=>x.ps)];o.lines=said();
+  if(VX||F[0].d.sick||F[1].d.sick||S.coins!==400||Math.round(F[0].d.happy)!==40||F.some(x=>x.ps))bad.push('after the visit: '+o.after);
+  const want=["Hello, "+F[0].d.name+"! Let's have a look.",'Ears... fine.','Teeth... fine.','Ah, a little cold.',"Here's a treat for being brave!","Next one! Hello, "+F[1].d.name+"!","Don't let "+F[0].d.name+" and "+F[1].d.name+" get sad. Play, cuddles, toys every day!","That's 100 coins for 2 pets, please."];
+  let at=0;for(const w of want){const i=o.lines.indexOf(w,at);if(i<0){bad.push('missing or out of order: '+w);}else at=i;}
+  /* too few coins: free */
+  up();F[0].d.sick=1;S.coins=30;vetStart();__run(300);o.free=[S.coins,F[0].d.sick,said().includes("Don't worry, it's free today.")];if(S.coins!==30||F[0].d.sick||!o.free[2])bad.push('with 30 coins: '+o.free);
+  /* your time later today: wait; a friend's time now: busy; closed at night; nobody sick */
+  up();F[0].d.sick=1;S.vet.bk={d:S.day,h:19,ids:[F[0].d.id]};vetStart();o.early=[!!VX,said()];if(VX||!o.early[1].includes('Your time is'))bad.push('too early: '+o.early);
+  S.vet.bk=null;MP.peers.set('zztest-vet',{vb:[S.day,11]});vetStart();o.taken=[!!VX,said()];MP.peers.delete('zztest-vet');if(VX||!/busy/.test(o.taken[1]))bad.push("a friend's time now: "+o.taken);
+  setT(23.5);vetStart();o.night=[!!VX,said()];if(VX||!/closed/.test(o.night[1]))bad.push('at night: '+o.night);
+  up();vetStart();o.well=said();if(!/healthy/.test(o.well))bad.push('nobody sick: '+o.well);
+  /* walking away in the middle: no cure, no coins */
+  F[0].d.sick=1;S.coins=500;vetStart();__run(40);__goto('city');__run(3);o.away=[!!VX,F[0].d.sick,S.coins,F[0].ps];if(VX||!F[0].d.sick||S.coins!==500||F[0].ps)bad.push('walked away: '+o.away);
+  /* Nurse Penny's desk */
+  up();__goto('vet');__run(2);const card=()=>($('card')&&!$('panel').hidden?$('card').innerText:'');openVetDesk();o.hello=card();if(!o.hello.includes('Welcome to the vet station'))bad.push('Penny: '+o.hello);
+  vetDesk('b');o.d1=card();vetDesk('t');o.d2=card();F[0].d.sick=1;vetDesk('b');o.d3=card();S.vet.bk={d:S.day,h:19,ids:[F[0].d.id]};vetDesk('b');o.d4=card();S.vet.bk=null;
+  MP.peers.set('zztest-vet',{vb:[S.day,11]});vetDesk('b');o.d5=[PH.app,!$('panel').hidden];MP.peers.delete('zztest-vet');closePanel();F[0].d.sick=0;
+  if(!o.d1.includes('Your pets look healthy'))bad.push('Penny, nobody sick: '+o.d1);if(!/very happy|bored|loves the/.test(o.d2))bad.push('Penny, tip: '+o.d2);
+  if(!o.d3.includes('Nobody is waiting'))bad.push('Penny, walk in: '+o.d3);if(!o.d4.includes('Come back between 19:00 and 21:00'))bad.push('Penny, booked: '+o.d4);if(o.d5[0]!=='vet')bad.push('Penny, time taken: the booking screen did not open '+o.d5);
+  for(const k of['hello','d1','d2','d3','d4'])o[k]=o[k].split('\n').filter(Boolean)[1]||'';
+  __goto('vet');__run(1);P.x=V.ox-(V.W-.9);P.z=V.oz-.6;hclimb(1);for(let i=0;i<60;i++)__run(1);   /* (the climb ends with a fade: P17 waits, then reads the floor) */
+  return {o,bad};}"""
+async def p17(run, live_w, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p17', FIX=FIX, name='ZZTEST-VET')
+    try:
+        await g.ev("()=>{__goto('city');__run(2);}")
+        a = await g.ev(P17_JS); await g.wait(1200); await g.step(10)
+        b = await g.ev(VISIT_JS); await g.wait(1200); await g.step(4)
+        b['o']['climb'] = await g.ev("()=>flOf(LOC.vet,P.z)")
+        if b['o']['climb'] != 1: b['bad'].append('the stairs did not take you up')
+        trees_new = await g.ev(TREES_JS); errs = g.errors[:]
+    finally: await run.close(g)
+    # the town's trees, bushes and walls outside the clinic, as the stage-3 build made them (pfu-trees-stage3.json, measured with TREES_JS on 1 Nov;
+    # the live game is no reference: stage 3's wider Friends Lane valley already moved the forest)
+    trees_live = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'pfu-trees-stage3.json')))
+    bad = a.get('bad', []) + b['bad']
+    same = trees_new == trees_live
+    if not same: bad.append(f"the town's trees and bushes outside the clinic moved: groups {trees_live['groups'][:2]} -> {trees_new['groups'][:2]}, map trees {len(trees_live['map'])} -> {len(trees_new['map'])}, walls {trees_live['cols']} -> {trees_new['cols']}")
+    if errs: bad.append(f'browser errors {errs[:2]}')
+    o, v = a.get('o', {}), b['o']
+    det = (f"door {o.get('door')}, walk-in spots inside the walls {o.get('walkIn')}, trees/bushes left there {o.get('stray')}; staff {o.get('staff')}; people's feet {o.get('feet')}; "
+           f"in at {v['at']}; pet on the table {v['table']}, vet move {v['vetMv']}, nurse move {v['leo']}; after (visit on, sick, sick, coins, hearts*20, on table) {v['after']}; lines: {v['lines'][:400]!r}; "
+           f"30 coins {v['free']}; too early {v['early']}; friend's time {v['taken']}; night {v['night']}; well {v['well']!r}; walked away {v['away']}; "
+           f"Penny {v['hello']!r} / {v['d1']!r} / {v['d2']!r} / {v['d3']!r} / {v['d4']!r} / time taken -> {v['d5']}; stairs -> floor {v['climb']}; "
+           f"other trees and bushes as in the stage-3 build: {same} ({len(trees_new['map'])} map trees, {len(trees_new['groups'])} groups)")
+    return not bad, det + (f' | PROBLEMS: {bad}' if bad else '')
+
+# ---------------- P18 big-needs pets: locked at Ms. Paws, the first missing thing named ----------------
+P18_JS = r"""()=>{const o={},bad=[],L=LOC.pets;__goto('pets');const it=L.inter.find(t=>t.label==='Big pets');if(!it||Math.abs(it.z-L.oz-UPZ)>2)bad.push('no Big pets board upstairs in the Pet Shop');
+  const keep=[sk('pets').lv,S.yard.pet,S.lic.lv,window.bigHome],K=['monkey','seal','bear','snake'],texts=[];
+  const rows=()=>{openBig();const B=[...document.querySelectorAll('#card [data-a^="bigp:"]')];o.small=(o.small||0)+B.filter(b=>b.getBoundingClientRect().height<44).length;texts.push($('card').innerText);const r=B.map(b=>b.innerText.replace(/\s+/g,' ').trim());closePanel();return r;};
+  const say=k=>{let m='';const t0=window.toast;window.toast=x=>{m=x;};bigPaws(k);window.toast=t0;texts.push(m);return m.replace(/^🐾 Ms\. Paws: “|”$/g,'');};
+  const steps=[['start',()=>{sk('pets').lv=1;S.yard.pet=1;S.lic.lv=0;},['🐒 🔒 Pet care 40','🦭 🔒 Pet care 40','🐻 🔒 Pet care 40','🐍 🔒 Glass tank'],{monkey:'Monkeys need a lot of care. Reach Pet care 40 first!',snake:'Where would it live? Get a glass tank in your house first!'}],
+    ['Pet care 40',()=>{sk('pets').lv=40;},['🐒 🔒 Pet yard level 3','🦭 🔒 Pet yard level 3','🐻 🔒 Pet yard level 3','🐍 🔒 Glass tank'],{seal:'A seal needs lots of space. Grow your pet yard to level 3!'}],
+    ['pet yard 3',()=>{S.yard.pet=3;},['🐒 🔒 Climbing tree','🦭 🔒 Pond','🐻 🔒 Cave den','🐍 🔒 Glass tank'],{bear:'Where would it live? Get a cave den first!'}],
+    ['homes',()=>{window.bigHome=()=>true;},['🐒 🔒 Animal license 1','🦭 🔒 Animal license 1','🐻 🔒 Animal license 3','🐍 🔒 Animal license 1'],{bear:'You need an animal license, level 3. Win at the Pet Show!'}],
+    ['license 1',()=>{S.lic.lv=1;},['🐒 Ready!','🦭 Ready!','🐻 🔒 Animal license 3','🐍 Ready!'],{snake:'Everything is ready. A snake will love your home!'}],
+    ['license 3',()=>{S.lic.lv=3;},['🐒 Ready!','🦭 Ready!','🐻 Ready!','🐍 Ready!'],{bear:'Everything is ready. A bear will love your home!'}]];
+  o.seen=[];for(const [n,f,want,lines] of steps){f();const r=rows();o.seen.push(n+': '+r.join(', '));if(JSON.stringify(r)!==JSON.stringify(want))bad.push(n+': '+r.join(', '));
+    for(const k in lines){const m=say(k);if(m!==lines[k])bad.push(n+' '+k+': '+m);}}
+  [sk('pets').lv,S.yard.pet,S.lic.lv,window.bigHome]=keep;
+  if(texts.some(t=>/exotic/i.test(t)))bad.push('the word exotic');if(o.small)bad.push(o.small+' buttons under 44 px');
+  return {o,bad};}"""
+async def p18(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p18', FIX=FIX, name='ZZTEST-BIG')
+    try: r = await g.ev(P18_JS); errs = g.errors[:]
+    finally: await run.close(g)
+    bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
+    return not bad, f"Big pets board upstairs; {' | '.join(r['o']['seen'])}" + (f' | PROBLEMS: {bad}' if bad else '')
+
 # ---------------- the stage ----------------
 async def s_pfu(run, d, live_w, new_wb, FIX):
     tests = [('P1', 'Saves (pets and farm update): every save of the kit (from older versions, today\'s main and the update\'s stages) and a fresh one from the live version loads as save version 2 with every new field at its default; saved again and loaded, it is exactly the same', lambda: p1(run, live_w, new_wb, FIX)),
@@ -615,7 +718,7 @@ async def s_pfu(run, d, live_w, new_wb, FIX):
              ('P3', 'Morning bus home: every day the bus waits at the beach 8:00-9:30 and goes to town (bus days unchanged, still 3 a week); free with under 20 coins, else 20; the pill and the timetable card show it', lambda: p3(run, new_wb, FIX)),
              ('P4', 'Hats sit on the hair: on every hairdo no hair sticks up through any hat, the party hat or a costume\'s hood', lambda: p4(run, new_wb, FIX)),
              ('P5', 'One need, happiness (stage 2): about an hour of play from full to sad, paused while away, half speed at home with a full bowl and a toy; moods by hearts (5 very very happy, 3-4 happy, 2 normal, 0-1 sad) with body language; 3 food groups (meat, fish, fruit & veggies; same items): every pet eats every food, its own +40 and a happy dance, others and treats +30; the no-food line; the shop says who loves each food', lambda: p5(run, new_wb, FIX)),
-             ('P6', 'Sickness (stage 2, switched off until the vet clinic): off, no pet ever gets sick; on, about an hour of play at 0-1 hearts makes a pet sick, with warning sneezes the last 15 minutes that stop when it cheers up; only the vet cures it (normal mood, 50 coins a pet, free with too few); no Pet Show and no Ms. Paws while sick', lambda: p6(run, new_wb, FIX)),
+             ('P6', 'Sickness (stage 2; switched on since stage 4 put the vet station in): on in the game; with the switch off no pet ever gets sick; on, about an hour of play at 0-1 hearts makes a pet sick, with warning sneezes the last 15 minutes that stop when it cheers up; only the vet cures it (normal mood, 50 coins a pet, free with too few); no Pet Show and no Ms. Paws while sick', lambda: p6(run, new_wb, FIX)),
              ('P7', 'Vet booking (stage 2): Book the vet in the Pets app (44 px); all well, or the sick pets and the next 8 two-hour times between 7:00 and 23:00; booked card with time, pets and Cancel; a reminder one game hour before; late = booking gone, no coins lost; one list for the room (a friend sees the time taken)', lambda: p7(run, new_wb, FIX)),
              ('P8', 'Care helpers (stage 2): one food fills the home bowl for one game day of play; the pets with you nap when you sleep (no loss at night) and wake happier; a healthy week (care on 3+ days Mon-Fri, no pet sick) puts the green ribbon on every pet for the weekend and counts for the animal license', lambda: p8(run, new_wb, FIX)),
              ('P9', 'Friends see your pets for real (stage 2): hearts, sick look and the same move at the same time, as a short code at the end of each pet row; friends pet and play with your pets (no feeding), your pet gets happier and they get pet XP; with an older version online the codes are left out and it still shows the pets', lambda: p9(run, live_w, new_wb, FIX)),
@@ -625,7 +728,9 @@ async def s_pfu(run, d, live_w, new_wb, FIX):
              ('P13', 'Yard levels by skill (stage 3): the 🏡 My yard sign sells garden level 2 (600, gardening 20) and 3 (1,500, gardening 40) and pet yard level 2 (800, Pet care 20) and 3 (2,000, Pet care 40), faded with the skill too low, Top level! at 3; the yard grows at once (fence back, big-pets gate at level 3); each garden level opens 3 new beds (spots 36-41) that work like the old ones; the pet limit stays 10', lambda: p13(run, new_wb, FIX)),
              ('P14', 'Only what you own shows (stage 3): a pot is drawn and usable only once it opens (6 at each gardening level 10-50), no lock plates; the new beds only with their garden level; no training gear before it is bought', lambda: p14(run, new_wb, FIX)),
              ('P15', 'Training gear (stage 3): Ms. Paws sells the 10 pieces at their prices (dog course from pet yard level 2), one of each, refused when the yard has no room; it stands in the yard at once; tapped, a pet of its kind plays on it with its own moves (+20 happiness, then a happy dance); a full bowl and yard gear keep home pets at half speed', lambda: p15(run, new_wb, FIX)),
-             ('P16', "Friends see your yard (stage 3): your garden level, pet yard level and gear go online as one short code (nothing at levels 1 with no gear); a friend's lot is drawn from it with its fences and gear; an old version's or a bad code draws the lot as before", lambda: p16(run, new_wb, FIX))]
+             ('P16', "Friends see your yard (stage 3): your garden level, pet yard level and gear go online as one short code (nothing at levels 1 with no gear); a friend's lot is drawn from it with its fences and gear; an old version's or a bad code draws the lot as before", lambda: p16(run, new_wb, FIX)),
+             ('P17', "Vet station (stage 4): the clinic on the town's north edge (Map x 14.2, z -77.2, door to the west, on the map), solid walls, no tree or bush left inside it and every other one where the stage-3 build has it; 2 floors, Nurse Penny, Dr. Rūta, Vet nurse Leo, Dr. Tomas; the visit: sick pets with you go on the exam table one by one, Dr. Rūta checks (ears, teeth, a little cold), Leo gives a treat, cured, normal mood, 50 coins a pet or free with too few; too early, a friend's time or closed: no visit; walking away: no cure, no coins; Penny books, tips and sends you up; the people's feet on the floor", lambda: p17(run, live_w, new_wb, FIX)),
+             ('P18', "Big-needs pets (stage 4): a Big pets board upstairs at Ms. Paws; monkey, seal and bear locked by Pet care 40, then pet yard level 3, then their home, then the animal license (bear 3, others 1); the snake by its glass tank, then license 1; Ms. Paws says the first missing thing in one line; never the word exotic; buttons 44 px", lambda: p18(run, new_wb, FIX))]
     only = [x for x in os.environ.get('PFU_ONLY', '').split(',') if x]
     for cid, name, fn in tests:
         if only and cid not in only: continue

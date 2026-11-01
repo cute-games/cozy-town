@@ -74,6 +74,8 @@ function groundY(x,z){let y=0;for(const h of HILLS){const d=((x-h.x)**2+(z-h.z)*
 function treeLo(g,x,y,z,s,c){cyl(g,.15*s,.2*s,2.3*s,'#9b6b4a',x,y,z,{seg:5,ol:false});sph(g,1.15*s,c,x,y+3.05*s,z,{ws:7,hs:5,ol:false});sph(g,.75*s,c,x+.7*s,y+2.75*s,z+.15*s,{ws:6,hs:4,ol:false});sph(g,.72*s,c,x-.62*s,y+2.8*s,z-.3*s,{ws:6,hs:4,ol:false});}
 function pineLo(g,x,y,z,s,c){cyl(g,.14*s,.18*s,.8*s,'#9b6b4a',x,y,z,{seg:5,ol:false});cone(g,1.2*s,1.6*s,c,x,y+.7*s,z,{seg:6,ol:false});cone(g,.92*s,1.4*s,c,x,y+1.55*s,z,{seg:6,ol:false});cone(g,.62*s,1.2*s,c,x,y+2.35*s,z,{seg:6,ol:false});}
 const laneFree=(x,z)=>x<-78&&Math.abs(z)<42,beachFree=(x,z)=>x>78&&Math.abs(z)<11;
+/* 🩺 the vet station's spot (stage 4, Map: x 14.2, z -77.2): the town's own bushes, rocks and tree groups are still made there in the same order (so every other one keeps its place), but drawn into VDUMP (never shown) and their walls taken out afterwards */
+const vetSpot=(x,z,m)=>x>8-m&&x<19.5+m&&z>-84-m&&z<-70.5+m,VDUMP=new THREE.Group();
 function freeSpot(L,x,z,r){for(const c of L.cols){if(c.cr!==undefined){if(Math.hypot(x-c.cx,z-c.cz)<c.cr+r)return false;}else if(x>c.x1-r&&x<c.x2+r&&z>c.z1-r&&z<c.z2+r)return false;}
   for(const t of L.inter)if(Math.hypot(x-t.x,z-t.z)<7)return false;return true;}
 function buildForest(L,st){const F=new THREE.Group();L.g.add(F);const r=seeded(68),TC=()=>TREE_COLS[(r()*TREE_COLS.length)|0],PC=()=>PINE_COLS[(r()*PINE_COLS.length)|0];
@@ -87,7 +89,7 @@ function buildForest(L,st){const F=new THREE.Group();L.g.add(F);const r=seeded(6
   const G=[],roadNear=(x,z)=>[-50,0,50].some(c=>Math.abs(x-c)<9||Math.abs(z-c)<9),bad=(x,z)=>Math.abs(x)>80||Math.abs(z)>80||roadNear(x,z)||(x>-42&&x<-6&&z>6&&z<43)||(x>-44&&x<-10&&z>53)||Math.hypot(x-69,z-69)<14||Math.hypot(x-36.2,z+36.2)<8||x<-76;
   for(let i=0;i<700&&G.length<9;i++){const x=(r()-.5)*160,z=(r()-.5)*160;if(Math.abs(x)<54&&Math.abs(z)<54)continue;if(bad(x,z)||!freeSpot(L,x,z,4.5)||G.some(g=>Math.hypot(g[0]-x,g[1]-z)<16))continue;
     const T=[];for(let k=0;k<14&&T.length<3+((r()*3)|0);k++){const a=r()*TAU,d=.8+r()*3.0,tx=x+Math.cos(a)*d,tz=z+Math.sin(a)*d;if(bad(tx,tz)||!freeSpot(L,tx,tz,1.4)||T.some(([a2,b2])=>Math.hypot(a2-tx,b2-tz)<2.3))continue;T.push([tx,tz]);}
-    if(T.length<2)continue;G.push([x,z]);let first=true;for(const [tx,tz] of T){const s=.9+r()*.5;if(r()<.3&&!first)pine(st,tx,tz,s*1.1);else{tree(st,tx,tz,s);if(first)(L.owlTrees||(L.owlTrees=[])).push([tx,tz]);}first=false;colC(L,tx,tz,.3);mapTrees().push([tx,tz,1.1*s]);}}
+    if(T.length<2)continue;G.push([x,z]);let first=true;for(const [tx,tz] of T){const s=.9+r()*.5,v=vetSpot(tx,tz,2),q=v?VDUMP:st;if(r()<.3&&!first)pine(q,tx,tz,s*1.1);else{tree(q,tx,tz,s);if(first&&!v)(L.owlTrees||(L.owlTrees=[])).push([tx,tz]);}first=false;colC(L,tx,tz,.3);if(v)L.cols[L.cols.length-1].vd=1;else mapTrees().push([tx,tz,1.1*s]);}}
   L.treeGroups=G;}
 
 /* 🦋 wild animals (night 3, job 13): one batch per kind, moved on the graphics chip, no shadows, only in town. Butterflies flutter round the
@@ -263,7 +265,7 @@ const HOUSE=id=>HOUSES.find(h=>h.id===id);
 /* 🏢 big apartment buildings: you go inside, up the stairs, and find the flat. They all share these 3 floors. */
 const APTB=['ap1','ap2','ap3','of'],isApt=id=>APTB.includes(id),FLAT_SPOT={};
 const DOORS={pizza:{city:[58.9,8.6,Math.PI/2],inside:[0,3.2,0]},toys:{city:[58.4,-31,Math.PI/2],inside:[0,3.2,0]},bakery:{city:[58.4,-14,Math.PI/2],inside:[0,3.2,0]},icecream:{city:[57.9,36,Math.PI/2],inside:[0,3.2,0]},
-  library:{city:[58.9,20,Math.PI/2],inside:[0,3.2,0]},school:{city:[-25,-57.5,Math.PI],inside:[0,3.2,0]},fire:{city:[-58.6,-29.6,-Math.PI/2],inside:[0,3.2,0]},clothes:{city:[-58.4,-12.5,-Math.PI/2],inside:[0,3.2,0]},homeback:{city:[-14,-19.7,0],inside:[4.4,-3.6,Math.PI]},cafe:{city:[32,-9.6,Math.PI],inside:[0,3.2,0]},flowers:{city:[31.5,9.6,0],inside:[0,3.2,0]},home:{city:[-17,-9.6,Math.PI],inside:[0,3.7,0]},market:{city:[18,-9.6,Math.PI],inside:[0,3.7,0]},pets:{city:[18,9.6,0],inside:[0,3.7,0]}};
+  library:{city:[58.9,20,Math.PI/2],inside:[0,3.2,0]},school:{city:[-25,-57.5,Math.PI],inside:[0,3.2,0]},fire:{city:[-58.6,-29.6,-Math.PI/2],inside:[0,3.2,0]},clothes:{city:[-58.4,-12.5,-Math.PI/2],inside:[0,3.2,0]},homeback:{city:[-14,-19.7,0],inside:[4.4,-3.6,Math.PI]},cafe:{city:[32,-9.6,Math.PI],inside:[0,3.2,0]},flowers:{city:[31.5,9.6,0],inside:[0,3.2,0]},home:{city:[-17,-9.6,Math.PI],inside:[0,3.7,0]},market:{city:[18,-9.6,Math.PI],inside:[0,3.7,0]},pets:{city:[18,9.6,0],inside:[0,3.7,0]},vet:{city:[8.8,-77.2,Math.PI/2],inside:[0,2.7,0]}};
 
 for(const id of APTB){const h=HOUSE(id);DOORS['apt1'+id]={city:[h.x+Math.sin(h.ry)*1.3,h.z+Math.cos(h.ry)*1.3,h.ry+Math.PI],inside:[-8.2,0,-Math.PI/2]};}
 DOORS.beach={city:[77.2,0,Math.PI/2],inside:[-25.5,0,-Math.PI/2]};
@@ -473,16 +475,19 @@ function buildCity(){
     const free=(x,z,rad)=>{if(x>63&&x<82&&z>-41&&z<-35)return false;   /* (run 4, stage 3: the Tree Park's gate path stays clear) */if(Math.abs(x)<8.5||Math.abs(z)<8.5||Math.abs(x)>79.3||Math.abs(z)>79.3)return false;if(Math.abs(Math.abs(x)-50)<8.5||Math.abs(Math.abs(z)-50)<8.5)return false;if(x>-41&&x<-9&&z>58&&z<79)return false;if(x>-23.5&&x<-10&&z>-25&&z<-8)return false;for(const c of L.cols)if(pushOut(x,z,rad+.4,c))return false;for(const [a,b] of WE)if(segDist(x,z,WP[a],WP[b])<rad+1.1)return false;return true;};
     for(let tries=0;tries<2600&&placed<190;tries++){const edge=r();let x,z,forest=false;if(edge<.15){x=-40+r()*80;z=33+r()*7;}else if(edge<.3){x=-40+r()*80;z=-40+r()*7;}else if(edge<.38){x=33+r()*7;z=-40+r()*80;}else if(edge<.46){x=-40+r()*7;z=-40+r()*80;}
         else{x=(r()<.5?-1:1)*(57+r()*23);z=-80+r()*160;if(r()<.5){const t=x;x=z;z=t;}forest=Math.abs(x)>57&&Math.abs(z)>57;}
-      let kind=r();if(forest&&kind<.75)kind=.9;
-      if(kind<.3){if(!free(x,z,.6))continue;const c=pick(['#5fbf74','#6cc97c','#4fae64']);sph(st,.5,c,x,.35,z,{ws:10,hs:8});sph(st,.38,c,x+.4,.28,z+.15,{ws:10,hs:8});sph(st,.34,c,x-.3,.25,z-.2,{ws:10,hs:8});if(r()<.5)for(let k=0;k<4;k++)sph(st,.05,pick(['#ff7aa8','#ffffff','#ffd45c']),x+r()*.6-.3,.72,z+r()*.5-.25,{ws:6,hs:5,ol:.01});colC(L,x,z,.6);}
-      else if(kind<.45){if(!free(x,z,.4))continue;sph(st,.35+r()*.2,pick(['#b8b4c4','#a7a3b5','#c8c4d6']),x,.1,z,{s:[1.3,.7,1],ws:9,hs:7});colC(L,x,z,.45);}
-      else if(kind<.65){if(!free(x,z,.3))continue;const n=3+(r()*4|0);for(let k=0;k<n;k++){const fx=x+r()*1.2-.6,fz=z+r()*1.2-.6;cyl(st,.014,.014,.26,'#4fae5c',fx,0,fz,{seg:4,ol:false});sph(st,.07,pick(['#ff7aa8','#ffd45c','#ffffff','#b79cff','#ff8a6b']),fx,.3,fz,{ws:7,hs:5,ol:.01});}}
-      else if(kind<.78){if(!free(x,z,.3))continue;for(let k=0;k<3;k++){const mx=x+r()*.6-.3,mz=z+r()*.6-.3,h=.12+r()*.12;cyl(st,.035,.045,h,'#fff4e0',mx,0,mz,{seg:6,ol:.01});sph(st,.1,'#ff5d6c',mx,h,mz,{s:[1,.6,1],ws:8,hs:6,ol:.012});}}
-      else{if(!free(x,z,1.3))continue;tree(st,x,z,1+r()*.3);colC(L,x,z,.3);}
+      let kind=r();const q=vetSpot(x,z,1.5)?VDUMP:st;if(forest&&kind<.75)kind=.9;
+      if(kind<.3){if(!free(x,z,.6))continue;const c=pick(['#5fbf74','#6cc97c','#4fae64']);sph(q,.5,c,x,.35,z,{ws:10,hs:8});sph(q,.38,c,x+.4,.28,z+.15,{ws:10,hs:8});sph(q,.34,c,x-.3,.25,z-.2,{ws:10,hs:8});if(r()<.5)for(let k=0;k<4;k++)sph(q,.05,pick(['#ff7aa8','#ffffff','#ffd45c']),x+r()*.6-.3,.72,z+r()*.5-.25,{ws:6,hs:5,ol:.01});colC(L,x,z,.6);if(q!==st)L.cols[L.cols.length-1].vd=1;}
+      else if(kind<.45){if(!free(x,z,.4))continue;sph(q,.35+r()*.2,pick(['#b8b4c4','#a7a3b5','#c8c4d6']),x,.1,z,{s:[1.3,.7,1],ws:9,hs:7});colC(L,x,z,.45);if(q!==st)L.cols[L.cols.length-1].vd=1;}
+      else if(kind<.65){if(!free(x,z,.3))continue;const n=3+(r()*4|0);for(let k=0;k<n;k++){const fx=x+r()*1.2-.6,fz=z+r()*1.2-.6;cyl(q,.014,.014,.26,'#4fae5c',fx,0,fz,{seg:4,ol:false});sph(q,.07,pick(['#ff7aa8','#ffd45c','#ffffff','#b79cff','#ff8a6b']),fx,.3,fz,{ws:7,hs:5,ol:.01});}}
+      else if(kind<.78){if(!free(x,z,.3))continue;for(let k=0;k<3;k++){const mx=x+r()*.6-.3,mz=z+r()*.6-.3,h=.12+r()*.12;cyl(q,.035,.045,h,'#fff4e0',mx,0,mz,{seg:6,ol:.01});sph(q,.1,'#ff5d6c',mx,h,mz,{s:[1,.6,1],ws:8,hs:6,ol:.012});}}
+      else{if(!free(x,z,1.3))continue;tree(q,x,z,1+r()*.3);colC(L,x,z,.3);if(q!==st)L.cols[L.cols.length-1].vd=1;}
       placed++;}}
   /* (the little bridge over the duck pond went in run 4, item 3: the pond is solid water all round again) */
   buildLane(L,st);buildClosedSigns(L);buildGrandmas(L,st);   /* 👵 grandmas on benches by the town houses */
   buildForest(L,st);buildWild(L);   /* 🌲 the forest belt and the tree groups; 🦋 butterflies, birds and owls */
+  {const g=new THREE.Group();g.position.set(14.2,0,-77.2);g.rotation.y=-Math.PI/2;st.add(g);vetClinic(g);   /* 🩺 the vet station (stage 4; Map x 14.2, z -77.2, door to the west) */
+    for(let i=L.cols.length;i--;)if(L.cols[i].vd)L.cols.splice(i,1);   /* (the walls of the things not drawn there go too: they stood only so the rest are made in the same places) */
+    col(L,9.6,-83.3,18.8,-71.1);col(L,8.4,-80.3,9.4,-79.3);col(L,8.4,-75.1,9.4,-74.1);inter(L,{x:8.6,z:-77.2,r:2.4,icon:'🩺',label:'Go into the Vet Station',act:()=>enter('vet')});}
   bake(st,true,32);
   L.g.add(glowMesh(glowGeo(LAMPXZ.flatMap(([x,z])=>[[x,3.21,z,.8,[.5,.38,.18]],[x,.1,z,4.4,4.4,[.3,.23,.11]]]))));
   buildFlies(L);   /* ✨ fireflies in the park at night */
@@ -1308,7 +1313,7 @@ function hclimb(dir){const L=CUR;if(CLIMB||CUT||fading||!L.fls||L.fls.length<2)r
   const w=L===LOC.home?HOMEW:L.W,x0=L.ox-w,z0=L.oz+UPZ*f;
   CLIMB={t:0,L,dir,x0:P.x,z0:P.z,y0:P.yaw,p0:P.pitch,x1:x0-3.3,z1:z0,ya:Math.PI/2,h:3,st:0,fd:false,end:()=>{
     [P.x,P.z]=collideXZ(L.ox-w+2.6,L.oz+UPZ*to,.3,L);P.yaw=-Math.PI/2;P.pitch=0;P.cy=0;floorVis();bringFollowers(true);saveLocal();
-    toast(dir<0?(to?'🏡 Down to floor '+(to+1):'🏡 Back downstairs'):L===LOC.home?(to===1?'🏡 Upstairs! Tap 🛋️ to decorate up here too.':'🏡 Floor '+(to+1)+'! Tap 🛋️ to decorate here too.'):L===LOC.pets?(dir>0?'🐾 Upstairs! Here are the animals 💗':'🛒 Downstairs: snacks, toys and pet clothes'):'🏡 Upstairs!',2.6);}};}
+    toast(dir<0?(to?'🏡 Down to floor '+(to+1):'🏡 Back downstairs'):L===LOC.home?(to===1?'🏡 Upstairs! Tap 🛋️ to decorate up here too.':'🏡 Floor '+(to+1)+'! Tap 🛋️ to decorate here too.'):L===LOC.pets?(dir>0?'🐾 Upstairs! Here are the animals 💗':'🛒 Downstairs: snacks, toys and pet clothes'):L===LOC.vet?(dir>0?'🩺 Upstairs: Dr. Rūta and the vet rooms':'🩺 Downstairs: Nurse Penny\'s desk'):'🏡 Upstairs!',2.6);}};}
 
 /* ===== 🏡 Friends Lane: the west road goes on past the edge of town, with a house lot for every player. Your house is here too ===== */
 /* lots 0-5 are where old versions have them; 6-11 are further down the lane; when even more friends play, more lots appear */
@@ -1907,12 +1912,91 @@ function buildPetShop(){
    const wh=new THREE.Mesh(new THREE.TorusGeometry(.18,.03,6,16),mat('#ff7aa8'));wh.position.set(2.1,1.02,3.0);pu.add(wh);col(L,-.1,Z+2.3,2.7,Z+4.5);
    const s2=signPlane('🐹 Hamsters',1.6,.4,'#ffd45c','#3d2c5e');s2.position.set(1.3,1.72,2.4);fls[1].g.add(s2);L.pens.push({type:'hamster',x0:.3,x1:2.3,z0:Z+2.7,z1:Z+4.1,y:.82});}   /* 🐹 the hamsters' table */
   {box(pu,1.8,.08,.5,'#c98f5e',4.9,.45,3.9,{ol:.012});for(const x of[4.1,5.7])box(pu,.1,.45,.5,'#c98f5e',x,0,3.9,{ol:.012});box(pu,1.8,.5,.08,'#c98f5e',4.9,.5,4.12,{ol:.012});col(L,4.0,Z+3.6,5.8,Z+4.2);}   /* a little bench to watch the animals from */
+  {const s=signPlane('🔒 Big pets: 🐒 🦭 🐻 🐍',2.4,.5,'#ffd45c','#3d2c5e');s.position.set(W/2-.06,1.8,0);s.rotation.y=-Math.PI/2;fls[1].g.add(s);inter(L,{x:W/2-1.2,z:Z,r:1.8,icon:'🔒',label:'Big pets',act:openBig});}   /* 🔒 stage 4: what the big-needs pets still need (Ms. Paws says it) */
   for(const F of fls){bake(F.sh,false);bake(F.pr,true);}
   inter(L,{x:0,z:4.3,r:1.9,icon:'🚪',label:'Go outside',act:()=>exitTo('pets')});
   inter(L,{x:5.6,z:.6,r:2,icon:'🛒',label:'Buy pet food, toys & clothes',act:()=>openShop('pets')});
   inter(L,{x:5.1,z:-3.6,r:1.8,icon:'👒',label:'Pet clothes',act:()=>openShop('pets')});
   return L;
 }
+/* 🩺 the vet station's models (pets and farm update, stage 4): the book's non-living pack v164 (vet:clinic, vet:table ... vet:treat, picked 31 Oct), copied as they are.
+   VT = the clinic's colours: lavender walls, violet and deep purple, butter yellow */
+/* (the pack's soft rounded box: its own signature, centred; the game's rbox is another one) */
+function vrboxGeo(w,h,d,r,grow){r=Math.min(r,w/2-.001,h/2-.001,d/2-.001);const s=new THREE.Shape(),x=w/2-r,y=h/2-r;s.moveTo(-x,-y);s.lineTo(x,-y);s.lineTo(x,y);s.lineTo(-x,y);s.closePath();
+  const g=new THREE.ExtrudeGeometry(s,{depth:d-2*r,bevelEnabled:true,bevelThickness:r+grow,bevelSize:r+grow,bevelSegments:5,curveSegments:4});g.translate(0,0,-(d-2*r)/2);g.computeVertexNormals();return g;}
+function vrbox(g,w,h,d,r,c,x,y,z,o={}){const m=new THREE.Mesh(vrboxGeo(w,h,d,r,0),o.mat||mat(c));m.position.set(x,y,z);if(o.rx)m.rotation.x=o.rx;if(o.ry)m.rotation.y=o.ry;if(o.rz)m.rotation.z=o.rz;g.add(m);
+  if(o.ol!==false){const h2=new THREE.Mesh(vrboxGeo(w,h,d,r,o.ol||.014),OL);h2.position.copy(m.position);h2.rotation.copy(m.rotation);g.add(h2);}return m;}
+function pawSign(g,x,y,z,s,c,bg){const p=new THREE.Group();p.position.set(x,y,z);p.scale.setScalar(s);g.add(p);
+  if(bg){const d=new THREE.Mesh(new THREE.CircleGeometry(.5,28),mat(bg));p.add(d);const r=new THREE.Mesh(new THREE.TorusGeometry(.5,.04,6,28),OL);p.add(r);}
+  const pad=new THREE.Mesh(new THREE.CircleGeometry(.17,20),mat(c));pad.scale.set(1.15,.95,1);pad.position.set(0,-.1,.01);p.add(pad);
+  for(const [tx,ty] of[[-.24,.1],[-.09,.24],[.09,.24],[.24,.1]]){const t=new THREE.Mesh(new THREE.CircleGeometry(.075,16),mat(c));t.scale.set(.9,1.15,1);t.position.set(tx,ty,.01);p.add(t);}
+  return p;}
+const VT={wall:'#efe6ff',acc:'#8a5fd6',deep:'#5a3d9a',pale:'#d9c8ff',sun:'#ffd86b',floor:'#d8cdea',wood:'#b79cff'};
+function vetTable(g,t=VT){const S='#d8d0ea';box(g,1.3,.06,.7,S,0,.86,0,{ol:.012});vrbox(g,1.1,.05,.55,.02,t.sun,0,.94,0,{ol:.008});
+  for(const x of[-.5,.5])for(const z of[-.25,.25])cyl(g,.035,.035,.86,t.deep,x,0,z,{seg:8,ol:.008});box(g,1.1,.04,.5,t.pale,0,.25,0,{ol:.008});
+  box(g,.5,.28,.4,t.acc,.95,0,.1,{ol:.01});box(g,.5,.05,.4,t.sun,.95,.28,.1,{ol:false});
+  cyl(g,.025,.025,1.1,t.deep,-.62,.9,-.3,{seg:6,ol:.006});cyl(g,.02,.02,.45,t.deep,-.45,1.98,-.3,{rz:-1.2,center:true,seg:6,ol:.006});
+  const sh=new THREE.Mesh(new THREE.ConeGeometry(.14,.14,14,1,true),mat(t.acc));sh.material.side=THREE.DoubleSide;sh.position.set(-.25,1.82,-.3);g.add(sh);sph(g,.06,null,-.25,1.77,-.3,{mat:toon({color:'#fff6d6',emissive:new THREE.Color('#ffe9a8'),emissiveIntensity:.6}),ol:false});}
+function vetScale(g,t=VT){box(g,.8,.08,.6,t.pale,0,0,0,{ol:.01});vrbox(g,.7,.03,.5,.02,t.acc,0,.095,0,{ol:false});pawSign(g,0,.115,0,.5,t.sun).rotation.x=-Math.PI/2;
+  cyl(g,.03,.03,.9,t.deep,0,.08,-.26,{seg:6,ol:.006});box(g,.34,.24,.08,t.deep,0,.95,-.26,{ol:.01});
+  const sg=signPlane('2.4 kg',.26,.1,'#fff3c4','#5a3d9a');sg.position.set(0,1.02,-.215);g.add(sg);}
+function vetShelf(g,t=VT){const W=1.4,H=1.8,D=.36;box(g,W,H,.04,t.pale,0,0,-D/2+.02);for(const s of[-1,1])box(g,.04,H,D,t.acc,s*(W/2-.02),0,0,{ol:.01});
+  const C=['#ff7aa8','#7cc8ff','#5fd4b0',t.sun,t.acc,'#ffffff'];for(let r=0;r<4;r++){const y=.1+r*.43;box(g,W-.04,.03,D-.02,t.acc,0,y,0,{ol:.006});
+    for(let k=0;k<6;k++){const x=-W/2+.16+k*.22,c=C[(k+r)%6];if((k+r)%3===0){box(g,.15,.2,.15,c,x,y+.03,0,{ol:.006});box(g,.15,.06,.152,'#ffffff',x,y+.1,0,{ol:false});}
+      else{cyl(g,.05,.05,.17,c,x,y+.03,0,{seg:10,ol:.006});cyl(g,.035,.035,.04,'#ffffff',x,y+.2,0,{seg:10,ol:false});}}}
+  box(g,W,.06,D+.02,t.deep,0,H,0,{ol:.01});}
+function vetCounter(g,t=VT){vrbox(g,2.0,1.0,.6,.08,t.acc,0,.5,0);box(g,2.1,.06,.7,t.sun,0,1.0,0,{ol:.012});pawSign(g,0,.55,.305,.55,t.sun);
+  box(g,.4,.28,.03,t.deep,-.55,1.06,-.12,{ol:.008});box(g,.36,.24,.01,null,-.55,1.08,-.104,{mat:toon({color:'#e6dcff',emissive:new THREE.Color('#b79cff'),emissiveIntensity:.35}),ol:false});box(g,.06,.06,.04,t.deep,-.55,1.0,-.12,{ol:false});
+  cyl(g,.06,.07,.02,t.sun,.5,1.03,.1,{seg:12,ol:.006});sph(g,.055,t.sun,.5,1.06,.1,{s:[1,.8,1],ws:10,hs:6,ol:.006});
+  cyl(g,.09,.09,.18,null,.2,1.03,.05,{mat:toon({color:'#efe6ff',transparent:true,opacity:.6}),seg:12,ol:.006});for(let i=0;i<5;i++)sph(g,.03,'#c48a5a',.2+Math.cos(i*1.3)*.04,1.07+(i%2)*.04,.05+Math.sin(i*1.3)*.04,{ws:6,hs:4,ol:false});}
+function vetBench(g,t=VT){for(let i=0;i<3;i++){const x=-.6+i*.6;vrbox(g,.5,.1,.48,.04,t.acc,x,.48,0,{ol:.01});vrbox(g,.5,.5,.08,.04,t.acc,x,.78,-.22,{ol:.01});}
+  box(g,1.8,.06,.45,t.deep,0,.38,0,{ol:.008});box(g,1.8,.1,.06,t.deep,0,.65,-.24,{ol:.008});for(const x of[-.8,.8])for(const z of[-.18,.18])cyl(g,.03,.03,.38,t.deep,x,0,z,{seg:6,ol:.006});
+  for(const x of[-.6,.6])sph(g,.11,t.sun,x,.62,-.05,{s:[1,.6,1],ws:10,hs:6,ol:.006});}
+function vetBigTable(g,t=VT){vrbox(g,2.6,.42,1.5,.1,t.acc,0,.21,0);vrbox(g,2.4,.08,1.3,.04,t.sun,0,.46,0,{ol:.01});
+  {const RL=1.6,L=Math.hypot(RL,.46),a=Math.atan2(.46,RL);const p=new THREE.Group();p.position.set(1.3+RL/2,.25,0);p.rotation.z=-a;g.add(p);box(p,L,.1,1.1,t.acc,0,0,0,{center:true,ol:.012});for(const s of[-1,1])box(p,L,.14,.06,t.deep,0,.06,s*.55,{center:true,ol:.008});for(let i=0;i<5;i++)box(p,.06,.03,1.0,t.sun,-L/2+.25+i*.3,.065,0,{center:true,ol:false});}
+  cyl(g,.05,.06,1.9,t.deep,-1.1,.5,-.6,{seg:8,ol:.008});cyl(g,.18,.2,.05,t.deep,-1.1,.46,-.6,{seg:12,ol:.006});cyl(g,.02,.02,.6,t.deep,-.85,2.38,-.6,{rz:-1.2,center:true,seg:6,ol:.006});
+  const sh=new THREE.Mesh(new THREE.ConeGeometry(.18,.16,14,1,true),mat(t.acc));sh.material.side=THREE.DoubleSide;sh.position.set(-.55,2.2,-.6);g.add(sh);sph(g,.07,null,-.55,2.14,-.6,{mat:toon({color:'#fff6d6',emissive:new THREE.Color('#ffe9a8'),emissiveIntensity:.6}),ol:false});}
+function vetCoffee(g,t=VT){cyl(g,.65,.65,.06,t.sun,0,.5,0,{seg:24,ol:.012});cyl(g,.08,.12,.5,t.deep,0,0,0,{seg:10,ol:.008});cyl(g,.3,.3,.04,t.deep,0,0,0,{seg:16,ol:.006});
+  for(let k=0;k<4;k++){const a=k*Math.PI/2+Math.PI/4,x=Math.cos(a)*1.0,z=Math.sin(a)*1.0,p=new THREE.Group();p.position.set(x,0,z);p.rotation.y=-a-Math.PI/2;p.scale.setScalar(.8);g.add(p);
+    vrbox(p,.62,.4,.6,.12,t.acc,0,.2,0);vrbox(p,.62,.5,.16,.08,t.acc,0,.6,-.26);vrbox(p,.5,.08,.46,.04,t.pale,0,.43,.04,{ol:false});
+    const m=new THREE.Group();m.position.set(Math.cos(a)*.35,.56,Math.sin(a)*.35);g.add(m);cyl(m,.05,.045,.1,['#ffffff',t.acc,'#ff9ec4','#7cc8ff'][k],0,0,0,{seg:10,ol:.005});cyl(m,.042,.042,.01,'#7a4a2e',0,.09,0,{seg:10,ol:false});}
+  cyl(g,.16,.16,.02,'#ffffff',0,.56,0,{seg:14,ol:.005});for(let i=0;i<4;i++)cyl(g,.045,.045,.02,'#d39a68',Math.cos(i*1.6)*.08,.58,Math.sin(i*1.6)*.08,{seg:10,ol:false});}
+function vetClinic(g){const t=VT,W=12,D=9,H=6.6;
+  building(g,{x:0,z:0,w:W,d:D,h:H,wall:t.wall,trim:t.acc,roof:t.pale,shop:true,awning:t.acc,sign:'Vet clinic',signBg:t.sun,signFg:t.deep,door:{x:0,c:t.acc,glass:true},wf:'#ffffff',skip:(dx,i)=>i===1&&Math.abs(dx)<3.9});
+  /* two big cat ears on the roof, pink-violet inside, and a paw board between them */
+  for(const s of[-1,1]){const e=new THREE.Group();e.position.set(s*3.7,H+.45,2.2);e.rotation.z=-s*.12;g.add(e);cone(e,1.6,2.5,t.acc,0,0,0,{seg:4,ry:Math.PI/4,ol:.05});cone(e,.9,1.6,'#f2b8e6',0,.25,.95,{seg:4,ry:Math.PI/4,s:[1,1,.2],ol:false});}
+  box(g,2.4,1.5,.3,t.sun,0,H+.4,D/2-.25,{ol:.02});pawSign(g,0,H+1.15,D/2-.08,1.1,t.deep);
+  /* a soft round window upstairs in the middle, under the sign */
+  {const w=new THREE.Mesh(new THREE.CircleGeometry(.6,28),WIN);w.position.set(0,H-1.45,D/2+.04);g.add(w);const r=new THREE.Mesh(new THREE.TorusGeometry(.6,.08,8,30),mat(t.sun));r.position.copy(w.position);g.add(r);const ro=new THREE.Mesh(new THREE.TorusGeometry(.6,.11,8,30),OL);ro.position.copy(w.position);ro.position.z-=.01;g.add(ro);}
+  /* a little front step path and two planters */
+  box(g,3.4,.08,1.6,t.pale,0,0,D/2+.9,{ol:.012});for(const s of[-1,1]){box(g,.9,.6,.9,t.deep,s*2.6,0,D/2+.8,{ol:.014});sph(g,.5,'#5fae5c',s*2.6,.95,D/2+.8,{ws:10,hs:8,ol:.014});for(let k=0;k<4;k++)sph(g,.1,t.sun,s*2.6+Math.cos(k*1.6)*.35,1.15,D/2+.8+Math.sin(k*1.6)*.35,{ws:6,hs:4,ol:.006});}}
+/* 🩺 the vet station inside (pets and farm update, stage 4; the book's vet:room, kept modest): two floors like the Pet Shop (floor 2 is UPZ further along z,
+   only the floor you stand on is drawn). Downstairs the lobby: Nurse Penny's desk, waiting seats, shelves, a paw rug. Upstairs Room 1 (exam table, scale),
+   Room 2 for big pets (the platform with its ramp) and the staff's coffee corner. The furniture is the book's (vetTable...), as it is */
+function buildVet(){const t=VT,W=11,D=8,H=3.2,L=makeLoc('vet','in',4500,0,[-W/2,-D/2,W/2,D/2]),wm=mat(t.wall),fm=toon({color:t.floor});L.W=W/2;L.D=D/2;L.items=new THREE.Group();scene.add(L.items);
+  const fls=[];for(let k=0;k<2;k++){const g=new THREE.Group(),sh=new THREE.Group(),pr=new THREE.Group();g.add(sh,pr);g.position.set(0,0,UPZ*k);fls.push({k,g,sh,pr});
+    shell({ox:L.ox,oz:L.oz+UPZ*k,cols:L.cols},sh,W,D,H,wm,fm,'#f7f2ff',g,UPG);if(!k)doorAt(sh,0,D/2-.02,Math.PI,t.acc,true,true);
+    for(const x of[-2.5,2.5])windowIn(sh,x,1.0,k?-D/2+.02:D/2-.02,k?0:Math.PI,t.sun);windowIn(sh,W/2-.02,1.0,0,-Math.PI/2,t.sun);stairsIn(sh,1-k,W,H,wm);}
+  L.fls=fls;L.g.add(fls[0].g);L.vf=-1;L.bounds={x1:L.ox-W/2,z1:L.oz-D/2,x2:L.ox+W/2,z2:L.oz+UPZ+D/2};
+  const put=(g,f,x,z,ry,y)=>{const p=new THREE.Group();p.position.set(x,y||0,z);p.rotation.y=ry||0;g.add(p);f(p,t);return p;},a=fls[0].pr,b=fls[1].pr,Z=UPZ;
+  /* the lobby */
+  put(a,vetCounter,2.9,-1.2);col(L,1.85,-1.55,3.95,-.85);put(a,vetShelf,2.9,-D/2+.4);put(a,vetShelf,-.4,-D/2+.4);col(L,-1.15,-D/2,3.65,-D/2+.62);
+  put(a,vetBench,-2.6,-3.25);col(L,-3.5,-3.55,-1.7,-2.9);put(a,vetBench,-2.6,2.5,Math.PI);col(L,-3.5,2.2,-1.7,2.8);
+  {const r=new THREE.Mesh(new THREE.CircleGeometry(1.1,30),mat(t.sun));r.rotation.x=-Math.PI/2;r.position.set(.3,.012,.6);a.add(r);pawSign(a,.3,.02,.6,1.4,t.acc).rotation.x=-Math.PI/2;}
+  cyl(a,.26,.2,.55,t.sun,4.6,0,3.2,{seg:12,ol:.01});for(let k=0;k<6;k++){const q=k*1.05;sph(a,.26,k%2?'#5fae5c':'#6fc25a',4.6+Math.cos(q)*.22,.92+(k%3)*.1,3.2+Math.sin(q)*.22,{ws:10,hs:8,ol:.012});}colC(L,4.6,3.2,.45);
+  pawSign(a,1.25,2.3,-D/2+.19,1.0,t.acc,t.sun);{const s=signPlane('Happy pets',1.4,.5,t.sun,t.deep);s.position.set(-2.6,2.1,-D/2+.21);a.add(s);}
+  {const s=signPlane('🩺 Vet rooms upstairs ⬆️',2.4,.5,t.sun,t.deep);s.position.set(-W/2+.06,2.55,-2.4);s.rotation.y=Math.PI/2;a.add(s);}
+  /* upstairs: Room 1, a low wall, Room 2 for big pets, the staff corner */
+  put(b,vetTable,-2.2,-2.6);col(L,-2.9,Z-3.0,-.65,Z-2.2);put(b,vetScale,-.4,-3.3);col(L,-.85,Z-3.65,.05,Z-2.95);
+  box(b,.14,.9,3.0,t.pale,.9,0,-2.5,{ol:.012});box(b,.2,.08,3.0,t.acc,.9,.9,-2.5,{ol:.008});col(L,.78,Z-4,1.02,Z-1);
+  put(b,vetBigTable,3.2,-2.6,-Math.PI/2);col(L,2.42,Z-3.95,3.98,Z-1.3);put(b,vetShelf,-4.3,-D/2+.4);col(L,-5,Z-D/2,-3.55,Z-D/2+.62);
+  put(b,vetCoffee,3.4,2.3);colC(L,3.4,Z+2.3,1.25);
+  for(const [x,n,w] of[[-1.6,'Room 1',1.4],[3.2,'Room 2: big pets',2.2]]){box(b,w+.12,.55,.06,t.deep,x,2.3,-D/2+.2,{ol:.01});const s=signPlane(n,w,.45,t.sun,t.deep);s.position.set(x,2.57,-D/2+.24);b.add(s);}
+  {cyl(b,.03,.03,.55,t.deep,3.4,0,3.75,{seg:6,ol:.006});box(b,.9,.36,.05,t.deep,3.4,.55,3.75,{ol:.008});const s=signPlane('Staff',.8,.3,t.sun,t.deep);s.position.set(3.4,.73,3.72);s.rotation.y=Math.PI;b.add(s);}
+  for(const F of fls){bake(F.sh,false);bake(F.pr,true);}
+  inter(L,{x:0,z:D/2-.7,r:1.9,icon:'🚪',label:'Go outside',act:()=>exitTo('vet')});
+  inter(L,{x:-W/2+.9,z:-.6,r:1.6,icon:'⬆️',label:'Upstairs to Dr. Rūta',act:()=>hclimb(1)});inter(L,{x:-W/2+.9,z:Z+.6,r:1.6,icon:'⬇️',label:'Downstairs to the lobby',act:()=>hclimb(-1)});
+  return L;}
 /* 👒 a rack of little pet clothes: bows, hats, collars, scarves, crowns, bow ties, capes and wings in bright colours */
 function petClothesRack(g,x,z,ry,w,items,c='#ffffff'){const p=new THREE.Group();p.position.set(x,0,z);p.rotation.y=ry;g.add(p);
   box(p,w,2.0,.1,c,0,0,-.35);box(p,.1,2.0,.8,c,-w/2+.05,0,0);box(p,.1,2.0,.8,c,w/2-.05,0,0);for(const y of[.1,.75,1.4])box(p,w,.06,.8,c,0,y,0,{ol:.015});box(p,w,.1,.8,c,0,1.95,0);

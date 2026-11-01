@@ -1,4 +1,4 @@
-# HANDOFF — read this first (one page; updated 1 Nov 2026, Pets and Farm Update stage 3)
+# HANDOFF — read this first (one page; updated 1 Nov 2026, Pets and Farm Update stage 4)
 
 ## Where things stand
 - Live: `main` = a47bb1a (pet update 1, stamp 2026102902). Backups: `backup-2026-10-31` and `backup-2026-11-01` = main a47bb1a (A2 wants today's date).
@@ -14,7 +14,11 @@
   pots/owned things drawn, training gear (10 pieces at Ms. Paws, pets play on it), friends see your yard (presence `yd`). Kit lines P12-P16; P10 and N33 rewritten.
   Joined game 1,663,820 -> 1,702,559 bytes (+38,739: moves +10.6 KB, gear models 9.4 KB, code). Quick kit 66 of 66 PASS (N3 failed once on timing in the
   full run, the night3 stage run again alone: all PASS; N3 alone 3 of 3) `tools/pfu-wip/quick-kit-stage3.log`; check_split S1-S4 PASS.
-- **Next: stage 4** (`kit/entries/plan-brief-pfu-4.json`: vet clinic, big-needs pets, new pet shop).
+- **Stage 4 done in part** (stamp 2026110102, commit see git log): vet station (outside at Map x 14.2 z -77.2, 2 floors inside, Penny/Rūta/Leo/Tomas, the visit), sickness ON,
+  big-needs pets locked at a Ms. Paws board. Kit P17-P18; rewritten (old -> new): P6 (sickness off until the clinic -> on with the station in, switch still
+  proven both ways), P1 (new pet field sad exactly 0 -> under 0.1 minute: it starts counting at once), B1 (pets' sad compared exactly -> like happiness, only 'still there'). Joined game 1,702,559 -> 1,733,495 bytes (+30,936). NOT in (size): the big pets' models,
+  homes and gear, wait-outside, new 3-floor Pet Shop, today's pets redrawn. Quick kit: `tools/pfu-wip/quick-kit-stage4.log`.
+- **Next: stage 5** (`kit/entries/plan-brief-pfu-5.json`: Pet Show with friends, license, tricks). Size left: about 66 KB for stages 5 and 6.
 
 ## Read first (each stage)
 1. `CLAUDE.md`, this file. 2. The run doc `kit/kits/pfu-night-run.json` (field `text`; its Guards and Corrections hold). 3. Your brief
@@ -66,7 +70,20 @@
 - homeCare() counts yard gear as a toy. Presence `yd` = garden lv + pet lv + a letter per gear (GEAR_IDS order: append new ids at the end only).
 - Soil meshes are made when a spot opens (draw-call budget, N14/N40: town pieces within 10% of live).
 
+## Stage 4 notes the next stages need
+- Vet: `buildVet()` (js/02-world.js, loc 'vet' at ox 4500, floors like the Pet Shop), clinic outside `vetClinic(g)` added to the city's static group; the town's bushes/trees
+  in the spot are still generated (same random order) into `VDUMP` and their walls removed (`vetSpot`). Visit: `vetStaff`, `openVetDesk/vetDesk`, `vetStart`, `vetStep`
+  (called from petTick), `vetEnd` (js/03-game.js). Keepers can play a move: `k.mv` (+`k.mv0`, `k.lk` look-at) in the main loop. Moves added: pet.vetNervous, pet.takeTreat,
+  vet.listen, vet.check, nurse.treat (extract-moves.py with the longer list). Furniture uses the pack's rounded box as `vrbox` (the game's `rbox` has another signature).
+- Big pets: `BIGP`, `bigLock`, `openBig`, `bigPaws`, `bigHome(k)` (js/04-panels.js; returns false until the homes are sold). License from `S.lic.lv` (stage 5).
+  The stage that adds the monkey/seal/bear/snake models must add PET_TYPES rows (base = an old type), the homes (GEAR-like, yard spots in stage 3 notes), make
+  bigHome read them, adopt when bigLock is null, and the wait-outside rule (bear, seal). PET_TOY already has their favourite toys.
+- Kit: P17 compares the town's trees outside the clinic with `tools/kit-v7/pfu-trees-stage3.json` (stage-3 build; zipped by make_v7.py).
+
 ## Open / not verified
+- Stage 4: pictures looked at: clinic from the road, lobby, upstairs, a dog on the exam table (all look right). NOT VERIFIED: friends seeing the visit (the pet on the
+  table is drawn only for you), phone/dark mode/iPad layout of the new cards, the clinic at night, sounds, the toast queue on a real device. A town tree on the
+  pavement stands 0.8 m from the clinic's door path (x 4.75, z -78; walkable). Big-pet platform used only by bear/seal (none can be owned yet).
 - Stage 3: no pictures looked at but one overview of a level-3 yard (fences, beds, pots, gate look right); how each pet looks on its gear (feet, jumps over the
   bars, the hamster in its wheel, capybara/duck in the water, owl on the perch) NOT VERIFIED by eye; friends do not see the gear moves (the pet stands at its
   spot for them); the map still shows the level-1 garden; yard sign screen on a phone; sounds. Decisions made here (tell Karolis): gear room = 1 piece at pet

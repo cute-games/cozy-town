@@ -304,13 +304,30 @@ const PLACES=[
 PLACES.push({id:'beach',n:'Beach',i:'🏖️',x:80,z:0,w:8,d:14,c:'#f6dfa9',door:[77.4,0],flat:1,nq:1});
 PLACES.push({id:'bus',n:'Bus stop',i:'🚌',x:-16.2,z:7.6,w:4,d:1.5,c:'#ffd9c2',door:[-14.3,5.2],flat:1,nq:1});
 PLACES.push({id:'treepark',n:'Tree Park',i:'🌲',x:75.6,z:-40.6,w:9,d:9,c:'#9fd88a',door:[71.6,-38],flat:1,nq:1});   /* 🌲 run 4, job 16: the gate in the woods behind the Toy Store */
+PLACES.push({id:'vet',n:'Vet Station',i:'🩺',x:14.2,z:-77.2,w:9,d:12,c:'#e6dbff',door:[9.4,-77.2],nq:1});   /* 🩺 pets and farm update, stage 4 */
 const theN=pl=>pl.nt?pl.n:'the '+pl.n;
 const BLDS=[[-31,-15,7,7,'#bff0dc'],[-22,-31,18,8,'#ffd0b5'],[23,-31,20,8,'#c7e6ff'],[24,31,18,8,'#ffe0c4'],[13,-61.5,8,7,'#ffd6e0'],[25,-61.5,8,7,'#c9f2e3'],[37,-61.5,8,7,'#fff1b8'],[13,61.5,8,7,'#e6dbff'],[25,61.5,8,7,'#d9e8ff'],[37,61.5,8,7,'#ffe0c4'],[-66,25,10,20,'#ffd0b5']];
-const INSIDE_AT={beach:'beach',home:'home',market:'market',pets:'pets',flowers:'flowers',cafe:'cafe',clothes:'clothes',toys:'toys',bakery:'bakery',icecream:'icecream',library:'library',school:'school',fire:'fire',pizza:'pizza',treepark:'treepark'};
+const INSIDE_AT={beach:'beach',home:'home',market:'market',pets:'pets',flowers:'flowers',cafe:'cafe',clothes:'clothes',toys:'toys',bakery:'bakery',icecream:'icecream',library:'library',school:'school',fire:'fire',pizza:'pizza',treepark:'treepark',vet:'vet'};
+/* 🔒 big-needs pets (stage 4: rules-big-needs-pets, screens-shop-locks, story-paws-locked): the monkey, the seal and the bear need Pet care 40, pet yard level 3,
+   their home and an animal license (the bear level 3, the others 1); the snake its glass tank and license 1. Ms. Paws names only the first thing missing, in
+   that order (never the word "exotic"). The license comes from the Pet Show (stage 5); the four animals and their homes come with the stage that brings
+   their models (bigHome then reads what you own) */
+const BIGP={monkey:['🐒','monkey','Monkeys','climbing tree',1,1],seal:['🦭','seal','Seals','pond',1,1],bear:['🐻','bear','Bears','cave den',3,1],snake:['🐍','snake','Snakes','glass tank in your house',1,0]};
+function bigHome(k){return false;}
+function bigLock(k){const [,n,N,h,lv,y]=BIGP[k];
+  if(y&&sk('pets').lv<40)return['Pet care 40',`${N} need a lot of care. Reach Pet care 40 first!`];
+  if(y&&yLv('pet')<3)return['Pet yard level 3',`A ${n} needs lots of space. Grow your pet yard to level 3!`];
+  if(!bigHome(k))return[h[0].toUpperCase()+h.slice(1).replace(' in your house',''),`Where would it live? Get a ${h} first!`];
+  if((S.lic.lv|0)<lv)return['Animal license '+lv,`You need an animal license, level ${lv}. Win at the Pet Show!`];
+  return null;}
+function openBig(){SFX.talk();openPanel(`<div class="who" style="--c:#ffd45c">🐾 Ms. Paws</div><p class="line">Big pets need a little more. Tap one!</p><div class="row">${Object.keys(BIGP).map(k=>{const l=bigLock(k);
+  return`<button class="btn ${l?'white':'mint'}" data-a="bigp:${k}">${BIGP[k][0]} ${l?'🔒 '+l[0]:'Ready!'}</button>`;}).join('')}<button class="btn white" data-a="close">Bye!</button></div>`,{bottom:true});}
+function bigPaws(k){const l=bigLock(k),K=KEEPERS.find(q=>q.name==='Ms. Paws');if(K)K.p.wave=1.2;SFX.talk();toast(`🐾 Ms. Paws: “${l?l[1]:`Everything is ready. A ${BIGP[k][1]} will love your home!`}”`,4);}
 /* 💗 a friend's pet, 🩺 the vet booking (the pet brain, stage 2: js/03-game.js) */
 ACT.fpet=k=>{if(!FPT)return;const {a,q}=FPT;if(!MP.peers.has(a.peer)){closePanel();return;}PBR.pc={to:a.peer,i:q.i,k:k==='y'?'y':'p',n:++PBR.pcN};PBR.pcT=performance.now();
   if(cool('fpet'+a.peer,4))addXP('pets',1);SFX[k==='y'?PET_TYPES[q.kind].snd:'pet']();floatText(k==='y'?PET_ITEMS[PET_TOY[q.kind]||'ball'].i:'💗',q.x,1.1,q.z,{h:.55});
   renderFPet(k==='y'?q.nm+' plays with you! So much fun!':pick([q.nm+' loves that!',q.nm+' wiggles happily!','So soft!']));};
 ACT.vetbk=i=>{const s=vetSlots()[+i],sick=vetSick();if(!s||!sick.length||vetTaken(s[0],s[1]))return;S.vet.bk={d:s[0],h:s[1],ids:sick.map(d=>d.id)};SFX.ding();change();
   toast(`🩺 Nurse Penny: “Come back between ${clockStr(s[1])} and ${clockStr(s[1]+2)}. Dr. Rūta will see you!”`,4);renderPhone();};
+ACT.vdesk=k=>vetDesk(k);ACT.bigp=k=>bigPaws(k);
 ACT.vetx=()=>{S.vet.bk=null;SFX.tap();change();renderPhone();};
