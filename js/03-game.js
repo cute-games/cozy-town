@@ -194,19 +194,19 @@ const MAXLV=50,xpNeed=lv=>10*lv,lvPay=lv=>2*lv+(lv%10===0?100:0);   /* 🪙 econ
 function sk(k){S.skills=S.skills||{};return S.skills[k]||(S.skills[k]={lv:1,xp:0});}
 function addXP(k,n){if(!S||!SKILLS[k])return;const s=sk(k);if(s.lv>=MAXLV)return;s.xp+=n;let up=false;
   while(s.lv<MAXLV&&s.xp>=xpNeed(s.lv)){s.xp-=xpNeed(s.lv);s.lv++;up=true;}if(s.lv>=MAXLV)s.xp=0;
-  if(up){const r=lvPay(s.lv);S.coins+=r;SFX.yay();setTimeout(()=>toast(SKILLS[k].i+' '+SKILLS[k].n+' level '+s.lv+'! +'+r+' 🪙',3.6),300);floatText('⭐',P.x-Math.sin(P.yaw)*1.4,1.9,P.z-Math.cos(P.yaw)*1.4,{h:.6});change();}}
+  if(up){const r=lvPay(s.lv);S.coins+=r;SFX.yay();setTimeout(()=>toast(SKILLS[k].i+' '+SKILLS[k].n+' level '+s.lv+'! +'+r+' 🪙',3.6),300);floatText('⭐',P.x-Math.sin(P.yaw)*1.4,1.9,P.z-Math.cos(P.yaw)*1.4,{h:.6});if(k==='garden')yardLv();change();}}   /* (🪴 a new gardening level can open pots: they appear) */
 function bumpLevel(k,n=1,noPay){if(!S||!SKILLS[k])return;const s=sk(k);for(let i=0;i<n&&s.lv<MAXLV;i++){s.lv++;const r=lvPay(s.lv);if(!noPay)S.coins+=r;}
   if(s.lv>=MAXLV)s.xp=0;   /* (a given level keeps the XP already earned toward the next one; it used to reset it to 0) */SFX.yay();setTimeout(()=>toast(SKILLS[k].i+' '+SKILLS[k].n+' is now level '+s.lv+'! ⭐',3.6),300);
-  floatText('⭐',P.x-Math.sin(P.yaw)*1.4,1.9,P.z-Math.cos(P.yaw)*1.4,{h:.6});change();}
+  floatText('⭐',P.x-Math.sin(P.yaw)*1.4,1.9,P.z-Math.cos(P.yaw)*1.4,{h:.6});if(k==='garden')yardLv();change();}
 const CD={};function cool(k,s){const t=performance.now();if(CD[k]&&t-CD[k]<s*1000)return false;CD[k]=t;return true;}
 /* ---- your backyard garden (behind your house on Friends Lane; it is part of your yard, see buildYard) ---- */
 const PLOTS=[];let PLANT=null;
 function plotStage(st){if(!st||!st.seed)return -1;if(st.g>=1)return 3;if(st.g>=.5)return 2;if(st.g>=.12)return 1;return 0;}
 function gardenInit(){S.garden=S.garden||[];   /* (run 4, stage 2 end: the list keeps the length it was saved with; a new pot gets its entry when you first use it, so an old save re-saves unchanged) */
-  if(!PLOTS.length){const L=LOC.city,G=YARD.gin;for(const pl of L.plots){const soilM=toon({color:'#7a5236'});const soil=new THREE.Mesh(pl.pot?new THREE.CylinderGeometry(.22,.22,.04,10):new THREE.BoxGeometry(1.6,.05,1.0),soilM);soil.position.set(pl.x,pl.pot?.32:.15,pl.z);soil.receiveShadow=true;G.add(soil);
-    const grp=new THREE.Group();grp.position.set(pl.x,pl.pot?.34:.175,pl.z);if(pl.pot)grp.scale.setScalar(.55);G.add(grp);const rec={pl,soil,soilM,grp,key:'',icon:null,iconK:''};   /* 🪴 a pot grows the same crop, smaller */
-    rec.target=pl.pot?{x:pl.x,z:pl.z,r:1.5,obj:grp,icon:'🌱',label:()=>plotLabel(rec),act:()=>usePlot(rec)}:{x:pl.x,z:pl.z,r:1.6,rect:{x1:pl.x-.92,z1:pl.z-.62,x2:pl.x+.92,z2:pl.z+.62},obj:grp,icon:'🌱',label:()=>plotLabel(rec),act:()=>usePlot(rec)};L.inter.push(rec.target);yardInt(rec.target);PLOTS.push(rec);}}
-  for(const r of PLOTS)plotRefresh(r);}
+  if(!PLOTS.length){const L=LOC.city,G=YARD.gin;for(const pl of L.plots){const soilM=toon({color:'#7a5236'});
+    const grp=new THREE.Group();grp.position.set(pl.x,pl.pot?.34:.175,pl.z);if(pl.pot)grp.scale.setScalar(.55);G.add(grp);const rec={pl,soil:null,soilM,grp,key:'',icon:null,iconK:''};   /* (the soil is made when the spot opens: stage 3) */   /* 🪴 a pot grows the same crop, smaller */
+    rec.target=pl.pot?{x:pl.x,z:pl.z,r:1.5,obj:grp,icon:'🌱',label:()=>plotLabel(rec),act:()=>usePlot(rec)}:{x:pl.x,z:pl.z,r:1.6,rect:{x1:pl.x-.92,z1:pl.z-.62,x2:pl.x+.92,z2:pl.z+.62},obj:grp,icon:'🌱',label:()=>plotLabel(rec),act:()=>usePlot(rec)};L.inter.push(rec.target);yardInt(rec.target);rec.target.when=()=>YARD.on&&plotOpen(pl.i);PLOTS.push(rec);}}   /* (a spot shows and can be used only once it is open: stage 3) */
+  yardLv();}
 function plotLabel(rec){const st=S.garden[rec.pl.i]||{};if(!plotOpen(rec.pl.i))return'🔒 Gardening level '+plotGate(rec.pl.i);if(!st.seed)return'Plant seeds';const K=SEEDS[st.seed];if(st.g>=1)return'Pick your '+K.pl;if(st.w!==S.day)return'Water your '+K.pl;return K.n+' growing… '+Math.floor(st.g*100)+'%';}
 function buildCrop(g,seed,sg){const o={ol:.012},spots=[[-.5,-.24],[0,-.24],[.5,-.24],[-.5,.24],[0,.24],[.5,.24]],G='#5fbf74',G2='#4fae64';
   if(sg===0){for(const [x,z] of spots)sph(g,.06,'#5a3a24',x,.0,z,{s:[1,.5,1],ws:6,hs:5,ol:false});return;}
@@ -221,11 +221,14 @@ function buildCrop(g,seed,sg){const o={ol:.012},spots=[[-.5,-.24],[0,-.24],[.5,-
     else if(seed==='strawberry'){for(let k=0;k<3;k++){const a=k/3*TAU;sph(g,.08,G,x+Math.cos(a)*.07,.03,z+Math.sin(a)*.07,{s:[1,.45,1],ws:8,hs:6,...o});}if(sg===3){sph(g,.045,'#ff4d6d',x+.08,.04,z+.06,{s:[1,1.2,1],ws:8,hs:6,ol:.01});sph(g,.045,'#ff4d6d',x-.07,.04,z-.05,{s:[1,1.2,1],ws:8,hs:6,ol:.01});sph(g,.025,'#ffffff',x,.08,z,{ws:6,hs:5,ol:false});}}
     else if(seed==='tulip'){box(g,.03,.2,.07,G,x-.04,0,z,{rz:.2,...o});box(g,.03,.2,.07,G,x+.04,0,z,{rz:-.2,...o});if(sg===3){cyl(g,.012,.012,.3,G2,x,0,z,{seg:4,ol:false});cone(g,.06,.12,pick(['#ff7aa8','#ffd45c','#ff8a6b','#b79cff']),x,.3,z,{rx:Math.PI,seg:6,ol:.01});}}
   }}
-function plotRefresh(rec){const st=S.garden[rec.pl.i]||{};rec.soilM.color.set(st.seed&&st.w===S.day?'#4a3020':'#7a5236');
+function plotRefresh(rec){const st=S.garden[rec.pl.i]||{},open=plotOpen(rec.pl.i);rec.soilM.color.set(st.seed&&st.w===S.day?'#4a3020':'#7a5236');rec.grp.visible=open;
+  if(open&&!rec.soil){const pl=rec.pl,soil=rec.soil=new THREE.Mesh(pl.pot?new THREE.CylinderGeometry(.22,.22,.04,10):new THREE.BoxGeometry(1.6,.05,1.0),rec.soilM);soil.position.set(pl.x,pl.pot?.32:.15,pl.z);soil.receiveShadow=true;YARD.gin.add(soil);}
+  if(rec.soil)rec.soil.visible=open;
+  if(!rec.pl.pot){const h=BED_TOP[yLv('garden')-1];if(rec.soil)rec.soil.position.y=h-.01;rec.grp.position.y=h+.015;}   /* 🏡 the beds are taller at garden levels 2 and 3 (stage 3) */
   const sg=plotStage(st),key=sg+':'+(st.seed||'');
   if(key!==rec.key){rec.key=key;while(rec.grp.children.length){const c=rec.grp.children[0];rec.grp.remove(c);c.traverse(o=>{if(o.geometry)o.geometry.dispose();});}if(sg>=0){buildCrop(rec.grp,st.seed,sg);bake(rec.grp,true);}}   /* one piece per bed (few draw calls: the garden is in view all down Friends Lane) */
-  const lk=!plotOpen(rec.pl.i),need=lk?(rec.pl.lock?'🔒 Level '+plotGate(rec.pl.i):''):!st.seed?'':st.g>=1?'✨':st.w!==S.day?'💧':'';   /* 🔒 a row of locked pots says its level on a little plate (run 4, stage 3) */
-  if(need!==rec.iconK){rec.iconK=need;if(rec.icon){YARD.gin.remove(rec.icon);rec.icon=null;}if(need){let s;if(lk){s=new THREE.Group();const t=label(need,.24);t.center.set(.5,0);t.position.y=.57;s.add(t);   /* (run 4 finish: held at its bottom edge, so a plate made smaller close up still sits on the stake) */cyl(s,.016,.02,.34,'#a87a52',0,.24,0,{seg:6,ol:false});s.position.set(rec.pl.x,0,rec.pl.z);}else{s=label(need,.34);s.position.set(rec.pl.x,rec.pl.pot?.82:1.0,rec.pl.z);}YARD.gin.add(s);rec.icon=s;}   /* (run 4, stage 3: the lock plate on a little stake in its pot, the 💧 in a small bubble right over the pot: both hung in the air) */}
+  const lk=!open,need=lk?'':!st.seed?'':st.g>=1?'✨':st.w!==S.day?'💧':'';   /* (stage 3: a spot that is not open yet is not shown at all, so it has no lock plate) */
+  if(need!==rec.iconK){rec.iconK=need;if(rec.icon){YARD.gin.remove(rec.icon);rec.icon=null;}if(need){const s=label(need,.34);s.position.set(rec.pl.x,rec.pl.pot?.82:rec.grp.position.y+.83,rec.pl.z);YARD.gin.add(s);rec.icon=s;}   /* (the 💧 in a small bubble right over the spot) */}
   rec.target.icon=!plotOpen(rec.pl.i)?'🔒':!st.seed?'🌱':st.g>=1?'🧺':st.w!==S.day?'💧':'🌿';}
 function usePlot(rec){const st=S.garden[rec.pl.i]||(S.garden[rec.pl.i]={});
   if(!plotOpen(rec.pl.i)){SFX.no();toast('🔒 This pot opens at gardening level '+plotGate(rec.pl.i)+'. Plant, water and pick to level up! 🌱',3.2);return;}
@@ -544,11 +547,11 @@ class Pet{
     [this.x,this.z]=petFrom(d,d.x,d.z);this.loc=d.loc;this.face=0;this.moving=false;this.r=.3;this.wt=0;this.tx=this.x;this.tz=this.z;   /* waiting in your yard: in your yard on Friends Lane */
     this.target={x:0,z:0,r:2.1,icon:PET_TYPES[petKind(d)].icon,label:()=>'Play with '+d.name,act:()=>openPet(this),obj:this.g};}
   update(dt,idx){const d=this.d;if(this.ps)return;
-    if(!d.stay){if(this.loc!==CUR.id)nearMe(this,idx);followStep(this,dt,idx);}
+    if(this.gp)gearStep(this,dt);else if(!d.stay){if(this.loc!==CUR.id)nearMe(this,idx);followStep(this,dt,idx);}
     else if(this.loc===CUR.id){this.wt-=dt;if(this.wt<=0){this.wt=rand(2,6);const a=rand(0,TAU),r=rand(0,d.home?.7:1.6),c=petFrom(d,d.sx,d.sz);   /* (a pet at home stays on its patch of the front yard) */[this.tx,this.tz]=collideXZ(c[0]+Math.cos(a)*r,c[1]+Math.sin(a)*r,.6,CUR);[this.x,this.z]=collideXZ(this.x,this.z,this.r,CUR);}   /* 🛋️ never a wander spot inside the furniture */
       const dx=this.tx-this.x,dz=this.tz-this.z,dd=Math.hypot(dx,dz);if(dd>.1){const s=Math.min(dd,1.1*dt),ox=this.x,oz=this.z;[this.x,this.z]=collideXZ(this.x+dx/dd*s,this.z+dz/dd*s,this.r,CUR);this.face=Math.atan2(dx,dz);this.moving=true;if(Math.hypot(this.x-ox,this.z-oz)<s*.3)this.wt=Math.min(this.wt,.4);}else this.moving=false;}
     petNeed(this,dt);d.loc=this.loc;[d.x,d.z]=toSave(this.loc,this.x,this.z);
-    this.g.visible=this.loc===CUR.id&&!(PHO.on&&this.loc==='city')&&!(DANCE.on||DANCE.res);   /* 🐾 your pets wait out of a photo shoot, a dance-off and its result card (run 4, stage 3) */this.g.position.set(this.x,hopY(this,dt)+brAt(this.loc,this.x,this.z),this.z);this.g.rotation.y=angLerp(this.g.rotation.y,this.face,Math.min(1,dt*8));
+    this.g.visible=this.loc===CUR.id&&!(PHO.on&&this.loc==='city')&&!(DANCE.on||DANCE.res);   /* 🐾 your pets wait out of a photo shoot, a dance-off and its result card (run 4, stage 3) */this.g.position.set(this.x,hopY(this,dt)+brAt(this.loc,this.x,this.z)+(this.gp?this.gy:0),this.z);this.g.rotation.y=angLerp(this.g.rotation.y,this.face,Math.min(1,dt*8));
     petAnim(this,dt);this.target.x=this.x;this.target.z=this.z;this.tag.visible=Math.hypot(P.x-this.x,P.z-this.z)>1.3;}
 }
 function addPetActor(d){const p=new Pet(d);PET_ACTORS.push(p);return p;}
@@ -568,7 +571,7 @@ const SMS=[['a','pet.unhappyBowl',6],['b','pet.unhappyPlay',3],['c','pet.unhappy
   ['g','pet.sneeze',1.2],['h','pet.warnSneeze',1.4],['i','pet.nap',0],['j','pet.takeFood',2]];   /* the moves friends see: [code, move, how long it plays (0 = until the pet moves)] */
 const SM_LEN={},SM_CODE={},SM_OF={};for(const [c,n,l] of SMS){SM_LEN[n]=l;SM_CODE[n]=c;SM_OF[c]=n;}
 const homeHas=(...ts)=>!!(S&&S.home&&S.home.items.some(it=>ts.includes(furnOf(it))));
-const homeCare=()=>(S.yard&&S.yard.bw>0)&&homeHas('toybox','cattree');   /* 🥣 a full bowl and a toy at home */
+const homeCare=()=>(S.yard&&S.yard.bw>0)&&(homeHas('toybox','cattree')||!!(S.yard.gear&&S.yard.gear.length));   /* 🥣 a full bowl and a toy at home (a toy box or cat tree in the house, or training gear in the yard: stage 3) */
 const petWeek=()=>(((S&&S.day)||1)-1)/7|0;
 const petRib=()=>!!(S&&S.hw&&S.hw.rb===petWeek()+1&&wdIdx()>=5);   /* 🎀 the healthy-week ribbon: worn on Saturday and Sunday */
 function petMove(e,n,now,next){if(!e)return;e.sm=n;e.sm0=now==null?gameMs()/1000:now;e.smN=next||null;
@@ -579,7 +582,7 @@ function petNeed(e,dt){const d=e.d;if(AW.on)return;   /* away = paused */
   d.happy=Math.max(0,d.happy-dt*PBR.RATE*(PBR.hc&&petAtHome(d)?.5:1));
   if(PBR.sick&&!d.sick){if(petHearts(d)<=1){d.sad=(d.sad||0)+dt/60;if(d.sad>=60){d.sick=1;d.sad=0;change();}}else if(d.sad)d.sad=0;}}
 /* what your pet does when it stands about (its body language), now and then */
-function petBrain(e,dt,now){const d=e.d,h=petHearts(d);
+function petBrain(e,dt,now){const d=e.d,h=petHearts(d);if(e.gp)return;   /* (on its yard gear: gearStep picks the moves) */
   e.nap=zzIn()&&e.loc===CUR.id&&!d.stay;   /* 😴 you sleep: the pets with you nap */
   if(e.nap){if(e.sm!=='pet.nap')petMove(e,'pet.nap',now);return;}if(e.sm==='pet.nap')e.sm=null;
   if(e.moving||e.sm)return;if((e.bt=(e.bt==null?rand(3,8):e.bt)-dt)>0)return;e.bt=rand(7,15);
@@ -595,6 +598,7 @@ function petPose(m,k,e,now,moving,look){if(!m.root.visible)return;let n=e.sm,t=n
   if(n&&SM_LEN[n]&&t>=SM_LEN[n]){n=e.sm=e.smN||null;e.smN=null;e.sm0=t=now;if(n)t=0;}
   if(!n){n=moving?(look==='s'?'pet.sickWalk':'pet.walk'):look==='s'?'pet.sickLie':look==='d'?'pet.sad':'pet.idle';t=now%600;}
   const far=Math.hypot(m.root.position.x-camera.position.x,m.root.position.z-camera.position.z)>8;
+  if(e.gp&&e.gm){COZY_MOVES.play(m,e.gm,e.gt,Object.assign({kind:k,fast:far},e.go));return;}
   COZY_MOVES.play(m,n,t,{kind:k,dist:e.wk||0,mood:moving&&look==='d'?'sad':undefined,fast:far});}
 const petLk=d=>d.sick?'s':petHearts(d)<=1?'d':'';
 function petAnim(e,dt){const d=e.d,now=gameMs()/1000,mv=Math.hypot(e.x-(e.lx===undefined?e.x:e.lx),e.z-(e.lz===undefined?e.z:e.lz));e.lx=e.x;e.lz=e.z;if(mv<1)e.wk=(e.wk||0)+mv;
@@ -612,6 +616,46 @@ function petRibbon(m,on){if(m.rib){m.b.remove(m.rib);m.rib=null;}if(!on)return;c
 /* once a frame for all your pets: the bowl empties with play, the healthy week, the vet booking */
 function petTick(dt){if(!S)return;PBR.hc=homeCare();if(S.yard&&S.yard.bw>0&&!AW.on&&!zzIn()&&S.pets.some(petAtHome))S.yard.bw=Math.max(0,S.yard.bw-dt);
   if((PBR.t-=dt)>0)return;PBR.t=1;hwTick();vetTick();PBR.old=[...MP.peers.values()].some(a=>!(a.v>=PBR.V));}
+/* 🏋️ pets play on their yard gear (stage 3, moves-pet-yard-gear). Tap a piece of gear in your yard and a pet of its kind (one with you, or one
+   waiting at home) runs over and plays: the dog gallops over the bars, the bunny hops the hurdles, the cat swats the feather wand, the hamster runs
+   its wheel, the duck walks up the ramp and splashes into the tub, the owl flies to its perch and through the hoops, the capybara soaks in its warm bath.
+   Each plan is in the gear's own frame (its builder's metres): m move, a start, b end (or stand at a facing f), t seconds (or the way at v m/s),
+   j bars to jump [x,z,height], sl on a slope, d0 the move's crouch before it leaves, dy metres lower (sitting in water). +20 happiness, Pet care XP */
+const GP_LAP=(...L)=>L.concat(L);
+const GEAR_PLAY={dog:GP_LAP({m:'dog.agility',a:[-1.6,0,1.1],b:[-1.6,0,-1.1],v:2.6,j:[[-1.6,0,.25]]},{m:'dog.agility',a:[-1.6,0,-1.1],b:[-.6,0,-1.1],v:2.6},{m:'dog.agility',a:[-.6,0,-1.1],b:[-.6,0,1.1],v:2.6,j:[[-.6,0,.4]]},{m:'dog.agility',a:[-.6,0,1.1],b:[-1.6,0,1.1],v:2.6}),
+  dog2:GP_LAP({m:'dog.agility',a:[-1.125,0,1.8],b:[-1.125,0,-.2],v:2.6,j:[[-1.125,.8,.72]]},{m:'dog.agility',a:[-1.125,0,-.2],b:[-2.2,0,.5],v:2.6},{m:'dog.agility',a:[-2.2,0,.5],b:[-1.125,0,1.8],v:2.6}),
+  cat:[{m:'cat.wand',a:[-.2,0,.75],t:8,f:[0,-1]}],cat2:[{m:'cat.wand',a:[.57,0,.65],t:8,f:[0,-1]}],
+  bunny:GP_LAP({m:'bunny.hurdles',a:[0,0,1.4],b:[0,0,-1.4],v:1.6,j:[[0,1,.3],[0,0,.24],[0,-1,.18]]},{m:'bunny.hurdles',a:[0,0,-1.4],b:[0,0,1.4],v:1.6,j:[[0,1,.3],[0,0,.24],[0,-1,.18]]}),
+  bunny2:GP_LAP({m:'bunny.hurdles',a:[0,0,1.15],b:[0,0,-1.15],v:1.6,j:[[0,.65,.25],[0,0,.37],[0,-.65,.49]]},{m:'bunny.hurdles',a:[0,0,-1.15],b:[0,0,1.15],v:1.6,j:[[0,.65,.25],[0,0,.37],[0,-.65,.49]]}),
+  hamster:[{m:'pet.walk',a:[-.2,0,.4],b:[-.2,.098,0],t:.6},{m:'hamster.wheel',a:[-.2,.098,0],t:8,f:[1,0]},{m:'pet.walk',a:[-.2,.098,0],b:[-.2,0,.4],t:.6}],
+  duck:[{m:'pet.walk',a:[-1.3,0,0],b:[-.95,0,0],v:.8},{m:'pet.walk',a:[-.95,0,0],b:[0,.3,0],v:.6,sl:1},{m:'duck.splash',a:[0,.3,0],b:[.5,.27,0],t:1,dy:.15},{m:'duck.paddle',a:[.5,.27,0],t:7,f:[0,1],dy:.15},{m:'duck.splash',a:[.5,.27,0],b:[.6,0,.8],t:1}],
+  owl:[{m:'owl.fly',a:[0,0,.7],b:[0,1.5,0],t:1.2},{m:'owl.perch',a:[0,1.5,0],t:7,f:[0,1]},{m:'owl.fly',a:[0,1.5,0],b:[.85,1.27,0],t:.8},{m:'owl.fly',a:[.85,1.27,0],b:[1.55,1.27,0],t:.7},{m:'owl.fly',a:[1.55,1.27,0],b:[2.1,0,.5],t:.9}],
+  capy:[{m:'capy.hopIn',a:[0,0,1.15],b:[0,.425,0],t:1.2,d0:.3},{m:'capy.tub',a:[0,.425,0],t:8,f:[0,1]},{m:'capy.hopIn',a:[0,.425,0],b:[0,0,1.15],t:1.2,d0:.3}]};
+const GPV=[new THREE.Vector3(),new THREE.Vector3(),new THREE.Vector3()];
+const gearPet=q=>PET_ACTORS.find(p=>p.gp&&p.gp.q===q),gearNm=id=>GEAR[id].n.replace(/ \(style 2\)/,'').toLowerCase();
+function gearLabel(k){const q=YARD.gear[k];if(!q)return'';const p=gearPet(q);return p?`${p.d.name} is playing on the ${gearNm(q.id)}!`:`${GEAR[q.id].i} Playtime on the ${gearNm(q.id)}!`;}
+function gearUse(k){const q=YARD.gear[k];if(!q||!q.o)return;const G=GEAR[q.id];if(gearPet(q)){SFX.pop();return;}
+  const w=q.o.getWorldPosition(GPV[0]),all=PET_ACTORS.filter(p=>p.loc==='city'&&p.g.visible&&!p.gp&&G.k.includes(petKind(p.d))&&(!p.d.stay||petAtHome(p.d)));
+  all.sort((a,b)=>Math.hypot(a.x-w.x,a.z-w.z)-Math.hypot(b.x-w.x,b.z-w.z));const e=all.find(p=>!p.d.sick);
+  if(!e){SFX.no();toast(all.length?`🏥 ${all[0].d.name} feels sick. The vet first, then playtime!`:`${G.i} This is for ${PET_TYPES[G.k[0]].many.toLowerCase()}. Bring yours here to play! 🐾`,3.6);return;}
+  q.o.userData.m.updateWorldMatrix(true,false);const plan=GEAR_PLAY[q.id];e.gp={q,plan:[{m:'pet.walk',wa:[e.x,e.z],b:plan[0].a,v:2.4}].concat(plan),i:0,t:0,run:0};e.gy=0;e.sm=null;e.moving=false;SFX[PET_TYPES[petKind(e.d)].snd]();}
+/* where a plan point is in the world (the gear's own frame, scale and turn) */
+const gpAt=(q,p,v)=>q.o.userData.m.localToWorld(v.set(p[0],p[1],p[2]));
+function gearStep(e,dt){const g=e.gp,q=g.q;if(CUR.id!=='city'||!q.o||!q.o.parent||Math.hypot(P.x-e.x,P.z-e.z)>16){gearEnd(e,false);return;}
+  q.o.userData.m.updateWorldMatrix(true,false);   /* (the yard may have just been rebuilt or moved) */
+  const sg=g.plan[g.i],A=sg.wa?GPV[0].set(sg.wa[0],0,sg.wa[1]):gpAt(q,sg.a,GPV[0]),B=sg.b?gpAt(q,sg.b,GPV[1]):GPV[1].copy(A),dx=B.x-A.x,dz=B.z-A.z,len=Math.hypot(dx,dz),
+    dur=sg.t||Math.max(.3,len/(sg.v||1.5)),u=Math.min(1,Math.max(0,(g.t-(sg.d0||0))/(dur-(sg.d0||0))));
+  e.x=A.x+dx*u;e.z=A.z+dz*u;e.gy=A.y+(B.y-A.y)*u-(sg.dy||0);
+  if(len>.05)e.face=Math.atan2(dx,dz);else if(sg.f){const F=gpAt(q,[sg.a[0]+sg.f[0],sg.a[1],sg.a[2]+sg.f[1]],GPV[2]);e.face=Math.atan2(F.x-A.x,F.z-A.z);}
+  const o={dist:g.run+u*len};if(sg.j)o.jumps=sg.j.map(J=>{const W=gpAt(q,[J[0],0,J[1]],GPV[2]);return[g.run+((W.x-A.x)*dx+(W.z-A.z)*dz)/(len||1),J[2]*q.s+.1];});
+  if(sg.sl)o.slope={pitch:Math.atan2(B.y-A.y,len||1)};if(sg.m==='capy.hopIn')o.height=.445*q.s;
+  e.gm=sg.m;e.gt=g.t;e.go=o;e.moving=false;
+  const M=q.o.userData.m;if(M.userData.wh&&sg.m==='hamster.wheel')M.userData.wh.rotation.z-=dt*7;if(M.userData.wand)M.userData.wand.rotation.z=.14*Math.sin(gameMs()/1000*9);
+  g.t+=dt;if(g.t>=dur){g.run+=len;g.t=0;if(++g.i>=g.plan.length)gearEnd(e,true);}}
+function gearEnd(e,done){const d=e.d,id=e.gp.q.id;e.gp=null;e.gm=null;e.gy=0;
+  if(d.stay&&petAtHome(d)){[e.x,e.z]=petFrom(d,d.sx,d.sz);e.tx=e.x;e.tz=e.z;}   /* (a pet from home goes back to its spot in the front yard) */
+  if(!done)return;d.happy=Math.min(100,d.happy+20);petMove(e,'pet.happyDance');SFX[PET_TYPES[petKind(d)].snd]();floatText('💗',e.x,1.2,e.z,{h:.55});
+  qEvent('pet');qEvent('play');if(cool('gear'+d.id,20))addXP('pets',3);petCare();toast(`${GEAR[id].i} ${d.name} loved the ${gearNm(id)}! 💗`,3);change();}
 /* 💚 a healthy week (rules-mech-ribbon): Monday to Friday none of your pets got sick, and you fed or played with your pets on 3 or more of those days.
    Then on Saturday and Sunday all your pets wear the green ribbon (the judges like it), and the week counts for the animal license (S.lic.weeks) */
 function hwTick(){const hw=S.hw,wk=petWeek()+1,wd=wdIdx();if(!hw)return;const mine=()=>{if(hw.w!==wk){hw.w=wk;hw.cd=0;hw.sick=0;}};   /* (a week with nothing in it is never written: a save only changes when you care or a pet is sick) */
@@ -1419,8 +1463,8 @@ function laneMe(){return MP.me||'me';}
 /* every player (you too) gets a lot, picked from their name; if two names want the same lot, whoever came first (jt) keeps it.
    jt is when you first lived on Friends Lane (saved), so the same friend keeps the same lot day after day.
    Lots 0-5 use exactly the old versions' rule (they only know those 6); when they are full, lots 6-11 the same way, then more lots */
-function laneAssign(){const me=laneMe(),list=[{k:me,nm:cleanName(S.name||'Friend'),jt:MP.jt||0,big:!!S.bighouse,gd:gardenSnap()||'',col:houseCol()||'',fl:homeFloors()}];
-  for(const a of MP.peers.values())list.push({k:a.peer,nm:a.nm,jt:Number.isFinite(a.jt)?a.jt:9e15,big:!!a.bh,gd:a.gd||'',col:HEX.test(a.hc||'')?a.hc:'',fl:clamp(+a.hf||(a.bh?2:1),1,6)});   /* hc, hf: house colour and floors (run 4, items 23 and 22) */
+function laneAssign(){const me=laneMe(),list=[{k:me,nm:cleanName(S.name||'Friend'),jt:MP.jt||0,big:!!S.bighouse,gd:gardenSnap()||'',col:houseCol()||'',fl:homeFloors(),yd:''}];
+  for(const a of MP.peers.values())list.push({k:a.peer,nm:a.nm,jt:Number.isFinite(a.jt)?a.jt:9e15,big:!!a.bh,gd:a.gd||'',col:HEX.test(a.hc||'')?a.hc:'',fl:clamp(+a.hf||(a.bh?2:1),1,6),yd:a.yd||''});   /* hc, hf: house colour and floors (run 4, items 23 and 22) */
   list.sort((a,b)=>a.jt-b.jt||(a.k<b.k?-1:a.k>b.k?1:0));
   const own=[],slot=new Map(),take=(b,h)=>{let j=b+h%6,t=0;while(own[j]&&t<6){j=b+(j-b+1)%6;t++;}return own[j]?-1:j;};
   for(const p of list){const h=hashStr(p.nm.toLowerCase());let j=take(0,h);if(j<0)j=take(6,h);
@@ -1430,10 +1474,10 @@ function laneAssign(){const me=laneMe(),list=[{k:me,nm:cleanName(S.name||'Friend
 function laneRefresh(force){const C=LOC.city;if(!C||!C.lane||typeof S==='undefined'||!S)return;const r=laneAssign();LANE.slotOf=r.slot;
   const m=r.slot.get(laneMe());while(C.lane.length<r.own.length&&laneGrow(m>=C.lane.length));   /* more players than lots: more lots appear */
   LANE.own=C.lane.map(lp=>r.own[lp.j]||null);
-  for(const lp of C.lane){const o=LANE.own[lp.j];const key=o?[o.k===laneMe()?'ME':o.k,o.nm,o.big?1:0,o.gd||'',o.col||'',o.fl||1].join('|'):'';if(key!==lp.key||force){lp.key=key;laneHouse(lp,o);}}
+  for(const lp of C.lane){const o=LANE.own[lp.j];const key=o?[o.k===laneMe()?'ME':o.k,o.nm,o.big?1:0,o.gd||'',o.col||'',o.fl||1,o.yd||''].join('|'):'';if(key!==lp.key||force){lp.key=key;laneHouse(lp,o);}}
   if(m!=null&&m!==LANE.mine){LANE.mine=m;yardPlace();}}
 function laneHouse(lp,o){const C=LOC.city;for(const c of [...lp.g.children])lp.g.remove(c);
-  const ci=C.cols.indexOf(lp.col);if(ci>=0)C.cols.splice(ci,1);
+  const ci=C.cols.indexOf(lp.col);if(ci>=0)C.cols.splice(ci,1);for(const c of lp.yc||[]){const i=C.cols.indexOf(c);if(i>=0)C.cols.splice(i,1);}lp.yc=[];
   const pal=o?LANE_PAL[hashStr(o.nm.toLowerCase())%LANE_PAL.length]:null;
   let sg;if(o)sg=signPlane(o.nm+"'s house",2.2,.8,pal[1],'#ffffff');else{const f=LANE.free||(LANE.free=signPlane('For a friend 💛',2.2,.8,'#ffffff','#ff7aa8'));sg=new THREE.Mesh(f.geometry,f.material);}   /* empty lots share one sign picture */
   sg.position.set(lp.sx,1.575,lp.sz);sg.rotation.y=lp.ry;lp.g.add(sg);
@@ -1442,7 +1486,10 @@ function laneHouse(lp,o){const C=LOC.city;for(const c of [...lp.g.children])lp.g
   if(big)opt.floors=fl;building(hg,opt);for(const bx of[-19.8,-14.2]){const [x,z]=lotPt(lp.j,bx,-10.6);flowerBed(hg,x,z,3,.9);}
   lp.gdKey=o.k===laneMe()?'':(o.gd||'');if(lp.gdKey)for(const row of lp.gdKey.split(';').slice(0,40)){const [i,seed,sg]=row.split(','),pl=YARD_ALL[+i];if(!pl||!SEEDS[seed])continue;const [x,z]=lotPt(lp.j,pl[1],pl[2]),pot=+i>=6;   /* 🌱 a friend's garden: their soil and crops at the same spots as in a yard (their presence says what grows; old versions send nothing); pots too (run 4, item 22) */
     if(pot){cyl(hg,.26,.2,.3,'#c9805a',x,0,z,{seg:10,ol:.015});}else box(hg,1.8,.16,1.2,'#b07a52',x,0,z,{ol:.02});const cg=new THREE.Group();cg.position.set(x,pot?.34:.16,z);cg.rotation.y=lp.s<0?0:Math.PI;if(pot)cg.scale.setScalar(.55);hg.add(cg);buildCrop(cg,seed,clamp(+sg|0,0,3));}
-  bake(hg,true);lp.g.add(hg);C.cols.push(lp.col);
+  /* 🏡 a friend's yard at their levels, with their training gear, from their presence yd (stage 3; old versions send none: their lot looks as before) */
+  if(o.k!==laneMe()&&/^[1-3][1-3][a-j]{0,10}$/.test(o.yd||'')){const T=(x,z)=>lotPt(lp.j,x,z),pl=+o.yd[1],ry=lp.s<0?0:Math.PI;yardShell(hg,{cols:lp.yc,ox:0,oz:0},+o.yd[0],pl,T);
+    for(const q of gearPlace([...o.yd.slice(2)].map(c=>GEAR_IDS[c.charCodeAt(0)-97]),pl))if(q){const m=gearModel(q),[x,z]=T(m.position.x,m.position.z);m.position.set(x,0,z);m.rotation.y+=ry;hg.add(m);}}
+  bake(hg,true);lp.g.add(hg);C.cols.push(lp.col,...lp.yc);
   const tg=label('🏠 '+o.nm,.9+.16*(fl-1));tg.position.set(lp.hx,big?opt.h+3.9:7.9,lp.hz+(big?opt.face*(opt.d/2+.35):0));   /* (a taller house has a bigger name sign; run 4, stage 3: in front of its pointed front roof, which hid it from the lane) */tg.onBeforeRender=laneTagR;lp.g.add(tg);}
 function laneTick(dt){LANE.t+=dt;if(LANE.t>=1){LANE.t=0;laneRefresh();}visTick(dt);}
 function laneIcon(j){const o=LANE.own[j];return o&&o.k===laneMe()?'🏠':'🔔';}
@@ -1460,11 +1507,11 @@ function peerSpot(a){const me=CUR.id,VD=VOX-LOC.home.ox;
   if(a.loc==='studio'||a.loc==='client')return null;
   return a.loc===me?[a.rx,a.rz,a.rry]:null;}
 function placeOf(a){if(a.loc==='visit'){if(MP.me&&a.ho===MP.me)return'🏠 Visiting your house!';const h=MP.peers.get(a.ho);return'🏠 At '+(h?esc(h.nm)+"'s house":"a friend's house");}return PLACE_OF[a.loc]||'📍 In town';}
-function laneFields(a,pr,fresh){a.jt=Number.isFinite(pr.jt)?pr.jt:undefined;a.bh=pr.bh?1:0;a.ho=typeof pr.ho==='string'?pr.ho:null;a.gd=typeof pr.gd==='string'?pr.gd.slice(0,600):'';
+function laneFields(a,pr,fresh){a.jt=Number.isFinite(pr.jt)?pr.jt:undefined;a.bh=pr.bh?1:0;a.ho=typeof pr.ho==='string'?pr.ho:null;a.gd=typeof pr.gd==='string'?pr.gd.slice(0,600):'';a.yd=typeof pr.yd==='string'?pr.yd.slice(0,12):'';
   const obj=v=>v&&typeof v==='object'?v:null;a.kn=obj(pr.kn);a.an=obj(pr.an);a.hm=obj(pr.hm);hpFields(a,pr);
   const guest=!!MP.me&&a.loc==='visit'&&a.ho===MP.me;if(guest&&!a.guest&&!fresh){SFX.yay();toast('🏠 '+a.nm+' is visiting your house!',3);}a.guest=guest;
   hostSeeKnock(a);}
-function laneStamp(st){st.jt=MP.jt||0;st.bh=S.bighouse?1:0;st.gd=gardenSnap();st.hc=houseCol()||null;st.hf=homeFloors();   /* 🌱 my garden for friends' games (optional; old versions ignore it) */
+function laneStamp(st){st.jt=MP.jt||0;st.bh=S.bighouse?1:0;st.gd=gardenSnap();st.yd=yardSnap();st.hc=houseCol()||null;st.hf=homeFloors();   /* 🌱 my garden for friends' games (optional; old versions ignore it) */
   if(CUR.id==='visit'&&VIS.st==='in'){st.loc='visit';st.ho=VIS.host;st.x=Math.round((P.x-VOX+LOC.home.ox)*100)/100;}else st.ho=null;
   st.kn=VIS.st==='knock'?{to:VIS.host,id:VIS.id}:null;st.an=HOST.an;
   let hosting=performance.now()<HOST.until;if(!hosting&&MP.me)for(const a of MP.peers.values())if(a.loc==='visit'&&a.ho===MP.me){hosting=true;break;}

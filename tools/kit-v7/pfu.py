@@ -3,7 +3,10 @@ Lines P1.. for the update's stages. Every line starts as FAIL and passes only on
 a later stage adds lines (or, with the owner's OK, rewrites one and lists it old -> new in its report).
 Stage 1 (31 Oct): P1 saves (save version 2, round trip), P2 night skip, P3 morning bus home, P4 hats sit on the hair.
 Stage 2 (1 Nov): P5 one need and food groups, P6 sickness (switched off until the vet clinic), P7 vet booking, P8 care helpers (bowl, naps,
-healthy week), P9 friends see your pets for real and can pet them, P10 the moves pack on every pet, P11 following pets are not left behind."""
+healthy week), P9 friends see your pets for real and can pet them, P10 the moves pack on every pet, P11 following pets are not left behind.
+Stage 3 (1 Nov): P12 Friends Lane's wider border, P13 yard levels by skill at the yard sign, P14 only owned things show, P15 training gear and pets playing
+on it, P16 friends see your yard. Rewritten: P10 (old: every move's lowest point within -0.07..0.012 m; new: the same for every move on the floor (a yard-gear move: on the pet kinds that play it, e.g. cat.wand on cats), and a
+move in water or the air (r.noGround: capy.tub, owl.fly) is measured by its highest point instead, which must stay above 0.05 m)."""
 import asyncio, json, os, re, time
 from crawl import INSTR
 from checks import start_from_save, save_diff
@@ -395,12 +398,14 @@ async def p9(run, live_w, new_wb, FIX):
     return not probs, '; '.join(det) + (f' | PROBLEMS: {probs}' if probs else '')
 
 # ---------------- P10 the moves pack on every pet, and its cost ----------------
-P10_JS = r"""()=>{const bad=[],bb=new THREE.Box3();let n=0,worst=0;for(const k of Object.keys(PET_TYPES)){const m=makePet(k,PET_TYPES[k].cols[0]);addOutfit(m,{outfit:{head:'tophat',back:'cape'}});scene.add(m.root);
-    for(const nm of COZY_MOVES.list){let lo=9,hi=-9;for(let t=0;t<4.5;t+=.25){const r=COZY_MOVES.play(m,nm,t,{kind:k,dist:t*.8,mood:nm==='pet.walk'&&t>2?'sad':undefined});n++;m.root.updateMatrixWorld(true);bb.setFromObject(m.root);if(!r.lift){lo=Math.min(lo,bb.min.y);hi=Math.max(hi,bb.min.y);}}
-      if(m.__mv.warned){bad.push(k+' '+nm+': error');m.__mv.warned=0;}worst=Math.min(worst,lo);if(lo<-.07||hi>.012)bad.push(k+' '+nm+': lowest point '+lo.toFixed(3)+'..'+hi.toFixed(3)+' m');}scene.remove(m.root);}
+P10_JS = r"""()=>{const bad=[],bb=new THREE.Box3(),wet={},USE={},need0=['pet.idle','pet.walk','pet.sad','pet.unhappyBowl','pet.unhappyPlay','pet.unhappyNap','pet.unhappyNudge','pet.veryHappy','pet.happyDance','pet.sickWalk','pet.sickLie','pet.sneeze','pet.warnSneeze','pet.nap','pet.takeFood'];let n=0,worst=0;
+  if(typeof GEAR_PLAY!=='undefined')for(const id in GEAR_PLAY)for(const sg of GEAR_PLAY[id])if(!need0.includes(sg.m))(USE[sg.m]=USE[sg.m]||[]).push(...GEAR[id].k);   /* (stage 3: a yard-gear move is checked on the kinds that play it) */
+  for(const k of Object.keys(PET_TYPES)){const m=makePet(k,PET_TYPES[k].cols[0]);addOutfit(m,{outfit:{head:'tophat',back:'cape'}});scene.add(m.root);
+    for(const nm of COZY_MOVES.list){if(USE[nm]&&!USE[nm].includes(k))continue;let lo=9,hi=-9,top=9;for(let t=0;t<4.5;t+=.25){const r=COZY_MOVES.play(m,nm,t,{kind:k,dist:t*.8,mood:nm==='pet.walk'&&t>2?'sad':undefined});n++;m.root.updateMatrixWorld(true);bb.setFromObject(m.root);if(r.noGround){top=Math.min(top,bb.max.y);wet[nm]=1;}else if(!r.lift){lo=Math.min(lo,bb.min.y);hi=Math.max(hi,bb.min.y);}}
+      if(m.__mv.warned){bad.push(k+' '+nm+': error');m.__mv.warned=0;}worst=Math.min(worst,lo);if(lo<-.07||hi>.012)bad.push(k+' '+nm+': lowest point '+lo.toFixed(3)+'..'+hi.toFixed(3)+' m');if(top<.05)bad.push(k+' '+nm+': sinks out of view (highest point '+top.toFixed(3)+' m)');}scene.remove(m.root);}
   const need=['pet.idle','pet.walk','pet.sad','pet.unhappyBowl','pet.unhappyPlay','pet.unhappyNap','pet.unhappyNudge','pet.veryHappy','pet.happyDance','pet.sickWalk','pet.sickLie','pet.sneeze','pet.warnSneeze','pet.nap','pet.takeFood'];
   for(const x of need)if(!COZY_MOVES.list.includes(x))bad.push('missing move '+x);
-  return {kinds:Object.keys(PET_TYPES).length,poses:n,worst:+worst.toFixed(3),bad};}"""
+  return {kinds:Object.keys(PET_TYPES).length,poses:n,worst:+worst.toFixed(3),wet:Object.keys(wet),bad};}"""
 COST_JS = r"""()=>{__goto('city');P.x=-20;P.z=-5.6;bringFollowers(true);__run(10);const peers=[...MP.peers.values()].filter(a=>a.pets);const fr=[];
   for(let i=0;i<120;i++){const t0=performance.now();for(const p of PET_ACTORS)petAnim(p,.05);for(const a of peers)for(const q of a.pets)if(q.g.visible)petPose(q.m,q.kind,q,gameMs()/1000,true,q.look);fr.push(performance.now()-t0);}
   fr.sort((a,b)=>a-b);const own=PET_ACTORS.filter(p=>p.loc===CUR.id&&p.g.visible).length,fp=peers.reduce((s,a)=>s+a.pets.filter(q=>q.g.visible).length,0);
@@ -421,7 +426,7 @@ async def p10(run, new_wb, FIX):
     if c['own'] + c['fp'] < 6: bad.append(f"only {c['own']} + {c['fp']} pets in view for the cost test")
     if c['p90'] > 4: bad.append(f"the pets' moves take {c['p90']} ms a frame (want under 4 ms for 2 players x 3 pets)")
     if errs: bad.append(f'browser errors {errs[:2]}')
-    det = (f"{r['poses']} poses: every move x {r['kinds']} pet kinds (top hat and cape on), no move errors; lowest point at worst {r['worst']} m (allowed -0.07: a head dipping to sniff); "
+    det = (f"{r['poses']} poses: every move x {r['kinds']} pet kinds (top hat and cape on), no move errors; lowest point at worst {r['worst']} m (allowed -0.07: a head dipping to sniff); moves in water or in the air (no floor by design: {', '.join(r['wet'])}) keep the head above 0.05 m; "
            f"2 players x 3 pets: {c['own']} own + {c['fp']} friend's pets in view, the moves take {c['med']} ms a frame (90%: {c['p90']} ms); "
            f"whole frames in this test copy (software drawing, no GPU, not an iPad): {c['fps']} a second (NOT VERIFIED on a real iPad)")
     return not bad, det + (f' | PROBLEMS: {bad}' if bad else '')
@@ -457,6 +462,152 @@ async def p11(run, new_wb, FIX):
     det.append('NOT IN THE GAME YET: bear and seal waiting outside (stage 4)')
     return not bad, '; '.join(det) + (f' | PROBLEMS: {bad}' if bad else '')
 
+# ================= stage 3 (1 Nov): yard levels by skill, +3 garden beds a level, only owned things show, training gear =================
+# ---------------- P12 Friends Lane's wider green border (map-lane-border) ----------------
+P12_JS = r"""()=>{__goto('city');const L=LOC.city,bad=[],o={};const [a,b,c]=L.laneC;o.laneC=[a.z2,b.z1,c.z1,c.z2];
+  if(a.z2!==-37.05||b.z1!==37.05||c.z1!==-37.05||c.z2!==37.05)bad.push('lane end walls '+o.laneC);
+  o.free=[laneFree(-90,41.5),laneFree(-90,-41.5),laneFree(-90,43)];if(!o.free[0]||!o.free[1]||o.free[2])bad.push('laneFree '+o.free);
+  o.mapTrees=mapTrees().filter(([x,z])=>x<-78&&Math.abs(z)<42).length;if(o.mapTrees)bad.push(o.mapTrees+' map trees in the lane valley');
+  /* walk the strip behind every lot: free up to the new hedge, the hedge stops you at 37.5 (both sides of the road) */
+  const blocked=[],through=[];for(const p of LANE_PLOTS){if(p.j===LANE.mine)continue;for(const tz of[-28,-31,-34,-36.4]){const [x,z]=lotPt(p.j,-11,tz),q=collideXZ(x,z,.3,L);if(Math.hypot(q[0]-x,q[1]-z)>.05)blocked.push([p.j,tz]);}
+    const [x,z]=lotPt(p.j,-17,-37.5),q=collideXZ(x,z,.3,L);if(Math.hypot(q[0]-x,q[1]-z)<.05)through.push(p.j);}
+  if(blocked.length)bad.push('the strip behind the lots is not free at '+JSON.stringify(blocked.slice(0,4)));if(through.length)bad.push('no hedge at 37.5 behind lots '+through);
+  o.lots=LANE_PLOTS.length;o.blocked=blocked.length;return {o,bad};}"""
+async def p12(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p12', FIX=FIX)
+    try:
+        r = await g.ev(P12_JS); errs = g.errors[:]
+    finally:
+        await run.close(g)
+    bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
+    o = r['o']
+    return not bad, f"lane end walls at z {o['laneC']}; forest kept off |z| < 42 ({o['free']}), map trees in the valley {o['mapTrees']}; {o['lots']} lots: the strip behind each is free to z -36.4 and the hedge stands at 37.5" + (f' | PROBLEMS: {bad}' if bad else '')
+
+# ---------------- P13 yard levels by skill, bought at the yard sign ----------------
+SIGN = r"""()=>{const t=YARD.ints.find(i=>i.icon==='🏡'&&/My yard/.test(typeof i.label==='function'?i.label():i.label));if(!t)return null;P.x=t.x;P.z=t.z+.3;t.act();
+  const c=$('card');return {h:c.querySelector('h2')?c.querySelector('h2').textContent:'',rows:[...c.querySelectorAll('.row')].map(r=>r.innerText.replace(/\s+/g,' ').trim()),
+    btn:[...c.querySelectorAll('.row button')].map(b=>({a:b.dataset.a||'',dis:b.disabled,t:b.innerText.trim(),h:Math.round(b.getBoundingClientRect().height)}))};}"""
+P13_JS = r"""()=>{__goto('city');const bad=[],o={};S.coins=10000;S.yard={pet:1,garden:1};sk('garden').lv=19;sk('pets').lv=19;yardLv();
+  const sign=()=>{const t=YARD.ints.find(i=>/My yard/.test(typeof i.label==='function'?i.label():i.label||''));t.act();const c=$('card');
+    const r={rows:[...c.querySelectorAll('.row')].map(x=>x.innerText.replace(/\s+/g,' ').trim()),btn:[...c.querySelectorAll('.row button')].map(b=>({a:b.dataset.a||'',dis:b.disabled,t:b.innerText.trim(),h:Math.round(b.getBoundingClientRect().height)}))};return r;};
+  const click=a=>{const b=document.querySelector('#card [data-a="'+a+'"]');if(!b)return false;b.click();return true;};
+  const back=()=>Math.min(...YARD.lcols.filter(c=>c.x1!==undefined&&c.x2-c.x1>3).map(c=>c.z1));
+  let s=sign();o.lv1=s.rows;if(!(s.btn.length===2&&s.btn.every(b=>b.dis)&&/🔒 Gardening level 20/.test(s.btn[0].t)&&/🔒 Pet care level 20/.test(s.btn[1].t)))bad.push('skill 19: '+JSON.stringify(s.btn));
+  click('yardup:garden');if(S.yard.garden!==1)bad.push('garden level 2 bought at gardening 19');
+  o.back1=+back().toFixed(2);o.beds1=[36,39].map(plotOpen);closePanel();
+  sk('garden').lv=20;sk('pets').lv=20;s=sign();o.btn20=s.btn.map(b=>b.t);if(!/Level 2 · 600 🪙/.test(s.btn[0].t)||!/Level 2 · 800 🪙/.test(s.btn[1].t)||s.btn.some(b=>b.dis||b.h<44))bad.push('level 2 buttons '+JSON.stringify(s.btn));
+  let c0=S.coins;click('yardup:garden');o.paidG2=c0-S.coins;c0=S.coins;click('yardup:pet');o.paidP2=c0-S.coins;o.lv2=[S.yard.garden,S.yard.pet];o.back2=+back().toFixed(2);
+  o.beds2=[36,37,38,39,40,41].map(plotOpen);s=sign();o.btn2=s.btn.map(b=>b.t);if(!s.btn.every(b=>b.dis&&/level 40/.test(b.t)))bad.push('level 3 before skill 40: '+JSON.stringify(s.btn));closePanel();
+  sk('garden').lv=40;sk('pets').lv=40;s=sign();if(!/Level 3 · 1,500 🪙/.test(s.btn[0].t)||!/Level 3 · 2,000 🪙/.test(s.btn[1].t))bad.push('level 3 buttons '+JSON.stringify(s.btn));
+  c0=S.coins;click('yardup:garden');o.paidG3=c0-S.coins;o.backG3=+back().toFixed(2);c0=S.coins;click('yardup:pet');o.paidP3=c0-S.coins;o.back3=+back().toFixed(2);
+  o.beds3=[36,37,38,39,40,41].map(plotOpen);s=sign();o.top=s.rows;if(s.btn.length||s.rows.filter(r=>/Top level! ⭐/.test(r)).length!==2)bad.push('top level rows '+JSON.stringify(s.rows));closePanel();
+  /* the big-pets gate: two posts at z -29 with a way between, the iron fence round the area */
+  o.gate=YARD.lcols.filter(c=>c.cr!==undefined&&Math.abs(c.cz+29)<.01).map(c=>+c.cx.toFixed(2));if(o.gate.length!==2)bad.push('gate posts '+o.gate);
+  /* not enough coins: nothing bought */
+  S.yard={pet:1,garden:1};yardLv();S.coins=500;s=sign();click('yardup:garden');o.poor=[S.yard.garden,S.coins];if(S.yard.garden!==1||S.coins!==500)bad.push('bought with too few coins');closePanel();
+  /* a new bed works like today's: plant, water */
+  S.yard={pet:3,garden:3};yardLv();S.bag.seed_carrot=2;const rec=PLOTS.find(p=>p.pl.i===40);rec.target.act();const pb=document.querySelector('#card [data-a="plant:carrot"]');if(pb)pb.click();o.planted=(S.garden[40]||{}).seed||null;
+  rec.target.act();o.watered=(S.garden[40]||{}).w===S.day;o.when=[rec.target.when(),PLOTS.find(p=>p.pl.i===36).target.when()];if(o.planted!=='carrot'||!o.watered||!o.when.every(Boolean))bad.push('bed 41 (spot 40): '+JSON.stringify([o.planted,o.watered,o.when]));
+  o.slots=S.garden.length;o.max=PET_MAX;if(PET_MAX!==10)bad.push('pet limit '+PET_MAX);
+  const W={paidG2:600,paidP2:800,paidG3:1500,paidP3:2000};for(const k in W)if(o[k]!==W[k])bad.push(k+' '+o[k]);
+  if(o.back1!==-24.68||o.back2!==-27.68||o.backG3!==-29.08||o.back3!==-35.1)bad.push('back fence '+[o.back1,o.back2,o.backG3,o.back3]);
+  if(o.beds1.some(Boolean)||o.beds2.join()!=='true,true,true,false,false,false'||!o.beds3.every(Boolean))bad.push('new beds open '+[o.beds1,o.beds2,o.beds3]);
+  return {o,bad};}"""
+async def p13(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p13', FIX=FIX)
+    try:
+        r = await g.ev(P13_JS); await g.step(4); errs = g.errors[:]
+    finally:
+        await run.close(g)
+    bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
+    o = r['o']
+    det = (f"🏡 My yard at skill 19: {o['lv1']} (both faded, 🔒 Gardening/Pet care level 20); at 20: {o['btn20']}; paid {o['paidG2']} + {o['paidP2']}, levels {o['lv2']}; at 40: paid {o['paidG3']} + {o['paidP3']}; then {o['top']}; "
+           f"back fence z {o['back1']} -> {o['back2']} -> {o['backG3']} (garden 3) -> {o['back3']} (pet yard 3), big-pets gate posts at x {o['gate']}; new beds open at garden 1/2/3: {o['beds1']} / {o['beds2']} / {o['beds3']}; "
+           f"with 500 coins nothing bought {o['poor']}; spot 41 planted {o['planted']}, watered {o['watered']}; pet limit {o['max']}")
+    return not bad, det + (f' | PROBLEMS: {bad}' if bad else '')
+
+# ---------------- P14 only what you own shows ----------------
+P14_JS = r"""()=>{__goto('city');const bad=[],o={};S.yard={pet:1,garden:1};const pots=()=>YARD.lcols.filter(c=>c.cr!==undefined&&Math.abs(c.cr-.32)<1e-6).length;
+  const shown=lv=>{sk('garden').lv=lv;yardLv();const vis=PLOTS.filter(r=>r.pl.pot&&r.soil&&r.soil.visible).length,act=PLOTS.filter(r=>r.pl.pot&&r.target.when()).length,plates=PLOTS.filter(r=>r.pl.pot&&!plotOpen(r.pl.i)&&r.icon).length;return [pots(),vis,act,plates];};
+  o.pots={};for(const lv of[1,9,10,20,30,40,50]){o.pots[lv]=shown(lv);const n=lv<10?0:6*Math.floor(lv/10);const [a,b,c,d]=o.pots[lv];if(a!==n||b!==n||c!==n||d)bad.push(`gardening ${lv}: ${a} pots drawn, ${b} soils, ${c} usable, ${d} lock plates (want ${n}, ${n}, ${n}, 0)`);}
+  sk('garden').lv=1;yardLv();o.beds=PLOTS.filter(r=>!r.pl.pot&&r.soil&&r.soil.visible).length;if(o.beds!==6)bad.push(o.beds+' beds at garden level 1');
+  o.gear=YARD.gear.filter(Boolean).length;S.yard.gear=[];yardLv();o.gear0=YARD.gear.filter(Boolean).length+YARD.lvg.children.length-1;if(o.gear0)bad.push('gear drawn before it is bought');
+  o.doghouse=S.home.items.filter(it=>it.t==='doghouse').length;return {o,bad};}"""
+async def p14(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p14', FIX=FIX)
+    try:
+        r = await g.ev(P14_JS); errs = g.errors[:]
+    finally:
+        await run.close(g)
+    bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
+    o = r['o']
+    return not bad, f"pots [drawn, soil, usable, lock plates] by gardening level: {o['pots']}; beds at garden 1: {o['beds']}; nothing else drawn before it is bought (gear {o['gear0']})" + (f' | PROBLEMS: {bad}' if bad else '')
+
+# ---------------- P15 training gear: bought at Ms. Paws, stands in the yard, pets play on it ----------------
+P15_SHOP = r"""()=>{__goto('city');const bad=[],o={};S.yard={pet:1,garden:1};yardLv();S.coins=5000;openShop('pets');
+  const btn=id=>document.querySelector('#card [data-a="gear:'+id+'"]');o.n=GEAR_IDS.filter(btn).length;o.dog=btn('dog')&&btn('dog').innerText.replace(/\s+/g,' ');
+  if(o.n!==10||!/🔒 Pet yard level 2/.test(o.dog||''))bad.push('gear in the shop: '+o.n+', dog '+o.dog);
+  const W={dog:300,dog2:300,cat:200,cat2:200,bunny:150,bunny2:150,hamster:150,duck:200,owl:200,capy:250};for(const k in W)if(GEAR[k].p!==W[k])bad.push('price '+k+' '+GEAR[k].p);
+  let c=S.coins;btn('dog').click();o.dogL1=[c-S.coins,(S.yard.gear||[]).length];if(o.dogL1[0]||o.dogL1[1])bad.push('dog course bought at pet yard 1');
+  c=S.coins;btn('cat').click();o.cat=c-S.coins;c=S.coins;btn('bunny').click();o.full=[c-S.coins,S.yard.gear.join()];if(o.cat!==200||o.full[0]||o.full[1]!=='cat')bad.push('pet yard 1: '+JSON.stringify([o.cat,o.full]));
+  o.own=btn('cat').disabled&&/In your yard/.test(btn('cat').innerText);if(!o.own)bad.push('the cat tower does not say it is yours');
+  S.yard.pet=2;yardLv();openShop('pets');c=S.coins;btn('dog').click();o.dog2=c-S.coins;S.yard.pet=3;yardLv();openShop('pets');btn('duck').click();o.l3=S.yard.gear.join();o.place=YARD.gear.map(q=>q&&[q.id,q.k,+q.s.toFixed(2)]);
+  if(o.dog2!==300||o.l3!=='cat,dog,duck'||YARD.gear.filter(Boolean).length!==3)bad.push('levels 2 and 3: '+JSON.stringify([o.dog2,o.l3,o.place]));closePanel();
+  /* every piece fits a spot at pet yard 3, never smaller than 0.6 of its moves' size, and inside the yard */
+  o.fit={};for(const id of GEAR_IDS){const q=gearPlace([id],3)[0];o.fit[id]=q?[q.k,+(q.s/GEAR[id].s).toFixed(2)]:null;if(!q)bad.push(id+' fits nowhere');}
+  S.yard.bw=0;o.hc0=homeCare();S.yard.bw=600;S.home.items=S.home.items.filter(it=>!['toybox','cattree'].includes(it.t));rebuildHome();o.hc=homeCare();if(o.hc0||!o.hc)bad.push('home care with a full bowl and yard gear: '+[o.hc0,o.hc]);
+  return {o,bad};}"""
+P15_PLAY = r"""([id])=>{__goto('city');S.yard={pet:3,garden:1,gear:[id]};yardLv();const q=YARD.gear.find(Boolean),k=GEAR[id].k[0],T=PET_TYPES[k];
+  const e=PET_ACTORS.find(p=>!p.d.stay);e.d.type=T.base||k;if(T.base)e.d.kind=k;else delete e.d.kind;rebuildPet(e);e.d.sick=0;
+  const sl=GEAR_SLOTS[q.k],[px,pz]=yardPt(sl.x,sl.z+(q.k===2?-1.6:1.9));P.x=px;P.z=pz;bringFollowers(true);__run(6);
+  q.o.updateWorldMatrix(true,true);const B=new THREE.Box3().setFromObject(q.o).expandByScalar(1),seen=[],t=gearLabel(q.k);let out=0,frames=0,y0=9,y1=-9,lift=0;const real=renderer.render;renderer.render=()=>{};
+  for(const p of PET_ACTORS)p.d.happy=50;let e2=e;
+  try{gearUse(q.k);e2=PET_ACTORS.find(p=>p.gp)||e;for(let i=0;i<900&&e2.gp;i++){window.__t=Math.max(window.__t||0,performance.now())+50;frame(window.__t);frames++;if(e2.gm&&!seen.includes(e2.gm))seen.push(e2.gm);
+    if(e2.gp&&e2.gp.i>0){if(e2.x<B.min.x||e2.x>B.max.x||e2.z<B.min.z||e2.z>B.max.z)out++;y0=Math.min(y0,e2.gy);y1=Math.max(y1,e2.gy);}}}finally{renderer.render=real;}
+  return {id,label:t,moves:seen,frames,s:+(frames*.05).toFixed(1),done:!e2.gp,happy:Math.round(e2.d.happy-50),after:e2.sm,out,y:[+y0.toFixed(2),+y1.toFixed(2)],warned:!!(e2.m.__mv&&e2.m.__mv.warned)};}"""
+GEAR_WANT = {'dog': ['dog.agility'], 'dog2': ['dog.agility'], 'cat': ['cat.wand'], 'cat2': ['cat.wand'], 'bunny': ['bunny.hurdles'], 'bunny2': ['bunny.hurdles'],
+             'hamster': ['hamster.wheel'], 'duck': ['duck.splash', 'duck.paddle'], 'owl': ['owl.fly', 'owl.perch'], 'capy': ['capy.hopIn', 'capy.tub']}
+async def p15(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p15', FIX=FIX); bad = []; det = []
+    try:
+        r = await g.ev(P15_SHOP); bad += r['bad']; o = r['o']
+        det.append(f"Ms. Paws sells {o['n']} pieces of gear (dog course: '{o['dog']}' at pet yard 1); cat tower {o['cat']} coins, a second piece at pet yard 1 refused {o['full']}; dog course at level 2 {o['dog2']}; at level 3 {o['place']}; "
+                   f"fit [spot, size vs the moves' size]: {o['fit']}; home pets at half speed with a full bowl and yard gear (no toy box) {o['hc']}")
+        for gid, want in GEAR_WANT.items():
+            p = await g.ev(P15_PLAY, [gid])
+            ok = p['done'] and all(m in p['moves'] for m in want) and p['happy'] == 20 and p['after'] == 'pet.happyDance' and p['out'] == 0 and not p['warned']
+            det.append(f"{gid}: '{p['label']}' -> {p['moves']} for {p['s']} s, +{p['happy']} happiness, then {p['after']}, height {p['y']} m" + ('' if p['out'] == 0 else f", {p['out']} frames more than 1 m off its gear"))
+            if not ok: bad.append(f'{gid}: {p}')
+        errs = g.errors[:]
+        if errs: bad.append(f'browser errors {errs[:2]}')
+    finally:
+        await run.close(g)
+    det.append('NOT VERIFIED: how the gear play looks (no pictures looked at in stage 3); friends do not see the gear moves themselves (the move code is left out), they see the pet at its spot')
+    return not bad, '; '.join(det) + (f' | PROBLEMS: {bad}' if bad else '')
+
+# ---------------- P16 friends see your yard (levels, gear), old versions as before ----------------
+P16_JS = r"""()=>{__goto('city');const bad=[],o={};S.yard={pet:3,garden:2,gear:['cat','dog','duck']};sk('pets').lv=40;yardLv();const st={};laneStamp(st);o.yd=st.yd;if(o.yd!=='23cah')bad.push('presence yd '+o.yd);
+  S.yard={pet:1,garden:1};yardLv();const s2={};laneStamp(s2);o.yd0=s2.yd;if(s2.yd!==null)bad.push('levels 1 and no gear send '+s2.yd);
+  const lp=LOC.city.lane.find(l=>l.j!==LANE.mine),cnt=()=>{let v=0;lp.g.traverse(m=>{if(m.isMesh&&m.geometry&&m.geometry.attributes.position)v+=m.geometry.attributes.position.count;});return v;},C=LOC.city;
+  const base={k:'zz',nm:'Zed',big:0,fl:1,col:'',gd:''};laneHouse(lp,base);const a=cnt(),ca=C.cols.length;laneHouse(lp,Object.assign({},base,{yd:'23cah'}));const b=cnt(),cb=C.cols.length;
+  o.yc=lp.yc.length;const back=Math.max(...lp.yc.filter(c=>c.x1!==undefined).map(c=>Math.max(Math.abs(c.z1),Math.abs(c.z2))));o.back=+back.toFixed(2);
+  laneHouse(lp,Object.assign({},base,{yd:'zz<script>'}));const c=cnt(),cc=C.cols.length;laneHouse(lp,base);const d=cnt(),cd=C.cols.length;
+  o.v=[a,b,c,d];o.cols=[ca,cb,cc,cd];if(!(b>a&&c===a&&d===a&&cb>ca&&cc===ca&&cd===ca))bad.push('friend lot vertices/walls without, with, bad yd, again: '+o.v+' / '+o.cols);if(Math.abs(o.back-35.1)>.05)bad.push('friend back fence '+o.back);
+  const pr={peer:'zz',nm:'Zed',loc:'city',yd:'23cah'};const A={};laneFields(A,pr,true);o.read=A.yd;const pr2={peer:'zz',nm:'Zed',loc:'city'};const A2={};laneFields(A2,pr2,true);o.old=A2.yd;
+  MP.peers.set('zz',Object.assign({peer:'zz',nm:'Zed',jt:1,gd:'',hc:'',hf:1},A));const as=laneAssign();const j=as.slot.get('zz');MP.peers.delete('zz');o.list=j!=null&&as.own[j].yd;if(o.read!=='23cah'||o.old!==''||o.list!=='23cah')bad.push('presence read '+[o.read,o.old,o.list]);
+  return {o,bad};}"""
+async def p16(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p16', FIX=FIX)
+    try:
+        r = await g.ev(P16_JS); await g.step(4); errs = g.errors[:]
+    finally:
+        await run.close(g)
+    bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
+    o = r['o']
+    return not bad, (f"presence yd '{o['yd']}' (garden 2, pet yard 3, cat tower + dog course + duck tub), {o['yd0']} at levels 1 with no gear (old look); a friend's lot drawn from it: vertices {o['v'][0]} -> {o['v'][1]}, "
+                     f"{o['yc']} fence walls, back fence at {o['back']} m; a bad yd and no yd draw it as before; read from presence {o['read']!r}, an old version's {o['old']!r}, on the lane list {o['list']!r}; "
+                     "NOT VERIFIED: two real devices (the fake online kit only)") + (f' | PROBLEMS: {bad}' if bad else '')
+
 # ---------------- the stage ----------------
 async def s_pfu(run, d, live_w, new_wb, FIX):
     tests = [('P1', 'Saves (pets and farm update): every save of the kit (from older versions, today\'s main and the update\'s stages) and a fresh one from the live version loads as save version 2 with every new field at its default; saved again and loaded, it is exactly the same', lambda: p1(run, live_w, new_wb, FIX)),
@@ -468,8 +619,13 @@ async def s_pfu(run, d, live_w, new_wb, FIX):
              ('P7', 'Vet booking (stage 2): Book the vet in the Pets app (44 px); all well, or the sick pets and the next 8 two-hour times between 7:00 and 23:00; booked card with time, pets and Cancel; a reminder one game hour before; late = booking gone, no coins lost; one list for the room (a friend sees the time taken)', lambda: p7(run, new_wb, FIX)),
              ('P8', 'Care helpers (stage 2): one food fills the home bowl for one game day of play; the pets with you nap when you sleep (no loss at night) and wake happier; a healthy week (care on 3+ days Mon-Fri, no pet sick) puts the green ribbon on every pet for the weekend and counts for the animal license', lambda: p8(run, new_wb, FIX)),
              ('P9', 'Friends see your pets for real (stage 2): hearts, sick look and the same move at the same time, as a short code at the end of each pet row; friends pet and play with your pets (no feeding), your pet gets happier and they get pet XP; with an older version online the codes are left out and it still shows the pets', lambda: p9(run, live_w, new_wb, FIX)),
-             ('P10', 'Moves pack (stage 2): every pet move on every pet kind without an error, feet on the floor; the moves of 2 players x 3 following pets take under 4 ms a frame', lambda: p10(run, new_wb, FIX)),
-             ('P11', 'Pets are not left behind (stage 2 play test): long walks with 3 following pets on Friends Lane round the yard fences, through town corners and along the beach; no pet more than 9 m away for over 3 s, all with you after each walk', lambda: p11(run, new_wb, FIX))]
+             ('P10', 'Moves pack (stage 2; stage 3 adds the yard-gear moves): every pet move on every pet kind without an error, feet on the floor (a yard-gear move on the kinds that play it; a move in water or in the air: the head stays in view); the moves of 2 players x 3 following pets take under 4 ms a frame', lambda: p10(run, new_wb, FIX)),
+             ('P11', 'Pets are not left behind (stage 2 play test): long walks with 3 following pets on Friends Lane round the yard fences, through town corners and along the beach; no pet more than 9 m away for over 3 s, all with you after each walk', lambda: p11(run, new_wb, FIX)),
+             ('P12', 'Friends Lane border (stage 3, map-lane-border): the hedges stand 37.5 m off the road (were 26.6), the lane ends and walls with them, the forest and the map keep the valley free to 42 m; the strip behind every lot is free', lambda: p12(run, new_wb, FIX)),
+             ('P13', 'Yard levels by skill (stage 3): the 🏡 My yard sign sells garden level 2 (600, gardening 20) and 3 (1,500, gardening 40) and pet yard level 2 (800, Pet care 20) and 3 (2,000, Pet care 40), faded with the skill too low, Top level! at 3; the yard grows at once (fence back, big-pets gate at level 3); each garden level opens 3 new beds (spots 36-41) that work like the old ones; the pet limit stays 10', lambda: p13(run, new_wb, FIX)),
+             ('P14', 'Only what you own shows (stage 3): a pot is drawn and usable only once it opens (6 at each gardening level 10-50), no lock plates; the new beds only with their garden level; no training gear before it is bought', lambda: p14(run, new_wb, FIX)),
+             ('P15', 'Training gear (stage 3): Ms. Paws sells the 10 pieces at their prices (dog course from pet yard level 2), one of each, refused when the yard has no room; it stands in the yard at once; tapped, a pet of its kind plays on it with its own moves (+20 happiness, then a happy dance); a full bowl and yard gear keep home pets at half speed', lambda: p15(run, new_wb, FIX)),
+             ('P16', "Friends see your yard (stage 3): your garden level, pet yard level and gear go online as one short code (nothing at levels 1 with no gear); a friend's lot is drawn from it with its fences and gear; an old version's or a bad code draws the lot as before", lambda: p16(run, new_wb, FIX))]
     only = [x for x in os.environ.get('PFU_ONLY', '').split(',') if x]
     for cid, name, fn in tests:
         if only and cid not in only: continue

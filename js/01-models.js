@@ -863,8 +863,88 @@ function foodTruck(st,L,x,z){const B='#ff8a6b',W='#ffffff';
 const TRUCK={x:-34.2,z:11.8};   /* the park's south-west corner, by the bench, the window towards the fountain (run 4, job 6: 1.7 m further west, so its counter and awning no longer hang over the flower bed; the tree that stood there moved to the fence) */
 
 
+/* 🏋️ training gear for the yard (pets and farm update, stage 3): the book's model pack builders, copied as they are (only these 10: run doc guard 3).
+   Both picked styles of the dog course, the cat tower and the bunny hurdles (Karolis 30 Oct: 'both' = two styles; style 2 = the ChatGPT model, in its first colour) */
+const GEAR_B={
+ dog(g){const bar=(x,h)=>{for(const s of[-1,1])box(g,.06,.6,.06,'#ffffff',x+s*.45,0,0,{ol:.01});cyl(g,.025,.025,.9,'#ff6b6b',x,h,0,{rz:Math.PI/2,center:true,seg:8,ol:.01});};bar(-1.6,.25);bar(-.6,.4);
+  const t=new THREE.Mesh(new THREE.CylinderGeometry(.32,.32,1.4,16,1,true),mat('#7cc8ff').clone());t.material.userData={};t.material.side=THREE.DoubleSide;t.rotation.z=Math.PI/2;t.position.set(.7,.32,0);g.add(t);const to=new THREE.Mesh(new THREE.CylinderGeometry(.345,.345,1.42,16,1,true),OL);to.rotation.z=Math.PI/2;to.position.copy(t.position);g.add(to);for(const s of[-1,1]){const r=new THREE.Mesh(new THREE.TorusGeometry(.33,.03,6,18),mat('#5fa8ff'));r.rotation.y=Math.PI/2;r.position.set(.7+s*.7,.32,0);g.add(r);}
+  for(let i=0;i<5;i++)cyl(g,.035,.035,1.0,i%2?'#ffd45c':'#ff7aa8',1.9,.04,-.8+i*.4,{seg:8,ol:.012});box(g,.16,.04,1.9,'#ffffff',1.9,0,0,{ol:.012});},
+ dog2(g){const c='#7cc8ff';
+    for(const x of[-1.8,-.45]){
+      box(g,.3,.07,.4,'#fff6e4',x,0,.8,{ol:.015});
+      cyl(g,.035,.045,.83,c,x,.07,.8,{seg:8,ol:.012});
+    }
+    for(const y of[.38,.68]){
+      cyl(g,.035,.035,1.35,c,-1.125,y,.8,{rz:Math.PI/2,center:true,seg:10,ol:.012});
+      cyl(g,.037,.037,.35,'#fff6e4',-1.125,y,.8,{rz:Math.PI/2,center:true,seg:10,ol:false});
+    }
+    for(const x of[.47,1.53])box(g,.16,.08,1.55,c,x,0,.03,{ol:.015});
+    for(let k=0;k<8;k++){
+      const a=(k+.5)*Math.PI/8;
+      box(g,.224,.085,1.5,k%2?c:'#ffd45c',1+Math.cos(a)*.56,.065+Math.sin(a)*.56,.03,{rz:a+Math.PI/2,center:true,ol:.012});
+    }
+    for(let k=0;k<6;k++){
+      const x=-1.65+k*.66;
+      cyl(g,.12,.15,.055,'#fff6e4',x,0,-1.15,{seg:10,ol:.012});
+      cyl(g,.025,.03,.7,c,x,.055,-1.15,{seg:8,ol:.008});
+      cyl(g,.027,.027,.1,'#ffd45c',x,.55,-1.15,{seg:8,ol:false});
+    }
+  },
+ cat(g){const P='#ffd6e0';box(g,.8,.1,.8,P,0,0,0,{ol:.015});cyl(g,.07,.07,1.5,'#e8c98f',0,.1,0,{seg:10,ol:.012});for(let i=0;i<10;i++)cyl(g,.075,.075,.012,'#c9a46a',0,.2+i*.13,0,{seg:10,ol:false});
+  for(const [y,x,s] of[[.6,.25,.55],[1.05,-.25,.5],[1.55,.1,.6]]){cyl(g,s/2,s/2,.08,P,x,y,0,{seg:16,ol:.015});cyl(g,s/2-.04,s/2-.04,.03,'#ff9ec4',x,y+.08,0,{seg:16,ol:false});}box(g,.4,.3,.4,P,.2,.1,.2,{ol:.015});const h=new THREE.Mesh(new THREE.CircleGeometry(.11,14),mat('#3d2c5e'));h.position.set(.2,.27,.405);g.add(h);
+  const w=new THREE.Group();w.position.set(-.42,.1,.3);g.add(w);w.userData.keep=1;g.userData.wand=w;sph(g,.06,'#ff7aa8',-.62,.06,.3,{ws:8,hs:6,ol:.01});cyl(w,.012,.012,.9,'#ff7aa8',0,.45,0,{rz:-.5,center:true,seg:5,ol:.008});cyl(w,.004,.004,.3,'#ffffff',.24,.72,0,{seg:4,ol:false});for(const [c,dz] of[['#7cc8ff',0],['#ffd45c',.03]])sph(w,.05,c,.25,.55,dz,{s:[.4,1.5,.4],ws:8,hs:5,ol:.008});},
+ cat2(g){const c='#b79cff';
+    box(g,1.2,.1,.9,c,0,0,0,{ol:.025});
+    cyl(g,.075,.09,1.55,'#e8d6b0',-.22,.1,-.18,{seg:10,ol:.02});
+    cyl(g,.075,.09,.8,'#e8d6b0',.25,.1,.2,{seg:10,ol:.02});
+    box(g,.65,.08,.55,c,-.22,1.65,-.18,{ol:.025});
+    box(g,.55,.08,.5,c,.25,.9,.2,{ol:.025});
+    cyl(g,.23,.23,.09,'#fff6e4',-.22,1.73,-.18,{seg:16,ol:.018});
+    for(const y of[.25,.45,.65])cyl(g,.078,.078,.035,'#c98f5e',.25,y,.2,{seg:10,ol:false});
+    cyl(g,.015,.015,.57,'#a8714a',.42,1.2,.2,{rz:-.55,center:true,seg:7,ol:.005});
+    cyl(g,.005,.005,.27,'#fff6e4',.57,1.17,.2,{seg:5,ol:false});
+    sph(g,.07,'#ff9ec4',.57,1.1,.2,{s:[.4,1.2,.65],ws:10,hs:7,ol:.006});
+    sph(g,.045,'#ffd45c',.57,1.08,.2,{s:[.4,1.1,.65],ws:8,hs:6,ol:.005});
+  },
+ bunny(g){for(let i=0;i<3;i++){const z=-1+i,h=.18+i*.06,c=['#ff9ec4','#ffd45c','#7cc8ff'][i];for(const s of[-1,1])box(g,.05,h+.08,.05,'#ffffff',s*.35,0,z,{ol:.01});box(g,.7,.04,.04,c,0,h,z,{ol:.01});for(const s of[-1,1])box(g,.16,.03,.16,'#ffffff',s*.35,0,z,{ol:.008});}},
+ bunny2(g){const c='#ff9ec4';
+    for(const [z,h] of[[-.65,.44],[0,.32],[.65,.2]]){
+      for(const x of[-.42,.42]){
+        box(g,.22,.05,.24,'#fff6e4',x,0,z,{ol:.012});
+        cyl(g,.022,.03,h+.03,c,x,.05,z,{seg:8,ol:.008});
+      }
+      cyl(g,.025,.025,.84,c,0,h+.05,z,{rz:Math.PI/2,center:true,seg:8,ol:.008});
+      cyl(g,.027,.027,.18,'#ffd45c',0,h+.05,z,{rz:Math.PI/2,center:true,seg:8,ol:false});
+    }
+  },
+ hamster(g){box(g,.9,.04,.5,'#e6dbff',0,0,0,{ol:.012});const wh=new THREE.Group();wh.position.set(-.2,.26,0);g.add(wh);wh.userData.keep=1;g.userData.wh=wh;   /* (the game turns the wheel while the hamster runs) */
+  
+  const r=new THREE.Mesh(new THREE.TorusGeometry(.18,.018,6,22),mat('#ff7aa8'));wh.add(r);const ro=new THREE.Mesh(new THREE.TorusGeometry(.18,.03,6,22),OL);wh.add(ro);for(let i=0;i<10;i++){const a=i/10*Math.PI*2;cyl(wh,.006,.006,.12,'#ffffff',Math.cos(a)*.175,Math.sin(a)*.175,0,{rx:Math.PI/2,center:true,seg:4,ol:false});}box(g,.04,.22,.04,'#5a5f8c',-.2,.02,-.08,{ol:.008});
+  const T=new THREE.MeshToonMaterial({color:'#9fd8ff',gradientMap:GRAD,transparent:true,opacity:.7});const tube=(x,y,z,l,rz,ry)=>{const m=new THREE.Mesh(new THREE.CylinderGeometry(.045,.045,l,10,1,true),T);m.material.side=THREE.DoubleSide;m.position.set(x,y,z);m.rotation.set(0,ry||0,rz||0);g.add(m);};
+  tube(.15,.09,0,.35,Math.PI/2);tube(.32,.2,0,.28,0);tube(.32,.34,-.1,.25,Math.PI/2,Math.PI/2);for(const y of[.09,.34]){const el=new THREE.Mesh(new THREE.SphereGeometry(.045,12,8),T);el.position.set(.32,y,0);g.add(el);}   /* 31 Oct, Karolis: tubes exactly as the Model movements tricks use them (gear at scale 4.4); only elbows, a firmer tube colour, the axle and spokes were added, so no movement changes */
+  cyl(g,.015,.015,.1,'#5a5f8c',-.2,.26,-.04,{rx:Math.PI/2,center:true,seg:6,ol:false});for(let i=0;i<4;i++){const a=i*Math.PI/2+.4;cyl(wh,.008,.008,.18,'#ffffff',Math.cos(a)*.09,Math.sin(a)*.09,-.06,{rz:a-Math.PI/2,center:true,seg:4,ol:false});}},
+ duck(g){cyl(g,.45,.42,.3,'#7cc8ff',.5,0,0,{seg:18,ol:.02});const w=new THREE.Mesh(new THREE.CircleGeometry(.4,20),WATER);w.rotation.x=-Math.PI/2;w.position.set(.5,.27,0);g.add(w);
+  {const L=Math.hypot(1.0,.32),a=Math.atan2(.32,1.0);const p=new THREE.Group();p.position.set(-.45,.16,0);p.rotation.z=a;g.add(p);box(p,L,.05,.4,'#ffd45c',0,0,0,{center:true,ol:.015});for(let i=0;i<5;i++)box(p,.03,.02,.38,'#ff8a6b',-L/2+.1+i*.2,.03,0,{ol:false});for(const s of[-1,1])box(p,L,.08,.03,'#ffb347',0,.05,s*.2,{center:true,ol:.01});}},
+ owl(g){box(g,.7,.08,.7,'#a8714a',0,0,0,{ol:.015});cyl(g,.06,.08,1.4,'#c98f5e',0,.08,0,{seg:8,ol:.012});cyl(g,.05,.05,.9,'#c98f5e',0,1.45,0,{rz:Math.PI/2,center:true,seg:8,ol:.012});for(const s of[-1,1])sph(g,.07,'#a8714a',s*.45,1.45,0,{ws:8,hs:6,ol:.01});
+  for(const [x,c] of[[.85,'#ff7aa8'],[1.55,'#ffd45c']]){cyl(g,.025,.03,1.1,'#ffffff',x,0,0,{seg:6,ol:.01});const r=new THREE.Mesh(new THREE.TorusGeometry(.3,.035,8,22),mat(c));r.rotation.y=Math.PI/2;r.position.set(x,1.42,0);g.add(r);const o=new THREE.Mesh(new THREE.TorusGeometry(.3,.05,8,22),OL);o.rotation.y=Math.PI/2;o.position.copy(r.position);g.add(o);}},
+ capy(g){const Wd='#c98f5e';
+  cyl(g,.72,.7,.42,Wd,0,0,0,{seg:24,ol:.02});for(const y of[.08,.3])cyl(g,.73,.73,.04,'#5a5f8c',0,y,0,{seg:24,ol:false});{const t=new THREE.Mesh(new THREE.TorusGeometry(.72,.035,8,32),mat(shade(Wd,-.1)));t.rotation.x=Math.PI/2;t.position.y=.445;g.add(t);}
+  const w=new THREE.Mesh(new THREE.CircleGeometry(.68,28),WATER);w.rotation.x=-Math.PI/2;w.position.y=.425;g.add(w);
+  for(const [x,z] of[[.25,.1],[-.3,-.2],[.05,.38],[-.1,.05],[.35,-.3]])sph(g,.085,'#ffd45c',x,.43,z,{s:[1,.85,1],ws:10,hs:8,ol:.008});
+  /* the bamboo spout on a post, pouring in */
+  box(g,.1,.9,.1,'#a8714a',.95,0,0,{ol:.012});cyl(g,.04,.04,.6,'#8fc96a',.68,.88,0,{rz:Math.PI/2-.2,center:true,seg:10,ol:.01});for(const x of[.55,.75])cyl(g,.042,.042,.02,'#6fae4f',x,.86+(x-.68)*.2,0,{rz:Math.PI/2-.2,center:true,seg:10,ol:false});
+  cyl(g,.012,.012,.42,'#bfe6ff',.39,.42,0,{seg:6,ol:false});
+  /* soft steam */
+  const St=new THREE.MeshBasicMaterial({color:'#ffffff',transparent:true,opacity:.45,depthWrite:false});for(const [x,y,z,r] of[[-.1,.6,0,.14],[.15,.75,-.1,.11],[-.05,.92,.1,.09]]){const m=new THREE.Mesh(new THREE.SphereGeometry(r,12,8),St);m.position.set(x,y,z);g.add(m);}
+  /* stones, big leaves and bamboo stalks round the back */
+  for(let i=0;i<9;i++){const a=Math.PI*.15+i*Math.PI*.95/8,r=.92;sph(g,.13+(i%3)*.03,i%2?'#8a85a3':'#a7a3b5',Math.cos(a)*r,.06,-Math.sin(a)*r,{s:[1.3,.55,1],ws:10,hs:6,ol:.012});}
+  /* leafy plants growing from the ground: a short stem per leaf, each leaf fanning out */
+  for(const [x,z] of[[-.95,-.5],[-.62,-.92],[.62,-.88]]){sph(g,.12,'#4f9a52',x,.06,z,{s:[1.4,.5,1.4],ws:10,hs:6,ol:.008});for(let k=0;k<6;k++){const a=k*1.05,lx=x+Math.cos(a)*.18,lz=z+Math.sin(a)*.18;cyl(g,.012,.012,.3,'#3f7a45',x+Math.cos(a)*.08,.05,z+Math.sin(a)*.08,{rz:-Math.cos(a)*.5,rx:Math.sin(a)*.5,seg:4,ol:false});sph(g,.17,k%2?'#5fae5c':'#6fc25a',lx,.32,lz,{s:[1,.1,.55],ry:-a,rz:-Math.cos(a)*.35,rx:Math.sin(a)*.35,ws:12,hs:6,ol:.008});}}
+  for(const [x,z] of[[.15,-1.0],[.3,-.98],[.45,-.92]]){cyl(g,.025,.025,1.3,'#8fc96a',x,0,z,{seg:8,ol:.01});for(let k=1;k<4;k++)cyl(g,.027,.027,.02,'#6fae4f',x,k*.32,z,{seg:8,ol:false});sph(g,.09,'#6fc25a',x+.05,1.3,z,{s:[1.4,.25,.5],rz:-.4,ws:8,hs:5,ol:.006});}
+  /* a little wooden bucket */
+  cyl(g,.1,.09,.14,Wd,-.85,0,.45,{seg:12,ol:.01});cyl(g,.101,.101,.02,'#5a5f8c',-.85,.08,.45,{seg:12,ol:false});}};
 /* 🐾 the moves pack (pets and farm update, stage 2): the book's tools/moves-pack v4 (31 Oct, every move OK'd by the owner), cut down to the pet moves
-   the game uses (run doc guard 3: only what the update uses; tools/pfu-wip/extract-moves.py cuts it). It turns the model's own groups (legs, head, tail,
+   the game uses (stage 3 adds the yard-gear moves: dog.agility, bunny.hurdles, cat.wand, hamster.wheel, capy.hopIn/tub, duck.splash/paddle, owl.perch/fly) (run doc guard 3: only what the update uses; tools/pfu-wip/extract-moves.py cuts it). It turns the model's own groups (legs, head, tail,
    body), never bends a mesh, and puts the feet on the floor. COZY_MOVES.play(model, name, seconds since the move began, {kind, dist, mood}).
    Later stages add the moves they use with the same script (seal, bear, snake, tricks, farm). */
 /* Cozy Town moves pack (31 Oct 2026, round 3: every approved preview, Pet Show tricks, toy play, farm feeding) — window.COZY_MOVES
@@ -1140,6 +1220,37 @@ function chickenWalk(m,t,o){const R=rig(m),K=KIND.chicken;o=o||{};const A=K.A*(o
   const half=frac(ph*2);const sc=(R.root.scale&&R.root.scale.y)||1;const step=stride(m,A)/2/sc;const hold=.7;const bob=Math.min(.06,step*hold*.9);
   const off=half<hold?bob*(.5-half/hold):bob*(-.5+(half-hold)/(1-hold));
   if(m.neck)m.neck.position.z+=off;else if(m.head)m.head.position.z+=off;rotAbout(R,'z',.06*Math.sin(TAU*ph),0,R.bCenter.y,0);if(m.tail)m.tail.rotation.x+=.1*Math.sin(TAU*2*ph);return {};}
+/* ======================= round 2 (31 Oct): the moves of every approved preview (grazeNecks, snakeTank, shopStairs, shopSpots, petsHome, bigPets, farmChores) ======================= */
+const scOf=R=>(R.root.scale&&R.root.scale.y)||1;
+const hexOf=q=>q&&q.material&&q.material.color?q.material.color.getHexString():'';
+const isOL=q=>!!(q.material&&q.material.side===THREE.BackSide);
+/* rest snapshot for a mesh a move turns rigidly (tongue, eyes, wing pieces) */
+function snapObj(R,o){if(o&&!R.rest.has(o))R.rest.set(o,{p:o.position.clone(),q:o.quaternion.clone(),s:o.scale.clone()});}
+/* a mesh and its ink outline hull (same parent, same place) */
+function withHulls(list){const out=new Set();list.forEach(q=>{out.add(q);const p=q.parent;if(p)p.children.forEach(c=>{if(c!==q&&c.isMesh&&isOL(c)&&c.position.distanceTo(q.position)<1e-4)out.add(c);});});return [...out];}
+/* turn a rigid piece about a pivot (in its parent's frame), from its rest pose */
+function turnAbout(R,o,axis,ang,piv){const r=R.rest.get(o);if(!r)return;_q.setFromAxisAngle(axis,ang);o.position.copy(r.p).sub(piv).applyQuaternion(_q).add(piv);o.quaternion.copy(_q).multiply(r.q);}
+/* bird wings (duck, owl): the flat boxes at the body's sides; they turn at the shoulder (.13 above their centre) */
+function wingsOf(R){if(R.wings)return R.wings;R.wings=[];if(R.kind!=='duck'&&R.kind!=='owl')return R.wings;
+  for(const sd of[-1,1]){const pr=R.b.children.filter(q=>q.isMesh&&q.geometry&&q.geometry.type==='BoxGeometry'&&Math.sign(q.position.x)===sd&&Math.abs(q.position.x)>.08);
+    if(!pr.length)continue;pr.forEach(q=>snapObj(R,q));R.wings.push({sd,pr,piv:new THREE.Vector3(pr[0].position.x,pr[0].position.y+.13,pr[0].position.z)});}return R.wings;}
+function wingTurn(R,a){if(!a)return;const W=R.m.wings;if(W&&W.length){W.forEach(w=>{w.rotation.z+=Math.sign(w.position.x)*a;});return;}wingsOf(R).forEach(w=>w.pr.forEach(q=>turnAbout(R,q,Z,w.sd*a,w.piv)));}
+/* owl eyes (blink = the eye balls squash shut) */
+function eyeBalls(R){if(R.eyeB)return R.eyeB;const h=R.m.head;R.eyeB=h?withHulls(h.children.filter(q=>q.isMesh&&!isOL(q)&&q.geometry.type==='SphereGeometry'&&q.position.z>.1&&Math.abs(q.position.x)>.02)):[];R.eyeB.forEach(q=>snapObj(R,q));return R.eyeB;}
+function blink(R,k){if(k>0)eyeBalls(R).forEach(q=>{q.scale.y*=1-.88*k;});}
+/* eyelids the pack adds once (hidden, never grounded): capybara = a head-coloured cap over the top of the eye (half shut, blinks);
+   snake = a head-coloured cover with a dark closed-eye line (asleep). lids(R,k): 0 open, .5 half shut, 1 shut */
+function lidsOf(R){if(R.lids)return R.lids;R.lids=[];const h=R.m.head;if(!h)return R.lids;
+  const skinM=h.children.find(q=>q.isMesh&&!isOL(q)&&q.geometry.type==='SphereGeometry'&&!(Math.abs(q.position.x)>.02));const col=skinM?skinM.material.color:new THREE.Color('#b8784a');
+  const mk=(par,pos,r,full,sx)=>{const g=new THREE.Group();g.position.copy(pos);par.add(g);const geo=full?new THREE.SphereGeometry(r*1.15,14,10):new THREE.SphereGeometry(r*1.14,18,8,0,TAU,0,PI/2);
+    const lid=new THREE.Mesh(geo,new THREE.MeshLambertMaterial({color:col}));lid.userData.noGround=true;if(!full){lid.scale.set(1,1.05,.66);}g.add(lid);
+    if(full){const ln=new THREE.Mesh(new THREE.BoxGeometry(.006,.006,r*1.9),new THREE.MeshBasicMaterial({color:'#1d1622'}));ln.userData.noGround=true;ln.position.set(sx*r*.75,r*.75,0);ln.rotation.z=-sx*.75;g.add(ln);}
+    g.visible=false;R.hide.push(g);snapObj(R,g);return g;};
+  if(R.kind==='snake'){h.children.forEach(q=>{if(q.isMesh&&!isOL(q)&&q.geometry.type==='SphereGeometry'&&Math.abs(q.position.x)>.02&&q.geometry.parameters.radius<.04&&hexOf(q)!=='2e2347')R.lids.push({g:mk(h,q.position,q.geometry.parameters.radius*Math.max(q.scale.x,q.scale.y,q.scale.z),true,Math.sign(q.position.x)),full:true,hl:[]});});}
+  else h.children.forEach(e=>{if(!e.isGroup)return;const eye=e.children.find(q=>q.isMesh&&q.geometry.type==='SphereGeometry'&&hexOf(q)==='141018');if(!eye)return;
+    const hl=e.children.filter(q=>q!==eye&&q.position.y>0);hl.forEach(q=>R.show.push(q));R.lids.push({g:mk(e,new THREE.Vector3(),eye.geometry.parameters.radius,false,0),full:false,hl});});
+  return R.lids;}
+function lids(R,k){if(k<=.01)return;lidsOf(R).forEach(L=>{if(L.full){L.g.visible=k>.5;return;}L.g.visible=true;L.hl.forEach(q=>{q.visible=false;});L.g.rotation.x=-.25+1.15*cl((k-.5)*2,0,1)-.4*cl((.5-k)*2,0,1);});}
 /* tilt the body to a slope and put it on the sloped floor (o.slope = {pitch, roll}: + pitch = the ground rises ahead, + roll = it rises to the model's left (+x)) */
 function slopeGround(R,sl){const T=R.top||R.b;const p=sl.pitch||0,r=sl.roll||0;const c=R.center;
   _q.setFromEuler(new THREE.Euler(-p,0,r,'XYZ'));T.position.sub(c).applyQuaternion(_q).add(c);T.quaternion.premultiply(_q);
@@ -1147,9 +1258,50 @@ function slopeGround(R,sl){const T=R.top||R.b;const p=sl.pitch||0,r=sl.roll||0;c
   T.traverse(o=>{if(!o.visible||!o.isMesh||o.userData.noGround||!o.geometry)return;const pa=o.geometry.attributes.position;if(!pa)return;_m.multiplyMatrices(_inv,o.matrixWorld);const st=pa.count>400?2:1;
     for(let i=0;i<pa.count;i+=st){_v.fromBufferAttribute(pa,i).applyMatrix4(_m);const d=_v.y-_v.z*tp-_v.x*tr;if(d<mn)mn=d;}});if(isFinite(mn))T.position.y-=mn;}
 function sitPivot(R){const zs=R.legs.map(l=>l.g.position.z);const hind=R.hind[0]||R.legs[0];return {y:hind?hind.g.position.y:R.bCenter.y,z:zs.length?Math.min(...zs):0};}
+function lerpK(keys,t){if(t<=keys[0][0])return keys[0][1];for(let i=1;i<keys.length;i++){const a=keys[i-1],b=keys[i];if(t<=b[0]){const u=ease((t-a[0])/((b[0]-a[0])||1));return a[1]+(b[1]-a[1])*u;}}return keys[keys.length-1][1];}
+/* capy.tub: soaks up to its chin in the warm tub: bobs, rolls a little, eyes half shut with slow blinks, chin up. 5 s loop. Grounded: put the root at water - r.sink */
+function capyTub(m,t,o){const R=rig(m);o=o||{};const s=scOf(R);const u=clock(t,5);lieDown(R,1);   /* legs tucked under */
+  if(m.head){m.head.rotation.x+=-.28+.06*Math.sin(TAU*u);m.head.rotation.z+=.12*Math.sin(TAU*(u+.25));m.head.rotation.y+=.15*Math.sin(TAU*u);}
+  const bk=Math.max(bell(u,.28,.4),bell(u,.78,.9));lids(R,.5+.5*bk);rotAbout(R,'z',.05*Math.sin(TAU*(u-.05)),0,R.bCenter.y,R.bCenter.z);
+  /* soak: the root is the water surface; the body goes down until the water line is at the chin (o.chin: m below the chin, default .02) */
+  if(!R.cache.chin&&m.head){const T=R.top||R.b;const y0=T.position.y;R.root.updateMatrixWorld(true);R.cache.chin=boxIn(R.root,m.head,new THREE.Box3()).min.y-y0;}
+  (R.top||R.b).position.y+=-(R.cache.chin||R.H*.6)+((o.chin==null?.02:o.chin)+.025*Math.sin(TAU*2*u))/s;return {noGround:true};}
+/* duck.paddle: sits on the water (legs tucked), glides, dips its head under twice, tail wags. 5 s loop. Grounded: root at water - r.sink */
+function duckPaddle(m,t,o){const R=rig(m);const u=clock(t,5);lieDown(R,1);rotAbout(R,'z',.05*Math.sin(TAU*4*u),0,R.bCenter.y,R.bCenter.z);
+  const dip=Math.min(1,1.6*(bell(u,.26,.46)+bell(u,.72,.92)));rotAbout(R,'x',.12*dip,0,R.bCenter.y,R.bCenter.z);headDown(R,-.1*Math.sin(TAU*2*u)+1.7*dip);
+  if(m.tail){m.tail.rotation.y+=.4*Math.sin(TAU*8*u);tailUp(R,.5*dip);}wingTurn(R,.2*dip);return {lift:.008*Math.sin(TAU*4*u),sink:.15*scOf(R)};}
+/* owl.perch: on its branch — blinks, turns its head right round, wing shuffle. 5 s loop. Root = the branch top */
+const OWL_LOOK=[[0,0],[.1,0],[.2,1.0],[.36,1.0],[.46,0],[.56,0],[.66,-1.0],[.8,-1.0],[.9,0],[1,0]];
+function owlPerch(m,t,o){const R=rig(m);const u=clock(t,5);if(m.head){m.head.rotation.y+=lerpK(OWL_LOOK,u);m.head.rotation.z+=.12*bell(u,.46,.56);}
+  blink(R,Math.max(bell(u,.12,.17),bell(u,.5,.55),bell(u,.92,.97)));const sh=bell(u,.58,.64)+bell(u,.66,.72);wingTurn(R,.35*sh);R.b.rotation.z+=.04*sh*Math.sin(TAU*12*u);breathe(R,t,2.5,.01);return {};}
 /* pet.takeFood: food from your hand — leans up to the hand, takes it, chews, steps back. 2 s, then the game plays pet.happyDance (favourite) */
 function takeFood(m,t,o){const R=rig(m),K=kindOf(R);const ln=bell(t,0,1.3);if(m.head)m.head.rotation.x+=-.18*ln;R.b.position.z+=R.Lz*.06*ln;
   const chew=t>.6&&t<1.6?.08*Math.abs(Math.sin(TAU*3*t)):0;headDown(R,chew,.3);wag(R,K.wag*1.3+.2,K.wagF+2,t);return {done:t>=2};}
+/* ---------- YARD TRAINING GEAR (yardGear preview) ---------- */
+/* jump run: the pet's run plus a jump over each bar or hurdle. o.dist = metres along the course; o.jumps = [[at, height], ...] (metres); o.jw = take-off distance before/after */
+function jumpRun(m,t,o,gait,jw0){const R=rig(m),K=kindOf(R);o=o||{};const s=scOf(R);const d=o.dist!=null?o.dist:t*1.5;const jw=o.jw||jw0;let air=null;
+  for(const [at,hh] of (o.jumps||[]))if(d>at-jw&&d<at+jw*.9){const v=(d-(at-jw))/(jw*1.9);air={v,hh};}
+  if(!air){if(gait==='gallop'){const A=.5,ph=phaseOf(R,t,o,A);gaitLegs(R,ph,A,1,'gallop',K.knee);rotAbout(R,'x',.06*Math.sin(TAU*ph),0,R.bCenter.y,R.bCenter.z);wag(R,.4,8,t);return {};}
+    return petWalk(m,t,o);}
+  airLegs(R,air.v);R.legs.forEach(l=>{l.g.rotation.x+=(l.front?-.25:.25)*Math.sin(PI*air.v);});rotAbout(R,'x',-.25*Math.cos(PI*air.v),0,R.bCenter.y,R.bCenter.z);wag(R,.4,8,t);
+  return {lift:arc(air.v,0,1,air.hh/s)};}
+/* cat.wand: crouches (tail twitching), sits up and swats the feather with one paw, then the other. 4 s loop. r.hit = how hard the feather was just hit (the wand is the game's) */
+function catWand(m,t,o){const R=rig(m);const u=clock(t,4);const cr=bell(u,.02,.24);if(cr){lieDown(R,.35*cr);if(m.tail)m.tail.rotation.y+=.5*Math.sin(TAU*8*u)*cr;if(m.head)m.head.rotation.x-=.15*cr;}
+  const up=seg(u,.22,.28)*(1-seg(u,.78,.88));const hits=[.3,.42,.6,.66];
+  if(up){sitPose(R,up);rotAbout(R,'x',-.2*up,0,R.hind[0]?R.hind[0].g.position.y:0,R.hind[0]?R.hind[0].g.position.z:0);if(m.head)m.head.rotation.x-=.15*up;
+    R.front.forEach((l,i)=>{let a=0;hits.forEach((h,k)=>{if(((k<2||k===3)===(i===0))||k===2)a=Math.max(a,bell(u,h-.06,h+.05));});l.g.rotation.x+=-(.9+1.0*a)*up+.2*up;});tailUp(R,.3*up);}
+  let hit=0;hits.forEach(h=>{const dd=u*4-h*4;if(dd>0)hit+=Math.exp(-dd*3.5)*Math.sin(dd*10);});wag(R,.3,1,t);return {hit};}
+/* hamster.wheel: runs in place on its wheel. r.speed = running speed (m/s): the game turns the wheel by speed / radius */
+function hamsterWheel(m,t,o){const R=rig(m);const f=6,A=.5;gaitLegs(R,t*f,A,1,'trot');rotAbout(R,'x',.03*Math.sin(TAU*f*t),0,R.bCenter.y,R.bCenter.z);if(m.head)m.head.rotation.x+=.05*Math.sin(TAU*2*f*t);
+  return {lift:.012*Math.abs(Math.sin(TAU*2*f*t))/scOf(R),speed:stride(m,A)*f};}
+/* capy.hopIn: crouches, hops up over the rim into the warm bath (o.height = rim height, m), lands (then capy.tub). 1.2 s */
+function capyHopIn(m,t,o){const R=rig(m);o=o||{};const s=scOf(R);const c=bell(t,0,.35);if(c)lieDown(R,.3*c);const u=cl((t-.3)/.8);let lift=0;if(u>0&&u<1){lift=arc(u,0,1,((o.height||.55)+.15)/s);airLegs(R,u);rotAbout(R,'x',-.3*Math.cos(PI*u),0,R.bCenter.y,R.bCenter.z);}
+  return {lift,done:t>=1.2};}
+/* duck.splash: hops off the ramp into the tub, wings flapping, legs tucked (then duck.paddle). 1 s; o.height = jump height (.35) */
+function duckSplash(m,t,o){const R=rig(m);o=o||{};const u=cl(t);const a=Math.sin(PI*u);wingTurn(R,.9*a);lieDown(R,.6*a+(u>.5?.4*(u-.5)*2:0));return {lift:arc(u,0,1,(o.height||.35)/scOf(R)),done:t>=1};}
+/* owl.fly: flying pose — body nearly level, legs tucked back, both wings flap (3 a second), a small bob (o.glide: wings out, still). The game moves it along its flight path. No ground fix */
+function owlFly(m,t,o){const R=rig(m);o=o||{};rotAbout(R,'x',.18,0,R.bCenter.y,R.bCenter.z);R.legs.forEach(l=>{l.g.rotation.x+=1.1;});headDown(R,-.12);
+  const fl=Math.sin(TAU*3*t);wingTurn(R,o.glide?.9:.35+1.1*(.5+.5*fl));if(m.tail)m.tail.rotation.x+=-.3;return {noGround:true,lift:.04*Math.sin(TAU*3*t-1)/scOf(R)};}
 const M={
  'pet.idle':[petIdle,0],
  'pet.walk':[petWalk,0],
@@ -1165,7 +1317,17 @@ const M={
  'pet.sneeze':[sneeze,1.2],
  'pet.warnSneeze':[warnSneeze,1.4],
  'pet.nap':[petNap,0],
- 'pet.takeFood':[takeFood,2]
+ 'pet.takeFood':[takeFood,2],
+ 'dog.agility':[(m,t,o)=>jumpRun(m,t,o,'gallop',.62),0],
+ 'bunny.hurdles':[(m,t,o)=>jumpRun(m,t,o,'walk',.48),0],
+ 'cat.wand':[catWand,0],
+ 'hamster.wheel':[hamsterWheel,0],
+ 'capy.hopIn':[capyHopIn,1.2],
+ 'capy.tub':[capyTub,0],
+ 'duck.splash':[duckSplash,1],
+ 'duck.paddle':[duckPaddle,0],
+ 'owl.perch':[owlPerch,0],
+ 'owl.fly':[owlFly,0]
 };
 function play(m,name,t,o){o=o||{};const R=rig(m,o.kind?{kind:o.kind}:null);reset(m);const e=M[name]||M[R.kind==='person'?'person.idle':'pet.idle'];
   let r;try{r=e[0](m,Math.max(0,t),o)||{};}catch(err){if(!R.warned){R.warned=1;console.warn('COZY_MOVES',name,err);}reset(m);r={};}

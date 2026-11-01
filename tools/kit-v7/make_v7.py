@@ -103,12 +103,18 @@ def fix_n9(s):
     # New: at 21:00 it must sell, and at 23:30 it must not (the same closed-hours test at the truck's new closing time). Nothing else changes.
     for a, b in N9_OLD: s = rep(s, a, b)
     return s
+def fix_house4(s):
+    # N33 (1 Nov, Pets and Farm Update stage 3, the owner's approved rules-garden-levels: garden levels 2 and 3 add 3 beds each at the back, save spots 36-41).
+    # Old: the yard has exactly 36 spots (6 beds + 30 pots). New: exactly 42 (6 beds + 30 pots + the 6 back beds); every other part of the line is unchanged.
+    return rep(s, """    if gd['plots'] != 36 or gd['pots'] != 30 or gd['garden'] < 6: probs.append(f"not 6 beds + 30 pots: {gd['plots']} spots, {gd['pots']} pots, {gd['garden']} slots")""",
+               """    if gd['plots'] != 42 or gd['pots'] != 30 or gd['garden'] < 6: probs.append(f"not 6 beds + 30 pots + 6 back beds (garden levels 2 and 3): {gd['plots']} spots, {gd['pots']} pots, {gd['garden']} slots")""")
 src = zipfile.ZipFile(SRC); out = io.BytesIO(); dst = zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED)
 for info in src.infolist():
     data = src.read(info.filename)
     if info.filename == 'cozycheck/cozy_check2.py': data = fix_check(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
     if info.filename == 'cozycheck/README-KIT.md': data = fix_readme(data.decode('utf-8')).encode('utf-8')
     if info.filename == 'cozycheck/night3.py': data = fix_n9(fix_night3(data.decode('utf-8'))).encode('utf-8'); compile(data, info.filename, 'exec')
+    if info.filename == 'cozycheck/house4.py': data = fix_house4(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
     if info.filename == 'cozycheck/run4.py': data = fix_run4(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
     dst.writestr(info, data)
 # fixtures that were only in tools/check-fixtures (31 Oct 2026): N8's save-prepet1-designer2.json, the save made by main before the

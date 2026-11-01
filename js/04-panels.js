@@ -189,7 +189,27 @@ function openShop(k){SHOP=k;const sh=SHOPS[k];SFX.talk();
   openPanel(`<div class="hd"><h2>${sh.title}</h2><div class="chip">🪙 <b id="pc">${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
     ${shutNote(k)}${sh.furn?'<p class="note">Furniture and decorations go to 📦 My stuff. Place them at home with&nbsp;🛋️&nbsp;Decorate.</p>':''}${newInHTML(k)}
     <div class="grid" style="margin-top:10px">${list.map(it=>`<button class="it" data-a="buy:${it.id}"><span class="em">${it.i}</span><span>${it.n}</span>${k==='pets'&&PET_LOVE[it.id]?`<span class="lv" title="${PET_LOVE[it.id][1]}" aria-label="${PET_LOVE[it.id][1]}">${PET_LOVE[it.id][0]}</span>`:''}<span class="pr">${it.p} 🪙</span><span class="have" id="hv-${it.id}">${it.f?'':(S.bag[it.id]?'You have '+S.bag[it.id]:'')}</span></button>`).join('')}</div>
+    ${k==='pets'?gearShopHTML():''}
     ${k==='pets'&&S.pets.length?'<div class="row"><button class="btn white" data-a="giveaway">💔 Give a pet to Ms. Paws</button></div>':''}`);}
+/* 🏋️ training gear for your yard at Ms. Paws (stage 3; prices economy-pfu-prices): one of each, it stands in your backyard at once */
+const gearOwned=id=>!!(S.yard&&S.yard.gear&&S.yard.gear.includes(id));
+function gearShopHTML(){return `<p class="note" style="margin-top:12px">🏋️ <b>Training gear</b> for your backyard: your pets play on it.</p><div class="grid" style="margin-top:6px">${GEAR_IDS.map(id=>{const G=GEAR[id],own=gearOwned(id),lk=yLv('pet')<G.lv;
+  return `<button class="it" data-a="gear:${id}"${own?' disabled':''}><span class="em">${G.i}</span><span>${G.n}</span><span class="pr">${own?'In your yard ✓':lk?'🔒 Pet yard level '+G.lv:G.p+' 🪙'}</span></button>`;}).join('')}</div>`;}
+ACT.gear=id=>{if(shutBuy('pets'))return;const G=GEAR[id];if(!G||gearOwned(id))return;
+  if(yLv('pet')<G.lv){SFX.no();toast(`🔒 The ${gearNm(id)} needs 🐾 Pet yard level ${G.lv}. Get it at the 🏡 sign by your yard gate.`,4.2);return;}
+  const list=((S.yard.gear)||[]).concat(id);if(!gearPlace(list,yLv('pet')).every(Boolean)){SFX.no();toast(yLv('pet')<3?'🏡 No room left in your yard! A bigger 🐾 Pet yard has room for more gear.':'🏡 No room left in your yard for more gear!',4.2);return;}
+  if(S.coins<G.p){SFX.no();toast('Not enough coins yet! 🪙 '+earnTip(),3.6);return;}
+  S.coins-=G.p;S.yard.gear=list;yardLv();SFX.coin();toast(`${G.i} The ${gearNm(id)} is in your backyard! Tap it there and your pet plays on it.`,4.4);qEvent('buy:gear');change();openShop('pets');};
+/* 🏡 My yard (stage 3, screens-yard-sign): the sign by your yard gate sells the next garden and pet yard level (prices economy-pfu-prices) */
+const YARD_UP={garden:{i:'🌱',n:'Garden',sk:'garden',p:[0,600,1500]},pet:{i:'🐾',n:'Pet yard',sk:'pets',p:[0,800,2000]}},yardNeed=lv=>lv>=3?40:20;
+function openYardSign(){SFX.talk();openPanel(`<div class="hd"><h2>🏡 My yard</h2><div class="chip">🪙 <b id="pc">${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
+  ${Object.keys(YARD_UP).map(k=>{const U=YARD_UP[k],lv=yLv(k),nx=lv+1,need=yardNeed(nx),ok=sk(U.sk).lv>=need;
+    return `<div class="row" style="justify-content:space-between;align-items:center;margin-top:10px"><span><b>${U.i} ${U.n}</b> · level ${lv}</span>${lv>=3?'<span><b>Top level! ⭐</b></span>':
+      ok?`<button class="btn mint" data-a="yardup:${k}">Level ${nx} · ${U.p[nx-1].toLocaleString('en')} 🪙</button>`:`<button class="btn white" disabled>🔒 ${SKILLS[U.sk].n} level ${need}</button>`}</div>`;}).join('')}
+  <p class="note" style="margin-top:12px">A new level makes your yard bigger at once: fence, gate and path come with it. Garden levels add 3 new beds each.</p>`);}
+ACT.yardup=k=>{const U=YARD_UP[k];if(!U)return;const lv=yLv(k),nx=lv+1;if(nx>3||sk(U.sk).lv<yardNeed(nx))return;const pr=U.p[nx-1];
+  if(S.coins<pr){SFX.no();toast('Not enough coins yet! 🪙 '+earnTip(),3.6);return;}
+  S.coins-=pr;S.yard[k]=nx;yardLv();SFX.yay();toast(k==='garden'?`🌱 Garden level ${nx}! Your garden is bigger, with 3 new beds at the back.`:nx>=3?'🐾 Pet yard level 3! The big-pets area behind the new gate is yours.':'🐾 Pet yard level 2! A play corner behind the shed, and room for the agility course.',4.6);change();openYardSign();};
 ACT.buy=(id,b)=>{if(shutBuy(SHOP))return;const sh=SHOPS[SHOP],F=(sh.furn&&sh.furn.includes(id))?FURN[id]:null,info=F||itemInfo(id);
   if(S.coins<info.p){SFX.no();toast('Not enough coins yet! 🪙 '+earnTip(),3.6);return;}
   S.coins-=info.p;SFX.coin();

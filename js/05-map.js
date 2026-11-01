@@ -28,7 +28,7 @@ const mapB=()=>({x1:laneEnd()-8,x2:110,z1:-92,z2:92});   /* how far the map move
 const mapShown=p=>!((p.id==='home'||p.id==='garden')&&p.x>-84);   /* your house and garden are on Friends Lane (not in town) */
 let MAP_TR=null;
 function mapTrees(){if(MAP_TR)return MAP_TR;const r=seeded(66),T=[];   /* soft round trees on the hills around town (not on Friends Lane or the beach path) */
-  for(let i=0;i<4000&&T.length<560;i++){const x=-330+r()*450,z=-125+r()*250,R=1.8+r()*2.6;if(x>-92&&x<93&&z>-92&&z<92)continue;if(x<-78&&Math.abs(z)<31.5)continue;if(x>78&&Math.abs(z)<11)continue;T.push([x,z,R]);}
+  for(let i=0;i<4000&&T.length<560;i++){const x=-330+r()*450,z=-125+r()*250,R=1.8+r()*2.6;if(x>-92&&x<93&&z>-92&&z<92)continue;if(x<-78&&Math.abs(z)<42)continue;if(x>78&&Math.abs(z)<11)continue;T.push([x,z,R]);}
   return MAP_TR=T;}
 /* paint the map: world (ox,oz) is the canvas corner, k = canvas px per metre, u = canvas px per CSS px. o.mini: the little job map (no names) */
 function mapPaint(x,ox,oz,k,w,h,o){const P=o.dark?MAP_PAL.dark:MAP_PAL.light,u=o.u||1,mini=!!o.mini,le=laneEnd(),X=v=>(v-ox)*k,Z=v=>(v-oz)*k,
@@ -85,10 +85,10 @@ function mapPaint(x,ox,oz,k,w,h,o){const P=o.dark?MAP_PAL.dark:MAP_PAL.light,u=o
     if(!mini&&!round&&k>2.5*u&&bw>2.5&&bd>2.5){R(bx-bw/2+.7,bz-bd/2+.7,bx+bw/2-.7,bz+bd/2-.7,Math.max(.4,r-.5));x.fillStyle=o.dark?'rgba(255,255,255,.08)':'rgba(255,255,255,.4)';x.fill();}}   /* a soft roof */
   /* 🏡 Friends Lane: the gate, hedges, every lot (a house when a friend lives there), your garden, the end of the lane */
   x.beginPath();pl([[-84.6,-4.5],[-84.6,4.5]]);stroke(P.ink,Math.max(2*u,.55*k)+2*u);stroke('#ff7aa8',Math.max(2*u,.55*k));
-  if(!mini){x.beginPath();for(const s of[-1,1])pl([[-80.3,s*26.6],[le-.9,s*26.6]]);pl([[le-1.35,-27],[le-1.35,27]]);stroke(P.hedge,Math.max(2*u,1*k));
+  if(!mini){x.beginPath();for(const s of[-1,1])pl([[-80.3,s*37.5],[le-.9,s*37.5]]);pl([[le-1.35,-38],[le-1.35,38]]);stroke(P.hedge,Math.max(2*u,1*k));
     x.beginPath();pl([[le+.2,-4.2],[le+.2,4.2]]);stroke(P.ink,Math.max(2*u,.4*k)+2*u);stroke('#ff6b6b',Math.max(2*u,.4*k));
     const C0=LOC.city,mine=LANE.mine;
-    for(const lp of (C0&&C0.lane)||[]){const X0=lp.X,s=lp.s,o2=LANE.own[lp.j];if(!vis(X0-7,-27,X0+7,27))continue;
+    for(const lp of (C0&&C0.lane)||[]){const X0=lp.X,s=lp.s,o2=LANE.own[lp.j];if(!vis(X0-7,-38,X0+7,38))continue;
       R(X0-6.6,Math.min(s*7.1,s*26.1),X0+6.6,Math.max(s*7.1,s*26.1),1.2);x.fillStyle=P.lot;x.fill();
       if(k>3*u){x.beginPath();pl([[X0-4.6,s*11.3],[X0-4.6,s*8.2],[X0-.9,s*8.2]]);pl([[X0+.9,s*8.2],[X0+4.6,s*8.2],[X0+4.6,s*11.3]]);stroke(P.ink,Math.max(u,.18*k)+1.6*u);stroke(P.fence,Math.max(u,.18*k));}   /* the front fence */
       if(lp.j===mine){const g=PLACES.find(q=>q.id==='garden'),q=(a,b)=>lotPt(lp.j,a,b);   /* 🌱 your garden: the beds, the shed and the stepping stones */

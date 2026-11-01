@@ -67,13 +67,13 @@ function buildSky(){
 /* 🌲 the forest belt and tree groups (night 3, job 12). Past the town barriers (and north and south of Friends Lane) a belt of round trees and
    pines several rows deep, at the same spots the map already draws (mapTrees), plus a close row just outside the barriers, and small tree
    groups in empty corners inside the town. Never on roads, paths, doors, the bus route, the football field, the pond and lake, the park or the
-   lane (the lane valley x < -78, |z| < 31.5 stays free for new plots). Built light: low-poly trees, no outlines, no shadows, merged by 64 m
+   lane (the lane valley x < -78, |z| < 42 stays free for new plots and the level-3 backyards; pets and farm update, stage 3). Built light: low-poly trees, no outlines, no shadows, merged by 64 m
    chunks into one vertex-colour piece each. Season colours from job 11. The near row and the groups go on the map too */
 const HILLS=[];
 function groundY(x,z){let y=0;for(const h of HILLS){const d=((x-h.x)**2+(z-h.z)**2)/(h.R*h.R);if(d<1)y=Math.max(y,h.y+h.R*.5*Math.sqrt(1-d));}return y;}
 function treeLo(g,x,y,z,s,c){cyl(g,.15*s,.2*s,2.3*s,'#9b6b4a',x,y,z,{seg:5,ol:false});sph(g,1.15*s,c,x,y+3.05*s,z,{ws:7,hs:5,ol:false});sph(g,.75*s,c,x+.7*s,y+2.75*s,z+.15*s,{ws:6,hs:4,ol:false});sph(g,.72*s,c,x-.62*s,y+2.8*s,z-.3*s,{ws:6,hs:4,ol:false});}
 function pineLo(g,x,y,z,s,c){cyl(g,.14*s,.18*s,.8*s,'#9b6b4a',x,y,z,{seg:5,ol:false});cone(g,1.2*s,1.6*s,c,x,y+.7*s,z,{seg:6,ol:false});cone(g,.92*s,1.4*s,c,x,y+1.55*s,z,{seg:6,ol:false});cone(g,.62*s,1.2*s,c,x,y+2.35*s,z,{seg:6,ol:false});}
-const laneFree=(x,z)=>x<-78&&Math.abs(z)<31.5,beachFree=(x,z)=>x>78&&Math.abs(z)<11;
+const laneFree=(x,z)=>x<-78&&Math.abs(z)<42,beachFree=(x,z)=>x>78&&Math.abs(z)<11;
 function freeSpot(L,x,z,r){for(const c of L.cols){if(c.cr!==undefined){if(Math.hypot(x-c.cx,z-c.cz)<c.cr+r)return false;}else if(x>c.x1-r&&x<c.x2+r&&z>c.z1-r&&z<c.z2+r)return false;}
   for(const t of L.inter)if(Math.hypot(x-t.x,z-t.z)<7)return false;return true;}
 function buildForest(L,st){const F=new THREE.Group();L.g.add(F);const r=seeded(68),TC=()=>TREE_COLS[(r()*TREE_COLS.length)|0],PC=()=>PINE_COLS[(r()*PINE_COLS.length)|0];
@@ -1330,15 +1330,15 @@ function buildLane(L,st){
   box(st,.26,1.05,9.5,'#ff7aa8',-84.6,4.0,0,{ol:.03});
   const sg=signPlane('🏡 Friends Lane',6.8,.82,'#ff7aa8','#ffffff');sg.position.set(-84.45,4.52,0);sg.rotation.y=Math.PI/2;L.g.add(sg);
   /* the end of the lane (a barrier and a hedge) moves along when the lane grows */
-  const e=new THREE.Group();L.g.add(e);box(e,.4,.9,8.4,'#ffffff',.2,0,0,{ol:.03});for(let k=-3;k<=3;k+=2)box(e,.42,.3,.9,'#ff6b6b',.2,.45,k,{ol:false});box(e,.9,1.1,54.1,'#5fbf74',-1.35,0,0,{ol:.03});bake(e,true);
-  L.laneE=e;L.laneC=[{z1:-82,x2:-80.4,z2:-26.15},{z1:26.15,x2:-80.4,z2:82},{z1:-26.15,z2:26.15},{z1:-4.2,z2:4.2}];L.cols.push(...L.laneC);laneEndSet(L);
+  const e=new THREE.Group();L.g.add(e);box(e,.4,.9,8.4,'#ffffff',.2,0,0,{ol:.03});for(let k=-3;k<=3;k+=2)box(e,.42,.3,.9,'#ff6b6b',.2,.45,k,{ol:false});box(e,.9,1.1,75.9,'#5fbf74',-1.35,0,0,{ol:.03});bake(e,true);
+  L.laneE=e;L.laneC=[{z1:-82,x2:-80.4,z2:-37.05},{z1:37.05,x2:-80.4,z2:82},{z1:-37.05,z2:37.05},{z1:-4.2,z2:4.2}]   /* 🏡 the green border is 37.5 m off the road (map-lane-border, stage 3: level-3 backyards reach 35 m) */;L.cols.push(...L.laneC);laneEndSet(L);
   L.lane=[];for(const p of LANE_PLOTS)laneLot(L,st,p);
   buildYard(L);}
 function laneEndSet(L){const x=laneEnd(),[a,b,c,d]=L.laneC;L.laneE.position.x=x;a.x1=b.x1=c.x1=x-3;c.x2=x-.9;d.x1=x;d.x2=x+.4;L.bounds.x1=x-1;}
 /* a piece of the lane from xa to xb (xb is further west): road, pavements, hedges and street lamps */
 function laneRoad(L,g,xa,xb,lamps){const ROAD='#8c90b4',SIDE='#f3e7df',CURB='#ddcdd0',cx=(xa+xb)/2,len=xa-xb,hx=xa>-85?-80.3:xa-.9;
   flat(g,len,8,ROAD,cx,.02,0);
-  for(const s of[-1,1]){flat(g,len,3,SIDE,cx,.03,s*5.5);box(g,len,.16,.14,CURB,cx,-.08,s*4,{ol:.015});box(g,hx-xb+.9,1.1,.9,'#5fbf74',(hx+xb-.9)/2,0,s*26.6,{ol:.03});}
+  for(const s of[-1,1]){flat(g,len,3,SIDE,cx,.03,s*5.5);box(g,len,.16,.14,CURB,cx,-.08,s*4,{ol:.015});box(g,hx-xb+.9,1.1,.9,'#5fbf74',(hx+xb-.9)/2,0,s*37.5,{ol:.03});}
   for(let t=xb+2;t<=xa-1;t+=3.2)box(g,1.4,.012,.16,'#ffffff',t,.03,0,{ol:false});
   for(const x of lamps)for(const s of[-1,1]){lampPost(g,x,s*4.55);colC(L,x,s*4.55,.16);}}
 /* what every lot has: a front fence, a little path, a mailbox and a sign. A house, flower beds and a name come with an owner */
@@ -1386,7 +1386,7 @@ function fcGate(open){open=!!open;if(FC.open===open||!FC.g)return;FC.open=open;F
 const fcOpen=()=>!!FC.open;
 /* 🌱 your yard on Friends Lane: the garden behind your house, its gate, the back door, the mailbox and the "Bigger house!" sign.
    It is built once at the old town-yard spots (the same numbers old saves use) and put on your lot; it moves along if your lot changes */
-const YARD={g:null,gin:null,cols:[],wc:[],ints:[],on:false,j:null,plaque:null};
+const YARD={g:null,gin:null,cols:[],lcols:[],wc:[],ints:[],on:false,j:null,plaque:null,lvg:null,gear:[]};
 /* 🌱 the seed spots in the yard (the old town-yard frame; lotPt moves them to your lot). Friends' lots draw the same spots from their presence (gd) */
 const YARD_PLOTS=[[0,-21,-20.9],[1,-18.3,-20.9],[2,-15.6,-20.9],[3,-21,-23.0],[4,-18.3,-23.0],[5,-15.6,-23.0]];
 /* 🪴 run 4, item 22: 30 more seed spots: pots along the inside of the fence (never on the way from the gate or the back door, never by the shed), six more at gardening level 10, 20, 30, 40 and 50 */
@@ -1395,31 +1395,91 @@ const YARD_POTS=[[-21.3,-18.95],[-20.6,-18.95],[-19.9,-18.95],[-19.2,-18.95],[-1
   [-22.55,-22.1],[-22.55,-22.8],[-22.55,-23.5],[-22.55,-24.1],[-21.9,-24.15],[-21.2,-24.15],
   [-20.5,-24.15],[-19.8,-24.15],[-19.1,-24.15],[-18.4,-24.15],[-17.7,-24.15],[-17.0,-24.15],
   [-16.3,-24.15],[-15.6,-24.15],[-14.9,-24.15],[-10.95,-20.4],[-10.95,-21.1],[-10.95,-21.8]].map(([x,z],k)=>[6+k,x,z]);
-const YARD_ALL=YARD_PLOTS.concat(YARD_POTS);
-const plotGate=i=>i<6?1:10*(1+Math.floor((i-6)/6));   /* the gardening level a spot needs: beds 1, pots 10, 20, 30, 40, 50 */
-const plotOpen=i=>!!S&&sk('garden').lv>=plotGate(i);
+/* 🏡 yard levels (pets and farm update, stage 3; rules-garden-levels, rules-q-yard-skill, rules-yard-only-owned): the garden level (2 at gardening 20,
+   3 at 40) and the pet yard level (2 at Pet care 20, 3 at 40) give the space and its looks: fences, gate, grass, lamps. A level 2 of either goes 3 m
+   further back, garden 3 to z -29, pet yard 3 adds the big-pets area behind a gate (z -29 to -35, the whole lot wide). Beds, pots and training gear show
+   only once they are yours: garden 2 and 3 add 3 beds each at the back (save spots 36-38, 39-41, open when the level is bought), a pot shows when it opens */
+const YARD_BEDS2=[[36,-21,-25.6],[37,-18.3,-25.6],[38,-15.6,-25.6],[39,-21,-27.65],[40,-18.3,-27.65],[41,-15.6,-27.65]];
+const YARD_ALL=YARD_PLOTS.concat(YARD_POTS,YARD_BEDS2);
+const plotGate=i=>i<6?1:i<36?10*(1+Math.floor((i-6)/6)):0;   /* the gardening level a spot needs: beds 1, pots 10, 20, 30, 40, 50 (the new beds: the garden level) */
+const yLv=k=>clamp(Math.floor(+(S&&S.yard&&S.yard[k]))||1,1,3);
+const plotOpen=i=>!!S&&(i>=36?yLv('garden')>=(i<39?2:3):sk('garden').lv>=plotGate(i));
+const yardBack=(gl,pl)=>pl>=3?-35:gl>=3?-29:gl>=2||pl>=2?-27.6:-24.6;
+const BED_TOP=[.16,.32,.42];
+function bedLook(g,x,z,lv){const h=BED_TOP[lv-1];if(lv<2){box(g,1.8,h,1.2,'#b07a52',x,0,z,{ol:.02});return;}const rim=lv===2?'#ffffff':'#f3e7df';box(g,1.8,h,1.2,lv===2?'#e0905e':'#d9645a',x,0,z,{ol:.02});
+  for(const s of[-1,1]){box(g,1.86,.06,.08,rim,x,h,z+s*.6,{ol:.012});box(g,.08,.06,1.26,rim,x+s*.9,h,z,{ol:.012});}if(lv===3)for(const a of[-1,1])for(const b of[-1,1])sph(g,.06,'#ffd45c',x+a*.9,h+.08,z+b*.6,{ws:6,hs:5,ol:.008});}
+const yLamp=(g,x,z)=>{cyl(g,.05,.06,1.0,'#3d3550',x,0,z,{seg:8,ol:.008});sph(g,.13,null,x,1.1,z,{mat:LAMP,ol:.01});cone(g,.17,.12,'#3d3550',x,1.2,z,{seg:8,ol:.008});};
+/* the fences, gate, grass and lamps of a yard at its levels (yours, and a friend's lot from their presence); T turns a yard spot into the lot's */
+function yardShell(g,L,gl,pl,T){const back=yardBack(gl,pl),GC=['#ffffff','#ffd6e0','#fff1b8'][gl-1],PC=['#ffffff','#c9f2e3','#c9f2e3'][pl-1],
+    F=(a,b,c,d,k)=>{const A=T(a,b),B=T(c,d);fence(g,A[0],A[1],B[0],B[1],L,k);},Q=(w,d,c,x,z,y)=>{const p=T(x,z);flat(g,w,d,c,p[0],y,p[1]);},at=(x,z)=>T(x,z);
+  if(back<-24.6)Q(12.3,-24.55-back,'#a2e48a',-16.75,(back-24.55)/2,.012);
+  if(pl>=3){F(-23,-18.5,-23,-29,GC);F(-23,-29,-13.3,-29,GC);F(-11.5,-29,-10.5,-29,PC);F(-10.5,-29,-10.5,-18.5,PC);
+    for(const [a,b,c,d] of[[-23,-29,-23,-35],[-23,-35,-10.5,-35],[-10.5,-35,-10.5,-29]]){const A=T(a,b),B=T(c,d);ironFence(g,A[0],A[1],B[0],B[1],L);}
+    Q(12.4,5.9,'#9fd98a',-16.75,-32,.013);const r=seeded(7);for(let i=0;i<26;i++){const [x,z]=at(-22.6+r()*11.7,-34.5+r()*5);sph(g,.05,FLOWER_COLS[i%5],x,.12,z,{ws:6,hs:4,ol:false});}
+    /* the gate to the big-pets area: two posts, an open way and a 'Big pets' board (never the word 'exotic') */
+    for(const x of[-13.3,-11.5]){const [px,pz]=at(x,-29);box(g,.26,1.3,.26,'#f3e7df',px,0,pz,{ol:.02});sph(g,.12,'#ffd45c',px,1.42,pz,{ws:8,hs:6,ol:.01});if(L)colC(L,px,pz,.16);}
+    {const [bx,bz]=at(-12.4,-29),ry=T(0,1)[1]>T(0,0)[1]?0:Math.PI;box(g,1.8,.45,.08,'#ffffff',bx,1.5,bz,{ol:.012});for(const sd of[1,-1]){const sg=signPlane('🐾 Big pets',1.7,.4,'#ffffff','#2f7a66');sg.position.set(bx,1.72,bz+sd*.05);sg.rotation.y=ry+(sd<0?Math.PI:0);g.add(sg);}}
+    for(const [x,z] of[[-22.6,-34.5],[-10.9,-29.6],[-18.2,-29.6]]){const [a,b]=at(x,z);yLamp(g,a,b);}}
+  else{F(-23,-18.5,-23,back,GC);F(-23,back,-17.2,back,GC);F(-17.2,back,-10.5,back,PC);F(-10.5,back,-10.5,-18.5,PC);}
+  {const [a,b]=at(-12.85,-21.2);flat(g,3.2,2.4,'#b4ea8e',a,.013,b);}   /* the pet corner's softer grass */
+  if(gl>=2){const [a,b]=at(-16.95,back+.7);yLamp(g,a,b);}if(pl>=2){const [a,b]=at(-10.9,-24.9);yLamp(g,a,b);}}
+/* 🏋️ training gear (stage 3, rules-garden-levels 8): small gear fits at pet yard level 1, the dog agility course needs level 2. Gear stands in the pet
+   corner (level 1), the play corner behind the shed (level 2) and the front of the big-pets area (level 3), each as big as fits its spot (never smaller
+   than 0.6 of the size the moves were made for). One of each; the shop says when the yard is full */
+const GEAR={dog:{n:'Dog agility course',i:'🐕',p:300,lv:2,k:['dog','pug','pomchi','sausage'],s:1.25},dog2:{n:'Dog agility course (style 2)',i:'🐕',p:300,lv:2,k:['dog','pug','pomchi','sausage'],s:1},
+  cat:{n:'Cat tower with feather wand',i:'🐈',p:200,lv:1,k:['cat'],s:1.6},cat2:{n:'Cat tower with feather wand (style 2)',i:'🐈',p:200,lv:1,k:['cat'],s:1.3},
+  bunny:{n:'Bunny hop hurdles',i:'🐇',p:150,lv:1,k:['bunny'],s:1.3},bunny2:{n:'Bunny hop hurdles (style 2)',i:'🐇',p:150,lv:1,k:['bunny'],s:1.1},
+  hamster:{n:'Hamster wheel and tube maze',i:'🐹',p:150,lv:1,k:['hamster'],s:4.4},duck:{n:'Duck ramp and splash tub',i:'🦆',p:200,lv:1,k:['duck'],s:1.3},
+  owl:{n:'Owl perch with flight hoops',i:'🦉',p:200,lv:1,k:['owl'],s:1.7},capy:{n:'Capybara zen bath',i:'♨️',p:250,lv:1,k:['capybara'],s:1.35}};
+const GEAR_IDS=Object.keys(GEAR),GEAR_SLOTS=[{x:-12.85,z:-21.2,w:3.0,d:1.7,lv:1},{x:-12.6,z:-26.0,w:3.6,d:2.2,lv:2},{x:-21.0,z:-29.8,w:2.8,d:1.0,lv:3}],GEAR_BB={};
+function gearBB(id){if(!GEAR_BB[id]){const g=new THREE.Group();GEAR_B[id](g);g.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(g);GEAR_BB[id]={cx:(b.min.x+b.max.x)/2,cz:(b.min.z+b.max.z)/2,w:b.max.x-b.min.x,d:b.max.z-b.min.z};g.traverse(o=>{if(o.geometry)o.geometry.dispose();});}return GEAR_BB[id];}
+/* where each piece of gear stands at pet yard level pl: [{id, k (slot), s (scale), ry}], in the order bought; a piece with no room left is null */
+function gearPlace(list,pl){const used=[];return list.map(id=>{if(!GEAR[id])return null;const B=gearBB(id),turn=B.d>B.w;let best=null;
+  GEAR_SLOTS.forEach((sl,k)=>{if(sl.lv>pl||used.includes(k))return;const w=turn?B.d:B.w,d=turn?B.w:B.d,s=Math.min(GEAR[id].s,sl.w/w,sl.d/d);if(s>=.6*GEAR[id].s&&(!best||s>best.s+1e-6))best={id,k,s,ry:turn?Math.PI/2:0};});
+  if(best)used.push(best.k);return best;});}
+/* one piece of gear as a model, standing in its slot (in the yard's frame) */
+function gearModel(q){const B=gearBB(q.id),sl=GEAR_SLOTS[q.k],o=new THREE.Group(),m=new THREE.Group();GEAR_B[q.id](m);m.position.set(-B.cx,0,-B.cz);o.add(m);o.scale.setScalar(q.s);o.rotation.y=q.ry;o.position.set(sl.x,0,sl.z);o.userData.m=m;return o;}
+/* your yard at its levels: rebuilt when a level, a pot or gear changes (and at the start) */
+function yardLv(){if(!YARD.lvg||!S)return;const g=YARD.lvg,gl=yLv('garden'),pl=yLv('pet');for(const c of [...g.children]){g.remove(c);c.traverse(o=>{if(o.geometry)o.geometry.dispose();});}
+  YARD.lcols.length=0;const FL={cols:YARD.lcols,ox:0,oz:0},st=new THREE.Group();g.add(st);
+  yardShell(st,FL,gl,pl,(x,z)=>[x,z]);
+  for(const [i,x,z] of YARD_PLOTS.concat(YARD_BEDS2))if(plotOpen(i)){bedLook(st,x,z,gl);col(FL,x-.92,z-.62,x+.92,z+.62);}
+  for(const [i,x,z] of YARD_POTS)if(plotOpen(i)){cyl(st,.26,.2,.3,'#c9805a',x,0,z,{seg:10,ol:.015});cyl(st,.29,.29,.05,'#b8704c',x,.28,z,{seg:10,ol:.012});colC(FL,x,z,.32);}   /* 🪴 only the open pots (no more lock plates) */
+  bake(st,true);
+  YARD.gear=gearPlace((S.yard&&S.yard.gear)||[],pl).filter(Boolean).reduce((a,q)=>{a[q.k]=q;return a;},[]);
+  for(const q of YARD.gear)if(q){const o=gearModel(q);g.add(o);bake(o,true);q.o=o;const B=gearBB(q.id),sl=GEAR_SLOTS[q.k],hw=(q.ry?B.d:B.w)*q.s/2,hd=(q.ry?B.w:B.d)*q.s/2;col(FL,sl.x-hw*.8,sl.z-hd*.6,sl.x+hw*.8,sl.z+hd*.6);}
+  if(typeof PLOTS!=='undefined')for(const r of PLOTS)plotRefresh(r);
+  if(YARD.j!=null)yardColsSet(YARD.j);}
+function yardColsSet(j){const C=LOC.city;for(const c of YARD.wc){const i=C.cols.indexOf(c);if(i>=0)C.cols.splice(i,1);}
+  YARD.wc=YARD.cols.concat(YARD.lcols).map(c=>{if(c.cr===undefined)return lotRect(j,c);const q=lotPt(j,c.cx,c.cz);return{cx:q[0],cz:q[1],cr:c.cr};});C.cols.push(...YARD.wc);}
+function yardSnap(){if(!S)return null;const gl=yLv('garden'),pl=yLv('pet'),gr=((S.yard&&S.yard.gear)||[]).filter(id=>GEAR[id]).map(id=>String.fromCharCode(97+GEAR_IDS.indexOf(id))).join('');const y=''+gl+pl+gr;return y==='11'?null:y;}   /* 🏡 "garden level, pet yard level, a letter per piece of gear" for friends (stage 3) */
 function gardenSnap(){if(!S||!Array.isArray(S.garden))return null;const out=[];S.garden.forEach((st,i)=>{if(st&&st.seed&&SEEDS[st.seed])out.push(i+','+st.seed+','+plotStage(st));});return out.length?out.join(';'):null;}   /* "spot,seed,stage;…" (run 4, job 2) */
 function buildYard(L){const g=new THREE.Group(),gin=new THREE.Group(),st=new THREE.Group(),FL={cols:YARD.cols,ox:0,oz:0};
   gin.position.set(17,0,15);g.add(gin);gin.add(st);L.g.add(g);g.visible=false;YARD.g=g;YARD.gin=gin;
   flat(st,12.3,6.0,'#a2e48a',-16.75,.012,-21.55);
-  fence(st,-23,-18.5,-23,-24.6,FL);fence(st,-23,-24.6,-10.5,-24.6,FL);fence(st,-10.5,-24.6,-10.5,-18.5,FL);fence(st,-23,-18.5,-21.6,-18.5,FL);
+  fence(st,-23,-18.5,-21.6,-18.5,FL);   /* (the side and back fences come with the yard level: yardLv) */
   /* the garden gate is beside the house, under a little arch; stepping stones lead there from the street */
   for(const x of[-12.32,-10.58]){box(st,.12,2.05,.12,'#ffffff',x,0,-18.5,{ol:.02});colC(FL,x,-18.5,.1);}box(st,1.9,.12,.16,'#ffffff',-11.45,1.98,-18.5,{ol:.02});box(st,1.62,.5,.06,'#ffffff',-11.45,2.05,-18.5,{ol:.02});
   const gs=signPlane('🌱 My Garden',1.5,.42,'#5fd4b0','#ffffff'),gb=new THREE.Mesh(gs.geometry,gs.material);gs.position.set(-11.45,2.3,-18.455);gb.position.set(-11.45,2.3,-18.545);gb.rotation.y=Math.PI;gin.add(gs,gb);   /* readable from both sides */
   for(let k=0;k<8;k++)disc(st,.36,'#e9e0f7',-11.45,.03,-7.6-k*1.4,{seg:14});
   doorAt(st,-14,-18.52,Math.PI,'#5fd4b0');
   {BENCH_SKIP=-1;const yb=bench(st,-20.0,-9.1,Math.PI);BENCH_SKIP=0;const B=BENCHES[BENCHES.length-1];B.x0=-20.0;B.z0=-9.1;B.ry0=Math.PI;for(const q of B.seats){q.lx=q.x;q.lz=q.z;}colC(FL,-20.0,-9.1,.8);}   /* 🪑 a bench in your front yard */
-  L.plots=[];for(const [i,x,z] of YARD_PLOTS){box(st,1.8,.16,1.2,'#b07a52',x,0,z,{ol:.02});col(FL,x-.92,z-.62,x+.92,z+.62);L.plots.push({i,x,z});}
-  for(const [i,x,z] of YARD_POTS){cyl(st,.26,.2,.3,'#c9805a',x,0,z,{seg:10,ol:.015});cyl(st,.29,.29,.05,'#b8704c',x,.28,z,{seg:10,ol:.012});colC(FL,x,z,.32);L.plots.push({i,x,z,pot:1});}   /* 🪴 the pots */
-  {const pots=L.plots.filter(p=>p.pot);let run=[];const end=()=>{if(run.length)run[Math.floor((run.length-1)/2)].lock=1;run=[];};pots.forEach((p,k)=>{const q=pots[k-1];if(q&&(plotGate(p.i)!==plotGate(q.i)||Math.hypot(p.x-q.x,p.z-q.z)>1.2))end();run.push(p);});end();}   /* 🔒 one lock plate in the middle of each row of pots of one level (run 4, stage 3) */
+  L.plots=[];for(const [i,x,z] of YARD_PLOTS.concat(YARD_BEDS2))L.plots.push({i,x,z});   /* (beds and pots are drawn by yardLv: only the open ones) */
+  for(const [i,x,z] of YARD_POTS)L.plots.push({i,x,z,pot:1});
   /* the shed stands beside the arch's way (not right behind it): its door, the seed box and the 🌱 Seeds sign face the arch */
   box(st,1.6,2.0,1.4,'#ffd6e0',-13.4,0,-23.3);prism(st,1.9,1.8,.75,'#ff7aa8',-13.4,2.0,-23.3,{ry:Math.PI/2});box(st,.7,1.6,.06,'#5fd4b0',-13.75,0,-22.58,{ol:.015});col(FL,-14.3,-24.05,-12.5,-22.55);
   box(st,.8,.45,.5,'#c98f5e',-12.95,0,-22.35);for(let k=0;k<4;k++)box(st,.14,.2,.04,['#ff7aa8','#ffd45c','#5fd4b0','#ff8a6b'][k],-13.25+k*.2,.45,-22.35,{rx:-.2,ol:.01});col(FL,-13.4,-22.65,-12.5,-22.05);
   const ss=signPlane('🌱 Seeds',.8,.3,'#ffffff','#3d2c5e');ss.position.set(-13,1.75,-22.57);gin.add(ss);
   cyl(st,.14,.16,.28,'#7cc8ff',-22.4,0,-19.3,{seg:12,ol:.015});cone(st,.04,.3,'#7cc8ff',-22.25,.25,-19.3,{rz:-1.0,seg:6,ol:.012});
   const pq=signPlane('Bigger house!',1.4,.36,'#ff7aa8','#ffffff');pq.position.set(-20.4,.8,-7.44);gin.add(pq);YARD.plaque=pq;   /* under your name sign, until you buy the big house */
+  /* 🏡 the yard sign by the garden gate (stage 3, screens-yard-sign): garden and pet yard levels */
+  box(st,.1,1.1,.1,'#9a6a43',-10.8,0,-16.9,{ol:.015});colC(FL,-10.8,-16.9,.1);box(st,.78,.36,.06,'#c98f5e',-10.8,.82,-16.9,{ol:.015});
+  const ys=signPlane('🏡 My yard',.7,.28,'#ffffff','#3d2c5e');ys.position.set(-10.8,1.0,-16.865);gin.add(ys);
   bake(st,true);
+  YARD.lvg=new THREE.Group();gin.add(YARD.lvg);
   const yi=(x,z,o)=>yardInt(inter(L,Object.assign({x,z},o)));
+  yi(-11.45,-16.9,{r:1.25,icon:'🏡',label:'My yard: garden and pet yard',act:()=>openYardSign()});
+  GEAR_SLOTS.forEach((sl,k)=>{const t=yi(sl.x,sl.z,{r:Math.max(sl.w,sl.d)/2+.9,icon:()=>{const q=YARD.gear[k];return q?GEAR[q.id].i:'🏋️';},label:()=>gearLabel(k),act:()=>gearUse(k)});t.when=()=>YARD.on&&!!YARD.gear[k];});
   yi(-14,-19.3,{r:1.9,icon:'🏠',label:'Go inside your house',act:()=>enter('home','back')});
   yi(-12.95,-21.4,{r:1.8,icon:'🌱',label:'Buy seeds',act:()=>openShop('seeds')});
   yi(-15.4,-7.1,{r:1.8,icon:'📬',label:()=>S.hp&&hpOn()?'🎉 Mailbox (your party is on!)':'Mailbox: mail or a party',act:hpMailMenu})   /* 🎉 run 4, job 17: 📬 Check mail or 🎉 Host a party */;
@@ -1431,8 +1491,7 @@ const yardPt=(x,z)=>YARD.j==null?[x,z]:lotPt(YARD.j,x,z);
 /* put your yard on your lot: at the start, and when your lot changes (a friend who has lived on Friends Lane longer came online) */
 function yardPlace(){const j=LANE.mine,C=LOC.city;if(j==null||!YARD.g||j===YARD.j)return;const p=LANE_PLOTS[j],a=YARD.j,[cx,cz]=lotPt(j,-17,-15);
   YARD.g.position.set(cx,0,cz);YARD.g.rotation.y=p.s<0?0:Math.PI;YARD.g.visible=true;
-  for(const c of YARD.wc){const i=C.cols.indexOf(c);if(i>=0)C.cols.splice(i,1);}
-  YARD.wc=YARD.cols.map(c=>{if(c.cr===undefined)return lotRect(j,c);const q=lotPt(j,c.cx,c.cz);return{cx:q[0],cz:q[1],cr:c.cr};});C.cols.push(...YARD.wc);
+  yardColsSet(j);
   YARD.j=j;YARD.on=true;for(const t of YARD.ints)yardT(t,j);benchYard(j);
   const yw=v=>p.s<0?v:v+Math.PI,d=lotPt(j,-17,-9.6),bk=lotPt(j,-14,-19.7);DOORS.home.city=[d[0],d[1],yw(Math.PI)];DOORS.homeback.city=[bk[0],bk[1],yw(0)];
   for(const [id,x,z,dx,dz] of[['home',-17,-15,-17,-6.9],['garden',-16.75,-21.5,-11.45,-6.9]]){const pl=PLACES.find(q=>q.id===id);[pl.x,pl.z]=lotPt(j,x,z);pl.door=lotPt(j,dx,dz);   /* the arrow aims at the pavement in front of your gate / garden path */
@@ -1447,7 +1506,7 @@ function yardHop(a,b){const mv=(x,z)=>{const q=lotBack(a,x,z);return inYardR(q[0
 /* a friend walking away from Friends Lane (going home, or no longer following you): out of the lot by a gate or a side path,
    then along the pavement into town, never through fences or houses (spots are your-yard numbers, turned onto the lot) */
 function laneOut(x,z){const s=z<0?-1:1,out=[];let ex=x;
-  for(const p of LANE_PLOTS){const [tx,tz]=lotBack(p.j,x,z);if(tx<-23.6||tx>-10.4||tz<-27||tz>-6.8)continue;
+  for(const p of LANE_PLOTS){const [tx,tz]=lotBack(p.j,x,z);if(tx<-23.6||tx>-10.4||tz<-36||tz>-6.8)continue;
     const W=(a,b)=>{const q=lotPt(p.j,a,b);out.push(q);ex=q[0];};
     if(tz>-8.2)W(tx,-6.4);   /* in front of the fence: onto the pavement (not along the mailboxes) */
     else if(tx>-21.6&&tx<-12.4&&tz>-11.4){W(-17,-9.2);W(-17,-7.3);}   /* the front yard: out by its gate */
