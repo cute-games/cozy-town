@@ -27,7 +27,7 @@
 - **Owner decisions 1 Nov (Karolis, foreman's chat)**: (1) the Pet Shop room may use up to **45,000 triangles** (was +10% of 15,363): kit `--e1-limits` default is now
   `pets:0.10:=45000` (E1, N14, N40; town and every other area keep their limits). (2) P19 (30+ fps, iPad view, 2 players) stays a real line, FAIL in the cloud
   (no GPU), NOT VERIFIED until Karolis measures on the real iPad; new **P25** = not slower than live in the same test browser (fps >= 90%, first load <= 115%).
-- **Stage 5 done** (stamp 2026110201, commit STAGE5COMMIT): Pet Show area in the park (book's stage, podium beside it, judges' table, sand lawn, rope; tree, slide and
+- **Stage 5 done** (stamp 2026110201, commit 11e2a8d): Pet Show area in the park (book's stage, podium beside it, judges' table, sand lawn, rope; tree, slide and
   food truck moved/turned), tricks (3 per kind from the moves pack, practice on gear, bigger gold zone), Pet Show with friends (45 s join card, waiting list,
   shared timeline, next show right after for >4), town results from the one clock, ribbon +1, animal license (counting, Barkley hand-over, card, My pets strip).
   Kit P25-P30; rewritten (old -> new): P18 (bear's license line: stand-in -> approved rules text), P10 (person moves on a person, not on pets), P17 (walls outside
