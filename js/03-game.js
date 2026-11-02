@@ -2418,7 +2418,7 @@ function updateCamera(dt){const bob=P.moving&&P.jy<=0?Math.sin(P.bobT)*.04:0;P.b
   if(PB){const show=PLAYING&&!P.sit&&!CR&&!P.ride&&!P.horse;PB.root.visible=show;if(show){const fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw);PB.root.position.set(P.x-fx*.13,P.jy+(P.cy||0),P.z-fz*.13);PB.root.rotation.y=P.yaw+Math.PI;animPerson(PB,dt,P.moving&&P.jy<=0,P.run?1.5:1);
     if(P.jy>0){PB.legs[0].rotation.x=.55;PB.legs[1].rotation.x=-.25;}}}
   if(P.sit){P.x=P.sit.x;P.z=P.sit.z;}
-  camera.position.set(P.x,(P.sit?P.sit.h||1.05:1.5)+P.bobA+P.jy-P.dip+(P.cy||0),P.z);ballLook(dt);camera.rotation.set(P.pitch+BLK.a,P.yaw,0,'YXZ');
+  camera.position.set(P.x,(P.sit?P.sit.h||1.05:1.5)+P.bobA+P.jy-P.dip+(P.cy||0),P.z);ballLook(dt);camera.rotation.set(P.pitch+BLK.a+(P.horse&&P.hp||0),P.yaw,0,'YXZ');
   if(SHAKE.t>0){SHAKE.t-=dt;const a=SHAKE.t*.08;camera.position.x+=rand(-a,a);camera.position.y+=rand(-a,a)*.5;camera.rotation.z+=rand(-a,a)*.3;}}   /* 👻 a little shake at a scare (run 4) */
 const SHAKE={t:0};
 /* ⚽ while the ball is your kick target the view dips a little, so you see the ball, its glow and the arrow (a = extra tilt, not your own look;
@@ -2599,7 +2599,7 @@ function farmPerson(p,now){const R=p.m.root;
 /* ---- riding ---- */
 /* 🐴 a box round each grown horse and cow near you (like the cars): you cannot walk into one, and one that turns or walks into you pushes you out (picture pass: the camera stood inside a horse) */
 function farmSolids(s){if(!FARM.on)return s;for(const a of [...FARM.hs,...FARM.riders,...FARM.an]){if(a.st==='me'||!/^fa\.(horse|cow)\.adult/.test(a.key||''))continue;const R=a.m.root;if(!R.visible||Math.abs(R.position.x-P.x)>8||Math.abs(R.position.z-P.z)>8)continue;
-  const ux=Math.sin(R.rotation.y),uz=Math.cos(R.rotation.y),cow=a.key[3]==='c';s.push({ob:1,cx:R.position.x+ux*.21,cz:R.position.z+uz*.21,ux,uz,hl:cow?1.3:1.24,hw:cow?1.28:.36});   /* (measured at eye height on every move: horse |x| .31, z -.8..1.55; the cow's low-detail body |x| 1.27, z -1.08..1.5) */}return s;}
+  const ux=Math.sin(R.rotation.y),uz=Math.cos(R.rotation.y),cow=a.key[3]==='c',o=cow?.33:.21;s.push({ob:1,cx:R.position.x+ux*o,cz:R.position.z+uz*o,ux,uz,hl:cow?1.22:1.24,hw:cow?.52:.36});   /* (measured at eye height on every move: horse |x| .31, z -.8..1.55; the cow |x| .47, z -.83..1.5 (picture pass 3: its neck is a slim tube now, not a 2.5 m drum)) */}return s;}
 function farmHorseFree(h){return h&&h.st==='home'&&!farmPeerOn(h.i);}
 function farmPeerOn(i){for(const a of MP.peers.values())if(a.rd&&a.rd[0]===i)return a;return null;}
 function farmMount(h,lesson){if(P.horse||!h)return;if(!lesson){if(!S.ride.lesson){SFX.no();toast('🐴 Ask the instructor for a lesson first! Stan is at the jump field.',3.5);return;}
@@ -2627,7 +2627,8 @@ function farmRide(dt){const r=P.horse,h=r.h,now=gameMs()/1000;
   r.g=jumping?'jump':r.sp<.05?'idle':r.sp<3.2?'walk':r.sp<6?'trot':'gallop';P.moving=r.sp>.05;
   h.x=P.x;h.z=P.z;h.ry=r.ry;h.m.root.position.set(P.x,0,P.z);h.m.root.rotation.y=r.ry;
   const pl=r.g==='jump'?COZY_MOVES.play(h.m,'horse.jump',now-r.j,{}):r.ref&&now-r.ref<2?COZY_MOVES.play(h.m,'horse.refuse',now-r.ref,{}):r.g==='idle'?COZY_MOVES.play(h.m,'horse.idle',now,{}):COZY_MOVES.play(h.m,'horse.'+r.g,now,{dist:r.dist});
-  P.jy=Math.max(0,(pl&&pl.lift)||0);if(r.g!=='idle'&&r.g!=='jump'){r.clop=(r.clop||0)+r.sp*dt;if(r.clop>3.2){r.clop=0;SFX.clop();}}}
+  P.jy=Math.max(0,(pl&&pl.lift)||0);h.m.b.updateWorldMatrix(true,false);const e=h.m.b.matrixWorld.elements,fl=Math.hypot(e[8],e[9],e[10])||1;P.hp=r.g==='jump'?1.7*Math.asin(Math.max(0,Math.min(1,e[9]/fl))):0;   /* (picture pass 3: as the horse takes off your view tips up with it (a bit more than its body: the neck rises too), so its neck stays at the bottom instead of filling the screen; landing nose down, the neck drops out of view by itself) */
+  if(r.g!=='idle'&&r.g!=='jump'){r.clop=(r.clop||0)+r.sp*dt;if(r.clop>3.2){r.clop=0;SFX.clop();}}}
 function farmJump(){const r=P.horse;if(!r)return false;const now=gameMs()/1000;if(now-r.j<1.7||r.sp<1)return true;r.j=now;SFX.jump();return true;}
 function farmStamp(st){const r=P.horse;st.rd=r?[r.h.i,{idle:'i',walk:'w',trot:'t',gallop:'g',jump:'j'}[r.g]||'i',Math.round(r.ry*100)/100]:null;}   /* 🐴 riding: [horse, gait, its heading] (old versions ignore it) */
 function farmExtra(a,pr){const v=pr.rd;a.rd=Array.isArray(v)&&v.length===3&&Number.isInteger(v[0])&&v[0]>=0&&v[0]<10&&typeof v[1]==='string'&&Number.isFinite(v[2])?v:null;
@@ -2664,7 +2665,7 @@ function farmLessonTick(dt){const L=FARM.lesson;if(!L)return;L.t+=dt;const r=P.h
 function farmSay(who,l){toast((who==='Stan'?'🤠 Stan':who==='Ieva'?'🐴 Ieva':who)+`: “${l}”`,3.2);}
 function farmLine(k,L){let i=Math.floor(Math.random()*L.length);if(L.length>1&&i===FARM.ln[k])i=(i+1)%L.length;FARM.ln[k]=i;return L[i];}   /* (never the same line twice in a row) */
 function farmIeva(){const p=FARM.ppl.find(q=>q.who==='ieva');if(p)p.mvT={mv:'coach.directTo',t0:gameMs()/1000,t1:gameMs()/1000+4,o:{target:[-8,0,4]}};
-  if(!S.ride.met){S.ride.met=1;change();farmSay('Ieva',"Hi! I'm Ieva. These horses are my best friends.");setTimeout(()=>farmSay('Ieva','Want a ride? First a lesson. Stan is at the jump field!'),2600);return;}
+  if(!S.ride.met){S.ride.met=1;change();farmSay('Ieva',"Hi! I'm Ieva. These horses are my best friends.");setTimeout(()=>{if(!P.horse)farmSay('Ieva',S.ride.lesson?'Stan says you did great! Pick a horse.':'Want a ride? First a lesson. Stan is at the jump field!');},2600);return;}   /* (picture pass 3: not over your ride, and no 'first a lesson' once it is done) */
   if(!S.ride.lesson){farmSay('Ieva','Stan is waiting at the jump field!');return;}
   if(!farmOpen()){farmSay('Ieva','The stable is open from 7:00 to 21:00. See you then!');return;}
   if(!FARM.hs.some(h=>h.kind!=='lesson'&&farmHorseFree(h))){farmSay('Ieva','Every horse is out. Come back soon!');return;}
@@ -2677,7 +2678,9 @@ function farmMilk(){S.farm=S.farm||{eggs:0,milk:0};if(S.farm.md===S.day){toast('
   const c=FARM.an.filter(a=>a.type==='cow'&&!a.baby).sort((a,b)=>Math.hypot(a.x-P.x,a.z-P.z)-Math.hypot(b.x-P.x,b.z-P.z))[0],now=gameMs()/1000;if(c)c.act={mv:'cow.stand',t0:now,t1:now+5};
   toast('🥛 You milked a cow! Sell the milk at the Market for '+FARM_PAY+' 🪙.',3.2);}
 const FEED_MV={cow:'farm.troughEat',sheep:'farm.troughEat',pig:'pig.bucketEat',chicken:'chicken.grainPeck'};
-function farmFeed(x,z,kinds,r,msg){const now=gameMs()/1000;FARM.feed={x,z,kinds,r,t0:now,t1:now+14,mv:FEED_MV,h:.55};SFX.eat();toast(msg,2.6);}
+function farmFeed(x,z,kinds,r,msg){const now=gameMs()/1000;FARM.feed={x,z,kinds,r,t0:now,t1:now+14,mv:FEED_MV,h:.55};
+  /* (picture pass 3: each kind spread evenly round the food; the ids' hash put every cow and sheep on one spot, one big brown heap) */
+  kinds.forEach((k,j)=>{const A=FARM.an.filter(a=>a.type===k&&Math.hypot(a.hx-x,a.hz-z)<24);A.forEach((a,i)=>{a.fi=(i+j*.5)/A.length*TAU;});});SFX.eat();toast(msg,2.6);}
 function farmPet(a){const now=gameMs()/1000,M={cow:'cow.patLean',sheep:'sheep.patLean',chicken:'chicken.puff'};a.act={mv:M[a.type]||'farm.lookAtYou',t0:now,t1:now+(a.type==='chicken'?1.5:4),f:Math.atan2(P.x-a.x,P.z-a.z),o:{look:0}};
   const s=FA_SND[a.type];if(s&&SFX[s])SFX[s](a.baby?1.4:1);else SFX.pet();}
 function farmHandFeed(h){const now=gameMs()/1000;h.act={mv:'horse.handEat',t0:now,t1:now+6,f:Math.atan2(P.x-h.x,P.z-h.z),o:{h:1.35}};SFX.eat();toast('🥕 Crunch! The horse eats from your hand.',2.4);}

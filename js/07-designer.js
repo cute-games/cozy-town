@@ -236,6 +236,7 @@ function psRivals(){const r=seeded(S.day*53+7),pk=a=>a[Math.floor(r()*a.length)]
     const o={},n=wp([[5,1],[20,2],[35,3],[40,4]]),slots=PSLOTS.map(x=>x[0]).sort(()=>r()-.5).slice(0,n);
     for(const sl of slots)o[sl]=pk(Object.keys(ACCS).filter(k=>ACCS[k].s===sl));
     out.push({type:t,col:pk(T.cols),name,owner:kids[i],outfit:o,style:2+2*n,happy:wp([[1,6],[2,7],[3,8],[3,9],[2,10]])});}
+  const mine=new Set((S.pets||[]).map(d=>d.name));for(const o of out)if(mine.has(o.name)){const n=PET_TYPES[o.type].names.find(x=>!mine.has(x)&&!used.has(x));if(n){used.add(n);o.name=n;}}   /* (picture pass 3: a town pet never has the name of one of yours, so 'Splash' on the stage is your seal, not a capybara; no extra draw: the rest of the day's pets stay the same) */
   return out;}
 const psRot=i=>Math.PI/2+(i===0?-.35:i===3?.35:0);
 function psRefresh(){if(CUT&&CUT.show){PSX.dirty=true;return;}PSX.dirty=false;for(const r of PSX.rivals)scene.remove(r.m.root);PSX.rivals=[];if(!S)return;PSX.rv=psRivals();

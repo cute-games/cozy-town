@@ -184,20 +184,23 @@ async def ipad_world(run):
         await g.ev("""()=>{__goto('city');const c=clockNow();let d=c.day;while(wdIdx(d)!==1)d++;__clockMs(msAt(d,12)-CLK.sk);__run(4);closePanel();FOL(['dog']);S.coins=Math.max(S.coins,2000);S.ride={lesson:0};S.farm={eggs:0,milk:0};
           P.x=-100;P.z=-101;P.yaw=Math.PI/2;bringFollowers(true);__run(4);farmLiveAll();__run(10);}""")
         await g.ev("()=>{const IV=FARM.ppl.find(p=>p.who==='ieva'),cl=(x,z)=>Math.min(...FARM.hs.map(h=>Math.hypot(h.m.root.position.x-x,h.m.root.position.z-z)-1.5));let best=null;for(let a=0;a<12;a++)for(const r of[3.2,4]){let [x,z]=collideXZ(IV.x+Math.sin(a/12*TAU)*r,IV.z+Math.cos(a/12*TAU)*r,.3,CUR);const c=cl(x,z);if(!best||c>best[2])best=[x,z,c];}P.x=best[0];P.z=best[1];__run(20);LOOKP(IV.x,IV.z,-.08);farmIeva();__run(10);}")
+        await asyncio.sleep(3); await g.ev("()=>toastOff()")   # (picture pass 3: Ieva's second line waits 2.6 s on a real timer and then in the toast queue; the script used to ride before it came)
         await snap(g, 'farm-stable-ieva', 'the stable with Ieva grooming/pointing, horses in their stalls', "[['Ieva',FARM.ppl.find(p=>p.who==='ieva').x,1.2,FARM.ppl.find(p=>p.who==='ieva').z]]")
-        r = await g.ev("""()=>{$('toast').classList.remove('show');farmLessonStart();ACT.flesson();const LH=FARM.hs.find(h=>h.kind==='lesson');P.x=LH.x+1;P.z=LH.z+1;FARM.on=true;
+        await g.ev("()=>{const C=FARM.an.filter(a=>a.type==='cow'&&!a.baby),cx=C.reduce((s,a)=>s+a.x,0)/C.length,cz=C.reduce((s,a)=>s+a.z,0)/C.length;P.x=cx+7;P.z=cz+3;[P.x,P.z]=collideXZ(P.x,P.z,.3,CUR);LOOKP(cx,cz,-.12);__run(4);window.__cw=[cx,cz];}")   # (picture pass 3: the cows were 2.5 m drums)
+        await snap(g, 'farm-cows', 'the cows grazing in their field (picture pass 3: each a cow with a head, a slim neck and spots, not a big drum)', "[['cows',__cw[0],1,__cw[1]]]")
+        r = await g.ev("""()=>{toastOff();farmLessonStart();ACT.flesson();const LH=FARM.hs.find(h=>h.kind==='lesson');P.x=LH.x+1;P.z=LH.z+1;FARM.on=true;
           const out=[];farmTargets(out);const t=out.find(t=>t.label==='Get on');if(t)t.act();
           const go=(x,z)=>{for(let i=0;i<300&&P.horse&&Math.hypot(P.x-x,P.z-z)>1;i++){P.yaw=Math.atan2(-(x-P.x),-(z-P.z));IN.keys.KeyW=true;farmRide(1/30);farmLessonTick(1/30);}IN.keys.KeyW=false;};
           go(FARM.flags.blue.x,FARM.flags.blue.z);if(P.horse)P.horse.sp=0;const SN=FARMD.lesson.stan;LOOKP(SN[0],SN[1],-.12);return {step:FARM.lesson&&FARM.lesson.step,horse:!!P.horse};}""")
         await g.step(4)
         await snap(g, 'farm-lesson-step', f"Stan's riding lesson, at the blue flag on the lesson horse, Stan's next line (step {r})", "[['Stan',FARMD.lesson.stan[0],1.2,FARMD.lesson.stan[1]]]")
-        r = await g.ev("""()=>{$('toast').classList.remove('show');FARM.lesson=null;S.ride.lesson=1;if(P.horse)farmOff(true);__run(4);const H=FARM.hs.find(h=>h.kind==='pad'&&farmHorseFree(h));P.x=H.x;P.z=H.z;farmMount(H);
-          const T=FARM.trail,i=Math.floor(T.length*.45),a=T[i],b=T[Math.min(T.length-1,i+2)];P.x=a[0]!==undefined?a[0]:a.x;P.z=a[1]!==undefined?a[1]:a.z;const bx=b[0]!==undefined?b[0]:b.x,bz=b[1]!==undefined?b[1]:b.z;LOOKP(bx,bz,-.15);P.horse.ry=P.yaw+Math.PI;__run(6);return {horse:!!P.horse,at:[+P.x.toFixed(1),+P.z.toFixed(1)]};}""")
+        r = await g.ev("""()=>{toastOff();FARM.lesson=null;S.ride.lesson=1;if(P.horse)farmOff(true);__run(4);const H=FARM.hs.find(h=>h.kind==='pad'&&farmHorseFree(h));P.x=H.x;P.z=H.z;farmMount(H);
+          const T=FARM.trail,i=Math.floor(T.length*.45),a=T[i],b=T[Math.min(T.length-1,i+2)];P.x=a[0]!==undefined?a[0]:a.x;P.z=a[1]!==undefined?a[1]:a.z;const bx=b[0]!==undefined?b[0]:b.x,bz=b[1]!==undefined?b[1]:b.z;LOOKP(bx,bz,-.15);P.horse.ry=P.yaw+Math.PI;__run(6);toastOff();return {horse:!!P.horse,at:[+P.x.toFixed(1),+P.z.toFixed(1)]};}""")
         await snap(g, 'farm-trail-ride', f'riding a horse on the horse trail (first person; {r})')
-        r = await g.ev("""()=>{$('toast').classList.remove('show');const J=FARM.jumps.o122;P.x=J.x+3*Math.sin(J.ry);P.z=J.z+3*Math.cos(J.ry);LOOKP(J.x,J.z,-.22);if(P.horse)P.horse.ry=P.yaw+Math.PI;__run(3);if(P.horse){P.horse.sp=4;P.horse.j=gameMs()/1000;}return {horse:!!P.horse};}""")
-        await g.step(8)
+        r = await g.ev("""()=>{toastOff();const J=FARM.jumps.o122;P.x=J.x+3*Math.sin(J.ry);P.z=J.z+3*Math.cos(J.ry);LOOKP(J.x,J.z,-.22);if(P.horse)P.horse.ry=P.yaw+Math.PI;__run(3);if(P.horse){P.horse.sp=4;P.horse.j=gameMs()/1000;window.__pre=()=>{if(!P.horse)return;P.horse.j=gameMs()/1000-.45;P.horse.sp=4;farmRide(0);updateCamera(0);};}return {horse:!!P.horse};}""")
+        await g.step(8)   # (picture pass 3: the hook holds the jump at 0.45 s for the picture; a step of real frames ran past it)
         await snap(g, 'farm-jump-mid', f'the jump field, first person on a horse 0.45 s into the jump over jump o122: its head and neck in front of you, the bar below (you are up in the air with it; {r})')
-        await g.ev("""()=>{$('toast').classList.remove('show');if(P.horse)farmOff(true);__run(4);__clockMs(msAt(S.day,21.6)-CLK.sk);__run(4);P.x=-92;P.z=-104;P.yaw=Math.PI*.55;P.pitch=-.08;__run(20);}""")
+        await g.ev("""()=>{window.__pre=null;toastOff();if(P.horse)farmOff(true);__run(4);__clockMs(msAt(S.day,21.6)-CLK.sk);__run(4);P.x=-92;P.z=-104;P.yaw=Math.PI*.55;P.pitch=-.08;__run(20);}""")
         await snap(g, 'farm-night', 'the farm yard at night (21:36)')
     await scene('farm', farm())
 

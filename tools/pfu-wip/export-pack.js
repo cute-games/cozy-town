@@ -15,6 +15,8 @@ function sandbox(pack){
   vm.runInContext(`initMaterials(true);Math.random=seeded(77);
     {const f=tubeGeo;tubeGeo=function(pts,r0,r1,seg,rad,grow){const o=f(pts,r0,r1,seg,rad,grow);const R=[];for(let i=0;i<=seg;i++){const t=i/seg;R.push(typeof r0==='function'?r0(t):r0+(r1-r0)*t);}o.g.userData.X=['U',pts,R,seg,rad,grow];return o;};}
     {const f=rboxGeo;rboxGeo=function(w,h,d,r,grow){const g=f(w,h,d,r,grow);g.userData.X=['X',w,h,d,r,grow];return g;};}
+    if(typeof cowNeckGeo==='function'){const f=cowNeckGeo;cowNeckGeo=function(t){const g=f(t);g.userData.X=['N',t];return g;};}   /* (picture pass 3: the cow's neck is a bent tube made from a unit cylinder; kept as its recipe, 'N') */
+    for(const k of['rotateX','translate']){const f=THREE.BufferGeometry.prototype[k];THREE.BufferGeometry.prototype[k]=function(...a){if(this.parameters)(this.userData.ops=this.userData.ops||[]).push([k==='rotateX'?'x':'t',...a]);return f.apply(this,a);};}   /* (the sheep's neck tube is turned and moved after it is made: kept as 'M' = shape + steps) */
     {const f=prismGeo;prismGeo=function(...a){const g=f(...a);g.userData.X=['Q',...a];return g;};}
     {const f=starGeo;starGeo=function(...a){const g=f(...a);g.userData.X=['Z',...a];return g;};}
     {const f=signPlane;signPlane=function(...a){const m=f(...a);m.userData.SIGN=a;return m;};}
@@ -29,6 +31,8 @@ const U_=undefined,trim=(a,d)=>{a=a.slice();while(a.length>1&&a[a.length-1]===d[
 function geo(g){const p=g.parameters||{},X=g.userData.X;
   if(X){const a=X.slice();if(a[0]==='U')return gid(['U',a[1].map(q=>q.map(r4)),a[2].map(r4),a[3],a[4],r4(a[5])]);return gid(a.map(v=>typeof v==='number'?r4(v):v));}
   const n=v=>typeof v==='number'?r4(v):v;
+  if(g.userData.ops){const O=g.userData.ops;delete g.userData.ops;g.userData.O=O;const b=geo(g);delete g.userData.O;g.userData.ops=O;return gid(['M',b,O.map(o=>o.map(n))]);}
+  if(g.parameters&&g.type!=='ShapeGeometry'&&g.type!=='LatheGeometry'){const F=new g.constructor(...Object.values(p));for(const o of g.userData.O||[])o[0]==='x'?F.rotateX(o[1]):F.translate(o[1],o[2],o[3]);const a=F.attributes.position.array,b=g.attributes.position.array;let d=a.length!==b.length;for(let i=0;!d&&i<a.length;i++)if(Math.abs(a[i]-b[i])>1e-4)d=true;if(d)UNK.push('CHANGED '+g.type+' '+JSON.stringify(p).slice(0,90));}   /* (picture pass 3: a shape changed after it was made would come out as the plain shape: say so) */
   switch(g.type){
     case 'BoxGeometry':return gid(trim(['B',p.width,p.height,p.depth,p.widthSegments,p.heightSegments,p.depthSegments].map(n),[U_,U_,U_,U_,1,1,1]));
     case 'SphereGeometry':return gid(trim(['S',p.radius,p.widthSegments,p.heightSegments,p.phiStart,p.phiLength,p.thetaStart,p.thetaLength].map(n),[U_,U_,32,16,0,r4(Math.PI*2),0,r4(Math.PI)]));

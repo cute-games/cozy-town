@@ -11,6 +11,7 @@ move in water or the air (r.noGround: capy.tub, owl.fly) is measured by its high
 Stage 6 (1 Nov): P31 the farm on the map, P32 riding, P33 chores and the Market, P34 feeding and petting, P35 friends see you ride.
 Full check (1 Nov): P36 a save with big-needs pets and the glass tank is never written over by the live version, and comes back whole.
 Picture pass 1 (2 Nov): P37 big pets reach their homes, P38 never inside a horse or cow, P39 waiting outside apart, capes on the back, show words end with the show.
+Picture pass 3 (2 Nov): P41 cows and sheep their real size, apart at the trough, no score on the table paddles, no town pet with your pet's name, Ieva's line not over your ride, the jump view.
 Picture pass 2 (2 Nov): P40 big pets off the vet platform away from you, capes along the back (capybara, seal, snake slithering), the show's sign and late big words. P34's trough picture reframed (shot only).
 Stage 5 (1 Nov): P25 not slower than live (the owner's ask: P19 stays for the real iPad), P26 the Pet Show area, P27 tricks, P28 the Pet Show alone (town results
 from the one clock, the ribbon), P29 the Pet Show with friends, P30 the animal license. Rewritten (old -> new): P18 Ms. Paws' line for the bear's license
@@ -1494,6 +1495,56 @@ async def p40(run, new_wb, FIX):
         return not probs, ' | '.join(det) + (f' | PROBLEMS: {probs}' if probs else '')
     finally: await run.close(g)
 
+# P41 (picture pass 3, 2 Nov): every cow was a 2.5 m drum (its bent neck tube came out of the book as a plain unit cylinder) and the sheep's neck stood upright;
+# fed at the trough, every cow and sheep went to one spot (one big heap); the judges' table paddles said 9, 10, 8 before any score; a town pet on the stage had your seal's name;
+# Ieva's 'first a lesson' line came on a timer over your ride (and after the lesson); in a jump the horse's neck filled the whole view
+P41_MODELS = r"""()=>{const bad=[],o=[];for(const k of Object.keys(PACKM.o).filter(k=>/^fa\.(cow|sheep)\./.test(k))){const m=farmModel(k);m.root.rotation.set(0,0,0);m.root.updateMatrixWorld(true);
+    const b=new THREE.Box3().setFromObject(m.root),w=b.max.x-b.min.x;o.push(k.slice(3)+' '+w.toFixed(2));if(w>1.2)bad.push(k+' is '+w.toFixed(2)+' m wide');
+    if(k.includes('sheep')){let n=null;packBuild(k).root.traverse(q=>{const P=q.isMesh&&q.geometry.parameters;if(P&&P.radiusTop===.045)n=q;});if(!n)bad.push(k+': no neck tube');else{n.geometry.computeBoundingBox();const g=n.geometry.boundingBox;
+      if(g.max.y-g.min.y>.15||g.max.z-g.min.z<.4)bad.push(k+' neck tube not along the neck ('+[g.max.y-g.min.y,g.max.z-g.min.z].map(v=>v.toFixed(2))+')');}}}
+  return {bad,o};}"""
+P41_FEED = r"""()=>{const bad=[],o=[];farmLiveAll();const t=FARM.troughs[0],now=()=>gameMs()/1000;farmFeed(t.x,t.z,['cow','sheep'],1.6,'x');for(let i=0;i<700;i++)FARM.an.forEach(a=>farmAnimal(a,.05,gameMs(),now()));
+  for(const [k,need] of [['cow',1.0],['sheep',.6]]){const A=FARM.an.filter(a=>a.type===k&&Math.hypot(a.x-t.x,a.z-t.z)<3);let mn=99;for(let i=0;i<A.length;i++)for(let j=i+1;j<A.length;j++)mn=Math.min(mn,Math.hypot(A[i].x-A[j].x,A[i].z-A[j].z));
+    o.push(k+': '+A.length+' at the trough, closest two '+mn.toFixed(2)+' m');if(A.length<2)bad.push(k+': only '+A.length+' came');else if(mn<need)bad.push(k+' at the trough '+mn.toFixed(2)+' m apart (under '+need+')');}
+  return {bad,o};}"""
+P41_SHOW = r"""()=>{const bad=[],o=[];const find=n=>{const r=[];const w=x=>{if(x[0]===2&&['9','10','8'].includes(String(x[2][0])))r.push(x[2]);const k=x[0]===2?null:x[0]===0?x[4]:x[2];if(Array.isArray(k))k.forEach(w);};w(n);return r;};
+  const refs=find(PACKM.o['show.judges'].n).map(a=>signPlane(...a).material.map.image.toDataURL());o.push(refs.length+' paddle signs in the book table');if(refs.length!==3)bad.push('the book table has '+refs.length+' number paddles, not 3');
+  const [jx,jz]=PS.jt,v=new THREE.Vector3();let n=0,hit=0;scene.traverse(q=>{const m=q.material,im=m&&m.map&&m.map.image;if(!q.isMesh||!im||!im.toDataURL)return;q.getWorldPosition(v);if(Math.hypot(v.x-jx,v.z-jz)>3)return;n++;if(refs.includes(im.toDataURL()))hit++;});
+  o.push(n+' signs at the judges\' table, '+hit+' showing 9/10/8');if(n<3)bad.push('the table\'s signs were not found ('+n+')');if(hit)bad.push(hit+' table paddles show a score before any judge scored');
+  const r0=psRivals(),keep=S.pets[0].name;S.pets[0].name=r0[0].name;const r1=psRivals(),mine=new Set(S.pets.map(d=>d.name));S.pets[0].name=keep;
+  o.push('town pets '+r0.map(r=>r.name)+' -> with your pet named '+r0[0].name+': '+r1.map(r=>r.name));if(r1.some(r=>mine.has(r.name)))bad.push('a town pet has your pet\'s name');
+  if(JSON.stringify(r0.map(r=>[r.type,r.col,r.outfit,r.owner]))!==JSON.stringify(r1.map(r=>[r.type,r.col,r.outfit,r.owner])))bad.push('renaming changed the day\'s town pets');
+  return {bad,o};}"""
+P41_RIDE = r"""()=>{FARM.lesson=null;S.ride={lesson:1};if(P.horse)farmOff(true);P.x=-100;P.z=-101;__run(4);$('toast').classList.remove('show');farmIeva();window.__iv=$('toast').textContent;
+  const H=FARM.hs.find(h=>h.kind==='pad'&&farmHorseFree(h));P.x=H.x;P.z=H.z;farmMount(H);__run(4);return !!P.horse;}"""
+P41_JUMP = r"""()=>{const bad=[],o=[];if(!P.horse)return {bad:['not on a horse'],o};const J=FARM.jumps.o122;P.x=J.x+3*Math.sin(J.ry);P.z=J.z+3*Math.cos(J.ry);P.yaw=Math.atan2(-(J.x-P.x),-(J.z-P.z));P.pitch=-.12;P.horse.ry=P.yaw+Math.PI;__run(3);
+  const m=P.horse.h.m,v=new THREE.Vector3(),top=()=>{m.root.updateMatrixWorld(true);camera.updateMatrixWorld(true);let mx=-9;m.root.traverse(q=>{if(!q.isMesh||!q.visible)return;const p=q.geometry.attributes.position;for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i).applyMatrix4(q.matrixWorld).project(camera);if(Math.abs(v.x)<.15&&v.z<1)mx=Math.max(mx,v.y);}});return mx;};
+  const t0=top();P.horse.sp=4;P.horse.j=gameMs()/1000;let mx=-9,at=0,n=0;for(let i=0;i<200&&gameMs()/1000-P.horse.j<1.5;i++){__run(1);const u=gameMs()/1000-P.horse.j;if(u<.25)continue;n++;const t=top();if(t>mx){mx=t;at=u;}}
+  o.push('top of your horse in the middle of the view (screen, -1 bottom .. 1 top): riding '+t0.toFixed(2)+', in the jump up to '+mx.toFixed(2)+' at '+at.toFixed(2)+' s ('+n+' frames)');if(!n)bad.push('no jump frames');if(mx>.15)bad.push('in the jump your horse reaches '+mx.toFixed(2)+' up the screen (over 0.15: it fills the middle of the view)');
+  farmOff(true);return {bad,o};}"""
+async def p41(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p41', FIX=FIX, name='ZZTEST-PP3')
+    probs = []; det = []
+    try:
+        for js in (P41_MODELS,):
+            r = await g.ev(js); probs += r['bad']; det += r['o']
+        await g.ev(FARM_GO)
+        r = await g.ev(P41_FEED); probs += r['bad']; det += r['o']
+        r = await g.ev(P41_SHOW); probs += r['bad']; det += r['o']
+        await g.ev(FARM_GO)
+        if not await g.ev(P41_RIDE): probs.append('could not get on a horse')
+        seen = set()
+        for _ in range(16):   # Ieva's second line came 2.6 s after her first, on a real timer, and could wait in the toast queue
+            await asyncio.sleep(.5); t = await g.ev("()=>$('toast').classList.contains('show')?$('toast').textContent:''")
+            if t: seen.add(t)
+        det.append('toasts in the 8 s after meeting Ieva and getting on: ' + ' / '.join(sorted(seen)))
+        bad_t = [t for t in seen if re.search('First a lesson|Pick a horse', t)]
+        if bad_t: probs.append(f"Ieva's timed line shows over your ride: {bad_t}")
+        r = await g.ev(P41_JUMP); probs += r['bad']; det += r['o']
+        if g.errors: probs.append(f'browser errors {g.errors[:2]}')
+        return not probs, ' | '.join(det) + (f' | PROBLEMS: {probs}' if probs else '')
+    finally: await run.close(g)
+
 # ---------------- the stage ----------------
 async def s_pfu(run, d, live_w, new_wb, FIX):
     tests = [('P1', 'Saves (pets and farm update): every save of the kit (from older versions, today\'s main and the update\'s stages) and a fresh one from the live version loads as save version 2 with every new field at its default; saved again and loaded, it is exactly the same', lambda: p1(run, live_w, new_wb, FIX)),
@@ -1535,7 +1586,8 @@ async def s_pfu(run, d, live_w, new_wb, FIX):
     tests += [('P37', "Big pets go home (picture pass 1, 2 Nov): a monkey, seal and bear sent home at pet yard level 3 walk round the house (side path, garden, the big-pets gate) to their own homes within 120 s of play: in a full yard (garden 3, every pot, 3 gear pieces), sent home a second time, and in a yard with garden 1 and no gear", lambda: p37(run, new_wb, FIX)),
               ('P38', "Never inside a horse or cow (picture pass 1, 2 Nov): put where a grown horse or cow stands, walking into it from 4 sides, or feeding a horse from your hand, the camera is never inside its body", lambda: p38(run, new_wb, FIX)),
               ('P39', "Picture pass 1 guards (2 Nov): at every building door bear and seal wait outside 1.9 m apart or more, never in a wall; the cape sits on the back of every pet kind (bottom within 5 cm above to 6 cm into it); the Pet Show's big words never pop up after the show ended", lambda: p39(run, new_wb, FIX)),
-              ('P40', "Picture pass 2 guards (2 Nov): after its vet visit a bear or a seal gets off 1.5 m or more from where you stand; the capybara's, seal's and snake's cape lies on its back along its whole length (within 6 cm), resting and while walking (the snake's slithers with it); during a Pet Show the 'Every Saturday!' sign under the banner hides (the big words pop up there) and a turn's big words left waiting never pop up after the next turn began", lambda: p40(run, new_wb, FIX))]
+              ('P40', "Picture pass 2 guards (2 Nov): after its vet visit a bear or a seal gets off 1.5 m or more from where you stand; the capybara's, seal's and snake's cape lies on its back along its whole length (within 6 cm), resting and while walking (the snake's slithers with it); during a Pet Show the 'Every Saturday!' sign under the banner hides (the big words pop up there) and a turn's big words left waiting never pop up after the next turn began", lambda: p40(run, new_wb, FIX)),
+              ('P41', "Picture pass 3 guards (2 Nov): every cow and sheep model is its real size (no part wider than 1.2 m; the sheep's neck tube lies along the neck); fed at the trough, the cows stand 1 m or more apart and the sheep 0.6 m or more (not one heap); the judges' table paddles never show a score; no town pet on the stage has one of your pets' names (and the day's town pets stay the same); Ieva's second line never shows over your ride; in a jump (take-off to landing) your own horse never fills the middle of the view", lambda: p41(run, new_wb, FIX))]
     only = [x for x in os.environ.get('PFU_ONLY', '').split(',') if x]
     for cid, name, fn in tests:
         if only and cid not in only: continue
