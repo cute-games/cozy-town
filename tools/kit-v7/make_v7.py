@@ -28,7 +28,9 @@ def fix_check(s):
     # E1 / N14 / N40 (1 Nov 2026, the owner Karolis in the foreman's chat, Pets and Farm Update stage 5): the Pet Shop room ('pets') may use up to 45,000 triangles
     # (the approved new 3-floor shop; was: +10% of the live shop's 15,363). Pieces stay +10%; the town and every other area keep their limits.
     # Old: --e1-limits default '' (every area +10%). New: default 'pets:0.10:=45000' ('=N' = an absolute cap); a value given on the command line replaces it as before.
-    s = rep(s, "ap.add_argument('--e1-limits', default='',", "ap.add_argument('--e1-limits', default='pets:0.10:=45000',")
+    # E1 / N14 / N40 again (1 Nov 2026, the owner Karolis, full check of the Pets and Farm Update): the town ('city') may use up to 15% more pieces and 20% more
+    # triangles (the farm, horse trail and jump field). Old: 'pets:0.10:=45000' (town +10% / +10%). New: 'pets:0.10:=45000,city:0.15:0.20'. Every other area keeps its limit.
+    s = rep(s, "ap.add_argument('--e1-limits', default='',", "ap.add_argument('--e1-limits', default='pets:0.10:=45000,city:0.15:0.20',")
     return rep(s, "    lim_txt = ', '.join(f'{a} +{round(p*100)}% pieces / +{round(t*100)}% triangles' for a, (p, t) in per.items())\n",
                "    lim_txt = ', '.join(f'{a} {C.limit_txt(p)} pieces / {C.limit_txt(t)} triangles' for a, (p, t) in per.items())\n")
 def fix_limits(s):
@@ -68,7 +70,10 @@ def fix_readme(s):
                 'given on the command line replaces it as before). P19 (30+ fps, iPad view, 2 players) stays and stays FAIL in a cloud browser with no GPU (NOT VERIFIED:\n'
                 'measure on the real iPad); new P25: the new build is not slower than the live game in the same test browser (fps at least 90% of live\'s, first load at\n'
                 'most 115%; fps: medians of 3 turns each (they swing up to 30% run to run here), the CPU time of a frame reported; first load: means of 2). P26 the Pet Show area, P27 tricks, P28 the Pet Show alone, P29 the Pet Show with friends, P30 the animal\n'
-                'license. Rewritten (old -> new): P18 the bear\'s license line (stand-in -> the approved rules text), P10 (person moves on a person, not on pets), P17 (walls outside the clinic, without the park\'s west part where the approved Pet Show area stands). The license card\'s fonts (Alfa Slab One, Roboto Slab 700/800) are served locally like Baloo 2 (fonts.css). Fixture save-pfu5-stage5.json.\n')
+                'license. Rewritten (old -> new): P18 the bear\'s license line (stand-in -> the approved rules text), P10 (person moves on a person, not on pets), P17 (walls outside the clinic, without the park\'s west part where the approved Pet Show area stands). The license card\'s fonts (Alfa Slab One, Roboto Slab 700/800) are served locally like Baloo 2 (fonts.css). Fixture save-pfu5-stage5.json.\n'
+                'Added 1 Nov 2026 (full check of the Pets and Farm Update, the owner Karolis): E1/N14/N40 old -> new: the town (\'city\') +10% pieces / +10% triangles ->\n'
+                '+15% pieces / +20% triangles (the farm, horse trail and jump field): --e1-limits now defaults to "pets:0.10:=45000,city:0.15:0.20". Every other area keeps\n'
+                'its limit. P19 and P25 keep their limits and keep running; they stay NOT VERIFIED until the owner measures on the real iPad.\n')
 def fix_checks(s):
     # B1 (1 Nov 2026, pets and farm update stage 4): sickness is switched on now, so a pet's sickness timer (pets.N.sad: minutes played at 0-1 hearts)
     # moves on every frame played, like happiness, and two loads a few frames apart differ in the third decimal (save-pfu2-stage2.json: 12.5 -> 12.513).

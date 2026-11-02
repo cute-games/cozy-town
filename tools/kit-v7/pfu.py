@@ -9,6 +9,7 @@ Stage 3 (1 Nov): P12 Friends Lane's wider border, P13 yard levels by skill at th
 on it, P16 friends see your yard. Rewritten: P10 (old: every move's lowest point within -0.07..0.012 m; new: the same for every move on the floor (a yard-gear move: on the pet kinds that play it, e.g. cat.wand on cats), and a
 move in water or the air (r.noGround: capy.tub, owl.fly) is measured by its highest point instead, which must stay above 0.05 m).
 Stage 6 (1 Nov): P31 the farm on the map, P32 riding, P33 chores and the Market, P34 feeding and petting, P35 friends see you ride.
+Full check (1 Nov): P36 a save with big-needs pets and the glass tank is never written over by the live version, and comes back whole.
 Stage 5 (1 Nov): P25 not slower than live (the owner's ask: P19 stays for the real iPad), P26 the Pet Show area, P27 tricks, P28 the Pet Show alone (town results
 from the one clock, the ribbon), P29 the Pet Show with friends, P30 the animal license. Rewritten (old -> new): P18 Ms. Paws' line for the bear's license
 (old: 'You need an animal license, level 3. Win at the Pet Show!', the stage-4 stand-in; new: the approved rules-animal-license line 8, 'A bear needs an animal
@@ -1327,6 +1328,48 @@ async def p35(run, live_w, new_wb, FIX):
             if g: await run.close(g)
     return not probs, '; '.join(det) + (f' | PROBLEMS: {probs}' if probs else '')
 
+# ---------------- P36 (full check, 1 Nov): a save with big-needs pets and the glass tank is safe in an older version ----------------
+# The live version (main) does not know the new pets or the tank: it stops at the title (its own update check then takes the newer file). The line proves the
+# save is never written over there: the same bytes after it tried to start, and the new version still loads it with nothing lost.
+P36_JS = r"""()=>{__goto('city');__setClock(null,12);__run(4);closePanel();S.coins=9000;sk('pets').lv=40;S.yard={pet:3,garden:1,home:['tree','pond','den']};S.lic.lv=3;yardLv();
+  const F=FURN.snaketank,it={u:uid(),t:'snaketank',c:F.cols[0],x:0,z:-2,r:0};S.home.items.push(it);addHomeItem(it);
+  for(const k of['monkey','snake']){openAdopt(k,PET_TYPES[k].cols[0]);ACT.adopt();closePanel();}change();saveLocal();
+  return {js:localStorage.getItem('cozytown-save-1'),kinds:S.pets.map(d=>petKind(d))};}"""
+async def p36(run, live_w, new_wb, FIX):
+    probs = []; det = []; A = O = B = None
+    try:
+        A = await begin(run, new_wb, 'ipad-landscape', 'p36-new', dict(fx(FIX, PETS_SAVE) or FIX[0][1], name='ZZTEST-OLDV')); r = await A.ev(P36_JS); errs = A.errors[:]; await run.close(A); A = None   # (the real clock, as the two later pages)
+        s1 = r['js']; sv = json.loads(s1)
+        tanks = sum(1 for i in sv['home']['items'] if i.get('t') == 'snaketank')
+        det.append(f"new save: pets {r['kinds']}, glass tanks placed {tanks}")
+        if 'monkey' not in r['kinds'] or 'snake' not in r['kinds'] or not tanks: probs.append('the new version did not make the save with a monkey, a snake and a placed tank')
+        O = await run.open(live_w, 'web', 'ipad-landscape', 'light', 'p36-live', save=sv)
+        await start_from_save(O); await O.step(30); await asyncio.sleep(2)
+        st = await O.ev("()=>({playing:!!PLAYING,js:localStorage.getItem('cozytown-save-1')})")
+        det.append(f"the live version's own error (expected: it does not know the new pets and the tank) {O.errors[:1]}"); O.errors = []   # (reported here, so C6 counts only unexpected errors)
+        await O.ev("()=>{try{saveLocal();}catch(e){}window.dispatchEvent(new Event('pagehide'));}")
+        s2 = await O.ev("()=>localStorage.getItem('cozytown-save-1')")
+        same = json.loads(st['js'] or 'null') == sv and json.loads(s2 or 'null') == sv   # (the kit seeds the save re-written by Python: compared as data)
+        det.append(f"the live version: playing {st['playing']}, save unchanged after starting and leaving {same}")
+        if not same:
+            diffs = save_diff(sv, json.loads(s2 or 'null') or {})
+            if diffs: probs.append(f'the live version changed the save and lost {len(diffs)} things: {diffs[:3]}')
+            else: det.append('(written again by the live version with nothing lost)')
+        await run.close(O); O = None
+        B = await begin(run, new_wb, 'ipad-landscape', 'p36-back', json.loads(s2 or s1))
+        back = await B.ev("()=>JSON.parse(localStorage.getItem('cozytown-save-1')||'null')")
+        b = await B.ev("()=>{saveLocal();return JSON.parse(localStorage.getItem('cozytown-save-1'));}")
+        diffs = [x for x in save_diff(sv, b) if not re.search(r"\.(happy|sad|t|px|pz|yaw|time)\b|^pets\.\d+\.loc: \"city\" -> \"home\"", x)]   # (a snake with its tank goes to live in it)
+        if b.get('day') != sv.get('day') or (b.get('q') or {}).get('day') != (sv.get('q') or {}).get('day'): diffs = [x for x in diffs if not re.match(r'(day|litter\.day|q\.)', x)]; det.append(f"(the day turned {sv.get('day')} -> {b.get('day')} during the test: the day's own list and day numbers not compared)")
+        det.append(f"back in the new version: {len(diffs)} differences, tanks {sum(1 for i in b['home']['items'] if i.get('t') == 'snaketank')}, pets {len(b['pets'])}")
+        if diffs: probs.append(f'lost on the way back: {diffs[:6]}')
+        errs += B.errors[:]
+        if errs: probs.append(f'browser errors (new version) {errs[:2]}')
+    finally:
+        for g in (A, O, B):
+            if g: await run.close(g)
+    return not probs, '; '.join(det) + (f' | PROBLEMS: {probs}' if probs else '')
+
 # ---------------- the stage ----------------
 async def s_pfu(run, d, live_w, new_wb, FIX):
     tests = [('P1', 'Saves (pets and farm update): every save of the kit (from older versions, today\'s main and the update\'s stages) and a fresh one from the live version loads as save version 2 with every new field at its default; saved again and loaded, it is exactly the same', lambda: p1(run, live_w, new_wb, FIX)),
@@ -1364,6 +1407,7 @@ async def s_pfu(run, d, live_w, new_wb, FIX):
               ('P33', "Farm chores and the Market (stage 6, rules-farm-chores, economy-eggs-milk-price, screens-market-sell): eggs and milk once a game day each, again the next day, kept in the save; Mr. Bun's card shows a Sell part only with farm goods (rows and the total), Sell all pays 10 each", lambda: p33(run, new_wb, FIX)),
               ('P34', "Feeding and petting (stage 6, economy-farm-feed, moves-farm-feed, moves-farm-graze-necks): the free bucket fills the trough and the cows and sheep come to eat; petting (cow leans in, the hen puffs up), the horse eats from your hand; every farm move on every farm model and person without an error", lambda: p34(run, new_wb, FIX)),
               ('P35', "Friends see you ride (stage 6, rules-riding 7, guard 4): your horse and gait go online as a short code; a friend sees you on that horse (seated, the horse under you) and that horse is taken for them; you get off, it is free again; the trail riders stand at the same spot for both (the one clock); the live version online with a rider has no errors", lambda: p35(run, live_w, new_wb, FIX))]
+    tests += [('P36', "An older version and a new save (full check, 1 Nov; project rule: old and new versions still see each other, saves keep everything): a save from this update with a monkey, a snake and a placed glass tank, opened in the live version, is never written over there (the live version stops at its title and its update check takes the newer file), and the new version loads it again with nothing lost", lambda: p36(run, live_w, new_wb, FIX))]
     only = [x for x in os.environ.get('PFU_ONLY', '').split(',') if x]
     for cid, name, fn in tests:
         if only and cid not in only: continue

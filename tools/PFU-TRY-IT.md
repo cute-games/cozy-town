@@ -9,6 +9,7 @@ Best on the real iPad (Safari, Home Screen app) and one PC, both playing togethe
 - [ ] iPad: walk to the farm (north out of town on the x -50 road, past the farm arch). Still smooth with the animals, horses and the riders on the trail?
 - [ ] iPad: ride a horse at a gallop round the trail. Smooth?
 - [ ] How long does the game take to open on the iPad (from tapping the icon to the Play button)? Write the seconds: ____
+  (In the cloud test browser the new game opens in 6.1 s vs 5.2 s for today's game: 119%, kit line P25 wants 115% or less. Compare on the iPad if you can: old ____ s, new ____ s.)
 
 ## Stage 1: sleep, bus, hats
 - [ ] Two players in their own beds at night: the clock jumps to 7:00 for both together.
@@ -47,3 +48,6 @@ Best on the real iPad (Safari, Home Screen app) and one PC, both playing togethe
 - [ ] Feeding: the free bucket by the cows' trough (cows and sheep come), the pigs, the hens (grain), a horse from your hand. Petting animals.
 - [ ] Farm sounds: neigh, hooves, snort, moo, baa, oink, cluck.
 - [ ] The farm at night and in the snow (not designed yet: tell us how it looks).
+
+## Old copies
+- [ ] A device still on the old version (not updated yet) that opens a game with a monkey, seal, bear, snake or the glass tank: it should update itself at the title and then play (the kit proves the save is never written over: P36).

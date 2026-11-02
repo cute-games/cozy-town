@@ -1,4 +1,4 @@
-# HANDOFF — read this first (one page; updated 1 Nov 2026, Pets and Farm Update stage 6: all 6 stages built)
+# HANDOFF — read this first (one page; updated 2 Nov 2026, Pets and Farm Update: all 6 stages built, full check done)
 
 ## Where things stand
 - Live: `main` = a47bb1a (pet update 1, stamp 2026102902). Backups: `backup-2026-10-31` and `backup-2026-11-01` = main a47bb1a (A2 wants today's date: a new dated backup each day).
@@ -46,7 +46,13 @@
   x +90, ~33k triangles instanced) and the farm pieces in view add ~60-70k triangles to every frame; the software-drawn test browser is triangle/fill bound. The CPU work
   is lower than stage 5 (pets out of sight not posed, the farm does nothing in town). First load: +283 KB file and the farm's ~170 ms build at load. Choices for Karolis
   / the foreman: allow it (real iPad numbers first, P19), or show the far plan scenery only near the farm, or build the farm after the title shows.
-- **Next: the foreman's full check** (all 6 stages built), then the one pull request. `tools/PFU-TRY-IT.md` = the "Try it for real" list for Karolis and Izabele (guard 7).
+- **Owner decisions 1 Nov, full check (Karolis)**: (3) town limit E1/N14/N40 old -> new: +10%/+10% -> **+15% pieces / +20% triangles**; kit default `--e1-limits pets:0.10:=45000,city:0.15:0.20`
+  (quick and full kit; every other area keeps its limit). (4) P25 keeps its limits and keeps running; P19 and P25 are the only lines allowed to FAIL, NOT VERIFIED until Karolis's iPad.
+- **Full check done** (1-2 Nov, kit v7 `--full`, 132 min, `tools/pfu-wip/full-check.log`; report `tools/PFU-REPORT.md`): every line PASS but P19, P25 (first load 119% of live; fps 95%),
+  P36 (new line, the test's own clock: fixed, PASS alone) and C6 (only P36's expected live-version error, now reported inside P36). check_split S1-S4 PASS. No game file changed
+  (stamp stays 2026110202). Snake tank / big pets in main: main stops at the title and writes nothing, its update check takes the new file: save safe, no fix (P36 proves it).
+  **Picture pass NOT DONE** (the helper had no tool for Sonnet viewers): 273 kit shots where the update touched are in the foreman's scratchpad `pics-pfu/`.
+- **Next**: the foreman's picture pass (Sonnet viewers), then the one pull request. `tools/PFU-TRY-IT.md` = the "Try it for real" list for Karolis and Izabele (guard 7).
 
 ## Read first (each stage)
 1. `CLAUDE.md`, this file. 2. The run doc `kit/kits/pfu-night-run.json` (field `text`; its Guards and Corrections hold). 3. Your brief
