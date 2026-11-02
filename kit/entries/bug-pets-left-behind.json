@@ -1,0 +1,16 @@
+{
+  "blockedBy": "",
+  "body": "4 Oct: pets were only put next to you when you walked through a door; ⚙️ Settings → 🐾 Bring my pets to me was the workaround. Main today, by the code: a blocked pet walks the way you walked, door trips still bring pets along, and the Settings button is still there. Not verified by play. Check: long walks with 3 following pets past corners and fences, on Friends Lane and at the beach.",
+  "ch": "bugs",
+  "comments": [],
+  "created": 1793380422277,
+  "id": "bug-pets-left-behind",
+  "kind": "bug",
+  "needs": [],
+  "order": 215,
+  "source": "chat 30 Oct: Bugs and fixes, board row from an old 4 Oct chat",
+  "stage": "pfu-2",
+  "status": "draft",
+  "title": "Do following pets still get left behind? (4 Oct report)",
+  "updated": 1793380422277
+}

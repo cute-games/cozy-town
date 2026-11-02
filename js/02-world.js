@@ -32,9 +32,11 @@ function pushOut(x,z,r,c){
   const l=x-c.x1,rr2=c.x2-x,t=z-c.z1,b=c.z2-z,m=Math.min(l,rr2,t,b);
   if(m===l)return[c.x1-r,z];if(m===rr2)return[c.x2+r,z];if(m===t)return[x,c.z1-r];return[x,c.z2+r];
 }
+let CFL=0;   /* 🐾 the floor whose pieces collide (the new Pet Shop's 3 floors, stage 4b): a piece with .fl only stops someone on that floor */
 function collideXZ(x,z,r,L,extra){
   for(let it=0;it<3;it++){let hit=false;
-    for(const list of [L.cols,L.dcols,extra||[]])for(const c of list){const p=pushOut(x,z,r,c);if(p){x=p[0];z=p[1];hit=true;}}
+    for(const list of [L.cols,L.dcols,extra||[]])for(const c of list){if(c.fl!==undefined&&c.fl!==CFL)continue;const p=pushOut(x,z,r,c);if(p){x=p[0];z=p[1];hit=true;}}
+    if(L.fgrid&&(z<-37||x<-138)){const G=L.fgrid,i0=Math.floor(x/8),j0=Math.floor(z/8);for(let i=i0-1;i<=i0+1;i++)for(let j=j0-1;j<=j0+1;j++){const q=G.get(i*1000+j);if(q)for(const c of q){const p=farmPush(x,z,r,c);if(p){x=p[0];z=p[1];hit=true;}}}}   /* 🐴 the farm's trees, buildings and fences (stage 6): an 8 m grid, only looked at out there */
     if(!hit)break;}
   const b=L.bounds;return[clamp(x,b.x1+r,b.x2-r),clamp(z,b.z1+r,b.z2-r)];
 }
@@ -57,27 +59,31 @@ function buildSky(){
   for(let i=0;i<16;i++){const c=new THREE.Group();const n=3+(Math.random()*3|0);for(let k=0;k<n;k++)sph(c,rand(5,9),null,k*6.5-n*3.2+rand(-2,2),rand(-1.5,1.5),rand(-3,3),{mat:CLOUD,ol:false,ws:12,hs:8,s:[1,.68,1]});
     const a=rand(0,TAU),r=rand(80,220);c.position.set(Math.cos(a)*r,rand(48,80),Math.sin(a)*r);c.userData.sp=rand(.6,1.5);bake(c,false);outside.add(c);clouds.push(c);}
   const hills=new THREE.Group();outside.add(hills);
-  for(let i=0;i<28;i++){const a=i/28*TAU+rand(-.08,.08),r=rand(205,250),R=rand(40,62),c=pick(['#86d37c','#79c973','#93dc85']),y=-rand(8,18),x=Math.cos(a)*r;let z=Math.sin(a)*r;
+  for(let i=0;i<28;i++){const a=i/28*TAU+rand(-.08,.08),r=rand(205,250),R=rand(40,62),c=pick(['#86d37c','#79c973','#93dc85']),y=-rand(8,18);let x=Math.cos(a)*r,z=Math.sin(a)*r;
     const foot=R*Math.sqrt(Math.max(0,1-(2*y/R)**2));if(x<-60&&Math.abs(z)<44+foot)z=(z<0?-1:1)*(44+foot);   /* 🏡 Friends Lane runs west through a valley: hills step aside */
+    {const ux=x/Math.hypot(x,z),uz=z/Math.hypot(x,z);for(let k=0;k<60&&Math.hypot(x-clamp(x,FARM_X1,-38),z-clamp(z,FARM_Z1,-37))<foot+4;k++){x+=ux*5;z+=uz*5;}}   /* 🐴 and step back behind the farm, the trail and the jump field (stage 6) */
     sph(hills,R,c,x,y,z,{ol:.9,ws:18,hs:10,s:[1,.5,1]});HILLS.push({x,y,z,R});}
-  for(let i=0;i<110;i++){const a=rand(0,TAU),r=rand(94,160);const x=Math.cos(a)*r,z=Math.sin(a)*r;if(Math.abs(x)<7||Math.abs(z)<7||(x<-78&&Math.abs(z)<38)||(Math.abs(Math.abs(x)-50)<7&&Math.abs(z)<95)||(Math.abs(Math.abs(z)-50)<7&&Math.abs(x)<95))continue;(Math.random()<.5?pine:tree)(hills,x,z,rand(1.3,2.2));}
+  for(let i=0;i<110;i++){const a=rand(0,TAU),r=rand(94,160);const x=Math.cos(a)*r,z=Math.sin(a)*r;if(Math.abs(x)<7||Math.abs(z)<7||(x<-78&&Math.abs(z)<38)||(Math.abs(Math.abs(x)-50)<7&&Math.abs(z)<95)||(Math.abs(Math.abs(z)-50)<7&&Math.abs(x)<95))continue;{const f=Math.random()<.5?pine:tree,sc=rand(1.3,2.2);if(FARMD.del.some(q=>Math.abs(q[0]-x)<.6&&Math.abs(q[1]-z)<.6)){FARM.deln++;continue;}f(hills,x,z,sc);FAR_TREES.push([x,z]);}}   /* (🐴 stage 6: the ones on the farm's trail, roads and fields are taken out, the random order kept) */
   bake(hills,false);}finally{Math.random=mr;}
 }
 
 /* 🌲 the forest belt and tree groups (night 3, job 12). Past the town barriers (and north and south of Friends Lane) a belt of round trees and
    pines several rows deep, at the same spots the map already draws (mapTrees), plus a close row just outside the barriers, and small tree
    groups in empty corners inside the town. Never on roads, paths, doors, the bus route, the football field, the pond and lake, the park or the
-   lane (the lane valley x < -78, |z| < 31.5 stays free for new plots). Built light: low-poly trees, no outlines, no shadows, merged by 64 m
+   lane (the lane valley x < -78, |z| < 42 stays free for new plots and the level-3 backyards; pets and farm update, stage 3). Built light: low-poly trees, no outlines, no shadows, merged by 64 m
    chunks into one vertex-colour piece each. Season colours from job 11. The near row and the groups go on the map too */
-const HILLS=[];
+const HILLS=[],FAR_TREES=[];
 function groundY(x,z){let y=0;for(const h of HILLS){const d=((x-h.x)**2+(z-h.z)**2)/(h.R*h.R);if(d<1)y=Math.max(y,h.y+h.R*.5*Math.sqrt(1-d));}return y;}
 function treeLo(g,x,y,z,s,c){cyl(g,.15*s,.2*s,2.3*s,'#9b6b4a',x,y,z,{seg:5,ol:false});sph(g,1.15*s,c,x,y+3.05*s,z,{ws:7,hs:5,ol:false});sph(g,.75*s,c,x+.7*s,y+2.75*s,z+.15*s,{ws:6,hs:4,ol:false});sph(g,.72*s,c,x-.62*s,y+2.8*s,z-.3*s,{ws:6,hs:4,ol:false});}
 function pineLo(g,x,y,z,s,c){cyl(g,.14*s,.18*s,.8*s,'#9b6b4a',x,y,z,{seg:5,ol:false});cone(g,1.2*s,1.6*s,c,x,y+.7*s,z,{seg:6,ol:false});cone(g,.92*s,1.4*s,c,x,y+1.55*s,z,{seg:6,ol:false});cone(g,.62*s,1.2*s,c,x,y+2.35*s,z,{seg:6,ol:false});}
-const laneFree=(x,z)=>x<-78&&Math.abs(z)<31.5,beachFree=(x,z)=>x>78&&Math.abs(z)<11;
+const laneFree=(x,z)=>x<-78&&Math.abs(z)<42,beachFree=(x,z)=>x>78&&Math.abs(z)<11;
+/* 🩺 the vet station's spot (stage 4, Map: x 14.2, z -77.2): the town's own bushes, rocks and tree groups are still made there in the same order (so every other one keeps its place), but drawn into VDUMP (never shown) and their walls taken out afterwards */
+const vetSpot=(x,z,m)=>x>8-m&&x<19.5+m&&z>-84-m&&z<-70.5+m,VDUMP=new THREE.Group();
 function freeSpot(L,x,z,r){for(const c of L.cols){if(c.cr!==undefined){if(Math.hypot(x-c.cx,z-c.cz)<c.cr+r)return false;}else if(x>c.x1-r&&x<c.x2+r&&z>c.z1-r&&z<c.z2+r)return false;}
   for(const t of L.inter)if(Math.hypot(x-t.x,z-t.z)<7)return false;return true;}
 function buildForest(L,st){const F=new THREE.Group();L.g.add(F);const r=seeded(68),TC=()=>TREE_COLS[(r()*TREE_COLS.length)|0],PC=()=>PINE_COLS[(r()*PINE_COLS.length)|0];
-  const plant=(x,z,s)=>{const y=groundY(x,z);if(r()<.45)pineLo(F,x,y,z,s*1.15,PC());else treeLo(F,x,y,z,s,TC());};
+  const plant=(x,z,s)=>{const mv=FARMD.mv.find(q=>Math.abs(q[0]-x)<.6&&Math.abs(q[1]-z)<.6);if(mv){x=mv[2];z=mv[3];}const gone=FARMD.del.some(q=>Math.abs(q[0]-x)<.6&&Math.abs(q[1]-z)<.6),G=gone?VDUMP:F;if(gone)FARM.deln++;if(mv)FARM.mvn++;   /* 🐴 stage 6 (map-forest-clear): taken out or moved, the random order kept */
+    const y=groundY(x,z);if(r()<.45)pineLo(G,x,y,z,s*1.15,PC());else treeLo(G,x,y,z,s,TC());};
   for(const [x,z,R] of mapTrees())plant(x,z,clamp(R/1.9,.9,2.4));   /* the belt, where the map draws it */
   const near=[];for(let i=0;i<900&&near.length<150;i++){const side=(r()*4)|0,u=(r()-.5)*2*91,v=85.5+r()*5.5,x=side<2?u:(side===2?v:-v),z=side<2?(side===0?v:-v):u;   /* a close row just past the barriers */
     if(laneFree(x,z)||beachFree(x,z)||near.some(([a,b])=>Math.hypot(a-x,b-z)<2.6))continue;near.push([x,z]);}
@@ -87,7 +93,7 @@ function buildForest(L,st){const F=new THREE.Group();L.g.add(F);const r=seeded(6
   const G=[],roadNear=(x,z)=>[-50,0,50].some(c=>Math.abs(x-c)<9||Math.abs(z-c)<9),bad=(x,z)=>Math.abs(x)>80||Math.abs(z)>80||roadNear(x,z)||(x>-42&&x<-6&&z>6&&z<43)||(x>-44&&x<-10&&z>53)||Math.hypot(x-69,z-69)<14||Math.hypot(x-36.2,z+36.2)<8||x<-76;
   for(let i=0;i<700&&G.length<9;i++){const x=(r()-.5)*160,z=(r()-.5)*160;if(Math.abs(x)<54&&Math.abs(z)<54)continue;if(bad(x,z)||!freeSpot(L,x,z,4.5)||G.some(g=>Math.hypot(g[0]-x,g[1]-z)<16))continue;
     const T=[];for(let k=0;k<14&&T.length<3+((r()*3)|0);k++){const a=r()*TAU,d=.8+r()*3.0,tx=x+Math.cos(a)*d,tz=z+Math.sin(a)*d;if(bad(tx,tz)||!freeSpot(L,tx,tz,1.4)||T.some(([a2,b2])=>Math.hypot(a2-tx,b2-tz)<2.3))continue;T.push([tx,tz]);}
-    if(T.length<2)continue;G.push([x,z]);let first=true;for(const [tx,tz] of T){const s=.9+r()*.5;if(r()<.3&&!first)pine(st,tx,tz,s*1.1);else{tree(st,tx,tz,s);if(first)(L.owlTrees||(L.owlTrees=[])).push([tx,tz]);}first=false;colC(L,tx,tz,.3);mapTrees().push([tx,tz,1.1*s]);}}
+    if(T.length<2)continue;G.push([x,z]);let first=true;for(const [tx,tz] of T){const s=.9+r()*.5,v=vetSpot(tx,tz,2),q=v?VDUMP:st;if(r()<.3&&!first)pine(q,tx,tz,s*1.1);else{tree(q,tx,tz,s);if(first&&!v)(L.owlTrees||(L.owlTrees=[])).push([tx,tz]);}first=false;colC(L,tx,tz,.3);if(v)L.cols[L.cols.length-1].vd=1;else mapTrees().push([tx,tz,1.1*s]);}}
   L.treeGroups=G;}
 
 /* 🦋 wild animals (night 3, job 13): one batch per kind, moved on the graphics chip, no shadows, only in town. Butterflies flutter round the
@@ -140,7 +146,7 @@ function wildTick(dt,now){if(!WILD.bf||!S)return;const t=(now/1000)%1e4,out=!!CU
    (their own face with that hair): a length (long, shoulder, short), a style (straight, bob, ponytail, bun, pigtails, curly) and one of 8 colours.
    ✂️ cuts shorter (never back), 🪮 picks the style, 🎨 the colour; the hair changes as you work. ✅ Done gives 1 to 5 stars by how close it is
    (length, style, colour, and not cutting too much) and coins by stars. The customer is always kind. Works by touch and on PC. HS_MAX a day */
-const SALON={x:-63.5,z:40.5,door:[-59.2,40.5]},HS_MAX=4,HS_PAY=[0,15,35,60,90,120];
+const SALON={x:-63.5,z:40.5,door:[-59.2,40.5]},HS_MAX=4,HS_PAY=[0,30,35,60,90,120];
 const HS_COLS=[['#2e2347','black'],['#5a3a24','dark brown'],['#8d6238','brown'],['#e8734a','ginger'],['#f2d16b','blonde'],['#d8d8e4','silver'],['#ff7aa8','pink'],['#7cc8ff','blue']];
 const HS_STYLES=[['straight','Straight','💇'],['bob','Bob','🔔'],['ponytail','Ponytail','🎀'],['bun','Bun','🍩'],['pigtails','Pigtails','🎎'],['curly','Curly','🌀']],HS_LENS=['long','shoulder','short'];
 const HS_NAMES=['Mia','Leo','Zoe','Max','Ava','Tom','Ruby','Ivy','Jack','Nora','Finn','Lily','Ben','Ella','Sam','Mo'];
@@ -263,7 +269,7 @@ const HOUSE=id=>HOUSES.find(h=>h.id===id);
 /* 🏢 big apartment buildings: you go inside, up the stairs, and find the flat. They all share these 3 floors. */
 const APTB=['ap1','ap2','ap3','of'],isApt=id=>APTB.includes(id),FLAT_SPOT={};
 const DOORS={pizza:{city:[58.9,8.6,Math.PI/2],inside:[0,3.2,0]},toys:{city:[58.4,-31,Math.PI/2],inside:[0,3.2,0]},bakery:{city:[58.4,-14,Math.PI/2],inside:[0,3.2,0]},icecream:{city:[57.9,36,Math.PI/2],inside:[0,3.2,0]},
-  library:{city:[58.9,20,Math.PI/2],inside:[0,3.2,0]},school:{city:[-25,-57.5,Math.PI],inside:[0,3.2,0]},fire:{city:[-58.6,-29.6,-Math.PI/2],inside:[0,3.2,0]},clothes:{city:[-58.4,-12.5,-Math.PI/2],inside:[0,3.2,0]},homeback:{city:[-14,-19.7,0],inside:[4.4,-3.6,Math.PI]},cafe:{city:[32,-9.6,Math.PI],inside:[0,3.2,0]},flowers:{city:[31.5,9.6,0],inside:[0,3.2,0]},home:{city:[-17,-9.6,Math.PI],inside:[0,3.7,0]},market:{city:[18,-9.6,Math.PI],inside:[0,3.7,0]},pets:{city:[18,9.6,0],inside:[0,3.7,0]}};
+  library:{city:[58.9,20,Math.PI/2],inside:[0,3.2,0]},school:{city:[-25,-57.5,Math.PI],inside:[0,3.2,0]},fire:{city:[-58.6,-29.6,-Math.PI/2],inside:[0,3.2,0]},clothes:{city:[-58.4,-12.5,-Math.PI/2],inside:[0,3.2,0]},homeback:{city:[-14,-19.7,0],inside:[4.4,-3.6,Math.PI]},cafe:{city:[32,-9.6,Math.PI],inside:[0,3.2,0]},flowers:{city:[31.5,9.6,0],inside:[0,3.2,0]},home:{city:[-17,-9.6,Math.PI],inside:[0,3.7,0]},market:{city:[18,-9.6,Math.PI],inside:[0,3.7,0]},pets:{city:[18,9.6,0],inside:[0,3.7,0]},vet:{city:[8.8,-77.2,Math.PI/2],inside:[0,2.7,0]}};
 
 for(const id of APTB){const h=HOUSE(id);DOORS['apt1'+id]={city:[h.x+Math.sin(h.ry)*1.3,h.z+Math.cos(h.ry)*1.3,h.ry+Math.PI],inside:[-8.2,0,-Math.PI/2]};}
 DOORS.beach={city:[77.2,0,Math.PI/2],inside:[-25.5,0,-Math.PI/2]};
@@ -285,7 +291,7 @@ function buildCity(){
   for(const xc of RX)for(const zc of RZ){for(let i=-3;i<=3;i++){const t=i*1.05;for(const s of[-1,1]){box(st,3,.012,.5,'#ffffff',xc+s*5.5,.033,zc+t,{ol:false});box(st,.5,.012,3,'#ffffff',xc+t,.035,zc+s*5.5,{ol:false});}}
     trafficLight(st,xc-4.6,zc-4.6,Math.PI/4);trafficLight(st,xc+4.6,zc+4.6,-Math.PI*3/4);colC(L,xc-4.6,zc-4.6,.12);colC(L,xc+4.6,zc+4.6,.12);}
   for(const s of[-1,1]){for(const z of RZ){if(z===0)continue;box(st,.4,.9,8.4,'#ffffff',s*(E-.2),0,z,{ol:.03});for(let k=-3;k<=3;k+=2)box(st,.42,.3,.9,'#ff6b6b',s*(E-.2),.45,z+k,{ol:false});}
-    for(const x of RX){box(st,8.4,.9,.4,'#ffffff',x,0,s*(E-.2),{ol:.03});for(let k=-3;k<=3;k+=2)box(st,.9,.3,.42,'#ff6b6b',x+k,.45,s*(E-.2),{ol:false});}}
+    for(const x of RX){if(x===-50&&s<0)continue;box(st,8.4,.9,.4,'#ffffff',x,0,s*(E-.2),{ol:.03});for(let k=-3;k<=3;k+=2)box(st,.9,.3,.42,'#ff6b6b',x+k,.45,s*(E-.2),{ol:false});}}   /* (🐴 stage 6: no barrier at the north end of the x -50 road: the farm road goes on from there) */
   const nearX=(t,arr)=>arr.some(c=>Math.abs(t-c)<8);
   /* 🌳 a few street trees and lamps stood right in front of a sign: moved a little (null = that tree is left out) */
   const NUDGE={'-1800,-475':[-21,-4.75],   /* (run 4, stage 3: the pavement tree that stood right in front of the Flower Corner's gate steps 3 m west) */
@@ -303,7 +309,8 @@ function buildCity(){
   building(st,{x:23,z:-31,w:20,d:8,h:12.6,wall:'#c7e6ff',face:1,door:{x:23,c:'#b79cff'}});col(L,12.9,-35.1,33.1,-26.9);
   bench(st,27,-6.6,0);col(L,26.1,-6.95,27.9,-6.25);bin(st,25.5,-6.7);colC(L,25.5,-6.7,.3);
   // SE block: pet shop, flower shop, apartments
-  building(st,{x:18,z:15,w:11,d:8,h:4.6,wall:'#c9f2e3',face:-1,shop:true,awning:'#ffd45c',sign:'🐾 Pet Shop',door:{x:18,glass:true},win:SWIN});col(L,12.4,10.6,23.6,19.1);
+  building(st,{x:18,z:15.6,w:14,d:10,h:9.6,wall:'#c9f2e3',trim:'#5fd4b0',roof:'#2f8f78',face:-1,shop:true,awning:'#ffd45c',sign:'🐾 Pet Shop',door:{x:18,glass:true},win:SWIN,skip:(dx,i)=>i===1&&Math.abs(dx)<4.3});col(L,10.9,10.5,25.1,20.7);   /* (no floor-2 window behind the sign) */   /* 🐾 the new 3-floor Pet Shop (stage 4b; model-petshop-new: Map x 11..25, z 10.6..20.6) */
+  pawSign(st,18,8.6,10.54,1.2,'#ffd45c','#5fd4b0').rotation.y=Math.PI;
   building(st,{x:31.5,z:14,w:7,d:6,h:4.2,wall:'#e6dbff',face:-1,shop:true,awning:'#b79cff',sign:'🌷 Flower Shop',door:{x:31.5,glass:true},win:SWIN});col(L,27.9,10.6,35.1,17.1);
   building(st,{x:24,z:31,w:18,d:8,h:9.6,wall:'#ffe0c4',face:-1,boxes:true,door:{x:24,c:'#ff8a6b'}});col(L,14.9,26.9,33.1,35.1);
   hydrant(st,10.5,6.6);colC(L,10.5,6.6,.2);bench(st,-27,-7.4,0);col(L,-27.9,-7.75,-26.1,-7.05);
@@ -315,37 +322,33 @@ function buildCity(){
   for(const [a,b] of [[22,25],[23,26],[24,26]]){const A=WP[a],B=WP[b],len=Math.hypot(B[0]-A[0],B[1]-A[1]);flat(st,1.8,len,'#f6e2b8',(A[0]+B[0])/2,.022,(A[1]+B[1])/2,{ry:Math.atan2(B[0]-A[0],B[1]-A[1])});}
   const fx=-22,fz=22;buildFountain(st,L,fx,fz);
   L.benches=[];for(let i=0;i<4;i++){const a=Math.PI/4+i*Math.PI/2,bx=fx+Math.cos(a)*9.6,bz=fz+Math.sin(a)*9.6,ry=Math.atan2(fx-bx,fz-bz);bench(st,bx,bz,ry);colC(L,bx,bz,.75);L.benches.push({x:bx,z:bz,ry,b:BENCHES[BENCHES.length-1]});}
-  for(const [x,z] of [[-37.6,9.2],[-11.5,16],[-37.4,16.2],[-37.6,27.7],[-11.5,28],[-16,37.5],[-26,37.5],[-20,35.5],[-36,37.5],[-12.5,37.5]]){tree(st,x,z,1);colC(L,x,z,.28);}   /* (run 4, stage 3: the corner tree a metre further from the food truck: from the stage its crown sat right on the truck's cab) */
-  foodTruck(st,L,TRUCK.x,TRUCK.z);   /* 🍔 the food truck, by the fountain benches */
+  for(const [x,z] of [[-37.6,9.2],[-11.5,16],[-39.2,13.4],[-37.6,27.7],[-11.5,28],[-16,37.5],[-26,37.5],[-20,35.5],[-36,37.5],[-12.5,37.5]]){tree(st,x,z,1);colC(L,x,z,.28);if(x===-39.2)L.cols[L.cols.length-1].ps5=1;}   /* (run 4, stage 3: the corner tree a metre further from the food truck: from the stage its crown sat right on the truck's cab; stage 5: the tree at -37.4,16.2 moved to -39.2,13.4 for the podium, map-petshow-park) */
+  foodTruck(st,L,TRUCK.x,TRUCK.z,TRUCK.ry);   /* 🍔 the food truck, by the fountain benches */
   L.beds=[{id:'h1',x:-19.8,z:-10.6,ix:-19.8,iz:-9.9,yard:1},{id:'h2',x:-14.2,z:-10.6,ix:-14.2,iz:-9.9,yard:1}];   /* h1, h2: the flower beds in front of your house (on Friends Lane) */
   for(const [i,sx,sz] of [[1,1,-1],[2,-1,-1],[3,-1,1],[4,1,1]]){const x=fx+sx*8.84,z=fz+sz*8.84;flowerBed(st,x,z,1.8,1.0);col(L,x-.95,z-.55,x+.95,z+.55);RAISED.push({x,z,w:1.8,d:1.0,h:.22});L.beds.push({id:'p'+i,x,z,ix:x,iz:z+(sz>0?-.9:.9)});}
   bench(st,-13,34.6,Math.PI);bench(st,-10,34.6,Math.PI);col(L,-14,34.2,-9,35.1);
   // playground
-  const sl=new THREE.Group();sl.position.set(-37.2,0,31.5);st.add(sl);
+  const sl=new THREE.Group();sl.position.set(-39.0,0,33.5);st.add(sl);   /* (stage 5, map-petshow-park: 1.8 m west and 2 m back, it was cramped behind the judges) */
   box(sl,1.2,1.8,1.2,'#ffd45c',0,0,-1.6);for(let i=0;i<5;i++)box(sl,1,.06,.12,'#ffffff',0,.3+i*.32,-2.25,{ol:.015});
   const sp=new THREE.Group();sp.position.set(0,1.8,-1);sp.rotation.x=.58;sl.add(sp);box(sp,.9,.08,3.2,'#ff7aa8',0,0,1.6,{center:true});box(sp,.08,.25,3.2,'#ff7aa8',-.45,0,1.6,{center:true});box(sp,.08,.25,3.2,'#ff7aa8',.45,0,1.6,{center:true});
-  col(L,-37.9,28.4,-36.5,33.8);
+  col(L,-39.7,30.4,-38.3,35.8);L.cols[L.cols.length-1].ps5=1;
   const sw=new THREE.Group();sw.position.set(-29,0,37.4);st.add(sw);
   for(const s of[-1,1]){box(sw,.12,2.6,.12,'#7cc8ff',s*1.8,0,-.6,{rx:s*0+.22});box(sw,.12,2.6,.12,'#7cc8ff',s*1.8,0,.6,{rx:-.22});}
   cyl(sw,.07,.07,3.8,'#7cc8ff',0,2.5,0,{rz:Math.PI/2,center:true,seg:8});col(L,-31,36.6,-27,38.2);
   L.swings=[];for(const s of[-.8,.8]){const p=new THREE.Group();p.position.set(-29+s,2.45,37.4);L.dyn.add(p);box(p,.03,1.8,.03,'#3d2c5e',-.25,-1.85,0,{ol:false});box(p,.03,1.8,.03,'#3d2c5e',.25,-1.85,0,{ol:false});box(p,.6,.06,.3,'#ff8a6b',0,-1.95,0,{ol:.015});L.swings.push(p);}
-  // 🏆 the Pet Show stage: west side of the park, facing the fountain
-  {const SX=-36.5,SZ=22,TOP=.55;
-    box(st,3.0,TOP,4.4,'#c98f5e',SX,0,SZ);box(st,2.92,.03,4.32,'#ff9ec4',SX,TOP,SZ,{ol:false});box(st,.45,.26,1.4,'#b97f4e',-34.77,0,SZ);
-    cyl(st,.58,.58,.012,'#ffd45c',-36.15,TOP+.03,SZ,{seg:28,ol:false});
-    for(const [x,z,c] of [[-37.3,20.3,'#7cc8ff'],[-37.45,21.45,'#ffd45c'],[-37.45,22.55,'#b79cff'],[-37.3,23.7,'#7fdcb5']])cyl(st,.3,.32,.07,c,x,TOP,z,{seg:16,ol:.015});
-    box(st,.16,2.8,4.5,'#b79cff',-37.92,TOP,SZ);
-    for(const s of[-1,1]){box(st,.14,2.65,.75,'#ff4d6d',-37.78,TOP+.02,SZ+s*1.82,{ol:.02});box(st,.16,.22,.8,'#ffd45c',-37.76,TOP+2.6,SZ+s*1.82,{ol:.015});}
-    for(const z of[19.85,24.15]){cyl(st,.11,.13,3.75,'#ffd45c',-37.8,0,z,{seg:10});sph(st,.2,'#ffd45c',-37.8,3.85,z,{ws:10,hs:8});}
-    for(let i=0;i<10;i++){const z=20.1+i*.44;cone(st,.13,.26,['#ff4d6d','#ffd45c','#7cc8ff','#7fdcb5','#b79cff'][i%5],-37.74,3.42,z,{rz:Math.PI,center:true,seg:3,ol:false,s:[.6,1,1]});}
-    box(st,.03,.03,4.3,'#3d2c5e',-37.74,3.55,SZ,{ol:false});
-    for(const [bx,z] of[[-34.6,19.95],[-34.6,24.05]]){box(st,.015,1.5,.015,'#ffffff',bx,TOP,z,{ol:false});   /* (run 4, stage 3: the balloons at the stage's front corners, never in front of the sign) */for(const [dx,dy,dz,c] of [[0,2.15,0,'#ff7aa8'],[.12,1.95,.14,'#ffd45c'],[-.1,1.98,-.12,'#7cc8ff']])sph(st,.17,c,bx+dx,dy,z+dz,{s:[1,1.18,1],ws:10,hs:8,ol:.015});}
-    const sg=signPlane('🏆 Pet Show',2.8,.8,'#ffd45c','#3d2c5e',.13);   /* (2.8 m: clear of the pillars, which stand 1.45 m from the middle) */sg.position.set(-37.82,2.62,SZ);sg.rotation.y=Math.PI/2;L.g.add(sg);   /* 2 cm in front of the stage's back wall (run 4, job 5: it was flush with it) */
-    const sg2=signPlane('Every Saturday!',1.9,.38,'#ffffff','#ff4d8d',.12);sg2.position.set(-37.82,1.98,SZ);sg2.rotation.y=Math.PI/2;L.g.add(sg2);
-    box(st,.7,.74,3.3,'#ffffff',-32.75,0,SZ);box(st,.05,.62,3.34,'#ff4d6d',-33.12,.1,SZ,{ol:.015});box(st,.06,.06,3.36,'#ffd45c',-33.12,.7,SZ,{ol:false});
-    for(const z of[21.05,22,22.95]){box(st,.44,.44,.44,'#9a6a43',-32.02,0,z);box(st,.48,.07,.48,'#ff9ec4',-32.02,.44,z,{ol:.012});box(st,.07,.62,.48,'#9a6a43',-31.76,.5,z);}
-    col(L,-38.05,19.7,-34.5,24.3);col(L,-33.15,20.3,-31.7,23.7);
-    inter(L,{x:-34.25,z:SZ,r:2.7,icon:'🏆',label:()=>psTargetLabel(),act:()=>openShow(),pri:()=>psOpen()&&!showDone()});}
+  // 🏆 the Pet Show area (pets and farm update, stage 5: objects-petshow-area, map-petshow-park): the book's stage, podium and judges' table on one sand show lawn
+  // on the park's west side, all facing the fountain; the podium BESIDE the stage (never in front of it), the judges at the other front corner, a low gold rope with a gap
+  {const c0=L.cols.length;L.show={};const add=(k,x,z,ry,t)=>{const o=packBuild(k,t).root;o.position.set(x,0,z);o.rotation.y=ry;o.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(o),r=v=>Math.round(v*100)/100;
+      L.show[k]=[r(b.min.x),r(b.max.x),r(b.min.z),r(b.max.z),r(b.max.y)];st.add(o);return o;};   /* (L.show: where each piece stands, for the check) */
+    const sand=new THREE.Mesh(new THREE.CircleGeometry(7.8,48),mat('#f2dcae'));sand.rotation.x=-Math.PI/2;sand.scale.set(.7,1,1);sand.position.set(-35.0,.026,22);st.add(sand);
+    add('show.stage',-34.9,22,Math.PI/2,{'Pet Show':'🏆 Pet Show'});add('show.podium',-36.0,16.9,Math.PI/2);add('show.judges',PS.jt[0],PS.jt[1],PS.jt[2],{Judge:['Lady Fluffington','Sir Barkley','Granny Daisy'],'9':'⭐','10':'⭐','8':'⭐'});   /* (picture pass 3: the book's table paddles said 9, 10, 8 before any judge had scored; the scores are the cards the judges hold up) */
+    const sg=signPlane('Every Saturday!',1.05,.26,'#ffffff','#ff4d8d',.12);sg.position.set(-37.262,1.62,22);sg.rotation.y=Math.PI/2;L.g.add(sg);PS.sign=sg;   /* under the stage's 🏆 Pet Show banner, between the paw signs (hidden during a show: the big words pop up just there) */
+    const rp=[];for(let i=0;i<=8;i++){const a=-Math.PI*.3+i/8*Math.PI*.6;rp.push([-36.2+Math.cos(a)*5.2,22+Math.sin(a)*5.2]);}
+    for(let i=0;i<rp.length;i++){const [x,z]=rp[i];if(Math.abs(z-22)<1.2)continue;cyl(st,.05,.06,.75,'#ffd45c',x,0,z,{seg:8,ol:.006});sph(st,.07,'#ffd45c',x,.78,z,{ws:8,hs:6,ol:.005});colC(L,x,z,.12);
+      if(i<rp.length-1&&Math.abs(rp[i+1][1]-22)>=1.2){const [x2,z2]=rp[i+1];tube(st,[[x,.62,z],[(x+x2)/2,.56,(z+z2)/2],[x2,.62,z2]],.02,.02,'#ff7aa8',{seg:8,rad:5,ol:false});}}
+    col(L,-37.5,19.6,-35.5,24.4);col(L,-36.65,14.9,-35.35,18.9);   /* the stage and the podium are solid (the show puts you up there itself) */
+    {const [jx,jz,ja]=PS.jt;for(const k of[-1.2,-.4,.4,1.2])colC(L,jx+k*Math.cos(ja)-.25*Math.sin(ja),jz-k*Math.sin(ja)-.25*Math.cos(ja),.55);}   /* the judges' table and its chairs */
+    inter(L,{x:-34.3,z:22,r:2.7,icon:'🏆',label:()=>psTargetLabel(),act:()=>openShow(),pri:()=>psOpen()&&!showDone()});for(let i=c0;i<L.cols.length;i++)L.cols[i].ps5=1;}
   buildBoard(L,st);   /* 📌 the ideas board and a big old oak, just inside the park's north gate */
   busStopCity(L,st);   /* 🚌 the Beach Bus stop, just east of the park's north gate */
   /* ===== paved paths to every shop and front door ===== */
@@ -469,20 +472,24 @@ function buildCity(){
    for(const [x,z,s] of [[76.6,-41.2,1.2],[77.0,-34.6,1.15],[70.6,-33.4,1.0],[80.6,-42.4,1.3]]){tree(st,x,z,s);colC(L,x,z,.3);}   /* (the big tree behind the gate stepped aside: it stood dead centre in the gateway) */
    inter(L,{x:GX-1.6,z:GZ,r:1.8,rect:{x1:GX-3.6,z1:GZ-2.3,x2:GX-.2,z2:GZ+2.3},icon:'🌲',label:'Climb into the Tree Park',act:()=>enter('treepark')});}
   // scatter nature along the edges of town, away from paths and buildings
-  {const r=seeded(77);let placed=0;
-    const free=(x,z,rad)=>{if(x>63&&x<82&&z>-41&&z<-35)return false;   /* (run 4, stage 3: the Tree Park's gate path stays clear) */if(Math.abs(x)<8.5||Math.abs(z)<8.5||Math.abs(x)>79.3||Math.abs(z)>79.3)return false;if(Math.abs(Math.abs(x)-50)<8.5||Math.abs(Math.abs(z)-50)<8.5)return false;if(x>-41&&x<-9&&z>58&&z<79)return false;if(x>-23.5&&x<-10&&z>-25&&z<-8)return false;for(const c of L.cols)if(pushOut(x,z,rad+.4,c))return false;for(const [a,b] of WE)if(segDist(x,z,WP[a],WP[b])<rad+1.1)return false;return true;};
+  /* (stage 5: the nature scatter still sees the park as it was before the Pet Show area (its walls marked ps5 are skipped, the old ones stand in), so every bush and rock keeps its place) */
+  {const r=seeded(77);let placed=0;const PS5_OLD=[{x1:-37.9,z1:28.4,x2:-36.5,z2:33.8},{x1:-38.05,z1:19.7,x2:-34.5,z2:24.3},{x1:-33.15,z1:20.3,x2:-31.7,z2:23.7},{x1:-35.45,z1:9.5,x2:-32.25,z2:14.65},{cx:-37.4,cz:16.2,cr:.28}];
+    const free=(x,z,rad)=>{if(x>63&&x<82&&z>-41&&z<-35)return false;   /* (run 4, stage 3: the Tree Park's gate path stays clear) */if(Math.abs(x)<8.5||Math.abs(z)<8.5||Math.abs(x)>79.3||Math.abs(z)>79.3)return false;if(Math.abs(Math.abs(x)-50)<8.5||Math.abs(Math.abs(z)-50)<8.5)return false;if(x>-41&&x<-9&&z>58&&z<79)return false;if(x>-23.5&&x<-10&&z>-25&&z<-8)return false;for(const c of L.cols)if(!c.ps5&&pushOut(x,z,rad+.4,c))return false;for(const c of PS5_OLD)if(pushOut(x,z,rad+.4,c))return false;for(const [a,b] of WE)if(segDist(x,z,WP[a],WP[b])<rad+1.1)return false;return true;};
     for(let tries=0;tries<2600&&placed<190;tries++){const edge=r();let x,z,forest=false;if(edge<.15){x=-40+r()*80;z=33+r()*7;}else if(edge<.3){x=-40+r()*80;z=-40+r()*7;}else if(edge<.38){x=33+r()*7;z=-40+r()*80;}else if(edge<.46){x=-40+r()*7;z=-40+r()*80;}
         else{x=(r()<.5?-1:1)*(57+r()*23);z=-80+r()*160;if(r()<.5){const t=x;x=z;z=t;}forest=Math.abs(x)>57&&Math.abs(z)>57;}
-      let kind=r();if(forest&&kind<.75)kind=.9;
-      if(kind<.3){if(!free(x,z,.6))continue;const c=pick(['#5fbf74','#6cc97c','#4fae64']);sph(st,.5,c,x,.35,z,{ws:10,hs:8});sph(st,.38,c,x+.4,.28,z+.15,{ws:10,hs:8});sph(st,.34,c,x-.3,.25,z-.2,{ws:10,hs:8});if(r()<.5)for(let k=0;k<4;k++)sph(st,.05,pick(['#ff7aa8','#ffffff','#ffd45c']),x+r()*.6-.3,.72,z+r()*.5-.25,{ws:6,hs:5,ol:.01});colC(L,x,z,.6);}
-      else if(kind<.45){if(!free(x,z,.4))continue;sph(st,.35+r()*.2,pick(['#b8b4c4','#a7a3b5','#c8c4d6']),x,.1,z,{s:[1.3,.7,1],ws:9,hs:7});colC(L,x,z,.45);}
-      else if(kind<.65){if(!free(x,z,.3))continue;const n=3+(r()*4|0);for(let k=0;k<n;k++){const fx=x+r()*1.2-.6,fz=z+r()*1.2-.6;cyl(st,.014,.014,.26,'#4fae5c',fx,0,fz,{seg:4,ol:false});sph(st,.07,pick(['#ff7aa8','#ffd45c','#ffffff','#b79cff','#ff8a6b']),fx,.3,fz,{ws:7,hs:5,ol:.01});}}
-      else if(kind<.78){if(!free(x,z,.3))continue;for(let k=0;k<3;k++){const mx=x+r()*.6-.3,mz=z+r()*.6-.3,h=.12+r()*.12;cyl(st,.035,.045,h,'#fff4e0',mx,0,mz,{seg:6,ol:.01});sph(st,.1,'#ff5d6c',mx,h,mz,{s:[1,.6,1],ws:8,hs:6,ol:.012});}}
-      else{if(!free(x,z,1.3))continue;tree(st,x,z,1+r()*.3);colC(L,x,z,.3);}
+      let kind=r();const q=vetSpot(x,z,1.5)?VDUMP:st;if(forest&&kind<.75)kind=.9;
+      if(kind<.3){if(!free(x,z,.6))continue;const c=pick(['#5fbf74','#6cc97c','#4fae64']);sph(q,.5,c,x,.35,z,{ws:10,hs:8});sph(q,.38,c,x+.4,.28,z+.15,{ws:10,hs:8});sph(q,.34,c,x-.3,.25,z-.2,{ws:10,hs:8});if(r()<.5)for(let k=0;k<4;k++)sph(q,.05,pick(['#ff7aa8','#ffffff','#ffd45c']),x+r()*.6-.3,.72,z+r()*.5-.25,{ws:6,hs:5,ol:.01});colC(L,x,z,.6);if(q!==st)L.cols[L.cols.length-1].vd=1;}
+      else if(kind<.45){if(!free(x,z,.4))continue;sph(q,.35+r()*.2,pick(['#b8b4c4','#a7a3b5','#c8c4d6']),x,.1,z,{s:[1.3,.7,1],ws:9,hs:7});colC(L,x,z,.45);if(q!==st)L.cols[L.cols.length-1].vd=1;}
+      else if(kind<.65){if(!free(x,z,.3))continue;const n=3+(r()*4|0);for(let k=0;k<n;k++){const fx=x+r()*1.2-.6,fz=z+r()*1.2-.6;cyl(q,.014,.014,.26,'#4fae5c',fx,0,fz,{seg:4,ol:false});sph(q,.07,pick(['#ff7aa8','#ffd45c','#ffffff','#b79cff','#ff8a6b']),fx,.3,fz,{ws:7,hs:5,ol:.01});}}
+      else if(kind<.78){if(!free(x,z,.3))continue;for(let k=0;k<3;k++){const mx=x+r()*.6-.3,mz=z+r()*.6-.3,h=.12+r()*.12;cyl(q,.035,.045,h,'#fff4e0',mx,0,mz,{seg:6,ol:.01});sph(q,.1,'#ff5d6c',mx,h,mz,{s:[1,.6,1],ws:8,hs:6,ol:.012});}}
+      else{if(!free(x,z,1.3))continue;tree(q,x,z,1+r()*.3);colC(L,x,z,.3);if(q!==st)L.cols[L.cols.length-1].vd=1;}
       placed++;}}
   /* (the little bridge over the duck pond went in run 4, item 3: the pond is solid water all round again) */
   buildLane(L,st);buildClosedSigns(L);buildGrandmas(L,st);   /* 👵 grandmas on benches by the town houses */
-  buildForest(L,st);buildWild(L);   /* 🌲 the forest belt and the tree groups; 🦋 butterflies, birds and owls */
+  buildForest(L,st);buildFarm(L);buildWild(L);   /* 🌲 the forest belt and the tree groups; 🦋 butterflies, birds and owls */
+  {const g=new THREE.Group();g.position.set(14.2,0,-77.2);g.rotation.y=-Math.PI/2;st.add(g);vetClinic(g);   /* 🩺 the vet station (stage 4; Map x 14.2, z -77.2, door to the west) */
+    for(let i=L.cols.length;i--;)if(L.cols[i].vd)L.cols.splice(i,1);   /* (the walls of the things not drawn there go too: they stood only so the rest are made in the same places) */
+    col(L,9.6,-83.3,18.8,-71.1);col(L,8.4,-80.3,9.4,-79.3);col(L,8.4,-75.1,9.4,-74.1);inter(L,{x:8.6,z:-77.2,r:2.4,icon:'🩺',label:'Go into the Vet Station',act:()=>enter('vet')});}
   bake(st,true,32);
   L.g.add(glowMesh(glowGeo(LAMPXZ.flatMap(([x,z])=>[[x,3.21,z,.8,[.5,.38,.18]],[x,.1,z,4.4,4.4,[.3,.23,.11]]]))));
   buildFlies(L);   /* ✨ fireflies in the park at night */
@@ -493,7 +500,7 @@ function buildCity(){
   inter(L,{x:31.5,z:10.1,r:2.3,icon:'🌷',label:'Go into the Flower Shop',act:()=>enter('flowers')});
   for(const [dx,dz] of [[0,5.3],[0,-5.3],[5.3,0],[-5.3,0]])inter(L,{x:fx+dx,z:fz+dz,r:2.2,icon:'✨',label:'Make a wish (1 🪙)',act:wish});
   L.swings.forEach((s,i)=>inter(L,{x:s.position.x,z:36.1,r:1.5,icon:'🎠',label:'Go on the swing',act:()=>startSwing(i)}));
-  inter(L,{x:-37.2,z:28.1,r:1.8,icon:'🛝',label:'Go down the slide',act:startSlide});
+  inter(L,{x:-39.0,z:30.1,r:1.8,icon:'🛝',label:'Go down the slide',act:startSlide});
   for(const b of L.beds){const t=inter(L,{x:b.ix,z:b.iz,r:1.9,icon:'💧',label:()=>S&&S.water&&S.water[b.id]===S.day?'These flowers are happy today':'Water the flowers',act:()=>waterBed(b)});if(b.yard)yardInt(t,b);}
   return L;
 }
@@ -619,8 +626,9 @@ function updBeach(dt){updBus(dt);if(!S||!PLAYING||!LOC.beach)return;
    1.5 game hours (about 1 real minute) at each stop: park -> beach -> back to the park (the morning trip home, for campers too).
    On bus days the bus home waits at the beach from 19:30 and leaves at 21:00. A brand-new player's first day has a free
    Welcome Bus at both stops from 8:00 to 12:00 that goes as soon as you hop on. You sit inside the waiting bus (Driver Dot says
-   hello); when it leaves, a little ride picture plays and you get off at the other stop. Missed it? Camp at the beach. */
-const BUS_FARE=20,BUS_W=1.5,BUS_D=.25,BUS_EV=19.5,BV=8,BA=2.5,BB=2,BUS_WK={},BUS_DAY={};
+   hello); when it leaves, a little ride picture plays and you get off at the other stop. Missed it? Camp at the beach.
+   Every morning a bus home waits at the beach 8:00-9:30 (on bus days that is the bus's own morning trip home; same fare, free with under 20 coins) */
+const BUS_FARE=20,BUS_W=1.5,BUS_D=.25,BUS_EV=19.5,BUS_MA=8,BV=8,BA=2.5,BB=2,BUS_WK={},BUS_DAY={};
 const BUSP={park:{loc:'city',x:-16.5,z:2.1,ry:0,get pre(){return Math.max(110,-28-laneEnd());},post:225},   /* in town it comes from the far end of 🏡 Friends Lane */
   beach:{loc:'beach',x:BEACH_X-35.5,z:2.25,ry:Math.PI/2,pre:110,post:95}};
 const BSEAT=[[.95,.68],[-.15,.68],[-1.25,.68],[.95,-.68],[-.15,-.68],[-1.25,-.68]],CAMP={x:-25.4,z:6,fx:-21.6,fz:5.4};
@@ -652,6 +660,7 @@ function busWelcome(){const h=S.time,a=h<8?8:Math.ceil(h*6)/6;S.wb=h>=17?[S.day+
 function busSess(d){let o=BUS_DAY[d];if(o)return o;o=[];const a=busArr(d),W=BUS_W,wb=busWB(d);
   if(wb)o.push({p:'park',a:S.wb[1],l:S.wb[2],go:'beach',wb:1},{p:'beach',a:S.wb[1],l:S.wb[2],go:'town',wb:1});
   else if(a!==undefined)o.push({p:'park',a,l:a+W,go:'beach'},{p:'beach',a:a+W,l:a+2*W,go:'town'},{p:'park',a:a+2*W,l:a+2*W+BUS_D,go:null});
+  else o.push({p:'beach',a:BUS_MA,l:BUS_MA+BUS_W,go:'town',mb:1},{p:'park',a:BUS_MA+BUS_W,l:BUS_MA+BUS_W+BUS_D,go:null});   /* 🌅 the morning bus home (pets and farm update): every day with no other trip, it waits at the beach 8:00-9:30 and goes to town */
   if(wb||a!==undefined)o.push({p:'beach',a:BUS_EV,l:21,go:'town'},{p:'park',a:21,l:21+BUS_D,go:null});
   return BUS_DAY[d]=o;}
 const busHM=h=>{const m=Math.round(h*60),H=Math.floor(m/60)%24,M=m%60;return H+':'+(M<10?'0':'')+M;};
@@ -841,7 +850,7 @@ function busBoardDraw(B){const day=S?S.day:1,x=B.c.getContext('2d'),Wd=512,Ht=30
     const L=(today?'⭐ ':'')+wdName(d),R=B.bch?(busWB(d)?'🎉 until '+busHM(S.wb[2]):busHM(busArr(d)+2*BUS_W))+' · 21:00':busWB(d)?'🎉 '+busHM(S.wb[1])+'–'+busHM(S.wb[2]):busHM(busArr(d));   /* 🏖️ the board at the beach: when the buses home leave (the same times as its card and the pill) */
     x.fillStyle='#3d2c5e';x.font=`800 32px ${FONT}`;const lw=x.measureText(L).width;x.textAlign='left';x.fillText(L,28,y);x.textAlign='right';
     x.font=`800 ${Math.max(20,Math.min(32,Math.floor(32*(Wd-80-lw)/x.measureText(R).width)))}px ${FONT}`;x.fillText(R,Wd-28,y);});
-  x.fillStyle='#3d2c5e';x.font=`700 25px ${FONT}`;x.textAlign='center';x.fillText(B.bch?`🏘️ Bus to town · a ride is ${BUS_FARE} 🪙`:`🏖️ Bus home 21:00 · a ride is ${BUS_FARE} 🪙`,Wd/2,Ht-26);B.t.needsUpdate=true;}
+  x.fillStyle='#3d2c5e';x.textAlign='center';const ft=B.bch?`🌅 Every morning 9:30 to town · ${BUS_FARE} 🪙`:`🏖️ Bus home 21:00 · a ride is ${BUS_FARE} 🪙`;x.font=`700 25px ${FONT}`;x.font=`700 ${Math.min(25,Math.floor(25*(Wd-24)/x.measureText(ft).width))}px ${FONT}`;x.fillText(ft,Wd/2,Ht-26);B.t.needsUpdate=true;}
 /* ---- the timetable card ---- */
 function busDays(from,n){const out=[];for(let d=from;out.length<n&&d<from+15;d++)if(busArr(d)!==undefined||busWB(d))out.push(d);return out;}
 function openBusTable(){const beach=CUR.id==='beach',w=Math.floor((S.day-1)/7);SFX.tap();
@@ -853,7 +862,7 @@ function openBusTable(){const beach=CUR.id==='beach',w=Math.floor((S.day-1)/7);S
   const c=busCur(beach?'beach':'park'),here=c&&c.u===0&&c.s.go?`🚌 The bus is here! It leaves at ${busHM(c.s.l)}.`:beach?'🏘️ Next bus home: '+busWhen(busNext('beach','town'),1)+'.':'🏖️ Next bus to the beach: '+busWhen(busNext('park','beach'))+'.';
   openPanel(`<div class="hd"><h2>🚌 Beach Bus</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div><p class="line" style="margin-top:2px">${here}</p>
     <div class="sec">This week</div>${wk(w).map(row).join('')}${left<2?`<div class="sec">Next week</div>${wk(w+1).map(row).join('')}`:''}
-    <p class="note" style="margin-top:12px">🚏 The bus waits about a minute at each stop, so be on time!<br>${busR1()?`🪙 A ride is ${BUS_FARE} coins.`:`🎟️ Your first ride is free! After that, a ride is ${BUS_FARE} coins.`}<br>🏖️ On bus days the bus home leaves the beach at 21:00.<br>⛺ Missed it? Camp at the beach. The next bus takes you home!</p>`,{cls:'bustab'});}   /* (bustab: its ⬇️ "more below" sits in the middle, between the days and the times) */
+    <p class="note" style="margin-top:12px">🚏 The bus waits about a minute at each stop, so be on time!<br>${busR1()?`🪙 A ride is ${BUS_FARE} coins.`:`🎟️ Your first ride is free! After that, a ride is ${BUS_FARE} coins.`}<br>🏖️ On bus days the bus home leaves the beach at 21:00.<br>🌅 Every morning a bus home waits at the beach from 8:00 to 9:30.<br>⛺ Missed it? Camp at the beach. The next bus takes you home!</p>`,{cls:'bustab'});}   /* (bustab: its ⬇️ "more below" sits in the middle, between the days and the times) */
 /* ---- riding ---- */
 function busInfo(p){const c=busCur(p);SFX.pop();
   if(c&&c.u===0&&c.s.go&&busThere(p)&&!BUS.ride){toast('🚌 The bus is here! Walk to its door to get on 🚪 It leaves at '+busHM(c.s.l)+'.',4);return;}
@@ -1306,7 +1315,7 @@ function hclimb(dir){const L=CUR;if(CLIMB||CUT||fading||!L.fls||L.fls.length<2)r
   const w=L===LOC.home?HOMEW:L.W,x0=L.ox-w,z0=L.oz+UPZ*f;
   CLIMB={t:0,L,dir,x0:P.x,z0:P.z,y0:P.yaw,p0:P.pitch,x1:x0-3.3,z1:z0,ya:Math.PI/2,h:3,st:0,fd:false,end:()=>{
     [P.x,P.z]=collideXZ(L.ox-w+2.6,L.oz+UPZ*to,.3,L);P.yaw=-Math.PI/2;P.pitch=0;P.cy=0;floorVis();bringFollowers(true);saveLocal();
-    toast(dir<0?(to?'🏡 Down to floor '+(to+1):'🏡 Back downstairs'):L===LOC.home?(to===1?'🏡 Upstairs! Tap 🛋️ to decorate up here too.':'🏡 Floor '+(to+1)+'! Tap 🛋️ to decorate here too.'):L===LOC.pets?(dir>0?'🐾 Upstairs! Here are the animals 💗':'🛒 Downstairs: snacks, toys and pet clothes'):'🏡 Upstairs!',2.6);}};}
+    toast(dir<0?(to?'🏡 Down to floor '+(to+1):'🏡 Back downstairs'):L===LOC.home?(to===1?'🏡 Upstairs! Tap 🛋️ to decorate up here too.':'🏡 Floor '+(to+1)+'! Tap 🛋️ to decorate here too.'):L===LOC.pets?(dir>0?'🐾 Upstairs! Here are the animals 💗':'🛒 Downstairs: snacks, toys and pet clothes'):L===LOC.vet?(dir>0?'🩺 Upstairs: Dr. Rūta and the vet rooms':'🩺 Downstairs: Nurse Penny\'s desk'):'🏡 Upstairs!',2.6);}};}
 
 /* ===== 🏡 Friends Lane: the west road goes on past the edge of town, with a house lot for every player. Your house is here too ===== */
 /* lots 0-5 are where old versions have them; 6-11 are further down the lane; when even more friends play, more lots appear */
@@ -1328,15 +1337,15 @@ function buildLane(L,st){
   box(st,.26,1.05,9.5,'#ff7aa8',-84.6,4.0,0,{ol:.03});
   const sg=signPlane('🏡 Friends Lane',6.8,.82,'#ff7aa8','#ffffff');sg.position.set(-84.45,4.52,0);sg.rotation.y=Math.PI/2;L.g.add(sg);
   /* the end of the lane (a barrier and a hedge) moves along when the lane grows */
-  const e=new THREE.Group();L.g.add(e);box(e,.4,.9,8.4,'#ffffff',.2,0,0,{ol:.03});for(let k=-3;k<=3;k+=2)box(e,.42,.3,.9,'#ff6b6b',.2,.45,k,{ol:false});box(e,.9,1.1,54.1,'#5fbf74',-1.35,0,0,{ol:.03});bake(e,true);
-  L.laneE=e;L.laneC=[{z1:-82,x2:-80.4,z2:-26.15},{z1:26.15,x2:-80.4,z2:82},{z1:-26.15,z2:26.15},{z1:-4.2,z2:4.2}];L.cols.push(...L.laneC);laneEndSet(L);
+  const e=new THREE.Group();L.g.add(e);box(e,.4,.9,8.4,'#ffffff',.2,0,0,{ol:.03});for(let k=-3;k<=3;k+=2)box(e,.42,.3,.9,'#ff6b6b',.2,.45,k,{ol:false});box(e,.9,1.1,75.9,'#5fbf74',-1.35,0,0,{ol:.03});bake(e,true);
+  L.laneE=e;L.laneC=[{z1:-38.2,x2:-80.4,z2:-37.05},{z1:37.05,x2:-80.4,z2:82},{z1:-37.05,z2:37.05},{z1:-4.2,z2:4.2},{x1:-232,z1:-38.2,z2:82,fw:1}]   /* (🐴 stage 6: north of the lane only the hedge's own strip: the farm's trail and forest are behind it; [4] = the land west of the lane end) */   /* 🏡 the green border is 37.5 m off the road (map-lane-border, stage 3: level-3 backyards reach 35 m) */;L.cols.push(...L.laneC);laneEndSet(L);
   L.lane=[];for(const p of LANE_PLOTS)laneLot(L,st,p);
   buildYard(L);}
-function laneEndSet(L){const x=laneEnd(),[a,b,c,d]=L.laneC;L.laneE.position.x=x;a.x1=b.x1=c.x1=x-3;c.x2=x-.9;d.x1=x;d.x2=x+.4;L.bounds.x1=x-1;}
+function laneEndSet(L){const x=laneEnd(),[a,b,c,d,w]=L.laneC;L.laneE.position.x=x;a.x1=b.x1=c.x1=x-3;c.x2=x-.9;d.x1=x;d.x2=x+.4;w.x2=x-3;L.bounds.x1=Math.min(x-1,FARM_X1);}   /* (🐴 the town's edge reaches round the farm: FARM_X1) */
 /* a piece of the lane from xa to xb (xb is further west): road, pavements, hedges and street lamps */
 function laneRoad(L,g,xa,xb,lamps){const ROAD='#8c90b4',SIDE='#f3e7df',CURB='#ddcdd0',cx=(xa+xb)/2,len=xa-xb,hx=xa>-85?-80.3:xa-.9;
   flat(g,len,8,ROAD,cx,.02,0);
-  for(const s of[-1,1]){flat(g,len,3,SIDE,cx,.03,s*5.5);box(g,len,.16,.14,CURB,cx,-.08,s*4,{ol:.015});box(g,hx-xb+.9,1.1,.9,'#5fbf74',(hx+xb-.9)/2,0,s*26.6,{ol:.03});}
+  for(const s of[-1,1]){flat(g,len,3,SIDE,cx,.03,s*5.5);box(g,len,.16,.14,CURB,cx,-.08,s*4,{ol:.015});box(g,hx-xb+.9,1.1,.9,'#5fbf74',(hx+xb-.9)/2,0,s*37.5,{ol:.03});}
   for(let t=xb+2;t<=xa-1;t+=3.2)box(g,1.4,.012,.16,'#ffffff',t,.03,0,{ol:false});
   for(const x of lamps)for(const s of[-1,1]){lampPost(g,x,s*4.55);colC(L,x,s*4.55,.16);}}
 /* what every lot has: a front fence, a little path, a mailbox and a sign. A house, flower beds and a name come with an owner */
@@ -1384,7 +1393,7 @@ function fcGate(open){open=!!open;if(FC.open===open||!FC.g)return;FC.open=open;F
 const fcOpen=()=>!!FC.open;
 /* 🌱 your yard on Friends Lane: the garden behind your house, its gate, the back door, the mailbox and the "Bigger house!" sign.
    It is built once at the old town-yard spots (the same numbers old saves use) and put on your lot; it moves along if your lot changes */
-const YARD={g:null,gin:null,cols:[],wc:[],ints:[],on:false,j:null,plaque:null};
+const YARD={g:null,gin:null,cols:[],lcols:[],wc:[],ints:[],on:false,j:null,plaque:null,lvg:null,gear:[]};
 /* 🌱 the seed spots in the yard (the old town-yard frame; lotPt moves them to your lot). Friends' lots draw the same spots from their presence (gd) */
 const YARD_PLOTS=[[0,-21,-20.9],[1,-18.3,-20.9],[2,-15.6,-20.9],[3,-21,-23.0],[4,-18.3,-23.0],[5,-15.6,-23.0]];
 /* 🪴 run 4, item 22: 30 more seed spots: pots along the inside of the fence (never on the way from the gate or the back door, never by the shed), six more at gardening level 10, 20, 30, 40 and 50 */
@@ -1393,31 +1402,101 @@ const YARD_POTS=[[-21.3,-18.95],[-20.6,-18.95],[-19.9,-18.95],[-19.2,-18.95],[-1
   [-22.55,-22.1],[-22.55,-22.8],[-22.55,-23.5],[-22.55,-24.1],[-21.9,-24.15],[-21.2,-24.15],
   [-20.5,-24.15],[-19.8,-24.15],[-19.1,-24.15],[-18.4,-24.15],[-17.7,-24.15],[-17.0,-24.15],
   [-16.3,-24.15],[-15.6,-24.15],[-14.9,-24.15],[-10.95,-20.4],[-10.95,-21.1],[-10.95,-21.8]].map(([x,z],k)=>[6+k,x,z]);
-const YARD_ALL=YARD_PLOTS.concat(YARD_POTS);
-const plotGate=i=>i<6?1:10*(1+Math.floor((i-6)/6));   /* the gardening level a spot needs: beds 1, pots 10, 20, 30, 40, 50 */
-const plotOpen=i=>!!S&&sk('garden').lv>=plotGate(i);
+/* 🏡 yard levels (pets and farm update, stage 3; rules-garden-levels, rules-q-yard-skill, rules-yard-only-owned): the garden level (2 at gardening 20,
+   3 at 40) and the pet yard level (2 at Pet care 20, 3 at 40) give the space and its looks: fences, gate, grass, lamps. A level 2 of either goes 3 m
+   further back, garden 3 to z -29, pet yard 3 adds the big-pets area behind a gate (z -29 to -35, the whole lot wide). Beds, pots and training gear show
+   only once they are yours: garden 2 and 3 add 3 beds each at the back (save spots 36-38, 39-41, open when the level is bought), a pot shows when it opens */
+const YARD_BEDS2=[[36,-21,-25.6],[37,-18.3,-25.6],[38,-15.6,-25.6],[39,-21,-27.65],[40,-18.3,-27.65],[41,-15.6,-27.65]];
+const YARD_ALL=YARD_PLOTS.concat(YARD_POTS,YARD_BEDS2);
+const plotGate=i=>i<6?1:i<36?10*(1+Math.floor((i-6)/6)):0;   /* the gardening level a spot needs: beds 1, pots 10, 20, 30, 40, 50 (the new beds: the garden level) */
+const yLv=k=>clamp(Math.floor(+(S&&S.yard&&S.yard[k]))||1,1,3);
+const plotOpen=i=>!!S&&(i>=36?yLv('garden')>=(i<39?2:3):sk('garden').lv>=plotGate(i));
+const yardBack=(gl,pl)=>pl>=3?-35:gl>=3?-29:gl>=2||pl>=2?-27.6:-24.6;
+const BED_TOP=[.16,.32,.42];
+function bedLook(g,x,z,lv){const h=BED_TOP[lv-1];if(lv<2){box(g,1.8,h,1.2,'#b07a52',x,0,z,{ol:.02});return;}const rim=lv===2?'#ffffff':'#f3e7df';box(g,1.8,h,1.2,lv===2?'#e0905e':'#d9645a',x,0,z,{ol:.02});
+  for(const s of[-1,1]){box(g,1.86,.06,.08,rim,x,h,z+s*.6,{ol:.012});box(g,.08,.06,1.26,rim,x+s*.9,h,z,{ol:.012});}if(lv===3)for(const a of[-1,1])for(const b of[-1,1])sph(g,.06,'#ffd45c',x+a*.9,h+.08,z+b*.6,{ws:6,hs:5,ol:.008});}
+const yLamp=(g,x,z)=>{cyl(g,.05,.06,1.0,'#3d3550',x,0,z,{seg:8,ol:.008});sph(g,.13,null,x,1.1,z,{mat:LAMP,ol:.01});cone(g,.17,.12,'#3d3550',x,1.2,z,{seg:8,ol:.008});};
+/* the fences, gate, grass and lamps of a yard at its levels (yours, and a friend's lot from their presence); T turns a yard spot into the lot's */
+function yardShell(g,L,gl,pl,T){const back=yardBack(gl,pl),GC=['#ffffff','#ffd6e0','#fff1b8'][gl-1],PC=['#ffffff','#c9f2e3','#c9f2e3'][pl-1],
+    F=(a,b,c,d,k)=>{const A=T(a,b),B=T(c,d);fence(g,A[0],A[1],B[0],B[1],L,k);},Q=(w,d,c,x,z,y)=>{const p=T(x,z);flat(g,w,d,c,p[0],y,p[1]);},at=(x,z)=>T(x,z);
+  if(back<-24.6)Q(12.3,-24.55-back,'#a2e48a',-16.75,(back-24.55)/2,.012);
+  if(pl>=3){F(-23,-18.5,-23,-29,GC);F(-23,-29,-13.3,-29,GC);F(-11.5,-29,-10.5,-29,PC);F(-10.5,-29,-10.5,-18.5,PC);
+    for(const [a,b,c,d] of[[-23,-29,-23,-35],[-23,-35,-10.5,-35],[-10.5,-35,-10.5,-29]]){const A=T(a,b),B=T(c,d);ironFence(g,A[0],A[1],B[0],B[1],L);}
+    Q(12.4,5.9,'#9fd98a',-16.75,-32,.013);const r=seeded(7);for(let i=0;i<26;i++){const [x,z]=at(-22.6+r()*11.7,-34.5+r()*5);sph(g,.05,FLOWER_COLS[i%5],x,.12,z,{ws:6,hs:4,ol:false});}
+    /* the gate to the big-pets area: two posts, an open way and a 'Big pets' board (never the word 'exotic') */
+    for(const x of[-13.3,-11.5]){const [px,pz]=at(x,-29);box(g,.26,1.3,.26,'#f3e7df',px,0,pz,{ol:.02});sph(g,.12,'#ffd45c',px,1.42,pz,{ws:8,hs:6,ol:.01});if(L)colC(L,px,pz,.16);}
+    {const [bx,bz]=at(-12.4,-29),ry=T(0,1)[1]>T(0,0)[1]?0:Math.PI;box(g,1.8,.45,.08,'#ffffff',bx,1.5,bz,{ol:.012});for(const sd of[1,-1]){const sg=signPlane('🐾 Big pets',1.7,.4,'#ffffff','#2f7a66');sg.position.set(bx,1.72,bz+sd*.05);sg.rotation.y=ry+(sd<0?Math.PI:0);g.add(sg);}}
+    for(const [x,z] of[[-22.6,-34.5],[-10.9,-29.6],[-18.2,-29.6]]){const [a,b]=at(x,z);yLamp(g,a,b);}}
+  else{F(-23,-18.5,-23,back,GC);F(-23,back,-17.2,back,GC);F(-17.2,back,-10.5,back,PC);F(-10.5,back,-10.5,-18.5,PC);}
+  {const [a,b]=at(-12.85,-21.2);flat(g,3.2,2.4,'#b4ea8e',a,.013,b);}   /* the pet corner's softer grass */
+  if(gl>=2){const [a,b]=at(-16.95,back+.7);yLamp(g,a,b);}if(pl>=2){const [a,b]=at(-10.9,-24.9);yLamp(g,a,b);}}
+/* 🏋️ training gear (stage 3, rules-garden-levels 8): small gear fits at pet yard level 1, the dog agility course needs level 2. Gear stands in the pet
+   corner (level 1), the play corner behind the shed (level 2) and the front of the big-pets area (level 3), each as big as fits its spot (never smaller
+   than 0.6 of the size the moves were made for). One of each; the shop says when the yard is full */
+const GEAR={dog:{n:'Dog agility course',i:'🐕',p:300,lv:2,k:['dog','pug','pomchi','sausage'],s:1.25},dog2:{n:'Dog agility course (style 2)',i:'🐕',p:300,lv:2,k:['dog','pug','pomchi','sausage'],s:1},
+  cat:{n:'Cat tower with feather wand',i:'🐈',p:200,lv:1,k:['cat'],s:1.6},cat2:{n:'Cat tower with feather wand (style 2)',i:'🐈',p:200,lv:1,k:['cat'],s:1.3},
+  bunny:{n:'Bunny hop hurdles',i:'🐇',p:150,lv:1,k:['bunny'],s:1.3},bunny2:{n:'Bunny hop hurdles (style 2)',i:'🐇',p:150,lv:1,k:['bunny'],s:1.1},
+  hamster:{n:'Hamster wheel and tube maze',i:'🐹',p:150,lv:1,k:['hamster'],s:4.4},duck:{n:'Duck ramp and splash tub',i:'🦆',p:200,lv:1,k:['duck'],s:1.3},
+  owl:{n:'Owl perch with flight hoops',i:'🦉',p:200,lv:1,k:['owl'],s:1.7},capy:{n:'Capybara zen bath',i:'♨️',p:250,lv:1,k:['capybara'],s:1.35}};
+/* 🐒🦭🐻🐍 stage 4b: the big-needs pets' gear (economy-pfu-prices), appended at the END (friends read gear by its place in GEAR_IDS). Monkey, seal and bear gear
+   need pet yard level 3 (where those pets live); the snake's basket fits any yard */
+Object.assign(GEAR,{monkey:{n:'Monkey climbing bars and rings',i:'🐒',p:250,lv:3,k:['monkey'],s:1},monkey2:{n:'Monkey climbing bars and rings (style 2)',i:'🐒',p:250,lv:3,k:['monkey'],s:1},
+  seal:{n:'Seal beach ball',i:'🦭',p:150,lv:3,k:['seal'],s:1.3},bear:{n:'Bear log and tyre swing',i:'🐻',p:250,lv:3,k:['bear'],s:1},snake:{n:'Snake flute and basket',i:'🎶',p:150,lv:1,k:['snake'],s:1.2}});
+/* 🏡 the big-needs pets' homes in the big-pets area of pet yard level 3 (the book's yard:design v3: pond .62 at (-20.8,-32), the 9 m jungle tree at (-16.4,-32.4),
+   the cave den .65 at (-12.15,-32.4); yard frame). Only the ones you bought (S.yard.home). sp = where the pet rests at home, c = what is solid */
+const BHOME={tree:{n:'Climbing tree',i:'🌳',p:400,pet:'monkey',key:'home.tree',x:-16.4,z:-32.4,s:1,sp:[-15.2,-30.6],c:[[0,0,.9]]},pond:{n:'Pond',i:'🌊',p:700,pet:'seal',key:'home.pond',x:-20.8,z:-32,s:.62,sp:[-19.0,-30.4],c:[[0,0,1.55]]},
+  den:{n:'Cave den',i:'🪨',p:700,pet:'bear',key:'home.den',x:-12.15,z:-32.4,s:.65,sp:[-12.2,-30.35],c:[[0,-.3,1.2]]}},BHOME_IDS=Object.keys(BHOME),BHOME_OF={monkey:'tree',seal:'pond',bear:'den'},BHOME_L='TPD';
+function bhomeModel(id){const H=BHOME[id],o=packBuild(H.key).root;o.scale.setScalar(H.s);o.position.set(H.x,0,H.z);return o;}
+const GEAR_IDS=Object.keys(GEAR),GEAR_SLOTS=[{x:-12.85,z:-21.2,w:3.0,d:1.7,lv:1},{x:-12.6,z:-26.0,w:3.6,d:2.2,lv:2},{x:-21.0,z:-29.8,w:2.8,d:1.0,lv:3}],GEAR_BB={};
+function gearBB(id){if(!GEAR_BB[id]){const g=new THREE.Group();GEAR_B[id](g);g.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(g);GEAR_BB[id]={cx:(b.min.x+b.max.x)/2,cz:(b.min.z+b.max.z)/2,w:b.max.x-b.min.x,d:b.max.z-b.min.z};g.traverse(o=>{if(o.geometry)o.geometry.dispose();});}return GEAR_BB[id];}
+/* where each piece of gear stands at pet yard level pl: [{id, k (slot), s (scale), ry}], in the order bought; a piece with no room left is null */
+function gearPlace(list,pl){const used=[];return list.map(id=>{if(!GEAR[id])return null;const B=gearBB(id),turn=B.d>B.w;let best=null;
+  GEAR_SLOTS.forEach((sl,k)=>{if(sl.lv>pl||used.includes(k))return;const w=turn?B.d:B.w,d=turn?B.w:B.d,s=Math.min(GEAR[id].s,sl.w/w,sl.d/d);if(s>=.6*GEAR[id].s&&(!best||s>best.s+1e-6))best={id,k,s,ry:turn?Math.PI/2:0};});
+  if(best)used.push(best.k);return best;});}
+/* one piece of gear as a model, standing in its slot (in the yard's frame) */
+function gearModel(q){const B=gearBB(q.id),sl=GEAR_SLOTS[q.k],o=new THREE.Group(),m=new THREE.Group();GEAR_B[q.id](m);m.position.set(-B.cx,0,-B.cz);o.add(m);o.scale.setScalar(q.s);o.rotation.y=q.ry;o.position.set(sl.x,0,sl.z);o.userData.m=m;return o;}
+/* your yard at its levels: rebuilt when a level, a pot or gear changes (and at the start) */
+function yardLv(){if(!YARD.lvg||!S)return;const g=YARD.lvg,gl=yLv('garden'),pl=yLv('pet');for(const c of [...g.children]){g.remove(c);c.traverse(o=>{if(o.geometry)o.geometry.dispose();});}
+  YARD.lcols.length=0;const FL={cols:YARD.lcols,ox:0,oz:0},st=new THREE.Group();g.add(st);
+  yardShell(st,FL,gl,pl,(x,z)=>[x,z]);
+  for(const [i,x,z] of YARD_PLOTS.concat(YARD_BEDS2))if(plotOpen(i)){bedLook(st,x,z,gl);col(FL,x-.92,z-.62,x+.92,z+.62);}
+  for(const [i,x,z] of YARD_POTS)if(plotOpen(i)){cyl(st,.26,.2,.3,'#c9805a',x,0,z,{seg:10,ol:.015});cyl(st,.29,.29,.05,'#b8704c',x,.28,z,{seg:10,ol:.012});colC(FL,x,z,.32);}   /* 🪴 only the open pots (no more lock plates) */
+  bake(st,true);
+  YARD.gear=gearPlace((S.yard&&S.yard.gear)||[],pl).filter(Boolean).reduce((a,q)=>{a[q.k]=q;return a;},[]);
+  if(pl>=3)for(const id of (S.yard&&S.yard.home)||[])if(BHOME[id]){const H=BHOME[id],o=bhomeModel(id);g.add(o);bake(o,true);for(const [dx,dz,r] of H.c)colC(FL,H.x+dx,H.z+dz,r);}   /* 🏡 stage 4b */
+  for(const q of YARD.gear)if(q){const o=gearModel(q);g.add(o);bake(o,true);q.o=o;const B=gearBB(q.id),sl=GEAR_SLOTS[q.k],hw=(q.ry?B.d:B.w)*q.s/2,hd=(q.ry?B.w:B.d)*q.s/2;col(FL,sl.x-hw*.8,sl.z-hd*.6,sl.x+hw*.8,sl.z+hd*.6);}
+  if(typeof PLOTS!=='undefined')for(const r of PLOTS)plotRefresh(r);
+  if(YARD.j!=null)yardColsSet(YARD.j);}
+function yardColsSet(j){const C=LOC.city;for(const c of YARD.wc){const i=C.cols.indexOf(c);if(i>=0)C.cols.splice(i,1);}
+  YARD.wc=YARD.cols.concat(YARD.lcols).map(c=>{if(c.cr===undefined)return lotRect(j,c);const q=lotPt(j,c.cx,c.cz);return{cx:q[0],cz:q[1],cr:c.cr};});C.cols.push(...YARD.wc);}
+function yardSnap(){if(!S)return null;const gl=yLv('garden'),pl=yLv('pet'),gr=((S.yard&&S.yard.gear)||[]).filter(id=>GEAR[id]).map(id=>String.fromCharCode(97+GEAR_IDS.indexOf(id))).join('');const hm=((S.yard&&S.yard.home)||[]).filter(id=>BHOME[id]).map(id=>BHOME_L[BHOME_IDS.indexOf(id)]).join('');const y=''+gl+pl+gr+hm;return y==='11'?null:y;}   /* (stage 4b: then a capital letter per big pet home, T P D) */   /* 🏡 "garden level, pet yard level, a letter per piece of gear" for friends (stage 3) */
 function gardenSnap(){if(!S||!Array.isArray(S.garden))return null;const out=[];S.garden.forEach((st,i)=>{if(st&&st.seed&&SEEDS[st.seed])out.push(i+','+st.seed+','+plotStage(st));});return out.length?out.join(';'):null;}   /* "spot,seed,stage;…" (run 4, job 2) */
 function buildYard(L){const g=new THREE.Group(),gin=new THREE.Group(),st=new THREE.Group(),FL={cols:YARD.cols,ox:0,oz:0};
   gin.position.set(17,0,15);g.add(gin);gin.add(st);L.g.add(g);g.visible=false;YARD.g=g;YARD.gin=gin;
   flat(st,12.3,6.0,'#a2e48a',-16.75,.012,-21.55);
-  fence(st,-23,-18.5,-23,-24.6,FL);fence(st,-23,-24.6,-10.5,-24.6,FL);fence(st,-10.5,-24.6,-10.5,-18.5,FL);fence(st,-23,-18.5,-21.6,-18.5,FL);
+  fence(st,-23,-18.5,-21.6,-18.5,FL);   /* (the side and back fences come with the yard level: yardLv) */
   /* the garden gate is beside the house, under a little arch; stepping stones lead there from the street */
   for(const x of[-12.32,-10.58]){box(st,.12,2.05,.12,'#ffffff',x,0,-18.5,{ol:.02});colC(FL,x,-18.5,.1);}box(st,1.9,.12,.16,'#ffffff',-11.45,1.98,-18.5,{ol:.02});box(st,1.62,.5,.06,'#ffffff',-11.45,2.05,-18.5,{ol:.02});
   const gs=signPlane('🌱 My Garden',1.5,.42,'#5fd4b0','#ffffff'),gb=new THREE.Mesh(gs.geometry,gs.material);gs.position.set(-11.45,2.3,-18.455);gb.position.set(-11.45,2.3,-18.545);gb.rotation.y=Math.PI;gin.add(gs,gb);   /* readable from both sides */
   for(let k=0;k<8;k++)disc(st,.36,'#e9e0f7',-11.45,.03,-7.6-k*1.4,{seg:14});
   doorAt(st,-14,-18.52,Math.PI,'#5fd4b0');
   {BENCH_SKIP=-1;const yb=bench(st,-20.0,-9.1,Math.PI);BENCH_SKIP=0;const B=BENCHES[BENCHES.length-1];B.x0=-20.0;B.z0=-9.1;B.ry0=Math.PI;for(const q of B.seats){q.lx=q.x;q.lz=q.z;}colC(FL,-20.0,-9.1,.8);}   /* 🪑 a bench in your front yard */
-  L.plots=[];for(const [i,x,z] of YARD_PLOTS){box(st,1.8,.16,1.2,'#b07a52',x,0,z,{ol:.02});col(FL,x-.92,z-.62,x+.92,z+.62);L.plots.push({i,x,z});}
-  for(const [i,x,z] of YARD_POTS){cyl(st,.26,.2,.3,'#c9805a',x,0,z,{seg:10,ol:.015});cyl(st,.29,.29,.05,'#b8704c',x,.28,z,{seg:10,ol:.012});colC(FL,x,z,.32);L.plots.push({i,x,z,pot:1});}   /* 🪴 the pots */
-  {const pots=L.plots.filter(p=>p.pot);let run=[];const end=()=>{if(run.length)run[Math.floor((run.length-1)/2)].lock=1;run=[];};pots.forEach((p,k)=>{const q=pots[k-1];if(q&&(plotGate(p.i)!==plotGate(q.i)||Math.hypot(p.x-q.x,p.z-q.z)>1.2))end();run.push(p);});end();}   /* 🔒 one lock plate in the middle of each row of pots of one level (run 4, stage 3) */
+  L.plots=[];for(const [i,x,z] of YARD_PLOTS.concat(YARD_BEDS2))L.plots.push({i,x,z});   /* (beds and pots are drawn by yardLv: only the open ones) */
+  for(const [i,x,z] of YARD_POTS)L.plots.push({i,x,z,pot:1});
   /* the shed stands beside the arch's way (not right behind it): its door, the seed box and the 🌱 Seeds sign face the arch */
   box(st,1.6,2.0,1.4,'#ffd6e0',-13.4,0,-23.3);prism(st,1.9,1.8,.75,'#ff7aa8',-13.4,2.0,-23.3,{ry:Math.PI/2});box(st,.7,1.6,.06,'#5fd4b0',-13.75,0,-22.58,{ol:.015});col(FL,-14.3,-24.05,-12.5,-22.55);
   box(st,.8,.45,.5,'#c98f5e',-12.95,0,-22.35);for(let k=0;k<4;k++)box(st,.14,.2,.04,['#ff7aa8','#ffd45c','#5fd4b0','#ff8a6b'][k],-13.25+k*.2,.45,-22.35,{rx:-.2,ol:.01});col(FL,-13.4,-22.65,-12.5,-22.05);
   const ss=signPlane('🌱 Seeds',.8,.3,'#ffffff','#3d2c5e');ss.position.set(-13,1.75,-22.57);gin.add(ss);
   cyl(st,.14,.16,.28,'#7cc8ff',-22.4,0,-19.3,{seg:12,ol:.015});cone(st,.04,.3,'#7cc8ff',-22.25,.25,-19.3,{rz:-1.0,seg:6,ol:.012});
   const pq=signPlane('Bigger house!',1.4,.36,'#ff7aa8','#ffffff');pq.position.set(-20.4,.8,-7.44);gin.add(pq);YARD.plaque=pq;   /* under your name sign, until you buy the big house */
+  /* 🏡 the yard sign by the garden gate (stage 3, screens-yard-sign): garden and pet yard levels */
+  box(st,.1,1.1,.1,'#9a6a43',-10.8,0,-16.9,{ol:.015});colC(FL,-10.8,-16.9,.1);box(st,.78,.36,.06,'#c98f5e',-10.8,.82,-16.9,{ol:.015});
+  const ys=signPlane('🏡 My yard',.7,.28,'#ffffff','#3d2c5e');ys.position.set(-10.8,1.0,-16.865);gin.add(ys);
   bake(st,true);
+  YARD.lvg=new THREE.Group();gin.add(YARD.lvg);
   const yi=(x,z,o)=>yardInt(inter(L,Object.assign({x,z},o)));
+  yi(-11.45,-16.9,{r:1.25,icon:'🏡',label:'My yard: garden and pet yard',act:()=>openYardSign()});
+  GEAR_SLOTS.forEach((sl,k)=>{const t=yi(sl.x,sl.z,{r:Math.max(sl.w,sl.d)/2+.9,icon:()=>{const q=YARD.gear[k];return q?GEAR[q.id].i:'🏋️';},label:()=>gearLabel(k),act:()=>gearUse(k)});t.when=()=>YARD.on&&!!YARD.gear[k];});
   yi(-14,-19.3,{r:1.9,icon:'🏠',label:'Go inside your house',act:()=>enter('home','back')});
   yi(-12.95,-21.4,{r:1.8,icon:'🌱',label:'Buy seeds',act:()=>openShop('seeds')});
   yi(-15.4,-7.1,{r:1.8,icon:'📬',label:()=>S.hp&&hpOn()?'🎉 Mailbox (your party is on!)':'Mailbox: mail or a party',act:hpMailMenu})   /* 🎉 run 4, job 17: 📬 Check mail or 🎉 Host a party */;
@@ -1429,8 +1508,7 @@ const yardPt=(x,z)=>YARD.j==null?[x,z]:lotPt(YARD.j,x,z);
 /* put your yard on your lot: at the start, and when your lot changes (a friend who has lived on Friends Lane longer came online) */
 function yardPlace(){const j=LANE.mine,C=LOC.city;if(j==null||!YARD.g||j===YARD.j)return;const p=LANE_PLOTS[j],a=YARD.j,[cx,cz]=lotPt(j,-17,-15);
   YARD.g.position.set(cx,0,cz);YARD.g.rotation.y=p.s<0?0:Math.PI;YARD.g.visible=true;
-  for(const c of YARD.wc){const i=C.cols.indexOf(c);if(i>=0)C.cols.splice(i,1);}
-  YARD.wc=YARD.cols.map(c=>{if(c.cr===undefined)return lotRect(j,c);const q=lotPt(j,c.cx,c.cz);return{cx:q[0],cz:q[1],cr:c.cr};});C.cols.push(...YARD.wc);
+  yardColsSet(j);
   YARD.j=j;YARD.on=true;for(const t of YARD.ints)yardT(t,j);benchYard(j);
   const yw=v=>p.s<0?v:v+Math.PI,d=lotPt(j,-17,-9.6),bk=lotPt(j,-14,-19.7);DOORS.home.city=[d[0],d[1],yw(Math.PI)];DOORS.homeback.city=[bk[0],bk[1],yw(0)];
   for(const [id,x,z,dx,dz] of[['home',-17,-15,-17,-6.9],['garden',-16.75,-21.5,-11.45,-6.9]]){const pl=PLACES.find(q=>q.id===id);[pl.x,pl.z]=lotPt(j,x,z);pl.door=lotPt(j,dx,dz);   /* the arrow aims at the pavement in front of your gate / garden path */
@@ -1445,7 +1523,7 @@ function yardHop(a,b){const mv=(x,z)=>{const q=lotBack(a,x,z);return inYardR(q[0
 /* a friend walking away from Friends Lane (going home, or no longer following you): out of the lot by a gate or a side path,
    then along the pavement into town, never through fences or houses (spots are your-yard numbers, turned onto the lot) */
 function laneOut(x,z){const s=z<0?-1:1,out=[];let ex=x;
-  for(const p of LANE_PLOTS){const [tx,tz]=lotBack(p.j,x,z);if(tx<-23.6||tx>-10.4||tz<-27||tz>-6.8)continue;
+  for(const p of LANE_PLOTS){const [tx,tz]=lotBack(p.j,x,z);if(tx<-23.6||tx>-10.4||tz<-36||tz>-6.8)continue;
     const W=(a,b)=>{const q=lotPt(p.j,a,b);out.push(q);ex=q[0];};
     if(tz>-8.2)W(tx,-6.4);   /* in front of the fence: onto the pavement (not along the mailboxes) */
     else if(tx>-21.6&&tx<-12.4&&tz>-11.4){W(-17,-9.2);W(-17,-7.3);}   /* the front yard: out by its gate */
@@ -1693,7 +1771,7 @@ function buildSchool(){const {L,sh,pr}=room('school',1400,'#fff6dc','wood');
     box(pr,.45,1.9,.58,c,s*5.75,0,z,{ol:.012});for(let k=0;k<3;k++)box(pr,.02,.02,.3,'#3d2c5e',s*5.52,1.62+k*.07,z,{ol:false});sph(pr,.03,'#ffffff',s*5.52,1.05,z-s*.18,{ws:6,hs:5,ol:false});}
   for(const s of[-1,1])col(L,s*5.5,-2.25,s*6,2.3);
   box(pr,1.9,1.2,.06,'#a8714a',3.4,.8,4.44);const nb=signPlane('📌 Fun facts!',1.7,1.0,'#fff6c8','#3d2c5e');nb.position.set(3.4,1.4,4.39);   /* 2 cm in front of its board (run 4, job 5) */nb.rotation.y=Math.PI;L.g.add(nb);
-  inter(L,{x:3.4,z:3.5,r:1.7,icon:'✏️',label:'Learn something new',act:()=>{SFX.pop();toast('✏️ '+pick(BOOK_FACTS),4.6);if(cool('learn',3))addXP('read',4);qEvent('read');}});
+  inter(L,{x:3.4,z:3.5,r:1.7,icon:'✏️',label:'Learn something new',act:()=>{if(!isDaytime()){SFX.no();toast('🌙 School is closed now. Learning starts again at 8:00 ☀️',3.6);return;}SFX.pop();toast('✏️ '+pick(BOOK_FACTS),4.6);if(cool('learn',3))addXP('read',4);qEvent('read');}});
   box(pr,2.0,.95,.5,'#a8714a',-3.4,0,4.15);box(pr,2.06,.05,.56,'#ffffff',-3.4,.95,4.15,{ol:.01});col(L,-4.45,3.85,-2.35,4.5);
   for(const [x,h] of [[-4.0,.34],[-3.4,.46],[-2.8,.3]]){cyl(pr,.07,.09,.06,'#ffc93c',x,1.0,4.15,{seg:10,ol:.008});cyl(pr,.025,.025,h*.4,'#ffc93c',x,1.06,4.15,{seg:6,ol:false});cyl(pr,.13,.07,h*.5,'#ffc93c',x,1.06+h*.4,4.15,{seg:12,ol:.01});}
   const tb=signPlane('🏆 Our trophies',1.4,.3,'#ffffff','#3d2c5e');tb.position.set(-3.4,1.95,4.42);tb.rotation.y=Math.PI;L.g.add(tb);
@@ -1809,49 +1887,131 @@ function buildStudio(){BENCH_L=null;const L=makeLoc('studio','in',700,0,[-4,-4,4
   const r=seeded(11),C=['#ff7aa8','#ffd45c','#5fd4b0','#7cc8ff','#b79cff'];
   for(let i=0;i<18;i++){const a=r()*TAU,d=2.2+r()*2.6;sph(g,.06+r()*.07,C[i%5],Math.cos(a)*d,.5+r()*2.6,-1.4-r()*2.6,{ws:8,hs:6,ol:.012});}
   bake(g,true);return L;}
-/* 🐾 run 4, job 12 (item 12): the Pet Shop has two floors. Downstairs: the counter, shelves of snacks and toys, a rack of pet clothes, the pet furniture for sale, the birdcage and the stairs
-   in the west wall. Upstairs (40 m further along z, like the floors of your house): every kind of animal in its own fenced area, so they never mix: puppies with their breeds, kittens, bunnies,
-   hamsters on their table, a capybara, ducks at a little pond, an owl on a perch. Adopting (💗 at every animal) and buying (🛒 downstairs) work as before */
+/* 🐾 the new Pet Shop (pets and farm update, stage 4b; the book's model-petshop-new, picked 31 Oct): 3 open floors as ONE room, 14 x 10, no fade between
+   floors. The room is the book's shop:room (PACKM 'shop.room', moved down 8 cm so floor 1 is at 0); the game adds the right and front walls, the door,
+   the ceiling, shelves of snacks and the clothes rack. Floors at PSH.F (0, 3.34, 6.54); stairs 1 to 2 on the left wall, 2 to 3 on the right, both rising
+   from z 4.2 to z .1 in 14 even steps (moves-petshop-stairs); the open middle x -3.2..3.2, z -2..2.6 has rails on floors 2 and 3. psTick (js/09-mainloop.js)
+   is the floor physics: where you stand is your floor (P.cy), a step is at most .45, the open middle and the stair sides are solid. Pieces that stand on a
+   floor collide only on that floor (col .fl, see collideXZ). Animals: each kind at its cozy spot (moves-petshop-spots), no cages */
+const PSH={F:[0,3.34,6.54],R:3.34,SX:[[-6.75,-5.15,0],[5.15,6.75,1]],SZ0:.1,SZ1:4.2,N:14,VX:3.2,VZ0:-2,VZ1:2.6};
+/* the height of the stairs of flight k at z (room frame): the top of the step you stand on */
+function psStairH(k,z){const n=clamp(Math.floor((PSH.SZ1-z)/((PSH.SZ1-PSH.SZ0)/PSH.N)),0,PSH.N-1);return PSH.F[k]+(n+1)*PSH.R/PSH.N;}
+/* where you can stand at x,z (room frame) with your feet at c: the highest floor within a step up; null = solid (a stair's side, or a drop) */
+function psSupport(x,z,c){let h=-1;const inM=Math.abs(x)<PSH.VX&&z>PSH.VZ0&&z<PSH.VZ1;
+  const cand=y=>{if(y<=c+.45&&y>h)h=y;};cand(0);
+  if(!inM&&!(x<-5.2&&z>PSH.SZ0))cand(PSH.F[1]);if(!inM&&!(x>5.2&&z>PSH.SZ0))cand(PSH.F[2]);
+  for(const [x0,x1,k] of PSH.SX)if(x>=x0&&x<=x1&&z>=PSH.SZ0&&z<=PSH.SZ1){const s=psStairH(k,z);if(s>c+.45&&PSH.F[k]<=c+.1)return null;cand(s);}
+  return h<c-.45?null:h;}
+const psFl=c=>c>PSH.F[2]-.6?2:c>PSH.F[1]-.6?1:0;   /* the floor a height is on */
 function buildPetShop(){
-  const L=makeLoc('pets','in',500,0,[-7,-5,7,5]);const W=14,D=10,H=3.4,wm=mat('#b0e6d2'),fm=toon({map:floorTex('mint')});L.W=W/2;L.D=D/2;L.items=new THREE.Group();scene.add(L.items);
-  const fls=[];for(let k=0;k<2;k++){const g=new THREE.Group(),sh=new THREE.Group(),pr=new THREE.Group();g.add(sh,pr);g.position.set(0,0,UPZ*k);const F={k,g,sh,pr,grid:null};fls.push(F);
-    shell({ox:L.ox,oz:L.oz+UPZ*k,cols:L.cols},sh,W,D,H,wm,fm,'#e2f1eb',g,UPG);   /* (run 4, stage 3: the walls and ceiling a little deeper: the shop looked washed out) */
-    if(k===0){doorAt(sh,0,D/2-.02,Math.PI,null,true,true);windowIn(sh,W/2-.02,1.0,2.6,-Math.PI/2,'#ffd45c');stairsIn(sh,1,W,H,wm);}
-    else{for(const z of[2.6,-2.6])windowIn(sh,W/2-.02,1.0,z,-Math.PI/2,'#ffd45c');for(const x of[-2.5,2.5])windowIn(sh,x,1.0,-D/2+.02,0,'#ffd45c');for(const x of[-2.5,2.5])windowIn(sh,x,1.0,D/2-.02,Math.PI,'#ffd45c');stairsIn(sh,0,W,H,wm);}
-    const gh=new THREE.GridHelper(W,W*2,0xb79cff,0xd9c8ff);gh.scale.z=D/W;gh.position.set(0,.012,UPZ*k);gh.visible=false;L.g.add(gh);F.grid=gh;}
-  L.fls=fls;L.g.add(fls[0].g);L.vf=-1;L.grid=fls[0].grid;L.bounds={x1:L.ox-W/2,z1:L.oz-D/2,x2:L.ox+W/2,z2:L.oz+UPZ+D/2};
-  inter(L,{x:-W/2+.9,z:-.6,r:1.6,icon:'⬆️',label:'Upstairs to the animals',act:()=>hclimb(1)});inter(L,{x:-W/2+.9,z:UPZ+.6,r:1.6,icon:'⬇️',label:'Downstairs to the shop',act:()=>hclimb(-1)});
-  /* ---- downstairs: the shop ---- */
-  const pr=fls[0].pr;
-  box(pr,3,1.0,.8,'#ffd45c',-4.9,0,2.0);box(pr,3.1,.08,.9,'#ffffff',-4.9,1.0,2.0);col(L,-6.45,1.55,-3.35,2.45);   /* the counter */
-  shelfUnit(pr,-4.1,-4.55,0,4.6,['petfood','catfood','bunnyfood'],'#ffffff',.5);shelfUnit(pr,.9,-4.55,0,4.6,['treat','ball','squeaky'],'#ffffff',.5);col(L,-6.4,-5,3.2,-4.1);   /* 🦴 snacks and toys along the back wall */
-  petClothesRack(pr,5.1,-4.55,0,3.2,['bow','hat','collar','scarf','pcrown','bowtie','cape','wings']);col(L,3.5,-5,6.7,-4.1);   /* 👒 pet clothes */
-  shelfUnit(pr,6.5,.6,-Math.PI/2,3.6,['petfood','catfood','ball'],'#ffffff',.5);col(L,6.05,-1.3,7,2.5);
-  {const t=buildFurn('cattree','#b79cff');t.position.set(-2.5,0,-1.3);pr.add(t);colC(L,-2.5,-1.3,.55);const d=buildFurn('doghouse','#7cc8ff');d.position.set(-6.1,0,-1.4);d.rotation.y=Math.PI/2;pr.add(d);col(L,-6.7,-2.0,-5.5,-.8);const pb=buildFurn('petbed','#ff9ec4');pb.position.set(2.3,0,-1.5);pr.add(pb);colC(L,2.3,-1.5,.5);}   /* pet furniture for sale, on show */
-  {cyl(pr,.04,.04,1.3,'#c8c8d8',5.8,0,3.9,{seg:6});const cage=new THREE.Group();cage.position.set(5.8,1.3,3.9);pr.add(cage);for(let k=0;k<10;k++){const a=k/10*TAU;cyl(cage,.012,.012,.8,'#c8c8d8',Math.cos(a)*.35,0,Math.sin(a)*.35,{seg:4,ol:false});}
-   cyl(cage,.36,.36,.05,'#ffd45c',0,0,0,{seg:16,ol:.01});cone(cage,.38,.3,'#ffd45c',0,.8,0,{seg:16,ol:.01});sph(cage,.1,'#5fd4b0',0,.35,0,{ws:10,hs:8,ol:.012});sph(cage,.06,'#5fd4b0',0,.49,.06,{ws:8,hs:6,ol:.01});cone(cage,.03,.06,'#ffd45c',0,.47,.14,{rx:Math.PI/2,center:true,seg:5,ol:false});colC(L,5.8,3.9,.45);}
-  {const up=signPlane('🐾 Animals upstairs ⬆️',2.4,.5,'#ffd45c','#3d2c5e');up.position.set(-W/2+.06,2.55,-2.4);up.rotation.y=Math.PI/2;fls[0].g.add(up);}
-  /* ---- upstairs: every kind in its own area (local z, 40 m along) ---- */
-  const pu=fls[1].pr,Z=UPZ;L.pens=[];
-  const pen=(type,kinds,x0,x1,z0,z1,c,o)=>{o=o||{};box(pu,x1-x0,.04,z1-z0,o.floor||'#ffe9a8',(x0+x1)/2,0,(z0+z1)/2,{ol:false});
-    for(const z of[z0,z1])box(pu,x1-x0,.3,.1,c,(x0+x1)/2,0,z,{ol:.02});for(const x of[x0,x1])box(pu,.1,.3,z1-z0,c,x,0,(z0+z1)/2,{ol:.02});
-    for(const x of[x0,x1])for(const z of[z0,z1])box(pu,.14,.5,.14,'#ffffff',x,0,z,{ol:.02});
-    col(L,x0-.08,Z+z0-.08,x1+.08,Z+z1+.08);
-    const s=signPlane(PET_TYPES[type].icon+' '+PET_TYPES[type].many,Math.min(2.6,x1-x0-.3),.5,c,'#3d2c5e');s.position.set((x0+x1)/2,2.95,z1<0?-D/2+.06:D/2-.06);   /* (run 4, stage 3: above the windows, which hid them) */if(z1>0)s.rotation.y=Math.PI;fls[1].g.add(s);   /* (run 4, stage 3: the upstairs group is already 40 m along; the signs added 40 m again and hung outside the room) */
-    L.pens.push(Object.assign({type,kinds,x0:x0+.4,x1:x1-.4,z0:Z+z0+.4,z1:Z+z1-.4},o.y?{y:o.y}:{},o.pz!==undefined?{pz:Z+o.pz}:{},o.swim?{swim:1}:{}));};   /* (run 4 finish: pz: the line of the perch a bird keeps to) */
-  pen('dog',['dog','pug','pomchi','sausage'],-6.7,-2.1,-4.9,-1.9,'#ffd45c');pen('cat',['cat','cat'],-1.7,1.1,-4.9,-1.9,'#ff9ec4');pen('bunny',['bunny','bunny'],1.5,4.1,-4.9,-1.9,'#b79cff');pen('capybara',['capybara'],4.5,6.7,-4.9,-1.9,'#c9a24a');
-  pen('duck',['duck','duck'],-6.7,-3.5,1.9,4.9,'#7cc8ff',{floor:'#9fd8f2',swim:1});disc(pu,1.1,'#7cc8ff',-5.1,.05,3.4,{seg:20});   /* 🦆 a little pond */
-  pen('owl',['owl'],-3.1,-.5,1.9,4.9,'#9a6a43',{y:.95,pz:3.4});{box(pu,.12,.95,.12,'#9a6a43',-2.9,0,3.4,{ol:.015});box(pu,.12,.95,.12,'#9a6a43',-.7,0,3.4,{ol:.015});box(pu,2.3,.08,.1,'#b07a52',-1.8,.9,3.4,{ol:.012});}   /* 🦉 a perch */
-  {box(pu,2.6,.8,2.0,'#c98f5e',1.3,0,3.4);box(pu,2.4,.04,1.8,'#ffe7a3',1.3,.8,3.4,{ol:false});const cg=toon({color:'#cfeeff',transparent:true,opacity:.16});box(pu,2.45,.55,1.85,null,1.3,.8,3.4,{mat:cg,ol:false});   /* no dark outline hull round the glass */
-   const wh=new THREE.Mesh(new THREE.TorusGeometry(.18,.03,6,16),mat('#ff7aa8'));wh.position.set(2.1,1.02,3.0);pu.add(wh);col(L,-.1,Z+2.3,2.7,Z+4.5);
-   const s2=signPlane('🐹 Hamsters',1.6,.4,'#ffd45c','#3d2c5e');s2.position.set(1.3,1.72,2.4);fls[1].g.add(s2);L.pens.push({type:'hamster',x0:.3,x1:2.3,z0:Z+2.7,z1:Z+4.1,y:.82});}   /* 🐹 the hamsters' table */
-  {box(pu,1.8,.08,.5,'#c98f5e',4.9,.45,3.9,{ol:.012});for(const x of[4.1,5.7])box(pu,.1,.45,.5,'#c98f5e',x,0,3.9,{ol:.012});box(pu,1.8,.5,.08,'#c98f5e',4.9,.5,4.12,{ol:.012});col(L,4.0,Z+3.6,5.8,Z+4.2);}   /* a little bench to watch the animals from */
-  for(const F of fls){bake(F.sh,false);bake(F.pr,true);}
-  inter(L,{x:0,z:4.3,r:1.9,icon:'🚪',label:'Go outside',act:()=>exitTo('pets')});
-  inter(L,{x:5.6,z:.6,r:2,icon:'🛒',label:'Buy pet food, toys & clothes',act:()=>openShop('pets')});
-  inter(L,{x:5.1,z:-3.6,r:1.8,icon:'👒',label:'Pet clothes',act:()=>openShop('pets')});
+  const L=makeLoc('pets','in',500,0,[-6.8,-4.8,6.88,4.94]);const W=14,D=10,H=9.82,F=PSH.F;L.W=W/2;L.D=D/2;L.items=new THREE.Group();scene.add(L.items);L.psh=1;
+  const g=new THREE.Group(),pr=new THREE.Group();g.position.y=-.08;L.g.add(g,pr);const room=packBuild('shop.room').root;g.add(room);
+  /* the right and front walls, the door, the ceiling (the book's room is a cut-away with low walls there) */
+  const wm=mat('#e6f8f0');box(pr,.3,H,D+.6,null,W/2+.15,0,0,{mat:wm,ol:false});box(pr,W+.6,H,.3,null,0,0,D/2+.15,{mat:wm,ol:false});
+  {const ce=new THREE.Mesh(new THREE.PlaneGeometry(W+.4,D+.4),new THREE.MeshBasicMaterial({color:'#e2f1eb'}));ce.rotation.x=Math.PI/2;ce.position.y=H;ce.userData.keep=1;L.g.add(ce);}
+  doorAt(pr,0,D/2-.02,Math.PI,null,true,true);for(const f of[1,2])for(const x of[-3.5,3.5])windowIn(pr,x,F[f]+1.2,D/2-.02,Math.PI,'#ffd45c');windowIn(pr,W/2-.02,1.2,-1.4,-Math.PI/2,'#ffd45c');
+  /* floor 1: snacks and toys on the right wall, the pet clothes rack by the door */
+  shelfUnit(pr,6.45,-1.5,-Math.PI/2,2.6,['petfood','catfood','bunnyfood'],'#ffffff',.5);petClothesRack(pr,3.4,4.45,Math.PI,2.4,['bow','hat','collar','scarf','pcrown','bowtie','cape','wings']);
+  const c1=(x1,z1,x2,z2,fl)=>{col(L,x1,z1,x2,z2);L.cols[L.cols.length-1].fl=fl;},cc=(x,z,r,fl)=>{colC(L,x,z,r);L.cols[L.cols.length-1].fl=fl;};
+  /* what stands on each floor (room frame, from the book's layout) */
+  c1(5.05,1.0,5.95,3.8,0);c1(1.1,-4.8,2.4,-4.35,0);c1(-2.4,-4.8,-1.1,-4.35,0);c1(-5.2,-4.8,-2.6,-3.9,0);c1(3.1,-4.8,6.4,-3.95,0);c1(6.0,-2.85,6.88,-.15,0);c1(2.15,4.0,4.65,4.94,0);
+  cc(0,.3,1.75,0);   /* the play hill with the shop tree */
+  cc(-4.6,-3.5,1.05,1);cc(4.4,-3.5,1.2,1);c1(-1.05,3.6,1.05,4.6,1);
+  c1(-6.8,-4.8,-3.6,-2.9,2);c1(-2.4,-4.8,2.35,-2.1,2);c1(-6.55,2.65,-5.15,4.85,2);
+  bake(g,true);bake(pr,true);   /* (the whole room: few draws, like the old shop) */
+  /* the animals at their spots: pens are small (a bed, a seat, a tub); y = where they stand; fixed = one spot and a move */
+  const hill=(x,z)=>{const q=1-(x*x+((z-.3)/.85)**2)/(1.9*1.9);return q>0?.95*Math.sqrt(q):0;};
+  L.pens=[{type:'dog',kinds:['dog','pug','pomchi','sausage'],x0:-5.0,x1:-2.9,z0:-3.3,z1:-2.2,fl:0,flat:1},{type:'cat',kinds:['cat','cat'],x0:3.4,x1:5.0,z0:-4.45,z1:-4.45,y:.48,fl:0},
+    {type:'bunny',kinds:['bunny','bunny'],x0:-1.5,x1:-.4,z0:-.6,z1:1.3,hill,fl:0},{type:'hamster',kinds:['hamster'],x0:.5,x1:.8,z0:.9,z1:1.2,hill,fl:0},
+    {type:'capybara',kinds:['capybara'],x0:-4.7,x1:-4.7,z0:-3.45,z1:-3.45,y:F[1]+.12,fl:1,swim:1,face:.6},{type:'duck',kinds:['duck','duck'],x0:3.7,x1:5.1,z0:-4.1,z1:-2.9,y:F[1]+.27,fl:1,swim:1},
+    {type:'owl',kinds:['owl'],x0:Math.cos(.3)*.83,x1:Math.cos(.3)*.83,z0:.3+Math.sin(.3)*.83,z1:.3+Math.sin(.3)*.83,y:4.16,fl:1,face:Math.atan2(-Math.cos(.3),-Math.sin(.3))+Math.PI/2},
+    {type:'bear',kinds:['bear'],x0:-5.35,x1:-5.35,z0:-2.4,z1:-2.4,y:F[2]+.42,fl:2,mv:'bear.tv',face:Math.PI},{type:'seal',kinds:['seal'],x0:.95,x1:.95,z0:-3.2,z1:-3.2,y:F[2]+.24,fl:2,mv:'seal.swim',face:.8,swim:1},
+    {type:'monkey',kinds:['monkey'],x0:-5.85,x1:-5.85,z0:3.4,z1:3.4,y:F[2]+2.62,fl:2,mv:'monkey.happy',face:Math.PI/2}];
+  {const s=signPlane('🐒 🦭 🐻 🐍 Big pets',2.2,.45,'#ffd45c','#2f8f78');s.position.set(4.2,F[2]+2.3,-4.76);L.g.add(s);}
+  inter(L,{x:4.2,z:-3.6,r:1.8,icon:'🔒',label:'Big pets',when:()=>psFl(P.cy||0)===2,act:openBig});   /* 🔒 what the big-needs pets still need (Ms. Paws says it), and adopting them */
+  inter(L,{x:0,z:4.3,r:1.9,icon:'🚪',label:'Go outside',when:()=>psFl(P.cy||0)===0,act:()=>exitTo('pets')});
+  inter(L,{x:4.4,z:2.4,r:2,icon:'🛒',label:'Buy pet food, toys & clothes',when:()=>psFl(P.cy||0)===0,act:()=>openShop('pets')});
+  inter(L,{x:3.4,z:3.6,r:1.6,icon:'👒',label:'Pet clothes',when:()=>psFl(P.cy||0)===0,act:()=>openShop('pets')});
   return L;
 }
+/* 🩺 the vet station's models (pets and farm update, stage 4): the book's non-living pack v164 (vet:clinic, vet:table ... vet:treat, picked 31 Oct), copied as they are.
+   VT = the clinic's colours: lavender walls, violet and deep purple, butter yellow */
+/* (the pack's soft rounded box: its own signature, centred; the game's rbox is another one) */
+function vrboxGeo(w,h,d,r,grow){r=Math.min(r,w/2-.001,h/2-.001,d/2-.001);const s=new THREE.Shape(),x=w/2-r,y=h/2-r;s.moveTo(-x,-y);s.lineTo(x,-y);s.lineTo(x,y);s.lineTo(-x,y);s.closePath();
+  const g=new THREE.ExtrudeGeometry(s,{depth:d-2*r,bevelEnabled:true,bevelThickness:r+grow,bevelSize:r+grow,bevelSegments:5,curveSegments:4});g.translate(0,0,-(d-2*r)/2);g.computeVertexNormals();return g;}
+function vrbox(g,w,h,d,r,c,x,y,z,o={}){const m=new THREE.Mesh(vrboxGeo(w,h,d,r,0),o.mat||mat(c));m.position.set(x,y,z);if(o.rx)m.rotation.x=o.rx;if(o.ry)m.rotation.y=o.ry;if(o.rz)m.rotation.z=o.rz;g.add(m);
+  if(o.ol!==false){const h2=new THREE.Mesh(vrboxGeo(w,h,d,r,o.ol||.014),OL);h2.position.copy(m.position);h2.rotation.copy(m.rotation);g.add(h2);}return m;}
+function pawSign(g,x,y,z,s,c,bg){const p=new THREE.Group();p.position.set(x,y,z);p.scale.setScalar(s);g.add(p);
+  if(bg){const d=new THREE.Mesh(new THREE.CircleGeometry(.5,28),mat(bg));p.add(d);const r=new THREE.Mesh(new THREE.TorusGeometry(.5,.04,6,28),OL);p.add(r);}
+  const pad=new THREE.Mesh(new THREE.CircleGeometry(.17,20),mat(c));pad.scale.set(1.15,.95,1);pad.position.set(0,-.1,.01);p.add(pad);
+  for(const [tx,ty] of[[-.24,.1],[-.09,.24],[.09,.24],[.24,.1]]){const t=new THREE.Mesh(new THREE.CircleGeometry(.075,16),mat(c));t.scale.set(.9,1.15,1);t.position.set(tx,ty,.01);p.add(t);}
+  return p;}
+const VT={wall:'#efe6ff',acc:'#8a5fd6',deep:'#5a3d9a',pale:'#d9c8ff',sun:'#ffd86b',floor:'#d8cdea',wood:'#b79cff'};
+function vetTable(g,t=VT){const S='#d8d0ea';box(g,1.3,.06,.7,S,0,.86,0,{ol:.012});vrbox(g,1.1,.05,.55,.02,t.sun,0,.94,0,{ol:.008});
+  for(const x of[-.5,.5])for(const z of[-.25,.25])cyl(g,.035,.035,.86,t.deep,x,0,z,{seg:8,ol:.008});box(g,1.1,.04,.5,t.pale,0,.25,0,{ol:.008});
+  box(g,.5,.28,.4,t.acc,.95,0,.1,{ol:.01});box(g,.5,.05,.4,t.sun,.95,.28,.1,{ol:false});
+  cyl(g,.025,.025,1.1,t.deep,-.62,.9,-.3,{seg:6,ol:.006});cyl(g,.02,.02,.45,t.deep,-.45,1.98,-.3,{rz:-1.2,center:true,seg:6,ol:.006});
+  const sh=new THREE.Mesh(new THREE.ConeGeometry(.14,.14,14,1,true),mat(t.acc));sh.material.side=THREE.DoubleSide;sh.position.set(-.25,1.82,-.3);g.add(sh);sph(g,.06,null,-.25,1.77,-.3,{mat:toon({color:'#fff6d6',emissive:new THREE.Color('#ffe9a8'),emissiveIntensity:.6}),ol:false});}
+function vetScale(g,t=VT){box(g,.8,.08,.6,t.pale,0,0,0,{ol:.01});vrbox(g,.7,.03,.5,.02,t.acc,0,.095,0,{ol:false});pawSign(g,0,.115,0,.5,t.sun).rotation.x=-Math.PI/2;
+  cyl(g,.03,.03,.9,t.deep,0,.08,-.26,{seg:6,ol:.006});box(g,.34,.24,.08,t.deep,0,.95,-.26,{ol:.01});
+  const sg=signPlane('2.4 kg',.26,.1,'#fff3c4','#5a3d9a');sg.position.set(0,1.02,-.215);g.add(sg);}
+function vetShelf(g,t=VT){const W=1.4,H=1.8,D=.36;box(g,W,H,.04,t.pale,0,0,-D/2+.02);for(const s of[-1,1])box(g,.04,H,D,t.acc,s*(W/2-.02),0,0,{ol:.01});
+  const C=['#ff7aa8','#7cc8ff','#5fd4b0',t.sun,t.acc,'#ffffff'];for(let r=0;r<4;r++){const y=.1+r*.43;box(g,W-.04,.03,D-.02,t.acc,0,y,0,{ol:.006});
+    for(let k=0;k<6;k++){const x=-W/2+.16+k*.22,c=C[(k+r)%6];if((k+r)%3===0){box(g,.15,.2,.15,c,x,y+.03,0,{ol:.006});box(g,.15,.06,.152,'#ffffff',x,y+.1,0,{ol:false});}
+      else{cyl(g,.05,.05,.17,c,x,y+.03,0,{seg:10,ol:.006});cyl(g,.035,.035,.04,'#ffffff',x,y+.2,0,{seg:10,ol:false});}}}
+  box(g,W,.06,D+.02,t.deep,0,H,0,{ol:.01});}
+function vetCounter(g,t=VT){vrbox(g,2.0,1.0,.6,.08,t.acc,0,.5,0);box(g,2.1,.06,.7,t.sun,0,1.0,0,{ol:.012});pawSign(g,0,.55,.305,.55,t.sun);
+  box(g,.4,.28,.03,t.deep,-.55,1.06,-.12,{ol:.008});box(g,.36,.24,.01,null,-.55,1.08,-.104,{mat:toon({color:'#e6dcff',emissive:new THREE.Color('#b79cff'),emissiveIntensity:.35}),ol:false});box(g,.06,.06,.04,t.deep,-.55,1.0,-.12,{ol:false});
+  cyl(g,.06,.07,.02,t.sun,.5,1.03,.1,{seg:12,ol:.006});sph(g,.055,t.sun,.5,1.06,.1,{s:[1,.8,1],ws:10,hs:6,ol:.006});
+  cyl(g,.09,.09,.18,null,.2,1.03,.05,{mat:toon({color:'#efe6ff',transparent:true,opacity:.6}),seg:12,ol:.006});for(let i=0;i<5;i++)sph(g,.03,'#c48a5a',.2+Math.cos(i*1.3)*.04,1.07+(i%2)*.04,.05+Math.sin(i*1.3)*.04,{ws:6,hs:4,ol:false});}
+function vetBench(g,t=VT){for(let i=0;i<3;i++){const x=-.6+i*.6;vrbox(g,.5,.1,.48,.04,t.acc,x,.48,0,{ol:.01});vrbox(g,.5,.5,.08,.04,t.acc,x,.78,-.22,{ol:.01});}
+  box(g,1.8,.06,.45,t.deep,0,.38,0,{ol:.008});box(g,1.8,.1,.06,t.deep,0,.65,-.24,{ol:.008});for(const x of[-.8,.8])for(const z of[-.18,.18])cyl(g,.03,.03,.38,t.deep,x,0,z,{seg:6,ol:.006});
+  for(const x of[-.6,.6])sph(g,.11,t.sun,x,.62,-.05,{s:[1,.6,1],ws:10,hs:6,ol:.006});}
+function vetBigTable(g,t=VT){vrbox(g,2.6,.42,1.5,.1,t.acc,0,.21,0);vrbox(g,2.4,.08,1.3,.04,t.sun,0,.46,0,{ol:.01});
+  {const RL=1.6,L=Math.hypot(RL,.46),a=Math.atan2(.46,RL);const p=new THREE.Group();p.position.set(1.3+RL/2,.25,0);p.rotation.z=-a;g.add(p);box(p,L,.1,1.1,t.acc,0,0,0,{center:true,ol:.012});for(const s of[-1,1])box(p,L,.14,.06,t.deep,0,.06,s*.55,{center:true,ol:.008});for(let i=0;i<5;i++)box(p,.06,.03,1.0,t.sun,-L/2+.25+i*.3,.065,0,{center:true,ol:false});}
+  cyl(g,.05,.06,1.9,t.deep,-1.1,.5,-.6,{seg:8,ol:.008});cyl(g,.18,.2,.05,t.deep,-1.1,.46,-.6,{seg:12,ol:.006});cyl(g,.02,.02,.6,t.deep,-.85,2.38,-.6,{rz:-1.2,center:true,seg:6,ol:.006});
+  const sh=new THREE.Mesh(new THREE.ConeGeometry(.18,.16,14,1,true),mat(t.acc));sh.material.side=THREE.DoubleSide;sh.position.set(-.55,2.2,-.6);g.add(sh);sph(g,.07,null,-.55,2.14,-.6,{mat:toon({color:'#fff6d6',emissive:new THREE.Color('#ffe9a8'),emissiveIntensity:.6}),ol:false});}
+function vetCoffee(g,t=VT){cyl(g,.65,.65,.06,t.sun,0,.5,0,{seg:24,ol:.012});cyl(g,.08,.12,.5,t.deep,0,0,0,{seg:10,ol:.008});cyl(g,.3,.3,.04,t.deep,0,0,0,{seg:16,ol:.006});
+  for(let k=0;k<4;k++){const a=k*Math.PI/2+Math.PI/4,x=Math.cos(a)*1.0,z=Math.sin(a)*1.0,p=new THREE.Group();p.position.set(x,0,z);p.rotation.y=-a-Math.PI/2;p.scale.setScalar(.8);g.add(p);
+    vrbox(p,.62,.4,.6,.12,t.acc,0,.2,0);vrbox(p,.62,.5,.16,.08,t.acc,0,.6,-.26);vrbox(p,.5,.08,.46,.04,t.pale,0,.43,.04,{ol:false});
+    const m=new THREE.Group();m.position.set(Math.cos(a)*.35,.56,Math.sin(a)*.35);g.add(m);cyl(m,.05,.045,.1,['#ffffff',t.acc,'#ff9ec4','#7cc8ff'][k],0,0,0,{seg:10,ol:.005});cyl(m,.042,.042,.01,'#7a4a2e',0,.09,0,{seg:10,ol:false});}
+  cyl(g,.16,.16,.02,'#ffffff',0,.56,0,{seg:14,ol:.005});for(let i=0;i<4;i++)cyl(g,.045,.045,.02,'#d39a68',Math.cos(i*1.6)*.08,.58,Math.sin(i*1.6)*.08,{seg:10,ol:false});}
+function vetClinic(g){const t=VT,W=12,D=9,H=6.6;
+  building(g,{x:0,z:0,w:W,d:D,h:H,wall:t.wall,trim:t.acc,roof:t.pale,shop:true,awning:t.acc,sign:'Vet clinic',signBg:t.sun,signFg:t.deep,door:{x:0,c:t.acc,glass:true},wf:'#ffffff',skip:(dx,i)=>i===1&&Math.abs(dx)<3.9});
+  /* two big cat ears on the roof, pink-violet inside, and a paw board between them */
+  for(const s of[-1,1]){const e=new THREE.Group();e.position.set(s*3.7,H+.45,2.2);e.rotation.z=-s*.12;g.add(e);cone(e,1.6,2.5,t.acc,0,0,0,{seg:4,ry:Math.PI/4,ol:.05});cone(e,.9,1.6,'#f2b8e6',0,.25,.95,{seg:4,ry:Math.PI/4,s:[1,1,.2],ol:false});}
+  box(g,2.4,1.5,.3,t.sun,0,H+.4,D/2-.25,{ol:.02});pawSign(g,0,H+1.15,D/2-.08,1.1,t.deep);
+  /* a soft round window upstairs in the middle, under the sign */
+  {const w=new THREE.Mesh(new THREE.CircleGeometry(.6,28),WIN);w.position.set(0,H-1.45,D/2+.04);g.add(w);const r=new THREE.Mesh(new THREE.TorusGeometry(.6,.08,8,30),mat(t.sun));r.position.copy(w.position);g.add(r);const ro=new THREE.Mesh(new THREE.TorusGeometry(.6,.11,8,30),OL);ro.position.copy(w.position);ro.position.z-=.01;g.add(ro);}
+  /* a little front step path and two planters */
+  box(g,3.4,.08,1.6,t.pale,0,0,D/2+.9,{ol:.012});for(const s of[-1,1]){box(g,.9,.6,.9,t.deep,s*2.6,0,D/2+.8,{ol:.014});sph(g,.5,'#5fae5c',s*2.6,.95,D/2+.8,{ws:10,hs:8,ol:.014});for(let k=0;k<4;k++)sph(g,.1,t.sun,s*2.6+Math.cos(k*1.6)*.35,1.15,D/2+.8+Math.sin(k*1.6)*.35,{ws:6,hs:4,ol:.006});}}
+/* 🩺 the vet station inside (pets and farm update, stage 4; the book's vet:room, kept modest): two floors like the Pet Shop (floor 2 is UPZ further along z,
+   only the floor you stand on is drawn). Downstairs the lobby: Nurse Penny's desk, waiting seats, shelves, a paw rug. Upstairs Room 1 (exam table, scale),
+   Room 2 for big pets (the platform with its ramp) and the staff's coffee corner. The furniture is the book's (vetTable...), as it is */
+function buildVet(){const t=VT,W=11,D=8,H=3.2,L=makeLoc('vet','in',4500,0,[-W/2,-D/2,W/2,D/2]),wm=mat(t.wall),fm=toon({color:t.floor});L.W=W/2;L.D=D/2;L.items=new THREE.Group();scene.add(L.items);
+  const fls=[];for(let k=0;k<2;k++){const g=new THREE.Group(),sh=new THREE.Group(),pr=new THREE.Group();g.add(sh,pr);g.position.set(0,0,UPZ*k);fls.push({k,g,sh,pr});
+    shell({ox:L.ox,oz:L.oz+UPZ*k,cols:L.cols},sh,W,D,H,wm,fm,'#f7f2ff',g,UPG);if(!k)doorAt(sh,0,D/2-.02,Math.PI,t.acc,true,true);
+    for(const x of[-2.5,2.5])windowIn(sh,x,1.0,k?-D/2+.02:D/2-.02,k?0:Math.PI,t.sun);windowIn(sh,W/2-.02,1.0,0,-Math.PI/2,t.sun);stairsIn(sh,1-k,W,H,wm);}
+  L.fls=fls;L.g.add(fls[0].g);L.vf=-1;L.bounds={x1:L.ox-W/2,z1:L.oz-D/2,x2:L.ox+W/2,z2:L.oz+UPZ+D/2};
+  const put=(g,f,x,z,ry,y)=>{const p=new THREE.Group();p.position.set(x,y||0,z);p.rotation.y=ry||0;g.add(p);f(p,t);return p;},a=fls[0].pr,b=fls[1].pr,Z=UPZ;
+  /* the lobby */
+  put(a,vetCounter,2.9,-1.2);col(L,1.85,-1.55,3.95,-.85);put(a,vetShelf,2.9,-D/2+.4);put(a,vetShelf,-.4,-D/2+.4);col(L,-1.15,-D/2,3.65,-D/2+.62);
+  put(a,vetBench,-2.6,-3.25);col(L,-3.5,-3.55,-1.7,-2.9);put(a,vetBench,-2.6,2.5,Math.PI);col(L,-3.5,2.2,-1.7,2.8);
+  {const r=new THREE.Mesh(new THREE.CircleGeometry(1.1,30),mat(t.sun));r.rotation.x=-Math.PI/2;r.position.set(.3,.012,.6);a.add(r);pawSign(a,.3,.02,.6,1.4,t.acc).rotation.x=-Math.PI/2;}
+  cyl(a,.26,.2,.55,t.sun,4.6,0,3.2,{seg:12,ol:.01});for(let k=0;k<6;k++){const q=k*1.05;sph(a,.26,k%2?'#5fae5c':'#6fc25a',4.6+Math.cos(q)*.22,.92+(k%3)*.1,3.2+Math.sin(q)*.22,{ws:10,hs:8,ol:.012});}colC(L,4.6,3.2,.45);
+  pawSign(a,1.25,2.3,-D/2+.19,1.0,t.acc,t.sun);{const s=signPlane('Happy pets',1.4,.5,t.sun,t.deep);s.position.set(-2.6,2.1,-D/2+.21);a.add(s);}
+  {const s=signPlane('🩺 Vet rooms upstairs ⬆️',2.4,.5,t.sun,t.deep);s.position.set(-W/2+.06,2.55,-2.4);s.rotation.y=Math.PI/2;a.add(s);}
+  /* upstairs: Room 1, a low wall, Room 2 for big pets, the staff corner */
+  put(b,vetTable,-2.2,-2.6);col(L,-2.9,Z-3.0,-.65,Z-2.2);put(b,vetScale,-.4,-3.3);col(L,-.85,Z-3.65,.05,Z-2.95);
+  box(b,.14,.9,3.0,t.pale,.9,0,-2.5,{ol:.012});box(b,.2,.08,3.0,t.acc,.9,.9,-2.5,{ol:.008});col(L,.78,Z-4,1.02,Z-1);
+  put(b,vetBigTable,3.2,-2.6,-Math.PI/2);col(L,2.42,Z-3.95,3.98,Z-1.3);put(b,vetShelf,-4.3,-D/2+.4);col(L,-5,Z-D/2,-3.55,Z-D/2+.62);
+  put(b,vetCoffee,3.4,2.3);colC(L,3.4,Z+2.3,1.25);
+  for(const [x,n,w] of[[-1.6,'Room 1',1.4],[3.2,'Room 2: big pets',2.2]]){box(b,w+.12,.55,.06,t.deep,x,2.3,-D/2+.2,{ol:.01});const s=signPlane(n,w,.45,t.sun,t.deep);s.position.set(x,2.57,-D/2+.24);b.add(s);}
+  {cyl(b,.03,.03,.55,t.deep,3.4,0,3.75,{seg:6,ol:.006});box(b,.9,.36,.05,t.deep,3.4,.55,3.75,{ol:.008});const s=signPlane('Staff',.8,.3,t.sun,t.deep);s.position.set(3.4,.73,3.72);s.rotation.y=Math.PI;b.add(s);}
+  for(const F of fls){bake(F.sh,false);bake(F.pr,true);}
+  inter(L,{x:0,z:D/2-.7,r:1.9,icon:'🚪',label:'Go outside',act:()=>exitTo('vet')});
+  inter(L,{x:-W/2+.9,z:-.6,r:1.6,icon:'⬆️',label:'Upstairs to Dr. Rūta',act:()=>hclimb(1)});inter(L,{x:-W/2+.9,z:Z+.6,r:1.6,icon:'⬇️',label:'Downstairs to the lobby',act:()=>hclimb(-1)});
+  return L;}
 /* 👒 a rack of little pet clothes: bows, hats, collars, scarves, crowns, bow ties, capes and wings in bright colours */
 function petClothesRack(g,x,z,ry,w,items,c='#ffffff'){const p=new THREE.Group();p.position.set(x,0,z);p.rotation.y=ry;g.add(p);
   box(p,w,2.0,.1,c,0,0,-.35);box(p,.1,2.0,.8,c,-w/2+.05,0,0);box(p,.1,2.0,.8,c,w/2-.05,0,0);for(const y of[.1,.75,1.4])box(p,w,.06,.8,c,0,y,0,{ol:.015});box(p,w,.1,.8,c,0,1.95,0);
@@ -1864,4 +2024,86 @@ function petClothesRack(g,x,z,ry,w,items,c='#ffffff'){const p=new THREE.Group();
     else if(it==='bowtie'){for(const s of[-1,1])cone(p,.06,.12,cc,xx+s*.07,y+.06,.05,{rz:s*Math.PI/2,center:true,seg:5,ol:.008});sph(p,.03,shade(cc,-.2),xx,y+.06,.05,{ws:6,hs:5,ol:false});}
     else if(it==='cape'){box(p,.26,.22,.03,cc,xx,y,0,{ol:.01});box(p,.3,.04,.05,'#ffd45c',xx,y+.22,0,{ol:false});}
     else{for(const s of[-1,1])sph(p,.12,cc,xx+s*.1,y+.1,.04,{s:[1,.7,.25],ws:8,hs:6,ol:.01});}}}}   /* 🧚 wings */
-
+/* 🐴 the farm, the horse trail and the jump field (pets and farm update, stage 6; map-farm-area-plan, pfu-placements: FARMD at the end of this file).
+   Built light (run doc guard 3): the trees, bushes and rocks are instanced (one draw per kind), the buildings, machines and props are baked into 48 m pieces,
+   the ground (trodden farm ground, mud with puddles) and the dirt roads and the horse trail are one flat piece per layer. The farm's walls and trees collide
+   through an 8 m grid that collideXZ only looks at out there (L.fgrid). The living things (farm animals, horses, Ieva, Stan, the trail riders) are made here
+   and moved by farmTick (js/03-game.js) only while you are near the farm */
+const FARM_X1=-226,FARM_Z1=-196;
+const farmZone=(x,z)=>x>FARM_X1+1&&z>FARM_Z1+1&&((x<-44&&z<-80)||(x<-81.4&&z<-38.2));   /* where the farm's land is (riding stays in here) */
+const farmNear=(x,z,m)=>Math.hypot(x-clamp(x,-200,-64),z-clamp(z,-126,-74))<m;   /* (within m metres of the farm yard and the jump field) */
+function farmCol(L,c){const G=L.fgrid||(L.fgrid=new Map());const x1=c.cr!==undefined&&!c.rb?c.cx-c.cr:c.x1,x2=c.cr!==undefined?c.cx+c.cr:c.x2,z1=c.cr!==undefined?c.cz-c.cr:c.z1,z2=c.cr!==undefined?c.cz+c.cr:c.z2;
+  for(let i=Math.floor(x1/8);i<=Math.floor(x2/8);i++)for(let j=Math.floor(z1/8);j<=Math.floor(z2/8);j++){const k=i*1000+j;if(!G.has(k))G.set(k,[]);G.get(k).push(c);}}
+/* a footprint w x d (metres, before turning ry) at (x,z): a box when it stands square, else a row of circles along its long side */
+function farmFoot(L,x,z,ry,w,d){const c=Math.cos(ry),sn=Math.sin(ry),hw=w/2,hd=d/2,ex=Math.abs(c)*hw+Math.abs(sn)*hd,ez=Math.abs(sn)*hw+Math.abs(c)*hd;
+  farmCol(L,{rb:1,cx:x,cz:z,c,s:sn,hw,hd,x1:x-ex,z1:z-ez,x2:x+ex,z2:z+ez});}   /* a turned box (its own frame: x across, z deep) */
+function farmPush(x,z,r,q){if(!q.rb)return pushOut(x,z,r,q);const dx=x-q.cx,dz=z-q.cz,lx=dx*q.c-dz*q.s,lz=dx*q.s+dz*q.c,p=pushOut(lx,lz,r,{x1:-q.hw,z1:-q.hd,x2:q.hw,z2:q.hd});
+  return p?[q.cx+p[0]*q.c+p[1]*q.s,q.cz-p[0]*q.s+p[1]*q.c]:null;}
+const FARM_SOLID={'farm.barn':1,'farm.stable':1,'farm.windmill':.5,'farm.tractor':1,'farm.combine':1,'farm.coop':1,'farm.trough':1,'farm.hay':1,'farm.fence':1};
+/* (speed guard) pack materials that are only a colour become the game's shared plain colours (one baked piece for all of them); props and machines lose their outline hulls */
+function farmLite(root,noOL){const kill=[];root.traverse(o=>{if(!o.isMesh)return;const m=o.material;if(noOL&&(m===OL||m===OLP||m.side===THREE.BackSide)){kill.push(o);return;}
+    if(m.isMeshToonMaterial&&!m.userData.plain&&!m.map&&!m.transparent&&m.side===THREE.FrontSide&&!(m.emissive&&m.emissive.getHex()&&m.emissiveIntensity))o.material=mat('#'+m.color.getHexString());});
+  for(const o of kill){o.parent.remove(o);o.geometry.dispose();}}
+function farmProto(k){const g=new THREE.Group();
+  if(k==='pine'){const c=PINE_COLS[1%PINE_COLS.length];cyl(g,.15,.2,.88,'#9b6b4a',0,0,0,{seg:4,ol:false});for(const [r,h,y] of [[1.32,1.76,.77],[1.01,1.54,1.7],[.68,1.32,2.58]])cone(g,r,h,c,0,y,0,{seg:4,ol:false});}   /* (pineLo, a little lighter: far scenery) */
+  else if(k==='tree'){const c=TREE_COLS[0];cyl(g,.15,.2,2.3,'#9b6b4a',0,0,0,{seg:4,ol:false});sph(g,1.15,c,0,3.05,0,{ws:5,hs:3,ol:false});sph(g,.75,c,.7,2.75,.15,{ws:4,hs:3,ol:false});sph(g,.72,c,-.62,2.8,-.3,{ws:4,hs:3,ol:false});}
+  else if(k==='bush'){for(const [r,x,y,z] of [[.5,0,.35,0],[.4,.38,.28,.1]])sph(g,r,'#5fbf74',x,y,z,{ws:6,hs:3,ol:false});}
+  else if(k==='rock')sph(g,.45,'#b8b4c4',0,.1,0,{s:[1.3,.7,1],ws:5,hs:3,ol:false});
+  else if(k==='mtn'){cone(g,15,17,'#9fb59a',0,-.5,0,{seg:7,ol:false});cone(g,9,10,'#b3c4ad',3,-.5,4,{seg:6,ol:false});}   /* (the plan's mountains, plain: map-farm-area-plan) */
+  else{const m=packBuild(k);m.root.traverse(o=>{if(o.isMesh&&(o.material===OL||o.material===OLP||o.material.side===THREE.BackSide))o.visible=false;});g.add(m.root);
+    const kill=[];g.traverse(o=>{if(o.isMesh&&!o.visible)kill.push(o);});for(const o of kill){o.parent.remove(o);o.geometry.dispose();}}
+  return bake(g,false);}
+function buildFarm(L){const T0=performance.now();FARM.L=L;L.bounds.x1=Math.min(L.bounds.x1,FARM_X1);L.bounds.z1=FARM_Z1;
+  /* walls: the town's north edge (open only where the farm road leaves the x -50 road), between the town and the land behind the lane's hedge, the farm's east side */
+  for(const c of [{x1:-80.4,z1:-81,x2:-53.2,z2:-80},{x1:-46.8,z1:-81,x2:80,z2:-80},{x1:-81.4,z1:-80,x2:-80.4,z2:-37.05},{x1:-44,z1:FARM_Z1,x2:-43,z2:-80}])L.cols.push(Object.assign(c,{fw:1}));
+  const sg=new THREE.Group(),inst={},rnd=seeded(606);L.g.add(sg);FARM.st=sg;
+  const hs=k=>{let h=2166136261;for(let i=0;i<k.length;i++){h^=k.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0)/4294967296;};
+  const NAT={pine:.35,tree:.35,bush:.55,rock:.5,'nat.oak':.5,'nat.fir':.4,'nat.firs':.4,'nat.birch':.3,mtn:0};
+  for(const [k,x,z,ry,s,id] of FARMD.p){
+    if(k in NAT){(inst[k]||(inst[k]=[])).push([x,z,ry||hs(id)*TAU,s*(.9+.25*hs(id+'s'))]);if(NAT[k]&&farmZone(x,z))farmCol(L,{cx:x,cz:z,cr:NAT[k]});continue;}
+    if(k.startsWith('fa.')||k.startsWith('coach.'))continue;   /* living things: farmTick's */
+    const m=packBuild(k);if(!m)continue;const g=m.root;farmLite(g,!/^farm\.(barn|stable|coop|arch)$/.test(k));g.position.set(x,0,z);g.rotation.y=ry;g.scale.multiplyScalar(s);sg.add(g);
+    if(FARM_SOLID[k]){const b=new THREE.Box3().setFromObject(new THREE.Group().add(packBuild(k).root)),w=(b.max.x-b.min.x)*s*FARM_SOLID[k],d=(b.max.z-b.min.z)*s*FARM_SOLID[k],cx=(b.max.x+b.min.x)/2*s,cz=(b.max.z+b.min.z)/2*s;
+      farmFoot(L,x+cx*Math.cos(ry)+cz*Math.sin(ry),z-cx*Math.sin(ry)+cz*Math.cos(ry),ry,w*.92,d*.92);}
+    if(k==='farm.arch')for(const sd of[-1,1])farmCol(L,{cx:x+sd*3.05*Math.cos(ry),cz:z-sd*3.05*Math.sin(ry),cr:.35});
+    if(k==='farm.stable')FARM.stables.push({x,z,ry,s});if(k==='farm.trough')FARM.troughs.push({x,z,ry});if(k==='farm.eggs')FARM.eggs={x,z};if(k==='farm.milk')FARM.milk={x,z};
+    if(k.startsWith('course.'))FARM.jumps[id]={x,z,ry};if(k.startsWith('flag.'))FARM.flags[k.slice(5)]={x,z};}
+  /* the free feed bucket (economy-farm-feed) by the cows' trough */
+  {const t=FARM.troughs[0],m=packBuild('farm.bucket');m.root.position.set(t.x+.75,0,t.z+1.05);sg.add(m.root);FARM.bucket={x:t.x+.75,z:t.z+1.05};}
+  bake(sg,true,160);
+  /* one draw per kind, with a bounding sphere round its own trees (the camera skips it when it looks away) */
+  for(const k in inst){const M=new THREE.Matrix4(),Q=new THREE.Quaternion(),V=new THREE.Vector3(),Sc=new THREE.Vector3(),C=new THREE.Color(),up=new THREE.Vector3(0,1,0),protos=farmProto(k);
+    for(const side of [0]){const P=inst[k];
+      for(const pm of protos){const geo=side?pm.geometry.clone():pm.geometry,im=new THREE.InstancedMesh(geo,pm.material,P.length);im.castShadow=false;im.receiveShadow=true;
+        if(!geo.boundingSphere)geo.computeBoundingSphere();const r0=geo.boundingSphere.radius+Math.abs(geo.boundingSphere.center.y);let x1=1e9,x2=-1e9,z1=1e9,z2=-1e9,sm=1;
+        P.forEach(([x,z,ry,s],i)=>{V.set(x,groundY(x,z),z);Q.setFromAxisAngle(up,ry);Sc.setScalar(s);M.compose(V,Q,Sc);im.setMatrixAt(i,M);x1=Math.min(x1,x);x2=Math.max(x2,x);z1=Math.min(z1,z);z2=Math.max(z2,z);sm=Math.max(sm,s);
+          if(k!=='mtn'&&k!=='rock'){const t=.88+.2*rnd();C.setRGB(t,t*(.97+.06*rnd()),t);im.setColorAt(i,C);}});
+        geo.boundingSphere=new THREE.Sphere(new THREE.Vector3((x1+x2)/2,0,(z1+z2)/2),Math.hypot(x2-x1,z2-z1)/2+r0*sm);
+        L.g.add(im);FARM.inst.push(im);}}}
+  /* the ground: trodden farm ground, mud (with puddles), the dirt roads and the horse trail (inside the farm a road is trodden ground too) */
+  const lay=[[],[],[],[]],COL=['#c8b27c','#8f6d4b','#d6bf8e','#7d8fa3'];
+  const disc=(li,x,z,r,sx,n,c)=>{const q=lay[li],cc=new THREE.Color(c||COL[li]);for(let i=0;i<n;i++){const a=i/n*TAU,b=(i+1)/n*TAU;q.push([x,z,x+Math.cos(a)*r*sx,z+Math.sin(a)*r,x+Math.cos(b)*r*sx,z+Math.sin(b)*r,cc]);}};
+  for(const [k,x,z,r,sm,sx] of FARMD.ground){if(k===2)continue;   /* (the sand: the Pet Show lawn, stage 5) */
+    disc(k,x,z,r,sx||1,14);if(k===1&&r>1.6){const a=hs(x+','+z)*TAU;disc(3,x+Math.cos(a)*r*.4,z+Math.sin(a)*r*.4,r*.28,1.4,10);}}
+  const [bx1,bz1,bx2,bz2]=FARMD.box,inBox=(x,z)=>x>bx1&&x<bx2&&z>bz1&&z<bz2;
+  for(const [kind,w,...pts] of FARMD.roads){const V3=[];for(let i=0;i<pts.length;i+=2)V3.push(new THREE.Vector3(pts[i],0,pts[i+1]));
+    const P=V3.length>2?new THREE.CatmullRomCurve3(V3).getSpacedPoints(Math.max(2,Math.ceil(new THREE.CatmullRomCurve3(V3).getLength()/1.5))):V3,li=2,hw=w/2;
+    for(let i=0;i<P.length-1;i++){const a=P[i],b=P[i+1],dx=b.x-a.x,dz=b.z-a.z,l=Math.hypot(dx,dz)||1,nx=-dz/l*hw,nz=dx/l*hw,c=new THREE.Color(inBox((a.x+b.x)/2,(a.z+b.z)/2)?COL[0]:kind===2?'#dcc69c':COL[2]);
+      lay[li].push([a.x+nx,a.z+nz,a.x-nx,a.z-nz,b.x+nx,b.z+nz,c],[b.x+nx,b.z+nz,a.x-nx,a.z-nz,b.x-nx,b.z-nz,c]);}
+    for(const e of [P[0],P[P.length-1]])disc(li,e.x,e.z,hw,1,12,inBox(e.x,e.z)?COL[0]:kind===2?'#dcc69c':COL[2]);
+    if(kind===2)FARM.trails.push(P.map(p=>[p.x,p.z]));}
+  lay[0]=lay[0].concat(lay[2].map(t=>t.concat([1])));lay[2]=[];lay[1]=lay[1].concat(lay[3].map(t=>t.concat([1])));lay[3]=[];   /* (2 pieces: the road and trail strips lie 4 mm over the trodden ground, the puddles 4 mm over the mud) */
+  lay.forEach((q,li)=>{if(!q.length)return;const n=q.length*3,P=new Float32Array(n*3),N=new Float32Array(n*3),C=new Float32Array(n*3),y=[.012,.02,.016,.024][li];
+    q.forEach((t,i)=>{const o=i*9;const tri=[[t[0],t[1]],[t[2],t[3]],[t[4],t[5]]];const cw=(tri[1][0]-tri[0][0])*(tri[2][1]-tri[0][1])-(tri[1][1]-tri[0][1])*(tri[2][0]-tri[0][0])>0;if(cw){const s2=tri[1];tri[1]=tri[2];tri[2]=s2;}
+      tri.forEach(([x,z],j)=>{P[o+j*3]=x;P[o+j*3+1]=y+(t[7]?.004:0);P[o+j*3+2]=z;N[o+j*3+1]=1;C[o+j*3]=t[6].r;C[o+j*3+1]=t[6].g;C[o+j*3+2]=t[6].b;});});
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(P,3));g.setAttribute('normal',new THREE.BufferAttribute(N,3));g.setAttribute('color',new THREE.BufferAttribute(C,3));g.computeBoundingSphere();
+    const m=TOONVC.clone();m.polygonOffset=true;m.polygonOffsetFactor=-1-li;m.polygonOffsetUnits=-2-2*li;m.onBeforeCompile=TOONVC.onBeforeCompile;const me=new THREE.Mesh(g,m);me.receiveShadow=true;me.userData.keep=1;L.g.add(me);FARM.ground.push(me);});
+  /* the forest belt on the map: the trees taken out vanish, the moved ones move */
+  for(const t of mapTrees()){const mv=FARMD.mv.find(q=>Math.abs(q[0]-t[0])<.6&&Math.abs(q[1]-t[1])<.6);if(mv){t[0]=mv[2];t[1]=mv[3];}else if(FARMD.del.some(q=>Math.abs(q[0]-t[0])<.6&&Math.abs(q[1]-t[1])<.6))t[2]=0;
+    if(t[2]&&farmZone(t[0],t[1]))farmCol(L,{cx:t[0],cz:t[1],cr:.45});}
+  for(const [x,z] of FAR_TREES)if(farmZone(x,z))farmCol(L,{cx:x,cz:z,cr:.5});
+  farmLive(L);FARM.ms=Math.round(performance.now()-T0);}
+/* 🐴 the farm, the horse trail and the jump field as placed in the Map chat's approved Area plan (pets and farm update, stage 6; made by tools/pfu-wip/put-farm.py
+   from kit/kits/pfu-placements.json): p = [model, x, z, ry, scale, id], roads = [0 road | 1 path | 2 trail, width, x,z,...], ground = [0 farm | 1 mud | 2 sand, x, z, r, smooth, x stretch],
+   del = forest trees taken out (trail, roads, fields, buildings), mv = forest trees moved [from x,z, to x,z]. Game metres, city frame */
+const FARMD={"box":[-170,-124,-64,-84],"p":[["rock",-55.46,-84,0,1,"o1"],["rock",-44.73,-84.9,0,1,"o2"],["rock",-54.82,-85.8,0,1,"o3"],["rock",-45.03,-86.7,0,1,"o4"],["rock",-54.72,-87.6,0,1,"o5"],["rock",-44.74,-88.5,0,1,"o6"],["rock",-54.83,-89.4,0,1,"o7"],["rock",-44.92,-90.3,0,1,"o8"],["rock",-54.89,-91.2,0,1,"o9"],["rock",-45.03,-92.1,0,1,"o10"],["rock",-55.1,-93,0,1,"o11"],["rock",-44.52,-93.9,0,1,"o12"],["rock",-54.95,-94.8,0,1,"o13"],["rock",-44.56,-95.7,0,1,"o14"],["farm.arch",-68.3,-100.9,1.57,1,"o15"],["farm.fence",-67.5,-107.1,2.88,1.35,"o16"],["farm.fence",-68.5,-95.2,0,1.1,"o17"],["farm.barn",-104.3,-111.1,0.26,0.82,"o18"],["farm.stable",-116.9,-119.9,0,0.9,"o19"],["farm.windmill",-97,-111,0.6,1,"o20"],["farm.tractor",-90,-97,2.3,1,"o21"],["farm.combine",-140,-96,0.4,0.9,"o22"],["farm.coop",-100,-95.5,3.14,1,"o23"],["fa.chicken.adult",-80.48,-109.16,3.12,1,"o24"],["fa.cow.adult",-149.12,-105.57,3.53,1,"o25"],["fa.cow.adult",-153.33,-113.83,2.35,1,"o26"],["fa.cow.adult",-151.63,-118.3,5.15,1,"o27"],["fa.cow.adult",-144.45,-116.78,2.48,1,"o28"],["fa.cow.adult",-143.91,-108.2,2.92,1,"o29"],["fa.sheep.baby",-128.53,-98.2,5.48,1,"o30"],["fa.sheep.baby",-131.92,-97.98,1.74,1,"o31"],["fa.sheep.adult",-124.11,-100.13,5.76,1,"o32"],["fa.sheep.baby",-132.79,-93.68,5.29,1,"o33"],["fa.sheep.adult",-127.22,-101.22,0.07,1,"o34"],["fa.sheep.adult",-130.82,-101.24,1.1,1,"o35"],["fa.sheep.adult",-127.54,-95.4,5.75,1,"o36"],["fa.horse.adult",-110.83,-108.95,1.67,1,"o37"],["fa.horse.adult",-113.75,-108.07,5.26,1,"o38"],["fa.horse.adult",-116.72,-107.9,4.21,1,"o39"],["fa.horse.baby",-117.4,-112.96,4.25,1,"o40"],["fa.horse.adult",-114.46,-114.58,0.07,1,"o41"],["fa.pig.adult",-109.62,-93.59,1.64,1,"o42"],["fa.pig.adult",-109.65,-97.57,4.08,1,"o43"],["fa.pig.adult",-104.73,-97.23,1.3,1,"o44"],["farm.trough",-140,-104,1.57,1,"o45"],["farm.trough",-122.3,-115.9,0,1,"o46"],["farm.hay",-94.9,-98.7,3.75,1,"o47"],["farm.hay",-93.7,-98,4.15,1,"o48"],["farm.hay",-93.26,-99.44,2.45,1,"o49"],["farm.hay",-95.18,-96.77,1.99,1,"o50"],["farm.hay",-96.4,-98.2,2.6,1,"o51"],["farm.milk",-139.4,-105.3,0,1,"o52"],["farm.eggs",-97.5,-94,0,1,"o53"],["tree",-87.07,-77.93,0,1,"o54"],["nat.oak",-77.96,-79.7,0,1,"o55"],["tree",-154.23,-131.94,0,1,"o56"],["tree",-140.76,-133.83,0,1,"o57"],["bush",-133.03,-74.15,0,1,"o59"],["tree",-122.97,-138.76,0,1,"o60"],["nat.oak",-133.64,-136.69,0,1,"o61"],["nat.oak",-107.04,-136.11,0,1,"o62"],["nat.oak",-148.22,-135.53,0,1,"o63"],["tree",-90.15,-133.17,0,1,"o64"],["tree",-92.06,-138.75,0,1,"o65"],["nat.oak",-83.51,-139.76,0,1,"o66"],["tree",-125.03,-78.45,0,1,"o67"],["tree",-108.35,-75.03,0,1,"o68"],["tree",-95.64,-78.75,0,1,"o69"],["tree",-127.42,-131.33,0,1,"o70"],["tree",-94.81,-130.41,0,1,"o71"],["tree",-83.41,-130.04,0,1,"o72"],["nat.oak",-78.16,-135.3,0,1,"o73"],["nat.oak",-151.26,-78.35,0,1,"o74"],["tree",-71.84,-76.43,0,1,"o75"],["tree",-120.75,-131.51,0,1,"o76"],["tree",-67.72,-135.47,0,1,"o77"],["nat.oak",-91.4,-75.29,0,1,"o78"],["nat.oak",-140.31,-139.86,0,1,"o79"],["tree",-76.94,-130.38,0,1,"o80"],["nat.oak",-135.74,-130.64,0,1,"o81"],["pine",-40.76,-128.51,0,1,"o82"],["nat.oak",-41.33,-155.96,0,1,"o84"],["tree",-56.96,-141.01,0,1,"o85"],["nat.oak",-60.02,-150.4,0,1,"o86"],["bush",-78.67,-146.82,0,1,"o87"],["bush",-62.47,-143.94,0,1,"o88"],["nat.oak",-55.23,-130.59,0,1,"o89"],["pine",-123.84,-144.65,0,1,"o90"],["tree",-107.26,-142.12,0,1,"o91"],["pine",-61.57,-134.87,0,1,"o92"],["tree",-39.79,-117.71,0,1,"o93"],["tree",-75.84,-152.72,0,1,"o94"],["bush",-38.55,-145.6,0,1,"o95"],["nat.oak",-115.34,-142.11,0,1,"o96"],["nat.oak",-128.71,-148.66,0,1,"o97"],["tree",-52.07,-153.18,0,1,"o98"],["bush",-75.12,-140.38,0,1,"o99"],["tree",-70.63,-149.32,0,1,"o100"],["tree",-112.86,-147.9,0,1,"o101"],["bush",-55.01,-121.42,0,1,"o102"],["pine",-38.01,-136.35,0,1,"o103"],["tree",-52.02,-135.44,0,1,"o104"],["nat.oak",-129.34,-140.81,0,1,"o105"],["bush",-66.81,-139.82,0,1,"o106"],["tree",-86.06,-149.4,0,1,"o107"],["nat.oak",-50.14,-143.78,0,1,"o108"],["nat.oak",-88.24,-143.32,0,1,"o109"],["pine",-69.13,-154.31,0,1,"o110"],["course.x.0",-182.45,-76.81,2.14,1,"o111"],["course.v.1",-180.86,-109.37,0.3,1,"o112"],["course.o.2",-184.61,-98.5,2.41,1,"o113"],["course.s.3",-193.07,-81.08,1.21,1,"o114"],["course.x.0",-194.49,-121.3,2.42,1,"o115"],["course.v.1",-185.39,-89.23,1.21,1,"o116"],["course.x.2",-178.73,-121.93,2.17,1,"o117"],["course.o.3",-194.62,-110.63,1.67,1,"o118"],["course.s.0",-194.14,-99.52,2.15,1,"o119"],["course.v.1",-176.06,-83.29,0.84,1,"o120"],["course.x.2",-174.01,-102.47,1.01,1,"o121"],["course.s.3",-175.72,-94.42,0.49,1,"o122"],["tree",-127.04,-35,0,1,"o123"],["bush",-123.54,-38.54,0,1,"o124"],["bush",-130.1,-39.16,0,1,"o125"],["bush",-125.79,-40.03,0,1,"o126"],["bush",-144.06,-133.57,0,1,"o127"],["bush",-139.38,-129.07,0,1,"o128"],["bush",-141.5,-129.47,0,1,"o129"],["bush",-118.28,-139.01,0,1,"o130"],["bush",-117.56,-131.14,0,1,"o131"],["bush",-62.45,-129.89,0,1,"o132"],["bush",-67.9,-129.68,0,1,"o133"],["bush",-66,-127.86,0,1,"o134"],["bush",-65.11,-133.07,0,1,"o135"],["tree",-147.46,-55.3,0,1,"o136"],["bush",-151.49,-55.39,0,1,"o137"],["bush",-150.63,-51.32,0,1,"o138"],["bush",-151.05,-58.03,0,1,"o139"],["bush",-142.41,-54.46,0,1,"o140"],["bush",-148.86,-51.76,0,1,"o141"],["bush",-91.96,-78.16,0,1,"o142"],["bush",-123.69,-81.67,0,1,"o143"],["bush",-129.11,-81.1,0,1,"o144"],["tree",-32.54,-157.94,0,1,"o145"],["bush",-30.86,-161.99,0,1,"o146"],["nat.oak",-143.9,-158.17,0,1,"o147"],["bush",-150.22,-160.76,0,1,"o148"],["bush",-148.35,-153.96,0,1,"o149"],["bush",-149,-157.56,0,1,"o150"],["bush",-151.09,-158.6,0,1,"o151"],["nat.oak",-186.29,-26.41,0,1,"o152"],["bush",-186.51,-22.95,0,1,"o153"],["bush",-189.44,-30.37,0,1,"o154"],["bush",-190.24,-23.78,0,1,"o155"],["bush",-187.29,-30.93,0,1,"o156"],["bush",-184.41,-23.44,0,1,"o157"],["tree",-176.24,-173.02,0,1,"o158"],["bush",-178.05,-170.29,0,1,"o159"],["bush",-176.46,-180.81,0,1,"o160"],["bush",-176.19,-169.98,0,1,"o161"],["bush",-180.47,-174.7,0,1,"o162"],["bush",-179.48,-178.57,0,1,"o163"],["bush",-174.78,-166.32,0,1,"o164"],["bush",-124.01,-128.42,0,1,"o165"],["tree",-29.68,-130.1,0,1,"o166"],["bush",-27.08,-128.4,0,1,"o167"],["bush",-31.67,-134.45,0,1,"o168"],["bush",-33.14,-129.23,0,1,"o169"],["bush",-26.36,-131.14,0,1,"o170"],["bush",-32.53,-131.97,0,1,"o171"],["tree",-183.12,-48.15,0,1,"o172"],["bush",-186.04,-50.61,0,1,"o173"],["bush",-177.9,-51,0,1,"o174"],["bush",-178.92,-51.41,0,1,"o175"],["bush",-186.79,-45.8,0,1,"o176"],["bush",-180,-46.88,0,1,"o177"],["tree",-224.2,-71.95,0,1,"o178"],["bush",-229.34,-78.07,0,1,"o179"],["bush",-230.99,-72.69,0,1,"o180"],["bush",-227.75,-78.25,0,1,"o181"],["bush",-221.25,-68.92,0,1,"o182"],["bush",-219.62,-73.68,0,1,"o183"],["bush",-229.8,-74.04,0,1,"o184"],["bush",-82.73,-80.67,0,1,"o185"],["bush",-81.55,-77.77,0,1,"o186"],["tree",-218.58,-115.18,0,1,"o187"],["bush",-219.84,-125.8,0,1,"o188"],["bush",-223.46,-126.39,0,1,"o189"],["bush",-221.15,-110.14,0,1,"o190"],["bush",-224.06,-116.5,0,1,"o191"],["tree",-102.83,-67.94,0,1,"o192"],["bush",-101.27,-71.23,0,1,"o193"],["tree",-87.95,-65.63,0,1,"o194"],["bush",-86.26,-68.68,0,1,"o195"],["tree",-137.86,-151.87,0,1,"o196"],["bush",-136.34,-149.11,0,1,"o197"],["bush",-136.49,-154.88,0,1,"o198"],["bush",-134.04,-150.05,0,1,"o199"],["nat.oak",-159.67,-139.98,0,1,"o200"],["bush",-155.25,-138.72,0,1,"o201"],["bush",-157.34,-135.86,0,1,"o202"],["bush",-168.48,-146.39,0,1,"o203"],["bush",-168.2,-143.61,0,1,"o204"],["bush",-170.65,-137.77,0,1,"o205"],["bush",-169.93,-140.29,0,1,"o206"],["bush",-32.65,-83.29,0,1,"o207"],["bush",-142.49,-145.7,0,1,"o208"],["bush",-158.03,-144.95,0,1,"o209"],["bush",-152.5,-147.92,0,1,"o210"],["bush",-112.48,-78.02,0,1,"o211"],["bush",-194.37,-53.36,0,1,"o213"],["bush",-20.84,-85.25,0,1,"o214"],["bush",-180.48,-138.93,0,1,"o215"],["bush",-10.07,-73.03,0,1,"o216"],["bush",-193.12,-48.06,0,1,"o217"],["pine",-12.52,-126.95,0,1,"o218"],["pine",-18.7,-126.36,0,1,"o219"],["pine",-14.64,-131.53,0,1,"o220"],["pine",-10.56,-132.57,0,1,"o221"],["pine",39.9,-135.35,0,1,"o222"],["pine",33.17,-133.14,0,1,"o223"],["pine",39.42,-139.47,0,1,"o224"],["pine",37.33,-137.6,0,1,"o225"],["pine",-219.4,-76.86,0,1,"o226"],["pine",-217.39,-73.82,0,1,"o227"],["pine",-216.3,-78.11,0,1,"o228"],["pine",-221.13,-80.57,0,1,"o229"],["pine",-29.08,-137.71,0,1,"o230"],["pine",21.76,-131.88,0,1,"o231"],["pine",16.53,-134.98,0,1,"o232"],["pine",33.21,-137.02,0,1,"o233"],["pine",15.33,-140.64,0,1,"o234"],["pine",23.68,-137.06,0,1,"o235"],["pine",26.57,-136.57,0,1,"o236"],["pine",22.61,-139.78,0,1,"o237"],["pine",4.56,-121.99,0,1,"o238"],["pine",5.13,-127.96,0,1,"o239"],["pine",7.59,-121.92,0,1,"o240"],["pine",2.01,-119.12,0,1,"o241"],["pine",-38.95,-141.81,0,1,"o242"],["pine",-25.25,-153.73,0,1,"o243"],["pine",-30.9,-149.21,0,1,"o244"],["pine",-32.32,-145.37,0,1,"o245"],["pine",-27.67,-144.23,0,1,"o246"],["pine",-28.01,-150.61,0,1,"o247"],["pine",-29.1,-147.05,0,1,"o248"],["pine",-65.61,-171.97,0,1,"o249"],["pine",-70.1,-173.06,0,1,"o250"],["pine",-66.07,-164.56,0,1,"o251"],["pine",-44.26,-174.47,0,1,"o252"],["pine",-46.88,-178.12,0,1,"o253"],["pine",-38.3,-180.56,0,1,"o254"],["pine",-41.3,-174.35,0,1,"o255"],["pine",-42.47,-168.24,0,1,"o256"],["pine",-41.37,-178.53,0,1,"o257"],["pine",-89.68,-174.94,0,1,"o258"],["pine",-90.16,-185.85,0,1,"o259"],["pine",-88.77,-181.13,0,1,"o260"],["pine",-84.51,-184.77,0,1,"o261"],["pine",-81.91,-181.25,0,1,"o262"],["pine",-68.4,-176.61,0,1,"o263"],["pine",-40.6,-160.4,0,1,"o264"],["pine",-38.03,-153.17,0,1,"o265"],["pine",-40.94,-164.9,0,1,"o266"],["pine",-84.34,-169.69,0,1,"o267"],["pine",-87.22,-167.9,0,1,"o268"],["pine",-79.87,-162.17,0,1,"o269"],["pine",-76.46,-168.35,0,1,"o270"],["pine",-49.85,-138.92,0,1,"o271"],["pine",-33.81,-161.89,0,1,"o272"],["pine",-34.92,-166.98,0,1,"o273"],["pine",-76,-190.22,0,1,"o274"],["pine",-72.18,-195.92,0,1,"o275"],["pine",-72.71,-185.65,0,1,"o276"],["pine",-69.18,-184.18,0,1,"o277"],["pine",-65.78,-189.95,0,1,"o278"],["pine",-88.04,-160.73,0,1,"o279"],["pine",-82.73,-164.5,0,1,"o280"],["pine",-81.82,-167.88,0,1,"o281"],["pine",-15.8,-137.18,0,1,"o282"],["pine",-7.18,-128.37,0,1,"o283"],["pine",-8.74,-138.1,0,1,"o284"],["pine",-17.43,-132.77,0,1,"o285"],["pine",-13.82,-140.26,0,1,"o286"],["pine",-20.54,-134.53,0,1,"o287"],["pine",-182.72,-172.64,0,1,"o288"],["pine",-178.94,-162.84,0,1,"o289"],["pine",-162.9,-175.9,0,1,"o290"],["pine",-180.39,-168.53,0,1,"o291"],["pine",-181.34,-182.72,0,1,"o292"],["pine",-174.54,-187.76,0,1,"o293"],["pine",-180.14,-186.51,0,1,"o294"],["pine",-52.57,-163.92,0,1,"o295"],["pine",-46.72,-166.61,0,1,"o296"],["pine",-49.49,-176.88,0,1,"o297"],["pine",-54.23,-170.34,0,1,"o298"],["pine",-52.28,-176.1,0,1,"o299"],["pine",-56.21,-181.58,0,1,"o300"],["pine",70.84,-129.87,0,1,"o301"],["pine",62.74,-129.65,0,1,"o302"],["pine",67.55,-126.76,0,1,"o303"],["pine",73.79,-122.69,0,1,"o304"],["pine",67.12,-135.55,0,1,"o305"],["pine",77.01,-131.39,0,1,"o306"],["pine",-63.34,-170.03,0,1,"o307"],["pine",-61.01,-167.5,0,1,"o308"],["pine",-61.64,-174.3,0,1,"o309"],["pine",17.94,-115.05,0,1,"o310"],["pine",33.92,-127.91,0,1,"o311"],["pine",44.26,-137.2,0,1,"o312"],["pine",29.68,-112.75,0,1,"o313"],["pine",14.46,-123.71,0,1,"o314"],["pine",16.23,-128.86,0,1,"o315"],["pine",28.08,-125.85,0,1,"o316"],["pine",32.54,-109.35,0,1,"o317"],["pine",41.83,-118.86,0,1,"o318"],["pine",32.29,-123.87,0,1,"o319"],["pine",30.58,-120.7,0,1,"o320"],["pine",35.54,-119.12,0,1,"o321"],["pine",46.99,-134.87,0,1,"o322"],["pine",45.83,-117.28,0,1,"o323"],["pine",-31.32,-139.84,0,1,"o324"],["pine",-50.31,-166.77,0,1,"o325"],["pine",-55.93,-165.46,0,1,"o326"],["pine",7.92,-136.6,0,1,"o327"],["pine",6.67,-140.55,0,1,"o328"],["pine",10.86,-138.95,0,1,"o329"],["pine",2.73,-132.5,0,1,"o330"],["pine",-1.93,-142.04,0,1,"o331"],["pine",-21.8,-146.67,0,1,"o332"],["nat.fir",-14.21,-147.34,0,1,"o333"],["pine",11.32,-151.55,0,1,"o334"],["nat.firs",69.32,-186.81,0,1,"o335"],["nat.fir",64.03,-155.78,0,1,"o336"],["pine",-2.22,-168.49,0,1,"o337"],["nat.fir",84.35,-173.99,0,1,"o338"],["nat.birch",49.89,-133.46,0,1,"o339"],["nat.fir",-0.75,-130.77,0,1,"o340"],["nat.firs",-11.91,-190.21,0,1,"o341"],["nat.fir",-80.07,-195.15,0,1,"o342"],["nat.firs",-37.86,-192.13,0,1,"o343"],["nat.fir",51.05,-122.62,0,1,"o344"],["nat.fir",85.89,-176.9,0,1,"o345"],["nat.fir",46.87,-178.8,0,1,"o346"],["nat.firs",-58.63,-196.79,0,1,"o347"],["nat.fir",-8.29,-154.25,0,1,"o348"],["nat.firs",-59.55,-180.97,0,1,"o349"],["pine",80.11,-166.3,0,1,"o350"],["nat.fir",-62.22,-187.31,0,1,"o351"],["pine",66.49,-168.62,0,1,"o352"],["nat.firs",74.33,-176.12,0,1,"o353"],["pine",6.26,-163.59,0,1,"o354"],["pine",49.86,-143.43,0,1,"o355"],["pine",18.47,-142.31,0,1,"o356"],["nat.fir",49.38,-151.41,0,1,"o357"],["pine",84.81,-127.59,0,1,"o358"],["nat.fir",-2.07,-124.48,0,1,"o359"],["pine",25.48,-166.41,0,1,"o360"],["pine",-35.64,-129.37,0,1,"o361"],["nat.fir",-31.09,-182.26,0,1,"o362"],["nat.fir",-13.53,-120.02,0,1,"o363"],["pine",-9.67,-166.56,0,1,"o364"],["nat.fir",-22.49,-128.25,0,1,"o365"],["nat.fir",31.39,-165.65,0,1,"o366"],["pine",-6.53,-141.79,0,1,"o367"],["nat.firs",67.81,-177.85,0,1,"o368"],["nat.firs",-86.6,-196.22,0,1,"o369"],["nat.firs",77.83,-193.7,0,1,"o370"],["nat.firs",72.28,-188.32,0,1,"o371"],["pine",36.67,-147.6,0,1,"o372"],["nat.fir",18.79,-194.17,0,1,"o373"],["nat.birch",-28.84,-122.01,0,1,"o374"],["nat.firs",59.89,-191.96,0,1,"o375"],["nat.firs",-36.13,-187.79,0,1,"o376"],["pine",9.42,-131.65,0,1,"o377"],["pine",-21.45,-153.81,0,1,"o378"],["nat.fir",57.35,-189.4,0,1,"o379"],["nat.firs",91.81,-172.41,0,1,"o380"],["pine",27.43,-152.05,0,1,"o381"],["pine",74.13,-156.65,0,1,"o382"],["pine",-26.08,-159.93,0,1,"o383"],["nat.fir",0.54,-171.62,0,1,"o384"],["nat.firs",-41.33,-194.15,0,1,"o385"],["nat.firs",-83.24,-173.11,0,1,"o386"],["pine",-12.2,-145,0,1,"o387"],["pine",70.05,-135.21,0,1,"o388"],["nat.fir",12.62,-165.28,0,1,"o389"],["pine",-72.42,-167.71,0,1,"o390"],["nat.firs",-28.18,-188.41,0,1,"o391"],["nat.fir",50.17,-156.8,0,1,"o392"],["pine",69.18,-146.77,0,1,"o393"],["nat.fir",82.45,-136.71,0,1,"o394"],["pine",75.69,-165.06,0,1,"o395"],["nat.firs",64.52,-186.84,0,1,"o396"],["nat.birch",41.71,-123.43,0,1,"o397"],["nat.firs",-91.15,-179.3,0,1,"o398"],["pine",79.94,-151.78,0,1,"o399"],["pine",9.95,-142.91,0,1,"o400"],["pine",57.08,-156.89,0,1,"o401"],["nat.fir",7.57,-172.34,0,1,"o402"],["pine",77.39,-142.46,0,1,"o403"],["nat.fir",-25.66,-178.6,0,1,"o404"],["nat.fir",-5.32,-180.7,0,1,"o405"],["nat.fir",-8.56,-149.28,0,1,"o406"],["pine",70.37,-155.54,0,1,"o407"],["pine",79.53,-158.62,0,1,"o408"],["pine",14.73,-171.99,0,1,"o409"],["nat.fir",73.81,-152.06,0,1,"o410"],["nat.fir",-27.22,-192.68,0,1,"o411"],["pine",88.09,-163.95,0,1,"o412"],["nat.fir",-7.19,-186.01,0,1,"o413"],["nat.fir",10.99,-188.81,0,1,"o414"],["nat.firs",14.51,-180.23,0,1,"o415"],["nat.fir",32.66,-195.83,0,1,"o416"],["pine",84.1,-149.21,0,1,"o417"],["nat.firs",76.18,-190.65,0,1,"o418"],["pine",84.61,-159.56,0,1,"o419"],["pine",56.95,-163.3,0,1,"o420"],["nat.firs",50.1,-174.06,0,1,"o421"],["nat.fir",82.15,-195.67,0,1,"o422"],["nat.firs",-50.57,-181.5,0,1,"o423"],["nat.fir",-94.82,-165.27,0,1,"o424"],["nat.fir",91.98,-144.14,0,1,"o425"],["pine",90.01,-167.46,0,1,"o426"],["pine",51.48,-136.97,0,1,"o427"],["pine",1.26,-140.04,0,1,"o428"],["pine",-11.98,-158.03,0,1,"o429"],["nat.firs",10.38,-181.25,0,1,"o430"],["nat.fir",-55.28,-188.87,0,1,"o431"],["nat.fir",91.48,-179.86,0,1,"o432"],["pine",87.33,-154.06,0,1,"o433"],["pine",16.36,-165.04,0,1,"o434"],["nat.firs",3.79,-172.99,0,1,"o435"],["nat.firs",9.69,-176.8,0,1,"o436"],["pine",89.18,-136.83,0,1,"o437"],["nat.fir",63.18,-182.16,0,1,"o438"],["nat.fir",-9.94,-195.67,0,1,"o439"],["nat.birch",54.84,-121.78,0,1,"o440"],["pine",-2.13,-160.13,0,1,"o441"],["pine",82.25,-132.87,0,1,"o442"],["pine",63.09,-147.82,0,1,"o443"],["nat.fir",-54.12,-197.11,0,1,"o444"],["nat.firs",37.23,-190.3,0,1,"o445"],["nat.fir",-11.99,-179.17,0,1,"o446"],["pine",66.35,-130.4,0,1,"o447"],["pine",41.8,-150.91,0,1,"o448"],["nat.fir",75.97,-139.68,0,1,"o449"],["pine",-23.77,-136.41,0,1,"o450"],["pine",38.31,-170.05,0,1,"o451"],["nat.fir",94.71,-166.24,0,1,"o452"],["nat.fir",76.77,-154.97,0,1,"o453"],["nat.fir",93.9,-123.08,0,1,"o454"],["nat.fir",43.32,-142.65,0,1,"o455"],["nat.fir",42.11,-128.26,0,1,"o456"],["pine",2.98,-144.96,0,1,"o457"],["nat.fir",83.83,-140.97,0,1,"o458"],["pine",-26.12,-170.11,0,1,"o459"],["nat.birch",77.5,-122.34,0,1,"o460"],["pine",8.38,-156.23,0,1,"o461"],["nat.firs",77.86,-172.37,0,1,"o462"],["nat.firs",-66.85,-194.68,0,1,"o463"],["pine",89.53,-156.21,0,1,"o464"],["pine",43.38,-155.15,0,1,"o465"],["nat.fir",84.62,-183.31,0,1,"o466"],["nat.fir",90.64,-176.86,0,1,"o467"],["nat.firs",-31.96,-172.69,0,1,"o468"],["pine",41.64,-158.74,0,1,"o469"],["nat.firs",-50.07,-173.03,0,1,"o470"],["nat.firs",-16.7,-189.09,0,1,"o471"],["pine",55.9,-142.26,0,1,"o472"],["nat.firs",48.82,-195.11,0,1,"o473"],["nat.fir",-44.72,-195.22,0,1,"o474"],["pine",5.83,-133.53,0,1,"o475"],["pine",58.94,-132.29,0,1,"o476"],["nat.birch",26.21,-120.4,0,1,"o477"],["pine",18.58,-152.12,0,1,"o478"],["nat.fir",-12.47,-153.23,0,1,"o479"],["pine",43.09,-162.31,0,1,"o480"],["pine",6.03,-169.16,0,1,"o481"],["nat.fir",-60.84,-192.49,0,1,"o482"],["nat.fir",60.82,-187.77,0,1,"o483"],["pine",89.51,-147.1,0,1,"o484"],["pine",-22.03,-140.02,0,1,"o485"],["nat.fir",59.89,-180.94,0,1,"o486"],["pine",20.7,-121.03,0,1,"o487"],["pine",29.57,-154.97,0,1,"o488"],["nat.fir",15.68,-175.47,0,1,"o489"],["nat.fir",-19.37,-158.93,0,1,"o490"],["nat.fir",25.64,-197.44,0,1,"o491"],["pine",-35.76,-155.93,0,1,"o492"],["nat.firs",-80.46,-185.62,0,1,"o493"],["pine",39.05,-127.46,0,1,"o494"],["nat.fir",-18.21,-196.03,0,1,"o495"],["nat.firs",-7.76,-193.33,0,1,"o496"],["pine",56.75,-150.61,0,1,"o497"],["nat.fir",21.21,-169.88,0,1,"o498"],["nat.firs",-27.67,-196.46,0,1,"o499"],["nat.fir",1.04,-162.47,0,1,"o500"],["nat.fir",94.25,-191.76,0,1,"o501"],["pine",14.11,-154.79,0,1,"o502"],["nat.firs",93.64,-182.32,0,1,"o503"],["nat.fir",-4.27,-175.44,0,1,"o504"],["nat.firs",-87.79,-190.14,0,1,"o505"],["nat.firs",70.07,-174.76,0,1,"o506"],["nat.firs",30.41,-187.85,0,1,"o507"],["pine",73.98,-132.68,0,1,"o508"],["rock",-12.31,-130.22,0,1,"o509"],["rock",-18.86,-186.41,0,1,"o510"],["rock",25.93,-160.93,0,1,"o511"],["rock",50.44,-149.13,0,1,"o512"],["rock",76.14,-175.96,0,1,"o513"],["rock",14.81,-143.61,0,1,"o514"],["rock",-89.47,-177.21,0,1,"o515"],["rock",4.46,-188.73,0,1,"o516"],["rock",25.83,-153.07,0,1,"o517"],["rock",82.22,-147.68,0,1,"o518"],["rock",31.81,-141.51,0,1,"o519"],["rock",33.73,-153.73,0,1,"o520"],["rock",-64.48,-176.39,0,1,"o521"],["rock",-12.91,-132.28,0,1,"o522"],["rock",50.68,-185.1,0,1,"o523"],["rock",58.41,-149.51,0,1,"o524"],["rock",42.08,-126.11,0,1,"o525"],["rock",-56.64,-189.68,0,1,"o526"],["rock",-52.95,-164.64,0,1,"o527"],["rock",-72.27,-170.62,0,1,"o528"],["rock",48.94,-172.12,0,1,"o529"],["rock",11.21,-128.94,0,1,"o530"],["rock",62.54,-165.68,0,1,"o531"],["mtn",-39.2,-169.2,0,1,"o532"],["mtn",-23.6,-179.4,0,1,"o533"],["mtn",-18.9,-147.7,0,1,"o534"],["mtn",78,-151.6,0,1,"o535"],["mtn",59.1,-147.3,0,1,"o536"],["nat.fir",-152.2,-95.3,0,1,"amvv9fwcu33w"],["fa.lab",-100.2,-105.9,0,1,"amvvhihhinjo"],["nat.birch",-127.2,-48.1,0,1,"amvvkpymbqn8"],["nat.birch",-120.6,-51.9,0,1,"amvvkpz9omjt"],["nat.birch",-127.7,-43,0,1,"amvvkq054x3p"],["nat.birch",-119.6,-48.6,0,1,"amvvkq0dfipw"],["nat.birch",-122.4,-43.8,0,1,"amvvkq0mh51z"],["nat.birch",-124,-56.1,0,1,"amvvkq0uer80"],["nat.birch",-115.5,-61.7,0,1,"amvvkq11xw80"],["nat.oak",-123.9,-46.8,0,1,"amvvkq89lgnx"],["farm.stable",-124,-110.2,1.57,1,"amvvo3jjd9id"],["coach.stan",-167.2,-98,-1.57,1,"acoach1"],["coach.ieva",-113,-111.5,0,1,"aieva1"],["flag.blue",-174,-116,0,1,"aflagblue"],["flag.red",-189,-114,0,1,"aflagred"]],"roads":[[0,6.4,-50,-84.1,-50,-85.5],[0,6,-68,-101.2,-68.86,-101.23,-69.71,-101.26,-70.57,-101.29,-71.43,-101.31,-72.29,-101.34,-73.14,-101.37],[2,3.4,-143.9,-72.4,-143.36,-71.6,-142.82,-70.8,-142.28,-70,-141.74,-69.2,-141.2,-68.4,-140.57,-67.81,-139.94,-67.23,-139.31,-66.64,-138.69,-66.06,-138.06,-65.47,-137.43,-64.89,-136.8,-64.3,-136.2,-63.63,-135.6,-62.97,-135,-62.3,-134.4,-61.63,-133.8,-60.97,-133.2,-60.3,-132.84,-59.5,-132.48,-58.7,-132.12,-57.9,-131.76,-57.1,-131.4,-56.3,-131.4,-55.4,-131.4,-54.5,-131.4,-53.6,-131.4,-52.7,-131.4,-51.8,-131.92,-51.13,-132.43,-50.47,-132.95,-49.8,-133.47,-49.13,-133.98,-48.47,-134.5,-47.8,-135.04,-47.18,-135.58,-46.56,-136.12,-45.94,-136.66,-45.32,-137.2,-44.7,-137.95,-44.1,-138.7,-43.5,-139.45,-42.9],[2,3.4,-208.17,-56.17,-208.23,-57.13,-208.3,-58.1,-208.3,-59.08,-208.3,-60.06,-208.3,-61.04,-208.3,-62.02,-208.3,-63,-208.23,-63.9,-208.17,-64.8,-208.1,-65.7,-208.03,-66.6,-207.97,-67.5,-207.9,-68.4,-207.62,-69.28,-207.34,-70.16,-207.06,-71.04,-206.78,-71.92,-206.5,-72.8,-206.32,-73.7,-206.14,-74.6,-205.96,-75.5,-205.78,-76.4,-205.6,-77.3,-205.42,-78.28,-205.24,-79.26,-205.06,-80.24,-204.88,-81.22,-204.7,-82.2,-204.7,-83.1,-204.7,-84,-204.7,-84.9,-204.7,-85.8,-204.7,-86.7,-204.88,-87.68,-205.06,-88.66,-205.24,-89.64,-205.42,-90.62,-205.6,-91.6,-205.88,-92.5,-206.16,-93.4,-206.44,-94.3,-206.72,-95.2,-207,-96.1,-207.37,-96.85,-207.73,-97.6,-208.1,-98.35,-208.47,-99.1,-208.83,-99.85,-209.2,-100.6,-209.46,-101.48,-209.72,-102.36,-209.98,-103.24,-210.24,-104.12,-210.5,-105,-210.62,-105.9,-210.75,-106.8,-210.87,-107.7,-211,-108.6,-211.15,-109.5,-211.3,-110.4,-211.45,-111.3,-211.6,-112.2,-211.66,-113.1,-211.72,-114,-211.78,-114.9,-211.84,-115.8,-211.9,-116.7,-211.96,-117.68,-212.02,-118.66,-212.08,-119.64,-212.14,-120.62,-212.2,-121.6,-212.24,-122.58,-212.28,-123.56,-212.32,-124.54,-212.36,-125.52,-212.4,-126.5,-212.42,-127.48,-212.44,-128.46,-212.46,-129.44,-212.48,-130.42,-212.5,-131.4,-212.48,-132.3,-212.46,-133.2,-212.44,-134.1,-212.42,-135,-212.4,-135.9,-212.3,-136.78,-212.2,-137.66,-212.1,-138.54,-212,-139.42,-211.9,-140.3,-211.5,-141.07,-211.1,-141.83,-210.7,-142.6,-210,-143.05,-209.3,-143.5,-208.6,-143.95,-207.9,-144.4,-207.07,-144.62,-206.23,-144.83,-205.4,-145.05,-204.57,-145.27,-203.73,-145.48,-202.9,-145.7,-202.02,-146,-201.13,-146.3,-200.25,-146.6,-199.37,-146.9,-198.48,-147.2,-197.6,-147.5,-196.88,-147.86,-196.16,-148.22,-195.44,-148.58,-194.72,-148.94,-194,-149.3,-193.16,-149.69,-192.32,-150.08,-191.49,-150.46,-190.65,-150.85,-189.81,-151.24,-188.98,-151.62,-188.14,-152.01,-187.3,-152.4,-186.48,-152.78,-185.67,-153.17,-184.85,-153.55,-184.03,-153.93,-183.22,-154.32,-182.4,-154.7,-181.5,-155.13,-181.05,-155.35,-180.6,-155.57,-179.7,-156,-178.8,-156.43,-178.35,-156.65,-177.9,-156.87,-177,-157.3,-176.18,-157.68,-175.37,-158.07,-174.55,-158.45,-173.73,-158.83,-172.92,-159.22,-172.1,-159.6,-171.2,-159.9,-170.3,-160.2,-169.4,-160.5,-168.5,-160.8,-167.6,-161.1,-166.7,-161.4,-165.72,-161.58,-164.74,-161.76,-163.76,-161.94,-162.78,-162.12,-161.8,-162.3,-160.9,-162.38,-160,-162.46,-159.1,-162.54,-158.2,-162.62,-157.3,-162.7,-156.32,-162.88,-155.34,-163.06,-154.36,-163.24,-153.38,-163.42,-152.4,-163.6,-151.4,-163.6,-150.4,-163.6,-149.4,-163.6,-148.4,-163.6,-147.42,-163.6,-146.44,-163.6,-145.46,-163.6,-144.48,-163.6,-143.5,-163.6,-142.68,-163.42,-141.86,-163.24,-141.04,-163.06,-140.22,-162.88,-139.4,-162.7,-138.52,-162.34,-137.64,-161.98,-136.76,-161.62,-135.88,-161.26,-135,-160.9,-134.1,-160.54,-133.2,-160.18,-132.3,-159.82,-131.4,-159.46,-130.5,-159.1,-129.7,-158.84,-128.9,-158.58,-128.1,-158.32,-127.3,-158.06,-126.5,-157.8,-125.68,-157.57,-124.87,-157.33,-124.05,-157.1,-123.23,-156.87,-122.42,-156.63,-121.6,-156.4,-120.78,-156.12,-119.97,-155.83,-119.15,-155.55,-118.33,-155.27,-117.52,-154.98,-116.7,-154.7,-115.8,-154.4,-114.9,-154.1,-114,-153.8,-113.1,-153.5,-112.2,-153.2,-111.3,-152.9,-110.5,-152.8,-109.7,-152.7,-108.9,-152.6,-108.1,-152.5,-107.3,-152.4,-106.4,-152.4,-105.5,-152.4,-104.6,-152.4,-103.7,-152.4,-102.8,-152.4,-101.82,-152.4,-100.84,-152.4,-99.86,-152.4,-98.88,-152.4,-97.9,-152.4,-97.08,-152.68,-96.26,-152.96,-95.44,-153.24,-94.62,-153.52,-93.8,-153.8,-92.92,-154.06,-92.04,-154.32,-91.16,-154.58,-90.28,-154.84,-89.4,-155.1,-88.57,-155.41,-87.74,-155.73,-86.91,-156.04,-86.09,-156.36,-85.26,-156.67,-84.43,-156.99,-83.6,-157.3,-82.78,-157.58,-81.96,-157.86,-81.14,-158.14,-80.32,-158.42,-79.5,-158.7,-78.62,-159,-77.73,-159.3],[0,6,-49.9,-85.2,-50,-93.4,-53.8,-98.9,-67.2,-101.6,-67.4,-101.9],[0,3,-77.1,-159.7,-75.8,-160.1,-74.5,-160.3,-73.1,-160.3,-71.6,-160.4,-70.3,-160.3,-69.1,-159.8],[0,3,-68.4,-159,-67.7,-158,-67.1,-156.9,-66.7,-155.6,-66.5,-154.4,-66.1,-153.2,-65.6,-152,-65.2,-150.8,-64.9,-149.5,-64.9,-148.1,-65,-146.8,-65.5,-145.6,-66,-144.5,-66.7,-143.3,-67.7,-142.5,-68.6,-141.5,-69.4,-140.5,-70.1,-139.4,-70.5,-138.2,-70.9,-136.8,-71.1,-135.6,-71.3,-134,-71.3,-132.5,-71.2,-131.2],[0,3,-70.7,-130.4,-70.6,-129.2,-70.4,-128,-70.1,-126.4,-69.8,-125,-69.4,-123.5,-69.1,-122,-68.8,-120.5,-68.6,-118.8,-68.6,-117.5,-68.5,-116.3,-68.6,-115,-68.6,-113.8,-68.8,-112.5,-69.2,-111.3,-69.5,-110.1,-70.1,-109,-70.5,-107.8,-70.9,-106.7,-71.2,-105.5,-71.3,-104],[0,6,-73.7,-100.8,-74.9,-100.8,-76.2,-100.8,-77.6,-100.9,-78.9,-100.9,-80.1,-100.9,-81.3,-101.1,-82.5,-101.4,-83.7,-101.6,-85,-101.8,-86.2,-102.2,-87.4,-102.5,-88.6,-102.7,-90,-102.9,-91.3,-102.9,-92.6,-102.9,-93.8,-102.8,-95.1,-102.7,-96.3,-102.6,-97.5,-102.4,-98.7,-102.2,-100,-101.8,-101.3,-101.7,-102.6,-101.5,-103.9,-101.3,-105.2,-101.2,-106.4,-101,-107.8,-100.8,-109.2,-100.7,-110.5,-100.6,-111.9,-100.5,-113.2,-100.4,-114.4,-100.2,-115.6,-100,-116.7,-99.4,-117.9,-99.1,-119.1,-98.8,-120.3,-98.6,-121.5,-98.5],[0,6,-121.2,-98.4,-121.75,-98.2,-122.3,-98,-122.85,-97.75,-123.4,-97.5,-124,-97.3,-124.6,-97.1,-125.1,-96.8,-125.6,-96.5,-126.1,-96.15,-126.6,-95.8,-127.05,-95.45,-127.5,-95.1,-128.05,-94.75,-128.6,-94.4,-129.15,-94.05,-129.7,-93.7,-130.2,-93.35,-130.7,-93,-131.25,-92.7,-131.8,-92.4,-132.3,-92.05,-132.8,-91.7],[0,6,-132.2,-92,-133.5,-91.6,-134.7,-91.3,-136.1,-91.2,-137.3,-91,-138.5,-90.7,-139.9,-90.5,-141.2,-90.3,-142.5,-90.3,-143.8,-90.2,-145,-90.1,-146.4,-89.9,-147.9,-89.8,-149.3,-89.7,-150.6,-89.7,-151.9,-89.6,-153.2,-89.7,-154.4,-89.7,-155.6,-89.7,-156.8,-89.9,-158.3,-89.9,-159.6,-90.1,-160.9,-90.2,-162.2,-90.2,-163.4,-90.3,-164.7,-90.3],[0,3,-144.3,-73.6,-144.5,-75,-144.7,-76.4,-144.9,-77.7,-145.1,-79,-145.3,-80.2,-145.4,-81.6,-145.5,-82.9,-145.5,-84.3,-145.5,-85.5,-145.6,-86.7],[0,3,-139.8,-42.1,-141,-41.8,-142.5,-41.5,-144.3,-41,-145.6,-40.5,-147.2,-40.2],[0,3,-207.9,-55.5,-207.8,-54.2,-207.3,-53,-206.7,-51.9,-206.1,-50.7,-205.3,-49.3,-204.5,-47.9,-203.7,-46.5,-203.1,-45.3,-202.2,-44.4,-201.3,-43.6,-200.4,-42.7,-199.5,-41.8,-198.6,-40.9,-197.1,-40.7,-195.6,-40.4,-194.3,-40.4,-192.7,-40.7,-191.3,-41.2,-189.7,-41.4,-188.3,-41.9,-187,-42.4,-185.4,-42.7,-184,-43.2,-182.7,-43.6,-181.6,-44.3,-180.2,-44.8,-178.9,-45.3,-177.6,-45.2,-176.1,-45.5,-174.5,-45.8,-173.3,-45.7,-172,-46.2,-170.4,-46.4,-169.2,-46.4,-167.7,-46.7,-166.4,-46.6,-164.7,-46.7,-163.5,-46.6,-162.2,-46.6,-160.8,-46.3,-159.6,-46.3,-158.4,-45.7,-157.3,-45.2,-156.4,-44.4,-155.3,-43.8,-154.4,-43,-153.5,-42.1,-152.4,-41.6,-151,-40.8,-149.9,-40.3,-148.5,-40,-147,-40.3,-145.7,-40.8]],"ground":[[1,-108,-96,3.2],[1,-104.6,-96,2],[1,-105.88,-93.81,2.4],[1,-108.76,-93.27,2.8],[1,-111.06,-94.79,2],[1,-111.06,-97.21,2.4],[1,-108.76,-98.73,2.8],[1,-105.88,-98.19,2],[0,-118.6,-102.5,2],[0,-119.3,-103.5,2],[0,-120.5,-103.6,2],[0,-121.7,-103.7,2],[0,-122.4,-104.7,2],[0,-121,-105.3,2],[0,-122.2,-105.4,2],[0,-123.3,-104.6,2],[0,-124.2,-103.8,2],[0,-123.2,-104.4,2],[0,-122.3,-105.4,2],[0,-121,-105.7,2],[0,-119.7,-105.3,2],[0,-118.5,-104.9,2],[0,-117.3,-104.9,2],[0,-116,-104.8,2],[0,-114.7,-104.8,2],[0,-113.5,-104.8,2],[0,-112.3,-104.9,2],[0,-111.1,-104.5,2],[0,-110,-104.1,2],[0,-108.8,-104.1,2],[0,-107.8,-104.9,2],[0,-107.6,-106.1,2],[0,-106.4,-106.5,2],[0,-105.2,-106.6,2],[0,-104,-107,2],[0,-103.3,-107.4,2],[0,-102,-107.4,2],[0,-100.7,-107.3,2],[0,-99.5,-107.3,2],[0,-98.3,-107.4,2],[0,-97.1,-107.7,2],[0,-95.8,-107.9,2],[0,-94.6,-107.9,2],[0,-95.7,-108.3,2],[0,-97,-108.4,2],[0,-98.3,-108.5,2],[0,-99.3,-109.2,2],[0,-98.4,-110.2,2],[0,-97.2,-110.3,2],[0,-95.9,-110.4,2],[0,-94.7,-110.2,2],[0,-93.7,-109.6,2],[0,-93,-108.6,2],[0,-92.3,-107.5,2],[0,-101.8,-97.4,2],[0,-100.5,-97.5,2],[0,-99.2,-97.9,2],[0,-97.9,-97.9,2],[0,-97,-97.2,2],[0,-95.4,-97.2,2],[0,-94.2,-97.8,2],[0,-93.4,-98.7,2],[0,-112.8,-95.7,2],[0,-113.7,-94.6,2],[0,-114.5,-93.7,2],[0,-115.8,-93.2,2],[0,-116.9,-92.9,2],[0,-118.2,-92.5,2],[0,-119.5,-92.7,2],[0,-120.7,-92.5,2],[0,-121.7,-91.7,2],[0,-123,-90.9,2],[0,-124.1,-90.3,2],[0,-125.4,-89.9,2],[0,-126.6,-89.8,2],[0,-127.9,-89.7,2],[0,-129.1,-89.8,2],[0,-130.5,-89.8,2],[0,-131.7,-89.6,2],[0,-130.3,-89.6,2],[0,-128.1,-90.1,2],[0,-126.3,-90.5,2],[0,-125,-90.9,2],[0,-123.9,-91.2,2],[0,-123.2,-90.1,2],[0,-124.4,-89.2,2],[0,-125.7,-88.7,2],[0,-145.4,-93.3,2],[0,-144.1,-93.3,2],[0,-142.6,-93.6,2],[0,-141.3,-93.9,2],[0,-140,-94.3,2],[0,-138.8,-94.7,2],[0,-137.6,-95.3,2],[0,-136.4,-95.9,2],[0,-135.1,-96.4,2],[0,-133.9,-96.8,2],[0,-132.8,-97.4,2],[0,-131.7,-98.1,2],[0,-130.8,-98.9,2],[0,-129.7,-99.9,2],[0,-128.7,-100.6,2],[0,-127.6,-101.4,2],[0,-126.6,-102,2],[0,-125.5,-102.7,2],[0,-124.4,-103.3,2],[0,-125.9,-103.1,2],[0,-126.9,-102.4,2],[0,-128.1,-101.6,2],[0,-129.4,-100.8,2],[0,-130.7,-100,2],[0,-131.8,-99.1,2],[0,-133,-98.4,2],[0,-134.1,-97.7,2],[0,-135.2,-96.9,2],[0,-136.3,-96.1,2],[0,-137.4,-95.5,2],[0,-138.7,-95,2],[0,-139.9,-94.7,2],[0,-141.1,-94.4,2],[0,-142.4,-94,2],[0,-143.8,-93.7,2],[0,-145.2,-93.5,2],[0,-146.4,-93.2,2],[0,-147.6,-93,2],[0,-148.8,-92.6,2],[0,-149.7,-91.6,2],[0,-150.3,-90.5,2],[0,-151,-89.5,2],[0,-150.9,-88.2,2],[0,-149.6,-87.5,2],[0,-148.6,-86.9,2],[0,-147.6,-86.2,2],[0,-148.8,-85.6,2],[0,-150.3,-85.5,2],[0,-151.6,-85.4,2],[0,-160.6,-86.3,2],[0,-161.9,-86.7,2],[0,-163.1,-87,2],[0,-164.6,-87.2,2],[0,-165.5,-86.4,2],[0,-164.9,-87.6,2],[0,-165.3,-88.8,2],[0,-165.5,-90,2],[0,-165.8,-91.2,2],[0,-165.7,-92.5,2],[0,-164.5,-92.9,2],[0,-163.2,-92.1,2],[0,-162,-91.4,2],[0,-160.8,-91.1,2],[0,-161,-92.4,2],[0,-161.9,-93.1,2],[0,-163.1,-93.6,2],[0,-164.3,-94.2,2],[0,-164.9,-95.3,2],[0,-165.2,-96.5,2],[0,-165.4,-97.8,2],[0,-165.6,-99.2,2],[0,-165.3,-97.6,2],[0,-165.3,-96.1,2],[0,-165.4,-94.9,2],[0,-164.5,-93.8,2],[0,-163.3,-93.5,2],[0,-162,-93.4,2],[0,-160.5,-93.2,2],[0,-159.2,-93,2],[0,-157.5,-92.7,2],[0,-156.2,-92.5,2],[0,-154.5,-92.4,2],[0,-155.7,-92.8,2],[0,-157.2,-93.1,2],[0,-158.4,-93.5,2],[0,-159.7,-94.1,2],[0,-160.7,-94.8,2],[0,-161.6,-95.6,2],[0,-162.6,-96.5,2],[0,-163.5,-97.3,2],[0,-164.3,-98.2,2],[0,-162.4,-97.5,2],[0,-161.3,-96.8,2],[0,-159.9,-96.1,2],[0,-158.5,-95.4,2],[0,-157.2,-94.9,2],[0,-155.9,-94.4,2],[0,-154.6,-94,2],[0,-153.2,-93.6,2],[0,-152,-93.3,2],[0,-150.7,-93,2],[0,-149.4,-92.9,2],[0,-160.6,-83.8,2],[0,-159.4,-83.8,2],[0,-157.7,-83.8,2],[0,-156.5,-84,2],[0,-154.9,-84.2,2],[0,-153.5,-84.5,2],[0,-152,-84.6,2],[0,-150.6,-84.6,2],[0,-149.2,-84.7,2],[0,-147.9,-84.7,2],[0,-146.7,-85,2],[0,-147.9,-85.5,2],[0,-149.7,-85.6,2],[0,-151.3,-85.8,2],[0,-152.8,-86,2],[0,-154.5,-86.2,2],[0,-156.2,-86.2,2],[0,-157.6,-86.2,2],[0,-159.1,-86,2],[0,-160.4,-85.7,2],[0,-161.8,-85.5,2],[0,-162.9,-84.9,2],[0,-164,-84.5,2],[0,-164.9,-83.6,2],[0,-164.5,-84.8,2],[0,-163.2,-84.7,2],[0,-161.6,-84.7,2],[0,-160.3,-84.7,2],[0,-133.4,-89.6,2],[0,-93.7,-99.6,2],[0,-92.5,-99.4,2],[0,-91.4,-100,2],[0,-90.5,-98.9,2],[0,-90.2,-97.7,2],[0,-91.2,-96.8,2],[0,-92.5,-96.4,2],[0,-93.7,-96.1,2],[0,-92.5,-95.9,2],[0,-91,-95.9,2],[0,-89.8,-96,2],[0,-88.5,-96.1,2],[0,-87.2,-96.2,2],[0,-91.2,-109,2],[0,-90.2,-108.2,2],[0,-89.1,-107.5,2],[0,-88,-106.6,2],[0,-87,-105.9,2],[0,-85.7,-105.2,2],[0,-84.5,-104.6,2],[0,-83.2,-104.5,2],[0,-82.2,-105.2,2],[0,-83,-106.4,2],[0,-84.1,-106.9,2],[0,-85.4,-107.5,2],[0,-86.9,-108.1,2],[0,-88.3,-108.5,2],[0,-89.7,-109,2],[0,-90.9,-109.3,2],[0,-92.1,-109.7,2],[0,-93.4,-110.1,2],[0,-94.5,-110.6,2],[0,-95.8,-111,2],[0,-97.1,-111.3,2],[0,-98.3,-111.5,2],[0,-98.6,-112.7,2],[0,-97.7,-113.5,2],[0,-96.3,-113.4,2],[0,-95.1,-113.1,2],[0,-93.6,-112.7,2],[0,-92.2,-112.4,2],[0,-91.1,-112,2],[0,-89.8,-111.8,2],[0,-88.5,-111.4,2],[0,-87.2,-111,2],[0,-85.6,-110.3,2],[0,-84.4,-109.7,2],[0,-83.4,-108.9,2],[0,-82.4,-108.2,2],[0,-81.2,-107.6,2],[0,-80.1,-106.9,2],[0,-78.8,-106.5,2],[0,-77.6,-106.3,2],[0,-76.4,-106.3,2],[0,-75.9,-105.1,2],[0,-76.1,-103.9,2],[0,-76.9,-102.8,2],[0,-77.4,-101.6,2],[0,-76.7,-100.6,2],[0,-75.8,-99.8,2],[0,-75.6,-98.6,2],[0,-76.7,-98.1,2],[0,-78,-97.7,2],[0,-79.3,-97.4,2],[0,-80.5,-97.2,2],[0,-81.8,-96.9,2],[0,-115.3,-111.3,2],[0,-115.5,-110,2],[0,-115.8,-108.5,2],[0,-116.2,-107.3,2],[0,-117.5,-107.1,2],[0,-118.5,-107.8,2],[0,-119.1,-109,2],[0,-119.4,-110.2,2],[0,-119.4,-111.4,2],[0,-119.5,-112.6,2],[0,-119.7,-113.8,2],[0,-120.1,-112.3,2],[0,-120.1,-111.1,2],[0,-120.2,-109.7,2],[0,-120.1,-108.5,2],[0,-119.5,-110,2],[0,-119.1,-111.7,2],[0,-118.9,-112.9,2],[0,-119.2,-114.2,2],[0,-119.4,-115.5,2],[0,-118.3,-116,2],[0,-117.1,-116.1,2],[0,-115.9,-116.2,2],[0,-114.7,-116.1,2],[0,-113.8,-115.3,2],[0,-114.4,-114.1,2],[0,-115.7,-113.6,2],[0,-117.1,-113.1,2],[0,-118.6,-112.4,2],[0,-119.6,-111.7,2],[0,-118.9,-110.5,2],[0,-117.9,-109.2,2],[0,-116.9,-107.9,2],[0,-116,-106.9,2],[0,-114.6,-106.9,2],[0,-113.7,-107.8,2],[0,-113.1,-108.9,2],[0,-112.9,-110.3,2],[0,-113.2,-111.6,2],[0,-113.4,-112.8,2],[0,-113.4,-114.1,2],[0,-112.5,-113.1,2],[0,-111.6,-111.6,2],[0,-111,-109.8,2],[0,-110.8,-108.6,2],[0,-110.4,-107.4,2],[0,-109.3,-106.9,2],[0,-109.1,-108.2,2],[0,-109.8,-109.2,2],[0,-110.9,-110.4,2],[0,-111.8,-111.5,2],[0,-112.5,-112.6,2],[2,-35,22,7.8,1,0.7]],"del":[[-36.47,-92.9],[-189.74,-74.56],[-111.62,-105.45],[-142.59,-78.6],[-95.35,-104.26],[-38.61,-95.92],[-61.3,-108.55],[-170.34,-85.92],[-103.21,-31.97],[-186.62,-99.91],[-187.72,-113.06],[-198.24,-90.33],[-140.25,-33.69],[-61.22,-102.54],[-206.55,-49.95],[-108.88,-95.75],[-198.35,-121.63],[-150.01,-35.65],[-196.15,-70.01],[-181.26,-78.48],[-194.66,-80.73],[-64.88,-98.21],[-99.59,-108.09],[-73.67,-105.85],[-183.22,-110.36],[-45.1,-92.83],[-166.06,-76.16],[-132.33,-45.32],[-97.72,-112.95],[-134.7,-62.42],[-33.86,-93.29],[-134.03,-50.08],[-183.96,-36.23],[-139.35,-87.8],[-182.99,-72.65],[-167.53,-119.2],[-171.66,-123.17],[-100.65,-115.34],[-188.75,-121.73],[-183.73,-68.03],[-166.69,-122.34],[-146.03,34.22],[-128.45,-94.7],[-182.37,-119.04],[-95.36,-33.92],[-105.49,-32.72],[-68.44,-101.78],[-111.78,-117.13],[-191.55,-95.53],[-117.02,34.04],[-106.55,31.72],[-57.33,-107.42],[-181.29,-93.9],[-193.87,-99.72],[-32.05,-87.75],[-49.66,-90.73],[-47.03,-89.54],[-50.24,-87.28],[-44.14,-89.97],[-86.47,-32.3],[-37.7,-89.25],[-42.4,-85.7],[-86.39,32.86],[-53.25,-87.85]],"mv":[[-167.52,-44.46,-168.6,-41.5],[-183.29,-44.95,-188.3,-37.9],[-156.74,-38.42,-160.3,-40.8]],"lesson":{"stan":[-167.2,-98],"blue":[-174,-116],"red":[-189,-114],"jump":"o122"}};

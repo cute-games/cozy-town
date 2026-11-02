@@ -1,0 +1,43 @@
+{
+  "blockedBy": "",
+  "body": "Farm babies come only as a BABY or an ADULT. A baby never grows up; it is its own animal (Karolis, 30 Oct). Each baby is shown beside its mother:\n- Foal: frisks: little bucks and gallop bursts.\n- Lamb: pronks: bounces on four stiff legs.\n- Calf: clumsy skip with a rock.\n- Piglet: zoomies in circles around its mum.\n- Chick: follows the walking hen and pecks.\nStage: 6, Farm Lane.",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793394121784,
+      "text": "The baby models arrived (foal, lamb, calf, piglet, chick), so this is no longer blocked. Made a baby move for each, beside its mother. No teen stage (your decision). Viewer: no big problems. Minor: the calf's head touches the cow's chin now and then."
+    },
+    {
+      "act": "approve",
+      "at": 1793395518874,
+      "text": "make baby chickens run around in flocks as if playing catch. \n\nbut all is GOOD"
+    },
+    {
+      "act": "chat",
+      "at": 1793397092464,
+      "text": "Done: approved.\nNext: queued, not done: chicks run in a little flock, playing catch."
+    },
+    {
+      "act": "chat",
+      "at": 1793397574271,
+      "text": "Chicks now run around the hen in a little flock, chasing each other like catch."
+    }
+  ],
+  "created": 1793381015996,
+  "id": "moves-horse-young",
+  "kind": "task",
+  "needs": [
+    "pet-scope-u1-02"
+  ],
+  "order": 113,
+  "pics": [
+    "img/moves6-babies.gif"
+  ],
+  "short": "Babies: foal, lamb, calf, piglet, chicks",
+  "source": "chat 30 Oct: Model movements, first drafts",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Farm babies: foal, lamb, calf, piglet, chick",
+  "updated": 1793397574271
+}

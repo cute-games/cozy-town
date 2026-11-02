@@ -1,0 +1,24 @@
+{
+  "blockedBy": "",
+  "body": "Fixes:\n1. 30 pots in 5 groups but only 2 garden levels. Fix: level 1 = beds + pots at gardening 10. Level 2 = pots at 20 and 30. Level 3 = pots at 40 and 50.\n2. Old saves: someone at gardening 25 already has 12 pots. Fix: they get garden level 2 free (level 3 free at 40+). Nothing disappears.\n3. The game keeps only your last Pet Show, no win count. Fix: wins count from the update on.\n4. License: the judge Sir Barkley hands it over at your 3rd win. Ms. Paws: \"A snake needs an animal license. Win 3 Pet Shows!\" Shop: 🔒 3 Pet Show wins.\nPicks:\n5. Pet yard has no skill gate (garden has). Same rule?\nA) Pet yard 2 at pets level 20, 3 at 40\nB) No skill gate for the pet yard\n6. Saturday comes every 105 real minutes, the show is open about 8.5 minutes, one show each. 3 wins = at least 3.5 real hours, harder with friends in.\nA) 3 wins, as you said\nB) 3 times in the top 3",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793401756412,
+      "text": "Done: your answers in chat, 31 Oct. 1: pots untouched. 2: not needed. 3, 4: OK.\n4 and 6 became 'Animal license' (3 levels). 5: new question."
+    }
+  ],
+  "created": 1793400859016,
+  "id": "rules-check-02",
+  "kind": "rule",
+  "needs": [],
+  "old": true,
+  "order": 317,
+  "short": "Rules check 2: 4 fixes, 2 picks",
+  "source": "chat 31 Oct 2026: Game rules red team (Karolis asked)",
+  "stage": "pfu-3",
+  "status": "approved",
+  "title": "Rules check 2: garden levels and the snake",
+  "updated": 1793401756412
+}

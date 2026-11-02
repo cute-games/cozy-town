@@ -1,0 +1,22 @@
+{
+  "body": "A bone-shaped biscuit the nurse gives.\nPicked in Model Compare.",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793395754000,
+    "id": "only-vet-treat"
+  },
+  "comments": [],
+  "created": 1793395900000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/vet3-treat-0.jpg"
+  ],
+  "short": "Picked: Pet treat from the nurse",
+  "source": "chat 30 Oct: Non-living things models, vet station round 2",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Pet treat from the nurse",
+  "updated": 1793402000000
+}

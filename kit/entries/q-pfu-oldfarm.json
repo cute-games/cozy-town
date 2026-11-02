@@ -1,0 +1,29 @@
+{
+  "blockedBy": "",
+  "body": "Map chat decided (Karolis: map is Map's call), 30 Oct 2026.\nThe 14-piece test farm from the old Builder (29 Oct) is NOT placed.\nWhy: the new farm follows your map lines and the village-farm idea (free animals, no fences).\nIt stays saved in the book (bld_scenes 'The farm'). Nothing deleted.",
+  "ch": "map",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793395137776,
+      "text": "Decisions chat: moved to Map. It is the Map chat's call, not a question for Karolis."
+    },
+    {
+      "act": "chat",
+      "at": 1793397143546,
+      "text": "Done: left unused, still saved. Nothing deleted."
+    }
+  ],
+  "created": 1793394474189,
+  "id": "q-pfu-oldfarm",
+  "kind": "decision",
+  "needs": [],
+  "old": true,
+  "order": 342,
+  "short": "Map decided: old test farm stays saved, not placed",
+  "source": "chat 30 Oct 2026: Plan asked (board plan-20261030-urge-decisions)",
+  "stage": "pfu-6",
+  "status": "draft",
+  "title": "Old Builder farm: left unused",
+  "updated": 1793397143546
+}

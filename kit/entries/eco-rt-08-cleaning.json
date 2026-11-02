@@ -1,0 +1,23 @@
+{
+  "blockedBy": "",
+  "body": "Now: Cleaning's only XP is litter: 10 pieces a day x 2 XP = 20 a day. Cleaning 30 takes about 220 game days, 50 takes 613. The hard challenge 'every skill to MAX' (500 coins) is only reachable through claw prizes.\nNew:\n- Litter gives 5 XP a piece (50 a day).\n- In the Pets and Farm Update: cleaning the pet yard and pet beds gives Cleaning XP (fits the pet needs).\nEffect: Cleaning 30 in about 60-80 game days, like the other skills.",
+  "ch": "economy",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793393902343,
+      "text": "Approved by Karolis ('do the rebalance', 30 Oct). Litter 5 XP is in the patch (build 2026103101). Pet-yard cleaning XP comes with the Pets and Farm Update."
+    }
+  ],
+  "created": 1793393358117,
+  "id": "eco-rt-08-cleaning",
+  "kind": "plan",
+  "needs": [],
+  "order": 18,
+  "short": "Cleaning levels faster: litter gives 5 XP",
+  "source": "chat 2026-10-30: Schedules and economy red team 2",
+  "stage": "pfu-1",
+  "status": "building",
+  "title": "Balance 8: Cleaning can actually level up",
+  "updated": 1793393902343
+}

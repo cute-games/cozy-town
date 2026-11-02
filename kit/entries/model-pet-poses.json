@@ -1,0 +1,35 @@
+{
+  "body": "Asked by Non-living (your words: bear watching TV on the sofa; snake sleeping in its open terrarium).\nBear sits on its bottom, hind legs forward and apart, head looking forward.\nPuppy and kitten lie on their belly, front paws forward.\nSnake sleeps coiled in two rings, head on top.\nSame models, only posed. Card: Model Compare, New pets, Pet poses.",
+  "ch": "living",
+  "cmp": {
+    "at": 1793425000000,
+    "id": "only-pet-poses"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793417100000,
+      "text": "Built round 42. Reviewer: bear 8, snake 8, puppy and kitten 7."
+    },
+    {
+      "act": "chat",
+      "at": 1793418000000,
+      "text": "Approved: you decided it in chat (31 Oct). Keep for this update; bear poses fixed after it."
+    }
+  ],
+  "created": 1793417100000,
+  "kind": "model",
+  "needs": [],
+  "order": 13,
+  "pics": [
+    "img/pose-bear-sit.jpg",
+    "img/pose-dog-lie.jpg",
+    "img/pose-snake-coil.jpg"
+  ],
+  "short": "Kept for this update. Bear poses get fixed after it",
+  "source": "chat 31 Oct: Living things models, round 42",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Pet poses: bear sits, dogs and cats lie, snake sleeps",
+  "updated": 1793418000000
+}

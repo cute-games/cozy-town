@@ -1,0 +1,21 @@
+{
+  "body": "Found by Model movements testing the picked models. All four fixed 31 Oct (book v142); they were broken, so no pick was needed:\n1) Stairs: both staircases moved 0.4 back, so 0.8 is free in front (player 0.5 wide); every step now rises evenly and the top step is level with the floor above (checked in code: 3.42 and 6.62).\n2) Owl perch: moved onto the branch, out of the leaf ball; the owl sits on it.\n3) Seal: pool 3.6 x 2.6 (was 3.0 x 2.3), taller ladder tower, slide 0.9 wide into the water.\n4) Snake hide: 0.88 wide inside (was 0.64), the coiled snake (0.71) fits.\nCheck in Model Compare → Pet Shop and Snake home (🔔).",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793459984853,
+    "id": "only-shop-room"
+  },
+  "comments": [],
+  "created": 1793459563364,
+  "id": "objects-petshop-fixes",
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [],
+  "short": "Check: shop stairs, owl perch, seal pool, snake hide fixed",
+  "source": "board moves-20261031-shop-fixes",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Pet Shop and terrarium fixes",
+  "updated": 1793460200000
+}

@@ -1,0 +1,22 @@
+{
+  "blockedBy": "",
+  "body": "#: 14\nDecision: Big-needs pets' homes\nNotes: Monkey: climbing tree. Seal: pond. Bear: cave den. Snake: warm glass tank. Each is a pet-yard item bought at the pet shop; the pond and den need pet yard level 2 or 3 to fit. The shop sells the pet only once you own its home",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793400314482,
+      "text": "31 Oct: pond, cave den AND climbing tree need pet yard level 3 (rule 'Big-needs pets')."
+    }
+  ],
+  "created": 1793323126942,
+  "id": "pet-dec-14",
+  "kind": "decision",
+  "needs": [],
+  "order": 260,
+  "source": "Pet update: plan › Decisions",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Pet decision 14: Big-needs pets' homes",
+  "updated": 1793400314482
+}

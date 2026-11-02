@@ -1,0 +1,95 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Cozy Town Sounds</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap">
+<style>
+/* Layout: one column of sound groups; each group a wrap of chunky game-style buttons (the game's own outline look) */
+:root{
+  --bg:#fff6ee; --card:#ffffff; --ink:#3d2c5e; --soft:#6d5c8c; --line:#3d2c5e;
+  --new:#ffe7a3; --farm:#c9f2e3; --baby:#ffd6e8; --pet:#e3d9ff; --small:#d6ecff; --old:#eeeeee; --hit:#5fd4b0;
+  --f:'Baloo 2', ui-rounded, 'Arial Rounded MT Bold', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1d1830; --card:#2a2342; --ink:#f4eeff; --soft:#d6cdee; --line:#9a8ad0;
+  --new:#6b5520; --farm:#1f5546; --baby:#6a2f4a; --pet:#45397a; --small:#24486a; --old:#4b4568; --hit:#2fa884; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1d1830; --card:#2a2342; --ink:#f4eeff; --soft:#d6cdee; --line:#9a8ad0;
+  --new:#6b5520; --farm:#1f5546; --baby:#6a2f4a; --pet:#45397a; --small:#24486a; --old:#4b4568; --hit:#2fa884; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--f);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+main{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+h1{font-size:30px;font-weight:800;margin:0;line-height:1.1;text-wrap:balance}
+.lead{margin:4px 0 0;font-size:16px;font-weight:600;color:var(--soft)}
+section{display:flex;flex-direction:column;gap:10px}
+h2{font-size:19px;font-weight:800;margin:0;letter-spacing:.02em}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+button.s{display:flex;align-items:center;gap:10px;min-height:64px;padding:8px 12px;border:3px solid var(--line);border-radius:18px;background:var(--c);color:var(--ink);font:inherit;text-align:left;cursor:pointer;box-shadow:0 4px 0 var(--line);transition:transform .08s,box-shadow .08s}
+button.s:active,button.s.on{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+button.s:focus-visible{outline:3px solid var(--hit);outline-offset:2px}
+button.s.on{background:var(--hit)}
+.e{font-size:30px;line-height:1;flex:none}
+.t{display:flex;flex-direction:column;min-width:0}
+.t b{font-size:17px;font-weight:800;line-height:1.1}
+.t small{font-size:13px;font-weight:600;color:var(--soft);line-height:1.2}
+.note{font-size:14px;font-weight:600;color:var(--soft);margin:0}
+@media (prefers-reduced-motion:reduce){button.s{transition:none}}
+</style>
+<main>
+  <header>
+    <h1>🔊 Cozy Town Sounds</h1>
+    <p class="lead">New sounds for the Pets and Farm Update. Tap to hear. Made exactly the way the game makes its sounds today.</p>
+  </header>
+  <div id="groups"></div>
+  <p class="note">Sound off on iPad? Flip the silent switch or turn the volume up.</p>
+</main>
+<script>
+/* the game's own sound maker (js/00-core.js tone), unchanged except it always plays here */
+let AC=null;
+function ac(){if(!AC){const C=window.AudioContext||window.webkitAudioContext;AC=new C();}if(AC.state==='suspended')AC.resume();return AC;}
+function tone(f,d=.12,type='sine',v=.15,delay=0,f2){if(!AC)return;try{const t=AC.currentTime+delay,o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.03);}catch(e){}}
+const R=Math.random;
+/* new sounds (same recipe style as SFX in the game) */
+const NEW={
+  monkey(){tone(440,.12,'sine',.12,0,640);tone(460,.12,'sine',.12,.16,660);tone(620,.28,'triangle',.11,.34,980);},
+  seal(){tone(560,.11,'sawtooth',.05,0,380);tone(600,.11,'sawtooth',.05,.17,400);},
+  bear(){tone(105,.4,'sawtooth',.05,0,80);tone(160,.3,'triangle',.09,.04,110);},
+  hiss(){for(let i=0;i<8;i++)tone(2800+R()*1800,.05,'sawtooth',.012,i*.035);},
+  neigh(p=1){[1150,1080,1180,1020,1100,940,980,820].forEach((f,i)=>tone(f*p,.07,'sawtooth',.04,i*.055));tone(420*p,.16,'square',.035,.5,260*p);},
+  clop(){tone(760,.04,'triangle',.09,0,520);tone(640,.04,'triangle',.08,.13,460);tone(760,.04,'triangle',.09,.3,520);tone(640,.04,'triangle',.08,.43,460);},
+  snort(){tone(260,.2,'sawtooth',.05,0,170);for(let i=0;i<3;i++)tone(1800+R()*900,.04,'sawtooth',.01,.05+i*.04);},
+  moo(p=1){tone(150*p,.65,'sawtooth',.05,0,118*p);tone(300*p,.65,'sine',.05,0,236*p);},
+  baa(p=1){for(let i=0;i<6;i++)tone((430+(i%2?35:0))*p,.08,'sawtooth',.04,i*.07);},
+  oink(p=1){tone(300*p,.09,'square',.06,0,430*p);tone(280*p,.09,'square',.05,.14,390*p);},
+  cluck(){[0,.1,.2].forEach(d=>tone(820,.05,'square',.04,d,620));tone(1100,.16,'square',.04,.34,1350);},
+  peep(){tone(2400,.06,'sine',.06,0,2900);tone(2500,.06,'sine',.05,.12,3000);},
+  bark(){tone(240,.1,'square',.07,0,160);tone(230,.12,'square',.06,.16,150);},
+  sneeze(){tone(700,.16,'sine',.07,0,1150);tone(1500,.1,'square',.045,.22,450);for(let i=0;i<4;i++)tone(2500+R()*1500,.04,'sawtooth',.012,.24+i*.03);},
+  stamp(){tone(140,.12,'triangle',.3,0,70);tone(85,.12,'sine',.28,.01);},
+  click(){tone(1800,.03,'square',.04);tone(1200,.03,'square',.03,.05);},
+  tick(){tone(880,.06,'triangle',.09);},
+};
+/* today's sounds, for comparison (copied from the game) */
+const OLD={
+  woof(){tone(380,.09,'square',.07,0,240);tone(380,.09,'square',.06,.15,220);},
+  meow(){tone(700,.32,'sine',.1,0,520);},
+  quack(){tone(520,.12,'square',.07,0,380);tone(480,.1,'square',.06,.14,340);},
+  whistle(){tone(2300,.12,'sine',.05,0,2500);tone(2300,.32,'sine',.05,.16,2600);},
+  coin(){tone(988,.09,'square',.05);tone(1319,.16,'square',.05,.08);},
+  yay(){[523,659,784,1047].forEach((f,i)=>tone(f,.15,'triangle',.11,i*.08));},
+};
+const G=[
+  ['New pets','--new',[['🐒','Monkey','Ooh-ooh-aah. When you pet or play',()=>NEW.monkey()],['🦭','Seal','Ark ark',()=>NEW.seal()],['🐻','Bear','A soft, friendly growl',()=>NEW.bear()],['🐍','Snake','A quiet hiss',()=>NEW.hiss()]]],
+  ['Farm','--farm',[['🐴','Horse','Neigh. Petting or getting on',()=>NEW.neigh()],['🐾','Hooves','Steps while you ride',()=>NEW.clop()],['😤','Horse says no','Snort near town, where it stops',()=>NEW.snort()],['🐄','Cow','Moo',()=>NEW.moo()],['🐑','Sheep','Baa',()=>NEW.baa()],['🐖','Pig','Oink',()=>NEW.oink()],['🐔','Chicken','Cluck cluck, bawk',()=>NEW.cluck()],['🐕','Farm dog','Sleepy woof if you wake it',()=>NEW.bark()]]],
+  ['Farm babies (same sound, higher)','--baby',[['🐎','Foal','Little neigh',()=>NEW.neigh(1.3)],['🐮','Calf','Little moo',()=>NEW.moo(1.5)],['🐑','Lamb','Little baa',()=>NEW.baa(1.45)],['🐷','Piglet','Little oink',()=>NEW.oink(1.4)],['🐣','Chick','Peep peep',()=>NEW.peep()]]],
+  ['Pets, vet and license','--pet',[['🤧','Sneeze','A pet that will soon get sick',()=>NEW.sneeze()],['🪪','License stamp','Sir Barkley stamps your card, then yay',()=>{NEW.stamp();setTimeout(()=>OLD.yay(),260);}]]],
+  ['Little sounds','--small',[['💡','Tank light','Switching the snake tank light',()=>NEW.click()],['⏱️','Join countdown','Last 5 seconds to join the Pet Show',()=>{for(let i=0;i<5;i++)setTimeout(()=>NEW.tick(),i*1000);}]]],
+  ['Today\'s sounds, to compare','--old',[['🐶','Dog','Woof (today)',()=>OLD.woof()],['🐱','Cat','Meow (today)',()=>OLD.meow()],['🦆','Duck','Quack (today)',()=>OLD.quack()],['📣','Whistle','Pet Show judge (today)',()=>OLD.whistle()],['🪙','Coins','Buying, selling (today)',()=>OLD.coin()]]],
+];
+const host=document.getElementById('groups');host.style.cssText='display:flex;flex-direction:column;gap:22px';
+G.forEach(([title,col,items],gi)=>{const s=document.createElement('section');s.innerHTML=`<h2>${title}</h2><div class="grid"></div>`;const g=s.querySelector('.grid');
+  items.forEach(([e,n,w,fn],i)=>{const b=document.createElement('button');b.className='s';b.id=`s${gi}-${i}`;b.style.setProperty('--c',`var(${col})`);b.innerHTML=`<span class="e" aria-hidden="true">${e}</span><span class="t"><b>${n}</b><small>${w}</small></span>`;
+    b.addEventListener('click',()=>{ac();fn();b.classList.add('on');setTimeout(()=>b.classList.remove('on'),220);});g.appendChild(b);});
+  host.appendChild(s);});
+</script>
+
+</body></html>

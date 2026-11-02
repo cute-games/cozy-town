@@ -1,0 +1,32 @@
+{
+  "body": "Your decision: farm animals come only as babies and adults, babies never grow up. New chick: not a small hen but a round fluffy ball, yellow (light brown for the brown hen), tiny beak, stubby legs, no comb. About shin height on the player. Pick in Model Compare: Farm animals → Chicken, Age: Baby.",
+  "ch": "living",
+  "cmp": {
+    "at": 1793395000000,
+    "id": "only-farm-chicken"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793393090000,
+      "text": "Viewer: 2 passes, 7/10, nothing above minor (thin outline, very small feet)."
+    },
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Approved: you decided it in Model Compare (31 Oct)."
+    }
+  ],
+  "created": 1793393090000,
+  "kind": "model",
+  "needs": [],
+  "order": 5,
+  "pics": [
+    "img/farm-chick.jpg"
+  ],
+  "source": "chat 30 Oct: Living things models, round 32",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Chick: baby chicken",
+  "updated": 1793409100000
+}

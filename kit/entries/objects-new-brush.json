@@ -1,0 +1,21 @@
+{
+  "body": "You decided Ieva grooms the horses by the stable. She needed a brush.\nNew (book v161): a hand brush about 20 cm: wooden back, pale bristles, a leather strap on top to hold it by. Model Compare → Farm Lane · stable.\nPick in Model Compare (🔔).",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793482315646,
+    "id": "only-farm-brush"
+  },
+  "comments": [],
+  "created": 1793482400000,
+  "id": "objects-new-brush",
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [],
+  "short": "Pick: Ieva's horse brush",
+  "source": "board moves-20261031-brush-branch",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "New: grooming brush for Ieva",
+  "updated": 1793482400000
+}

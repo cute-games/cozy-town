@@ -1,0 +1,36 @@
+{
+  "blockedBy": "",
+  "body": "The Living chat built a puppy with knees (card pet:dogjoint).\n- Same moves on today's block legs and on the knees puppy.\n- Knees: 7/10. Block legs: 5/10. Knees make sit and walk read better.\nA) Knees for all pets (model pack)\nB) Keep today's legs",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793421631724,
+      "text": "Done: same moves on both puppies. Knees 7/10, block legs 5/10.\nNeed your pick: A) or B)."
+    },
+    {
+      "act": "approve",
+      "at": 1793457603639,
+      "text": ""
+    },
+    {
+      "act": "approve",
+      "at": 1793461500000,
+      "text": "Picked in chat: B) Keep today's legs"
+    }
+  ],
+  "created": 1793410479321,
+  "id": "moves-jointed-test",
+  "kind": "task",
+  "needs": [],
+  "order": 117.5,
+  "pics": [
+    "img/moves10-jointTest.gif"
+  ],
+  "short": "Knees 7/10, today’s block legs 5/10. Pick one",
+  "source": "Model movements 31 Oct: gap check against the stage briefs",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Knees for pets: test on the jointed puppy",
+  "updated": 1793461500000
+}

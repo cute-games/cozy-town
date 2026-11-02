@@ -1,0 +1,21 @@
+{
+  "body": "The trick 'Rise from the charmer basket' (you OK'd it) needs an open basket; the top was closed.\nNow (book v161): open top with a dark inside, woven bands and a rim; the lid lies beside it, the flute in front.\nPick in Model Compare → Snake flute and basket (🔔).",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793482315646,
+    "id": "snakebasket"
+  },
+  "comments": [],
+  "created": 1793482400000,
+  "id": "objects-fix-snake-basket",
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [],
+  "short": "Check: the snake can rise out of it",
+  "source": "board moves-20261031-trough-basket-maze",
+  "stage": "pfu-5",
+  "status": "approved",
+  "title": "Snake charmer basket: open top",
+  "updated": 1793482400000
+}

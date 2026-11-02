@@ -1,0 +1,25 @@
+{
+  "blockedBy": "",
+  "body": "A) Ride any time; lessons 8:00-20:00 (my pick)\nB) Stable 8:00-20:00 for everything\nC) Stable 7:00-21:00 for everything\nA) nobody is sent off a horse at closing time.\nLessons need the instructor: 8:00-20:00, like the jobs.\nB, C) at closing, riders get off; the horse walks back (like leaving the game).\nNight riding: dark from 21:00. How the farm looks at night: unknown.\nStage pfu-6.",
+  "ch": "economy",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793404435793,
+      "text": "Approved: you decided it in chat (31 Oct): C, 7:00-21:00 for everything; at closing riders get off."
+    }
+  ],
+  "created": 1793397142216,
+  "id": "economy-stable-hours",
+  "kind": "plan",
+  "needs": [
+    "rules-riding"
+  ],
+  "order": 6,
+  "short": "Stable 7:00-21:00 for riding and lessons",
+  "source": "chat 2026-10-30: Schedules and economy chat, from board rows of Plan and Game rules",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Stable and riding hours",
+  "updated": 1793404435793
+}

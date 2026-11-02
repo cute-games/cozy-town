@@ -1,0 +1,5 @@
+ffmpeg -loglevel error -y -framerate 12 -i fr2/cows/%03d.png -vf "split[a][b];[a]palettegen=max_colors=128[p];[b][p]paletteuse=dither=bayer:bayer_scale=4" -loop 0 gif2/moves-cows.gif
+convert \( fr2/cows/000.png fr2/cows/012.png fr2/cows/024.png +append \) \( fr2/cows/036.png fr2/cows/048.png fr2/cows/060.png +append \) -append -resize '1600x>' chk2/cows.jpg
+for f in 000 002 004 006 008 010 044 046 048 050 052 054; do convert fr2/cows/$f.png -crop 320x260+320+34 +repage -resize 200% chk2/cc_$f.png; done
+convert \( chk2/cc_000.png chk2/cc_002.png chk2/cc_004.png +append \) \( chk2/cc_006.png chk2/cc_008.png chk2/cc_010.png +append \) -append -resize '1600x>' chk2/cows_chew.jpg
+convert \( chk2/cc_044.png chk2/cc_046.png chk2/cc_048.png +append \) \( chk2/cc_050.png chk2/cc_052.png chk2/cc_054.png +append \) -append -resize '1600x>' chk2/cows_tail.jpg

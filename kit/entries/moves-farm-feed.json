@@ -1,0 +1,43 @@
+{
+  "blockedBy": "",
+  "body": "Rule (approved 31 Oct): anyone can feed and pet farm animals; the feed bucket at the farm is free. No move for it yet.\nPlan:\n- Player tips the feed bucket into the trough; cows, sheep and pigs come and eat (head down, chew).\n- Chickens: player scatters grain; they run up and peck.\n- Horse: eats from your hand.\n- Petting: player pats the head; the animal leans in, tail swish; a chicken fluffs up.\nModels exist (feed bucket, trough, hay). Plan only today: the GIF comes after your OK.",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793461500000,
+      "text": "Need your OK: plan for feeding and petting farm animals (stage 6).\nGIF after your OK."
+    },
+    {
+      "act": "chat",
+      "at": 1793462400000,
+      "text": "Approved: you decided it in chat (31 Oct).\nPictures come next."
+    },
+    {
+      "act": "chat",
+      "at": 1793467300000,
+      "text": "Done: trough, chickens and grain, horse from the hand, petting.\nLeftover: the pig is too short for the trough, so it eats from the bucket (asked Objects)."
+    },
+    {
+      "act": "approve",
+      "at": 1793480331582,
+      "text": ""
+    }
+  ],
+  "created": 1793461500000,
+  "id": "moves-farm-feed",
+  "kind": "task",
+  "needs": [
+    "economy-farm-feed"
+  ],
+  "order": 128.5,
+  "pics": [
+    "img/moves13-farmFeed.gif"
+  ],
+  "short": "Feed the trough, chickens, horse, petting. OK?",
+  "source": "Model movements 31 Oct: readiness check against the stage 6 brief",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Feed and pet the farm animals",
+  "updated": 1793480331582
+}

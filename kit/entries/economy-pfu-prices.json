@@ -1,0 +1,35 @@
+{
+  "blockedBy": "",
+  "body": "Set by the Schedules and economy chat after a red team (you asked it to decide, 31 Oct). Base: your pet decision 18.\nYardstick after the rebalance: about 585 coins a game day = 2,300 a real hour of normal play.\n\nPETS\n- Normal pets: 200 (as today)\n- Monkey, seal, bear, snake: 400\n- Farm animals and horses: not for sale (shared town farm)\n\nPET HOMES\n- Climbing tree (monkey) 400, snake glass tank 400, pond (seal) 700, cave den (bear) 700, dog house 180 (as today)\n- Monkey, seal, bear also need pet yard level 3 + animal license; snake needs a license + its tank\n\nBEDS, BOWLS, TOY BOX\n- Pet bed 80 (as today); the 2 new bed styles 100 and 120\n- Food bowl 30 (as today), water bowl 30, pet toy box 60\n\nTOYS: every pet toy 20 (feather toy 25)\n- Today's toys go up to 20 too (ball, frisbee, yarn ball, toy mouse, squeaky toy were 8-10): same kind, same price. Toys you own stay yours.\n\nTRAINING GEAR (150-300)\n- 150: bunny hurdles, hamster wheel and maze, seal beach ball, snake flute and basket\n- 200: cat tower, duck ramp and tub, owl perch\n- 250: monkey bars, bear log swing, capybara zen bath\n- 300: dog agility course\n\nPET ACCESSORIES: orange, green sprout, bubble tea, honey pot: 40 each\n\nBACKYARD (fence, gate, path, decoration come with the level)\n- Pet yard: level 1 free, level 2 = 800 (Pet care 20), level 3 = 2,000 (Pet care 40)\n- Garden: level 1 free, level 2 = 600 (Gardening 20), level 3 = 1,500 (Gardening 40)\n\nOTHER (decided 31 Oct): vet 50 per pet (free with too few coins), riding lesson 100 once, Market pays 10 for farm eggs and milk, pet food 6 (as today).\n\nWHAT IT COSTS IN PLAY TIME (normal play)\n- A normal pet with bed, bowl and 2 toys: 350 = about 9 minutes\n- Pet yard to level 3: 2,800 = about 1 hour 15 min (plus Pet care 40)\n- First big pet with home and yard: up to 3,900 = about 1 hour 40 min (plus license)\nAll prices can be changed in Town Timetable after playing.",
+  "ch": "economy",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793404157503,
+      "text": "Done: big pets now also need yard level 3 + license (Game rules 31 Oct); costs updated."
+    },
+    {
+      "act": "chat",
+      "at": 1793404435793,
+      "text": "Approved: you told me to decide after a red team (31 Oct). Changed: all toys 20; costs in play time; yard and garden level gates added."
+    }
+  ],
+  "created": 1793392227281,
+  "id": "economy-pfu-prices",
+  "kind": "plan",
+  "needs": [
+    "pet-dec-18"
+  ],
+  "order": 2,
+  "pics": [
+    "tools/model-pack/sheet-0.jpg",
+    "tools/model-pack/sheet-1.jpg",
+    "tools/model-pack/sheet-2.jpg"
+  ],
+  "short": "Pet update prices: red-teamed and set (all toys 20)",
+  "source": "chat 2026-10-30: Schedules and economy chat, from pet decision 18 + model pack list",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Pets and Farm Update: price for every new thing to buy",
+  "updated": 1793404435793
+}

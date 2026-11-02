@@ -1,0 +1,16 @@
+{
+  "blockedBy": "",
+  "body": "#: 4\nDecision: Backyard upgrades: levels plus items\nNotes: Levels (bought one by one, Stardew-style) buy the space; items (beds, toys, bowls, ponds) fill it",
+  "ch": "rules",
+  "comments": [],
+  "created": 1793323126942,
+  "id": "pet-dec-04",
+  "kind": "decision",
+  "needs": [],
+  "order": 250,
+  "source": "Pet update: plan › Decisions",
+  "stage": "pfu-3",
+  "status": "approved",
+  "title": "Pet decision 4: Backyard upgrades: levels plus items",
+  "updated": 1793323126942
+}

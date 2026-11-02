@@ -1,0 +1,25 @@
+{
+  "blockedBy": "",
+  "body": "1. Each player collects eggs and milk once per game day.\n2. Sell them at the Market. Prices: Schedules and economy chat.\n3. Feeding and petting farm animals: any time.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793397700275,
+      "text": "Approved by you in chat, 31 Oct (rules check, fix 6)."
+    }
+  ],
+  "created": 1793397700275,
+  "id": "rules-farm-chores",
+  "kind": "rule",
+  "needs": [
+    "pet-dec-13"
+  ],
+  "order": 309,
+  "short": "Eggs and milk: each player collects once per game day",
+  "source": "chat 31 Oct 2026: Game rules check fix 6",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Farm chores: eggs and milk once a day",
+  "updated": 1793397700275
+}

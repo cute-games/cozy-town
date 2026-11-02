@@ -1,0 +1,35 @@
+{
+  "blockedBy": "",
+  "body": "1. A level gives the space: fence, gate, path, grass.\n2. Pet homes, pens, ponds, trees, beds, toys and bowls appear only after you buy them.\n3. No locked pots: a pot appears only when it unlocks.\n4. Pots you already have stay.\n5. Visitors see the same as you.\n6. Yard levels never limit how many pets you keep (10, as today).\n7. Dog houses placed as furniture before the update stay where they are.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793400467688,
+      "text": "Done: your rule (31 Oct).\nOne pick left: what unlocks the pots."
+    },
+    {
+      "act": "chat",
+      "at": 1793402471510,
+      "text": "Done: line 6, yard levels never limit pet count (31 Oct)."
+    },
+    {
+      "act": "chat",
+      "at": 1793402712224,
+      "text": "Done: old dog houses stay (rules check 4)."
+    }
+  ],
+  "created": 1793400467688,
+  "id": "rules-yard-only-owned",
+  "kind": "rule",
+  "needs": [
+    "pet-dec-04"
+  ],
+  "order": 314,
+  "short": "Only what you own shows; locked things are never drawn",
+  "source": "chat 31 Oct 2026: Karolis in the Game rules chat",
+  "stage": "pfu-3",
+  "status": "approved",
+  "title": "Yard and garden: only what you own is drawn",
+  "updated": 1793402712224
+}

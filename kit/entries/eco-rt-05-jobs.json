@@ -1,0 +1,23 @@
+{
+  "blockedBy": "",
+  "body": "Now per game day: pizza 120-705 (Mon-Fri), designer 60-390, teacher 150-390, hairstylist and photographer 60-480.\nNew: raise the bottom so a bad day still pays, keep the top:\n- Designer room: 20/50/90/130 -> 40/70/100/140\n- Teacher class: 75/135/195 -> 90/150/210\n- Hairstylist and photographer 1 star: 15 -> 30\nPizza stays (it is the weekday rush job).\nEffect: a middle job day about 290 -> 330. With Balances 1-4, the job is clearly the best way to earn.",
+  "ch": "economy",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793393902343,
+      "text": "Karolis said 'do the rebalance' in the Schedules and economy chat (30 Oct): approved. Built as a code patch (economy-rebalance.patch, build 2026103101) and checked with the quick kit; goes live through a pull request in the next repo chat."
+    }
+  ],
+  "created": 1793392672726,
+  "id": "eco-rt-05-jobs",
+  "kind": "plan",
+  "needs": [],
+  "order": 15,
+  "short": "Jobs pay more on a bad day",
+  "source": "chat 2026-10-30: Schedules and economy red team",
+  "stage": "pfu-1",
+  "status": "building",
+  "title": "Balance 5: jobs become the main income (small raise)",
+  "updated": 1793393902343
+}

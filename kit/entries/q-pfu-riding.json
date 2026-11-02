@@ -1,0 +1,22 @@
+{
+  "blockedBy": "",
+  "body": "Pets and Farm Update, stage 6 (farm). Answer (Karolis, 30 Oct):\n1. Nobody owns a horse. The farm has 10 horses.\n2. One rider per horse. A player takes a horse; others share the rest or wait until a rider brings one back to the stable.\n3. You can ride only after a riding lesson. A horse instructor (new character) gives the lesson.\nHorse model: https://claude.ai/artifact/6VamW3iTDycZZjZnfTrZa3#living-1",
+  "ch": "decisions",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793395137776,
+      "text": "Decisions chat: recorded as approved, Karolis answered in chat on 30 Oct."
+    }
+  ],
+  "created": 1793394474189,
+  "id": "q-pfu-riding",
+  "kind": "question",
+  "needs": [],
+  "order": 341,
+  "source": "chat 30 Oct 2026: Plan asked (board plan-20261030-urge-decisions)",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Horse riding: 10 shared farm horses, one rider each, lesson first",
+  "updated": 1793395137776
+}

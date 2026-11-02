@@ -24,11 +24,11 @@ const MAP_AT={park:[-33.4,14.6],beach:[91,0]};   /* where a place's badge sits w
 const MAP_MQ=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
 function mapDark(){const t=document.documentElement.getAttribute('data-theme');return t==='dark'||(t!=='light'&&!!(MAP_MQ&&MAP_MQ.matches));}
 function mixC(a,b,t){const p=s=>[1,3,5].map(i=>parseInt(s.slice(i,i+2),16)),A=p(a),B=p(b);return'#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('');}
-const mapB=()=>({x1:laneEnd()-8,x2:110,z1:-92,z2:92});   /* how far the map moves: the town, all of Friends Lane, the beach sign */
+const mapB=()=>({x1:Math.min(laneEnd()-8,-214),x2:110,z1:-168,z2:92});   /* (🐴 stage 6: the farm, the trail and the jump field are on the map) */   /* how far the map moves: the town, all of Friends Lane, the beach sign */
 const mapShown=p=>!((p.id==='home'||p.id==='garden')&&p.x>-84);   /* your house and garden are on Friends Lane (not in town) */
 let MAP_TR=null;
 function mapTrees(){if(MAP_TR)return MAP_TR;const r=seeded(66),T=[];   /* soft round trees on the hills around town (not on Friends Lane or the beach path) */
-  for(let i=0;i<4000&&T.length<560;i++){const x=-330+r()*450,z=-125+r()*250,R=1.8+r()*2.6;if(x>-92&&x<93&&z>-92&&z<92)continue;if(x<-78&&Math.abs(z)<31.5)continue;if(x>78&&Math.abs(z)<11)continue;T.push([x,z,R]);}
+  for(let i=0;i<4000&&T.length<560;i++){const x=-330+r()*450,z=-125+r()*250,R=1.8+r()*2.6;if(x>-92&&x<93&&z>-92&&z<92)continue;if(x<-78&&Math.abs(z)<42)continue;if(x>78&&Math.abs(z)<11)continue;T.push([x,z,R]);}
   return MAP_TR=T;}
 /* paint the map: world (ox,oz) is the canvas corner, k = canvas px per metre, u = canvas px per CSS px. o.mini: the little job map (no names) */
 function mapPaint(x,ox,oz,k,w,h,o){const P=o.dark?MAP_PAL.dark:MAP_PAL.light,u=o.u||1,mini=!!o.mini,le=laneEnd(),X=v=>(v-ox)*k,Z=v=>(v-oz)*k,
@@ -42,7 +42,8 @@ function mapPaint(x,ox,oz,k,w,h,o){const P=o.dark?MAP_PAL.dark:MAP_PAL.light,u=o
   if(!mini){x.beginPath();for(const [tx,tz,tr] of mapTrees())if(vis(tx-tr,tz-tr,tx+tr,tz+tr)){x.moveTo(X(tx)+tr*k,Z(tz));x.arc(X(tx),Z(tz),tr*k,0,TAU);}
     stroke(P.treeE,2.4*u);x.fillStyle=P.tree;x.fill();}
   x.fillStyle=P.gr;R(-88,-88,88,88,7);x.fill();if(!mini){R(le-4,-28.5,-80,28.5,5);x.fill();}   /* the town, and Friends Lane's valley */
-  if(!mini){x.fillStyle=P.sand;C(97,0,7.5);x.fill();x.fillStyle=P.water;C(108,0,8.5);x.fill();}   /* 🏖️ a bit of beach past the east edge */
+  if(!mini){x.fillStyle=P.sand;C(97,0,7.5);x.fill();x.fillStyle=P.water;C(108,0,8.5);x.fill();}
+  if(!mini&&vis(-216,-170,-44,-37))farmMap(x,o.dark,X,Z,k,u,vis,pl,stroke);   /* 🐴 the farm (stage 6) */   /* 🏖️ a bit of beach past the east edge */
   /* 🌳 the park, the football field, ponds and the lake (flat PLACES, by shape) */
   for(const p of PLACES){if(!p.flat||!mapShown(p)||p.id==='beach'||p.id==='garden'||p.id==='bus')continue;const rr0=p.r||Math.max(p.w,p.d)/2;if(!vis(p.x-rr0,p.z-rr0,p.x+rr0,p.z+rr0))continue;
     if(p.id==='park'){R(p.x-p.w/2,p.z-p.d/2,p.x+p.w/2,p.z+p.d/2,2.6);x.fillStyle=P.park;x.fill();stroke(P.parkE,1.6*u);
@@ -85,10 +86,10 @@ function mapPaint(x,ox,oz,k,w,h,o){const P=o.dark?MAP_PAL.dark:MAP_PAL.light,u=o
     if(!mini&&!round&&k>2.5*u&&bw>2.5&&bd>2.5){R(bx-bw/2+.7,bz-bd/2+.7,bx+bw/2-.7,bz+bd/2-.7,Math.max(.4,r-.5));x.fillStyle=o.dark?'rgba(255,255,255,.08)':'rgba(255,255,255,.4)';x.fill();}}   /* a soft roof */
   /* 🏡 Friends Lane: the gate, hedges, every lot (a house when a friend lives there), your garden, the end of the lane */
   x.beginPath();pl([[-84.6,-4.5],[-84.6,4.5]]);stroke(P.ink,Math.max(2*u,.55*k)+2*u);stroke('#ff7aa8',Math.max(2*u,.55*k));
-  if(!mini){x.beginPath();for(const s of[-1,1])pl([[-80.3,s*26.6],[le-.9,s*26.6]]);pl([[le-1.35,-27],[le-1.35,27]]);stroke(P.hedge,Math.max(2*u,1*k));
+  if(!mini){x.beginPath();for(const s of[-1,1])pl([[-80.3,s*37.5],[le-.9,s*37.5]]);pl([[le-1.35,-38],[le-1.35,38]]);stroke(P.hedge,Math.max(2*u,1*k));
     x.beginPath();pl([[le+.2,-4.2],[le+.2,4.2]]);stroke(P.ink,Math.max(2*u,.4*k)+2*u);stroke('#ff6b6b',Math.max(2*u,.4*k));
     const C0=LOC.city,mine=LANE.mine;
-    for(const lp of (C0&&C0.lane)||[]){const X0=lp.X,s=lp.s,o2=LANE.own[lp.j];if(!vis(X0-7,-27,X0+7,27))continue;
+    for(const lp of (C0&&C0.lane)||[]){const X0=lp.X,s=lp.s,o2=LANE.own[lp.j];if(!vis(X0-7,-38,X0+7,38))continue;
       R(X0-6.6,Math.min(s*7.1,s*26.1),X0+6.6,Math.max(s*7.1,s*26.1),1.2);x.fillStyle=P.lot;x.fill();
       if(k>3*u){x.beginPath();pl([[X0-4.6,s*11.3],[X0-4.6,s*8.2],[X0-.9,s*8.2]]);pl([[X0+.9,s*8.2],[X0+4.6,s*8.2],[X0+4.6,s*11.3]]);stroke(P.ink,Math.max(u,.18*k)+1.6*u);stroke(P.fence,Math.max(u,.18*k));}   /* the front fence */
       if(lp.j===mine){const g=PLACES.find(q=>q.id==='garden'),q=(a,b)=>lotPt(lp.j,a,b);   /* 🌱 your garden: the beds, the shed and the stepping stones */
@@ -361,7 +362,8 @@ function renderPhone(){if(PH.app==='map'){openMap();return;}if(MAPV.on)mapOff();
     else if(a==='cal'){body=hd('🗓️ Calendar')+calBody();}
     else if(a==='skills'){body=hd('⭐ Skills')+'<p class="ph-sub">Do things in town to level up your skills!</p>'+Object.keys(SKILLS).map(k=>{const s=sk(k),K=SKILLS[k],need=xpNeed(s.lv),pct=s.lv>=MAXLV?100:Math.round(s.xp/need*100);
       return`<div class="qcard"><div class="qtop"><span class="qi">${K.i}</span><div style="flex:1"><div class="qt">${K.n}</div><div class="qd">${K.how}</div></div><div class="sklv">Level<b>${s.lv}</b></div></div><div class="qfoot"><span class="qprog" style="max-width:none"><i style="width:${pct}%"></i></span><span class="qn">${s.lv>=MAXLV?'Max!':s.xp+'/'+need}</span></div></div>`;}).join('');}
-    else{body=hd('🐾 Pets')+(S.pets.map(d=>`<div class="ph-row"><span>${PET_TYPES[petKind(d)].icon} ${esc(d.name)}</span><span class="hearts">${hearts(clamp(Math.round(d.happy/20),0,5))}</span></div>`).join('')||'<p class="ph-sub">Visit the pet shop to adopt a pet!</p>');}}
+    else if(a==='vet'){body=`<div class="ph-hd"><button class="btn ph-back" data-a="phapp:pets" aria-label="Back to my pets">‹</button><h3>🩺 Vet</h3><span class="ph-coins">🪙 ${S.coins}</span></div>`+vetPhone();}   /* 🩺 stage 2 (screens-vet-app) */
+    else{body=hd('🐾 Pets')+(S.pets.map(d=>`<div class="ph-row"><span>${PET_TYPES[petKind(d)].icon} ${esc(d.name)}</span><span class="hearts">${hearts(clamp(Math.round(d.happy/20),0,5))}</span></div>`).join('')||'<p class="ph-sub">Visit the pet shop to adopt a pet!</p>')+(S.pets.length?'<div class="row"><button class="btn sky vetgo" data-a="phapp:vet">🩺 Book the vet</button></div>':'');}}
   openPanel(`<div class="phone" role="dialog" aria-label="Phone"><div class="ph-status"><span>${clockStr(S.time)}</span><span>${PH.app?"":"🪙 "+S.coins}</span></div><div class="ph-screen">${body}</div><button class="ph-home" data-a="close" aria-label="Close phone"></button></div>`,{cls:'phonecard',onClose:()=>{PH.app=null;PH.chat=null;PH.jobs=false;}});
   if(PH.app==='msg'&&PH.chat){const sc=document.querySelector('#card .ph-screen');if(sc){sc.scrollTop=sc.scrollHeight;const q=PH.jobs&&[...sc.querySelectorAll('.bub.them')].pop(),hd=sc.querySelector('.ph-hd');const l=q||[...sc.querySelectorAll('.bub')].pop();if(l){const t=l.getBoundingClientRect().top-sc.getBoundingClientRect().top-(hd?hd.offsetHeight:0)-6;if(q||t<0)sc.scrollTop+=t;}}}}   /* (run 4 finish: a newest message taller than the screen opens at its top: the thank-you photo's top was under the header on a sideways phone) */   /* (the job cards: from Rosie's question down, so on a short screen the first jobs are in view; run 4, stage 3) */
 ACT.phapp=a=>{PH.app=a||null;PH.chat=null;PH.jobs=false;renderPhone();};
@@ -631,4 +633,11 @@ function crCam(dt){const w=innerWidth,h=innerHeight,port=w/h<.95,th=Math.tan(15*
 $('panel').addEventListener('pointerdown',e=>{if(CR&&e.target===$('panel')){CR.drag=e.clientX;try{$('panel').setPointerCapture(e.pointerId);}catch(_){}}});
 $('panel').addEventListener('pointermove',e=>{if(CR&&CR.drag!==null){CR.rot+=(e.clientX-CR.drag)*.012;CR.drag=e.clientX;}});
 for(const ev of['pointerup','pointercancel'])$('panel').addEventListener(ev,()=>{if(CR)CR.drag=null;});
-
+/* 🐴 the farm on the map (stage 6): trodden ground and mud, the dirt roads and the horse trail, the barn, stables and coop, the jumps; its name */
+function farmMap(x,dark,X,Z,k,u,vis,pl,stroke){const dirt=dark?'#6f5d45':'#e6d3a3',mud=dark?'#5a4636':'#b48f66';
+  for(const [kk,gx,gz,r,sm,sx] of FARMD.ground){if(kk===2||!vis(gx-r,gz-r,gx+r,gz+r))continue;x.beginPath();x.ellipse(X(gx),Z(gz),r*(sx||1)*k,r*k,0,0,TAU);x.fillStyle=kk===1?mud:dirt;x.fill();}
+  for(const [kind,w,...pts] of FARMD.roads){const q=[];for(let i=0;i<pts.length;i+=2)q.push([pts[i],pts[i+1]]);x.beginPath();pl(q);stroke(kind===2?(dark?'#8a7656':'#dcc395'):(dark?'#7d6a52':'#d4b98c'),Math.max(u,w*k));}
+  const B={'farm.barn':[7.9,6.2,'#d9645a'],'farm.stable':[9,4.4,'#c98f5e'],'farm.coop':[2.1,2.5,'#e8b765'],'farm.windmill':[2,2,'#9aa3b5']};
+  for(const [kk,gx,gz,ry,s] of FARMD.p){const b=B[kk];if(b){x.save();x.translate(X(gx),Z(gz));x.rotate(-ry);x.fillStyle=dark?mixC(b[2],'#241b42',.38):b[2];x.fillRect(-b[0]*s*k/2,-b[1]*s*k/2,b[0]*s*k,b[1]*s*k);x.restore();}
+    else if(kk.startsWith('course.')){x.beginPath();x.arc(X(gx),Z(gz),Math.max(u,.9*k),0,TAU);x.fillStyle='#ff6b6b';x.fill();}}
+  if(k>.9*u){x.font=`800 ${Math.round(13*u)}px "Baloo 2",sans-serif`;x.textAlign='center';x.fillStyle=dark?'#fff6e4':'#5a3e2b';x.fillText('🐴 Farm',X(-110),Z(-128));x.fillText('🏇 Jump field',X(-186),Z(-127));}}

@@ -1,0 +1,16 @@
+{
+  "blockedBy": "",
+  "body": "Answer (Karolis, 30 Oct): yes.\nFinal check line N8: old 'tests a 2-room order' → new 'new orders 1 room; saved 2-room order still finishes'.",
+  "ch": "decisions",
+  "comments": [],
+  "created": 1793394474189,
+  "id": "q-pfu-n8",
+  "kind": "question",
+  "needs": [],
+  "order": 340,
+  "source": "chat 30 Oct 2026: Plan asked (board plan-20261030-urge-decisions)",
+  "stage": "pfu-1",
+  "status": "approved",
+  "title": "Interior designer: final check line N8 changes (OK'd)",
+  "updated": 1793394678260
+}

@@ -1,0 +1,55 @@
+{
+  "blockedBy": "",
+  "body": "1. A pet gets sick when it stays very unhappy for a long time (about 1 more hour of play at the bottom).\n2. It counts real play minutes, only while you play. Away = paused.\n3. It shows by body language only: droops, walks slowly, lies down, sneezes. Only the vet booking screen lists your sick pets.\n4. Friends see your pets as the real thing: the same sick look, moods and moves.\n5. No tricks or Pet Show until cured.\n6. Only the vet cures it. It never dies or runs away.\n7. Ms. Paws won't take a sick pet: \"Let's get her well first.\"\n8. It doesn't spread.\n9. Old saves: all pets start healthy; happiness stays.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793394973392,
+      "text": "wghen u dont feed for long, and dont play"
+    },
+    {
+      "act": "chat",
+      "at": 1793395059021,
+      "text": "Game rules chat: Got it. Sick only when it isn't fed AND isn't played with for long (both). If you meant either one, press Redo."
+    },
+    {
+      "act": "chat",
+      "at": 1793395983846,
+      "text": "Done: \"or\" now. Red team fixes in lines 2, 4, 7.\nNeed your OK again."
+    },
+    {
+      "act": "chat",
+      "at": 1793396474945,
+      "text": "Done: approved by you in chat, 30 Oct."
+    },
+    {
+      "act": "chat",
+      "at": 1793397700275,
+      "text": "Done: now hunger or happiness (two needs, 31 Oct)."
+    },
+    {
+      "act": "chat",
+      "at": 1793407889299,
+      "text": "Done: friends see the real sick look (your ask via Plan); booking screen may list sick pets."
+    },
+    {
+      "act": "chat",
+      "at": 1793408087606,
+      "text": "Done: no hunger now; sick only from being very unhappy for long."
+    }
+  ],
+  "created": 1793394435143,
+  "id": "rules-sickness",
+  "kind": "rule",
+  "needs": [
+    "rules-vet-visit"
+  ],
+  "order": 295,
+  "short": "Sick when very unhappy for a long time",
+  "source": "chat 30 Oct 2026: Game rules chat, from Pet update 2 #13 and pet decisions 6, 15, 19",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "How pets get sick",
+  "updated": 1793408087606
+}

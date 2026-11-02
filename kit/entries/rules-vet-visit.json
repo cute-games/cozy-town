@@ -1,0 +1,66 @@
+{
+  "blockedBy": "",
+  "body": "1. Book a time: on your phone (any time, for open hours) or with Nurse Penny at the lobby desk (while open). Only sick pets can be booked.\n2. Your time is a 2-hour window (about 1.5 real minutes). Nobody booked: walk right in.\n3. Come with the sick pet following you. Early: wait in the lobby. Late: book again, no coins lost.\n4. Go into the cabinet. Dr. Rūta checks the pet.\n5. Nurse Leo has a short talk and gives the pet a treat. The pet is cured; its mood is normal. Your care makes it happy.\n6. Leo reminds you: don't let it get sad, always look after its needs.\n7. One visit treats every sick pet following you. Pay per pet; free if you can't pay. Hours and price: Schedules and economy chat.\n8. All pets fit, bear and seal come in too. Farm animals never visit. Friends there see it.\n9. No vet job for players for now.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793394949384,
+      "text": "u either schedule time on mobile or with vet station lobby nurse. \n\nwhen u arrive on time to vet station. u can go in to cabinet. u get a small short talk with nurse it give pet treat and pet is happy again, nurse tells u not to let pet get sad and always take car of its needs. btw u must arrive with the sick pet."
+    },
+    {
+      "act": "chat",
+      "at": 1793395059021,
+      "text": "Game rules chat: Got it. Rule rewritten in your words. My calls (Redo if wrong): the vet checks, the nurse talks and gives the treat; early = wait in the lobby; late = book again, free; only sick pets can be booked. Nurse, cabinet, treat and phone app sent to their chats."
+    },
+    {
+      "act": "chat",
+      "at": 1793395983846,
+      "text": "Red team fix in line 2: a game hour is only 43 s, so a 2-hour window.\nNeed your OK again."
+    },
+    {
+      "act": "chat",
+      "at": 1793396474945,
+      "text": "Done: approved by you in chat, 30 Oct.\nLine 5 now: cured, normal mood (your pick B)."
+    },
+    {
+      "act": "chat",
+      "at": 1793397700275,
+      "text": "Done: fix 3 in (one visit, pay per pet).\nMy call: phone books any time, the nurse only while open."
+    },
+    {
+      "act": "chat",
+      "at": 1793397867921,
+      "text": "Done: line 7, free if you can't pay (your B)."
+    },
+    {
+      "act": "chat",
+      "at": 1793402471510,
+      "text": "Done: bear and seal may come into the vet station."
+    },
+    {
+      "act": "chat",
+      "at": 1793407889299,
+      "text": "Done: the nurse is Vet nurse Leo (your pick of the 4 vets)."
+    },
+    {
+      "act": "chat",
+      "at": 1793485139560,
+      "text": "Done: lobby desk = Nurse Penny, vet = Dr. Rūta (your pick, 1 Nov). Leo still gives the treat."
+    }
+  ],
+  "created": 1793394435143,
+  "id": "rules-vet-visit",
+  "kind": "rule",
+  "needs": [
+    "plan-vet-station",
+    "rules-q-vet-sickness"
+  ],
+  "order": 294,
+  "short": "Book on phone or with nurse, bring sick pet, treat cures it",
+  "source": "chat 30 Oct 2026: Game rules chat, from Plan's vet row and pet decisions 8, 12, 15",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "How a vet visit works",
+  "updated": 1793485139560
+}

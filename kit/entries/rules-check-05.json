@@ -1,0 +1,31 @@
+{
+  "blockedBy": "",
+  "body": "Fixes:\n1. Treats: the rule says 'smaller', but today treats give +30 like other food. Fix: keep today's numbers, fix the words (treats = cheaper, same boost).\n2. Bowl at home: nothing says how long it lasts, so one food would work forever. Fix: one food fills the bowl for one game day of play, then it's empty.\n3. No food at all in your bag: Ms. Paws's line names the 3 foods ('Ms. Paws sells meat, fish, fruit & veggies').\nBuild better:\n4. Each pet type gets one 'food group' word instead of its own food list (today 10 lists). A new pet = one word.\n5. In the pet shop, each food shows who loves it ('Fish: cats and seals love it'), so kids don't have to remember.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793410587480,
+      "text": ""
+    },
+    {
+      "act": "chat",
+      "at": 1793458112931,
+      "text": "Done: approved in chat and in the book, 31 Oct. Written into 'Pet food: 3 food groups'."
+    }
+  ],
+  "created": 1793408639553,
+  "id": "rules-check-05",
+  "kind": "rule",
+  "needs": [
+    "rules-food"
+  ],
+  "old": true,
+  "order": 325,
+  "short": "Rules check 5: 3 food fixes, 2 build ideas, OK?",
+  "source": "chat 31 Oct 2026: Game rules red team of the food groups (Karolis asked)",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Rules check 5: pet food",
+  "updated": 1793410587480
+}

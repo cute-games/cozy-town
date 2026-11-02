@@ -1,0 +1,16 @@
+{
+  "blockedBy": "",
+  "body": "#: 12\nDecision: One shared town farm, in the suburbs\nNotes: Everyone visits; farmers run it; nobody owns the farm animals; not behind a gate but part of the town, at its edge like Friends Lane",
+  "ch": "rules",
+  "comments": [],
+  "created": 1793323126942,
+  "id": "pet-dec-12",
+  "kind": "decision",
+  "needs": [],
+  "order": 258,
+  "source": "Pet update: plan › Decisions",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Pet decision 12: One shared town farm, in the suburbs",
+  "updated": 1793323126942
+}

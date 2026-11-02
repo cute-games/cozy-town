@@ -1,0 +1,16 @@
+{
+  "blockedBy": "",
+  "body": "Answer (Karolis, 30 Oct): yes. A friend visiting your house at night counts too: the night skips only when they are in their own bed.",
+  "ch": "decisions",
+  "comments": [],
+  "created": 1793380557257,
+  "id": "q-n1-sleep",
+  "kind": "question",
+  "needs": [],
+  "order": 304,
+  "source": "chat 30 Oct 2026: open questions left in tools/NIGHT-REPORT.md §8 (night 1, 8 Oct), not in the book before",
+  "stage": "pfu-1",
+  "status": "approved",
+  "title": "Night skip: a visiting friend must be in their own bed",
+  "updated": 1793394678260
+}

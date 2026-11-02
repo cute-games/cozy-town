@@ -1,0 +1,27 @@
+{
+  "body": "The player next to every game pet, three ways: suggested (real size, nothing under 30 cm, hamster cartoon-sized), real size, today. You chose suggested.\nSee it in Model Compare: Living things → Model Compare → Size lineup.",
+  "ch": "living",
+  "cmp": {
+    "at": 0,
+    "id": "only-size-lineup"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Approved: you decided it in Model Compare (31 Oct)."
+    }
+  ],
+  "created": 1793352910000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/lineup.jpg"
+  ],
+  "source": "chat 30 Oct: real size red team",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Size lineup: player and all pets",
+  "updated": 1793409100000
+}

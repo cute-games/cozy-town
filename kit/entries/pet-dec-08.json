@@ -1,0 +1,23 @@
+{
+  "blockedBy": "",
+  "body": "#: 8\nDecision: Four needs: play, rest, attention, food\nNotes: Each pet type has a favourite thing (monkeys climb, seals swim, dogs fetch)",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793397700275,
+      "text": "Replaced 31 Oct: two needs, hunger and happiness (Karolis in chat)."
+    }
+  ],
+  "created": 1793323126942,
+  "id": "pet-dec-08",
+  "kind": "decision",
+  "needs": [],
+  "old": true,
+  "order": 254,
+  "source": "Pet update: plan › Decisions",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Pet decision 8: Four needs: play, rest, attention, food",
+  "updated": 1793323126942
+}

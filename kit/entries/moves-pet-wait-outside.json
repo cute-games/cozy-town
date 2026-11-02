@@ -1,0 +1,33 @@
+{
+  "blockedBy": "",
+  "body": "Rule (approved 31 Oct): when you go through a door, bear and seal sit or lie by it and join you again when you come out. At the vet station they come in.",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793421631724,
+      "text": "Done: they sit or lie by the door and rejoin you.\nLeftover: the player fades out at the door."
+    },
+    {
+      "act": "approve",
+      "at": 1793457637404,
+      "text": ""
+    }
+  ],
+  "created": 1793410479321,
+  "id": "moves-pet-wait-outside",
+  "kind": "task",
+  "needs": [
+    "rules-big-needs-pets"
+  ],
+  "order": 122,
+  "pics": [
+    "img/moves10-waitOutside.gif"
+  ],
+  "short": "Bear and seal wait by the door. OK?",
+  "source": "Model movements 31 Oct: gap check against the stage briefs",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Bear and seal wait outside buildings",
+  "updated": 1793457637404
+}

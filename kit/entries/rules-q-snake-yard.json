@@ -1,0 +1,29 @@
+{
+  "blockedBy": "",
+  "body": "The snake lives indoors in its glass tank.\nA) Yes, level 3 like the others\nB) No, only its glass tank",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793400859016,
+      "text": "Done: your answer in chat, 31 Oct.\nRed team in 'Rules check 2'."
+    },
+    {
+      "act": "chat",
+      "at": 1793401756412,
+      "text": "Changed 31 Oct: license level 1 (not 3 wins)."
+    }
+  ],
+  "created": 1793400314482,
+  "id": "rules-q-snake-yard",
+  "kind": "question",
+  "needs": [],
+  "old": true,
+  "order": 313,
+  "short": "Snake: no yard level; license level 1 + glass tank",
+  "source": "chat 31 Oct 2026: Game rules chat",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Snake: animal license level 1 and a glass tank (decided 31 Oct)",
+  "updated": 1793401756412
+}

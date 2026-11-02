@@ -1,0 +1,47 @@
+{
+  "body": "Round 21 from your note on the grizzly (\"make it the same cute and body as the white bear\"): the grizzly now has the polar bear's cute body and face, in grizzly browns, with a small grizzled mane over the shoulders. All six bears keep the round back end. Teddy, honey, panda, polar and moon unchanged (you kept them).",
+  "ch": "living",
+  "cmp": {
+    "at": 1793381000000,
+    "id": "only-pet-bear"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793375748425,
+      "text": "Grizzly rebuilt as a real grizzly; panda patches bigger with the eyes inside."
+    },
+    {
+      "act": "chat",
+      "at": 1793376556086,
+      "text": "All bears: round rump, one shared body. Grizzly on the same body with a smaller mane."
+    },
+    {
+      "act": "chat",
+      "at": 1793381400000,
+      "text": "Grizzly on the polar bear's cute body and face, grizzly browns, small mane."
+    },
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Approved: you decided it in Model Compare (31 Oct)."
+    }
+  ],
+  "created": 1793364500000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/bear-teddy.jpg",
+    "img/bear-grizzly.jpg",
+    "img/bear-panda.jpg",
+    "img/bear-honey.jpg",
+    "img/bear-polar.jpg",
+    "img/bear-moon.jpg"
+  ],
+  "source": "chat 30 Oct: Living things models, round 21",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Bears: your notes per version",
+  "updated": 1793409100000
+}

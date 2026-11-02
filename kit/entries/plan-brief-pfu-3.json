@@ -1,0 +1,50 @@
+{
+  "blockedBy": "",
+  "body": "Build brief. Rules and models approved by Karolis 30-31 Oct.\nMODELS: backyard levels 1, 2, 3 all picked. L1 empty first; items appear as bought. L2: play corner, no pond. L3: front = garden + everyday pets; back = big-pet area the whole lot wide (seal pond ~4.3x3.9 m, monkey tree ~3x2.8 m, bear cave ~3.7x2.8 m, gate at x -12.4, stone path).\nONLY OWNED SHOWS (rules-yard-only-owned): the level gives space (fence, gate, path, grass); homes, pens, ponds, trees, beds, toys, bowls appear only once bought. No locked pot plates: today all 30 pots show '🔒 Level N' (js/02-world.js YARD_POTS); they appear only when unlocked. Pots players have stay. Yard levels never limit how many pets you keep (10). Dog houses already placed as furniture stay.\nLEVELS (rules-garden-levels, rules-q-yard-skill): pet yard L2 at Pet care 20, L3 at Pet care 40. Garden L2 at gardening 20, L3 at 40: each adds 3 beds at the back, open when bought (save spots 36-41), plus more space and nicer looks. Training gear: small gear at pet yard L1, agility course at L2. Pots keep Izabele's rule (idea 75, gardening 10-50).\nCARE: home bowl + toys = home pets lose needs at half speed; pets nap near you; bear and seal nap in their own home (den, pond).\nGame work: per-lot hedge step-back; 6 beds + 30 pot spots unchanged; 6 new beds in the back strip.\nMOVES: moves-pet-yard-gear (pets on gear and agility course).\nSCREENS: screens-yard-sign (sign by your yard sells garden and pet yard levels).\nPLACEMENTS: project doc claude/pfu-placements.json (Friends Lane border 37.5 for the wider level-3 yard, entry map-lane-border).\nPRICES (economy-pfu-prices, approved): pet yard L1 free, L2 800 (Pet care 20), L3 2,000 (Pet care 40); garden L1 free, L2 600 (Gardening 20), L3 1,500 (Gardening 40). Fence, gate, path and decoration come with the level.",
+  "ch": "plan",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793402295737,
+      "text": "What changed: models picked; skill gates; only owned things show."
+    },
+    {
+      "act": "chat",
+      "at": 1793403524940,
+      "text": "Game rules chat: updated with today's last rules (+3 beds per garden level, training gear, pet count, dog houses).\nReady for your OK."
+    },
+    {
+      "act": "chat",
+      "at": 1793403631542,
+      "text": "Approved: everything in it you already decided in chat (30-31 Oct).\nRecorded by the Game rules chat; Plan told."
+    },
+    {
+      "act": "chat",
+      "at": 1793410821985,
+      "text": "Added: moves, screens and placements for this stage."
+    },
+    {
+      "act": "chat",
+      "at": 1793459656438,
+      "text": "Plan: approved yard and garden prices added. Still approved."
+    }
+  ],
+  "created": 1793397122256,
+  "id": "plan-brief-pfu-3",
+  "kind": "plan",
+  "needs": [
+    "rules-yard-only-owned",
+    "rules-garden-levels",
+    "rules-q-yard-skill",
+    "rules-mech-home-care",
+    "rules-mech-sleep",
+    "economy-pfu-prices"
+  ],
+  "order": 13,
+  "short": "Stage 3: yard levels by skill, +3 garden beds per level, only owned things show",
+  "source": "chat 2026-10-30: Plan chat, game rules approved 30 Oct (board rules-20261030-all-approved, -approved2)",
+  "stage": "pfu-3",
+  "status": "approved",
+  "title": "Stage 3 build brief: game rules",
+  "updated": 1793459656438
+}

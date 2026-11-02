@@ -50,8 +50,8 @@ body.dancing #joy,body.dancing #moveBtns,body.dancing #actWrap,body.dancing #pad
 @media (orientation:portrait){body:has(#hpCard:not([hidden])) #mmBtn,body:has(#hpCard:not([hidden])) #pad,body:has(#dnCard:not([hidden])) #mmBtn,body:has(#dnCard:not([hidden])) #pad{visibility:hidden}}   /* (run 4, stage 3: the card sat on the map and the notepad) */
 #hpCard,#dnCard{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 74px);transform:translateX(-50%);z-index:9500;background:var(--paper);border:3px solid var(--line);border-radius:22px;padding:14px 16px 16px;box-shadow:0 6px 0 #3d2c5e;text-align:center;width:min(410px,92vw);color:var(--ink);animation:kcPop .2s ease-out}#hpCard .kc-b,#dnCard .kc-b{display:flex;gap:10px;justify-content:center}#hpCard .kc-t,#dnCard .kc-t{font-size:28px;line-height:1.15}#hpCard[hidden],#dnCard[hidden]{display:none}@media (orientation:portrait){#hpCard,#dnCard{top:calc(env(safe-area-inset-top,0px) + 150px)}}#hpCard .kc-b,#dnCard .kc-b{flex-wrap:wrap}#hpCard .kc-b .btn,#dnCard .kc-b .btn{min-height:48px;font-size:17px;padding:8px 14px;white-space:nowrap}`;document.head.appendChild(st);}   /* the cards' and the dance HUD's looks, in at load time */
 const HPT={seen:new Set(),queue:[],cur:null,rem:{},noted:{},ans:null,tiles:null,mats:null,ball:null,lit:false,key:'',t:0,ct:0};
-function hpOn(h){h=h===undefined?S&&S.hp:h;return !!(h&&realMs()>=h.at&&realMs()<h.at+HP_LEN);}
-function hpSoon(h){h=h===undefined?S&&S.hp:h;return !!(h&&realMs()<h.at+HP_LEN);}
+function hpOn(h){h=h===undefined?S&&S.hp:h;return !!(h&&gameMs()>=h.at&&gameMs()<h.at+HP_LEN);}   /* (a party's time is on the one clock: gameMs, so a night skip brings it closer) */
+function hpSoon(h){h=h===undefined?S&&S.hp:h;return !!(h&&gameMs()<h.at+HP_LEN);}
 function hpWhen(h){const d=clockAt(h.at),n=clockNow();return (d.day===n.day?'today':d.day===n.day+1?'tomorrow':'on '+wdName(d.day))+' at '+clockStr(h.h!=null?h.h:d.time);}
 function hpDisco(){return !!(S&&S.home&&S.home.items.some(it=>it.t==='discofloor')&&S.home.items.some(it=>it.t==='discoball'));}
 /* 📬 the mailbox: mail, or a party */
@@ -76,7 +76,7 @@ function hpCard(){if(HPT.cur||!HPT.queue.length)return;const q=HPT.queue.shift()
   el.innerHTML=`<div class="kc-t">🎉 A party!</div><div class="kc-m"><b>${esc(q.nm)}</b> is hosting a party ${esc(when)}!<br>Go check it out?</div><div class="kc-b"><button class="btn mint" id="hpYes">✅ I'll come!</button><button class="btn" id="hpNo">🙅 Not this time</button></div>`;
   el.hidden=false;$('hpYes').onclick=()=>hpAnswer(true);$('hpNo').onclick=()=>hpAnswer(false);clearTimeout(HPT.ct);HPT.ct=setTimeout(()=>{if(HPT.cur===q)hpAnswer(false,true);},40000);}
 function hpAnswer(ok,quiet){const q=HPT.cur;if(!q)return;HPT.cur=null;const el=$('hpCard');if(el)el.hidden=true;clearTimeout(HPT.ct);S.rsvp=S.rsvp||{};S.rsvp[q.id]=ok?'yes':'no';HPT.ans={id:q.id,ok:ok?1:0};change();
-  const a=MP.peers.get(q.peer);if(ok){SFX.yay();if(realMs()>=q.at){HPT.noted[q.id]=1;if(a&&hpNav(a))HPT.rem[q.id]=1;}else if(!quiet)toast('🎉 Yay! I will tell you when '+q.nm+"'s party starts.",3.4);}else if(!quiet)toast('💛 Okay, maybe next time.',2.4);setTimeout(hpCard,600);}
+  const a=MP.peers.get(q.peer);if(ok){SFX.yay();if(gameMs()>=q.at){HPT.noted[q.id]=1;if(a&&hpNav(a))HPT.rem[q.id]=1;}else if(!quiet)toast('🎉 Yay! I will tell you when '+q.nm+"'s party starts.",3.4);}else if(!quiet)toast('💛 Okay, maybe next time.',2.4);setTimeout(hpCard,600);}
 function hpNav(a,quiet){const j=LANE.slotOf.get(a.peer),ln=LOC.city.lane;if(j==null||!ln||!ln[j]){if(!quiet)toast('🏠 '+a.nm+"'s house is not on Friends Lane right now.",3);return false;}const d=ln[j].door;
   setNavTo({id:'party',n:a.nm+"'s party",i:'🎉',x:d[0],z:d[1],w:4,d:4,door:[d[0],d[1]],flat:1,nq:1},true);toast('🎉 Follow the arrow to '+a.nm+"'s house!",3.2);return true;}
 /* 🪩 the disco floor flashes and the ball spins at a party, or while a round is on */
@@ -87,11 +87,11 @@ function hpLights(dt){const L=CUR&&(CUR.id==='home'||CUR.id==='visit')?CUR:null;
   if(on){HPT.t+=dt;const step=Math.floor(HPT.t*3);for(const o of HPT.tiles){const m=M[(o.userData.tile+step)%M.length];if(m&&o.material!==m)o.material=m;}if(HPT.ball)HPT.ball.rotation.y+=dt*2.2;HPT.lit=true;}
   else if(HPT.lit){for(const o of HPT.tiles){const m=HPT.mats[o.userData.tile];if(m)o.material=m;}HPT.lit=false;}}
 function hpTick(dt){if(!S)return;
-  if(S.hp&&realMs()>=S.hp.at+HP_LEN){S.hp=null;S.rsvpIn=null;change();if(PLAYING)toast('🎉 Your party is over. What a day!',3);}
+  if(S.hp&&gameMs()>=S.hp.at+HP_LEN){S.hp=null;S.rsvpIn=null;change();if(PLAYING)toast('🎉 Your party is over. What a day!',3);}
   if(MP.grp)for(const a of MP.peers.values()){const py=a.py;
-    if(py&&typeof py.id==='string'&&Number.isFinite(py.at)&&realMs()<py.at+HP_LEN){const key=a.peer+'|'+py.id,r=S.rsvp&&S.rsvp[py.id];
+    if(py&&typeof py.id==='string'&&Number.isFinite(py.at)&&gameMs()<py.at+HP_LEN){const key=a.peer+'|'+py.id,r=S.rsvp&&S.rsvp[py.id];
       if(!HPT.seen.has(key)&&!r){HPT.seen.add(key);HPT.queue.push({peer:a.peer,id:py.id,at:py.at,h:py.h,nm:a.nm});}
-      if(r==='yes'&&realMs()>=py.at){if(!HPT.noted[py.id]){HPT.noted[py.id]=1;SFX.ding();showNote('🎉 Party time!',a.nm+"'s party is starting! Follow the arrow to their house.",true,'🎉');}
+      if(r==='yes'&&gameMs()>=py.at){if(!HPT.noted[py.id]){HPT.noted[py.id]=1;SFX.ding();showNote('🎉 Party time!',a.nm+"'s party is starting! Follow the arrow to their house.",true,'🎉');}
         if(!HPT.rem[py.id]&&CUR&&CUR.id==='city'&&hpNav(a,true))HPT.rem[py.id]=1;}}   /* (the way is set as soon as the host's house is on Friends Lane) */
     if(S.hp&&a.pa&&a.pa.id===S.hp.id){S.rsvpIn=S.rsvpIn||{};if(S.rsvpIn[a.peer]!==a.pa.ok){S.rsvpIn[a.peer]=a.pa.ok;if(a.pa.ok&&PLAYING)toast('💌 '+a.nm+' is coming to your party!',3);}}}
   if(!HPT.cur&&HPT.queue.length&&PLAYING&&!CUT&&!fading&&!DANCE.on)hpCard();
@@ -175,8 +175,8 @@ function dnPeer(a,dt){const dn=a.dn&&a.dn.st==='go'?a.dn:null,res=DANCE.res&&a.p
   a.dnTime=(a.dnTime||0)+dt;dnPose(a.av,a.dnT>0?a.dnK:-1,a.dnT>0?1-a.dnT/.65:0,a.dnTime);}
 function dnEnd(why){const D=DANCE;if(!D.on)return;D.on=false;D.res=true;D.shown=false;D.ended=performance.now();const a=MP.peers.get(D.partner),nm=D.partnerNm;if(D.mine){D.mine.st='done';D.mine.sc=D.sc;}
   document.body.classList.remove('dancing');dnHud(false);   /* (the view stays on the two dancers until Done: dnLeave; run 4, stage 3) */
-  const fin=()=>{const osc=a&&a.dn&&a.dn.r===D.r&&Number.isFinite(a.dn.sc)?a.dn.sc:D.osc;const win=D.sc>osc,tie=D.sc===osc;S.dance=S.dance||{rounds:0,wins:0};S.dance.rounds++;if(win)S.dance.wins++;const coins=15;S.coins+=coins;addXP('sport',3);hardEvent('dance',1);qEvent('dance');change();
-    SFX.yay();openPanel(`<div class="who" style="--c:#ff9ec4">🕺 Dance-off</div><p class="line">${why==='gone'?esc(nm)+' had to go. ':''}You <b>${D.sc}</b> · ${esc(nm)} <b>${osc}</b></p><p class="earn">${tie?'🤝 A tie! Great moves, both of you!':win?'🏆 You win! What a dancer!':'🎉 '+esc(nm)+' wins! Great moves!'}<br>You got <b>${coins} 🪙</b>!</p><div class="row" style="justify-content:center"><button class="btn mint" data-a="dnbye" style="min-height:58px;font-size:21px;padding:0 34px">👋 Done</button></div>`,{bottom:true,lock:true,cls:'dnres'});D.shown=true;
+  const fin=()=>{const osc=a&&a.dn&&a.dn.r===D.r&&Number.isFinite(a.dn.sc)?a.dn.sc:D.osc;const win=D.sc>osc,tie=D.sc===osc;S.dance=S.dance||{rounds:0,wins:0};S.dance.rounds++;if(win)S.dance.wins++;if(S.dance.pd!==S.day){S.dance.pd=S.day;S.dance.pn=0;}const coins=S.dance.pn<3?15:0;S.dance.pn++;S.coins+=coins;   /* 🪙 economy rebalance (30 Oct): the first 3 rounds a game day pay */addXP('sport',3);hardEvent('dance',1);qEvent('dance');change();
+    SFX.yay();openPanel(`<div class="who" style="--c:#ff9ec4">🕺 Dance-off</div><p class="line">${why==='gone'?esc(nm)+' had to go. ':''}You <b>${D.sc}</b> · ${esc(nm)} <b>${osc}</b></p><p class="earn">${tie?'🤝 A tie! Great moves, both of you!':win?'🏆 You win! What a dancer!':'🎉 '+esc(nm)+' wins! Great moves!'}<br>${coins?`You got <b>${coins} 🪙</b>!`:'Just for fun now: dance coins come with the first 3 rounds each day.'}</p><div class="row" style="justify-content:center"><button class="btn mint" data-a="dnbye" style="min-height:58px;font-size:21px;padding:0 34px">👋 Done</button></div>`,{bottom:true,lock:true,cls:'dnres'});D.shown=true;
     setTimeout(()=>{if(D.mine&&D.mine.r===D.r)D.mine=null;},5000);};
   setTimeout(fin,1200);}
 ACT.dnbye=()=>{closePanel();dnLeave();toast('🪩 Another round? Tap Dance! on the floor.',2.6);};
@@ -267,6 +267,14 @@ function buildTreePark(){
   const hd=new THREE.Group();box(hd,.6,.05,.05,'#5a5f8c',0,0,0,{ol:false});for(const s of[-.22,.22])box(hd,.04,.5,.04,'#e8d7b0',s,-.5,0,{ol:false});box(hd,.5,.04,.04,'#8f6244',0,-.5,0,{ol:false});hd.visible=false;L.g.add(hd);TP.hand=hd;
   const mk=new THREE.Group();{const m=new THREE.Mesh(starGeo(.42,0,.12),STARM);mk.add(m);hull(mk,starGeo(.42,.042,.12),m,{});}   /* (run 4, stage 3: a turning star; the arrow looked like a floating pencil in two pieces) */mk.visible=false;mk.userData.keep=1;L.g.add(mk);TP.mark=mk;   /* ⬇️ a bobbing yellow arrow over the next deck of your path (run 4, stage 3) */
   return L;}
+/* 🐾 the new Pet Shop's floors (stage 4b; js/02-world.js PSH): you walk up and down the stairs, the floor under you is your height (P.cy); a stair's side,
+   the rails round the open middle and the stair holes stop you (you never fall). Pieces on a floor collide only on that floor (CFL) */
+function psTick(dt){const L=LOC.pets;if(!L||CUR!==L||!L.psh){PSH.in=0;CFL=0;return;}
+  if(!PSH.in){PSH.in=1;PSH.px=P.x;PSH.pz=P.z;}
+  if(!PLAYING||CUT||fading||P.sit){PSH.px=P.x;PSH.pz=P.z;CFL=psFl(P.cy||0);return;}
+  const c=P.cy||0,h=psSupport(P.x-L.ox,P.z-L.oz,c);
+  if(h===null){P.x=PSH.px;P.z=PSH.pz;}else P.cy=Math.abs(h-c)<.01?h:lerp(c,h,Math.min(1,dt*14));
+  PSH.px=P.x;PSH.pz=P.z;CFL=psFl(P.cy||0);}
 /* ---- the floor physics ---- */
 function tpSupport(x,z,feet){let h=0;for(const d of TP.decks){if(d.h<=feet+.5&&Math.abs(x-d.x)<=d.w/2&&Math.abs(z-d.z)<=d.d/2)h=Math.max(h,d.h);}for(const w of TP.walk){if(w.h<=feet+.5&&x>=w.x1&&x<=w.x2&&z>=w.z1&&z<=w.z2)h=Math.max(h,w.h);}return h;}
 function tpDeckAt(x,z,h){return TP.decks.find(d=>Math.abs(d.h-h)<.3&&Math.abs(x-d.x)<=d.w/2&&Math.abs(z-d.z)<=d.d/2)||null;}
@@ -305,7 +313,7 @@ function tpFinish(k){const PA=TP_PATHS[k];if(TP.rung[k])return;TP.rung[k]=1;cons
    buttons, then frame, zoom and snap. Pay by how good the photo is (stars 1 to 5, pay 15/35/60/90/120 like the hairstylist): everyone inside the dashed frame and nobody cut off, faces towards
    the camera, everyone posed, the people filling the frame well, the background the client asked for. The client's thank-you message shows the photo. 4 bookings a game day. Touch and
    keyboard (Space snaps, + and - zoom, N = next background, E or a tap on a person = poses). The state object is PHO (PHO.on while a shoot is on; the update guard of job 2 knows it) ===== */
-const PT_MAX=4,PT_PAY=[0,15,35,60,90,120],PT_IN=[.88,.84];   /* PT_IN: inside these screen limits (the dashed viewfinder) counts as "in the picture" */
+const PT_MAX=4,PT_PAY=[0,30,35,60,90,120],PT_IN=[.88,.84];   /* PT_IN: inside these screen limits (the dashed viewfinder) counts as "in the picture" */
 const PT_SPOTS={
   park:{n:'Cozy Park',at:[-22,11.6],bgs:[{id:'fountain',n:'the fountain',g:[-22,15.0],face:Math.PI},{id:'flowers',n:'the flower beds',g:[-28.6,13.6],face:Math.PI*.7},{id:'stage',n:'the Pet Show stage',g:[-33.6,19.4],face:Math.PI*.5}]},
   pond:{n:'Duck Pond',at:[34.6,-31.4],bgs:[{id:'pond',n:'the duck pond',g:[36.2,-33.3],face:0},{id:'bench',n:'the bench',g:[32.6,-37.9],face:Math.PI}]},
@@ -668,8 +676,9 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
   if(PLAYING){
     {if(clockSync()){newDay();change();}   /* 🕰️ the one clock (run 4, job 1): the time and the day come from the real time, the same for everyone */
       S.hunger=Math.max(0,S.hunger-dt/HOUR*4);if(S.hunger<20&&!hungryWarn){hungryWarn=true;toast('Your tummy is rumbling! Eat something from your 🎒 bag.',4);}if(S.hunger>30)hungryWarn=false;}
-    updatePlayer(dt);tpTick(dt);   /* 🌲 the Tree Park's floor physics (run 4, job 16) */
-    fanTick(dt);let fi=0;for(const f of FRIEND_ACTORS)f.update(dt,f.mode==='follow'?fi++:0);PET_ACTORS.forEach((p,i)=>p.update(dt,fi+i+(fi?0:1)));tagsApart([...FRIEND_ACTORS,...PET_ACTORS].filter(f=>f.g.visible&&f.loc===CUR.id&&f.tag).map(f=>({tag:f.tag,bub:f.bub||null})));   /* (run 4 finish: your pets' tags too; indoors three of them piled up) */
+    updatePlayer(dt);farmTick(dt);tpTick(dt);psTick(dt);   /* 🐴 the farm (stage 6): nothing runs while you are far from it */
+      /* 🌲 the Tree Park's floor physics (run 4, job 16) */
+    fanTick(dt);let fi=0;for(const f of FRIEND_ACTORS)f.update(dt,f.mode==='follow'?fi++:0);PET_ACTORS.forEach((p,i)=>p.update(dt,fi+i+(fi?0:1)));petTick(dt);tagsApart([...FRIEND_ACTORS,...PET_ACTORS].filter(f=>f.g.visible&&f.loc===CUR.id&&f.tag).map(f=>({tag:f.tag,bub:f.bub||null})));   /* (run 4 finish: your pets' tags too; indoors three of them piled up) */
     if(CUR.id==='pets')updatePen(dt);
     if(CUR.id==='toys'&&CUR.train){const T=CUR.train;T.userData.t=(T.userData.t||0)+dt*.9;T.children.forEach((c,i)=>{const a=T.userData.t-i*.32;c.position.set(Math.cos(a)*.88,0,Math.sin(a)*.55);c.rotation.y=Math.atan2(-Math.sin(a)*.88,Math.cos(a)*.55);});}
     wkStat();for(const w of WALKERS)w.update(dt);walkersApart(dt);granTick(dt);   /* 🚶 townspeople give way to each other and walk round people who stand or sit about */
@@ -678,9 +687,9 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     fbTick(dt);   /* ⚽ the football friends */
     {const vis=CUR.id==='city'&&sittersOut();for(const s of SITTERS){s.p.root.visible=vis;if(vis){s.t+=dt;s.p.head.rotation.y=Math.sin(s.t*.5)*.35;if(s.p.wave>0){s.p.wave-=dt;s.p.arms[1].rotation.z=2.5+Math.sin(s.p.wave*14)*.35;}else s.p.arms[1].rotation.z*=.85;}}}
     psUpdate(dt);dayTick();holTick(dt);fwTick(dt);confTick(dt);spookTick(dt);wxTick(dt);hsTick(dt);hsTutTick(dt);   /* 🎃 holidays from the real calendar; 👻 the spooky path; 🌦️ the weather */
-    for(const k of KEEPERS)if(k.L===CUR){k.p.root.rotation.y=angLerp(k.p.root.rotation.y,Math.atan2(P.x-k.x,P.z-k.z),.05);animPerson(k.p,dt,false);}
+    for(const k of KEEPERS)if(k.L===CUR){const f=k.lk||[P.x,P.z];k.p.root.rotation.y=angLerp(k.p.root.rotation.y,Math.atan2(f[0]-k.x,f[1]-k.z),.05);if(k.mv)COZY_MOVES.play(k.p,k.mv,(gameMs()-k.mv0)/1000,{kind:'person'});else animPerson(k.p,dt,false);}   /* (🩺 the vet and the nurse: their moves at the exam table, facing it: stage 4) */
     if(CUR&&CUR.id==='studio'&&!CR&&!fading){setLoc('city');P.x=-17;P.z=-4.6;P.yaw=0;P.pitch=0;P.sit=null;P.ride=null;$('hud').hidden=false;camera.clearViewOffset();resize();saveLocal();}
-    if(CUT)cutUpdate(dt);if(CLIMB)climbUpdate(dt);floorVis();
+    if(CUT)cutUpdate(dt);if(PS.sign)PS.sign.visible=!(CUT&&CUT.show);   /* 🏆 'Every Saturday!' hides during a show (picture pass 2: the big words sat on it, a stray pink 'Ev' showed) */if(CLIMB)climbUpdate(dt);floorVis();
     if(CR)crCam(dt);else if(P.ride)updateRide(dt);else updateCamera(dt);if(CUT)cutCam(dt);swingUI();
     if(DECO.on)decoUpdate();
     TARGET=(UI.open||DECO.on||CUT||CLIMB||TUT||DTUT)?null:findTarget();showAction();jobTick(dt);
@@ -717,7 +726,7 @@ async function boot(){
     sun=new THREE.DirectionalLight('#fff4e0',.9);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);const sc=sun.shadow.camera;sc.left=-30;sc.right=30;sc.top=30;sc.bottom=-30;sc.near=1;sc.far=150;sun.shadow.bias=-.0006;sun.shadow.normalBias=.09;scene.add(sun);scene.add(sun.target);
     lamp=new THREE.PointLight('#ffe2b8',0,20,1.4);scene.add(lamp);
     try{await Promise.race([document.fonts.load('800 40px "Baloo 2"'),new Promise(r=>setTimeout(r,2000))]);}catch(e){}
-    seasonSet();buildSky();buildCity();buildHome();buildMarket();buildPetShop();buildFlowerShop();buildCafe();buildSalon();buildClothesShop();buildToyStore();buildBakery();buildIceCream();buildLibrary();buildSchool();buildClassrooms();buildFireStation();buildPizzeria();buildApts();buildClientRoom();buildVisit();buildBeach();buildTreePark();buildStudio();buildActors();buildTownfolk();buildPetShow();buildCars();buildBall();buildShoppers();
+    seasonSet();buildSky();buildCity();buildHome();buildMarket();buildPetShop();buildVet();buildFlowerShop();buildCafe();buildSalon();buildClothesShop();buildToyStore();buildBakery();buildIceCream();buildLibrary();buildSchool();buildClassrooms();buildFireStation();buildPizzeria();buildApts();buildClientRoom();buildVisit();buildBeach();buildTreePark();buildStudio();buildActors();buildTownfolk();buildPetShow();buildCars();buildBall();buildShoppers();
     S=freshState();setLoc('city');S=null;holCheck();   /* 🎃 decorations for today's real date */
     setupInput();applyGfx();addEventListener('resize',resize);
     requestAnimationFrame(t=>{last=t;frame(t);});

@@ -1,0 +1,40 @@
+{
+  "blockedBy": "",
+  "body": "A healthy week (Monday to Friday): none of your pets got sick, and you cared for them on 3 or more days (fed or played with your pets that game day).\nThen all your pets wear a green ribbon the judges like on Saturday.\nEach healthy week also counts for the animal license.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793396474945,
+      "text": "Done: approved by you in chat, 30 Oct."
+    },
+    {
+      "act": "chat",
+      "at": 1793397700275,
+      "text": "Done: fix 1 in (3+ days of care, never sick)."
+    },
+    {
+      "act": "chat",
+      "at": 1793402471510,
+      "text": "Done: one healthy week per player; counts for the license (31 Oct)."
+    },
+    {
+      "act": "chat",
+      "at": 1793402712224,
+      "text": "Done: care day explained (rules check 4)."
+    }
+  ],
+  "created": 1793395983846,
+  "id": "rules-mech-ribbon",
+  "kind": "rule",
+  "needs": [
+    "rules-sickness"
+  ],
+  "order": 303,
+  "short": "Healthy week: no pet sick + 3 days of care = ribbon",
+  "source": "chat 30 Oct 2026: Game rules red team, suggested mechanic",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Healthy all week: a ribbon that helps at the Pet Show",
+  "updated": 1793402712224
+}

@@ -1,0 +1,28 @@
+{
+  "blockedBy": "",
+  "body": "Now: every Sports level makes you 3% faster, with no cap. Level 50 = 2.47x speed (running about 17 m a second). Sports XP comes from running and jumping, unlimited, so the faster you get the faster you level.\nWhy it matters: pizza order timers, races to the bus and Tree park get trivial; friends at level 5 can't keep up with a friend at 50.\nNew (changed after the kit run): +3% a level as now up to level 11 (= +30%), then no more. Early levels feel exactly as today. (The first version, +0.6% a level, made the Tree park's Hard path jumps fail: they need today's early speed.)\nSaves: nothing changes in saves.",
+  "ch": "economy",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793393902343,
+      "text": "Karolis said 'do the rebalance' in the Schedules and economy chat (30 Oct): approved. Built as a code patch (economy-rebalance.patch, build 2026103101) and checked with the quick kit; goes live through a pull request in the next repo chat."
+    },
+    {
+      "act": "chat",
+      "at": 1793397204363,
+      "text": "Kit line N37 (Tree park) failed with +0.6% a level: Hard path jumps of 2.2 m need today's early speed. Changed to +3% a level up to level 11 (+30%), then flat."
+    }
+  ],
+  "created": 1793393358117,
+  "id": "eco-rt-07-sport-speed",
+  "kind": "plan",
+  "needs": [],
+  "order": 17,
+  "short": "Sports speed boost stops at +30% (level 11)",
+  "source": "chat 2026-10-30: Schedules and economy red team 2",
+  "stage": "pfu-1",
+  "status": "building",
+  "title": "Balance 7: Sports level speed boost capped at +30%",
+  "updated": 1793397204363
+}

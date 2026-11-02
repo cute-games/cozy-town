@@ -1,0 +1,41 @@
+{
+  "body": "Your ask: one cowboy and one cowgirl who ride round the horse trail now and then; 2 looks each to choose. Shown riding your kept horse.\n- Cowboy Cody: brown hat, red checked shirt, yellow scarf, brown horse\n- Cowboy Hank: black hat, denim shirt, leather vest, red scarf, black horse\n- Cowgirl Daisy: tan hat, pink checked shirt, fringe vest, pigtails, cream horse\n- Cowgirl Rose: white hat, turquoise shirt, suede vest, long hair, dark brown horse\nPick in Model Compare: Farm riding → Cowboy and Cowgirl (keep one look each, or both).",
+  "ch": "living",
+  "cmp": {
+    "at": 1793401000000,
+    "id": "only-farm-cowboy"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793397085000,
+      "text": "Viewer: 3 passes + final: all four 8/10."
+    },
+    {
+      "act": "chat",
+      "at": 1793397470000,
+      "text": "Calmer riding pose (your note: the leg spread was extreme): hips close on the saddle, legs hang down the horse's sides at a small angle, knees a little forward. One rule for every rider, the horse card's Mounted look too. Viewer: 8/10."
+    },
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Approved: you decided it in Model Compare (31 Oct)."
+    }
+  ],
+  "created": 1793397085000,
+  "kind": "model",
+  "needs": [],
+  "order": 8,
+  "pics": [
+    "img/ride-cody.jpg",
+    "img/ride-pose-front.jpg",
+    "img/ride-hank.jpg",
+    "img/ride-daisy.jpg",
+    "img/ride-rose.jpg"
+  ],
+  "source": "chat 30 Oct: Living things models, round 34",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Cowboy and cowgirl on the horse trail: 2 looks each",
+  "updated": 1793409100000
+}

@@ -1,0 +1,80 @@
+{
+  "blockedBy": "",
+  "body": "Build brief. Game rules approved by Karolis 30-31 Oct. Read each rule entry before building.\nONE NEED (rules-dec-one-need, 31 Oct, replaces two and four): happiness only, NO hunger. Food, petting, playing, toys, naps and the favourite thing all raise it (like today's single happy value). Body language when unhappy: brings a toy, bounces, yawns, follows close, nudges, sniffs or sits by the empty bowl. Old saves: happiness stays.\nSICKNESS (rules-sickness): sick when very unhappy for long. Real play minutes only; away = paused. Body language only. No tricks or Pet Show while sick. Only the vet cures. Never dies or runs away. Ms. Paws won't take a sick pet. Doesn't spread. Old saves: all pets healthy.\nVET VISIT (rules-vet-visit): book on the phone (any time, for open hours) or with the lobby nurse (while open); only sick pets; 2-game-hour window; nobody booked = walk in; late = book again, no coins lost. Vet checks, nurse gives a treat. Cured at NORMAL mood. One visit treats every sick pet following you, pay per pet. Can't pay = free (rules-q-vet-broke B). Farm animals never visit. No vet job for players.\nCARE HELPERS: home bowl + toys = home pets lose happiness at half speed; pets nap when you sleep; friends pet and play, no feeding; free nurse tip; warning sneeze ~15 min before sick; healthy week is per player: no pet sick + care on 3+ days Mon-Fri (care day = fed or played with your pets) -> all your pets wear the ribbon and it counts for the animal license. Bear and seal nap in their own home (den, pond).\nFRIENDS SEE PETS FOR REAL (Karolis, 31 Oct): send each pet's mood, sick state and current move online, so friends see the same moves. Build notes: friends' pet copies carry no mood today; add 'sick' at the END of the pet array so old versions ignore it. Unknown: one player on two devices must not lose happiness twice.\nORDER: build sickness in stage 2 but keep it switched off until the vet clinic (stage 4) is in the game.\nFOOD (rules-food, approved 31 Oct): 3 food groups, no new items: Meat (dogs, owl, bear, snake) = old Pet food; Fish (cat, seal) = old Cat food; Fruit & veggies (bunny, hamster, capybara, duck, monkey) = old Bunny & hamster food; Treats for all. Same ids. Every pet eats every food: group food +40, others and treats +30 (treats cheaper). Each pet type has one food-group word, not a food list. Bowl: one food lasts one game day of play. No food in bag: 'Ms. Paws sells meat, fish, fruit & veggies.' Shop: each food says who loves it. Change the quest step text (js/03-game.js ~274), the some-food word list (~321), and ACT.pfeed refusing foods (js/04-panels.js).\nMOVES (#moves, stage pfu-2): moves-pack (all OK'd moves as code for the game's models), moves-pet-nap-home, moves-pet-eat (new: eat from bowl or hand), moves-jointed-test (Karolis picks after).\nSCREENS: screens-vet-app (Book the vet button in the Pets app; Leo's desk opens the same screen; buttons at least 44 px). Sounds: screens-sounds (tone() recipes as given).\nCHECK: measure the iPad frame rate with 2 players x 3 following pets (friends see real moves).\nPET BRAIN DETAILS (rules-pet-brain-details, 31 Oct): moods follow today's hearts (happiness / 20): 5 very very happy, 3-4 happy, 2 normal, 0-1 sad; sick after ~1 more hour of play at 0-1 hearts; babies can enter the Pet Show; growing up keeps counting while sick.\nNUMBERS (Schedules and economy, approved 31 Oct): vet 50 coins per pet treated, free with too few coins; vet open 7:00-23:00 every day = 8 two-hour booking windows. Food prices as today: 6 each, treats 5.\nSHOP FOOD LABELS (screens-food-labels): Meat / Fish / Fruit & veggies, a 'who loves it' line of animal faces under each; Treats: '🐾 all love it'.\nPLAY TEST (bug-pets-left-behind, never play-checked): long walks with 3 following pets past corners and fences, on Friends Lane and at the beach; pets must not be left behind. Also bear and seal waiting outside.\nBEFORE BUILDING: pre-mortem with Karolis (pet brain is the biggest new system).\nMOVES PACK (31 Oct, all moves OK'd by Karolis): book tools/moves-pack/ v4 (moves-pack.js, README with every move, trigger and prop position). Pets keep today's legs (no knees, Karolis picked B). Limits: people hop up steps, hands stop short of low targets. Polish later (moves-polish-later).",
+  "ch": "plan",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793402295737,
+      "text": "What changed: two needs not four; vet free if broke; pay per pet."
+    },
+    {
+      "act": "approve",
+      "at": 1793403430548,
+      "text": ""
+    },
+    {
+      "act": "chat",
+      "at": 1793403524940,
+      "text": "Game rules chat: added 2 rules you approved after this plan was written (healthy week per player, bear and seal nap at home)."
+    },
+    {
+      "act": "chat",
+      "at": 1793408087606,
+      "text": "Game rules chat: no hunger now (Karolis, 31 Oct): one need, happiness. Still approved."
+    },
+    {
+      "act": "chat",
+      "at": 1793410821985,
+      "text": "Added: moves, screens and placements for this stage. Food groups."
+    },
+    {
+      "act": "chat",
+      "at": 1793458112931,
+      "text": "Game rules chat: food details from rules check 5 added (Karolis OK'd). Still approved."
+    },
+    {
+      "act": "chat",
+      "at": 1793458677972,
+      "text": "Game rules chat: pet brain details added (moods, babies, growing up). Still approved."
+    },
+    {
+      "act": "chat",
+      "at": 1793459656438,
+      "text": "Plan: approved vet numbers, food labels, pets-left-behind play test added. Still approved."
+    },
+    {
+      "act": "chat",
+      "at": 1793480741963,
+      "text": "Added: latest moves, people and map notes (31 Oct)."
+    }
+  ],
+  "created": 1793397122256,
+  "id": "plan-brief-pfu-2",
+  "kind": "plan",
+  "needs": [
+    "rules-dec-two-needs",
+    "rules-sickness",
+    "rules-vet-visit",
+    "rules-q-vet-broke",
+    "rules-mech-home-care",
+    "rules-mech-sleep",
+    "rules-mech-friend-care",
+    "rules-mech-nurse-tip",
+    "rules-mech-sneeze",
+    "rules-mech-ribbon",
+    "economy-vet-price",
+    "economy-vet-hours",
+    "screens-food-labels",
+    "bug-pets-left-behind",
+    "rules-food",
+    "rules-pet-brain-details"
+  ],
+  "order": 12,
+  "short": "Stage 2: one need (happiness), sickness, vet visit, food, care helpers",
+  "source": "chat 2026-10-30: Plan chat, game rules approved 30 Oct (board rules-20261030-all-approved, -approved2)",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Stage 2 build brief: game rules",
+  "updated": 1793480741963
+}

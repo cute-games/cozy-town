@@ -1,0 +1,31 @@
+{
+  "blockedBy": "",
+  "body": "Food raises happiness (one need).\n- Eats from the home bowl.\n- Takes food from your hand.\n- Favourite food: the very-happy move plays after.\nUnknown: the game has no pet-eating move today (only the player eats).",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793421631724,
+      "text": "Done: eats from the home bowl, takes food from your hand, happy dance after.\nPlayer is a stand-in (farmer model)."
+    },
+    {
+      "act": "approve",
+      "at": 1793457617701,
+      "text": ""
+    }
+  ],
+  "created": 1793410479321,
+  "id": "moves-pet-eat",
+  "kind": "task",
+  "needs": [],
+  "order": 120,
+  "pics": [
+    "img/moves10-petEat.gif"
+  ],
+  "short": "Eats from the bowl and your hand. OK?",
+  "source": "Model movements 31 Oct: gap check against the stage briefs",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Pet eats: bowl and your hand",
+  "updated": 1793457617701
+}

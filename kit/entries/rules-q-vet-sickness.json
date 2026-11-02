@@ -1,0 +1,29 @@
+{
+  "blockedBy": "",
+  "body": "Pet decision 1 (29 Oct) says sickness ships with the vet in \"update 2\", so a sick pet can always be cured.\nOn 30 Oct you made it one Pets and Farm Update (stages 1-6). No stage holds sickness or the vet yet.\nThe game has no vet today (checked GitHub main, stamp 2026102902).\nPick one:\nA) Sickness + vet go in this update. Plan picks the stage.\nB) Both wait for a later update. Pets get sad, never sick, for now.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "comment",
+      "at": 1793392477105,
+      "text": "Sickness and vets in this update! Need models for vet station and mechanics. SEND URGENT MSG TO PLAN"
+    },
+    {
+      "act": "chat",
+      "at": 1793394435143,
+      "text": "Game rules chat: Recorded: sickness and the vet go in this update. Urgent row sent to Plan. Models: the vet person (Living chat) and the vet station with its inside (Non-living chat) are already ordered, 3 versions each for your pick. Sick-pet looks sent to Model movements. Mechanics: drafts 'How a vet visit works' and 'How pets get sick' are in Game rules for your OK. One new question: a vet job for players."
+    }
+  ],
+  "created": 1793391445852,
+  "id": "rules-q-vet-sickness",
+  "kind": "question",
+  "needs": [],
+  "old": true,
+  "order": 293,
+  "short": "Sickness and the vet are in this update",
+  "source": "chat 30 Oct 2026: Game rules chat found pet decision 1 clashes with the one-update plan",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Sick pets and the vet: in this update (decided 30 Oct)",
+  "updated": 1793394435143
+}

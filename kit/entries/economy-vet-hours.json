@@ -1,0 +1,26 @@
+{
+  "blockedBy": "",
+  "body": "A) 8:00-20:00 every day (my pick)\nB) 7:00-23:00 every day\nC) 9:00-17:00 every day\nBookings: 2-game-hour windows (about 1.5 real minutes each).\nA) 6 windows: 8-10, 10-12, 12-14, 14-16, 16-18, 18-20.\nB) 8 windows. C) 4 windows.\nSaturday open: Pet Show day (8:00-20:00). A sick pet can't enter, so cure it first.\nA) matches the Pet Shop and the Pet Show.\nOne game day = 15 real minutes, so the vet opens again soon.\nOpen: can you book while it is closed? Sent to Plan.\nStage pfu-2 (Plan's later row; an earlier row said pfu-4).",
+  "ch": "economy",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793404435793,
+      "text": "Approved: you decided it in chat (31 Oct): B, 7:00-23:00."
+    }
+  ],
+  "created": 1793397142216,
+  "id": "economy-vet-hours",
+  "kind": "plan",
+  "needs": [
+    "plan-vet-station",
+    "rules-vet-visit"
+  ],
+  "order": 4,
+  "short": "Vet open 7:00-23:00 every day (8 booking windows)",
+  "source": "chat 2026-10-30: Schedules and economy chat, from board rows of Plan and Game rules",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Vet station opening hours",
+  "updated": 1793404435793
+}

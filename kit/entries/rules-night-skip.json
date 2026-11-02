@@ -1,0 +1,25 @@
+{
+  "blockedBy": "",
+  "body": "1. At night, when every player online is in their own bed, the night skips to 7:00. Alone: your bed is enough.\n2. A friend visiting your house counts only once they're in their own bed.\n3. Not everyone in bed: the night goes on as today (5 real minutes).\n4. The skip is saved online once, so every player's clock jumps together.\n5. Old game versions update themselves first, at the next calm moment.\n6. While you sleep, your pets sleep too.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793396708589,
+      "text": "Done: approved by you in chat, 30 Oct."
+    }
+  ],
+  "created": 1793396506885,
+  "id": "rules-night-skip",
+  "kind": "rule",
+  "needs": [
+    "q-n1-sleep"
+  ],
+  "order": 304,
+  "short": "Night skips to 7:00 when every player online is in their own bed",
+  "source": "chat 30 Oct 2026: Game rules chat, from q-n1-sleep and Plan red team 02",
+  "stage": "pfu-1",
+  "status": "approved",
+  "title": "Night skip: how it works",
+  "updated": 1793396708589
+}

@@ -1,0 +1,21 @@
+{
+  "body": "31 Oct, Karolis: one model per type (my version only), and NO animation redo.\nNow (book v164): the tubes are back exactly where the Model movements maze trick and wheel run were made (the game places this gear at 4.4 size, as the movements pack says; the hamster fits the tubes at that size). Added only things that don't move the paths: round elbows at the joints, a firmer tube colour, an axle with 4 spokes so the wheel sits on its stand.\nPick in Model Compare → Hamster wheel and tube maze (🔔).",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793483028091,
+    "id": "hamsterplay"
+  },
+  "comments": [],
+  "created": 1793482400000,
+  "id": "objects-fix-hamster-maze",
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [],
+  "short": "Check: tubes as the movements use them; nothing to redo",
+  "source": "board moves-20261031-trough-basket-maze",
+  "stage": "pfu-5",
+  "status": "approved",
+  "title": "Hamster wheel and tube maze: ready for the existing movements",
+  "updated": 1793483110000
+}

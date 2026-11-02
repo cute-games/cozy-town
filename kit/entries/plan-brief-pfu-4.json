@@ -1,0 +1,63 @@
+{
+  "blockedBy": "",
+  "body": "Build brief. All living and non-living models picked by Karolis (31 Oct).\nVET CLINIC: clinic, inside, exam table, big-pet platform, scale, shelf, booking desk, seats, coffee table, treat; 4 vets + lobby nurse. Fits rules-vet-visit. When the clinic is in the game, sickness (stage 2) is switched on.\nBIG-NEEDS PETS (rules-big-needs-pets): monkey and seal = animal license level 1 + pet yard L3 + their home; bear = license level 3 + yard L3 + cave; snake = license level 1 + glass tank, no yard level. Pet shop shows them locked ('🔒 Pet yard level 3', '🔒 Animal license 3' ...); Ms. Paws names the first missing thing in this order: Pet care level, pet yard level, home, license. Bear and seal wait outside buildings (they do come into the vet station); monkey and snake follow everywhere. Never called 'exotic'.\nANIMAL LICENSE (rules-animal-license, approved): earned from Pet Show top-3 finishes plus healthy weeks, counted from the update (stage 5). So big pets can only be bought once stage 5 is live.\nModel pack: tools/model-pack/ in the book. Today's pets redrawn to the picked models.\nMOVES: moves-pet-wait-outside (bear and seal by the door), moves-vet-bigpets (big-pet table), moves-pet-seal-flippers.\nSCREENS: screens-shop-locks, screens-snake-tank.\nMODELS: living pack v3 (book tools/living-pack/, 57 items, all picked) + non-living model pack (tools/model-pack/).\nPLACEMENTS: vet clinic spot in claude/pfu-placements.json.\nFAVOURITE TOYS (rules-pet-brain-details): monkey frisbee, seal ball, bear squeaky toy, snake toy mouse (PET_TOY in js/01-models.js has none for new pets: the Play button would break). A big-needs pet's home counts as its toy at home.\nPRICES (economy-pfu-prices, approved): normal pets 200; monkey, seal, bear, snake 400. Homes: climbing tree 400, glass tank 400, pond 700, cave den 700, dog house 180. Beds 80 / 100 / 120; food bowl 30, water bowl 30, pet toy box 60. Every pet toy 20 (feather toy 25); today's toys go up to 20, owned toys stay. Training gear 150-300 (list in economy-pfu-prices). Pet accessories 40 each. Farm animals and horses not for sale.\nNEW PET SHOP (model-petshop-new, approved): 3 open floors as one room, 14 x 10, Map spot x 11..25, z 10.6..20.6. Game work: step height per staircase, stair zones, blockers for handrails and the open-middle railing, pet-follow path on the stairs, a camera that follows 3 floors without hitting slabs (moves-petshop-stairs, moves-petshop-spots).\nWAITING FOR KAROLIS: objects-petshop-fixes (stairs: deeper landing or shorter handrail; snake: wider hide or sleeps stretched); then Objects fixes the models.\nNEW PETS PLAY: favourite toy play (approved): monkey frisbee, seal ball, bear squeaky toy, snake toy mouse; frisbee + mouse models: Karolis's pick (model-toys-frisbee-mouse). Snake sleeps coiled. Objects fixes still open: terrarium branch/rock out of the hide, open-top snake basket, hamster maze scale.",
+  "ch": "plan",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793402295737,
+      "text": "What changed: all models picked; big pets need license (from Pet Show)."
+    },
+    {
+      "act": "chat",
+      "at": 1793403524940,
+      "text": "Game rules chat: updated with today's last rules (shop hint order, bear and seal wait outside, license approved).\nReady for your OK."
+    },
+    {
+      "act": "chat",
+      "at": 1793403631542,
+      "text": "Approved: everything in it you already decided in chat (30-31 Oct).\nRecorded by the Game rules chat; Plan told."
+    },
+    {
+      "act": "chat",
+      "at": 1793410821985,
+      "text": "Added: moves, screens and placements for this stage."
+    },
+    {
+      "act": "chat",
+      "at": 1793458677972,
+      "text": "Game rules chat: favourite toys for new pets added. Still approved."
+    },
+    {
+      "act": "chat",
+      "at": 1793459656438,
+      "text": "Plan: approved prices + new Pet Shop added. Still approved.\nWaits: your pick on Pet Shop fixes."
+    },
+    {
+      "act": "chat",
+      "at": 1793480741963,
+      "text": "Added: latest moves, people and map notes (31 Oct)."
+    }
+  ],
+  "created": 1793397122256,
+  "id": "plan-brief-pfu-4",
+  "kind": "plan",
+  "needs": [
+    "rules-vet-visit",
+    "plan-vet-station",
+    "rules-big-needs-pets",
+    "rules-animal-license",
+    "economy-pfu-prices",
+    "model-petshop-new",
+    "moves-petshop-stairs",
+    "moves-petshop-spots",
+    "objects-petshop-fixes"
+  ],
+  "order": 14,
+  "short": "Stage 4: all models picked; big pets locked by license",
+  "source": "chat 2026-10-30: Plan chat, game rules approved 30 Oct (board rules-20261030-all-approved, -approved2)",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Stage 4 build brief: game rules",
+  "updated": 1793480741963
+}

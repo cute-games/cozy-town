@@ -1,0 +1,25 @@
+{
+  "body": "Your rule (Decisions, Riding at the farm): a lesson first, then riding. 10 shared horses, nobody owns one, one rider per horse.\nWhat will be built: a riding instructor in the farmers' people style. Riding helmet, boots, gilet, a whistle or crop. 3 versions for your pick in Model Compare (Farm animals topic).\nNot built yet: the building chat makes it.",
+  "ch": "living",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Approved: same as Riding instructor (farm coach), you kept Ieva and Stan (31 Oct)."
+    }
+  ],
+  "created": 1793397093496,
+  "id": "model-horse-instructor",
+  "kind": "model",
+  "needs": [
+    "q-pfu-riding"
+  ],
+  "old": true,
+  "order": 7,
+  "short": "Merged into Riding instructor (Ieva and Stan)",
+  "source": "chat 30 Oct: board row from Decisions (horse instructor)",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Horse instructor (riding lessons)",
+  "updated": 1793417100000
+}

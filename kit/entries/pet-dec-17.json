@@ -1,0 +1,16 @@
+{
+  "blockedBy": "",
+  "body": "#: 17\nDecision: Pets learn tricks, with training gear per pet type\nNotes: Pets start with 1 trick and learn more by practising with you in the pet yard; at the show they only do tricks they know, and practised tricks have a bigger gold zone. Each pet type trains on its own gear (new models), e.g. dogs an agility course, snakes dance to a flute",
+  "ch": "rules",
+  "comments": [],
+  "created": 1793323126942,
+  "id": "pet-dec-17",
+  "kind": "decision",
+  "needs": [],
+  "order": 263,
+  "source": "Pet update: plan › Decisions",
+  "stage": "pfu-5",
+  "status": "approved",
+  "title": "Pet decision 17: Pets learn tricks, with training gear per pet type",
+  "updated": 1793323126942
+}

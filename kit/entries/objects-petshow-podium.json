@@ -1,0 +1,32 @@
+{
+  "body": "Plan A OK'd (31 Oct), now built (book v145), Model Compare → Pet Show:\n1) Podium: 3 blue steps, 1st in the middle (0.9 high, gold 1), 2nd left (silver 2), 3rd right (bronze 3), white tops, paw on step 1. 3.9 x 1.0 x 1.6 units.\n2) Stage for Sir Barkley behind it: low wooden stage with steps, blue back panel, gold Pet Show banner, paw signs, two ribbon rosettes, bunting, flower pots. 4.7 x 3.5 x 4.4 with the podium.\n3) License card in the hand: 0.36 x 0.24 units, vintage paper card like the Screens card: shield with a paw, ANIMAL LICENSE, your name, level stars, Certified stamp (gold TOP LEVEL at level 3), Signed: Sir Barkley. Levels 1-3.\nReviewer: podium 7.5, stage 8, card 9/10.\nPick in Model Compare → Pet Show (🔔).",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793461957293,
+    "id": "only-show-stage"
+  },
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793461213908,
+      "text": "a"
+    },
+    {
+      "act": "chat",
+      "at": 1793462700000,
+      "text": "Thanks. All 3 are marked picked: podium, stage, license card. You said the podium must not block the stage, so I built the whole area in the park as a new card: Model Compare → Pet Show → Pet Show area. The podium now stands beside the stage, and the judges' table sits at the other front corner."
+    }
+  ],
+  "created": 1793459563364,
+  "id": "objects-petshow-podium",
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [],
+  "short": "OK'd: podium, stage and license card. The layout is in the new card Pet Show area",
+  "source": "board moves-20261031-podium-card",
+  "stage": "pfu-5",
+  "status": "approved",
+  "title": "Pet Show podium + license card",
+  "updated": 1793462700000
+}

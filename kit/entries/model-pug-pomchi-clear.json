@@ -1,0 +1,34 @@
+{
+  "body": "Your notes: more pug, more pomchi, keep it cartoon.\nPug: flat dark mask, big round eyes, folded ears, wrinkle lines, curly tail, stocky legs.\nPomchi: fluffy round body, ruff, upright pointy ears with pink inside, plume tail on the back.\nEach card has Version: New / Today (game).",
+  "ch": "living",
+  "cmp": {
+    "at": 1793423000000,
+    "id": "only-age-pug"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793403023241,
+      "text": "Built round 40. Reviewer: pug 8.5, pomchi 8.5. Pomchi card: only-age-pomchi."
+    },
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Done: pug nose and mouth show, rings gone. Pomchi: today's kept."
+    }
+  ],
+  "created": 1793403023241,
+  "kind": "model",
+  "needs": [],
+  "order": 12,
+  "pics": [
+    "img/pug-new.jpg",
+    "img/pomchi-new.jpg"
+  ],
+  "short": "You kept the new pug and today's pomchi",
+  "source": "chat 31 Oct: Living things models, round 40",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Pug and pomchi: easy to recognise",
+  "updated": 1793409800000
+}

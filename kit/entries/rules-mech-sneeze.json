@@ -1,0 +1,25 @@
+{
+  "blockedBy": "",
+  "body": "Starts about 15 minutes before it gets sick. Fix the need and it stops.\nWhy: a fair last chance.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793396474945,
+      "text": "Done: approved by you in chat, 30 Oct."
+    }
+  ],
+  "created": 1793395983846,
+  "id": "rules-mech-sneeze",
+  "kind": "rule",
+  "needs": [
+    "rules-sickness"
+  ],
+  "order": 302,
+  "short": "Warning: a pet sneezes now and then before getting sick",
+  "source": "chat 30 Oct 2026: Game rules red team, suggested mechanic",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Warning: a pet sneezes now and then before getting sick",
+  "updated": 1793396474945
+}

@@ -198,6 +198,23 @@ const SFX={
   pet(){tone(880,.1,'sine',.12,0,1250);tone(1175,.12,'sine',.1,.1,1450);},
   woof(){tone(380,.09,'square',.07,0,240);tone(380,.09,'square',.06,.15,220);},
   meow(){tone(700,.32,'sine',.1,0,520);},
+  /* 🐾 the big-needs pets and the tank light (pets and farm update, stage 4b): the book's tools/sounds.html recipes as they are */
+  monkey(){tone(440,.12,'sine',.12,0,640);tone(460,.12,'sine',.12,.16,660);tone(620,.28,'triangle',.11,.34,980);},
+  seal(){tone(560,.11,'sawtooth',.05,0,380);tone(600,.11,'sawtooth',.05,.17,400);},
+  bear(){tone(105,.4,'sawtooth',.05,0,80);tone(160,.3,'triangle',.09,.04,110);},
+  hiss(){for(let i=0;i<8;i++)tone(2800+Math.random()*1800,.05,'sawtooth',.012,i*.035);},
+  click(){tone(1800,.03,'square',.04);tone(1200,.03,'square',.03,.05);},
+  /* 🏆🪪 the Pet Show's join countdown and the license stamp (stage 5): tools/sounds.html recipes as they are */
+  tick(){tone(880,.06,'triangle',.09);},
+  stamp(){tone(140,.12,'triangle',.3,0,70);tone(85,.12,'sine',.28,.01);},
+  /* 🐴 the farm (stage 6): tools/sounds.html recipes as they are */
+  neigh(p=1){[1150,1080,1180,1020,1100,940,980,820].forEach((f,i)=>tone(f*p,.07,'sawtooth',.04,i*.055));tone(420*p,.16,'square',.035,.5,260*p);},
+  clop(){tone(760,.04,'triangle',.09,0,520);tone(640,.04,'triangle',.08,.13,460);tone(760,.04,'triangle',.09,.3,520);tone(640,.04,'triangle',.08,.43,460);},
+  snort(){tone(260,.2,'sawtooth',.05,0,170);for(let i=0;i<3;i++)tone(1800+Math.random()*900,.04,'sawtooth',.01,.05+i*.04);},
+  moo(p=1){tone(150*p,.65,'sawtooth',.05,0,118*p);tone(300*p,.65,'sine',.05,0,236*p);},
+  baa(p=1){for(let i=0;i<6;i++)tone((430+(i%2?35:0))*p,.08,'sawtooth',.04,i*.07);},
+  oink(p=1){tone(300*p,.09,'square',.06,0,430*p);tone(280*p,.09,'square',.05,.14,390*p);},
+  cluck(){[0,.1,.2].forEach(d=>tone(820,.05,'square',.04,d,620));tone(1100,.16,'square',.04,.34,1350);},
   squeak(){tone(1400,.08,'sine',.08,0,1800);tone(1500,.08,'sine',.07,.1,1900);},
   quack(){tone(520,.12,'square',.07,0,380);tone(480,.1,'square',.06,.14,340);},yip(){tone(900,.07,'square',.06,0,1200);tone(950,.07,'square',.05,.11,1250);},
   jump(){tone(330,.16,'triangle',.14,0,660);},
@@ -222,6 +239,7 @@ const SFX={
   aww(){tone(587,.16,'sine',.08,0,466);tone(466,.24,'sine',.07,.15,392);},
   ring(){for(let k=0;k<2;k++)for(let i=0;i<8;i++)tone(i%2?1047:1319,.06,'triangle',.11,k*.75+i*.07);},
   boo(){tone(190,.34,'sine',.11,0,95);tone(760,.14,'triangle',.035,.04,260);},   /* 👻 a soft, friendly BOO */
+  sneeze(){tone(700,.16,'sine',.07,0,1150);tone(1500,.1,'square',.045,.22,450);for(let i=0;i<4;i++)tone(2500+Math.random()*1500,.04,'sawtooth',.012,.24+i*.03);},   /* 🤧 a pet that will soon get sick (the book's sounds page, as given) */
   spook(k){if(k==='skel'){for(let i=0;i<4;i++)tone(1400+i*120,.03,'triangle',.05,i*.07);}else if(k==='zombie')tone(120,.5,'sine',.1,0,88);else if(k==='bats'){for(let i=0;i<6;i++)tone(900+(i%2)*200,.025,'square',.018,i*.06);}else if(k==='pumpkin'){tone(240,.4,'sine',.09,0,180);tone(480,.12,'triangle',.03,.1,360);}else this.boo();},   /* 👻💀🧟🦇🎃 soft scare sounds (run 4): quiet and short */
 };
 function playTune(){const s=[0,4,7,12,7,4,5,9,12,9,7,4,0];s.forEach((n,i)=>tone(523.25*Math.pow(2,n/12),.3,'triangle',.13,i*.2));}

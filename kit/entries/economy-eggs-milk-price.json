@@ -1,0 +1,25 @@
+{
+  "blockedBy": "",
+  "body": "A) 5 each (10 a day)\nB) 10 each (20 a day) (my pick)\nC) 20 each (40 a day)\nEach player collects eggs and milk once per game day, so up to 4 times a real hour.\nOnly farm eggs and milk can be sold. The Market still sells eggs and milk for 6, so nobody can buy cheap and sell dear.\nCompare: mailbox 10-20 a day, litter 30 a day, a job day about 290.\nThe game has no selling yet: a Sell button at the Market, farm goods only.",
+  "ch": "economy",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793404435793,
+      "text": "Approved: you decided it in chat (31 Oct): B, 10 each."
+    }
+  ],
+  "created": 1793404157503,
+  "id": "economy-eggs-milk-price",
+  "kind": "question",
+  "needs": [
+    "rules-farm-chores"
+  ],
+  "order": 5,
+  "short": "Market pays 10 each for farm eggs and milk",
+  "source": "chat 2026-10-31: Schedules and economy, from rules-farm-chores",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Farm eggs and milk: what the Market pays",
+  "updated": 1793404435793
+}

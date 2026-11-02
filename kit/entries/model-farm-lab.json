@@ -1,0 +1,47 @@
+{
+  "body": "St. Bernard (your photo). Now 3 versions: asleep curled up (kept), asleep flat on its side, standing (legs bend, can walk between spots).\nPick in Model Compare: Farm animals → Farm dog.",
+  "ch": "living",
+  "cmp": {
+    "at": 1793413000000,
+    "id": "only-farm-lab"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793391400000,
+      "text": "Redone as a St. Bernard sleeping like your photo."
+    },
+    {
+      "act": "chat",
+      "at": 1793400712000,
+      "text": "Done: side sleep rebuilt like the curled dog."
+    },
+    {
+      "act": "chat",
+      "at": 1793402060000,
+      "text": "Done: standing tail rebuilt (round, low, curl up, white tip). Need your pick."
+    },
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Approved: you decided it in Model Compare (31 Oct)."
+    }
+  ],
+  "created": 1793352910000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/dog-stand.jpg",
+    "img/dog-stand-tail.jpg",
+    "img/dog-walk.jpg",
+    "img/dog-side.jpg",
+    "img/dog-stbernard.jpg"
+  ],
+  "short": "Standing farm dog: new tail, low and curled",
+  "source": "chat 30 Oct: Living things models, round 30",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Farm dog: St. Bernard, 3 poses",
+  "updated": 1793409100000
+}

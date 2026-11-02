@@ -1,0 +1,35 @@
+{
+  "blockedBy": "",
+  "body": "Body language only (rule rules-sickness):\n- Head and tail low, slow walk, lies down a lot, sneezes.\n- Warning sneeze now and then before it gets sick (rules-mech-sneeze).\n- Every pet type, new pets too. Settings per type, like the shared set.\n- Friends see the real move too (Plan, 31 Oct).\n- Faces: a sad or sick mouth needs the Living chat (capybara mouth already asked).\nPicture: all 14 pet types and a warning sneeze.\nStage: 2, pet brain.",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793404837008,
+      "text": "Done: sick moves for all 14 pet types and the warning sneeze.\nFriends now see the real move, so the simple-copy cell is gone."
+    },
+    {
+      "act": "approve",
+      "at": 1793406511900,
+      "text": ""
+    }
+  ],
+  "created": 1793397092464,
+  "id": "moves-pet-sick",
+  "kind": "task",
+  "needs": [
+    "rules-sickness",
+    "rules-mech-sneeze",
+    "moves-pet-body-language"
+  ],
+  "order": 114,
+  "pics": [
+    "img/moves8-sick.gif"
+  ],
+  "short": "Sick look for every pet type. OK?",
+  "source": "board 30 Oct: rules-20261030-sick-moves, -sick-moves2, -mech-moves",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Sick pet: droop, slow, sneeze",
+  "updated": 1793406511900
+}

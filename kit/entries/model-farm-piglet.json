@@ -1,0 +1,32 @@
+{
+  "body": "Your decision: farm animals come only as babies and adults, babies never grow up. New piglet made from the adult pig you kept (same smooth round style): small (about knee height), bigger head, short legs, rounder. Pick in Model Compare: Farm animals → Pig, Age: Baby.",
+  "ch": "living",
+  "cmp": {
+    "at": 1793395000000,
+    "id": "only-farm-pig"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793393090000,
+      "text": "Viewer: 2 passes, 7/10, nothing above minor (thin outline, small at play distance)."
+    },
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Approved: you decided it in Model Compare (31 Oct)."
+    }
+  ],
+  "created": 1793393090000,
+  "kind": "model",
+  "needs": [],
+  "order": 4,
+  "pics": [
+    "img/farm-piglet.jpg"
+  ],
+  "source": "chat 30 Oct: Living things models, round 32",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Piglet: baby pig",
+  "updated": 1793409100000
+}

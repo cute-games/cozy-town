@@ -1,0 +1,21 @@
+{
+  "body": "31 Oct, Karolis: 'Pet shop counter is facing wall, needs to face coming in customers. Others approved.'\nFloor 3 path fix: OK'd by Karolis.\nCOUNTER (book v151): it stood front-right with its front to the front wall. Now it stands along the right wall at (5.5, 2.4), front (paw + 'Pet Shop' sign) facing the middle of the shop and the door; the shopkeeper stands behind it, facing the customers. Free path all round (walk check: floor 1 100% reachable; staff get behind it from the front end). Reviewer 8/10.\nPick in Model Compare → Pet Shop inside (🔔).",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793464876447,
+    "id": "only-shop-room"
+  },
+  "comments": [],
+  "created": 1793464600000,
+  "id": "objects-petshop-walk",
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [],
+  "short": "OK'd 31 Oct: free paths, counter faces customers, one tree. In the model pack",
+  "source": "Karolis 31 Oct: player must move around the shop with no blocked path",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Pet Shop: counter turned to face the customers (floor 3 path OK'd)",
+  "updated": 1793465160000
+}

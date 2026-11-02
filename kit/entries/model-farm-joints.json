@@ -1,0 +1,41 @@
+{
+  "body": "Model movements asked (your wish: real moves, no bending): same look as the cow and hen you kept.\nA) Cow: neck bends down to the grass, head turns, knees bend, tail hangs down.\nB) Hen: short neck, legs bend at the hock, tail fan on the body.\nPick in Model Compare: Farm animals → Cow, Chicken.",
+  "ch": "living",
+  "cmp": {
+    "at": 1793411000000,
+    "id": "only-farm-cow"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793398412113,
+      "text": "Done: joints connected in rest and test poses."
+    },
+    {
+      "act": "chat",
+      "at": 1793401720000,
+      "text": "Done: your approved cow again; neck hidden inside, shows only when grazing. Need your pick."
+    },
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Approved: you decided it in Model Compare (31 Oct)."
+    }
+  ],
+  "created": 1793398412113,
+  "kind": "model",
+  "needs": [],
+  "order": 9,
+  "pics": [
+    "img/joint-cow.jpg",
+    "img/joint-cow-graze.jpg",
+    "img/joint-hen.jpg",
+    "img/joint-hen-peck.jpg"
+  ],
+  "short": "Cow: back to the one you approved, neck hidden",
+  "source": "chat 31 Oct: Living things models, round 36",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Cow and hen: joints for real moves",
+  "updated": 1793409100000
+}

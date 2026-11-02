@@ -1,0 +1,24 @@
+{
+  "blockedBy": "Starts after the Pets and Farm Update (you said: the update after next)",
+  "body": "You OK'd every move (31 Oct). Polishing waits for the update after next.\nList to polish (from the checks):\n- Clips that jump back when they restart.\n- People and pets on stairs (no knees: people hop each step, the dog tips up).\n- Hands that stop short (milking, eggs, Sir Barkley's card).\n- Owl perch inside the leaves, seal bigger than its slide, monkey head at the bar.\n- Cow head still a box shape; capybara tub, monkey shows its back.\n- Horse stops at the stall gate; milk hard to see.\n- New joints from the Living chat to use: duck and owl wing flaps, snake tongue flick.",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793460600000,
+      "text": "Noted from chat (31 Oct): all moves OK'd; polish in the update after next.\nNothing to do now."
+    }
+  ],
+  "created": 1793460600000,
+  "id": "moves-polish-later",
+  "kind": "task",
+  "needs": [],
+  "order": 130,
+  "pics": [],
+  "short": "Moves polish comes in the update after next",
+  "source": "Karolis in chat, 31 Oct: all moves approved; polish them in the NEXT NEXT update",
+  "stage": "",
+  "status": "blocked",
+  "title": "Polish all moves (update after next)",
+  "updated": 1793460700000
+}

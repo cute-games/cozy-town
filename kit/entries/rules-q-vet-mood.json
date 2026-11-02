@@ -1,0 +1,24 @@
+{
+  "blockedBy": "",
+  "body": "Risk: skip care, pay the vet, get a happy pet for the Pet Show.\nA) Fully happy (as you wrote)\nB) Healthy, normal mood; care makes it happy",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793396474945,
+      "text": "Done: you picked B in chat, 30 Oct.\nRule 'How a vet visit works' line 5 updated."
+    }
+  ],
+  "created": 1793395983846,
+  "id": "rules-q-vet-mood",
+  "kind": "question",
+  "needs": [],
+  "old": true,
+  "order": 297,
+  "short": "After the vet: healthy, normal mood; your care makes it happy",
+  "source": "chat 30 Oct 2026: Game rules red team",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "After the vet: healthy, normal mood (decided 30 Oct)",
+  "updated": 1793396474945
+}

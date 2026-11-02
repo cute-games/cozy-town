@@ -1,0 +1,24 @@
+{
+  "blockedBy": "",
+  "body": "A) Free\nB) Small fee each ride",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793397867921,
+      "text": "Done: you picked A in chat, 31 Oct."
+    }
+  ],
+  "created": 1793397700275,
+  "id": "rules-q-ride-fee",
+  "kind": "question",
+  "needs": [],
+  "old": true,
+  "order": 311,
+  "short": "Rides after the lesson are free",
+  "source": "chat 31 Oct 2026: from Economy via Plan",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Rides after the lesson: free (decided 31 Oct)",
+  "updated": 1793397867921
+}

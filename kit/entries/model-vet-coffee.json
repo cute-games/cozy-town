@@ -1,0 +1,22 @@
+{
+  "body": "Round coffee table with 4 seats, mugs and cookies, for the vet staff.\nPicked in Model Compare.",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793395754000,
+    "id": "only-vet-coffee"
+  },
+  "comments": [],
+  "created": 1793395900000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/vet3-coffee-0.jpg"
+  ],
+  "short": "Picked: Staff coffee table",
+  "source": "chat 30 Oct: Non-living things models, vet station round 2",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Staff coffee table",
+  "updated": 1793402000000
+}

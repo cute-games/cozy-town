@@ -4,7 +4,7 @@
    from the 🛋️ Furniture app (free for the job) → tap 🎉 Finished! → the client walks in,
    looks around and gives you stars: right vibe, right amount, and neat (or messy!). */
 /* 🪙 a room pays 20 (no ⭐) / 50 (⭐) / 90 (⭐⭐) / 130 🪙 (⭐⭐⭐), 3 rooms a day; the room's Decorating level-up gives no extra coins */
-const DS_MAX=3,CL_ITEMS=new Map(),DS_PAY=st=>st>=2.5?130:st>=1.5?90:st>=.5?50:20;
+const DS_MAX=3,CL_ITEMS=new Map(),DS_PAY=st=>st>=2.5?140:st>=1.5?100:st>=.5?70:40;
 const DS_PLANTS=['plant','fern','bonsai','cactus','sunflower','lavender','flowers','tulips','rosebush'];
 const DS_TOYS=['teddy','toybox','castle','dollhouse','robot','rockinghorse','racecar','unicorn'];
 const DS_SEATS=['sofa','armchair'],DS_WALLY=['bed','bunkbed','wardrobe','shelf','dresser','mirror','tv','fireplace','fridge','stove','sink','washer','piano','desk','computer','gaming','clock','dollhouse','bath','cupboard','cupboardn','drawers','cornercup','tallcup'];
@@ -169,58 +169,83 @@ function revEnd(){const C=CUT;if(!C||!C.rev)return;scene.remove(C.p.root);CUT=nu
   const d=ds();setTimeout(()=>toast(d.done>=DS_MAX?`🌟 That's ${DS_MAX} clients! Great job today! More clients tomorrow.`:'🎨 Nice work! A new client will message you soon.',3.6),500);}
 
 /* 🏆 Pet Show — every Saturday in the park. Four pets take turns on stage, the judges hold up score cards,
-   and the pet with the most points wins. The other pets can do great, okay, badly — or even fall out of the show! */
-const PS={sx:-36.15,sz:22,top:.55,jx:-32.02,jz:[21.05,22,22.95],cam:[-34.05,24.1],jcam:[-35.75,22],out:[-33.4,25.5],rcam:[-33.35,22],
-  pad:[[-37.3,20.3],[-37.45,21.45],[-37.45,22.55],[-37.3,23.7]],pod:[[-36.05,22,.42],[-36.05,22.82,.3],[-36.05,21.18,.2]]};
-const PSX={judges:[],rivals:[],plates:[],on:false,rv:null,pick:null,pod:null,dirty:false};
+   and the pet with the most points wins. The other pets can do great, okay, badly — or even fall out of the show!
+   Pets and farm update, stage 5: the show stands in the book's Pet Show area (stage, podium beside it, judges' table at the other corner); every pet does
+   its own kind's tricks (COZY_MOVES.TRICKS, 3 per kind, only the ones it knows; tricks learned by practice have a bigger gold zone); friends in the park get
+   45 seconds to join and their pets take the town pets' places (4 a show, more: the next show right after), everyone watching the same show; the town pets'
+   results come from the shared clock (no dice); the healthy-week ribbon gives +1 from Granny Daisy; top 3 counts for the animal license, which Sir Barkley
+   hands over on the podium (rules-pet-show-friends, rules-tricks, rules-animal-license, story-barkley-license, screens-show-join, screens-license-card) */
+const PS={sx:-36.3,sz:22,top:.56,lx:-33.6,lz:22,cam:[-30.6,22],rcam:[-31.2,17.2],out:[-30.3,21.4],
+  jt:[-33.8,27.3,Math.atan2(-36.0+33.8,22-27.3)],   /* the judges' table: x, z, turned toward the stage */
+  pad:[[-36.85,20.35],[-36.95,21.15],[-36.95,22.85],[-36.85,23.65]],
+  pod:[[-36.0,16.9,.98],[-36.0,18.2,.68],[-36.0,15.6,.46]],   /* the podium's steps: 1st in the middle, 2nd, 3rd; x, z, top */
+  you:[-35.85,17.12],bark:[-35.86,17.86]};   /* the license hand-over: you on step 1, Sir Barkley on step 2 (moves-show-license) */
+const PSX={judges:[],rivals:[],on:false,rv:null,pick:null,dirty:false,gear:{}};
 const PS_TR=[1,3,4,6,7,9,10];   /* trick points (0-6) → Sir Barkley's card (1-10) */
+const PS_AIM=8,PS_JOIN=45,PS_V=2026110201;   /* a shared show: seconds to aim each trick; seconds friends get to join; the first build that shows friends' shows */
 const PS_JUDGES=[
   {n:'Lady Fluffington',i:'👒',k:'style',love:'fancy outfits',look:{skin:'#ffe0c2',hair:'#f2d16b',style:'bun',top:'#ff9ec4',bottom:'#ffffff',shoes:'#ff7aa8',dress:true,hat:'flowers',eyes:'sparkle'},
     hi:['Darling, I ADORE pets in fancy outfits! 👒','Hats, bow ties, glasses, capes… the more the better!','Fill all 4 outfit spots and I give a 10! ✨'],
     say:['No outfit at all? Oh dear!','A little plain. Try a hat or a scarf!','Cute! Maybe add one more thing?','So stylish! 💕','MAGNIFICENT outfit, darling! 👒']},
   {n:'Sir Barkley',i:'🎩',k:'trick',love:'tricks',look:{skin:'#d9a06b',hair:'#1f1a2e',style:'short',top:'#3d4a7a',bottom:'#2e2347',shoes:'#2e2347',hat:'tophat',glasses:'glasses'},
-    hi:['I judge the TRICKS! 🎩','Tap at just the right moment for a perfect trick!','The other pets practice a lot. Hit the gold to beat them!'],
+    hi:['I judge the TRICKS! 🎩','Tap at just the right moment for a perfect trick!','Practise on your training gear: new tricks, and a bigger gold zone!'],
     say:['Oopsie! Better luck next time!','Practice makes perfect!','A nice try!','Great tricks! 👏','BRAVO! A true superstar! 🌟']},
   {n:'Granny Daisy',i:'🌼',k:'happy',love:'happy pets',look:{skin:'#f6d3bb',hair:'#d8d8e4',style:'bun',top:'#7fdcb5',bottom:'#9a6a43',shoes:'#3d2c5e',dress:true,glasses:'glasses'},
-    hi:['I love a happy, loved pet! 🌼','Pet it, feed it and play with it before the show!','Full hearts means a 10 from me! 💗'],
+    hi:['I love a happy, loved pet! 🌼','Pet it, feed it and play with it before the show!','A green healthy-week ribbon? One more point from me! 💚'],
     say:['This poor pet needs some love!','A bit sad… give it cuddles!','Fairly happy. A treat would help!','What a happy pet! 😊','Such a happy, loved pet! 💗']}];
 const PS_KIDS=['Mia','Leo','Ava','Noah','Lily','Max','Zoe','Finn','Ella','Sam','Ruby','Theo'];
-const TRICKS=[['🌀','Spin'],['⬆️','Big jump'],['🤸','Flip'],['💃','Dance'],['🔄','Roll over'],['🙌','High five']];
 const PS_FLOP={sleep:{e:'😴',say:['Oh dear, a nap on stage!','Zzz… that is not a trick!','Wake up, sleepyhead! 💤']},
   butterfly:{e:'🦋',say:['Come back, little one!','A butterfly?! Focus!','Oh my, it ran away! 🦋']}};
+/* 🎩 tricks (rules-tricks): 3 per kind from the moves pack; a pet knows d.tr of them (1 at first); 5 practice days on its training gear (one counts a game day) teach the next */
+const trList=k=>COZY_MOVES.TRICKS[k]||COZY_MOVES.TRICKS.dog;
+const trLen=(k,id)=>COZY_MOVES.TRICK_LEN[COZY_MOVES.TRICK_KIND(k)+'.'+id]||COZY_MOVES.TT;
+const trKnown=d=>clamp(d.tr|0||1,1,3);
+const TR_GEAR={'train:dog':'dog','train:cat':'cat','train:bunny':'bunny','train:hamster':'hamster','train:capybara':'capy','train:owl':'owl','train:monkey':'monkey','train:seal':'seal','train:bear':'bear','train:snake':'snake'};
+function trPractice(e){const d=e.d;if(d.sick||trKnown(d)>=3)return;if(d.tq===S.day)return;d.tq=S.day;d.tp=(d.tp|0)+1;   /* one practice day counts a game day; a sick pet can't practise (gearUse) */
+  if(d.tp>=5){d.tr=trKnown(d)+1;d.tp=0;const t=trList(petKind(d))[d.tr-1];SFX.yay();setTimeout(()=>toast(`🎩 ${d.name} learned a new trick: ${t[1]}! Show it at the Pet Show on Saturday 🏆`,4.6),700);}
+  else setTimeout(()=>toast(`🎩 Practice day ${d.tp} of 5: ${d.name} is learning ${trList(petKind(d))[trKnown(d)][1]}!`,3.6),700);}
+function trLine(d){const L=trList(petKind(d)),n=trKnown(d);return L.map(([,nm],i)=>i<n?'✅ '+nm:i===n?`🔒 ${nm} (practice ${d.tp|0}/5)`:'🔒 '+nm).join(' · ');}
+/* where a trick is done (the stage, or the lawn in front of it for a trick on gear) and how big its path is: measured once on a model of its kind */
+const TRX={};
+function trSpot(k,id){const key=COZY_MOVES.TRICK_KIND(k)+'.'+id;if(TRX[key])return TRX[key];const G=COZY_MOVES.trickGear(k,id);
+  if(!G)return TRX[key]={x:PS.sx,y:PS.top+.03,z:PS.sz,ry:Math.PI/2,G:null};
+  const m=makePet(k,PET_TYPES[k].cols[0]),v=new THREE.Vector3(),L=trLen(k,id);let x0=9,x1=-9,z0=9,z1=-9;
+  for(let t=0;t<=L;t+=.1){COZY_MOVES.play(m,'trick',t,{kind:k,trick:id,gr:1,h:G.h,water:G.water});m.root.updateMatrixWorld(true);m.b.getWorldPosition(v);x0=Math.min(x0,v.x);x1=Math.max(x1,v.x);z0=Math.min(z0,v.z);z1=Math.max(z1,v.z);}
+  m.root.traverse(o=>{if(o.isMesh)o.geometry.dispose();});
+  return TRX[key]={x:PS.lx-(x0+x1)/2,y:G.y?-G.y:0,z:PS.lz-(z0+z1)/2,ry:0,G};}   /* gear tricks face along the lawn (+z), their path centred in front of the stage */
+function trGear(sp){if(!sp.G||!TR_GEAR[sp.G.id])return null;const id=TR_GEAR[sp.G.id],G=sp.G,o=new THREE.Group(),g=new THREE.Group();GEAR_B[id](g);g.scale.setScalar(G.scale||1);
+  g.position.set(G.x||0,G.y||0,G.z||0);g.rotation.y=G.rotY||0;o.add(g);o.position.set(sp.x,sp.y,sp.z);o.rotation.y=sp.ry;o.userData.m=g;scene.add(o);return o;}
+function trGearOff(o){if(!o)return;scene.remove(o);o.traverse(q=>{if(q.isMesh)q.geometry.dispose();});}
 function psTargetLabel(){if(!S)return'🏆 Pet Show';if(!isShowDay())return'🏆 Pet Show is on Saturday';if(showDone())return'🏆 See you next Saturday!';if(S.time<PS_ON)return`🏆 Pet Show starts at ${PS_ON}:00`;if(S.time>=PS_OFF)return'🏆 Pet Show is over for today';return'🏆 Enter the Pet Show!';}
 function psScore(d){return{style:petStyle(d),happy:clamp(Math.round(d.happy/20),1,5)};}
-function psScore10(d,pts){return{style:petStyle(d)*2,trick:PS_TR[clamp(pts|0,0,6)],happy:clamp(Math.ceil(d.happy/10),1,10)};}
+function psScore10(d,pts){return{style:petStyle(d)*2,trick:PS_TR[clamp(pts|0,0,6)],happy:Math.min(10,clamp(Math.ceil(d.happy/10),1,10)+(petRib()?1:0))};}   /* 💚 the healthy-week ribbon: one more point from Granny Daisy */
+const psSec=()=>gameMs()/1000;
 
-function buildPetShow(){
-  PS_JUDGES.forEach((J,i)=>{const p=makePerson(J.look);sitPose(p);bakePerson(p);p.root.position.set(PS.jx+.06,.5-.62,PS.jz[i]);p.root.rotation.y=-Math.PI/2;p.root.visible=false;scene.add(p.root);
+function buildPetShow(){const [jx,jz,ja]=PS.jt,c=Math.cos(ja),s=Math.sin(ja);
+  PS_JUDGES.forEach((J,i)=>{const p=makePerson(J.look);sitPose(p);bakePerson(p);const lx=i-1,lz=-.71;p.root.position.set(jx+lx*c+lz*s,.52-.62,jz-lx*s+lz*c);p.root.rotation.y=ja;p.root.visible=false;scene.add(p.root);   /* in the judges' table's chairs */
     const tg=label(J.i+' '+J.n,.2);tg.position.y=2.34+i*.26;p.root.add(tg);   /* (run 4, stage 3: the three judges' names at three heights, so they read from the square instead of piling up) */
     /* the score card is held in the judge's hand: it hangs off the arm and turns back upright every frame */
     const card=new THREE.Group();card.position.set(0,-.47,.03);card.visible=false;p.arms[1].add(card);box(card,.035,.44,.035,'#9a6a43',0,-.02,.0,{ol:false});
-    const pl=signPlane(J.n,.82,.17,'#ffffff','#3d2c5e');pl.position.set(-33.16,.86,PS.jz[i]);pl.rotation.y=-Math.PI/2;pl.visible=false;scene.add(pl);PSX.plates.push(pl);
     const j={J,p,tg,card,cm:null,t:Math.random()*6,up:0};
-    j.target={x:PS.jx-.2,z:PS.jz[i],r:2.0,icon:'💬',label:'Talk to '+J.n,obj:p.root,act:()=>{p.wave=1.2;SFX.talk();toast(J.i+' '+J.n+': “'+pick(J.hi)+'”',3.8);}};
-    PSX.judges.push(j);});
-  const pod=new THREE.Group();pod.visible=false;pod.position.y=PS.top;scene.add(pod);PSX.pod=pod;
-  PS.pod.forEach(([x,z,h],i)=>{const c=['#ffd45c','#d8dcea','#e8a26b'][i],b=new THREE.Group();b.position.set(x,0,z);pod.add(b);
-    box(b,.72,h,.78,c,0,0,0,{ol:.015});box(b,.76,.04,.82,'#ffffff',0,h,0,{ol:.01});
-    const n=signPlane(['1','2','3'][i],.34,Math.min(.3,h*.85),c,'#3d2c5e');n.position.set(.375,h*.5,0);n.rotation.y=Math.PI/2;b.add(n);});}
-/* today's three other pets (the same all day, so they're there before the show starts) */
+    j.target={x:p.root.position.x+.6*s,z:p.root.position.z+.6*c,r:2.0,icon:'💬',label:'Talk to '+J.n,obj:p.root,act:()=>{p.wave=1.2;SFX.talk();toast(J.i+' '+J.n+': “'+pick(J.hi)+'”',3.8);}};
+    PSX.judges.push(j);});}
+/* today's three town pets (the same all day, so they're there before the show starts) */
 function psRivals(){const r=seeded(S.day*53+7),pk=a=>a[Math.floor(r()*a.length)],wp=w=>{let x=r()*w.reduce((a,b)=>a+b[0],0);for(const [p,v] of w){x-=p;if(x<=0)return v;}return w[w.length-1][1];};
-  const types=Object.keys(PET_TYPES).sort(()=>r()-.5),kids=PS_KIDS.slice().sort(()=>r()-.5),out=[],used=new Set();
+  const types=Object.keys(PET_TYPES).filter(k=>!PET_TYPES[k].big).sort(()=>r()-.5),kids=PS_KIDS.slice().sort(()=>r()-.5),out=[],used=new Set();   /* (big-needs pets left out: old versions draw the same rivals) */
   for(let i=0;i<3;i++){const t=types[i%types.length],T=PET_TYPES[t];let name=pk(T.names);for(let k=0;used.has(name)&&k<8;k++)name=pk(T.names);used.add(name);
     const o={},n=wp([[5,1],[20,2],[35,3],[40,4]]),slots=PSLOTS.map(x=>x[0]).sort(()=>r()-.5).slice(0,n);
     for(const sl of slots)o[sl]=pk(Object.keys(ACCS).filter(k=>ACCS[k].s===sl));
     out.push({type:t,col:pk(T.cols),name,owner:kids[i],outfit:o,style:2+2*n,happy:wp([[1,6],[2,7],[3,8],[3,9],[2,10]])});}
+  const mine=new Set((S.pets||[]).map(d=>d.name));for(const o of out)if(mine.has(o.name)){const n=PET_TYPES[o.type].names.find(x=>!mine.has(x)&&!used.has(x));if(n){used.add(n);o.name=n;}}   /* (picture pass 3: a town pet never has the name of one of yours, so 'Splash' on the stage is your seal, not a capybara; no extra draw: the rest of the day's pets stay the same) */
   return out;}
-const psRot=i=>Math.PI/2+(i===0?-.35:i===2?.35:0);
+const psRot=i=>Math.PI/2+(i===0?-.35:i===3?.35:0);
 function psRefresh(){if(CUT&&CUT.show){PSX.dirty=true;return;}PSX.dirty=false;for(const r of PSX.rivals)scene.remove(r.m.root);PSX.rivals=[];if(!S)return;PSX.rv=psRivals();
-  PSX.rv.forEach((R,i)=>{const m=makePet(R.type,R.col);addOutfit(m,{outfit:Object.assign({},R.outfit)});m.root.visible=false;scene.add(m.root);
-    const tg=label(R.name,.2);tg.position.y=petTagY(R.type);m.root.add(tg);const r={R,m,tg,busy:false};PSX.rivals.push(r);psHome(r,i);});}
-function psHome(r,i){const pd=PS.pad[i],m=r.m;m.root.position.set(pd[0],PS.top+.08,pd[1]);m.root.rotation.set(0,psRot(i),0);m.b.rotation.set(0,0,0);m.b.position.set(0,0,0);if(m.head)m.head.rotation.x=0;m.legs[0].rotation.x=0;r.busy=false;}
+  PSX.rv.forEach((R,i)=>{const r=psModel(R);PSX.rivals.push(r);psHome(r,i);});}
+function psModel(R){const m=makePet(R.type,R.col);addOutfit(m,{outfit:Object.assign({},R.outfit)});m.root.visible=false;scene.add(m.root);
+  const tg=label(R.name,.2);tg.position.y=petTagY(R.type);m.root.add(tg);return{R,m,tg,busy:false};}
+function psHome(r,i){const pd=PS.pad[i],m=r.m;m.root.position.set(pd[0],PS.top+.03,pd[1]);m.root.rotation.set(0,psRot(i),0);m.b.rotation.set(0,0,0);m.b.position.set(0,0,0);if(m.head)m.head.rotation.x=0;if(m.legs[0])m.legs[0].rotation.x=0;r.busy=false;}
 function psDay(){psRefresh();if(S&&isShowDay())setTimeout(()=>{if(S&&PLAYING&&psLeft())toast(`🏆 It's Pet Show day! The show is in the park from ${clockStr(PS_ON)} to ${clockStr(PS_OFF)}. Dress up your pet!`,4.6);},4800);}
 function psUpdate(dt){const on=!!(S&&CUR&&CUR.id==='city'&&(psOpen()||CUT&&CUT.show||UI.open&&PSX.pc&&UI.onClose===PSX.pc));PSX.on=on;
-  for(const pl of PSX.plates)pl.visible=on;
   const judging=!!(CUT&&CUT.show&&/^r?(jin|judge)$/.test(CUT.stage));
   for(const j of PSX.judges){const p=j.p,a=p.arms[1];p.root.visible=on&&!(PHO.on&&ptInShot(p.root.position.x,p.root.position.z));if(!on)continue;   /* (run 4 finish: they step out of a photo shoot like anyone else: two sat right beside the camera at the stage background) */j.t+=dt;j.tg.visible=!judging;
     if(!j.up)p.head.rotation.y=Math.sin(j.t*.45+j.J.n.length)*.3;else p.head.rotation.y*=.85;
@@ -228,59 +253,146 @@ function psUpdate(dt){const on=!!(S&&CUR&&CUR.id==='city'&&(psOpen()||CUT&&CUT.s
     else if(j.up){const e=Math.min(1,dt*9);a.rotation.z=lerp(a.rotation.z,2.75,e);a.rotation.x=lerp(a.rotation.x,-.15,e);}
     else{a.rotation.z*=.85;a.rotation.x=lerp(a.rotation.x,-.55,Math.min(1,dt*6));}
     j.card.visible=!!j.up;if(j.up){const k=Math.min(1,j.up+=dt*3);j.card.scale.setScalar(.2+.8*(1-Math.pow(1-k,3)));j.card.rotation.set(-a.rotation.x,0,-a.rotation.z,'ZYX');}}
-  for(const r of PSX.rivals){r.m.root.visible=on;if(on&&!r.busy)animPet(r.m,dt,false);}
-  if(PSX.pod)PSX.pod.visible=on&&!!(CUT&&CUT.show&&CUT.pod);}
+  const inShow=CUT&&CUT.show;if(inShow)for(const x of CUT.order)if(x.own&&!x.r.busy&&CUT.order[CUT.ri]!==x)animPet(x.r.m,dt,false);
+  for(const r of PSX.rivals){r.m.root.visible=on&&!(inShow&&!CUT.order.some(x=>x.r===r));if(on&&!r.busy)animPet(r.m,dt,false);}   /* (in a show with friends the town pets not in it step off) */
+  psmTick(dt);}
 function psCard(j,v){psCardOff(j);const out=v==='✖',c=signPlane(out?'✖':String(v),.6,.46,'#ffffff',out?'#ff4d6d':'#3d2c5e');c.position.set(0,.66,.03);j.card.add(c);j.cm=c;j.up=.001;}
 function psCardOff(j){if(!j.cm)return;j.card.remove(j.cm);j.cm.geometry.dispose();if(j.cm.material.map)j.cm.material.map.dispose();j.cm.material.dispose();j.cm=null;}
 function psCardsDown(){for(const j of PSX.judges){j.up=0;j.card.visible=false;psCardOff(j);}}
 
+/* the pets that can go on stage with you: following you, in town, near, not sick (🩺 no Pet Show while sick); the same order as your online pet list (one button each) */
+function psMine(){return S.pets.filter(d=>!d.stay&&PET_TYPES[d.type]).slice(0,3).map(d=>PET_ACTORS.find(p=>p.d===d)).filter(p=>p&&p.loc==='city'&&Math.hypot(p.x-P.x,p.z-P.z)<18);}
 function openShow(){if(!S)return;
   if(!isShowDay()){const n=daysToShow();SFX.talk();toast(`🏆 The Pet Show is every Saturday! Today is ${wdName()}, so it's in ${n} day${n>1?'s':''}. Get your pet ready!`,4.8);return;}
   if(showDone()){toast(`🏆 You already did today's show! Come back next Saturday.`,4);return;}
   if(S.time<PS_ON){SFX.talk();toast(`🏆 The Pet Show starts at ${PS_ON}:00! The judges are on their way. Dress up your pet! 🎀`,4.6);return;}
   if(S.time>=PS_OFF){SFX.talk();toast(`🏆 Today's Pet Show is over (${clockStr(PS_ON)} to ${clockStr(PS_OFF)}). The next one is next Saturday!`,4.6);return;}
   if(!S.pets.length){SFX.no();toast('You need a pet for the Pet Show! Adopt one at the 🐾 Pet Shop.',4);return;}
-  const here=PET_ACTORS.filter(p=>p.loc==='city'&&Math.hypot(p.x-P.x,p.z-P.z)<18);
-  if(!here.length){SFX.no();toast('Bring a pet to the park! Tip: ⚙️ Settings → 🐾 Bring my pets to me',4.8);return;}
+  const near=PET_ACTORS.filter(p=>p.loc==='city'&&Math.hypot(p.x-P.x,p.z-P.z)<18),here=near.filter(p=>!p.d.sick);   /* 🩺 no Pet Show while sick (stage 2) */
+  if(!here.length){SFX.no();toast(near.length?`🩺 ${near[0].d.name} doesn't feel well. Get well at the vet first!`:'Bring a pet to the park! Tip: ⚙️ Settings → 🐾 Bring my pets to me',4.8);return;}
+  const g=psOpenGather();if(g){psJoinCard(g);return;}   /* a friend's show is open: join it */
+  if(PSM.g){psWaitCard();return;}
   if(PSX.dirty||!PSX.rivals.length)psRefresh();
-  SFX.yay();PSX.pick=here;const rv=PSX.rv||[];if(!PSX.pc)PSX.pc=()=>{};
+  SFX.yay();PSX.pick=here;const rv=PSX.rv||[],fr=psFriendsHere().length;if(!PSX.pc)PSX.pc=()=>{};
   openPanel(`<div class="hd"><h2>🏆 Pet Show!</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
     <div class="psj">${PS_JUDGES.map(J=>`<div><span>${J.i}</span><b>${J.n}</b><i>loves ${J.love}</i></div>`).join('')}</div>
-    <p class="note">Today's other pets: ${rv.map(R=>`${PET_TYPES[R.type].icon} <b>${esc(R.name)}</b> (${esc(R.owner)})`).join(', ')}. They practiced a lot! Can you beat them?</p>
-    <p class="note">🥇 <b>200 🪙</b> + 🐾 Pets +2 levels · 🥈 80 🪙 · 🥉 40 🪙</p>
+    <p class="note">${fr?`👫 Friends in the park get ${PS_JOIN} seconds to join you! Free places go to today's town pets: `:'Today\'s other pets: '}${rv.map(R=>`${PET_TYPES[R.type].icon} <b>${esc(R.name)}</b> (${esc(R.owner)})`).join(', ')}. They practiced a lot! Can you beat them?</p>
+    <p class="note">🥇 <b>200 🪙</b> + 🐾 Pets +2 levels · 🥈 80 🪙 · 🥉 40 🪙 · 🪪 top 3 counts for your animal license</p>
     <div class="pspick">${here.map((p,i)=>{const d=p.d,o=petOutfit(d),sc=psScore(d);return`<button class="pscard" data-a="psgo:${i}"><span class="pi">${PET_TYPES[petKind(d)].icon}</span><b>${esc(d.name)}</b>
-      <span class="pso">${PSLOTS.map(([sl])=>o[sl]?ACCS[o[sl]].i:'').join('')||'no outfit yet'}</span><span>👒 ${starRow(sc.style)}</span><span>🌼 ${starRow(sc.happy)}</span><i>⭐ Pick ${esc(d.name)}!</i></button>`;}).join('')}</div>
+      <span class="pso">${PSLOTS.map(([sl])=>o[sl]?ACCS[o[sl]].i:'').join('')||'no outfit yet'}</span><span>👒 ${starRow(sc.style)}</span><span>🌼 ${starRow(sc.happy)}${petRib()?' 💚':''}</span><span>🎩 ${trKnown(d)} trick${trKnown(d)>1?'s':''}</span><i>⭐ Pick ${esc(d.name)}!</i></button>`;}).join('')}</div>
     <p class="note">Tip: dress your pet in all 4 outfit spots, make it super happy, and hit the gold when you do tricks!</p>`,{onClose:PSX.pc});}
-ACT.psgo=i=>{const p=PSX.pick&&PSX.pick[+i];if(!p||CUT)return;closePanel();psStart(p);};
-/* how each other pet will do today: great, good, medium, bad — or out of the show */
-function psPlan(r,i){let x=Math.random()*100,form='good';for(const [p,v] of [[22,'great'],[28,'good'],[24,'medium'],[16,'bad'],[10,'out']]){x-=p;if(x<=0){form=v;break;}}
-  const R=r.R,o={r,i,R,form,done:false,out:form==='out'};
-  if(o.out){o.flop=Math.random()<.5?'sleep':'butterfly';return o;}
-  const pts=pick({great:[6,6,5],good:[5,4,4],medium:[3,4,2],bad:[1,0,2]}[form]),g=[0,0,0];let left=pts;
-  while(left>0){const k=Math.floor(Math.random()*3);if(g[k]<2){g[k]++;left--;}}
-  o.g=g;o.tr=TRICKS.slice().sort(()=>Math.random()-.5).slice(0,3);o.sc={style:R.style,trick:PS_TR[pts],happy:R.happy};o.tot=o.sc.style+o.sc.trick+o.sc.happy;return o;}
-function psStart(p){const d=p.d;if(P.ride)stopRide();P.sit=null;document.body.classList.add('cut');$('note').hidden=true;
-  p.ps=true;p.moving=false;p.tag.visible=false;if(PSX.dirty||!PSX.rivals.length)psRefresh();
-  const order=PSX.rivals.map((r,i)=>psPlan(r,i)).concat([{you:1,done:false,out:false}]);
-  CUT={show:1,t:0,shake:0,p,d,stage:'intro',st:0,round:0,pts:0,res:[],tr:TRICKS.slice().sort(()=>Math.random()-.5).slice(0,3),from:{x:P.x,z:P.z,yaw:P.yaw,pitch:P.pitch},px:p.x,pz:p.z,jn:-1,order,ri:-1,pod:false};
+ACT.psgo=i=>{const p=PSX.pick&&PSX.pick[+i];if(!p||CUT)return;closePanel();if(psFriendsHere().length&&MP.me){psHost(p);return;}psStart(p);};
+
+/* ---------- 👫 shows with friends (rules-pet-show-friends, screens-show-join). Online: presence ps = [t0, jt, pet, style, happy, tricks known, grades] while you are
+   in a show (t0 = when the first player entered, on the one clock, seconds; jt = when you joined; pet = your place in your online pet list, -1 = just watching;
+   grades = '0'..'2' per trick done). Everyone sorts the players the same way (by jt, then id), fills the 4 places in that order and runs the same timeline
+   from t0 + 45 s; the town pets' results come from the one clock. An older version sends no ps and is never asked. ---------- */
+const PSM={g:null,no:{},tk:-1};
+function psFriendsHere(){if(!MP.peers)return[];return[...MP.peers.values()].filter(a=>a.loc==='city'&&(a.v|0)>=PS_V&&a.rx>-41&&a.rx<-8&&a.rz>8&&a.rz<41);}   /* friends in the park on a version that knows shared shows */
+function psOpenGather(){if(!MP.peers||PSM.g||CUT)return null;const now=psSec();let best=null;
+  for(const a of psFriendsHere()){const s=a.ps;if(!s||s[1]!==s[0]||now>=s[0]+PS_JOIN-2||now<s[0]-5)continue;if(!best||s[0]<best.t0)best={t0:s[0],host:a};}return best;}
+function psStampMine(st){const g=PSM.g;if(!g){st.ps=null;return;}const d=g.p&&g.p.d;st.ps=d?[g.t0,g.jt,g.pi,g.sc.style,g.sc.happy,trKnown(d),g.gr||'']:[g.t0,g.jt,-1];}
+function psExtra(a,pr){const s=pr.ps;a.ps=Array.isArray(s)&&s.length>=3&&s.slice(0,3).every(Number.isFinite)&&s.length<=7?s.map((v,i)=>i===6?String(v||'').replace(/[^012]/g,'').slice(0,3):v):null;}
+function psHost(p){const t=Math.round(psSec());PSM.g={t0:t,jt:t,p,pi:psMine().indexOf(p),sc:psScore10(p.d,0),gr:''};if(PSM.g.pi<0){PSM.g=null;psStart(p);return;}SFX.yay();psWaitCard();}
+function psJoinCard(g){const sec=Math.max(0,Math.ceil(g.t0+PS_JOIN-psSec())),mine=psMine();PSM.card=g.t0;
+  openPanel(`<div class="hd"><h2>🏆 ${esc(g.host.nm||'A friend')} entered the Pet Show!</h2><span class="psn">⏱️ <b id="psCnt">${sec}</b> s</span></div>
+    <p class="note">Join with a pet that follows you, or just watch. The show starts when the time is up.</p>
+    <div class="row">${mine.map((p,i)=>`<button class="btn ${p.d.sick?'white':'butter'}" data-a="psjoin:${i}"${p.d.sick?' disabled':''}>${PET_TYPES[petKind(p.d)].icon} ${esc(p.d.name)}${p.d.sick?' 🩺':''}</button>`).join('')}
+    <button class="btn sky" data-a="psjoin:w">👀 Just watch</button><button class="btn white" data-a="psno">No, thanks</button></div>`,{bottom:true,onClose:()=>{PSM.card=0;}});}
+ACT.psjoin=k=>{const g=psOpenGather();if(!g){closePanel();toast('🏆 Too late, the show has started! Next Saturday 🐾',3);return;}PSM.no[g.t0]=1;
+  if(k==='w'){PSM.g={t0:g.t0,jt:Math.round(psSec()),watch:1};closePanel();SFX.tap();psWaitCard();return;}
+  if(showDone()){closePanel();toast(`🏆 You already did today's show! You can watch.`,3.4);return;}
+  const p=psMine()[+k];if(!p||p.d.sick)return;PSM.g={t0:g.t0,jt:Math.round(psSec()),p,pi:+k,sc:psScore10(p.d,0),gr:''};closePanel();SFX.yay();psWaitCard();};
+ACT.psno=()=>{if(PSM.card)PSM.no[PSM.card]=1;closePanel();};
+/* the players of a show, sorted the same way on every screen: by when they joined, then by id */
+function psPlayers(t0){const L=[];const g=PSM.g;
+  if(g&&g.t0===t0&&g.p)L.push({me:1,jt:g.jt,id:MP.me||'',p:g.p,sc:g.sc,tk:trKnown(g.p.d),kind:petKind(g.p.d)});
+  for(const a of psFriendsHere()){const s=a.ps;if(!s||s[0]!==t0||s[2]<0||s[1]>t0+PS_JOIN-1)continue;const q=a.pets&&a.pets.find(x=>x.i===s[2]);if(!q)continue;
+    L.push({peer:a,t0,jt:s[1],id:a.peer,q,kind:q.kind,sc:{style:clamp(s[3]|0,2,10),trick:0,happy:clamp(s[4]|0,1,10)},tk:clamp(s[5]|0,1,3)});}
+  return L.sort((x,y)=>x.jt-y.jt||(x.id<y.id?-1:x.id>y.id?1:0));}
+function psWaitCard(){const g=PSM.g;if(!g||CUT)return;const sec=Math.max(0,Math.ceil(g.t0+PS_JOIN-psSec())),L=psPlayers(g.t0),me=L.findIndex(x=>x.me);
+  const row=(x,i)=>x?`<div class="psrow on${x.me?' me':''}"><span class="pji">${PET_TYPES[x.kind].icon}</span><div><b>${esc(x.me?x.p.d.name:x.q.nm)}</b><i>${x.me?'You!':esc(x.peer.nm||'Friend')}</i></div><span class="pjs">${i+1}</span></div>`
+    :`<div class="psrow"><span class="pji">🐾</span><div><b>Free place</b><i>a town pet</i></div><span class="pjs">${i+1}</span></div>`;
+  const first=L.slice(0,4),rest=L.slice(4);
+  openPanel(`<div class="hd"><h2>🏆 The Pet Show starts in <b id="psCnt">${sec}</b> s</h2></div>
+    <p class="note">${g.watch?'👀 You are watching. ':''}Friends in the park can join now. Free places get town pets.</p>${[0,1,2,3].map(i=>row(first[i],i)).join('')}
+    ${rest.length?`<p class="note">⏭️ Next show, right after: ${rest.map(x=>esc(x.me?'you':x.peer.nm||'Friend')).join(', ')}${me>=4?' (you!)':''}</p>`:''}`,{bottom:true,lock:true,cls:'psc'});}
+/* every frame: the join card for friends in the park, the countdown, and the start of a shared show */
+function psmTick(dt){if(!S||!MP.peers)return;const now=psSec(),g=PSM.g;
+  if(g&&!CUT){const left=g.t0+PS_JOIN-now,el=$('psCnt');if(el)el.textContent=Math.max(0,Math.ceil(left));
+    if(Math.ceil(left)!==PSM.tk){PSM.tk=Math.ceil(left);if(left<=5&&left>0)SFX.tick();if(UI.open&&$('card').classList.contains('psc')&&!(left<=0))psWaitCard();}
+    if(left<=0){if(UI.open)closePanel();psGroupStart();}
+    else if(CUR.id!=='city'||(g.p&&g.p.d.sick)){PSM.g=null;if(UI.open&&$('card').classList.contains('psc'))closePanel();toast('🏆 You left the Pet Show.',2.6);}
+    return;}
+  if(CUT||showDone()&&!psOpenGather())return;const o=psOpenGather();
+  if(o&&!PSM.no[o.t0]&&!UI.open&&!PSM.card&&CUR&&CUR.id==='city'&&P.x>-41&&P.x<-8&&P.z>8&&P.z<41){psJoinCard(o);return;}
+  if(PSM.card){const el=$('psCnt');if(el&&o)el.textContent=Math.max(0,Math.ceil(o.t0+PS_JOIN-now));if(!o&&UI.open&&$('card').querySelector('[data-a^="psjoin"]')){closePanel();PSM.card=0;}
+    if(o&&Math.ceil(o.t0+PS_JOIN-now)!==PSM.tk){PSM.tk=Math.ceil(o.t0+PS_JOIN-now);if(PSM.tk<=5&&PSM.tk>0)SFX.tick();}}}
+/* the shared show starts: my group of 4 (the first 4 players, or the next show right after), town pets in the free places, one timeline from the one clock */
+function psGroupStart(){const g=PSM.g,L=psPlayers(g.t0),me=L.findIndex(x=>x.me),ts=g.t0+PS_JOIN;
+  if(L.length<1&&g.watch){PSM.g=null;toast('🏆 Nobody is in the show after all.',3);return;}
+  const mine=me<0?0:Math.floor(me/4),plans=psGroups(L,ts);
+  g.plans=plans;g.gi=0;g.mine=g.watch?-1:mine;psShow(plans[0],g.watch||mine!==0?null:L[me].p);}
+/* 4 a show: the first 4 players, the next 4 in the show right after (its start = the end of the one before, on the one clock) */
+function psGroups(L,ts){const groups=[];for(let i=0;i<L.length;i+=4)groups.push(L.slice(i,i+4));if(!groups.length)groups.push([]);
+  let t=ts;return groups.map(G=>{const o=psOrder(G,Math.round(t));const len=psLen(o);const r={o,ts:t,len};t+=len;return r;});}
+/* the order: town pets first (in the free places), then the players in their sorted order */
+function psOrder(G,seed){if(PSX.dirty||!PSX.rivals.length)psRefresh();const n=4-G.length,o=[];
+  for(let i=0;i<n;i++)o.push(psPlan(PSX.rivals[i],i,seed));
+  for(const x of G)o.push(x.me?{you:1,kind:x.kind,tk:x.tk,tr:psTrs(x.kind,x.tk)}:psPeerEntry(x));
+  return o;}
+function psPeerEntry(x){const R={type:x.kind,col:x.q.col,name:x.q.nm,owner:x.peer.nm||'Friend',outfit:{}};for(const k of String(x.q.of||'').split('.').slice(0,4))if(mpOwn(ACCS,k))R.outfit[ACCS[k].s]=k;
+  const r=psModel(R);return{peer:x.peer,t0:x.t0,R,r,kind:x.kind,tk:x.tk,sc:x.sc,g:[],tr:psTrs(x.kind,x.tk),done:false,out:false,own:1};}
+/* a friend's taps so far (from their ps); a trick that timed out here stays an oopsie */
+function psPeerG(x){const s=x.peer.ps;if(!s||s[0]!==x.t0)return;const g=String(s[6]||'');for(let i=0;i<g.length&&i<3;i++)if(x.g[i]==null)x.g[i]=+g[i];}
+/* the 3 tricks of a show: the known ones in turn (1 known: three times) */
+function psTrs(kind,tk){const L=trList(kind);return[0,1,2].map(i=>L[i%tk]);}
+const PS_MV=.9,PS_RES=2.2+2*2.4+1.4+2.0+6;
+/* the longest a turn can take (a shared show's timeline: each turn starts at its time on the one clock, a short turn waits) */
+function psTurnLen(x){if(x.you||x.peer)return 1.7+x.tr.reduce((s,[id])=>s+2*PS_MV+PS_AIM+trLen(x.kind,id),0)+1.2+3*1.4+1.4+1.6+1;
+  return 1.7+(x.out?6.3:x.tr.reduce((s,[id])=>s+2*PS_MV+trLen(x.kind,id),0))+1.1+3*1.15+1.4+1.6+1;}
+function psLen(o){return 3.4+o.reduce((s,x)=>s+psTurnLen(x),0)+PS_RES;}
+
+/* how each town pet will do today: great, good, medium, bad — or out of the show. From the one clock (seed = the show's start), never dice: everyone sees the same */
+function psPlan(r,i,seed){const q=seeded((seed|0)*7+i*131+17);let x=q()*100,form='good';for(const [p,v] of [[22,'great'],[28,'good'],[24,'medium'],[16,'bad'],[10,'out']]){x-=p;if(x<=0){form=v;break;}}
+  const R=r.R,o={r,i,R,form,done:false,out:form==='out',kind:R.type,npc:1};
+  if(o.out){o.flop=q()<.5?'sleep':'butterfly';o.tr=[];return o;}
+  const pk=a=>a[Math.floor(q()*a.length)],pts=pk({great:[6,6,5],good:[5,4,4],medium:[3,4,2],bad:[1,0,2]}[form]),g=[0,0,0];let left=pts;
+  while(left>0){const k=Math.floor(q()*3);if(g[k]<2){g[k]++;left--;}}
+  o.g=g;o.tr=psTrs(R.type,1+Math.floor(q()*3));o.sc={style:R.style,trick:PS_TR[pts],happy:R.happy};o.tot=o.sc.style+o.sc.trick+o.sc.happy;return o;}
+function psStart(p){const t=Math.round(psSec());if(PSX.dirty||!PSX.rivals.length)psRefresh();
+  psShow({o:PSX.rivals.map((r,i)=>psPlan(r,i,t)).concat([{you:1,kind:petKind(p.d),tk:trKnown(p.d)}]),ts:null},p);}
+/* one show: p = your pet on stage (null: you watch). plan.ts = the shared start (null: alone, the show runs at your pace and you can skip) */
+function psShow(plan,p){if(P.ride)stopRide();if(document.fonts)for(const f of['25px "Alfa Slab One"','800 20px "Roboto Slab"','700 20px "Roboto Slab"'])document.fonts.load(f).catch(()=>{});   /* (the license card's fonts, ready before Sir Barkley draws it) */
+  P.sit=null;document.body.classList.add('cut');$('note').hidden=true;
+  const order=plan.o,me=order.findIndex(x=>x.you);let d=null;
+  if(p){d=p.d;p.ps=true;p.moving=false;p.tag.visible=false;const x=order[me];x.tr=psTrs(petKind(d),trKnown(d));x.done=false;x.out=false;}
+  for(const x of order)if(x.own)x.r.m.root.visible=true;
+  CUT={show:1,t:0,shake:0,p,d,stage:'intro',st:0,round:0,pts:0,res:[],tr:me>=0?order[me].tr:[],from:{x:P.x,z:P.z,yaw:P.yaw,pitch:P.pitch},px:p?p.x:PS.out[0],pz:p?p.z:PS.out[1],jn:-1,order,ri:-1,me,ts:plan.ts,len:plan.len||0,plan};
+  for(let i=0;i<order.length;i++){const x=order[i];if(x.own)psHome(x.r,i);else if(x.npc&&x.i!==i)psHome(x.r,i);}
   SFX.yay();popText('🏆 Pet Show!');psPanel('intro');}
 function psGo(stage){CUT.stage=stage;CUT.st=CUT.t;}
-function psBoard(){const C=CUT;return C.order.map((x,i)=>{const me=!!x.you,R=x.R,ic=PET_TYPES[me?petKind(C.d):R.type].icon,cur=i===C.ri&&!x.done;
+const psNm=x=>x.you?CUT.d.name:x.R.name,psOwner=x=>x.you?'Your pet!':x.peer?'⭐ '+esc(x.R.owner)+'\'s '+PET_TYPES[x.kind].name:esc(x.R.owner)+'\'s '+PET_TYPES[x.kind].name;
+function psBoard(){const C=CUT;return C.order.map((x,i)=>{const me=!!x.you,ic=PET_TYPES[x.kind].icon,cur=i===C.ri&&!x.done;
   const sc=x.done?(x.out?'😴 Out':x.tot+' ⭐'):cur?'🎤':'…';
-  return`<div class="psrow on${me?' me':''}${cur?' cur':''}"><span class="pji">${ic}</span><div><b>${esc(me?C.d.name:R.name)}</b><i>${me?'Your pet!':esc(R.owner)+'\'s '+PET_TYPES[R.type].name}</i></div><span class="pjs">${sc}</span></div>`;}).join('');}
-function psPanel(kind){const C=CUT;let h;
-  if(kind==='intro')h=`<div class="hd"><h2>🎤 Welcome to the Pet Show!</h2></div><p class="note">4 pets, 3 judges, 1 winner! The other pets go first. Watch how they do!</p>${psBoard()}`;
-  else if(kind==='rival'){const R=C.order[C.ri].R;h=`<div class="hd"><h2>${PET_TYPES[R.type].icon} ${esc(R.name)}'s turn!</h2><span class="psn">Pet ${C.ri+1} of 4</span></div>${psBoard()}`;}
-  else h=`<div class="hd"><h2>⭐ Your turn, ${esc(C.d.name)}!</h2><span class="psn">Pet 4 of 4</span></div><p class="note">The score to beat: <b>${Math.max(0,...C.order.filter(x=>!x.you&&!x.out).map(x=>x.tot))} ⭐</b></p>${psBoard()}`;
-  openPanel(h+(kind!=='you'&&C.ri<3?`<div class="row"><button class="btn white" data-a="psskip">⏩ Skip to my turn</button></div>`:''),{bottom:true,lock:true,cls:'psc'});}
-function psNextRival(){const C=CUT;C.ri++;
-  if(C.ri<3){const x=C.order[C.ri];x.r.busy=true;psGo('rin');psPanel('rival');popText(PET_TYPES[x.R.type].icon+' '+x.R.name+'!');const snd=SFX[PET_TYPES[x.R.type].snd];if(snd)snd();}
-  else psToYou();}
-function psToYou(){const C=CUT,g=C.p.g;C.ri=3;C.ix=g.position.x;C.iy=g.position.y;C.iz=g.position.z;psGo('in');psPanel('you');popText('⭐ Your turn!');}
-ACT.psskip=()=>{const C=CUT;if(!C||!C.show||C.ri>=3||!/^(intro|r)/.test(C.stage))return;
-  for(let i=Math.max(0,C.ri);i<3;i++){const x=C.order[i];x.done=true;psHome(x.r,i);if(x.bf){scene.remove(x.bf);x.bf=null;}}
-  psCardsDown();SFX.tap();psToYou();};
-function psJudgePanel(){const C=CUT,x=C.order[C.ri],me=!!x.you,nm=me?C.d.name:x.R.name,on=/judge$/.test(C.stage);
+  return`<div class="psrow on${me?' me':''}${cur?' cur':''}"><span class="pji">${ic}</span><div><b>${esc(psNm(x))}</b><i>${psOwner(x)}</i></div><span class="pjs">${sc}</span></div>`;}).join('');}
+function psPanel(kind){const C=CUT,n=C.order.length;let h;const x=C.order[C.ri];
+  if(kind==='intro')h=`<div class="hd"><h2>🎤 Welcome to the Pet Show!</h2></div><p class="note">4 pets, 3 judges, 1 winner! ${C.me===n-1&&C.order.filter(x=>x.npc).length===n-1?'The other pets go first. Watch how they do!':'The town pets go first, then the players.'}</p>${psBoard()}`;
+  else if(kind==='rival')h=`<div class="hd"><h2>${PET_TYPES[x.kind].icon} ${esc(psNm(x))}'s turn!</h2><span class="psn">Pet ${C.ri+1} of ${n}</span></div>${psBoard()}`;
+  else h=`<div class="hd"><h2>⭐ Your turn, ${esc(C.d.name)}!</h2><span class="psn">Pet ${C.ri+1} of ${n}</span></div><p class="note">The score to beat: <b>${Math.max(0,...C.order.filter(x=>!x.you&&x.done&&!x.out).map(x=>x.tot))} ⭐</b></p>${psBoard()}`;
+  const skip=kind!=='you'&&C.ts==null&&C.me>=0&&C.ri<C.me;
+  openPanel(h+(skip?`<div class="row"><button class="btn white" data-a="psskip">⏩ Skip to my turn</button></div>`:''),{bottom:true,lock:true,cls:'psc'});}
+/* the next turn: alone, at once; in a shared show at its time on the one clock (everyone's turns line up) */
+function psTurnAt(i){const C=CUT;if(C.ts==null)return 0;let t=C.ts+3.4;for(let k=0;k<i;k++)t+=psTurnLen(C.order[k]);return t;}
+function psNext(){const C=CUT;const i=C.ri+1;if(C.ts!=null&&psSec()<psTurnAt(i)-.05){psGo('wait');C.wi=i;return;}psBegin(i);}
+function psBegin(i){const C=CUT;C.ri=i;for(const f of FLOATS)f.t=f.life;popDrop();   /* (picture pass 2: and big words still waiting, so a skipped turn's name never pops up over the next one) */   /* the last pet's words above the stage go before the next name pops up (picture pass: 'PERFECT!' sat on 'Bean!') */
+  if(i>=C.order.length){psResultsAt();return;}const x=C.order[i];
+  if(x.you){psToYou();return;}x.r.busy=true;x.k=0;psGo('rin');psPanel('rival');popText(PET_TYPES[x.kind].icon+' '+psNm(x)+'!');const snd=SFX[PET_TYPES[x.kind].snd];if(snd)snd();}
+function psToYou(){const C=CUT,g=C.p.g;C.ix=g.position.x;C.iy=g.position.y;C.iz=g.position.z;C.round=0;C.pts=0;C.res=[];psGo('in');psPanel('you');popText('⭐ Your turn!');}
+ACT.psskip=()=>{const C=CUT;if(!C||!C.show||C.ts!=null||C.me<0||C.ri>=C.me||!/^(intro|r|wait)/.test(C.stage))return;
+  for(let i=Math.max(0,C.ri);i<C.me;i++){const x=C.order[i];x.done=true;psHome(x.r,i);if(x.bf){scene.remove(x.bf);x.bf=null;}}
+  trGearOff(C.gearO);C.gearO=null;psCardsDown();SFX.tap();C.ri=C.me;psToYou();};
+function psJudgePanel(){const C=CUT,x=C.order[C.ri],nm=psNm(x),on=/judge$/.test(C.stage);
   const rows=PS_JUDGES.map((J,i)=>{const shown=on&&i<=C.jn,v=x.out?'✖':x.sc[J.k],line=x.out?PS_FLOP[x.flop].say[i]:J.say[Math.ceil(v/2)-1];
     return`<div class="psrow${shown?' on':''}"><span class="pji">${J.i}</span><div><b>${J.n}</b><i>${shown?esc(line):'…'}</i></div><span class="pjs">${shown?(x.out?'✖':v+'/10'):''}</span></div>`;}).join('');
   openPanel(`<div class="hd"><h2>⭐ The judges score ${esc(nm)}…</h2></div>${rows}${on&&C.jn>=2?`<p class="earn">${x.out?PS_FLOP[x.flop].e+' Out of the show!':'Total: <b>'+x.tot+' ⭐</b>'}</p>`:''}`,{bottom:true,lock:true,cls:'psc'});}
@@ -288,20 +400,12 @@ const psLook=(x,y,z)=>{const dx=x-P.x,dz=z-P.z;return{yaw:Math.atan2(-dx,-dz),pi
 function psCamTo(x,z,ax,ay,az,dt,sp){const e=1-Math.exp(-dt*(sp||4));P.x=lerp(P.x,x,e);P.z=lerp(P.z,z,e);const a=psLook(ax,ay,az);P.yaw=angLerp(P.yaw,a.yaw,e);P.pitch=lerp(P.pitch,a.pitch,e);P.moving=false;}
 function psPose(g,m,x,y,z,ry){g.visible=true;g.position.set(x,y,z);g.rotation.set(0,ry,0);m.b.rotation.set(0,0,0);m.b.position.set(0,0,0);}
 function psPetPose(p,x,y,z,ry){psPose(p.g,p.m,x,y,z,ry);p.x=x;p.z=z;}
-/* one trick (u = seconds since it started); gr: 0 = oopsie, 1 = good, 2 = perfect */
-function psTrickAnim(g,m,type,tk,gr,u,BY,face,fx){const c={dog:.3,cat:.28,bunny:.26,hamster:.15}[type]||.25,b=m.b,k=clamp(u/1.1,0,1),e=k*k*(3-2*k),big=gr===2;
-  if(!gr){b.rotation.z=Math.sin(u*18)*.25*(1-k);g.position.y=BY+Math.abs(Math.sin(u*6))*.1*(1-k);}
-  else if(tk==='Spin'){g.rotation.y=face+e*Math.PI*(big?4:2);g.position.y=BY+Math.sin(Math.PI*k)*.15;}
-  else if(tk==='Big jump'){g.position.y=BY+Math.sin(Math.PI*k)*(big?1.2:.7);}
-  else if(tk==='Flip'||tk==='Roll over'){const a=e*Math.PI*2*(big&&tk==='Flip'?2:1);if(tk==='Flip'){b.rotation.x=-a;b.position.set(0,c*(1-Math.cos(a)),c*Math.sin(a));g.position.y=BY+Math.sin(Math.PI*k)*.75;}else{b.rotation.z=a;b.position.set(c*Math.sin(a),c*(1-Math.cos(a)),0);}}
-  else if(tk==='Dance'){b.rotation.z=Math.sin(u*15)*.35*(1-k*.3);g.position.y=BY+Math.abs(Math.sin(u*9))*.16;g.rotation.y=face+Math.sin(u*7.5)*.5;}
-  else{g.position.y=BY+Math.sin(Math.PI*clamp(u/.6,0,1))*.25;m.legs[0].rotation.x=-1.6*Math.sin(Math.PI*k);if(fx&&!fx.hf&&u>.35){fx.hf=1;floatText('🙌',g.position.x+.3,1.45,g.position.z,{h:.55});}}}
 function psButterfly(){const g=new THREE.Group();for(const s of[-1,1]){const w=new THREE.Group();g.add(w);sph(w,.075,s<0?'#ff9ec4':'#ff7aa8',s*.075,0,0,{s:[1,.15,.75],ws:8,hs:5,ol:.006});sph(w,.048,'#ffd45c',s*.085,0,-.065,{s:[1,.15,.8],ws:6,hs:4,ol:false});}
   box(g,.022,.022,.11,'#3d2c5e',0,-.011,0,{ol:false});return g;}
 function psBfly(u){const cx=PS.sx,cz=PS.sz;if(u<2.4){const a=u*2.4+Math.PI;return[cx+.85*Math.cos(a),.95+.15*Math.sin(u*5),cz+.85*Math.sin(a)];}
   const s=u-2.4,a0=2.4*2.4+Math.PI,sx=cx+.85*Math.cos(a0),sz=cz+.85*Math.sin(a0);
-  if(s<2.0){const k=s/2;return[lerp(sx,-33.9,k),.9+.25*Math.sin(s*4),lerp(sz,23.9,k)+Math.sin(s*3)*.5];}
-  const k=s-2;return[-33.9+k*.6,.9+k*1.6,23.9+k*.9];}
+  if(s<2.0){const k=s/2;return[lerp(sx,-32.9,k),.9+.25*Math.sin(s*4),lerp(sz,23.9,k)+Math.sin(s*3)*.5];}
+  const k=s-2;return[-32.9+k*.6,.9+k*1.6,23.9+k*.9];}
 /* "out of the show": a nap on stage, or chasing a butterfly off into the park */
 function psFlop(x,u,dt){const g=x.r.m.root,m=x.r.m,BY=PS.top+.03,F=Math.PI/2;
   if(x.flop==='sleep'){psPose(g,m,PS.sx,BY,PS.sz,F);
@@ -314,102 +418,212 @@ function psFlop(x,u,dt){const g=x.r.m.root,m=x.r.m,BY=PS.top+.03,F=Math.PI/2;
   if(x.bf){const bp=psBfly(u),f=x.bf;f.rotation.y=Math.atan2(bp[0]-f.position.x,bp[2]-f.position.z+1e-6);f.position.set(bp[0],bp[1],bp[2]);
     f.children[0].rotation.z=.5+Math.sin(u*28)*.6;f.children[1].rotation.z=-.5-Math.sin(u*28)*.6;if(bp[1]>3.2){scene.remove(f);x.bf=null;}}
   let q;if(u<4.6)q=psBfly(Math.max(0,u-.55));else{const k=clamp((u-4.6)/1.4,0,1),e=k*k*(3-2*k),a=x.ret||(x.ret=[g.position.x,g.position.z]);q=[lerp(a[0],PS.sx,e),0,lerp(a[1],PS.sz,e)];}
-  const px=g.position.x,pz=g.position.z,mv=Math.hypot(q[0]-px,q[2]-pz),gy=lerp(BY,0,clamp((q[0]+35.15)/.4,0,1));
+  const px=g.position.x,pz=g.position.z,mv=Math.hypot(q[0]-px,q[2]-pz),gy=lerp(BY,0,clamp((q[0]+35.5)/.4,0,1));
   psPose(g,m,q[0],gy+(mv>.004?Math.abs(Math.sin(u*14))*.05:0),q[2],mv>.004?Math.atan2(q[0]-px,q[2]-pz):g.rotation.y);animPet(m,dt,mv>.004);}
 function psTags(){const pr=POPQ.el&&POPQ.el.getBoundingClientRect(),v=new THREE.Vector3(),W=innerWidth,H=innerHeight;
-  for(const r of PSX.rivals){let on=true;if(pr&&r.m.root.visible){r.tg.getWorldPosition(v);v.project(camera);const x=(v.x+1)/2*W,y=(1-v.y)/2*H;on=v.z>1||x<pr.left-50||x>pr.right+50||y<pr.top-30||y>pr.bottom+30;}if(r.tg.visible!==on)r.tg.visible=on;}}
-function psCut(dt){psTags();const C=CUT,p=C.p,m=p.m,t=(C.t+=dt),u=t-C.st,sm=k=>k*k*(3-2*k),BY=PS.top+.03,PY=PS.top+.08,FACE=Math.PI/2,pd3=PS.pad[3],me=C.order[3];
+  for(const r of PSX.rivals.concat(CUT.order.filter(x=>x.own).map(x=>x.r))){let on=true;if(pr&&r.m.root.visible){r.tg.getWorldPosition(v);v.project(camera);const x=(v.x+1)/2*W,y=(1-v.y)/2*H;on=v.z>1||x<pr.left-50||x>pr.right+50||y<pr.top-30||y>pr.bottom+30;}if(r.tg.visible!==on)r.tg.visible=on;}}
+/* a trick, one frame: g/m the pet, at its spot (the stage, or the lawn with its gear); u = seconds since it started */
+function psTrick(g,m,kind,id,gr,u,C,x){const sp=trSpot(kind,id);psPose(g,m,sp.x,sp.y,sp.z,sp.ry);
+  if(sp.G&&!C.gearO)C.gearO=trGear(sp);
+  const r=COZY_MOVES.play(m,'trick',u,{kind,trick:id,gr,h:sp.G&&sp.G.h,water:sp.G&&sp.G.water});
+  const bl=C.gearO&&C.gearO.userData.m.userData.ball;if(bl&&r.ball){const w=m.root.localToWorld(new THREE.Vector3(r.ball.x??r.ball[0],r.ball.y??r.ball[1],r.ball.z??r.ball[2]));bl.parent.worldToLocal(w);bl.position.copy(w);}
+  if(id==='highFive'&&gr&&x&&!x.hf&&u>1.9){x.hf=1;floatText('🙌',sp.x+.3,1.45,sp.z,{h:.55});}
+  return r;}
+/* hop from one place to another (from the pad to a trick's spot and back) */
+function psHop(g,m,a,b,k,dt,ry){const e=k*k*(3-2*k);psPose(g,m,lerp(a[0],b[0],e),lerp(a[1],b[1],e)+Math.sin(Math.PI*k)*.45,lerp(a[2],b[2],e),ry);animPet(m,dt,k<1);}
+function psCut(dt){psTags();const C=CUT,p=C.p,t=(C.t+=dt),u=t-C.st,sm=k=>k*k*(3-2*k),BY=PS.top+.03,FACE=Math.PI/2,me=C.me>=0?C.order[C.me]:null;
   for(const w of PET_ACTORS)if(w!==p&&w.loc==='city')w.g.visible=false;for(const f of FRIEND_ACTORS)if(f.mode==='follow')f.g.visible=false;   /* 🐾 your other pets and friends watch from out of sight, so the show stays clear */
   for(const w of [...WALKERS,...FRIEND_ACTORS])if(w.g.visible&&Math.abs(w.x-PS.sx-3)<9&&Math.abs(w.z-PS.sz)<9)w.g.visible=false;   /* 🚶 and people walking past the stage don't step into the pictures */
-  const showCam=()=>psCamTo(PS.cam[0],PS.cam[1],PS.sx,.35,PS.sz,dt,3.2),judgeCam=()=>psCamTo(PS.jcam[0],PS.jcam[1],PS.jx,.95,PS.sz,dt,3.4);
-  const youWait=()=>{psPetPose(p,pd3[0],PY,pd3[1],FACE+.35);animPet(m,dt,false);};
-  if(C.stage==='intro'){showCam();const k=sm(clamp(u/1.7,0,1));psPetPose(p,lerp(C.px,pd3[0],k),lerp(0,PY,k)+Math.sin(Math.PI*k)*.9,lerp(C.pz,pd3[1],k),k<.85?Math.atan2(pd3[0]-C.px,pd3[1]-C.pz):FACE+.35);animPet(m,dt,k<1);
-    if(u>=1.8&&!C.hi){C.hi=1;const snd=SFX[PET_TYPES[petKind(C.d)].snd];if(snd)snd();}
-    if(u>=3.4)psNextRival();return;}
-  if(C.ri>=0&&C.ri<3){youWait();const x=C.order[C.ri],r=x.r,g=r.m.root,rm=r.m,pd=PS.pad[C.ri];
-    if(C.stage==='rin'){showCam();const k=sm(clamp(u/1.5,0,1));psPose(g,rm,lerp(pd[0],PS.sx,k),lerp(PY,BY,k)+Math.abs(Math.sin(k*Math.PI*3))*.08,lerp(pd[1],PS.sz,k),k<.9?Math.atan2(PS.sx-pd[0],PS.sz-pd[1]):FACE);animPet(rm,dt,k<1);
-      if(u>=1.7){if(x.out)psGo('rflop');else{x.k=0;x.fb=0;x.hf=0;psGo('rtr');floatText(x.tr[0].join(' ')+'!',PS.sx,1.55,PS.sz,{h:.42,top:1});}}return;}
-    if(C.stage==='rtr'){showCam();psPose(g,rm,PS.sx,BY,PS.sz,FACE);const gr=x.g[x.k];psTrickAnim(g,rm,x.R.type,x.tr[x.k][1],gr,u,BY,FACE,x);
-      if(!x.fb&&u>.9){x.fb=1;floatText(['🙈 Oops!','⭐ Good!','🌟 PERFECT!'][gr],PS.sx,1.3,PS.sz,{h:.42,top:1});gr===2?SFX.whee():gr===1?SFX.pop():SFX.tap();}
-      if(u>=1.6){rm.legs[0].rotation.x=0;psPose(g,rm,PS.sx,BY,PS.sz,FACE);if(x.k<2){x.k++;x.fb=0;x.hf=0;psGo('rtr');floatText(x.tr[x.k].join(' ')+'!',PS.sx,1.55,PS.sz,{h:.42,top:1});}else psGo('rjin');}return;}
+  for(const x of C.order)if(x.peer&&x.peer.pets)for(const q of x.peer.pets)q.g.visible=false;   /* 👫 a friend's pet is on the stage, not at their heels */
+  const spot=C.spot||[PS.sx,PS.sz],lawn=spot[0]>PS.sx+1,showCam=()=>psCamTo(lawn?spot[0]+3.4:-32.9,lawn?spot[1]+.4:PS.sz+(spot[1]-PS.sz)*.5+.6,spot[0],lawn?.3:.6,spot[1],dt,3.2);   /* (close to the stage, a step further back for a trick on gear in front of it) */
+  const [jx,jz,ja]=PS.jt,judgeCam=()=>psCamTo(jx+3.3*Math.sin(ja),jz+3.3*Math.cos(ja),jx-.7*Math.sin(ja),.95,jz-.7*Math.cos(ja),dt,3.4);
+  const padOf=i=>[PS.pad[i][0],BY,PS.pad[i][1]];
+  const youWait=()=>{if(!p||C.ri===C.me)return;const pd=PS.pad[C.me];psPetPose(p,pd[0],BY,pd[1],psRot(C.me));animPet(p.m,dt,false);};
+  if(C.stage==='intro'){showCam();if(p){const k=sm(clamp(u/1.7,0,1)),pd=PS.pad[C.me];psPetPose(p,lerp(C.px,pd[0],k),lerp(0,BY,k)+Math.sin(Math.PI*k)*.9,lerp(C.pz,pd[1],k),k<.85?Math.atan2(pd[0]-C.px,pd[1]-C.pz):psRot(C.me));animPet(p.m,dt,k<1);
+      if(u>=1.8&&!C.hi){C.hi=1;const snd=SFX[PET_TYPES[petKind(C.d)].snd];if(snd)snd();}}
+    if(u>=3.4)psNext();return;}
+  if(C.stage==='wait'){showCam();youWait();if(psSec()>=psTurnAt(C.wi)-.05)psBegin(C.wi);return;}
+  const x=C.order[C.ri];
+  if(x&&!x.you&&C.ri<C.order.length){youWait();const r=x.r,g=r.m.root,rm=r.m,pd=padOf(C.ri),kind=x.kind;
+    const tr=()=>x.tr[x.k],sp=()=>trSpot(kind,tr()[0]),at=s=>[s.x,s.y,s.z];
+    if(C.stage==='rin'){C.spot=[PS.sx,PS.sz];showCam();if(x.out){const k=sm(clamp(u/1.5,0,1));psHop(g,rm,pd,[PS.sx,BY,PS.sz],k,dt,FACE);if(u>=1.7)psGo('rflop');return;}
+      const s=sp();C.spot=[s.x,s.z];const k=clamp(u/PS_MV,0,1);psHop(g,rm,pd,at(s),k,dt,k<.9?Math.atan2(s.x-pd[0],s.z-pd[2]):s.ry);
+      if(u>=PS_MV){x.fb=0;x.hf=0;x.s0=null;psGo('rtr');}return;}
+    if(C.stage==='rtr'){showCam();if(x.peer)psPeerG(x);let gr=x.g[x.k];
+      if(!x.npc&&gr==null){const s=sp();psPose(g,rm,s.x,s.y,s.z,s.ry);animPet(rm,dt,false);if(!x.wt)x.wt=C.t;if(C.t-x.wt<PS_AIM+3)return;gr=x.g[x.k]=0;}   /* 👫 a friend's trick waits for their tap (or their time runs out) */
+      x.wt=null;if(x.s0==null){x.s0=C.t;floatText('🎩 '+tr()[1]+'!',C.spot[0],1.55,C.spot[1],{h:.42,top:1});}const v=C.t-x.s0;
+      psTrick(g,rm,kind,tr()[0],gr,v,C,x);
+      if(!x.fb&&v>.9){x.fb=1;floatText(['🙈 Oops!','⭐ Good!','🌟 PERFECT!'][gr],C.spot[0],1.3,C.spot[1],{h:.42,top:1});gr===2?SFX.whee():gr===1?SFX.pop():SFX.tap();}
+      if(v>=trLen(kind,tr()[0])){const s=sp();x.bx=[s.x,s.y,s.z];trGearOff(C.gearO);C.gearO=null;x.fb=0;x.hf=0;x.s0=null;
+        if(x.k<2){const n=trSpot(kind,x.tr[x.k+1][0]);x.k++;if(n.x!==s.x||n.z!==s.z||n.ry!==s.ry){x.mv0=x.bx;psGo('rmv');}else psGo('rtr');}else psGo('rback0');}
+      return;}
+    if(C.stage==='rmv'){showCam();const s=sp(),k=clamp(u/PS_MV,0,1);C.spot=[s.x,s.z];psHop(g,rm,x.mv0,at(s),k,dt,s.ry);if(u>=PS_MV)psGo('rtr');return;}
+    if(C.stage==='rback0'){showCam();const k=clamp(u/PS_MV,0,1),c=[PS.sx,BY,PS.sz];psHop(g,rm,x.bx,c,k,dt,FACE);if(u>=PS_MV){C.spot=[PS.sx,PS.sz];psScorePeer(x);psGo('rjin');}return;}
     if(C.stage==='rflop'){showCam();psFlop(x,u,dt);if(u>=(x.flop==='sleep'?4.4:6.3))psGo('rjin');return;}
     if(C.stage==='rjin'){judgeCam();if(x.flop!=='sleep')psPose(g,rm,PS.sx,BY,PS.sz,FACE);if(u>1.1){psGo('rjudge');C.jn=-1;psJudgePanel();}return;}
     if(C.stage==='rjudge'){judgeCam();const n=Math.floor(u/1.15);
       if(n>C.jn&&n<3){C.jn=n;const j=PSX.judges[n],v=x.out?'✖':x.sc[j.J.k];psCard(j,v);if(x.out)SFX.no();else if(v>=8)SFX.yay();else SFX.pop();psJudgePanel();}
-      if(u>3*1.15+1.4){psCardsDown();x.done=true;x.bx=g.position.x;x.bz=g.position.z;x.by=g.position.y;psGo('rback');psPanel('rival');}return;}
-    if(C.stage==='rback'){showCam();const k=sm(clamp(u/1.4,0,1));psPose(g,rm,lerp(x.bx,pd[0],k),lerp(x.by,PY,k)+Math.abs(Math.sin(k*Math.PI*3))*.08,lerp(x.bz,pd[1],k),k<.9?Math.atan2(pd[0]-x.bx,pd[1]-x.bz):psRot(C.ri));animPet(rm,dt,k<1);
-      if(u>=1.5){psHome(r,C.ri);psNextRival();}return;}
+      if(u>3*1.15+1.4){psCardsDown();x.done=true;x.bx=[g.position.x,g.position.y,g.position.z];psGo('rback');psPanel('rival');}return;}
+    if(C.stage==='rback'){showCam();const k=sm(clamp(u/1.4,0,1));psHop(g,rm,x.bx,pd,k,dt,k<.9?Math.atan2(pd[0]-x.bx[0],pd[2]-x.bx[2]):psRot(C.ri));
+      if(u>=1.5){psHome(r,C.ri);psNext();}return;}
     return;}
-  if(C.stage==='in'){showCam();const k=sm(clamp(u/1.4,0,1));psPetPose(p,lerp(C.ix,PS.sx,k),lerp(C.iy,BY,k)+Math.abs(Math.sin(k*Math.PI*2))*.12,lerp(C.iz,PS.sz,k),k<.85?Math.atan2(PS.sx-C.ix,PS.sz-C.iz):FACE);animPet(m,dt,k<1);
-    if(u>=1.6){C.round=0;psGo('aim');psAim();}return;}
-  if(C.stage==='aim'||C.stage==='trick'){showCam();
-    if(C.stage==='aim'){psPetPose(p,PS.sx,BY,PS.sz,FACE);animPet(m,dt,false);const el=$('psMark');if(el)el.style.left=(psPos()*100).toFixed(1)+'%';return;}
-    psPetPose(p,PS.sx,BY,PS.sz,FACE);psTrickAnim(p.g,m,petKind(C.d),C.tr[C.round][1],C.res[C.round],u,BY,FACE,C);
-    if(u>=1.6){C.hf=0;m.legs[0].rotation.x=0;psPetPose(p,PS.sx,BY,PS.sz,FACE);
-      if(C.round<2){C.round++;psGo('aim');psAim();}else{me.sc=psScore10(C.d,C.pts);me.tot=me.sc.style+me.sc.trick+me.sc.happy;psGo('jin');C.jn=-1;psJudgePanel();}}
+  const m=p&&p.m;
+  if(C.stage==='in'){C.spot=[PS.sx,PS.sz];showCam();const k=sm(clamp(u/1.4,0,1));psPetPose(p,lerp(C.ix,PS.sx,k),lerp(C.iy,BY,k)+Math.abs(Math.sin(k*Math.PI*2))*.12,lerp(C.iz,PS.sz,k),k<.85?Math.atan2(PS.sx-C.ix,PS.sz-C.iz):FACE);animPet(m,dt,k<1);
+    if(u>=1.6){C.round=0;C.pos=[PS.sx,BY,PS.sz];psGo('mv');}return;}
+  if(C.stage==='mv'){const s=trSpot(petKind(C.d),C.tr[C.round][0]),k=clamp(u/PS_MV,0,1);C.spot=[s.x,s.z];showCam();psHop(p.g,m,C.pos,[s.x,s.y,s.z],k,dt,s.ry);p.x=p.g.position.x;p.z=p.g.position.z;
+    if(u>=PS_MV){psGo('aim');psAim();}return;}
+  if(C.stage==='aim'||C.stage==='trick'){showCam();const kind=petKind(C.d),[id]=C.tr[C.round],s=trSpot(kind,id);
+    if(C.stage==='aim'){psPetPose(p,s.x,s.y,s.z,s.ry);animPet(m,dt,false);const el=$('psMark');if(el)el.style.left=(psPos()*100).toFixed(1)+'%';
+      if(C.ts!=null&&u>=PS_AIM)psTapped(0);   /* in a shared show the time to aim runs out (the others are waiting): an oopsie */
+      return;}
+    psTrick(p.g,m,kind,id,C.res[C.round],u,C,C);p.x=s.x;p.z=s.z;
+    if(u>=trLen(kind,id)){C.hf=0;trGearOff(C.gearO);C.gearO=null;C.pos=[s.x,s.y,s.z];
+      if(C.round<2){C.round++;psGo('mv');}else psGo('back0');}
     return;}
+  if(C.stage==='back0'){C.spot=[PS.sx,PS.sz];showCam();const k=clamp(u/PS_MV,0,1);psHop(p.g,m,C.pos,[PS.sx,BY,PS.sz],k,dt,FACE);
+    if(u>=PS_MV){me.sc=psScore10(C.d,C.pts);const g=PSM.g;if(C.ts!=null&&g&&g.sc){me.sc.style=g.sc.style;me.sc.happy=g.sc.happy;}   /* (a shared show: style and happiness as sent when you joined, so every screen adds up the same) */
+      me.tot=me.sc.style+me.sc.trick+me.sc.happy;psGo('jin');C.jn=-1;psJudgePanel();}return;}
   if(C.stage==='jin'||C.stage==='judge'){judgeCam();psPetPose(p,PS.sx,BY,PS.sz,FACE);animPet(m,dt,false);
     if(C.stage==='jin'&&u>1.2){psGo('judge');C.jn=-1;}
     if(C.stage==='judge'){const n=Math.floor(u/1.4);if(n>C.jn&&n<3){C.jn=n;const j=PSX.judges[n],v=me.sc[j.J.k];psCard(j,v);if(v>=8)SFX.yay();else SFX.pop();psJudgePanel();}
-      if(u>3*1.4+1.4){psCardsDown();me.done=true;psResults();}}
+      if(u>3*1.4+1.4){psCardsDown();me.done=true;if(C.ri<C.order.length-1){psGo('yback');psPanel('rival');}else psNext();}}
     return;}
-  if(C.stage==='res'){P.cy=lerp(P.cy||0,.35,Math.min(1,dt*3));psCamTo(PS.rcam[0],PS.rcam[1],PS.sx,1.0,PS.sz,dt,2.6);
-    const n=C.ann.length,ya=C.ann.find(a=>a.x.you);
-    if(u<1.0){const k=sm(clamp(u/.9,0,1));psPetPose(p,lerp(PS.sx,pd3[0],k),lerp(BY,PY,k)+Math.sin(Math.PI*k)*.45,lerp(PS.sz,pd3[1],k),FACE+.35);animPet(m,dt,k<1);}
-    else if(!ya||!ya.shown)youWait();
-    PSX.pod.scale.y=clamp((u-.9)/.6,.01,1);
+  if(C.stage==='yback'){showCam();const k=sm(clamp(u/1.4,0,1)),pd=padOf(C.me);psHop(p.g,m,[PS.sx,BY,PS.sz],pd,k,dt,psRot(C.me));p.x=p.g.position.x;p.z=p.g.position.z;if(u>=1.5)psNext();return;}
+  if(C.stage==='rwait'){showCam();youWait();if(psSec()>=C.rt-.05)psResults();return;}
+  if(C.stage==='res'){P.cy=lerp(P.cy||0,.35,Math.min(1,dt*3));psCamTo(PS.rcam[0],PS.rcam[1],-36.0,1.0,16.9,dt,2.6);
+    const n=C.ann.length;
     for(let j=0;j<n;j++){const a=C.ann[j],T=2.2+j*2.4+(j===n-1?1.4:0);
       if(j===n-1&&u>=T-1.4&&!C.drum){C.drum=1;popText('🥁 And the winner is…');SFX.knock();}
       if(u>=T&&!a.shown)psReveal(a);
       if(a.shown)psOnPod(a,u-T,dt);}
+    if(p&&!C.ann.some(a=>a.x.you&&a.shown))youWait();
     const T1=2.2+(n-1)*2.4+1.4;
-    if(u>=T1&&(!C.cf||u-C.cf>(C.place===1?.5:.8))){C.cf=u;const sd=Math.random()<.5?-1:1;floatText(pick(['🎉','⭐','✨','🎊']),PS.sx+rand(-1.0,.2),rand(1.7,2.5),PS.sz+sd*rand(1.0,1.7),{h:.3});}
+    if(u>=T1&&(!C.cf||u-C.cf>(C.place===1?.5:.8))){C.cf=u;const sd=Math.random()<.5?-1:1;floatText(pick(['🎉','⭐','✨','🎊']),-36.0+rand(-.6,.6),rand(1.9,2.6),16.9+sd*rand(.8,1.6),{h:.3});}
     if(u>=T1+2.0&&!C.paid){C.paid=1;psPay();}
+    if(C.ts!=null&&C.me<0&&C.paid&&!C.nx&&psSec()>=C.ts+C.len){C.nx=1;psAfter();}
     return;}
+  if(C.stage==='lic'){psLicCut(u,dt);return;}
   if(C.stage==='out'){P.cy=lerp(P.cy||0,0,Math.min(1,dt*4));const k=sm(clamp(u/1.1,0,1)),o=PS.out;psCamTo(o[0],o[1],PS.sx,.9,PS.sz,dt,4);
-    psPetPose(p,lerp(C.ox,o[0]-.7,k),lerp(C.oy,0,k)+Math.sin(Math.PI*k)*.7,lerp(C.oz,o[1]-.9,k),Math.atan2(o[0]-C.ox,o[1]-C.oz));animPet(m,dt,k<1);
+    if(p)psPetPose(p,lerp(C.ox,o[0]-.7,k),lerp(C.oy,0,k)+Math.sin(Math.PI*k)*.7,lerp(C.oz,o[1]-.9,k),Math.atan2(o[0]-C.ox,o[1]-C.oz)),animPet(m,dt,k<1);
     if(u>=1.3)psEnd();}}
-function psResults(){const C=CUT,placed=C.order.filter(x=>!x.out).sort((a,b)=>b.tot-a.tot||b.sc.trick-a.sc.trick||(b.you?1:0)-(a.you?1:0));
-  C.placed=placed;C.place=placed.indexOf(C.order[3])+1;C.pod=true;C.ann=placed.slice(0,3).map((x,i)=>({x,i})).reverse();
-  PSX.pod.scale.y=.01;closePanel();psGo('res');P.x=PS.rcam[0];P.z=PS.rcam[1];{const a=psLook(PS.sx,1.0,PS.sz);P.yaw=a.yaw;P.pitch=a.pitch;}SFX.ding();popText('🏆 And the results are…');}
-function psReveal(a){const C=CUT,x=a.x,nm=x.you?C.d.name:x.R.name,med=['🥇','🥈','🥉'][a.i];a.shown=1;
+/* a friend's turn is scored from what they sent: style and happiness when they joined, the trick card from their taps */
+function psScorePeer(x){if(x.npc)return;const pts=x.g.reduce((s,v)=>s+(v|0),0);x.sc.trick=PS_TR[clamp(pts,0,6)];x.tot=x.sc.style+x.sc.trick+x.sc.happy;}
+/* the results: in a shared show at the same moment for everyone */
+function psResultsAt(){const C=CUT;if(C.ts!=null){C.rt=psTurnAt(C.order.length);if(psSec()<C.rt-.05){psGo('rwait');return;}}psResults();}
+function psResults(){const C=CUT,ix=x=>C.order.indexOf(x),placed=C.order.filter(x=>!x.out).sort((a,b)=>b.tot-a.tot||b.sc.trick-a.sc.trick||(a.npc?1:0)-(b.npc?1:0)||ix(a)-ix(b));   /* ties: players before town pets, then the earlier turn: the same on every screen */
+  C.placed=placed;C.place=me0(C)?placed.indexOf(C.order[C.me])+1:0;C.ann=placed.slice(0,3).map((x,i)=>({x,i})).reverse();
+  closePanel();psGo('res');P.x=PS.rcam[0];P.z=PS.rcam[1];{const a=psLook(-36.0,1.0,16.9);P.yaw=a.yaw;P.pitch=a.pitch;}SFX.ding();popText('🏆 And the results are…');}
+const me0=C=>C.me>=0&&!!C.p;
+function psReveal(a){const C=CUT,x=a.x,nm=psNm(x),med=['🥇','🥈','🥉'][a.i];a.shown=1;
   popText(a.i===0?(x.you?'🥇 YOU WIN!':'🥇 '+nm+' wins!'):med+' '+['1st','2nd','3rd'][a.i]+' place: '+nm+'!');
   if(a.i===0){SFX.yay();setTimeout(()=>SFX.whee(),300);}else SFX.ding();
   const g=x.you?C.p.g:x.r.m.root;a.f=[g.position.x,g.position.y,g.position.z];if(!x.you)x.r.busy=true;}
-function psOnPod(a,v,dt){const C=CUT,x=a.x,[bx,bz,h]=PS.pod[a.i],top=PS.top+h+.05,k=clamp(v/.9,0,1),e=k*k*(3-2*k);
+function psOnPod(a,v,dt){const C=CUT,x=a.x,[bx,bz,h]=PS.pod[a.i],top=h+.02,k=clamp(v/.9,0,1),e=k*k*(3-2*k);
   const px=lerp(a.f[0],bx,e),pz=lerp(a.f[2],bz,e),py=lerp(a.f[1],top,e)+Math.sin(Math.PI*k)*.8+(k>=1&&a.i===0?Math.abs(Math.sin(v*6))*.18:0),ry=k<1?Math.atan2(bx-a.f[0],bz-a.f[2]):Math.PI/2;
   if(x.you){psPetPose(C.p,px,py,pz,ry);animPet(C.p.m,dt,k<1);}else{psPose(x.r.m.root,x.r.m,px,py,pz,ry);animPet(x.r.m,dt,k<1);}}
-function psRow(x,med){const C=CUT,me=!!x.you,R=x.R,ic=PET_TYPES[me?petKind(C.d):R.type].icon;
-  return`<div class="psrow on${me?' me':''}"><span class="pji">${med}</span><div><b>${ic} ${esc(me?C.d.name:R.name)}</b><i>${me?'Your pet!':esc(R.owner)+'\'s '+PET_TYPES[R.type].name}</i></div><span class="pjs">${x.out?'Out':x.tot+' ⭐'}</span></div>`;}
-function psPay(){const C=CUT,d=C.d,me=C.order[3],place=C.place,tot=me.tot;
+function psRow(x,med){const me=!!x.you;
+  return`<div class="psrow on${me?' me':''}"><span class="pji">${med}</span><div><b>${PET_TYPES[x.kind].icon} ${esc(psNm(x))}</b><i>${psOwner(x)}</i></div><span class="pjs">${x.out?'Out':x.tot+' ⭐'}</span></div>`;}
+function psPay(){const C=CUT,med=['🥇','🥈','🥉','4️⃣'],rows=C.placed.map((x,i)=>psRow(x,med[i]||'')).join('')+C.order.filter(x=>x.out).map(x=>psRow(x,'😴')).join('');
+  if(!me0(C)){openPanel(`<div class="hd"><h2>🏆 ${esc(psNm(C.placed[0]))} wins!</h2></div>${rows}<p class="note">${C.plan&&PSM.g&&PSM.g.mine>(PSM.g.gi|0)?'⏭️ Your show is next!':'The next Pet Show is next Saturday! 📅'}</p>
+    <div class="row"><button class="btn mint" data-a="psbye">👍 OK!</button></div>`,{bottom:true,lock:true,cls:'psc'});return;}
+  const d=C.d,me=C.order[C.me],place=C.place,tot=me.tot;
   const lv0=sk('pets').lv;let pay=0,lvUp=0;
   if(place===1){pay=200;S.coins+=pay;bumpLevel('pets',2);lvUp=sk('pets').lv-lv0;S.showWins=(S.showWins||0)+1;}
   else{pay=[0,0,80,40][place]||15;S.coins+=pay;addXP('pets',place===2?10:place===3?5:3);SFX.coin();}
   S.show={day:S.day,place,tot,pet:d.name};S.showLast=(['','🥇 ','🥈 ','🥉 '][place]||'4th place · ')+d.name+' — '+tot+' ⭐';qEvent('petshow');if(place===1){qEvent('petshowwin');hardEvent('showwin',1);}
-  d.happy=Math.min(100,d.happy+15);change();saveLocal();
-  const med=['🥇','🥈','🥉','4️⃣'],rows=C.placed.map((x,i)=>psRow(x,med[i]||'')).join('')+C.order.filter(x=>x.out).map(x=>psRow(x,'😴')).join('');
+  d.happy=Math.min(100,d.happy+15);C.lic=licShow(place);change();saveLocal();
   const prize=place===1?`You win <b>200 🪙</b>${lvUp?` and 🐾 Pets <b>+${lvUp} level${lvUp>1?'s':''}</b>`:' (your Pets skill is already MAX! 🌟)'}!`
     :place<=3?`You got <b>${pay} 🪙</b>. So close! Next time: hit the gold for perfect tricks! 💪`:`You got <b>${pay} 🪙</b> for joining. Practice your tricks and try again next Saturday! 💪`;
-  openPanel(`<div class="hd"><h2>${place===1?'🏆 '+esc(d.name)+' WINS!':place===2?'🥈 2nd place!':place===3?'🥉 3rd place!':'4th place'}</h2></div>${rows}<p class="earn">${prize}</p><p class="note">The next Pet Show is next Saturday! 📅</p>
+  openPanel(`<div class="hd"><h2>${place===1?'🏆 '+esc(d.name)+' WINS!':place===2?'🥈 2nd place!':place===3?'🥉 3rd place!':'4th place'}</h2></div>${rows}<p class="earn">${prize}</p>${place<=3?'<p class="note">🪪 Top 3: it counts for your animal license!</p>':''}<p class="note">The next Pet Show is next Saturday! 📅</p>
     <div class="row"><button class="btn ${place===1?'butter':'mint'}" data-a="psbye">${place===1?'🎉 Yay!':'👍 OK!'}</button></div>`,{bottom:true,lock:true,cls:'psc'});}
-ACT.psbye=()=>{const C=CUT;if(!C||!C.show||C.stage!=='res'||!C.paid)return;closePanel();psCardsDown();C.pod=false;PSX.rivals.forEach((r,i)=>psHome(r,i));
-  const g=C.p.g;C.ox=g.position.x;C.oy=g.position.y;C.oz=g.position.z;psGo('out');};
+ACT.psbye=()=>{const C=CUT;if(!C||!C.show||C.stage!=='res'||!C.paid)return;closePanel();psCardsDown();
+  if(C.lic&&C.lic.up){psLicStart();return;}
+  if(C.ts!=null&&C.me<0&&!C.nx){C.nx=1;psAfter();return;}
+  psOut();};
+function psOut(){const C=CUT;C.order.forEach((x,i)=>{if(!x.you)psHome(x.r,i);});const g=C.p?C.p.g:null;if(g){C.ox=g.position.x;C.oy=g.position.y;C.oz=g.position.z;}psGo('out');}
+/* after a shared show: the next show right after (more than 4 players), or home */
+function psAfter(){const C=CUT,g=PSM.g;if(!g||!g.plans){psOut();return;}g.gi=(g.gi|0)+1;const nx=g.plans[g.gi];
+  if(!nx||g.gi>g.mine&&g.mine>=0||g.watch&&!nx){psOut();return;}
+  psEnd(true);const L=psPlayers(g.t0),me=L.findIndex(x=>x.me);psShow(nx,g.mine===g.gi&&me>=0?L[me].p:null);}
 function psPos(){const C=CUT,T=[1.8,1.5,1.25][C.round],ph=(((performance.now()-C.t0)/1000)/T+C.ph)%1;return ph<.5?ph*2:2-ph*2;}
-function psAim(){const C=CUT,[ic,nm]=C.tr[C.round];C.t0=performance.now();C.ph=Math.random();
-  openPanel(`<div class="hd"><h2>${ic} ${nm}!</h2><span class="psn">Trick ${C.round+1} of 3</span></div>
-    <p class="note">🎩 Tap <b>⭐ NOW!</b> when the paw is in the <b>gold</b> spot!</p>
-    <div class="psbar"><div class="psgood"></div><div class="psgold"></div><div id="psMark" class="psm">🐾</div></div>
+/* the gold zone: a trick learned by practising (the 2nd and 3rd) has a bigger one (rules-tricks) */
+const psGoldW=C=>C.tr[C.round]&&trList(petKind(C.d)).findIndex(t=>t[0]===C.tr[C.round][0])>0?.12:.08;
+function psAim(){const C=CUT,[,nm]=C.tr[C.round],gw=psGoldW(C);C.t0=performance.now();C.ph=(Math.round(psSec()*10)%10)/10;
+  openPanel(`<div class="hd"><h2>🎩 ${esc(nm)}!</h2><span class="psn">Trick ${C.round+1} of 3</span></div>
+    <p class="note">🎩 Tap <b>⭐ NOW!</b> when the paw is in the <b>gold</b> spot!${gw>.08?' <b>Practised trick: a bigger gold spot!</b>':''}</p>
+    <div class="psbar"><div class="psgood"></div><div class="psgold" style="left:${50-gw*100}%;right:${50-gw*100}%"></div><div id="psMark" class="psm">🐾</div></div>
     <div class="row"><button class="btn butter psnow" data-a="pstap">⭐ NOW!</button></div>`,{bottom:true,lock:true,cls:'psc aim'});}
-ACT.pstap=()=>{const C=CUT;if(!C||!C.show||C.stage!=='aim'||C.t-C.st<.25)return;const pos=psPos(),d=Math.abs(pos-.5),g=d<=.08?2:d<=.22?1:0;
-  C.res[C.round]=g;C.pts+=g;C.stage='trick';C.st=C.t;const el=$('psMark');if(el){el.style.left=(pos*100).toFixed(1)+'%';el.classList.add('hit');}
-  const b=document.querySelector('.psnow');if(b)b.disabled=true;
-  if(g===2){SFX.whee();setTimeout(()=>SFX.yay(),250);popText('PERFECT! 🌟');for(let i=0;i<4;i++)setTimeout(()=>{if(CUT&&CUT.show)floatText('⭐',PS.sx+rand(-.6,.6),rand(1.1,1.7),PS.sz+rand(-.6,.6),{h:.42});},i*120);}
-  else if(g===1){SFX.pop();popText('Good! ⭐');}else{SFX.tap();popText('Oopsie! 🙈');floatText('💦',PS.sx,1.3,PS.sz,{h:.45});}};
-function psEnd(){const C=CUT;if(!C||!C.show)return;const p=C.p,o=PS.out;CUT=null;for(const r of PSX.rivals)r.tg.visible=true;document.body.classList.remove('cut');if(UI.open)closePanel();psCardsDown();
-  for(const x of C.order)if(x.bf){scene.remove(x.bf);x.bf=null;}PSX.rivals.forEach((r,i)=>psHome(r,i));if(PSX.pod){PSX.pod.visible=false;PSX.pod.scale.y=1;}
-  p.ps=false;p.m.b.rotation.set(0,0,0);p.m.b.position.set(0,0,0);p.m.legs[0].rotation.x=0;p.g.rotation.set(0,p.g.rotation.y,0);p.x=o[0]-.7;p.z=o[1]-.9;p.tx=p.x;p.tz=p.z;p.loc='city';p.d.loc='city';p.d.x=p.x;p.d.z=p.z;p.tag.visible=true;
+ACT.pstap=()=>{const C=CUT;if(!C||!C.show||C.stage!=='aim'||C.t-C.st<.25)return;const pos=psPos(),d=Math.abs(pos-.5),g=d<=psGoldW(C)?2:d<=.22?1:0;psTapped(g,pos);};
+function psTapped(g,pos){const C=CUT;C.res[C.round]=g;C.pts+=g;if(PSM.g&&C.ts!=null)PSM.g.gr=(PSM.g.gr||'')+g;C.stage='trick';C.st=C.t;const el=$('psMark');if(el&&pos!=null){el.style.left=(pos*100).toFixed(1)+'%';el.classList.add('hit');}
+  const b=document.querySelector('.psnow');if(b)b.disabled=true;const sp=C.spot;
+  if(g===2){SFX.whee();setTimeout(()=>SFX.yay(),250);popText('PERFECT! 🌟');for(let i=0;i<4;i++)setTimeout(()=>{if(CUT&&CUT.show)floatText('⭐',sp[0]+rand(-.6,.6),rand(1.1,1.7),sp[1]+rand(-.6,.6),{h:.42});},i*120);}
+  else if(g===1){SFX.pop();popText('Good! ⭐');}else{SFX.tap();popText(pos==null?'Too slow! 🙈':'Oopsie! 🙈');floatText('💦',sp[0],1.3,sp[1],{h:.45});}}
+function psEnd(keep){const C=CUT;if(!C||!C.show)return;const p=C.p,o=PS.out;CUT=null;popDrop();for(const f of FLOATS)f.t=f.life;   /* the show's big words (and any still waiting) end with it (picture pass: 'Oopsie!' followed you to the farm) */
+  for(const r of PSX.rivals)r.tg.visible=true;if(!keep)document.body.classList.remove('cut');if(UI.open)closePanel();psCardsDown();trGearOff(C.gearO);
+  for(const x of C.order){if(x.bf){scene.remove(x.bf);x.bf=null;}if(x.own){scene.remove(x.r.m.root);x.r.m.root.traverse(q=>{if(q.isMesh)q.geometry.dispose();});}}PSX.rivals.forEach((r,i)=>psHome(r,i));
+  psLicOff(C);
+  if(p){p.ps=false;p.m.b.rotation.set(0,0,0);p.m.b.position.set(0,0,0);if(p.m.legs[0])p.m.legs[0].rotation.x=0;p.g.rotation.set(0,p.g.rotation.y,0);p.x=o[0]-.7;p.z=o[1]-.9;p.tx=p.x;p.tz=p.z;p.loc='city';p.d.loc='city';p.d.x=p.x;p.d.z=p.z;p.tag.visible=true;}
+  if(keep)return;
+  if(PSM.g&&(C.ts!=null||PSM.g.t0))PSM.g=null;
   P.x=o[0];P.z=o[1];P.pitch=0;P.cy=0;[P.x,P.z]=collideXZ(P.x,P.z,.3,CUR);change();if(PSX.dirty)psRefresh();
-  if(C.place===1)setTimeout(()=>toast('🏆 '+C.d.name+' is the Pet Show champion! See you next Saturday!',4),400);}
+  if(C.place===1)setTimeout(()=>toast('🏆 '+C.d.name+' is the Pet Show champion! See you next Saturday!',4),400);
+  else if(C.lic&&C.lic.near)setTimeout(()=>toast('🎩 Sir Barkley: “'+C.lic.near+'”',4.4),400);}
+
+/* 🪪 the animal license (rules-animal-license): top 3 at a show counts as a win (only for the license), 1st place as a first; healthy weeks from the ribbon.
+   Level 1 = 1 win + 1 healthy week, level 2 = 2 + 2, level 3 = 3 wins (one of them 1st) + 3 healthy weeks. Counted from this update, never taken away;
+   a new level is handed over by Sir Barkley on the podium after a show (story-barkley-license) */
+const LIC_NEED=[null,[1,1,0],[2,2,0],[3,3,1]];
+function licReach(l){let lv=l.lv|0;while(lv<3){const n=LIC_NEED[lv+1];if((l.wins|0)>=n[0]&&(l.weeks|0)>=n[1]&&(l.firsts|0)>=n[2])lv++;else break;}return lv;}
+function licShow(place){const l=S.lic;if(!l)return null;if(place>=1&&place<=3)l.wins=(l.wins|0)+1;if(place===1)l.firsts=(l.firsts|0)+1;
+  const lv=licReach(l),up=lv>(l.lv|0);if(up){l.lv=lv;l.seen=0;}
+  let near='';if(!up&&(l.lv|0)<3){const n=LIC_NEED[(l.lv|0)+1],w=n[0]-(l.wins|0),k=n[1]-(l.weeks|0),f=n[2]-(l.firsts|0),miss=Math.max(0,w)+Math.max(0,k)+Math.max(0,f);
+    if(miss===1)near=`One more ${k>0?'healthy week':'win'} and your license grows!`;}
+  return{up,lv:l.lv|0,near};}
+function licStars(lv){return'★'.repeat(lv)+'☆'.repeat(3-lv);}
+const LIC_LINE=['','Splendid! Here is your animal license, level 1. Wear it with pride!','Marvellous! Your license is now level 2.','Bravo! Level 3! You may now care for any animal in Cozy Town.'];
+/* the hand-over: you on podium step 1, Sir Barkley on step 2 hands you the card (person.giveCard / person.takeCard), your pet hops (pet.greet) */
+function psLicStart(){const C=CUT,lv=C.lic.lv;C.order.forEach((x,i)=>{if(!x.you){psHome(x.r,i);x.r.busy=false;}});
+  const B=makePerson(PS_JUDGES[1].look),Y=makePerson(lookToPerson(S.look));for(const q of[B,Y])scene.add(q.root);
+  B.root.position.set(PS.bark[0],PS.pod[1][2]+.02,PS.bark[1]);B.root.rotation.y=Math.atan2(.6,-.8);Y.root.position.set(PS.you[0],PS.pod[0][2]+.02,PS.you[1]);Y.root.rotation.y=Math.atan2(.6,.8);
+  const card=psLicCard(lv);scene.add(card);C.lb={B,Y,card,lv};const j=PSX.judges[1];if(j)j.p.root.visible=false;
+  B.root.updateMatrixWorld(true);Y.root.updateMatrixWorld(true);const mid=new THREE.Vector3((PS.bark[0]+PS.you[0])/2+.28,PS.pod[0][2]+.9,(PS.bark[1]+PS.you[1])/2);   /* the meeting point: between the near shoulders, .28 toward the audience, a little lower */C.lb.tB=B.root.worldToLocal(mid.clone()).toArray();C.lb.tY=Y.root.worldToLocal(mid.clone()).toArray();
+  C.lb.show=Y.root.worldToLocal(new THREE.Vector3(PS.rcam[0],1.5,PS.rcam[1])).toArray();
+  psGo('lic');toast('🎩 Sir Barkley: “'+LIC_LINE[lv]+'”',4.6);}
+function psLicCut(u,dt){const C=CUT,L=C.lb,p=C.p;P.cy=lerp(P.cy||0,.35,Math.min(1,dt*3));psCamTo(-30.9,17.4,-35.9,1.55,17.5,dt,2.6);
+  if(p){psPetPose(p,-35.0,0,17.5,Math.PI/2);if(!C.hop||u-C.hop>2.2)C.hop=u;COZY_MOVES.play(p.m,'pet.greet',u-C.hop,{kind:petKind(C.d)});}
+  const rb=COZY_MOVES.play(L.B,'person.giveCard',u,{target:L.tB}),ry=u>.85?COZY_MOVES.play(L.Y,'person.takeCard',u-.85,{target:L.tY,showTo:L.show}):{};
+  const cp=rb.cardPose||ry.cardPose,who=rb.cardPose?L.B:ry.cardPose?L.Y:null;L.card.visible=!!who;
+  if(who){who.root.updateMatrixWorld(true);L.card.position.fromArray(cp.p).applyMatrix4(who.root.matrixWorld);L.card.quaternion.fromArray(cp.q).premultiply(who.root.quaternion);}
+  if(u>1.3&&!C.stamp){C.stamp=1;SFX.stamp();setTimeout(()=>SFX.yay(),260);}
+  if(u>4.6&&!C.licOpen){C.licOpen=1;openLicense(true);}}
+ACT.licok=()=>{const C=CUT;closePanel();if(C&&C.show&&C.stage==='lic')psOut();};
+function psLicOff(C){const L=C&&C.lb;if(!L)return;for(const q of[L.B,L.Y,L.card]){scene.remove(q.root||q);(q.root||q).traverse(o=>{if(o.isMesh){o.geometry.dispose();if(o.material&&o.material.map&&o.material.map.isCanvasTexture){o.material.map.dispose();o.material.dispose();}}});}C.lb=null;const j=PSX.judges[1];if(j&&PSX.on)j.p.root.visible=true;}
+/* the hand-held card: the book's show:license model, its face drawn by the game (your name, level stars, stamp) */
+function psLicCard(lv){const o=packBuild('show.license').root,c=document.createElement('canvas');c.width=768;c.height=512;licDraw(c.getContext('2d'),lv,S.name||'You');
+  const tx=new THREE.CanvasTexture(c);o.traverse(q=>{if(q.isMesh&&q.material&&q.material.type==='MeshBasicMaterial'&&q.geometry.type==='PlaneGeometry')q.material=new THREE.MeshBasicMaterial({map:tx});});return o;}
+function licDraw(x,lv,name){const F='"Roboto Slab","Alfa Slab One",Georgia,serif';
+  x.fillStyle='#f3e6c4';x.fillRect(0,0,768,512);x.strokeStyle='#7a5a36';x.lineWidth=10;x.strokeRect(14,14,740,484);x.lineWidth=3;x.strokeRect(30,30,708,452);
+  x.fillStyle='#3d5bd9';x.beginPath();x.moveTo(80,90);x.lineTo(240,90);x.lineTo(240,210);x.quadraticCurveTo(240,300,160,340);x.quadraticCurveTo(80,300,80,210);x.closePath();x.fill();x.strokeStyle='#ffd45c';x.lineWidth=8;x.stroke();
+  x.fillStyle='#ffd45c';x.beginPath();x.ellipse(160,230,34,28,0,0,TAU);x.fill();for(const [dx,dy] of[[-40,-30],[-14,-52],[14,-52],[40,-30]]){x.beginPath();x.ellipse(160+dx,230+dy,13,17,0,0,TAU);x.fill();}
+  x.fillStyle='#3a2a1a';x.textAlign='left';x.font='44px "Alfa Slab One",Georgia,serif';x.fillText('ANIMAL LICENSE',280,135);
+  x.font='700 30px '+F;x.fillStyle='#5a4630';x.fillText('Cozy Town Pet Office',282,178);
+  x.font='800 42px '+F;x.fillStyle='#2a3a8f';x.fillText(String(name).slice(0,16),282,250);
+  x.font='700 30px '+F;x.fillStyle='#5a4630';x.fillText('Level '+lv,282,305);x.font='48px '+F;x.fillStyle='#d4a017';x.fillText(licStars(lv),420,308);
+  if(lv){x.save();x.translate(575,385);x.rotate(-.22);x.strokeStyle=lv===3?'#9a6e08':'#c0392b';x.fillStyle=x.strokeStyle;x.lineWidth=7;x.beginPath();x.arc(0,0,82,0,TAU);x.stroke();x.lineWidth=3;x.beginPath();x.arc(0,0,68,0,TAU);x.stroke();
+    x.textAlign='center';x.font='800 '+(lv===3?21:23)+'px '+F;x.fillText(lv===3?'TOP LEVEL':'CERTIFIED',0,8);x.font='700 15px '+F;x.fillText('valid forever',0,36);x.restore();}
+  x.font='600 22px '+F;x.fillStyle='#7a5a36';x.textAlign='left';x.fillText('Signed: Sir Barkley',80,440);}
+/* 🪪 the license card screen (screens-license-card): paper, the same in dark mode; your level, what's next, the animals you may have */
+function openLicense(given){const l=S.lic||{},lv=l.lv|0,n=LIC_NEED[Math.min(3,lv+1)],first=S.pets[0],ic=first?PET_TYPES[petKind(first)].icon:'🐾';
+  const can=Object.keys(BIGP).filter(k=>lv>=BIGP[k][4]).map(k=>BIGP[k][0]);
+  const next=lv>=3?'<b>Top level!</b> Every animal in Cozy Town.':`Next level: 🏆 Pet Show top 3 <b>${Math.min(l.wins|0,n[0])}/${n[0]}</b>${n[2]?` · 🥇 1st place <b>${Math.min(l.firsts|0,n[2])}/${n[2]}</b>`:''} · 💚 Healthy weeks <b>${Math.min(l.weeks|0,n[1])}/${n[1]}</b>`;
+  const once=given&&!l.seen;if(given)l.seen=1;
+  openPanel(`<div class="lic"><div class="licTop"><div class="licShield">${ic}</div><div><div class="licT">ANIMAL LICENSE</div><div class="licS">Cozy Town Pet Office</div></div></div>
+    <div class="licN">${esc(S.name||'You')}</div><div class="licL">Level ${lv} <span class="licStars">${licStars(lv)}</span></div>
+    <div class="licX">${next}</div><div class="licX">${lv?'You may have: '+(can.length?can.join(' '):'')+' and every other pet':'Finish top 3 at a Pet Show and have a healthy week for level 1.'}${lv&&lv<3?' · 🐻 at level 3':''}</div>
+    ${lv?`<div class="licStamp${lv===3?' gold':''}">${lv===3?'TOP LEVEL':'CERTIFIED'}<small>valid forever</small></div>`:''}<div class="licSig">Signed: Sir Barkley</div></div>
+    ${once?'<p class="note">🎩 Sir Barkley: “Find your license in My pets.”</p>':''}<div class="row"><button class="btn butter" data-a="${given?'licok':'close'}">${given?'🎉 Yay!':'OK'}</button></div>`,{cls:'licc'});if(given)change();}
+ACT.lic=()=>{SFX.tap();openLicense(false);};
+
 /* 🕹️ Claw machine in the Toy Store: stop the claw over a capsule, drop it, and win a prize! */
 const CLAW_COST=10,CLAW_FURN=['teddy','unicorn','toybox','robot','racecar','rockinghorse','dollhouse','castle','tulips','sunflower','bonsai','cactus'],GOLD_FURN=['gteddy','gunicorn','gtrophy','gstar'];
 const clawK=()=>LOC.toys&&LOC.toys.cl;
@@ -421,9 +635,9 @@ function clawOpen(){const K=clawK();if(!K||CUT||!S)return;SFX.talk();
     <div class="row"><button class="btn butter" data-a="clawgo" ${S.coins<CLAW_COST?'disabled':''}>🕹️ Play! (${CLAW_COST} 🪙)</button></div>${S.coins<CLAW_COST?'<p class="note">Not enough coins yet. '+earnTip()+'</p>':''}`);}
 function clawNew(K){K.x=K.rx;K.z=K.rz;K.y=K.ry;K.open=.1;clawPose(K);
   CUT={claw:1,t:0,st:0,shake:0,stage:'x',K,t0:performance.now(),hold:null,res:null};clawPanel();}
-ACT.clawgo=()=>{const K=clawK();if(!K||CUT||shutBuy('toys'))return;if(S.coins<CLAW_COST){SFX.no();toast('Not enough coins! 🪙');return;}
+ACT.clawgo=()=>{const K=clawK();if(!K||CUT||shutBuy('toys')||clawEmpty())return;if(S.coins<CLAW_COST){SFX.no();toast('Not enough coins! 🪙');return;}
   S.coins-=CLAW_COST;SFX.coin();change();closePanel();if(P.ride)stopRide();P.sit=null;document.body.classList.add('cut');$('note').hidden=true;clawNew(K);};
-ACT.clawagain=()=>{const C=CUT;if(!C||!C.claw||shutBuy('toys'))return;if(S.coins<CLAW_COST){SFX.no();return;}clawTidy(C);S.coins-=CLAW_COST;SFX.coin();change();clawNew(C.K);};
+ACT.clawagain=()=>{const C=CUT;if(!C||!C.claw||shutBuy('toys')||clawEmpty())return;if(S.coins<CLAW_COST){SFX.no();return;}clawTidy(C);S.coins-=CLAW_COST;SFX.coin();change();clawNew(C.K);};
 ACT.clawdone=()=>{const C=CUT;if(!C||!C.claw)return;clawEnd();};
 function clawPanel(){const C=CUT;
   if(C.stage==='x')openPanel(`<div class="hd"><h2>🕹️ Left or right?</h2><span class="psn">Step 1 of 2</span></div><p class="note">Tap <b>⏹ STOP</b> when the claw is right above a capsule!</p><div class="row"><button class="btn butter psnow" data-a="clawtap">⏹ STOP</button></div>`,{bottom:true,lock:true});
@@ -455,14 +669,17 @@ function clawCut(dt){const C=CUT,K=C.K,L=LOC.toys,t=(C.t+=dt),u=t-C.st,sm=k=>k*k
   if(C.hold){const c=C.hold;c.x=K.x;c.z=K.z;c.y=K.y-.17;c.g.position.set(c.x,c.y,c.z);}
   if(C.fell){const f=C.fell,v=t-f.t,c=f.c;c.y=Math.max(K.fy,f.y-v*v*7);c.g.position.set(c.x,c.y+(c.y<=K.fy?Math.abs(Math.sin(v*14))*.03*Math.max(0,1-v):0),c.z);}
   clawPose(K);}
+/* 🪙 economy rebalance (30 Oct): at most 10 prizes a game day; a level prize gives the level, no coins */
+const CLAW_DAY=10,clawToday=()=>S.clawDay&&S.clawDay[0]===S.day?S.clawDay[1]:0;
+function clawEmpty(){if(clawToday()<CLAW_DAY)return false;SFX.no();toast('🧸 Mr. Toby: “The claw machine is empty for today! New prizes tomorrow.”',3.8);return true;}
 function clawSkill(){const ks=Object.keys(SKILLS).filter(k=>sk(k).lv<MAXLV);return ks.length?pick(ks):null;}
 function clawPrize(cap){const out={};
-  if(cap.gold){const id=pick(GOLD_FURN);S.home.store.push({u:uid(),t:id,c:null,x:0,z:0,r:0});out.gold=1;out.furn=id;const k=clawSkill();if(k){bumpLevel(k,1);out.sk=k;}else{S.coins+=100;out.coins=100;}}
+  if(cap.gold){const id=pick(GOLD_FURN);S.home.store.push({u:uid(),t:id,c:null,x:0,z:0,r:0});out.gold=1;out.furn=id;const k=clawSkill();if(k){bumpLevel(k,1,true);out.sk=k;}else{S.coins+=100;out.coins=100;}}
   else{const r=Math.random();
     if(r<.58){const id=pick(CLAW_FURN),F=FURN[id],c=F.cols?pick(F.cols):null;S.home.store.push({u:uid(),t:id,c,x:0,z:0,r:0});out.furn=id;out.c=c;}
     else if(r<.88){const n=pick([20,25,30,30,40,50]);S.coins+=n;out.coins=n;}
-    else{const k=clawSkill();if(k){bumpLevel(k,1);out.sk=k;}else{S.coins+=40;out.coins=40;}}}
-  S.clawWins=(S.clawWins||0)+1;qEvent('claw');hardEvent('claw',1);change();saveLocal();return out;}
+    else{const k=clawSkill();if(k){bumpLevel(k,1,true);out.sk=k;}else{S.coins+=40;out.coins=40;}}}
+  S.clawWins=(S.clawWins||0)+1;S.clawDay=[S.day,clawToday()+1];qEvent('claw');hardEvent('claw',1);change();saveLocal();return out;}
 function clawPop(){const C=CUT,K=C.K,c=C.won,g=new THREE.Group(),r=.13;
   const top=new THREE.Mesh(new THREE.SphereGeometry(r,14,7,0,TAU,0,Math.PI/2),mat(c.col)),bot=new THREE.Mesh(new THREE.SphereGeometry(r,14,7,0,TAU,Math.PI/2,Math.PI/2),mat(c.gold?'#fff1b8':'#ffffff'));
   g.add(top,bot);K.g.add(g);C.pop={g,top,bot};g.position.set(K.mx+.84,.3,K.mz+.3);C.prize=clawPrize(c);SFX.pop();}
@@ -488,7 +705,7 @@ function clawEnd(){const C=CUT;if(!C||!C.claw)return;const K=C.K,L=LOC.toys;claw
    hallway, sit at your desk and stop kids who goof off (their names float over their heads — write them on your
    notepad!). Then the kids hand in their homework and you mark every answer ✔ or ✗. The game works out the grades. */
 /* 🪙 job pay is even: a weak day ~150, a good day ~270, the best day ~390 🪙 in every job. A class pays 75 / 135 / 195 by ⭐ (2 a day) */
-const TC_MAX=2,TC_PAY=s=>15+60*s,TC_NAMES=['Alexa','Ben','Chloe','Daniel','Emma','Felix','Grace','Henry','Isla','Jack','Lucy','Mason','Nora','Oscar','Pia','Ryan','Sofia','Tom','Zara','Leo'];
+const TC_MAX=2,TC_PAY=s=>30+60*s,TC_NAMES=['Alexa','Ben','Chloe','Daniel','Emma','Felix','Grace','Henry','Isla','Jack','Lucy','Mason','Nora','Oscar','Pia','Ryan','Sofia','Tom','Zara','Leo'];
 const GOOFS=[['talk','🗣️'],['plane','✈️'],['phone','📱'],['sleep','💤'],['dance','💃'],['silly','😜']];
 Object.assign(PLACE_OF,{cl_math:'📐 In Math class',cl_english:'📖 In English class',cl_history:'🏛️ In History class'});
 function tc(){const d=S.tc||(S.tc={});if(d.day!==S.day){d.day=S.day;d.done=0;}if(!isFinite(d.wait))d.wait=5;return d;}

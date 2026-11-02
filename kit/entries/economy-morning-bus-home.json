@@ -1,0 +1,25 @@
+{
+  "blockedBy": "",
+  "body": "Decided by Karolis (book, 30 Oct; said again in chat): every morning a bus takes campers home from the beach.\nHow it works:\n- Every day, also days with no bus: the bus waits at the beach 8:00-9:30 and goes to town (same 1.5 game hour wait as now).\n- On bus days nothing changes: the normal trip already goes beach -> town in the morning.\n- Same fare and free-ride rules as now (20 coins; free with under 20 coins).\n- The bus sign and the Town Timetable show it.\n- Old saves keep working (the timetable is worked out from the day number; nothing new is saved).\nBuilt in a game update (repo chat), with the full check.",
+  "ch": "economy",
+  "comments": [
+    {
+      "act": "approve",
+      "at": 1793386808718,
+      "text": ""
+    }
+  ],
+  "created": 1793386711899,
+  "id": "economy-morning-bus-home",
+  "kind": "task",
+  "needs": [
+    "q-economy-beach-bus-camp"
+  ],
+  "order": 4,
+  "short": "Morning bus home from the beach, every day 8:00-9:30",
+  "source": "chat 2026-10-30: Schedules and economy chat, from decision q-economy-beach-bus-camp",
+  "stage": "pfu-1",
+  "status": "approved",
+  "title": "Build: a morning bus home from the beach every day",
+  "updated": 1793386808718
+}

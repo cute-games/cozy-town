@@ -1,0 +1,31 @@
+{
+  "body": "Why: stiff block legs keep the animations at about 6 out of 10 (Model movements chat).\nBuilt: the game puppy, same look. Each leg turns at the shoulder or hip and bends at the knee or hock. Neck is hidden inside the body. Head, ears and tail move on their own.\nCard: Puppy: jointed movement test (Baby & teen pets). Poses: Standing, Walk, Sit, Sniff.\nPart names sent to Model movements.\nCost of doing this for every animal: unknown until you and Model movements judge this test.",
+  "ch": "living",
+  "cmp": {
+    "at": 1793417000000,
+    "id": "only-pet-dogjoint"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793403023241,
+      "text": "Built round 38. Knee joints have no seam lines."
+    },
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Approved: you decided it in Model Compare (31 Oct)."
+    }
+  ],
+  "created": 1793397093496,
+  "id": "model-dog-jointed",
+  "kind": "model",
+  "needs": [],
+  "order": 8,
+  "short": "Built: puppy with bending legs. Try Walk, Sit, Sniff in Model Compare",
+  "source": "chat 30 Oct: board rows from Model movements and Plan (jointed test animal)",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Jointed dog: movement test",
+  "updated": 1793409100000
+}

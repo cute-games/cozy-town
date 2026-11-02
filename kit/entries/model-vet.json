@@ -1,0 +1,46 @@
+{
+  "body": "Your ask: \"we need Veterinarian, give 4 options, I will choose\". You kept all 4 = staff of 4.\nIn THIS update, stage 4 (your decision 30 Oct: sickness + vet go in now).\nSame people style as the townsfolk and farmers. All wear a stethoscope and a white name badge with a red cross.\n- Nurse Penny (was Dr. Mila's look): white coat, clipboard, lobby desk\n- Dr. Tomas: teal scrubs, white collar, paw-print pocket, a dog treat\n- Dr. Rūta: older, grey bun, round glasses, white coat, carrying a kitten\n- Vet nurse Leo: lilac scrubs with white paw prints, a bandage roll\nThe lobby nurse (books visits, gives treats) is a separate entry: Lobby nurse.\nModel Compare: Pet clinic → Veterinarian.",
+  "ch": "living",
+  "cmp": {
+    "at": 1793397000000,
+    "id": "only-vet-vet"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793394440000,
+      "text": "Viewer: 3 passes + final, all four 8/10. Left (minor): Mila's coat back looks pale grey in the light; small pocket flap under the badge."
+    },
+    {
+      "act": "chat",
+      "at": 1793397093496,
+      "text": "Done: moved to this update, stage 4.\nLobby nurse is a new model (own entry)."
+    },
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Approved: you decided it in Model Compare (31 Oct)."
+    },
+    {
+      "act": "chat",
+      "at": 1793485300000,
+      "text": "Done: final 4 = Penny (lobby), Tomas, Rūta (the vet), Leo (treat). No Dr. Mila."
+    }
+  ],
+  "created": 1793394440000,
+  "kind": "model",
+  "needs": [],
+  "order": 6,
+  "pics": [
+    "img/vet-mila.jpg",
+    "img/vet-tomas.jpg",
+    "img/vet-ruta.jpg",
+    "img/vet-leo.jpg"
+  ],
+  "short": "4 vets kept; they go in this update (stage 4)",
+  "source": "chat 30 Oct: Living things models, round 33",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Veterinarian: 4 vets to choose from",
+  "updated": 1793485300000
+}

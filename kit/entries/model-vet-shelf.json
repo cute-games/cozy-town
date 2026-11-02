@@ -1,0 +1,28 @@
+{
+  "body": "Medicine shelf in the new colours.\nPicked in Model Compare.",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793395754000,
+    "id": "only-vet-shelf"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793395900000,
+      "text": "Done: purple/violet + butter yellow, bigger, no cages or X-ray."
+    }
+  ],
+  "created": 1793394700000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [
+    "img/vet3-shelf-0.jpg"
+  ],
+  "short": "Picked: Medicine shelf, purple",
+  "source": "chat 30 Oct: Non-living things models, vet clinic",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Medicine shelf, purple",
+  "updated": 1793402000000
+}

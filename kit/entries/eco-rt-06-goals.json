@@ -1,0 +1,30 @@
+{
+  "blockedBy": "",
+  "body": "Now: once the house has its floors, there is little left to buy, and nothing costs money over time.\nNew:\n- Dream items: a few big things to save for (1,500-5,000), e.g. a hot tub, a treehouse, a home cinema. Izabele picks which. Not part of the Pets and Farm Update.\n- Keep the pet price list (economy-pfu-prices) as it is.\n- Dropped (31 Oct): daily pet food cost. Pets have no hunger (rules-dec-one-need); food is one way to make them happy.\nPace with Balances 1-9 (estimate): job 330 + quests 140 + small extras 65 + level-ups about 50 = about 585 coins a game day = about 2,300 a real hour of normal play.\n- Big pet with its home and pet yard level 3: up to 3,900 = about 1 hour 40 min\n- Pet yard to level 3 (2,800): about 1 hour 15 min\n- All 5 house floors (12,500): about 5.5 real hours (they also need Decorating 10-50)\nTapping and the claw no longer beat working.",
+  "ch": "economy",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793393902343,
+      "text": "Approved by Karolis ('do the rebalance', 30 Oct). Not in this patch: pet food per day comes with pet needs (Pets and Farm Update); dream items wait for Izabele's picks."
+    },
+    {
+      "act": "chat",
+      "at": 1793458437181,
+      "text": "Done: daily pet food cost dropped (pets have no hunger, 31 Oct)."
+    }
+  ],
+  "created": 1793392672726,
+  "id": "eco-rt-06-goals",
+  "kind": "plan",
+  "needs": [
+    "eco-rt-01-levelup-pay"
+  ],
+  "order": 16,
+  "short": "Big dream items to save for (Izabele picks)",
+  "source": "chat 2026-10-30: Schedules and economy red team",
+  "stage": "pfu-1",
+  "status": "approved",
+  "title": "Balance 6: things to save up for, and small daily costs",
+  "updated": 1793458437181
+}

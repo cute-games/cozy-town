@@ -1,0 +1,28 @@
+{
+  "blockedBy": "",
+  "body": "Plan chat, 30 Oct. Tonight is cut down so it can finish in one night.\nIN tonight (all already decided):\n- Max 10 pets; only your 3 chosen pets follow you, the rest stay home.\n- Give a pet away to the pet shop cashier.\n- Interior designer: new orders are 1 room; a saved 2-room order still finishes. Check line N8: old 'tests a 2-room order' -> new 'new orders 1 room; saved 2-room order still finishes'.\n- Morning bus home from the beach every day 8:00-9:30 (approved).\n- Hats sitting inside hair: fix on all hats and cosmetics.\nNOT tonight: pet brain (moves not OK'd; critic stuck at 6/10 because models have stiff legs), backyard, new pets, Pet Show, farm, night skip, pet redraws, model pack.\nHow: one Claude Code chat on cute-games/cozy-town, Opus 5.5 medium. Backup branch backup-2026-10-30 first. Quick kit after each change, full check before the pull request. Karolis merges in the morning.",
+  "ch": "plan",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793391000000,
+      "text": "Replaced: Karolis wants the full Pets and Farm Update, not a cut-down night."
+    }
+  ],
+  "created": 1793390400000,
+  "id": "plan-night-run-1",
+  "kind": "plan",
+  "needs": [
+    "pet-scope-u1-03",
+    "pet-scope-u1-04",
+    "pet-scope-u1-11",
+    "economy-morning-bus-home"
+  ],
+  "old": true,
+  "order": 1,
+  "source": "chat 2026-10-30: Plan chat, night run plan",
+  "stage": "pfu-1",
+  "status": "draft",
+  "title": "Tonight's night run: small things only (Pets and Farm Update, part 1)",
+  "updated": 1793390400000
+}

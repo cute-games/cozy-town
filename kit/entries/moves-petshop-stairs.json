@@ -1,0 +1,38 @@
+{
+  "blockedBy": "",
+  "body": "Your ask (31 Oct): 3 floors as ONE room, no cutscene between floors.\n- Up 1 to 2 (left stairs), 2 to 3 (right stairs), down again; the dog follows on the steps.\n- Walks round the open middle on floor 2 without falling.\n- Player is a stand-in (farmer model).\nThe game needs real step heights, rail blockers and a camera on 3 floors (sent to Plan). Landing in front of each stair is too tight (asked Objects).",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793421631724,
+      "text": "Done: up, up, down and round the middle; camera follows, no fade, no rail clipping.\nLeftovers: dog tilts at the bottom turn; some paws float a little."
+    },
+    {
+      "act": "approve",
+      "at": 1793457686417,
+      "text": ""
+    },
+    {
+      "act": "chat",
+      "at": 1793477115355,
+      "text": "Updated: same moves on the changed shop (stairs moved back, handrail starts higher).\nThe dog now follows 1.4 m behind; no rail clipping."
+    }
+  ],
+  "created": 1793421631724,
+  "id": "moves-petshop-stairs",
+  "kind": "task",
+  "needs": [
+    "model-petshop-new"
+  ],
+  "order": 124.4,
+  "pics": [
+    "img/moves14-shopStairs.gif"
+  ],
+  "short": "Walk up and down the shop stairs, pet follows. OK?",
+  "source": "Model movements 31 Oct: asks from the Objects chat",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Pet Shop: stairs in one room, no fade",
+  "updated": 1793477115355
+}

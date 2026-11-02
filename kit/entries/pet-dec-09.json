@@ -1,0 +1,22 @@
+{
+  "blockedBy": "",
+  "body": "#: 9\nDecision: Big-needs pets need their home first\nNotes: The pet shop won't sell them until you own it: monkey needs a climbing tree, seal needs a pond, bear needs something big too (open question)",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793400314482,
+      "text": "31 Oct: monkey, seal and bear also need pet yard level 3 (rule 'Big-needs pets')."
+    }
+  ],
+  "created": 1793323126942,
+  "id": "pet-dec-09",
+  "kind": "decision",
+  "needs": [],
+  "order": 255,
+  "source": "Pet update: plan › Decisions",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Pet decision 9: Big-needs pets need their home first",
+  "updated": 1793400314482
+}

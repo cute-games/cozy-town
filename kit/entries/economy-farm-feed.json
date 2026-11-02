@@ -1,0 +1,25 @@
+{
+  "blockedBy": "",
+  "body": "A) Free feed bucket at the farm (my pick)\nB) Feed from the Market, 5 coins\nGame rules say anyone can feed and pet farm animals any time. Nobody owns them, so nothing to earn back.\nA) keeps the farm a free, friendly place, like the Tree park.",
+  "ch": "economy",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793407300000,
+      "text": "Approved: you decided it in chat (31 Oct): A, free feed bucket at the farm."
+    }
+  ],
+  "created": 1793405330000,
+  "id": "economy-farm-feed",
+  "kind": "question",
+  "needs": [
+    "rules-farm-chores"
+  ],
+  "order": 8,
+  "short": "Feeding farm animals is free (feed bucket at the farm)",
+  "source": "chat 2026-10-31: Schedules and economy, gap found checking the update",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Feeding farm animals: free or paid",
+  "updated": 1793407300000
+}

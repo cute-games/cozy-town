@@ -1,0 +1,26 @@
+{
+  "body": "Your ask: bigger, 2-3 floors as ONE room (no fade between floors), a counter, cozy spots for the pets instead of cages; bear on a sofa watching TV on floor 3.\nOne open middle (6.4 x 4.6) from floor 1 to the roof, wide stairs: 1 to 2 on the left wall, 2 to 3 on the right. Inside 14 x 10; outside the shop grows to match (14 x 10, 3 floors).\nFloor 1: counter with Ms. Paws, shelves, dog sofa + rug, cat window seat + cat tree, bunny + hamster play hill with a big tree growing up through the middle.\nFloor 2: capybara warm tub, duck pond with a bridge, owl on a tree branch, a sofa to watch from.\nFloor 3 (Big pets): bear on a sofa facing a TV (Cat show now, Izabele's movie later), seal pool with a slide, monkey climbing frame + ropes on the tree.\nPicked 31 Oct: all approved (room, building and 10 pieces).",
+  "ch": "objects",
+  "cmp": {
+    "at": 1793411270139,
+    "id": "only-shop-room"
+  },
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793412100000,
+      "text": "Karolis: \"all aproved. very good\". Sent to Moves."
+    }
+  ],
+  "created": 1793411400000,
+  "kind": "model",
+  "needs": [],
+  "order": 0,
+  "pics": [],
+  "short": "Picked: new Pet Shop, 3 open floors, no cages",
+  "source": "chat 31 Oct: Non-living things models (his ask: new Pet Shop)",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "New Pet Shop: 3 floors, one open room",
+  "updated": 1793412100000
+}

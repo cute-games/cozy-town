@@ -1,0 +1,28 @@
+{
+  "blockedBy": "",
+  "body": "Changed after the second red team. The old idea (XP limits on tapping, furniture XP only the first time) would break the game:\n- House floors need Decorating 10/20/30/40/50. Placing each furniture type once gives only 384 XP = level 9, so non-designers could never get floor 2.\n- Most skills would need 100+ game days to reach level 30.\nNew: keep all XP as it is. With Balance 1 (level-ups pay a fixed 50), tapping only gives levels, not riches.\nOne fix stays: the school board 'Learn something new' works 8:00-20:00 like the library (now it works at any hour).",
+  "ch": "economy",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793393358117,
+      "text": "Second red team: XP limits removed (they block house floors and slow every skill); only the school-hours fix stays."
+    },
+    {
+      "act": "chat",
+      "at": 1793393902343,
+      "text": "Karolis said 'do the rebalance' in the Schedules and economy chat (30 Oct): approved. Built as a code patch (economy-rebalance.patch, build 2026103101) and checked with the quick kit; goes live through a pull request in the next repo chat."
+    }
+  ],
+  "created": 1793392672726,
+  "id": "eco-rt-02-xp-spam",
+  "kind": "plan",
+  "needs": [],
+  "order": 12,
+  "short": "No XP limits; school board open 8:00-20:00 only",
+  "source": "chat 2026-10-30: Schedules and economy red team",
+  "stage": "pfu-1",
+  "status": "building",
+  "title": "Balance 2 (changed): no XP limits, only the school board follows school hours",
+  "updated": 1793393902343
+}

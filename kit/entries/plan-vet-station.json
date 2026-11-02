@@ -1,0 +1,33 @@
+{
+  "blockedBy": "",
+  "body": "Karolis decided in the Plan chat (30 Oct): a veterinarian and a vet station go into this update (before: Pet update 2).\nThe game has no vet today (checked main, a47bb1a).\nAnswered 30 Oct (Game rules chat): pets DO get sick in this update (only when not fed AND not played with for long). No vet job for players.\nVisit: book on the in-game phone or with the lobby nurse, come on time, go into the cabinet, nurse gives a treat, pet is happy, she reminds you of its needs.\nStaff: 4 vets + lobby nurse (Living). Clinic: building, lobby desk, cabinet room, 7 furniture pieces, treat (Non-living). Spot in town (Map). Price + hours (Economy). Exam, nurse, treat and sick moves (Moves). Booking app on the phone (Screens and sound).\nStages: rules pfu-2, models and building parts pfu-4.",
+  "ch": "plan",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793392200000,
+      "text": "Decided by Karolis in the Plan chat, 30 Oct."
+    },
+    {
+      "act": "chat",
+      "at": 1793395800000,
+      "text": "Done: sick pets + vet rules answered; staff of 4 vets + nurse."
+    },
+    {
+      "act": "chat",
+      "at": 1793397200000,
+      "text": "Newer approved rules win: sick if not fed OR not played with; cured at normal mood. See plan-brief-pfu-2."
+    }
+  ],
+  "created": 1793392200000,
+  "id": "plan-vet-station",
+  "kind": "plan",
+  "needs": [],
+  "order": 2,
+  "short": "Vet clinic + sick pets are in this update",
+  "source": "chat 2026-10-30: Plan chat, Karolis asked for vet + vet station",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Vet station and veterinarian join the Pets and Farm Update",
+  "updated": 1793397200000
+}

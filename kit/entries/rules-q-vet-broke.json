@@ -1,0 +1,24 @@
+{
+  "blockedBy": "",
+  "body": "A) First visit free\nB) Free whenever you can't pay",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793397867921,
+      "text": "Done: you picked B in chat, 31 Oct."
+    }
+  ],
+  "created": 1793397700275,
+  "id": "rules-q-vet-broke",
+  "kind": "question",
+  "needs": [],
+  "old": true,
+  "order": 310,
+  "short": "Can't pay the vet? It's free",
+  "source": "chat 31 Oct 2026: from Economy via Plan",
+  "stage": "pfu-2",
+  "status": "approved",
+  "title": "Sick pet, no coins: the vet is free (decided 31 Oct)",
+  "updated": 1793397867921
+}

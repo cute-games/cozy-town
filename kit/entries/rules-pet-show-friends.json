@@ -1,0 +1,36 @@
+{
+  "blockedBy": "",
+  "body": "1. Saturdays 8:00-20:00 in the park, as today.\n2. When someone enters, friends in the park get 45 seconds to join. The show starts only after the 45 seconds.\n3. Friends' pets take the NPC pets' places (4 pets per show). More than 4: the rest get the next show right after. Everyone there watches the same show.\n4. Judges score style (outfits), tricks and happiness, as today. The healthy-week ribbon helps.\n5. NPC rivals' scores come from the shared clock, not dice, so everyone sees the same result.\n6. Winner gets the prize, everyone else a smaller reward.\n7. Sick pets can't enter. One pet per player per show. One show per player per Saturday, as today.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793396708589,
+      "text": "Done: approved by you in chat, 30 Oct.\nNow 45 seconds to join; the show waits until then."
+    },
+    {
+      "act": "chat",
+      "at": 1793397700275,
+      "text": "Done: fix 2 in (more than 4: next show right after)."
+    },
+    {
+      "act": "chat",
+      "at": 1793402712224,
+      "text": "Done: one pet per player per show (rules check 4)."
+    }
+  ],
+  "created": 1793396506885,
+  "id": "rules-pet-show-friends",
+  "kind": "rule",
+  "needs": [
+    "pet-dec-16",
+    "pet-dec-17"
+  ],
+  "order": 305,
+  "short": "Friends get 45 seconds to join; everyone sees the same results",
+  "source": "chat 30 Oct 2026: Game rules chat, from pet decisions 16-17 and Plan red team 07",
+  "stage": "pfu-5",
+  "status": "approved",
+  "title": "Pet Show with friends: how it works",
+  "updated": 1793402712224
+}

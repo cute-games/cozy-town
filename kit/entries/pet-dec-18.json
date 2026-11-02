@@ -1,0 +1,16 @@
+{
+  "blockedBy": "",
+  "body": "#: 18\nDecision: Starting prices (coins), tuned after playing\nNotes: Pet yard 1 free, 2 = 800, 3 = 2,000. Garden 1 free (today's), 2 = 600, 3 = 1,500. Beds and bowls 40 to 120. Toys 20 to 60. Training gear 150 to 300. Climbing tree and glass tank 400; pond and cave den 700. Normal pets 200 (as today); monkey, seal, bear, snake 400",
+  "ch": "rules",
+  "comments": [],
+  "created": 1793323126942,
+  "id": "pet-dec-18",
+  "kind": "decision",
+  "needs": [],
+  "order": 264,
+  "source": "Pet update: plan › Decisions",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Pet decision 18: Starting prices (coins), tuned after playing",
+  "updated": 1793323126942
+}

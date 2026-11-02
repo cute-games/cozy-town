@@ -1,0 +1,27 @@
+{
+  "body": "From Plan's list:\n- Horse: more like a real horse: kept game style (you kept it)\n- Horse: baby: done (farm Baby/Adult)\n- Sheep lamb: done round 29, you kept it\n- Seal: bigger flippers + 1 variant: built round 39 (Seal card)\n- Snake: longer: done round 6\n- Pug and pomchi: easier to recognise: built round 40 (new version on each card)\n- Capybara: sauna zen face: built round 37 (Capybara card, Face)\n- Labrador sleep pose: done = farm dog (St. Bernard), you kept curl, side, stand\n- Farmers: you kept them",
+  "ch": "living",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793403023241,
+      "text": "All built. Your picks left: Capybara faces, Puppy jointed test, Seal, Pug, Pomchi."
+    },
+    {
+      "act": "chat",
+      "at": 1793409100000,
+      "text": "Approved: all 9 done; you decided them in chat and Model Compare (31 Oct)."
+    }
+  ],
+  "created": 1793397093496,
+  "id": "model-living-left",
+  "kind": "task",
+  "needs": [],
+  "order": 11,
+  "short": "All 9 done",
+  "source": "chat 30 Oct: board row from Plan (living left list)",
+  "stage": "pfu-4",
+  "status": "approved",
+  "title": "Living models still to finish",
+  "updated": 1793409100000
+}

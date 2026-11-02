@@ -1,0 +1,31 @@
+{
+  "blockedBy": "",
+  "body": "Rule (stage 6): your pets wait at the stable while you ride. They sit or lie by the stable, look around, greet you when you come back.",
+  "ch": "moves",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793421631724,
+      "text": "Done: pets sit, lie and look around, greet you back (same picture as chores).\nCheck the picture: Yes or Change."
+    },
+    {
+      "act": "approve",
+      "at": 1793457706150,
+      "text": ""
+    }
+  ],
+  "created": 1793410479321,
+  "id": "moves-farm-wait-stable",
+  "kind": "task",
+  "needs": [],
+  "order": 126,
+  "pics": [
+    "img/moves10-farmChores.gif"
+  ],
+  "short": "Pets wait at the stable while you ride. OK?",
+  "source": "Model movements 31 Oct: gap check against the stage briefs",
+  "stage": "pfu-6",
+  "status": "approved",
+  "title": "Pets wait at the stable while you ride",
+  "updated": 1793457706150
+}

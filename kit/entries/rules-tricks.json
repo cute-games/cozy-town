@@ -1,0 +1,25 @@
+{
+  "blockedBy": "",
+  "body": "1. Each pet type has 3 tricks. It starts knowing 1.\n2. Practise on its training gear in your yard. 5 practice days (one counts per game day) teach the next trick.\n3. At the Pet Show it only does tricks it knows. Practised tricks have a bigger gold zone (as decided).\n4. Sick pets can't practise.",
+  "ch": "rules",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793459080507,
+      "text": "Approved: you said OK in chat (31 Oct)."
+    }
+  ],
+  "created": 1793458677972,
+  "id": "rules-tricks",
+  "kind": "rule",
+  "needs": [
+    "pet-dec-17"
+  ],
+  "order": 327,
+  "short": "3 tricks per pet; 5 practice days teach the next",
+  "source": "chat 31 Oct 2026: Game rules pet brain check: pet decision 17 never said how a trick is learned",
+  "stage": "pfu-5",
+  "status": "approved",
+  "title": "How pets learn tricks",
+  "updated": 1793459080507
+}

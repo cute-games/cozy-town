@@ -1,0 +1,28 @@
+{
+  "blockedBy": "",
+  "body": "Now: 10 x the new level (level 40 = 400 coins), about 1 coin per XP. Tapping the school board earns 80-96 coins a minute.\nRound 2 found my first idea (a fixed 50 a level) was worse: early levels need only 20-100 XP, so tapping at level 2-5 would pay up to 200 coins a minute.\nNew: a level-up pays 2 x the new level (level 10 = 20, level 40 = 80). Every 10th level (10, 20, 30, 40, 50) pays 100 extra as a milestone, with the star and toast as now.\nEffect (estimate, tapping the school board): levels 1-10 about 37 coins a minute (once per skill), 10-20 about 23, after that about 15. A job pays about 22 a minute over a whole game day. One skill 1 to 50 = about 3,050 coins; all 9 = about 27,400 (now 114,660).\nSaves: coins already earned stay.",
+  "ch": "economy",
+  "comments": [
+    {
+      "act": "chat",
+      "at": 1793393358117,
+      "text": "Second red team: fixed 50 a level would make early-level tapping pay more than now, so changed to 2 x level + milestones."
+    },
+    {
+      "act": "chat",
+      "at": 1793393902343,
+      "text": "Karolis said 'do the rebalance' in the Schedules and economy chat (30 Oct): approved. Built as a code patch (economy-rebalance.patch, build 2026103101) and checked with the quick kit; goes live through a pull request in the next repo chat."
+    }
+  ],
+  "created": 1793392672726,
+  "id": "eco-rt-01-levelup-pay",
+  "kind": "plan",
+  "needs": [],
+  "order": 11,
+  "short": "Level-ups pay 2 x level, plus 100 every 10th",
+  "source": "chat 2026-10-30: Schedules and economy red team",
+  "stage": "pfu-1",
+  "status": "building",
+  "title": "Balance 1 (changed): level-ups pay 2 x level, plus 100 every 10th level",
+  "updated": 1793393902343
+}
