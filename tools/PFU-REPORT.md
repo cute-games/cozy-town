@@ -66,7 +66,41 @@ Speed (cloud test browser, software drawing, no GPU): P19 new 3.5 fps / live 4 (
 - C6 was not run again in a full run after P36's fix (the only error it found was P36's expected one).
 
 ## 7. Leftover grade-1 marks
-None graded in this check (no picture pass). Older open items stay: G4-205/222, G4-279, G4-285 and run 4's 15 grade-1 marks (`tools/RUN-4-REPORT.md`, "Leftover minor marks").
+None graded in the full check (no picture pass); picture pass 1: see section 9. Older open items stay: G4-205/222, G4-279, G4-285 and run 4's 15 grade-1 marks (`tools/RUN-4-REPORT.md`, "Leftover minor marks").
 
 ## 8. Where the tokens went
 Full-check helper only (one session, medium effort): no sub-helpers were started (none available), so no per-helper log. Most of it went on reading the hand-off/kit code, the tank test, writing P36 and waiting on the 132-minute kit run (short looks at the end of the log).
+
+## 9. Picture pass 1 (2 Nov): marks, decisions, fixes (stamp 2026110203)
+Pictures: 273 kit shots and 74 gap shots (`tools/pfu-wip/shots_pfu.py`), Sonnet viewers (the foreman). The fix helper checked each grade 2-3 mark on a small
+crop and, where unclear, in the game (Playwright probes). Grades are the helper's.
+
+| Mark | Seen | Decision | Fix |
+|---|---|---|---|
+| M1 (3) | riding: dark void, brown blocks | **real**: you could stand inside a horse (in the kit shot the mount was refused after P32's 21:00 test) | grown horses and cows get a box like the cars (`farmSolids` in `solids()`); one that turns or walks into you pushes you out (`farmTick`). P32's shot mounts at noon |
+| G2 (2-3), M2 (2) | stable / trough: camera in a horse | real, same cause | same fix |
+| M3 (2-3) | Pet Shop: flat grey walls | kit artefact: N28's 'petshop-floors' faced the front wall at 1 m; the run-4 crawler stands you 0.55-1.1 m from a button with no collision (3 of 6 tries up to 1 m inside a wall or pen) | N28's shot looks into the room and up; crawler unchanged |
+| M5 (2) | 'PERFECT!' on 'Bean!' | real (stage 5): the last pet's floating words outlived its turn | they go when the next pet starts (`psBegin`) |
+| M7 (2) | slab over the pug/pomchi; capybara | real (stage 4b redrew pug and capybara; big pets new): capes, wings and backpacks used the fitted kind's back (dog 0.44 m): over the pug, inside the capybara and bear | `BACK_FIT`, measured per kind (pomchi, pug, sausage, capybara, monkey, seal, bear, snake) |
+| M13 (3) | big pets never reach their homes | **real** (stage 4b): straight at the spot, stopped by the house | `bigWay`/`bigPath`: a 30 cm grid path round the house (side path, garden, big-pets gate); home in about 35 s |
+| G4/G9 (2) | bear and seal in each other at the window | real (stage 4b): spots along the shop front 1.1 m apart | one each side of the way out, 1.2 m in front of the door (2.8 m apart at every door) |
+| G5 (2) | 'Book the v...' | real (stage 2) | phone header '🩺 Vet' (the Pets app button still says 'Book the vet') |
+| show words on the farm | 'Oopsie!', 'YOU WIN!' later | real (stage 5): queued big words outlived the show | `psEnd` drops them (`popDrop`) and the floating words |
+| G1 (2) | no hearts/sick/ribbon | by design: moods and sickness are body language; the ribbon only Sat-Sun (shot on a Wednesday); My pets never had hearts (each pet's card has them) | shots on a Saturday |
+| G6, G7 (2) | sleep screen faded; jump/lesson subject | shots artefacts (0.8 s fade-in; leftover show banner) | shots wait 1.2 s; retaken |
+| M4, M6, M8, G3, G8 (2) | yard sign close; dog sunk; truck in fence; bear on its back; NOW greyed | grade 1: crawler 0.6 m from a sign on the house side; the farm dog lying; truck 0.5 m inside the fence (mesh z 9.03, fence 8.4); the bear sits on the mat (lowest point 0.54 = mat), paws 0.34 m from Dr. Rūta; NOW is off after your tap | none |
+| M9-M12 (2) | Market list scrolled; cave den toast; speakerless line; shopper in view | pre-existing or crawler: buy code and shoppers are main's; the toast answers the crawler's tap on the locked Cave den; 'Pet clothes' opens the Pet Shop list on main too | none |
+
+Leftover grade 1 (not fixed): M4, M6, M8, G3, G8's stray 'd', a name tag behind a hat (capybara, seal) or a bow, your own body at the bottom-left in the
+shop, kittens close in the crawl, and the viewers' grade-1 notes in the foreman's `marks-g23.md` (locked yard buttons, Adopt text on mint, dark-mode note and
+map buttons, vet counter/shelf, license banner peeking, Sir Barkley's line twice, small show name tags, floating coin, map labels on phones, empty Big pets
+panel, license strip wrap on phones, seal on the rocks, seal/snake lying in the road, toast over the snake tank, gear hint pill, cowboy hair, vet tags under
+the minimap, 'To town' sign). Pre-existing (main): M9-M12, the beach-bus hint toast. Kit note: making the crawler collision-aware would change every crawl
+line's walk: the owner's/foreman's call.
+
+New kit lines (each FAILS on the stage-6 build, PASSES now): **P37** big pets reach their homes (full yard, sent home twice, small yard); **P38** never
+inside a grown horse or cow (on its spot, walking in from 4 sides, feeding; 14 rays from the camera); **P39** bear and seal apart at every door, the cape on
+every kind's back, the show's big words end with it. Shots changed (framing only, no line weakened): P32 'riding', N28 'petshop-floors'.
+Quick kit after the fixes (`--only files,counts,saves,night3,run4,pfu`): **87 of 89 PASS**; FAIL A2 (the backup branch is dated 2026-11-01, today is
+2 Nov: the foreman makes `backup-2026-11-02`) and P19 (no GPU: 4.8 fps, live 4.2). P25 PASS (fps 100% of live, CPU side 109%, first load 98%).
+check_split S1-S4 PASS. Size 2,332,697 -> **2,336,482** bytes. Retakes (45 pictures, list.txt) for the Sonnet viewers: the foreman's scratchpad `pics-fix1/`.

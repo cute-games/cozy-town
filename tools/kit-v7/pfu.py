@@ -10,6 +10,7 @@ on it, P16 friends see your yard. Rewritten: P10 (old: every move's lowest point
 move in water or the air (r.noGround: capy.tub, owl.fly) is measured by its highest point instead, which must stay above 0.05 m).
 Stage 6 (1 Nov): P31 the farm on the map, P32 riding, P33 chores and the Market, P34 feeding and petting, P35 friends see you ride.
 Full check (1 Nov): P36 a save with big-needs pets and the glass tank is never written over by the live version, and comes back whole.
+Picture pass 1 (2 Nov): P37 big pets reach their homes, P38 never inside a horse or cow, P39 waiting outside apart, capes on the back, show words end with the show.
 Stage 5 (1 Nov): P25 not slower than live (the owner's ask: P19 stays for the real iPad), P26 the Pet Show area, P27 tricks, P28 the Pet Show alone (town results
 from the one clock, the ribbon), P29 the Pet Show with friends, P30 the animal license. Rewritten (old -> new): P18 Ms. Paws' line for the bear's license
 (old: 'You need an animal license, level 3. Win at the Pet Show!', the stage-4 stand-in; new: the approved rules-animal-license line 8, 'A bear needs an animal
@@ -1243,7 +1244,7 @@ async def p32(run, new_wb, FIX):
     g = await pet_page(run, new_wb, 'p32', FIX=FIX, name='ZZTEST-RIDE')
     try:
         await g.ev(FARM_GO); r = await g.ev(P32_JS)
-        await g.ev("()=>{const H=FARM.hs.find(h=>h.kind==='pad');P.x=H.x;P.z=H.z;farmMount(H);P.yaw=Math.PI*.6;P.pitch=-.2;}"); await g.step(8); await g.shot('riding', both=True)
+        await g.ev("()=>{__setClock(null,12);const H=FARM.hs.find(h=>h.kind==='pad');H.st='home';H.x=H.hx;H.z=H.hz;H.m.root.position.set(H.x,0,H.z);P.x=H.x;P.z=H.z;farmMount(H);P.yaw=Math.PI*.6;P.pitch=-.2;}"); await g.step(8); await g.shot('riding', both=True)   # (picture pass 1: after the 21:00 test the horse was refused and you stood in it; noon, the horse at its spot)
         errs = g.errors[:]
     finally: await run.close(g)
     bad = r['bad'] + ([f'browser errors {errs[:2]}'] if errs else [])
@@ -1370,6 +1371,86 @@ async def p36(run, live_w, new_wb, FIX):
             if g: await run.close(g)
     return not probs, '; '.join(det) + (f' | PROBLEMS: {probs}' if probs else '')
 
+# ---------------- picture pass 1 (2 Nov): guards for the real problems the pictures found ----------------
+BIGPETS = """()=>{__goto('city');__setClock(null,12);__run(4);closePanel();S.coins=9000;sk('pets').lv=40;sk('garden').lv=40;S.lic.lv=3;S.lic.wins=Math.max(S.lic.wins||0,3);PBR.sick=false;
+  S.yard={pet:3,garden:3,home:['tree','pond','den'],gear:['dog','cat','bear']};yardLv();
+  for(const k of['monkey','seal','bear'])if(!S.pets.some(d=>petKind(d)===k)){for(const e of PET_ACTORS)if(!e.d.stay)petGoHome(e);openAdopt(k,PET_TYPES[k].cols[0]);ACT.adopt();closePanel();}
+  return PET_ACTORS.filter(e=>['monkey','seal','bear'].includes(petKind(e.d))).length;}"""
+# P37: a big pet sent home walked straight at its rest spot and stood against the house (z 11.1) for good; now it walks round by the side path and the big-pets gate
+P37_JS = r"""()=>{const bad=[],o={},big=PET_ACTORS.filter(e=>['monkey','seal','bear'].includes(petKind(e.d))),j=LANE.mine,[x,z]=lotPt(j,-17,-5.2);
+  const at=e=>{const h=bigRest(e.d);return !!h&&Math.hypot(h[0]-e.x,h[1]-e.z)<1.2;};
+  const run=tag=>{let f=0;while(f<2400&&!big.every(at)){__run(20);f+=20;}o[tag]=Math.round(f*.05)+' s: '+big.map(e=>petKind(e.d)+(at(e)?' home':' at '+lotBack(j,e.x,e.z).map(v=>v.toFixed(1)))).join(', ');
+    if(!big.every(at))bad.push(tag+': not at home after 120 s of play ('+o[tag]+')');};
+  const again=()=>{for(const e of big){e.d.stay=false;delete e.d.home;e.far=0;}bringFollowers(true);__run(40);for(const e of big)petGoHome(e);};
+  P.x=x;P.z=z;P.cy=0;for(const e of big)petGoHome(e);run('full yard (garden 3, all pots, 3 gear pieces), from the front yard');
+  again();run('sent home again');
+  S.yard.garden=1;S.yard.gear=[];yardLv();again();run('garden 1, no gear');
+  return {bad,o};}"""
+async def p37(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p37', FIX=FIX, name='ZZTEST-BIGHOME')
+    try:
+        n = await g.ev(BIGPETS)
+        if n < 3: return False, f'adopting the big pets: {n} of 3'
+        r = await g.ev(P37_JS); probs = r['bad'] + ([f'browser errors {g.errors[:2]}'] if g.errors else [])
+        return not probs, '; '.join(f'{k}: {v}' for k, v in r['o'].items()) + (f' | PROBLEMS: {probs}' if probs else '')
+    finally: await run.close(g)
+
+# P38: the camera stood inside a horse (riding shot, stable, trough): you never stand inside a grown horse or cow, walking into one, standing where one is, or feeding one
+P38_JS = r"""()=>{const bad=[],o={};farmLiveAll();S.ride.lesson=1;
+  const A=[...FARM.hs,...FARM.an].filter(a=>/^fa\.(horse|cow)\.adult/.test(a.key||'')),rc=new THREE.Raycaster(),D=[];rc.camera=camera;for(const x of[-1,0,1])for(const y of[-1,0,1])for(const z of[-1,0,1])if(Math.abs(x)+Math.abs(y)+Math.abs(z)===1||Math.abs(x)+Math.abs(y)+Math.abs(z)===3)D.push(new THREE.Vector3(x,y,z).normalize());
+  const inside=()=>{camera.updateMatrixWorld(true);const c=camera.position;for(const a of A){const R=a.m.root;if(!R.visible||Math.hypot(c.x-R.position.x,c.z-R.position.z)>3.2)continue;R.updateMatrixWorld(true);
+    let out=false;for(const d of D){rc.set(c,d);rc.far=4;const h=rc.intersectObject(R,true)[0];if(!h||h.object.material.side!==THREE.BackSide){out=true;break;}}if(!out)return a.key+'#'+(a.i??a.id);}return null;};   /* inside a body every ray, all 14 ways, first meets its outline from within (the dark void of the riding picture); outside, some ray sees a front face or nothing */
+  let n=0;const hit=(what)=>{n++;const w=inside();if(w&&bad.length<6)bad.push(what+': the camera is inside '+w);};
+  for(const a of A){const R=a.m.root;
+    P.x=R.position.x;P.z=R.position.z;__run(4);hit('stood where it stands');   /* (the riding picture: put on a horse's spot, the horse not ridden) */
+    for(const k of[0,1,2,3]){const t=k*Math.PI/2+.3;P.x=R.position.x+Math.sin(t)*3.5;P.z=R.position.z+Math.cos(t)*3.5;[P.x,P.z]=collideXZ(P.x,P.z,.3,CUR);
+      P.yaw=Math.atan2(-(R.position.x-P.x),-(R.position.z-P.z));P.pitch=0;IN.keys.KeyW=true;for(let f=0;f<36;f++){P.yaw=Math.atan2(-(R.position.x-P.x),-(R.position.z-P.z));__run(1);hit('walked into it');}IN.keys.KeyW=false;}
+    if(a.kind){const t=R.rotation.y+Math.PI/2;P.x=R.position.x+Math.sin(t)*.9;P.z=R.position.z+Math.cos(t)*.9;__run(2);farmHandFeed(a);for(let f=0;f<40;f++){__run(1);hit('fed it from the hand');}}}
+  o.animals=A.length;o.views=n;return {bad,o};}"""
+async def p38(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p38', FIX=FIX, name='ZZTEST-NOHORSE')
+    try:
+        await g.ev(FARM_GO); r = await g.ev(P38_JS); probs = r['bad'] + ([f'browser errors {g.errors[:2]}'] if g.errors else [])
+        return not probs, f"{r['o']['animals']} grown horses and cows, {r['o']['views']} views checked" + (f' | PROBLEMS: {probs}' if probs else '')
+    finally: await run.close(g)
+
+# P39: bear and seal waiting outside stood in each other at the shop front; capes floated over the pug or sat inside the bear; the Pet Show's big words followed you out
+P39_WAIT = r"""()=>{const bad=[],o=[];const W=PET_ACTORS.filter(e=>['bear','seal'].includes(petKind(e.d)));for(const e of PET_ACTORS)if(!['bear','seal'].includes(petKind(e.d))&&!e.d.stay)petGoHome(e);
+  for(const e of W){e.d.stay=false;delete e.d.home;e.far=0;}
+  for(const id of Object.keys(DOORS)){const D=DOORS[id];if(!D||!D.city||id==='vet'||!LOC[id]||LOC[id].type!=='in')continue;__goto('city');P.x=D.city[0];P.z=D.city[1];P.yaw=D.city[2];bringFollowers(true);__run(6);
+    setLoc(id);const L=LOC[id];P.x=L.ox+D.inside[0];P.z=L.oz+D.inside[1];bringFollowers();__run(6);const w=W.filter(e=>e.wo);
+    if(w.length!==2){bad.push(id+': '+w.length+' of 2 wait outside');continue;}const gap=Math.hypot(w[0].x-w[1].x,w[0].z-w[1].z),door=Math.min(...w.map(e=>Math.hypot(e.x-D.city[0],e.z-D.city[1])));
+    const moved=w.map(e=>{const q=collideXZ(e.x,e.z,.45,LOC.city);return Math.hypot(q[0]-e.x,q[1]-e.z);});o.push(id+' '+gap.toFixed(1)+'/'+door.toFixed(1));
+    if(gap<1.9)bad.push(id+': bear and seal '+gap.toFixed(2)+' m apart (in each other)');if(Math.max(...moved)>.05)bad.push(id+': one waits inside a wall or fence');}
+  __goto('city');return {bad,o};}"""
+P39_BACK = r"""()=>{const bad=[],o=[],rc=new THREE.Raycaster();for(const k of Object.keys(PET_TYPES)){const m=makePet(k,PET_TYPES[k].cols[0]);m.root.updateMatrixWorld(true);
+    const before=new Set();m.b.traverse(o=>before.add(o));addOutfit(m,{outfit:{back:'cape'}});m.root.updateMatrixWorld(true);
+    const cape=[];m.b.traverse(x=>{if(!before.has(x)&&x.isMesh&&x.material.side!==THREE.BackSide)cape.push(x);});if(!cape.length){bad.push(k+': no cape drawn');continue;}
+    if(k==='owl'){o.push('owl (upright on its back, run 4)');continue;}const top=cape.reduce((a,x)=>{const B=new THREE.Box3().setFromObject(x),A=(B.max.x-B.min.x)*(B.max.z-B.min.z);return A>a[1]?[x,A,B]:a;},[null,0,null]);   /* the cape itself (not its hanging end) */const B=top[2],c=B.getCenter(new THREE.Vector3());
+    const hs=new Set();if(m.head)m.head.traverse(x=>hs.add(x));const body=[];m.b.traverse(x=>{if(x.isMesh&&before.has(x)&&!hs.has(x)&&x.material.side!==THREE.BackSide)body.push(x);});
+    rc.set(new THREE.Vector3(c.x,c.y+2,c.z),new THREE.Vector3(0,-1,0));const h=rc.intersectObjects(body,false)[0],d=h?B.min.y-h.point.y:null;o.push(k+' '+(d==null?'-':d.toFixed(2)));
+    if(d==null||d>.05||d<-.06)bad.push(k+': the cape is '+(d==null?'over nothing':(d>0?d.toFixed(2)+' m above':(-d).toFixed(2)+' m inside')+' its back'));}
+  return {bad,o};}"""
+P39_SHOW = r"""()=>{__goto('city');const c=clockNow();let d=c.day;while(wdIdx(d)!==5)d++;__setClock(d,12);__run(4);closePanel();for(const p of PET_ACTORS){p.d.happy=90;p.d.sick=0;}
+  P.x=-34;P.z=25;const p=PET_ACTORS.find(e=>!PET_TYPES[petKind(e.d)].big);if(!p)return 'no pet';p.d.stay=false;delete p.d.home;p.x=P.x+1;p.z=P.z+1;p.loc='city';psStart(p);__run(20);if(!(CUT&&CUT.show))return 'no show';
+  for(const t of['one','two','three','four'])popText(t);psEnd();window.__pops=0;new MutationObserver(m=>{for(const r of m)for(const n of r.addedNodes)if(n.classList&&n.classList.contains('pop'))window.__pops++;}).observe(document.body,{childList:true});return 'ok';}"""
+async def p39(run, new_wb, FIX):
+    g = await pet_page(run, new_wb, 'p39', FIX=FIX, name='ZZTEST-PP1')
+    probs = []; det = []
+    try:
+        if await g.ev(BIGPETS) < 3: return False, 'adopting the big pets failed'
+        w = await g.ev(P39_WAIT); probs += w['bad']; det.append('waiting outside (apart/from the door, m): ' + ', '.join(w['o']))
+        b = await g.ev(P39_BACK); probs += b['bad']; det.append('cape bottom over the back (m): ' + ', '.join(b['o']))
+        s = await g.ev(P39_SHOW)
+        if s != 'ok': probs.append(f'the show did not start: {s}')
+        else:
+            await asyncio.sleep(3.5); n = await g.ev("()=>window.__pops+document.querySelectorAll('.pop').length")
+            det.append(f'big words shown after the show ended: {n}')
+            if n: probs.append(f'{n} of the show\'s big words popped up after it ended')
+        if g.errors: probs.append(f'browser errors {g.errors[:2]}')
+        return not probs, '; '.join(det) + (f' | PROBLEMS: {probs}' if probs else '')
+    finally: await run.close(g)
+
 # ---------------- the stage ----------------
 async def s_pfu(run, d, live_w, new_wb, FIX):
     tests = [('P1', 'Saves (pets and farm update): every save of the kit (from older versions, today\'s main and the update\'s stages) and a fresh one from the live version loads as save version 2 with every new field at its default; saved again and loaded, it is exactly the same', lambda: p1(run, live_w, new_wb, FIX)),
@@ -1408,6 +1489,9 @@ async def s_pfu(run, d, live_w, new_wb, FIX):
               ('P34', "Feeding and petting (stage 6, economy-farm-feed, moves-farm-feed, moves-farm-graze-necks): the free bucket fills the trough and the cows and sheep come to eat; petting (cow leans in, the hen puffs up), the horse eats from your hand; every farm move on every farm model and person without an error", lambda: p34(run, new_wb, FIX)),
               ('P35', "Friends see you ride (stage 6, rules-riding 7, guard 4): your horse and gait go online as a short code; a friend sees you on that horse (seated, the horse under you) and that horse is taken for them; you get off, it is free again; the trail riders stand at the same spot for both (the one clock); the live version online with a rider has no errors", lambda: p35(run, live_w, new_wb, FIX))]
     tests += [('P36', "An older version and a new save (full check, 1 Nov; project rule: old and new versions still see each other, saves keep everything): a save from this update with a monkey, a snake and a placed glass tank, opened in the live version, is never written over there (the live version stops at its title and its update check takes the newer file), and the new version loads it again with nothing lost", lambda: p36(run, live_w, new_wb, FIX))]
+    tests += [('P37', "Big pets go home (picture pass 1, 2 Nov): a monkey, seal and bear sent home at pet yard level 3 walk round the house (side path, garden, the big-pets gate) to their own homes within 120 s of play: in a full yard (garden 3, every pot, 3 gear pieces), sent home a second time, and in a yard with garden 1 and no gear", lambda: p37(run, new_wb, FIX)),
+              ('P38', "Never inside a horse or cow (picture pass 1, 2 Nov): put where a grown horse or cow stands, walking into it from 4 sides, or feeding a horse from your hand, the camera is never inside its body", lambda: p38(run, new_wb, FIX)),
+              ('P39', "Picture pass 1 guards (2 Nov): at every building door bear and seal wait outside 1.9 m apart or more, never in a wall; the cape sits on the back of every pet kind (bottom within 5 cm above to 6 cm into it); the Pet Show's big words never pop up after the show ended", lambda: p39(run, new_wb, FIX))]
     only = [x for x in os.environ.get('PFU_ONLY', '').split(',') if x]
     for cid, name, fn in tests:
         if only and cid not in only: continue

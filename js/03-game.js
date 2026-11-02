@@ -552,7 +552,7 @@ class Pet{
     else if(this.wo){this.moving=false;this.face=this.wo.f;}   /* 🐻🦭 waiting outside by the door (stage 4b) */
     else if(this.gp)gearStep(this,dt);else if(!d.stay){if(this.loc!==CUR.id)nearMe(this,idx);followStep(this,dt,idx);}
     else if(snakeTank(this)){this.moving=false;}   /* 🐍 a snake at home lives in its glass tank (stage 4b) */
-    else if(this.loc===CUR.id){this.wt-=dt;if(this.wt<=0){this.wt=rand(2,6);const hr=bigRest(d),a=rand(0,TAU),r=rand(0,hr?.4:d.home?.7:1.6),c=hr||petFrom(d,d.sx,d.sz);   /* (a pet at home stays on its patch of the front yard) */[this.tx,this.tz]=collideXZ(c[0]+Math.cos(a)*r,c[1]+Math.sin(a)*r,.6,CUR);[this.x,this.z]=collideXZ(this.x,this.z,this.r,CUR);}   /* 🛋️ never a wander spot inside the furniture */
+    else if(this.loc===CUR.id){this.wt-=dt;const bw=bigWay(this,dt);if(bw){[this.tx,this.tz]=bw;this.wt=.5;}else if(this.wt<=0){this.wt=rand(2,6);const hr=bigRest(d),a=rand(0,TAU),r=rand(0,hr?.4:d.home?.7:1.6),c=hr||petFrom(d,d.sx,d.sz);   /* (a pet at home stays on its patch of the front yard) */[this.tx,this.tz]=collideXZ(c[0]+Math.cos(a)*r,c[1]+Math.sin(a)*r,.6,CUR);[this.x,this.z]=collideXZ(this.x,this.z,this.r,CUR);}   /* 🛋️ never a wander spot inside the furniture */
       const dx=this.tx-this.x,dz=this.tz-this.z,dd=Math.hypot(dx,dz);if(dd>.1){const s=Math.min(dd,1.1*dt),ox=this.x,oz=this.z;[this.x,this.z]=collideXZ(this.x+dx/dd*s,this.z+dz/dd*s,this.r,CUR);this.face=Math.atan2(dx,dz);this.moving=true;if(Math.hypot(this.x-ox,this.z-oz)<s*.3)this.wt=Math.min(this.wt,.4);}else this.moving=false;}
     if(CUR.psh&&this.loc===CUR.id)psPet(this,ox,oz,dt,idx);else this.cy=0;
     petNeed(this,dt);d.loc=this.loc;[d.x,d.z]=toSave(this.loc,this.x,this.z);
@@ -569,10 +569,23 @@ function psPet(e,ox,oz,dt,idx){const L=CUR,c=e.cy||0,h=psSupport(e.x-L.ox,e.z-L.
 const WAIT_OUT=['bear','seal'];
 function petWaitOut(e){if(e.d.stay||!WAIT_OUT.includes(petKind(e.d))||!CUR||CUR.type!=='in'||CUR.id==='vet'){e.wo=null;return false;}
   if(e.wo)return true;const D=DOORS[CUR.id];if(!D||!D.city||(e.loc&&e.loc!=='city'))return false;
-  const n=PET_ACTORS.filter(q=>q.wo).length,yw=D.city[2],r=1.5+n*1.1;e.wo={f:yw,t0:gameMs()/1000};e.loc='city';e.gp=null;
-  [e.x,e.z]=collideXZ(D.city[0]+Math.cos(yw)*r,D.city[1]-Math.sin(yw)*r,.5,LOC.city);e.tx=e.x;e.tz=e.z;return true;}
+  const n=PET_ACTORS.filter(q=>q.wo).length,yw=D.city[2],r=1.2+(n>>1)*1.8,o=n%2?1.4:-1.4;e.wo={f:yw,t0:gameMs()/1000};e.loc='city';e.gp=null;
+  [e.x,e.z]=collideXZ(D.city[0]-Math.sin(yw)*r+Math.cos(yw)*o,D.city[1]-Math.cos(yw)*r-Math.sin(yw)*o,.5,LOC.city);   /* out in front of the door, one each side of the way out (picture pass: in a row along the shop front they stood in each other) */e.tx=e.x;e.tz=e.z;return true;}
 /* 🏡 a big pet at home rests at its own home in the big-pets area (moves-pet-nap-home: the bear in its den, the seal by its pond, the monkey under its tree) */
 function bigRest(d){const id=BHOME_OF[petKind(d)];if(!id||!d.stay||!d.home||d.loc!=='city'||LANE.mine==null||yLv('pet')<3||!(S.yard.home||[]).includes(id))return null;const H=BHOME[id];return lotPt(LANE.mine,H.sp[0],H.sp[1]);}
+/* 🐻🦭🐒 a big pet sent home walks round the house to its home behind it: out of the front yard, along the side path, through the garden and the big-pets gate
+   (picture pass: it walked straight at its spot and stood against the house). A path on a 30 cm grid in the yard frame, found once (again after 40 s, if the yard changed; 3 s if none was found) */
+function bigWay(e,dt){const hr=bigRest(e.d);if(!hr){e.bw=null;return null;}const j=LANE.mine,f=lotBack(j,e.x,e.z);if(f[1]<-29.3){e.bw=null;return null;}
+  if(!e.bw||(e.bwt=(e.bwt||0)+dt)>40){e.bw=bigPath(j,f,lotBack(j,hr[0],hr[1]));e.bwt=0;if(!e.bw){e.bw=[hr];e.bwt=37;}}
+  while(e.bw.length>1&&Math.hypot(e.bw[0][0]-e.x,e.bw[0][1]-e.z)<.3)e.bw.shift();return e.bw[0];}
+const BIG_STEP=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+function bigPath(j,s,g){const h=.3,X0=-24,Z0=-35.6,N=48,M=99,[ax,az]=lotPt(j,-17,-21),cols=LOC.city.cols.filter(c=>c.cr!==undefined?Math.abs(c.cx-ax)<22&&Math.abs(c.cz-az)<22:c.x1===undefined||c.x2>ax-22&&c.x1<ax+22&&c.z2>az-22&&c.z1<az+22);
+  const id=(x,z)=>{const i=Math.round((x-X0)/h),k=Math.round((z-Z0)/h);return i<0||k<0||i>=N||k>=M?-1:i+k*N;},ok=new Int8Array(N*M).fill(-1),prev=new Int32Array(N*M).fill(-1),pt=c=>lotPt(j,X0+(c%N)*h,Z0+Math.floor(c/N)*h);
+  const free=c=>{if(ok[c]<0){const [x,z]=pt(c);ok[c]=cols.some(q=>pushOut(x,z,.27,q))?0:1;}return ok[c]===1;};
+  const a=id(s[0],s[1]),b=id(g[0],g[1]);if(a<0||b<0)return null;const Q=[a];prev[a]=a;
+  for(let q=0;q<Q.length&&prev[b]<0;q++){const c=Q[q],i=c%N;for(const [di,dk] of BIG_STEP){const n=c+di+dk*N;if(i+di<0||i+di>=N||n<0||n>=N*M||prev[n]>=0||!(n===b||free(n)))continue;if(di&&dk&&!free(c+di)&&!free(c+dk*N))continue;prev[n]=c;Q.push(n);}}
+  if(prev[b]<0)return null;const out=[];for(let c=b;c!==a;c=prev[c])out.push(c);out.reverse();
+  return out.filter((c,k)=>k===out.length-1||c-(k?out[k-1]:a)!==out[k+1]-c).map(pt);}
 /* 🐍 the snake at home goes in and out of its open tank by itself and sleeps in the hide (moves-snake-tank; COZY_MOVES.tankPath, root at the tank's origin) */
 function snakeTank(e){const d=e.d;if(petKind(d)!=='snake'||!d.stay||!d.home){e.tk=null;return false;}let rec=null;for(const r of HOME_ITEMS.values())if(r.it.t==='snaketank'){rec=r;break;}
   if(!rec){e.tk=null;return false;}e.tk=rec;e.loc='home';e.x=rec.g.position.x;e.z=rec.g.position.z;e.face=rec.g.rotation.y;e.g.rotation.y=e.face;return true;}
@@ -2343,7 +2356,7 @@ function standUp(){if(!P.sit)return;if(P.sit.bus){busOff();return;}if(P.sit.bk){
   const nx=P.x-Math.sin(P.yaw)*.55,nz=P.z-Math.cos(P.yaw)*.55;[P.x,P.z]=collideXZ(nx,nz,.3,CUR);}
 
 /* ---- player ---- */
-function solids(){const s=[];if(CUR.type==='in'&&S.time>=8&&S.time<20)for(const p of SHOPPERS)if(p.L===CUR)s.push({cx:p.x,cz:p.z,cr:.32});for(const f of FRIEND_ACTORS)if(f.loc===CUR.id&&f.mode!=='away'&&f.mode!=='follow')s.push({cx:f.x,cz:f.z,cr:.32});if(CUR.id==='city'){for(const w of WALKERS)if(w.state!=='home')s.push({cx:w.x,cz:w.z,cr:.32});for(const c of CARS){if(c.away)continue;s.push({ob:1,cx:c.x,cz:c.z,ux:Math.sin(c.yaw),uz:Math.cos(c.yaw),hl:1.78,hw:.95});}   /* 🚗 one box round each car, like the bus: your eyes stay 30 cm from its body and half a metre from its cabin (run 4 finish: its two round ends let you come 15 cm from the cabin's side, just under the roof at eye height, and the view was one flat colour with a dark band) */}busSolids(s);return s;}
+function solids(){const s=[];if(CUR.type==='in'&&S.time>=8&&S.time<20)for(const p of SHOPPERS)if(p.L===CUR)s.push({cx:p.x,cz:p.z,cr:.32});for(const f of FRIEND_ACTORS)if(f.loc===CUR.id&&f.mode!=='away'&&f.mode!=='follow')s.push({cx:f.x,cz:f.z,cr:.32});if(CUR.id==='city'){for(const w of WALKERS)if(w.state!=='home')s.push({cx:w.x,cz:w.z,cr:.32});for(const c of CARS){if(c.away)continue;s.push({ob:1,cx:c.x,cz:c.z,ux:Math.sin(c.yaw),uz:Math.cos(c.yaw),hl:1.78,hw:.95});}farmSolids(s);   /* 🚗 one box round each car, like the bus: your eyes stay 30 cm from its body and half a metre from its cabin (run 4 finish: its two round ends let you come 15 cm from the cabin's side, just under the roof at eye height, and the view was one flat colour with a dark band) */}busSolids(s);return s;}
 const sittersOut=()=>S.time>=9&&S.time<19.5;
 /* swing pumping: tap ⬆️ (or Space) while swinging to go higher and higher */
 const SW_MAX=1.45;let swOn=false,swFull=false;
@@ -2550,7 +2563,7 @@ const FA_IDLE={cow:['cow.graze','cow.stand'],sheep:['sheep.graze','sheep.look'],
 function farmTick(dt){if(!FARM.L)return;const inCity=CUR&&CUR.id==='city',near=inCity&&(farmNear(P.x,P.z,40)||!!P.horse);if(FARM.q&&inCity&&farmNear(P.x,P.z,70))FARM.q();
   if(near!==FARM.on){FARM.on=near;FARM.dyn.visible=near;if(near)FARM.L.g.add(FARM.dyn);else FARM.L.g.remove(FARM.dyn);if(!near&&P.horse)farmOff(true);}   /* (far away the living things leave the scene: no matrix work for them each frame) */
   if(!near)return;FARM.tick++;const ms=gameMs(),now=ms/1000,cx=camera.position.x,cz=camera.position.z;
-  if(P.horse)farmRide(dt);farmLessonTick(dt);
+  if(P.horse)farmRide(dt);else if(!P.sit&&!P.ride)for(const q of farmSolids([])){const p=pushOut(P.x,P.z,.3,q);if(p){P.x=p[0];P.z=p[1];}}farmLessonTick(dt);
   /* the trail riders */
   for(const h of FARM.riders){const at=farmRiderAt(h,ms);h.m.root.visible=!!at&&Math.hypot(at?at.x-cx:0,at?at.z-cz:0)<55;if(!h.m.root.visible)continue;
     const slow=FARM.said['r'+h.rider.who]>performance.now();h.x=at.x;h.z=at.z;h.m.root.position.set(at.x,0,at.z);h.m.root.rotation.y=at.ry;
@@ -2584,6 +2597,9 @@ function farmPerson(p,now){const R=p.m.root;
   if(p.who==='stan'){const L=FARM.lesson,k=Math.floor(now/6)%3;COZY_MOVES.play(p.m,L?(L.step>=5?'coach.cheer':'coach.point'):['coach.point','coach.whistle','coach.point'][k],now%6,{kind:'person'});return;}
   COZY_MOVES.play(p.m,'person.idle',now,{kind:'person'});}
 /* ---- riding ---- */
+/* 🐴 a box round each grown horse and cow near you (like the cars): you cannot walk into one, and one that turns or walks into you pushes you out (picture pass: the camera stood inside a horse) */
+function farmSolids(s){if(!FARM.on)return s;for(const a of [...FARM.hs,...FARM.riders,...FARM.an]){if(a.st==='me'||!/^fa\.(horse|cow)\.adult/.test(a.key||''))continue;const R=a.m.root;if(!R.visible||Math.abs(R.position.x-P.x)>8||Math.abs(R.position.z-P.z)>8)continue;
+  const ux=Math.sin(R.rotation.y),uz=Math.cos(R.rotation.y),cow=a.key[3]==='c';s.push({ob:1,cx:R.position.x+ux*.21,cz:R.position.z+uz*.21,ux,uz,hl:cow?1.3:1.24,hw:cow?1.28:.36});   /* (measured at eye height on every move: horse |x| .31, z -.8..1.55; the cow's low-detail body |x| 1.27, z -1.08..1.5) */}return s;}
 function farmHorseFree(h){return h&&h.st==='home'&&!farmPeerOn(h.i);}
 function farmPeerOn(i){for(const a of MP.peers.values())if(a.rd&&a.rd[0]===i)return a;return null;}
 function farmMount(h,lesson){if(P.horse||!h)return;if(!lesson){if(!S.ride.lesson){SFX.no();toast('🐴 Ask the instructor for a lesson first! Stan is at the jump field.',3.5);return;}

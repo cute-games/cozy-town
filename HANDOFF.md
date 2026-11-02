@@ -1,4 +1,4 @@
-# HANDOFF — read this first (one page; updated 2 Nov 2026, Pets and Farm Update: all 6 stages built, full check done)
+# HANDOFF — read this first (one page; updated 2 Nov 2026, Pets and Farm Update: all 6 stages built, full check done, picture pass 1 fixed)
 
 ## Where things stand
 - Live: `main` = a47bb1a (pet update 1, stamp 2026102902). Backups: `backup-2026-10-31` and `backup-2026-11-01` = main a47bb1a (A2 wants today's date: a new dated backup each day).
@@ -52,7 +52,14 @@
   P36 (new line, the test's own clock: fixed, PASS alone) and C6 (only P36's expected live-version error, now reported inside P36). check_split S1-S4 PASS. No game file changed
   (stamp stays 2026110202). Snake tank / big pets in main: main stops at the title and writes nothing, its update check takes the new file: save safe, no fix (P36 proves it).
   **Picture pass NOT DONE** (the helper had no tool for Sonnet viewers): 273 kit shots where the update touched are in the foreman's scratchpad `pics-pfu/`.
-- **Next**: the foreman's picture pass (Sonnet viewers), then the one pull request. `tools/PFU-TRY-IT.md` = the "Try it for real" list for Karolis and Izabele (guard 7).
+- **Picture pass 1 fixed** (stamp 2026110203; marks, decisions and leftovers: `tools/PFU-REPORT.md` section 9): you never stand inside a grown horse/cow
+  (`farmSolids`: boxes like the cars, and a push in `farmTick`), big pets walk home round the house (`bigWay`/`bigPath`, grid path via the big-pets gate), bear
+  and seal wait one each side of a door (`petWaitOut`), capes/wings/backpacks fit each body (`BACK_FIT`), the show's floating and big words end with the turn/show
+  (`psBegin`, `psEnd` + `popDrop`), vet phone header '🩺 Vet'. New kit lines P37-P39 (fail on stage 6, pass now); shots reframed: P32 riding, N28 petshop-floors.
+  Quick kit 87 of 89 PASS (A2: backup branch dated 2026-11-01, needs `backup-2026-11-02`; P19 no GPU); check_split S1-S4 PASS; 2,336,482 bytes.
+  `shots_pfu.py` takes `ONLY='yard 3,farm,...'` (scene names) for retakes. Not changed: the run-4 crawler teleports without collision (crawl pictures can look
+  from inside walls): the owner's/foreman's call.
+- **Next**: Sonnet viewers on the retakes (45 pictures, the foreman's scratchpad `pics-fix1/` + `list.txt`), then the one pull request. `tools/PFU-TRY-IT.md` = the "Try it for real" list for Karolis and Izabele (guard 7).
 
 ## Read first (each stage)
 1. `CLAUDE.md`, this file. 2. The run doc `kit/kits/pfu-night-run.json` (field `text`; its Guards and Corrections hold). 3. Your brief

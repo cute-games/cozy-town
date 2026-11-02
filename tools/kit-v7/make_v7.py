@@ -73,7 +73,9 @@ def fix_readme(s):
                 'license. Rewritten (old -> new): P18 the bear\'s license line (stand-in -> the approved rules text), P10 (person moves on a person, not on pets), P17 (walls outside the clinic, without the park\'s west part where the approved Pet Show area stands). The license card\'s fonts (Alfa Slab One, Roboto Slab 700/800) are served locally like Baloo 2 (fonts.css). Fixture save-pfu5-stage5.json.\n'
                 'Added 1 Nov 2026 (full check of the Pets and Farm Update, the owner Karolis): E1/N14/N40 old -> new: the town (\'city\') +10% pieces / +10% triangles ->\n'
                 '+15% pieces / +20% triangles (the farm, horse trail and jump field): --e1-limits now defaults to "pets:0.10:=45000,city:0.15:0.20". Every other area keeps\n'
-                'its limit. P19 and P25 keep their limits and keep running; they stay NOT VERIFIED until the owner measures on the real iPad.\n')
+                'its limit. P19 and P25 keep their limits and keep running; they stay NOT VERIFIED until the owner measures on the real iPad.\n'
+                'Added 2 Nov 2026 (picture pass 1): P37 big pets reach their homes round the house, P38 never inside a grown horse or cow, P39 bear and seal wait apart\n'
+                'at every door, the cape on every kind\'s back, the Pet Show\'s big words end with it. Shots reframed (no line changed): P32 riding, N28 petshop-floors.\n')
 def fix_checks(s):
     # B1 (1 Nov 2026, pets and farm update stage 4): sickness is switched on now, so a pet's sickness timer (pets.N.sad: minutes played at 0-1 hearts)
     # moves on every frame played, like happiness, and two loads a few frames apart differ in the third decimal (save-pfu2-stage2.json: 12.5 -> 12.513).

@@ -31,7 +31,7 @@ async def n28(run, new_wb, FIX):
       P.x=L.ox;P.z=L.oz+3.7;P.cy=0;__run(2);const up=[go(-4.6,4.5,40),go(-5.95,4.5,20),go(-5.95,-.3,80)];const dn=[go(-5.95,4.6,80),go(-4.6,4.5,20)];return {up,dn};}""")
     det.append(f"the stairs: up to {st['up'][-1]} m (floor 2), down to {st['dn'][-1]} m")
     if abs(st['up'][-1] - 3.34) > .01 or st['dn'][-1] != 0: probs.append(f'the stairs: {st}')
-    await g.ev("()=>{const L=LOC.pets;P.x=L.ox-2;P.z=L.oz+3;P.yaw=Math.PI;P.pitch=.02;}"); await g.step(4); await g.shot('petshop-floors', both=False)
+    await g.ev("()=>{const L=LOC.pets;P.x=L.ox-2;P.z=L.oz+3;P.yaw=0;P.pitch=.32;}"); await g.step(4); await g.shot('petshop-floors', both=False)
     ad = await g.ev("""()=>{const a=PEN.find(q=>q.t==='pug');P.x=a.x+1.2;P.z=a.z+1.2;P.cy=0;const n0=S.pets.length;a.target.act();const open=UI.open;const b=document.querySelector('#card [data-a="adopt"]');if(b)b.click();
       return {open,adopted:S.pets.length-n0,kind:S.pets.length?S.pets[S.pets.length-1].kind||S.pets[S.pets.length-1].type:null};}""")
     det.append(f"adopting a pug: card opens {ad['open']}, pets +{ad['adopted']} ({ad['kind']})")

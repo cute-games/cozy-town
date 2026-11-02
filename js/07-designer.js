@@ -384,7 +384,8 @@ function psPanel(kind){const C=CUT,n=C.order.length;let h;const x=C.order[C.ri];
 /* the next turn: alone, at once; in a shared show at its time on the one clock (everyone's turns line up) */
 function psTurnAt(i){const C=CUT;if(C.ts==null)return 0;let t=C.ts+3.4;for(let k=0;k<i;k++)t+=psTurnLen(C.order[k]);return t;}
 function psNext(){const C=CUT;const i=C.ri+1;if(C.ts!=null&&psSec()<psTurnAt(i)-.05){psGo('wait');C.wi=i;return;}psBegin(i);}
-function psBegin(i){const C=CUT;C.ri=i;if(i>=C.order.length){psResultsAt();return;}const x=C.order[i];
+function psBegin(i){const C=CUT;C.ri=i;for(const f of FLOATS)f.t=f.life;   /* the last pet's words above the stage go before the next name pops up (picture pass: 'PERFECT!' sat on 'Bean!') */
+  if(i>=C.order.length){psResultsAt();return;}const x=C.order[i];
   if(x.you){psToYou();return;}x.r.busy=true;x.k=0;psGo('rin');psPanel('rival');popText(PET_TYPES[x.kind].icon+' '+psNm(x)+'!');const snd=SFX[PET_TYPES[x.kind].snd];if(snd)snd();}
 function psToYou(){const C=CUT,g=C.p.g;C.ix=g.position.x;C.iy=g.position.y;C.iz=g.position.z;C.round=0;C.pts=0;C.res=[];psGo('in');psPanel('you');popText('⭐ Your turn!');}
 ACT.psskip=()=>{const C=CUT;if(!C||!C.show||C.ts!=null||C.me<0||C.ri>=C.me||!/^(intro|r|wait)/.test(C.stage))return;
@@ -556,7 +557,8 @@ function psTapped(g,pos){const C=CUT;C.res[C.round]=g;C.pts+=g;if(PSM.g&&C.ts!=n
   const b=document.querySelector('.psnow');if(b)b.disabled=true;const sp=C.spot;
   if(g===2){SFX.whee();setTimeout(()=>SFX.yay(),250);popText('PERFECT! 🌟');for(let i=0;i<4;i++)setTimeout(()=>{if(CUT&&CUT.show)floatText('⭐',sp[0]+rand(-.6,.6),rand(1.1,1.7),sp[1]+rand(-.6,.6),{h:.42});},i*120);}
   else if(g===1){SFX.pop();popText('Good! ⭐');}else{SFX.tap();popText(pos==null?'Too slow! 🙈':'Oopsie! 🙈');floatText('💦',sp[0],1.3,sp[1],{h:.45});}}
-function psEnd(keep){const C=CUT;if(!C||!C.show)return;const p=C.p,o=PS.out;CUT=null;for(const r of PSX.rivals)r.tg.visible=true;if(!keep)document.body.classList.remove('cut');if(UI.open)closePanel();psCardsDown();trGearOff(C.gearO);
+function psEnd(keep){const C=CUT;if(!C||!C.show)return;const p=C.p,o=PS.out;CUT=null;popDrop();for(const f of FLOATS)f.t=f.life;   /* the show's big words (and any still waiting) end with it (picture pass: 'Oopsie!' followed you to the farm) */
+  for(const r of PSX.rivals)r.tg.visible=true;if(!keep)document.body.classList.remove('cut');if(UI.open)closePanel();psCardsDown();trGearOff(C.gearO);
   for(const x of C.order){if(x.bf){scene.remove(x.bf);x.bf=null;}if(x.own){scene.remove(x.r.m.root);x.r.m.root.traverse(q=>{if(q.isMesh)q.geometry.dispose();});}}PSX.rivals.forEach((r,i)=>psHome(r,i));
   psLicOff(C);
   if(p){p.ps=false;p.m.b.rotation.set(0,0,0);p.m.b.position.set(0,0,0);if(p.m.legs[0])p.m.legs[0].rotation.x=0;p.g.rotation.set(0,p.g.rotation.y,0);p.x=o[0]-.7;p.z=o[1]-.9;p.tx=p.x;p.tz=p.z;p.loc='city';p.d.loc='city';p.d.x=p.x;p.d.z=p.z;p.tag.visible=true;}

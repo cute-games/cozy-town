@@ -39,7 +39,9 @@ async def snap(g, what, note, pts=None, both=True):
         name = f'{g.profile}_{theme}_{what}.png'; shutil.copy(p, os.path.join(OUT, name))
         LIST.append(f'{name}\t{note}{inv}')
 
+ONLY = [x for x in os.environ.get('ONLY', '').split(',') if x]   # (picture pass 1: ONLY='yard 3,farm,...' retakes some scenes; 'phone cards' and 'show join' are scenes too)
 async def scene(label, coro):
+    if ONLY and label not in ONLY: coro.close(); return
     try: await coro
     except Exception as e:
         FAILED.append(f'{label}: {e}'); print('FAILED', label, e); traceback.print_exc()
@@ -74,17 +76,18 @@ async def ipad_world(run):
         await g.ev(QUIET)
         st = await g.ev(f"()=>{{__goto('city');__setClock(null,12);S.yard={{pet:{lv},garden:{lv},gear:{json.dumps(gear)}{home}}};yardLv();FOL([]);for(const e of PET_ACTORS)e.far=0;"
                    f"const j=LANE.mine,[x,z]=lotPt(j,-17,-19.9);P.x=x;P.z=z;__run(80);"
-                   # (big pets sent home walk to the house front and stop there (z 11.1, against the house): for the picture they are put on their rest spots, see list.txt)
-                   f"window.__st=PET_ACTORS.filter(e=>bigRest(e.d)).map(e=>{{const was=[+e.x.toFixed(1),+e.z.toFixed(1)];[e.x,e.z]=bigRest(e.d);e.tx=e.x;e.tz=e.z;return petKind(e.d)+' was at '+was;}});__run(40);return __st;}}")
+                   # (picture pass 1: the big pets walk home round the house by themselves; at most 120 s of play, then where each one is)
+                   f"const B=PET_ACTORS.filter(e=>bigRest(e.d)),at=e=>{{const h=bigRest(e.d);return Math.hypot(h[0]-e.x,h[1]-e.z)<1.2;}};let f=0;while(f<2400&&!B.every(at)){{__run(20);f+=20;}}"
+                   f"window.__st=B.map(e=>petKind(e.d)+(at(e)?' home':' NOT home'))+' after '+Math.round(f*.05)+' s';return __st;}}")
         pts = "[...PETPTS(),...YARD.gear.filter(Boolean).map((q,i)=>{const v=new THREE.Vector3();q.o.getWorldPosition(v);return ['gear '+i,v.x,v.y+.3,v.z];})" + \
               (",...BHOME_IDS.map(id=>{const H=BHOME[id],[x,z]=lotPt(LANE.mine,H.x,H.z);return [id,x,.8,z];})]" if lv == 3 else "]")
         await g.ev("()=>{const j=LANE.mine,[cx,cz]=lotPt(j,-17,-19.5),[tx,tz]=lotPt(j,-16.5,-27.5);CAM([cx,14,cz],[tx,0,tz]);}")
-        await snap(g, f'yard-L{lv}-above', f'your yard, garden and pet yard level {lv}, gear {gear}' + (f', the big-pets area with jungle tree, pond and den, monkey/seal/bear at their homes (PUT there for the picture: sent home they had not arrived after 4 s: {st}; a separate probe: they walk to the house front and stop there at z 11.1, against the house, also after 40 s and after leaving and coming back)' if lv == 3 else '') + ', from above', pts)
+        await snap(g, f'yard-L{lv}-above', f'your yard, garden and pet yard level {lv}, gear {gear}' + (f', the big-pets area with jungle tree, pond and den, monkey/seal/bear at their homes (sent home, they walked there round the house: {st})' if lv == 3 else '') + ', from above', pts)
         await g.ev("()=>{window.__pre=null;const j=LANE.mine,[x,z]=lotPt(j,-20.5,-19.9),[tx,tz]=lotPt(j,-13.5,-24.5);P.x=x;P.z=z;LOOKP(tx,tz,-.14);}")
         await snap(g, f'yard-L{lv}-eye', f'your yard level {lv} at eye height from the back of the house, gear {gear}', pts)
         if lv == 3:
             await g.ev("()=>{const j=LANE.mine,[x,z]=lotPt(j,-16.5,-23.2),[tx,tz]=lotPt(j,-16.5,-32);P.x=x;P.z=z;LOOKP(tx,tz,-.16);}")
-            await snap(g, 'yard-L3-bighomes-eye', 'level-3 big-pets area at eye height: jungle tree (monkey), pond (seal), den (bear), each big pet at its home (put there, see above)', pts)
+            await snap(g, 'yard-L3-bighomes-eye', 'level-3 big-pets area at eye height: jungle tree (monkey), pond (seal), den (bear), each big pet at its home (walked there, see above)', pts)
     for lv in (1, 2, 3): await scene(f'yard {lv}', yard(lv))
 
     async def gearplay():
@@ -140,12 +143,13 @@ async def ipad_world(run):
 
     async def moods():
         await g.ev("()=>{}"); await g.ev(QUIET); await g.ev(TOWN)
+        await g.ev("()=>{const c=clockNow();let d=c.day;while(wdIdx(d)!==5)d++;__clockMs(msAt(d,12)-CLK.sk);__run(2);S.hw.rb=petWeek()+1;}")   # (picture pass 1: the ribbon is worn on Saturday and Sunday)
         r = await g.ev("""()=>{PBR.sick=true;FOL(['dog','cat','bunny']);const by=k=>PET_ACTORS.find(e=>petKind(e.d)===k);const a=by('dog'),b=by('cat'),c=by('bunny');
           a.d.happy=100;b.d.happy=8;c.d.happy=30;c.d.sick=1;__run(30);const now=gameMs()/1000;petMove(a,'pet.veryHappy',now);petMove(b,'pet.unhappyPlay',now);return [a.d.name+' very happy',b.d.name+' sad',c.d.name+' sick'];}""")
         await g.step(20); await g.ev("()=>CAMPETS(3.0,1.4)")
-        await snap(g, 'town-pet-moods', f'three pets in three moods in town: {r}', 'PETPTS()')
+        await snap(g, 'town-pet-moods', f'three pets in three moods in town, Saturday after a healthy week (every pet wears the green ribbon); moods are body language only (no icons): {r}', 'PETPTS()')
         await g.ev("()=>{window.__pre=null;S.hw.rb=petWeek()+1;S.lic.lv=Math.max(1,S.lic.lv);openMyPets();}"); await g.step(4)
-        await snap(g, 'card-mypets', 'My pets card: hearts per pet (one sick, one sad), the healthy-week ribbon, the animal license strip')
+        await snap(g, 'card-mypets', 'My pets card: who follows / is at home, the animal license strip (by design no hearts here: hearts are on each pet\'s own card)')
         await g.ev("()=>{closePanel();for(const e of PET_ACTORS){e.d.sick=0;e.d.sad=0;e.d.happy=90;}PBR.sick=false;}")
     await scene('moods', moods())
 
@@ -221,7 +225,7 @@ async def ipad_world(run):
         await g.ev(QUIET)
         r = await g.ev("""()=>{__clockMs(msAt(S.day,22)-CLK.sk);__goto('home');__run(2);if(![...HOME_ITEMS.values()].some(r=>FURN[r.it.t].use==='sleep')){S.home.items.push({u:'zzbed',t:'bed',c:'#ff9ec4',x:-4.6,z:-3.85,r:0});rebuildHome();}
           const rec=[...HOME_ITEMS.values()].find(r=>FURN[r.it.t].use==='sleep');P.x=rec.g.position.x+1;P.z=rec.g.position.z;rec.inter.act();__run(3);return {bed:zzIn(),t:+S.time.toFixed(2)};}""")
-        await g.step(2)
+        await g.step(2); await g.wait(1200); await g.step(1)   # (picture pass 1: the screen fades in for 0.8 s)
         await snap(g, 'sleep-screen', f'the night-skip sleep screen in bed at 22:00 (Sleeping until 7:00, Wake up): {r}')
     await scene('sleep', sleep())
     await run.close(g)
@@ -235,7 +239,7 @@ async def phone_cards(run):
         await g.ev("()=>{closePanel();__goto('vet');__setClock(null,12);openVetBook();}"); await g.step(4)
         await snap(g, 'card-vet-booking', 'the vet booking screen on the phone')
         await g.ev("()=>{PH.app=null;__goto('city');PBR.sick=true;const e=PET_ACTORS.find(p=>petKind(p.d)==='cat');if(e){e.d.happy=8;}const c=PET_ACTORS.find(p=>petKind(p.d)==='bunny');if(c){c.d.sick=1;c.d.happy=30;}S.hw.rb=petWeek()+1;S.lic.lv=Math.max(1,S.lic.lv);openMyPets();}"); await g.step(4)
-        await snap(g, 'card-mypets', 'My pets card: hearts per pet (one sick, one sad), the healthy-week ribbon, the animal license strip')
+        await snap(g, 'card-mypets', 'My pets card: who follows / is at home, the animal license strip (by design no hearts here: hearts are on each pet\'s own card)')
         await g.ev("()=>{closePanel();__goto('pets');S.lic.lv=1;openBig();}"); await g.step(3)
         await snap(g, 'card-bigpets-board', 'the Big pets board card (bear locked: license 3; the others adopted)')
     await scene('phone cards', cards())
@@ -274,8 +278,8 @@ async def show_join(run):
 async def main():
     async with Run('gap', os.path.join(OUT, '..', 'gap-run')) as run:
         await ipad_world(run)
-        await phone_cards(run)
-        await show_join(run)
+        if not ONLY or 'phone cards' in ONLY: await phone_cards(run)
+        if not ONLY or 'show join' in ONLY: await show_join(run)
     LIST.sort()
     with open(os.path.join(OUT, 'list.txt'), 'w') as f:
         f.write(f'{len(LIST)} pictures (Pets and Farm Update, gaps after the full check; tools/pfu-wip/shots_pfu.py)\n')
