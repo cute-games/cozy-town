@@ -1,7 +1,8 @@
 # Pets and Farm Update: report (full check 1-2 Nov 2026)
 
 Branch `claude/exciting-feynman-ea1031` (stands in for the run doc's `pfu` branch). Live: `main` = a47bb1a (stamp 2026102902). Backup: `backup-2026-11-01` = main a47bb1a.
-Final build: stamp **2026110202** (stage 6; the full check changed no game file). Joined game **2,332,697 bytes** (limit 3.0 MB).
+**Final build (for the pull request): stamp 2026110206, joined game 2,339,970 bytes (limit 3.0 MB). Sections 1-8 describe the first full check (stamp 2026110202); the picture passes and the final checks are in sections 9-11.**
+First full check build: stamp 2026110202, 2,332,697 bytes.
 
 ## 1. Check output (as printed)
 Full kit v7 (`--full`: every stage, the crawls, the 10-screen sweep, two players, old saves from today's main), 22:26 (1 Nov) to 00:40 UTC (2 Nov). Whole log: `tools/pfu-wip/full-check.log`.
@@ -195,12 +196,13 @@ Retakes for the viewers: the foreman's scratchpad `pics-fix4/` (12 pictures, `ON
   differ (Splash huge); the bear on the vet platform (T6).
 - Pass 4: the farm's blocky cows (the book's picked model, see above); at the friend's show a tree trunk and leaves block the stage and the left judge is cut off (P29 shot framing);
   Ieva's faded toast low contrast over her legs at the stable; the NOW! button pale/greyed on the show card (light and dark).
+- Pass 5 (re-check of `pics-fix4/`, 12 pictures, 2 Sonnet viewers, 2 Nov: no grade 2-3 mark): Stan's faded 'Now trot to the red flag!' toast still over the neck on the light trail ride (both viewers);
+  a cow close to the camera cut off at the left edge in the farm-cows shot (shot framing).
 - Pre-existing on main (not this update): the Market list scrolled (M9), the toast answering a tap on the locked Cave den (M10), a line with no speaker (M11), a shopper in view (M12),
   the beach-bus hint toast; G4-205/222 (pets at your heels), G4-279 (salon floor), G4-285 (phone job list on a sideways iPhone); run 4's 15 grade-1 marks (`tools/RUN-4-REPORT.md`).
 
 ### NOT VERIFIED (whole update)
-P19 and P25 on Karolis's real iPad; C1-WK (Safari's engine), F3 (after upload), G (real devices, sound, two real players); the picture re-check of `pics-fix4/` (12 pictures);
-everything in `tools/PFU-TRY-IT.md`; each stage's list in section 12.
+P19 and P25 on Karolis's real iPad; C1-WK (Safari's engine), F3 (after upload), G (real devices, sound, two real players); everything in `tools/PFU-TRY-IT.md`; each stage's list in section 12.
 
 ### Where the tokens went (this last helper)
 One session at medium effort, no sub-helpers: reading the hand-off, the kit's teacher and P36 code, the quest and clock code; the cow render compare (one small picture opened:
