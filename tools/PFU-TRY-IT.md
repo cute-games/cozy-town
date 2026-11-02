@@ -40,14 +40,15 @@ Best on the real iPad (Safari, Home Screen app) and one PC, both playing togethe
 - [ ] Ieva by the stable: talk to her the first time, she sends you to Stan.
 - [ ] Stan's lesson (100 coins once): get on, walk to the blue flag, trot to the red flag, jump the little cross, stop by Stan. Is it clear what to do? Is the jump fun?
 - [ ] Riding feel: walk, trot, gallop (iPad: push the stick further; PC: W, Shift = faster), jump (jump button / Space). Does the camera height feel right?
-- [ ] In a jump your view tips up with the horse as it takes off (picture pass 3: before, its neck filled the screen). Does it feel right, not dizzy?
+- [ ] In a jump your view tips up with the horse as it takes off (picture pass 3; picture pass 4 tips it up a bit more: the neck still filled the lower half). Does it feel right, not dizzy?
 - [ ] The horse stops near town and snorts.
 - [ ] Get off at the stable: the horse walks back to its spot; your pets were waiting at the stable and come back to you.
+- [ ] Talk to Ieva with your pets: she says "Your pets can wait here with me." (every other time). No Ieva line pops up while you ride (picture pass 4).
 - [ ] Riding with a friend: you see each other on the horses; a horse your friend rides is not offered to you.
 - [ ] Cody, Hank and Rose ride the trail now and then; say hi to them.
 - [ ] Eggs from the coop and milking a cow (once a game day each); sell them to Mr. Bun at the Market (10 coins each).
 - [ ] Feeding: the free bucket by the cows' trough (cows and sheep come), the pigs, the hens (grain), a horse from your hand. Petting animals.
-- [ ] The cows look like cows (a head, a slim neck, spots) and, fed at the trough, the cows and sheep stand round it, each on its own spot (picture pass 3: every cow was a big brown drum and they all piled on one spot).
+- [ ] The cows look like the cow you picked in Model Compare (blocky, the neck hidden until it grazes: picture pass 4 checked the game's cow is the same model, same size) and, fed at the trough, the cows and sheep stand round it, each on its own spot (picture pass 3: every cow was a big brown drum and they all piled on one spot).
 - [ ] Farm sounds: neigh, hooves, snort, moo, baa, oink, cluck.
 - [ ] The farm at night and in the snow (not designed yet: tell us how it looks).
 

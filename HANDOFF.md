@@ -1,188 +1,35 @@
-# HANDOFF — read this first (one page; updated 2 Nov 2026, Pets and Farm Update: all 6 stages built, full check done, picture passes 1 and 2 fixed)
+# HANDOFF — read this first (one page; updated 2 Nov 2026: Pets and Farm Update ready for its pull request)
 
 ## Where things stand
-- Live: `main` = a47bb1a (pet update 1, stamp 2026102902). Backups: `backup-2026-10-31`, `backup-2026-11-01` and `backup-2026-11-02` = main a47bb1a (A2 wants today's date: a new dated backup each day).
-- Building the **Pets and Farm Update** (PFU) on branch `claude/exciting-feynman-ea1031` (stands in for the run doc's `pfu` branch). Six stages, one
-  helper each; no pull request until all six pass and the foreman's full check is done. Never push to main.
-- **Stage 1 done** (stamp 2026103102): economy rebalance patch (2 commits, as written: it targets the split js/ files), night skip, morning bus home,
-  hats sit on the hair, save version 2 + migration, kit N8 fixture fixed, new kit stage `pfu` (P1-P4). Quick kit: 54 of 54 PASS
-  (`tools/pfu-wip/quick-kit-stage1.log`); check_split S1-S4 PASS. Joined game 1,606,558 -> 1,614,292 bytes (limit 1.8 MB).
-- **Stage 2 done** (stamp 2026103103, commit ddfda17): the pet brain (one need = happiness, moods, body language from the moves
-  pack), food groups, home bowl, pets nap when you sleep, healthy-week ribbon, sickness (built, OFF), vet booking on the phone, friends see your pets for
-  real and pet/play with them. New kit lines P5-P11. Joined game 1,614,292 -> 1,663,820 bytes. Quick kit 60 of 61 PASS (only A2, see Open) `tools/pfu-wip/quick-kit-stage2.log`; check_split PASS.
-- **Stage 3 done** (stamp 2026110101, commit 13067b2): Friends Lane hedges at 37.5 m, yard levels (🏡 My yard sign), 6 new beds (spots 36-41), only open
-  pots/owned things drawn, training gear (10 pieces at Ms. Paws, pets play on it), friends see your yard (presence `yd`). Kit lines P12-P16; P10 and N33 rewritten.
-  Joined game 1,663,820 -> 1,702,559 bytes (+38,739: moves +10.6 KB, gear models 9.4 KB, code). Quick kit 66 of 66 PASS (N3 failed once on timing in the
-  full run, the night3 stage run again alone: all PASS; N3 alone 3 of 3) `tools/pfu-wip/quick-kit-stage3.log`; check_split S1-S4 PASS.
-- **Stage 4 done in part** (stamp 2026110102, commit 2699548): vet station (outside at Map x 14.2 z -77.2, 2 floors inside, Penny/Rūta/Leo/Tomas, the visit), sickness ON,
-  big-needs pets locked at a Ms. Paws board. Kit P17-P18; rewritten (old -> new): P6 (sickness off until the clinic -> on with the station in, switch still
-  proven both ways), P1 (new pet field sad exactly 0 -> under 0.1 minute: it starts counting at once), B1 (pets' sad compared exactly -> like happiness, only 'still there'). Joined game 1,702,559 -> 1,733,495 bytes (+30,936). NOT in (size): the big pets' models,
-  homes and gear, wait-outside, new 3-floor Pet Shop, today's pets redrawn. Quick kit 68 of 68 PASS (`tools/pfu-wip/quick-kit-stage4.log`); check_split S1-S4 PASS.
-- **Stage 4b done** (stamp 2026110103, commit 6f424b5): what stage 4 left out. Size limit now 3.0 MB + speed guard (owner's OK 1 Nov; CLAUDE.md, kit N14/N40, new P19).
-  Big-needs pets (monkey 8 looks, seal 4, bear 6, snake 4) from the book's picked models, adoption when bigLock is null (400), homes (jungle tree 400, pond 700, den 700 in the
-  big-pets area; snake glass tank 400 = furniture with light on/off + 8 colours), big-pet gear (5 pieces), bear/seal wait outside (not at the vet), big-pet platform at the vet,
-  the new 3-floor Pet Shop (one room, real stairs), today's pets redrawn (new pug, real capybara, pomchi tail, duck/owl wing joints). Joined game 1,733,495 -> 1,973,272 bytes (pack models as data ~190 KB, moves +35 KB).
-  Quick kit 70 of 74 PASS (`tools/pfu-wip/quick-kit-stage4b.log`); check_split S1-S4 PASS. FAIL: E1, N14, N40 only on the Pet Shop's triangles 15,363 -> 40,544
-  (the approved 3-floor room; pieces 14 -> 13): needs Karolis's OK as `--e1-limits pets:...`; P19 3.7 fps in the software-drawn test browser (live 3.5): measure on a real iPad.
-- **Owner decisions 1 Nov (Karolis, foreman's chat)**: (1) the Pet Shop room may use up to **45,000 triangles** (was +10% of 15,363): kit `--e1-limits` default is now
-  `pets:0.10:=45000` (E1, N14, N40; town and every other area keep their limits). (2) P19 (30+ fps, iPad view, 2 players) stays a real line, FAIL in the cloud
-  (no GPU), NOT VERIFIED until Karolis measures on the real iPad; new **P25** = not slower than live in the same test browser (fps >= 90%, first load <= 115%).
-- **Stage 5 done** (stamp 2026110201, commit 11e2a8d): Pet Show area in the park (book's stage, podium beside it, judges' table, sand lawn, rope; tree, slide and
-  food truck moved/turned), tricks (3 per kind from the moves pack, practice on gear, bigger gold zone), Pet Show with friends (45 s join card, waiting list,
-  shared timeline, next show right after for >4), town results from the one clock, ribbon +1, animal license (counting, Barkley hand-over, card, My pets strip).
-  Kit P25-P30; rewritten (old -> new): P18 (bear's license line: stand-in -> approved rules text), P10 (person moves on a person, not on pets), P17 (walls outside
-  the clinic, without the park's west part where the approved Pet Show area stands). Joined game 1,973,272 -> 2,049,426 bytes (+76 KB: moves +35 KB, show models, code).
-  Quick kit 79 of 80 PASS, only P19 FAIL (no GPU) (`tools/pfu-wip/quick-kit-stage5.log`); check_split S1-S4 PASS. **P25 is borderline**: fps medians 3.8 vs 4.2 = 90%
-  (one earlier run 82%, fps swing up to 30% here); the CPU side of a frame is 136-151% of live main's (the whole update, stages 1-5): worth a look in stage 6.
-- **Stage 6 done** (stamp 2026110202, commit 3ed56af): the farm, horse trail and jump field from the Map plan (pfu-placements 1:1: 548 things, 64 forest trees
-  taken out/3 moved, hills stepped back), farm animals (baby/adult), 10 shared horses, Ieva (stable) and Stan (jump field), Cody/Hank/Rose on the trail (the clock), riding
-  (Stan's 5-step lesson 100 once, free rides after, 7:00-21:00, stops at the town edge, get off at the stable, pets wait there), eggs and milk once a game day, Market sells
-  them (10 each), free feed bucket, petting, friends see you ride (presence `rd`), the farm on the map. Kit P31-P35; rewritten (old -> new): P17 (see stage 6 notes).
-  Joined game 2,049,426 -> 2,332,697 bytes (+283 KB: farm models as data +176 KB, moves +25 KB, placements 35 KB, code). Quick kit 85 lines: 79 PASS; after the P10/P12 rewrites
-  (re-run alone, PASS) the FAILs are **N14, N40** (the town with Halloween+rain: 497 -> 553 pieces +11%, 732,586 -> 860,076 triangles +17%, limit 10%: the farm's ~62k
-  triangles do not fit the ~8k left after stages 1-5; E1 at the title passes at +9.4% / +9.85%: **needs Karolis's OK**, e.g. `--e1-limits pets:0.10:=45000,city:0.15:0.20`),
-  **P19** (no GPU) and **P25** (fps 86% / 78% of live in two runs, CPU side of a frame 121-124% (stage 5: 136-151%), first load 116-132%) (`tools/pfu-wip/quick-kit-stage6.log`);
-  check_split S1-S4 PASS. **P25 root cause** (guard 5, stopped here): in P25's view (town, looking north) the plan's scenery north of the town (pines/firs out to z -197,
-  x +90, ~33k triangles instanced) and the farm pieces in view add ~60-70k triangles to every frame; the software-drawn test browser is triangle/fill bound. The CPU work
-  is lower than stage 5 (pets out of sight not posed, the farm does nothing in town). First load: +283 KB file and the farm's ~170 ms build at load. Choices for Karolis
-  / the foreman: allow it (real iPad numbers first, P19), or show the far plan scenery only near the farm, or build the farm after the title shows.
-- **Owner decisions 1 Nov, full check (Karolis)**: (3) town limit E1/N14/N40 old -> new: +10%/+10% -> **+15% pieces / +20% triangles**; kit default `--e1-limits pets:0.10:=45000,city:0.15:0.20`
-  (quick and full kit; every other area keeps its limit). (4) P25 keeps its limits and keeps running; P19 and P25 are the only lines allowed to FAIL, NOT VERIFIED until Karolis's iPad.
-- **Full check done** (1-2 Nov, kit v7 `--full`, 132 min, `tools/pfu-wip/full-check.log`; report `tools/PFU-REPORT.md`): every line PASS but P19, P25 (first load 119% of live; fps 95%),
-  P36 (new line, the test's own clock: fixed, PASS alone) and C6 (only P36's expected live-version error, now reported inside P36). check_split S1-S4 PASS. No game file changed
-  (stamp stays 2026110202). Snake tank / big pets in main: main stops at the title and writes nothing, its update check takes the new file: save safe, no fix (P36 proves it).
-  **Picture pass NOT DONE** (the helper had no tool for Sonnet viewers): 273 kit shots where the update touched are in the foreman's scratchpad `pics-pfu/`.
-- **Picture pass 1 fixed** (stamp 2026110203; marks, decisions and leftovers: `tools/PFU-REPORT.md` section 9): you never stand inside a grown horse/cow
-  (`farmSolids`: boxes like the cars, and a push in `farmTick`), big pets walk home round the house (`bigWay`/`bigPath`, grid path via the big-pets gate), bear
-  and seal wait one each side of a door (`petWaitOut`), capes/wings/backpacks fit each body (`BACK_FIT`), the show's floating and big words end with the turn/show
-  (`psBegin`, `psEnd` + `popDrop`), vet phone header '🩺 Vet'. New kit lines P37-P39 (fail on stage 6, pass now); shots reframed: P32 riding, N28 petshop-floors.
-  Quick kit 87 of 89 PASS (A2: backup branch dated 2026-11-01, needs `backup-2026-11-02`; P19 no GPU); check_split S1-S4 PASS; 2,336,482 bytes.
-  `shots_pfu.py` takes `ONLY='yard 3,farm,...'` (scene names) for retakes. Not changed: the run-4 crawler teleports without collision (crawl pictures can look
-  from inside walls): the owner's/foreman's call.
-- **Picture pass 2 fixed** (stamp 2026110204; `tools/PFU-REPORT.md` section 10): a bear/seal gets off at the foot of its vet platform (`vetOff`; it stood 1 m in front of you),
-  capes on the capybara/seal shorter and off the neck, the snake's rides on its body piece (`BACK_FIT` + 5th value tilt), 'Every Saturday!' hides during a show (main loop) and `psBegin` drops
-  waiting big words. Framing only (no game change): stable, P34 trough, vet platform, wait-outside, riding/jump (horse heads where you look), moods note. Bear on the platform stays grade 1
-  (sits on the mat, measured). New kit line P40. Quick kit 88 of 90 PASS (P19 no GPU; P25 74% in the run, alone PASS 100%); check_split PASS; 2,337,485 bytes.
-- **Next**: Sonnet viewers on the retakes (30 pictures, the foreman's scratchpad `pics-fix2/` + `list.txt`), then the one pull request. `tools/PFU-TRY-IT.md` = the "Try it for real" list for Karolis and Izabele (guard 7).
+- Live: `main` = a47bb1a (pet update 1, stamp 2026102902). Backups: `backup-2026-10-31`, `backup-2026-11-01`, `backup-2026-11-02` = main a47bb1a
+  (kit A2 wants a backup branch dated today: make `backup-YYYY-MM-DD` from main on the day of a check).
+- **Pets and Farm Update (PFU)**, branch `claude/exciting-feynman-ea1031` (stands in for the run doc's `pfu` branch): all 6 stages built (economy, night skip,
+  morning bus, hats; pet brain, food, vet booking; yards and gear; vet station, big-needs pets, 3-floor Pet Shop; Pet Show and animal license; the farm,
+  horses and riding), 4 picture passes fixed. Stamp **2026110206**, joined game **2,339,970 bytes** (limit 3.0 MB). **State: ready for the pull request**
+  (the foreman opens it; the owner merges). Never push to main.
+- Full check (2 Nov, `--full`, stamp 2026110205): 132 PASS; FAIL P19 (allowed: no GPU here), P36 and T1-T4 (iPhone, PC; T1 iPad). Reruns: **T1-T4 PASS on all three
+  screens** (timing: they ran after game 20:00), **P36 PASS alone twice**. Picture pass 4 changed only the jump view and when Ieva says her pets line; quick kit after it:
+  **90 of 91 PASS** (only P19). check_split S1-S4 PASS. Details, every FAIL and every leftover mark: `tools/PFU-REPORT.md` section 11.
+- **Still open for the owner**: P19/P25 on the real iPad; `tools/PFU-TRY-IT.md` (try it for real: Karolis and Izabele); Sonnet viewers on the 12 retakes of picture pass 4
+  (the foreman's scratchpad `pics-fix4/` + `list.txt`); the cows are the book's picked blocky model (grade 1, models frozen).
 
-## Read first (each stage)
-1. `CLAUDE.md`, this file. 2. The run doc `kit/kits/pfu-night-run.json` (field `text`; its Guards and Corrections hold). 3. Your brief
-`kit/entries/plan-brief-pfu-N.json` and the entries it names (all in `kit/entries/`; index and versions in `kit/README.md`). Packs: `kit/files/tools/`.
+## Read first
+1. `CLAUDE.md`, this file. 2. `tools/PFU-REPORT.md` (sections 1-11: checks, rewrites, marks; section 12: every stage's code notes: save v2 names, night skip `CLK.sk`/`gameMs()`,
+pet brain, yard/gear, vet, big pets/`PACKM`/`packBuild`, Pet Show, farm). 3. The run doc `kit/kits/pfu-night-run.json` and briefs in `kit/entries/` (book copies; `kit/README.md`).
 
-## The split game (Plan 1) and checks
-- Edit `js/*.js`, `css/`; the stamp `const COZY_BUILD=` stays inline in `index.html`. Join / kit / split / check_split as below.
-  1. `python3 tools/split/split.py join . /tmp/x/bundle.html --edited`; live = join of a main checkout (`git worktree add <dir> a47bb1a`).
-  2. Kit: `python3 tools/kit-v7/make_v7.py` (rebuilds `cozy-check-v7.zip` from v6 + every rewrite + stage `pfu` + fixtures), unzip, strip_online both
-     files, run `cozy_check2.py ... --backup <live> --backup-title backup-2026-10-31 --only files,counts,saves,night3,run4,pfu` (quick kit, ~70 min).
-  3. `python3 tools/split/split.py split /tmp/x/bundle.html .` 4. `tools/split/check_split.py --site . --tested ... --live ... --three <kit>/cozycheck/three-r128.min.js`.
-- New kit lines go in `tools/kit-v7/pfu.py` (stage `pfu`, function `s_pfu`; `PFU_ONLY=P2,P4` runs some). Each stage adds a fixture save made by its
-  own build: `tools/check-fixtures/save-pfu<N>-*.json` (make_v7.py picks up `save-pfu*.json` and `save-prepfu-*.json`). Stage 1 added
-  `save-prepfu-main.json` (made by main) and `save-pfu1-stage1.json`. Python Playwright 1.63.0 (`pip install --break-system-packages playwright==1.63.0`).
+## The split game and checks
+- Edit `js/*.js`, `css/`; the stamp `const COZY_BUILD=` stays inline in `index.html`.
+  1. `python3 tools/split/split.py join . <dir>/github-new.html --edited`; live = join of a main checkout (`git worktree add <dir> a47bb1a`).
+  2. Kit: `python3 tools/kit-v7/make_v7.py` (rebuilds `cozy-check-v7.zip`), unzip, `strip_online.py` both files, run `cozy_check2.py --live-claude ... --new-claude ...
+     --live-web ... --backup <live> --backup-title backup-YYYY-MM-DD --only files,counts,saves,night3,run4,pfu` (quick kit, ~75 min) or `--full` (~140 min).
+  3. `python3 tools/split/split.py split <bundle> .` 4. `tools/split/check_split.py --site . --tested ... --live ... --three <kit>/cozycheck/three-r128.min.js`.
+- PFU kit lines: `tools/kit-v7/pfu.py` (stage `pfu`; `PFU_ONLY=P36` runs some with `--only pfu`). Fixtures: `tools/check-fixtures/save-pfu*.json`.
+  Pictures: `tools/pfu-wip/shots_pfu.py <kit>/cozycheck <joined> <out>` (`ONLY='farm,...'` for some scenes). Playwright 1.63.0.
+- **Kit timing**: the teacher stages (T1-T4) play on the real one clock (a game day = 15 real minutes); classes come only at game 8:00-20:00. A stage that starts late
+  in the game day fails with 'no message from the school came'. Rerun it alone just after game 8:00 (game time = clockAt(Date.now()): 8:00 is 252.9 s into each
+  900 s day counted from 1 Jan 2026 UTC); a stopped run continues with the same command (finished stages are skipped).
+- Run nothing heavy next to a check (N13/N15/P25 fail on timing alone).
 
-## Stage 1 notes the next stages need
-- **Save version 2** (`SAVE_V`, `saveMigrate()` in js/03-game.js, called in startGame): `S.sv=2`; each pet gets `sick:0, sad:0, tr:1, tp:0`;
-  `S.hw={w,cd,sick}`, `S.vet={bk:null}`, `S.yard={pet:1,garden:1}`, `S.lic={lv,wins,firsts,weeks}`, `S.ride={lesson:0}`, `S.farm={eggs:0,milk:0}`.
-  Use these names; do not bump the save version again. `S.v` stays 1. New adopted pets get the four pet fields (js/04-panels.js).
-- **Night skip**: `CLK.sk` (total skipped ms) shared online at `worlds/cozy-town/cozy-world/peers/clock` (the players' list: the only place the
-  Firebase rules let anyone write without new rules; it has no name, so every version leaves it out of the players). Game time = `gameMs()` =
-  realMs()+CLK.sk; use `gameMs()` (not realMs) for anything on the game clock. Presence `ob:1` = in my own bed. Stage 2 adds "pets sleep too".
-  Kit tip: set a test clock with `__clockMs(msAt(d,h)-CLK.sk)` once a skip happened.
-- **Morning bus**: `busSess` adds `{p:'beach',a:8,l:9.5,go:'town',mb:1}` + park drop-off on days with no bus and no Welcome Bus.
-- **Hats**: `HAT_COVER`, `HAT_LIFT`, `hatLift()`, `bunTop()` in js/01-models.js; headphones, unicorn band and the kids' flower were reshaped; under
-  a costume hood the side hair is tucked in. Kit P4 checks every hairdo x hat x costume from above.
-
-## Stage 2 notes the next stages need
-- Pet brain: js/03-game.js after `rebuildPet` (`PBR`, `petNeed`, `petBrain`, `petPose`, `petAnim`, `petTick`, `hwTick`, `petCare`, `petCode`/`petUncode`,
-  vet functions). `PBR.sick=false`: **stage 4 sets it true when the vet clinic is in** and calls `vetCure(list)` (pay 50 a pet, free if broke, mood 2 hearts),
-  `petTip(d)` (Nurse Penny's line) and `openVetBook()` (Penny's desk opens the phone screen). Bookings: `S.vet.bk={d,h,ids,rm}`, presence `vb`.
-- Rate: 70 happiness per real hour of play (pet decision 19), half at home with `S.yard.bw>0` (bowl, seconds of play left) and a toy box or cat tree in the
-  house (`homeCare`; stage 3/4: add yard toys and big-pet homes there). Pets with you nap in bed (`e.nap`), +15 at the morning (`zzMorning`).
-- Moves: `COZY_MOVES` at the end of js/01-models.js, cut from the book's pack by `tools/pfu-wip/extract-moves.py <pack> <out> <move,list>` (only the 15
-  pet moves used). Stage 4 adds bear/seal/snake/monkey moves (bear.denNap, seal.nap, toy plays...) by re-running it with the longer list.
-- Online: pet row = [type, col, name, outfit, kind, code]; code = hearts + s(sick) w(sneeze) r(ribbon) + `.<move letter><start tenths>` (`SMS` table);
-  left out while an older version (v < PBR.V) is online. Friend care: presence `pc={to,i,k,n}`. Food: `PET_GROUP`, `GROUP_FOOD`, `PET_LOVE`, `petFood()`;
-  `PET_FOOD` kept as an alias (kit N11 reads it). Healthy week: `S.hw.{w,cd,sick,ev,rb}`, written only when you care or a pet is sick; `S.lic.weeks`++.
-
-## Stage 3 notes the next stages need
-- Yard (js/02-world.js after YARD_POTS): `yLv(k)` (S.yard.garden / S.yard.pet, 1-3), `yardBack`, `yardShell` (fences/gate/grass/lamps for your yard and friends' lots),
-  `yardLv()` rebuilds your yard's level part (call it after any level, pot or gear change), `yardColsSet`. Pet yard 3 = big-pets area z -29..-35 behind a gate
-  at x -12.4 (stage 4 puts pond (-20.8,-32) .62, jungle tree (-16.4,-32.4), den (-12.15,-32.4) .65 there, only once bought). `S.yard.gear` = list of gear ids
-  (made on first purchase, no migration default: P1 wants yard {pet,garden} for old saves).
-- Gear: `GEAR` (prices, levels, kinds), `GEAR_B` builders (js/01-models.js), `GEAR_SLOTS` (3 spots: pet corner L1, play corner L2, big-area front L3),
-  `gearPlace` (best fitting free spot, never < 0.6 of the moves' size). Play: `GEAR_PLAY`, `gearUse/gearStep/gearEnd` in js/03-game.js (+20 happiness, Pet care XP,
-  petCare). Stage 4 adds big-pet gear (monkey bars, seal ball, bear log, snake basket) the same way: builders in GEAR_B, a GEAR row, a GEAR_PLAY plan, moves via
-  extract-moves.py; P15 checks every GEAR id. Stage 5's practice days can hook into gearEnd(e,true).
-- homeCare() counts yard gear as a toy. Presence `yd` = garden lv + pet lv + a letter per gear (GEAR_IDS order: append new ids at the end only).
-- Soil meshes are made when a spot opens (draw-call budget, N14/N40: town pieces within 10% of live).
-
-## Stage 4 notes the next stages need
-- Vet: `buildVet()` (js/02-world.js, loc 'vet' at ox 4500, floors like the Pet Shop), clinic outside `vetClinic(g)` added to the city's static group; the town's bushes/trees
-  in the spot are still generated (same random order) into `VDUMP` and their walls removed (`vetSpot`). Visit: `vetStaff`, `openVetDesk/vetDesk`, `vetStart`, `vetStep`
-  (called from petTick), `vetEnd` (js/03-game.js). Keepers can play a move: `k.mv` (+`k.mv0`, `k.lk` look-at) in the main loop. Moves added: pet.vetNervous, pet.takeTreat,
-  vet.listen, vet.check, nurse.treat (extract-moves.py with the longer list). Furniture uses the pack's rounded box as `vrbox` (the game's `rbox` has another signature).
-- Big pets: `BIGP`, `bigLock`, `openBig`, `bigPaws`, `bigHome(k)` (js/04-panels.js; returns false until the homes are sold). License from `S.lic.lv` (stage 5).
-  The stage that adds the monkey/seal/bear/snake models must add PET_TYPES rows (base = an old type), the homes (GEAR-like, yard spots in stage 3 notes), make
-  bigHome read them, adopt when bigLock is null, and the wait-outside rule (bear, seal). PET_TOY already has their favourite toys.
-- Kit: P17 compares the town's trees outside the clinic with `tools/kit-v7/pfu-trees-stage3.json` (stage-3 build; zipped by make_v7.py).
-
-## Stage 4b notes the next stages need
-- Pack models as data: `PACKM` (end of js/01-models.js) made by `node tools/pfu-wip/export-pack.js <three-r128.min.js> > x.js; python3 tools/pfu-wip/put-packm.py x.js`
-  (the book's packs in kit/files/tools, kept versions). `packBuild(key)` draws one with the game's shapes; `makePet` uses it for monkey/seal/bear/snake/pug/capybara
-  (`PACKM.cols`; monkey/bear kinds = fur colour). Add a model: a line in export-pack.js's OUT list, rerun both commands. Moves: extract-moves.py with EXTRA=stairH,tankPath.
-- New Pet Shop (js/02-world.js `PSH`, `psSupport`, `psFl`, `buildPetShop`; js/09-mainloop.js `psTick`): floors at 0 / 3.34 / 6.54, P.cy = your height, pets `e.cy`;
-  colliders with `.fl` collide only on that floor (`CFL` in collideXZ); targets/inter use `when:()=>psFl(P.cy)===fl`. Pens: `L.pens` with fl, y, hill, face, mv (big pets).
-- Big pets: PET_TYPES rows have `big:1`; `BHOME` (homes, yard frame), `S.yard.home` (list, made on first purchase), presence yd + T/P/D letters; `bigHome`, `bigRest`
-  (pets at home rest at their home), `snakeTank`/`snakeTankPose` (snake at home lives in the tank), `petWaitOut` (e.wo), `vetBigStaff`. Toy moves `TOY_MV` (not sent online).
-  GEAR ids appended: monkey, monkey2, seal, bear, snake (letters k-o). Psrivals (Pet Show) leave big pets out (same draw as old versions).
-- Kit rewrites (old -> new): N14/N40 size, B1 sad within 0.1, P10 (real-shape lowest point; big-pet/toy moves on their kind), P15 (15 gear pieces), N28 (the new shop).
-
-## Stage 5 notes the next stages need
-- Pet Show (js/07-designer.js, rewritten): `PS` (stage spot -36.3,22 top .56; lawn spot for gear tricks; podium steps `PS.pod`; judges' table `PS.jt`), `psShow(plan,p)`
-  runs one show (`plan.ts` null = alone, at your pace, skip allowed; a number = shared timeline on the one clock, `psTurnAt`), `psPlan(r,i,seed)` = town results from
-  a seed (the show's start second, never Math.random). Tricks: `trList`, `trLen`, `trSpot` (stage or lawn + gear via `GEAR_B`), `trPractice` (from `gearEnd`; pet
-  fields `tr` known 1-3, `tp` practice days, `tq` last practice day), `psGoldW` (.08, .12 for learned tricks). Friends: `PSM`, presence `ps=[t0,jt,pet,style,happy,known,grades]`,
-  `psFriendsHere` (version >= `PS_V`=2026110201, in the park), `psJoinCard`, `psWaitCard`, `psmTick`, `psGroups` (4 a show, next right after).
-- License: `LIC_NEED`, `licReach`, `licShow(place)` (S.lic wins/firsts; S.lic.seen), hand-over `psLicStart/psLicCut` (moves person.giveCard/takeCard, pet.greet),
-  `openLicense`, My pets strip `.licstrip`. Ribbon at the show: +1 Granny Daisy (`psScore10`). Map: Pet Show area pieces in `LOC.city.show`; the park's new walls are
-  marked `ps5` and the nature scatter still sees the old park (`PS5_OLD`) so every bush keeps its place. Food truck `TRUCK.ry` (turned); `packBuild(key,txt)` swaps sign texts.
-- Moves re-cut with `trick,pet.greet,person.giveCard,person.takeCard` and EXTRA=stairH,tankPath,TRICKS,trickGear,TRICK_LEN,TRICK_KIND,TT.
-
-## Stage 6 notes (the farm)
-- Build: `buildFarm` (js/02-world.js, before `FARMD` = the placements as data, made by `python3 tools/pfu-wip/put-farm.py` from kit/kits/pfu-placements.json). Statics baked
-  (160 m pieces; props/machines without outline hulls, plain colours merged: `farmLite`), nature instanced (one draw a kind, `farmProto`), ground/roads 2 flat pieces, walls
-  (`fw:1`) + an 8 m collider grid `L.fgrid` (turned boxes `farmPush`) that collideXZ reads only out there. Lane: the block north of the hedge is now a thin hedge strip, a new
-  block `laneC[4]` shuts the land west of the lane end; city bounds reach x -226, z -196 (`FARM_X1/Z1`); the x -50 road's north barrier is gone; hills step back behind the farm.
-  Forest trees on the trail/roads/fields: same random order, drawn into VDUMP (53 of the 64 found; the other 11 went with stage 3's lane border).
-- Life (js/03-game.js end): `FARM`, `farmLive` (made lazily within 70 m of the farm: `FARM.q`), `farmTick` (nothing when far; far LOD = one baked piece past 22 m; animals hidden
-  past 70 m), `farmRide` (P.horse; `P.cy` = seat height), lesson `farmLessonTick` (S.ride.lesson/paid/met/picked), chores `farmEggs/farmMilk` (S.farm.eggs/milk/ed/md), Market
-  `farmSellHTML`/`ACT.fsell`, presence `rd=[horse,gait,heading]` (`farmStamp/farmExtra/farmPeer`, peer fields a.fh..., `a.hm` is the house map!). Models: export-pack.js
-  (farm keys, `packBuild` low-detail `PK_LO` for farm keys), moves re-cut with the farm moves (tools/pfu-wip lists in the commit message).
-- Speed: pets out of sight are not posed (`petPlay`), the farm leaves the scene graph when far. Rewrites (old -> new): P17 map trees and walls outside the clinic as in the
-  stage-3 build -> the same without the map trees within 0.6 m of a planned removal/move and without the farm's own walls (`fw`); P10 every move on every pet kind -> the same
-  without the farm animals' and coaches' moves (played on their own models in P34); P12 no map tree at |z|<42 west of x -78 -> none but the 2 the plan moved behind the hedge.
-  Fixture `tools/check-fixtures/save-pfu6-stage6.json` (made by this build: lesson done, farm goods).
-- NOT VERIFIED (stage 6): how riding feels (camera, speeds, jump) on a real iPad; the farm at night and in snow (no lights); friends riding together on real devices; every
-  farm move by eye (only the moves check); Ieva's brush in her hand (pose from the moves pack); animals walk through each other and through you (no animal colliders);
-  feeding moves of the player (first person: not drawn); the lesson has no map star for Stan; sounds.
-
-## Open / not verified
-- Stage 5 NOT VERIFIED: a shared show with real friends on real devices (clock and presence lag), 3+ players and the next show right after (only a unit test of the
-  grouping), how every trick looks on its kind (looked at: the dog's high five, agility on its gear, roll over; the rest only by the moves check), the hand-over on an
-  iPad (looked at once in the test copy), sounds (tick, stamp), the license card on a phone, P19 on the real iPad.
-- Stage 4b NOT VERIFIED (by eye/real device): big pets walking/playing and their gear moves, the bear/seal waiting pose, the vet platform view, the snake in its tank,
-  the shop's stairs on an iPad (camera, feel), the tank card on a phone, friends see your floor in the shop (presence has no height: a friend upstairs is drawn on floor 1),
-  capybara faces (only the 'real' face is used), sounds (monkey, seal, bear, hiss, click). An old version (main) cannot place a saved glass tank (unknown furniture).
-- Stage 4: pictures looked at: clinic from the road, lobby, upstairs, a dog on the exam table (all look right). NOT VERIFIED: friends seeing the visit (the pet on the
-  table is drawn only for you), phone/dark mode/iPad layout of the new cards, the clinic at night, sounds, the toast queue on a real device. A town tree on the
-  pavement stands 0.8 m from the clinic's door path (x 4.75, z -78; walkable). Big-pet platform used only by bear/seal (none can be owned yet).
-- Stage 3: no pictures looked at but one overview of a level-3 yard (fences, beds, pots, gate look right); how each pet looks on its gear (feet, jumps over the
-  bars, the hamster in its wheel, capybara/duck in the water, owl on the perch) NOT VERIFIED by eye; friends do not see the gear moves (the pet stands at its
-  spot for them); the map still shows the level-1 garden; yard sign screen on a phone; sounds. Decisions made here (tell Karolis): gear room = 1 piece at pet
-  yard 1, 2 at level 2, 3 at level 3; gear scaled to fit its spot (hamster 3.9 not 4.4, dog course 0.88 not 1.25); both styles of dog course, cat tower and
-  bunny hurdles are sold as separate items '(style 2)'; garden fence colour per garden level (white, pink, yellow), pet-yard side mint at 2-3, iron round the big area.
-- A2 fails on 1 Nov only because the backup branch is dated 31 Oct (the kit wants today's date in the title); main is unchanged (same md5).
-- Stage 2: real iPad frame rate (P10 measures 0.5-0.9 ms a frame for 6 pets' moves; whole frames only in the software-drawn test copy); moves seen by
-  friends on real devices (clocks a second apart can shorten a short move); one player on two devices; sounds (sneeze) not listened to; no pictures looked at.
-  Sick pets, the vet visit itself and bear/seal waiting outside / napping at home: stage 4. The ribbon's Pet Show bonus: stage 5.
-- Night skip with real friends on real devices, and with the real Firebase (the kit uses a fake one). Hats: only contact sheets (stage 1).
-- Older items from run 4 and pet update 1 stay open (G4-205/222, G4-279, G4-285, 15 grade-1 marks; iPad smoothness with 10 pets).
+## Open / not verified (all in `tools/PFU-REPORT.md` 6, 11, 12)
+- Real iPad: P19 (30+ fps, 2 players) and P25 (first load); C1-WK, F3 (after upload), G (real devices, sounds, friends together).
+- Older items stay open: G4-205/222, G4-279, G4-285, run 4's 15 grade-1 marks (`tools/RUN-4-REPORT.md`).

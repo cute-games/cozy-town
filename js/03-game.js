@@ -2607,7 +2607,7 @@ function farmMount(h,lesson){if(P.horse||!h)return;if(!lesson){if(!S.ride.lesson
   SFX.neigh();h.st='me';h.act=null;P.horse={h,sp:0,g:'idle',j:-9,said:false,ry:h.ry,dist:0,lesson:!!lesson};P.x=h.x;P.z=h.z;P.yaw=h.ry+Math.PI;P.pitch=-.12;P.cy=FARM_SEAT-.62;
   /* your pets wait at the stable (moves-farm-wait-stable) */
   const S0=FARM.stables[0];let n=0;for(const e of PET_ACTORS){if(e.d.stay||e.loc!=='city'||e.gp)continue;const a=Math.PI*(.3+n*.22);e.fw={f:S0.ry,t0:gameMs()/1000};[e.x,e.z]=collideXZ(S0.x-3+Math.cos(a)*(2+n*.4),S0.z+4+Math.sin(a)*1.2,.4,LOC.city);e.tx=e.x;e.tz=e.z;n++;}
-  if(n&&!lesson)farmSay('Ieva','Your pets can wait here with me.');}
+}   /* (picture pass 4: Ieva says it when you talk to her with pets, never over your ride) */
 function farmOff(quiet,why){const r=P.horse;if(!r)return;const h=r.h;P.horse=null;P.cy=0;const a=h.ry+Math.PI/2;[P.x,P.z]=collideXZ(h.x+Math.sin(a)*1.3,h.z+Math.cos(a)*1.3,.3,LOC.city);
   h.st=r.lesson?'home':'back';if(r.lesson){h.x=h.hx;h.z=h.hz;h.ry=h.hry0??h.ry;h.m.root.position.set(h.x,0,h.z);}
   for(const e of PET_ACTORS)if(e.fw){e.fw=null;e.sm='pet.greet';e.sm0=gameMs()/1000;}
@@ -2627,7 +2627,7 @@ function farmRide(dt){const r=P.horse,h=r.h,now=gameMs()/1000;
   r.g=jumping?'jump':r.sp<.05?'idle':r.sp<3.2?'walk':r.sp<6?'trot':'gallop';P.moving=r.sp>.05;
   h.x=P.x;h.z=P.z;h.ry=r.ry;h.m.root.position.set(P.x,0,P.z);h.m.root.rotation.y=r.ry;
   const pl=r.g==='jump'?COZY_MOVES.play(h.m,'horse.jump',now-r.j,{}):r.ref&&now-r.ref<2?COZY_MOVES.play(h.m,'horse.refuse',now-r.ref,{}):r.g==='idle'?COZY_MOVES.play(h.m,'horse.idle',now,{}):COZY_MOVES.play(h.m,'horse.'+r.g,now,{dist:r.dist});
-  P.jy=Math.max(0,(pl&&pl.lift)||0);h.m.b.updateWorldMatrix(true,false);const e=h.m.b.matrixWorld.elements,fl=Math.hypot(e[8],e[9],e[10])||1;P.hp=r.g==='jump'?1.7*Math.asin(Math.max(0,Math.min(1,e[9]/fl))):0;   /* (picture pass 3: as the horse takes off your view tips up with it (a bit more than its body: the neck rises too), so its neck stays at the bottom instead of filling the screen; landing nose down, the neck drops out of view by itself) */
+  P.jy=Math.max(0,(pl&&pl.lift)||0);h.m.b.updateWorldMatrix(true,false);const e=h.m.b.matrixWorld.elements,fl=Math.hypot(e[8],e[9],e[10])||1;P.hp=r.g==='jump'?2.3*Math.asin(Math.max(0,Math.min(1,e[9]/fl))):0;   /* (picture pass 3: as the horse takes off your view tips up with it (a bit more than its body: the neck rises too), so its neck stays at the bottom instead of filling the screen (picture pass 4: 1.7 -> 2.3, the neck still filled the lower half); landing nose down, the neck drops out of view by itself) */
   if(r.g!=='idle'&&r.g!=='jump'){r.clop=(r.clop||0)+r.sp*dt;if(r.clop>3.2){r.clop=0;SFX.clop();}}}
 function farmJump(){const r=P.horse;if(!r)return false;const now=gameMs()/1000;if(now-r.j<1.7||r.sp<1)return true;r.j=now;SFX.jump();return true;}
 function farmStamp(st){const r=P.horse;st.rd=r?[r.h.i,{idle:'i',walk:'w',trot:'t',gallop:'g',jump:'j'}[r.g]||'i',Math.round(r.ry*100)/100]:null;}   /* 🐴 riding: [horse, gait, its heading] (old versions ignore it) */
@@ -2670,6 +2670,7 @@ function farmIeva(){const p=FARM.ppl.find(q=>q.who==='ieva');if(p)p.mvT={mv:'coa
   if(!farmOpen()){farmSay('Ieva','The stable is open from 7:00 to 21:00. See you then!');return;}
   if(!FARM.hs.some(h=>h.kind!=='lesson'&&farmHorseFree(h))){farmSay('Ieva','Every horse is out. Come back soon!');return;}
   if(!S.ride.picked){S.ride.picked=1;change();farmSay('Ieva','Stan says you did great! Pick a horse.');setTimeout(()=>farmSay('Ieva',"Bring her back to the stable when you're done."),2600);return;}
+  if(!P.horse&&FARM.ln.pw!==1&&PET_ACTORS.some(e=>!e.d.stay&&e.loc==='city'&&!e.fw)){FARM.ln.pw=1;farmSay('Ieva','Your pets can wait here with me.');return;}FARM.ln.pw=0;   /* (with pets: every other time) */
   farmSay('Ieva',farmLine('ieva',['Brushing makes their coat shine.','Clover loves apples.','The trail goes all around the farm.']));}
 const RIDER_SAY={cody:['Howdy, neighbour!','The trail is extra pretty today.','Did you see the cows by the big trees?'],hank:['Easy does it.','This old horse knows every turn.','Mind the mud by the pigs!'],rose:['Race you to the farm arch!','Stan taught me to jump too!','Yee-haw! See you around!']};
 /* ---- chores, feeding, petting ---- */

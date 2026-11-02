@@ -1364,6 +1364,7 @@ async def p36(run, live_w, new_wb, FIX):
         b = await B.ev("()=>{saveLocal();return JSON.parse(localStorage.getItem('cozytown-save-1'));}")
         diffs = [x for x in save_diff(sv, b) if not re.search(r"\.(happy|sad|t|px|pz|yaw|time)\b|^pets\.\d+\.loc: \"city\" -> \"home\"", x)]   # (a snake with its tank goes to live in it)
         if b.get('day') != sv.get('day') or (b.get('q') or {}).get('day') != (sv.get('q') or {}).get('day'): diffs = [x for x in diffs if not re.match(r'(day|litter\.day|q\.)', x)]; det.append(f"(the day turned {sv.get('day')} -> {b.get('day')} during the test: the day's own list and day numbers not compared)")
+        det.append(f"days (game day / quest day / time): save {sv.get('day')}/{(sv.get('q') or {}).get('day')}/{round(sv.get('time') or 0, 2)}, as loaded {(back or {}).get('day')}/{((back or {}).get('q') or {}).get('day')}, back {b.get('day')}/{(b.get('q') or {}).get('day')}/{round(b.get('time') or 0, 2)}")   # (picture pass 4: the full check once saw the day's quest list drawn again on the way back)
         det.append(f"back in the new version: {len(diffs)} differences, tanks {sum(1 for i in b['home']['items'] if i.get('t') == 'snaketank')}, pets {len(b['pets'])}")
         if diffs: probs.append(f'lost on the way back: {diffs[:6]}')
         errs += B.errors[:]
@@ -1516,6 +1517,7 @@ P41_SHOW = r"""()=>{const bad=[],o=[];const find=n=>{const r=[];const w=x=>{if(x
   if(JSON.stringify(r0.map(r=>[r.type,r.col,r.outfit,r.owner]))!==JSON.stringify(r1.map(r=>[r.type,r.col,r.outfit,r.owner])))bad.push('renaming changed the day\'s town pets');
   return {bad,o};}"""
 P41_RIDE = r"""()=>{FARM.lesson=null;S.ride={lesson:1};if(P.horse)farmOff(true);P.x=-100;P.z=-101;__run(4);$('toast').classList.remove('show');farmIeva();window.__iv=$('toast').textContent;
+  if(!window.__rideT){window.__rideT=[];const t1=window.toast;window.toast=function(){if(P.horse)window.__rideT.push(String(arguments[0]||''));return t1.apply(this,arguments);};}   /* (picture pass 4: every toast while you ride) */
   const H=FARM.hs.find(h=>h.kind==='pad'&&farmHorseFree(h));P.x=H.x;P.z=H.z;farmMount(H);__run(4);return !!P.horse;}"""
 P41_JUMP = r"""()=>{const bad=[],o=[];if(!P.horse)return {bad:['not on a horse'],o};const J=FARM.jumps.o122;P.x=J.x+3*Math.sin(J.ry);P.z=J.z+3*Math.cos(J.ry);P.yaw=Math.atan2(-(J.x-P.x),-(J.z-P.z));P.pitch=-.12;P.horse.ry=P.yaw+Math.PI;__run(3);
   const m=P.horse.h.m,v=new THREE.Vector3(),top=()=>{m.root.updateMatrixWorld(true);camera.updateMatrixWorld(true);let mx=-9;m.root.traverse(q=>{if(!q.isMesh||!q.visible)return;const p=q.geometry.attributes.position;for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i).applyMatrix4(q.matrixWorld).project(camera);if(Math.abs(v.x)<.15&&v.z<1)mx=Math.max(mx,v.y);}});return mx;};
@@ -1540,6 +1542,8 @@ async def p41(run, new_wb, FIX):
         det.append('toasts in the 8 s after meeting Ieva and getting on: ' + ' / '.join(sorted(seen)))
         bad_t = [t for t in seen if re.search('First a lesson|Pick a horse', t)]
         if bad_t: probs.append(f"Ieva's timed line shows over your ride: {bad_t}")
+        rt = await g.ev("()=>(window.__rideT||[]).slice()"); nfw = await g.ev("()=>PET_ACTORS.filter(e=>e.fw).length"); det.append(f"pets waiting at the stable {nfw}; toasts raised while riding: {rt}")   # (picture pass 4: no Ieva line at all while you ride)
+        if [t for t in rt if 'Ieva' in t]: probs.append(f"an Ieva line comes while you ride: {rt}")
         r = await g.ev(P41_JUMP); probs += r['bad']; det += r['o']
         if g.errors: probs.append(f'browser errors {g.errors[:2]}')
         return not probs, ' | '.join(det) + (f' | PROBLEMS: {probs}' if probs else '')
@@ -1587,7 +1591,7 @@ async def s_pfu(run, d, live_w, new_wb, FIX):
               ('P38', "Never inside a horse or cow (picture pass 1, 2 Nov): put where a grown horse or cow stands, walking into it from 4 sides, or feeding a horse from your hand, the camera is never inside its body", lambda: p38(run, new_wb, FIX)),
               ('P39', "Picture pass 1 guards (2 Nov): at every building door bear and seal wait outside 1.9 m apart or more, never in a wall; the cape sits on the back of every pet kind (bottom within 5 cm above to 6 cm into it); the Pet Show's big words never pop up after the show ended", lambda: p39(run, new_wb, FIX)),
               ('P40', "Picture pass 2 guards (2 Nov): after its vet visit a bear or a seal gets off 1.5 m or more from where you stand; the capybara's, seal's and snake's cape lies on its back along its whole length (within 6 cm), resting and while walking (the snake's slithers with it); during a Pet Show the 'Every Saturday!' sign under the banner hides (the big words pop up there) and a turn's big words left waiting never pop up after the next turn began", lambda: p40(run, new_wb, FIX)),
-              ('P41', "Picture pass 3 guards (2 Nov): every cow and sheep model is its real size (no part wider than 1.2 m; the sheep's neck tube lies along the neck); fed at the trough, the cows stand 1 m or more apart and the sheep 0.6 m or more (not one heap); the judges' table paddles never show a score; no town pet on the stage has one of your pets' names (and the day's town pets stay the same); Ieva's second line never shows over your ride; in a jump (take-off to landing) your own horse never fills the middle of the view", lambda: p41(run, new_wb, FIX))]
+              ('P41', "Picture pass 3 guards (2 Nov): every cow and sheep model is its real size (no part wider than 1.2 m; the sheep's neck tube lies along the neck); fed at the trough, the cows stand 1 m or more apart and the sheep 0.6 m or more (not one heap); the judges' table paddles never show a score; no town pet on the stage has one of your pets' names (and the day's town pets stay the same); no Ieva line ever comes while you ride (picture pass 4; was: Ieva's second line never shows over your ride); in a jump (take-off to landing) your own horse never fills the middle of the view", lambda: p41(run, new_wb, FIX))]
     only = [x for x in os.environ.get('PFU_ONLY', '').split(',') if x]
     for cid, name, fn in tests:
         if only and cid not in only: continue
