@@ -104,3 +104,28 @@ every kind's back, the show's big words end with it. Shots changed (framing only
 Quick kit after the fixes (`--only files,counts,saves,night3,run4,pfu`): **87 of 89 PASS**; FAIL A2 (the backup branch is dated 2026-11-01, today is
 2 Nov: the foreman makes `backup-2026-11-02`) and P19 (no GPU: 4.8 fps, live 4.2). P25 PASS (fps 100% of live, CPU side 109%, first load 98%).
 check_split S1-S4 PASS. Size 2,332,697 -> **2,336,482** bytes. Retakes (45 pictures, list.txt) for the Sonnet viewers: the foreman's scratchpad `pics-fix1/`.
+
+## 10. Picture pass 2 (2 Nov): marks, decisions, fixes (stamp 2026110204)
+Pictures: the 45 retakes of pass 1 (`pics-fix1/`), 2 Sonnet viewers each (the foreman; marks R1-R6 in its `view/marks-pass2.md`). The fix helper checked each mark on small crops and
+Playwright probes (side and front views, measured heights and distances).
+
+| Mark | Seen | Decision | Fix |
+|---|---|---|---|
+| R1 vet booking (2) | the bear's body fills the view behind the phone | **real** (stage 4b): after its visit a bear or seal got off on the small pets' spot, 1 m in front of where you stand to watch | `vetOff`: a bear or seal gets off at the foot of its platform (4.5 m from you) |
+| R1 stable, P34 trough (2) | a horse's side / head at the camera | framing: you are never inside one (P38) and every horse button works from 2.8 m; the shots stood you against a stall horse (stable) and at the hand-fed horse's head (P34's t+(4,3)). No game camera pull-in is needed (first person, like a wall) | shots: the stable view from the spot near Ieva furthest from any horse; P34's trough picture from 5 m on the side furthest from the horses (shot only, the line's checks unchanged) |
+| R2 capes (2) | snake's cape on the ground beside it, seal's up by its head, capybara's past its back | **real** (pass 1's `BACK_FIT`): the snake's body slithers but its cape stayed put; the seal's and capybara's ran onto the neck/shoulder | `BACK_FIT`: capybara and seal shorter, off the neck (capybara tilted to its back, a 5th value), the snake's cape rides on the body piece under it. All 5 points along each cape now 0-5 cm over the back, resting and walking |
+| R3 show words (2) | 'Pet Show!' over the banner with tiny pink text; a stray pink 'Ev' before 'Pepper!' | **real** (stage 5): the big words pop up exactly where the stage's 'Every Saturday!' sign hangs; also a skipped turn's name could pop up late | the sign hides while a show runs (main loop); `psBegin` drops big words still waiting. The 'Pet Show!' still up at your trick and the bus toast: the shots script runs the show's start in 0.2 s (framing; cleared before that picture). The bus hint toast over the banner in real play only in the show's first seconds: grade 1 |
+| R4 bear on the platform (2, was 1) | lying on its side in the air | **stays grade 1**: measured, the bear's lowest point is the mat (0.54 m) for the whole visit; from the front it sits on the mat, paws up (pet.vetNervous); the shot looked from behind Dr. Rūta's shoulder | shot: from the ramp's front |
+| R5 wait outside (2, one viewer) | bear and seal 'inside' with the Go outside button | framing: both stand outside at the shop front (1.8 m from the door); the button was yours, inside | shot hides the use button for that composite picture |
+| R6 jump / trail / moods (2-3) | no horse mid-jump; own horse head a box low right; seal and bear not in view | framing: riding is first person (you see the head and neck, not the horse in the air); the shots turned your view but not the horse; the moods note listed every pet, the shot is of 3 | the horse heads where you look in both shots; the note says first person; the moods note lists its 3 pets |
+
+Leftover grade 1 (not fixed): the bus hint toast over the show banner in a show's first seconds (pre-existing toast, the show is new), license strip wraps on phones, vet card text tight
+under the header, dark mode only changes the screens (not the 3D scene, as on main), zzz icons over the sleep card, Sandy's name tag large close up, seal not in the pond, Pet Shop windows flat
+grey, the farm's blocky cow at the trough (the book's picked model), the jump seen first person is mostly the horse's neck.
+
+New kit line **P40** (fails on the pass-1 build in all 3 parts: bear/seal 0.00 m from you, seal cape 0.15 m off, snake over nothing, sign shown, 3 late words; passes now): after its vet visit
+a bear or seal gets off 1.5 m or more from you; the capybara's, seal's and snake's cape on the back along its whole length (within 6 cm) resting and walking; the 'Every Saturday!' sign hides
+during a show only; a turn's waiting big words never pop up after the next turn began. No line rewritten (P34: picture framing only).
+Quick kit after the fixes (`--only files,counts,saves,night3,run4,pfu`, backup-title `backup-2026-11-02`, `tools/pfu-wip/quick-kit-picture-pass2.log`): **88 of 90 PASS**; FAIL P19 (no GPU: 3 fps, live 4.7;
+first load live 5258 / new 6169 ms) and P25 (fps 74% of live in the run: 3.7 vs 5.0, swing up to 30% here; run again alone: **PASS**, fps 100% of live (3.5/3.5), CPU side 100%, first load 88%). A2 PASS.
+check_split S1-S4 PASS. Size 2,336,482 -> **2,337,485** bytes. Retakes (30 pictures, list.txt) for the viewers: the foreman's scratchpad `pics-fix2/`.

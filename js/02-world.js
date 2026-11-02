@@ -342,7 +342,7 @@ function buildCity(){
       L.show[k]=[r(b.min.x),r(b.max.x),r(b.min.z),r(b.max.z),r(b.max.y)];st.add(o);return o;};   /* (L.show: where each piece stands, for the check) */
     const sand=new THREE.Mesh(new THREE.CircleGeometry(7.8,48),mat('#f2dcae'));sand.rotation.x=-Math.PI/2;sand.scale.set(.7,1,1);sand.position.set(-35.0,.026,22);st.add(sand);
     add('show.stage',-34.9,22,Math.PI/2,{'Pet Show':'🏆 Pet Show'});add('show.podium',-36.0,16.9,Math.PI/2);add('show.judges',PS.jt[0],PS.jt[1],PS.jt[2],{Judge:['Lady Fluffington','Sir Barkley','Granny Daisy']});
-    const sg=signPlane('Every Saturday!',1.05,.26,'#ffffff','#ff4d8d',.12);sg.position.set(-37.262,1.62,22);sg.rotation.y=Math.PI/2;L.g.add(sg);   /* under the stage's 🏆 Pet Show banner, between the paw signs */
+    const sg=signPlane('Every Saturday!',1.05,.26,'#ffffff','#ff4d8d',.12);sg.position.set(-37.262,1.62,22);sg.rotation.y=Math.PI/2;L.g.add(sg);PS.sign=sg;   /* under the stage's 🏆 Pet Show banner, between the paw signs (hidden during a show: the big words pop up just there) */
     const rp=[];for(let i=0;i<=8;i++){const a=-Math.PI*.3+i/8*Math.PI*.6;rp.push([-36.2+Math.cos(a)*5.2,22+Math.sin(a)*5.2]);}
     for(let i=0;i<rp.length;i++){const [x,z]=rp[i];if(Math.abs(z-22)<1.2)continue;cyl(st,.05,.06,.75,'#ffd45c',x,0,z,{seg:8,ol:.006});sph(st,.07,'#ffd45c',x,.78,z,{ws:8,hs:6,ol:.005});colC(L,x,z,.12);
       if(i<rp.length-1&&Math.abs(rp[i+1][1]-22)>=1.2){const [x2,z2]=rp[i+1];tube(st,[[x,.62,z],[(x+x2)/2,.56,(z+z2)/2],[x2,.62,z2]],.02,.02,'#ff7aa8',{seg:8,rad:5,ol:false});}}

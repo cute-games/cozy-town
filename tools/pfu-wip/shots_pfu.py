@@ -22,7 +22,7 @@ INSTALL = """()=>{if(window.__preOn)return;window.__preOn=1;const r=window.__rea
   window.CAMPETS=(dist,h)=>{const F=PET_ACTORS.filter(e=>!e.d.stay&&e.loc===CUR.id);if(!F.length)return null;const cx=F.reduce((a,e)=>a+e.x,0)/F.length,cz=F.reduce((a,e)=>a+e.z,0)/F.length;
     let dx=cx-P.x,dz=cz-P.z,d=Math.hypot(dx,dz)||1;dx/=d;dz/=d;CAM([cx+dx*dist,h||1.45,cz+dz*dist],[cx,.4,cz]);return [cx,cz];};
   window.INV=(pts)=>{camera.updateMatrixWorld(true);return pts.map(([n,x,y,z])=>{const v=new THREE.Vector3(x,y,z).project(camera);return n+(Math.abs(v.x)<=1&&Math.abs(v.y)<=1&&v.z<1?' in view':' NOT in view');}).join(', ');};
-  window.PETPTS=()=>PET_ACTORS.filter(e=>e.loc===CUR.id&&e.g.visible).map(e=>[e.d.name+' ('+petKind(e.d)+')',e.g.position.x,e.g.position.y+.3,e.g.position.z]);
+  window.PETPTS=(ks)=>PET_ACTORS.filter(e=>e.loc===CUR.id&&e.g.visible&&(!ks||ks.includes(petKind(e.d)))).map(e=>[e.d.name+' ('+petKind(e.d)+')',e.g.position.x,e.g.position.y+.3,e.g.position.z]);
   $('toast').classList.remove('show');}"""
 QUIET = "()=>{$('toast').classList.remove('show');closePanel();window.__pre=null;}"
 
@@ -116,10 +116,10 @@ async def ipad_world(run):
           const fx=-Math.sin(D[2]),fz=-Math.cos(D[2]),cam=[D[0]+fx*4.6,1.6,D[1]+fz*4.6];
           window.__pre=()=>{const C=LOC.city;C.g.visible=true;LOC.market.g.visible=false;outside.visible=true;skyMesh.visible=true;sunSprite.visible=true;FOG.near=60;FOG.far=340;
             for(const e of W){e.g.visible=true;e.g.position.set(e.x,0,e.z);e.g.rotation.y=e.wo.f;COZY_MOVES.play(e.m,'pet.wait',3,{kind:petKind(e.d)});}
-            if(PB)PB.root.visible=false;camera.position.set(...cam);camera.lookAt(D[0],.6,D[1]);};
+            if(PB)PB.root.visible=false;$('actWrap').hidden=true;camera.position.set(...cam);camera.lookAt(D[0],.6,D[1]);};
           window.__wpts=W.map(e=>[petKind(e.d),e.x,.4,e.z]);return W.map(e=>petKind(e.d)+' '+Math.hypot(e.x-D[0],e.z-D[1]).toFixed(1)+' m from the door');}""")
         await snap(g, 'town-wait-outside-market', f'bear and seal waiting by the Market door while you are inside (the outside drawn for this picture): {r}', '__wpts')
-        await g.ev("()=>{window.__pre=null;exitTo('market');}"); await g.wait(1500); await g.step(10)
+        await g.ev("()=>{window.__pre=null;$('actWrap').hidden=false;exitTo('market');}"); await g.wait(1500); await g.step(10)
     await scene('wait outside', wait_out())
 
     async def vet():
@@ -133,8 +133,8 @@ async def ipad_world(run):
                    "[...PETPTS(),['Rūta',VK('Dr. Rūta').x,1.2,VK('Dr. Rūta').z],['Leo',VK('Vet nurse Leo').x,1.2,VK('Vet nurse Leo').z]]")
         await g.ev("()=>{let n=0;while(VX&&n++<800)__run(1);}")
         r = await g.ev("""()=>{$('toast').classList.remove('show');const V=LOC.vet;P.x=V.ox-2.2;P.z=V.oz+UPZ-.4;P.yaw=0;FOL(['bear']);__run(4);const b=PET_ACTORS.find(e=>petKind(e.d)==='bear');b.d.sick=1;VX={L:[b],i:0,t:0,said:0};
-          let up=0;for(let i=0;i<300&&VX;i++){__run(1);if(b.ps&&Math.abs(b.g.position.y-.54)<.01&&++up>25)break;}const R=VK('Dr. Rūta'),p=b.g.position;let dx=R.x-p.x,dz=R.z-p.z,d=Math.hypot(dx,dz)||1;
-          CAM([p.x+dx/d*3.6+dz/d*1.2,1.9,p.z+dz/d*3.6-dx/d*1.2],[p.x,.9,p.z]);return {up,on:!!b.ps,y:+p.y.toFixed(2)};}""")
+          let up=0;for(let i=0;i<300&&VX;i++){__run(1);if(b.ps&&Math.abs(b.g.position.y-.54)<.01&&++up>25)break;}const p=b.g.position;
+          CAM([p.x+.4,1.7,p.z+4.4],[p.x,.95,p.z]);return {up,on:!!b.ps,y:+p.y.toFixed(2)};}""")
         await snap(g, 'vet-bear-platform', f'the bear on the big-pet platform with Dr. Rūta: {r}', "[...PETPTS(),['Rūta',VK('Dr. Rūta').x,1.2,VK('Dr. Rūta').z]]")
         await g.ev("()=>{let n=0;while(VX&&n++<900)__run(1);window.__pre=null;closePanel();for(const e of PET_ACTORS)e.d.sick=0;openVetBook();}"); await g.step(4)
         await snap(g, 'card-vet-booking', 'the vet booking screen on the phone (Nurse Penny\'s desk opens the same)')
@@ -147,7 +147,7 @@ async def ipad_world(run):
         r = await g.ev("""()=>{PBR.sick=true;FOL(['dog','cat','bunny']);const by=k=>PET_ACTORS.find(e=>petKind(e.d)===k);const a=by('dog'),b=by('cat'),c=by('bunny');
           a.d.happy=100;b.d.happy=8;c.d.happy=30;c.d.sick=1;__run(30);const now=gameMs()/1000;petMove(a,'pet.veryHappy',now);petMove(b,'pet.unhappyPlay',now);return [a.d.name+' very happy',b.d.name+' sad',c.d.name+' sick'];}""")
         await g.step(20); await g.ev("()=>CAMPETS(3.0,1.4)")
-        await snap(g, 'town-pet-moods', f'three pets in three moods in town, Saturday after a healthy week (every pet wears the green ribbon); moods are body language only (no icons): {r}', 'PETPTS()')
+        await snap(g, 'town-pet-moods', f'three pets in three moods in town, Saturday after a healthy week (every pet wears the green ribbon); moods are body language only (no icons): {r}', "PETPTS(['dog','cat','bunny'])")
         await g.ev("()=>{window.__pre=null;S.hw.rb=petWeek()+1;S.lic.lv=Math.max(1,S.lic.lv);openMyPets();}"); await g.step(4)
         await snap(g, 'card-mypets', 'My pets card: who follows / is at home, the animal license strip (by design no hearts here: hearts are on each pet\'s own card)')
         await g.ev("()=>{closePanel();for(const e of PET_ACTORS){e.d.sick=0;e.d.sad=0;e.d.happy=90;}PBR.sick=false;}")
@@ -174,7 +174,7 @@ async def ipad_world(run):
         r = await g.ev(r"""()=>{let n=0;while(n++<9000){__run(1);const C=CUT;if(!C||!C.show)return 'ended';if(C.stage==='trick'&&C.order[C.ri]&&C.order[C.ri].you)return 'your trick, round '+C.round;
             if(C.stage==='aim'&&C.t-C.st>.3){C.t0=performance.now()-((.25+1-C.ph)%1)*[1.8,1.5,1.25][C.round]*1000;ACT.pstap();}
             if(/^(intro|r|wait)/.test(C.stage)&&C.ri<C.me&&C.ts==null)ACT.psskip();}return 'timeout '+(CUT&&CUT.stage);}""")
-        await g.step(36)
+        await g.step(36); await g.ev("()=>{$('toast').classList.remove('show');popDrop();}")   # (picture pass 2: the script runs the show's start in a fifth of a second: its bus hint and 'Pet Show!' were still up)
         await snap(g, 'show-trick', f'the Pet Show on the stage, your dog mid-trick ({r})')
         await g.ev(r"""()=>{let n=0;while(CUT&&CUT.show&&n++<6000){__run(1);const C=CUT;if(!C)break;if(C.stage==='aim'&&C.t-C.st>.3)ACT.pstap();if(C.stage==='res'&&C.paid)ACT.psbye();if(C.stage==='lic'&&C.licOpen)ACT.licok();}closePanel();}""")
     await scene('pet show', show())
@@ -183,7 +183,7 @@ async def ipad_world(run):
         await g.ev(QUIET)
         await g.ev("""()=>{__goto('city');const c=clockNow();let d=c.day;while(wdIdx(d)!==1)d++;__clockMs(msAt(d,12)-CLK.sk);__run(4);closePanel();FOL(['dog']);S.coins=Math.max(S.coins,2000);S.ride={lesson:0};S.farm={eggs:0,milk:0};
           P.x=-100;P.z=-101;P.yaw=Math.PI/2;bringFollowers(true);__run(4);farmLiveAll();__run(10);}""")
-        await g.ev("()=>{const IV=FARM.ppl.find(p=>p.who==='ieva');P.x=IV.x+3.4;P.z=IV.z+2.6;[P.x,P.z]=collideXZ(P.x,P.z,.3,CUR);__run(20);LOOKP(IV.x,IV.z,-.08);farmIeva();__run(10);}")
+        await g.ev("()=>{const IV=FARM.ppl.find(p=>p.who==='ieva'),cl=(x,z)=>Math.min(...FARM.hs.map(h=>Math.hypot(h.m.root.position.x-x,h.m.root.position.z-z)-1.5));let best=null;for(let a=0;a<12;a++)for(const r of[3.2,4]){let [x,z]=collideXZ(IV.x+Math.sin(a/12*TAU)*r,IV.z+Math.cos(a/12*TAU)*r,.3,CUR);const c=cl(x,z);if(!best||c>best[2])best=[x,z,c];}P.x=best[0];P.z=best[1];__run(20);LOOKP(IV.x,IV.z,-.08);farmIeva();__run(10);}")
         await snap(g, 'farm-stable-ieva', 'the stable with Ieva grooming/pointing, horses in their stalls', "[['Ieva',FARM.ppl.find(p=>p.who==='ieva').x,1.2,FARM.ppl.find(p=>p.who==='ieva').z]]")
         r = await g.ev("""()=>{$('toast').classList.remove('show');farmLessonStart();ACT.flesson();const LH=FARM.hs.find(h=>h.kind==='lesson');P.x=LH.x+1;P.z=LH.z+1;FARM.on=true;
           const out=[];farmTargets(out);const t=out.find(t=>t.label==='Get on');if(t)t.act();
@@ -192,11 +192,11 @@ async def ipad_world(run):
         await g.step(4)
         await snap(g, 'farm-lesson-step', f"Stan's riding lesson, at the blue flag on the lesson horse, Stan's next line (step {r})", "[['Stan',FARMD.lesson.stan[0],1.2,FARMD.lesson.stan[1]]]")
         r = await g.ev("""()=>{$('toast').classList.remove('show');FARM.lesson=null;S.ride.lesson=1;if(P.horse)farmOff(true);__run(4);const H=FARM.hs.find(h=>h.kind==='pad'&&farmHorseFree(h));P.x=H.x;P.z=H.z;farmMount(H);
-          const T=FARM.trail,i=Math.floor(T.length*.45),a=T[i],b=T[Math.min(T.length-1,i+2)];P.x=a[0]!==undefined?a[0]:a.x;P.z=a[1]!==undefined?a[1]:a.z;const bx=b[0]!==undefined?b[0]:b.x,bz=b[1]!==undefined?b[1]:b.z;LOOKP(bx,bz,-.15);__run(6);return {horse:!!P.horse,at:[+P.x.toFixed(1),+P.z.toFixed(1)]};}""")
+          const T=FARM.trail,i=Math.floor(T.length*.45),a=T[i],b=T[Math.min(T.length-1,i+2)];P.x=a[0]!==undefined?a[0]:a.x;P.z=a[1]!==undefined?a[1]:a.z;const bx=b[0]!==undefined?b[0]:b.x,bz=b[1]!==undefined?b[1]:b.z;LOOKP(bx,bz,-.15);P.horse.ry=P.yaw+Math.PI;__run(6);return {horse:!!P.horse,at:[+P.x.toFixed(1),+P.z.toFixed(1)]};}""")
         await snap(g, 'farm-trail-ride', f'riding a horse on the horse trail (first person; {r})')
-        r = await g.ev("""()=>{$('toast').classList.remove('show');const J=FARM.jumps.o122;P.x=J.x+3*Math.sin(J.ry);P.z=J.z+3*Math.cos(J.ry);LOOKP(J.x,J.z,-.22);__run(3);if(P.horse){P.horse.sp=4;P.horse.j=gameMs()/1000;}return {horse:!!P.horse};}""")
+        r = await g.ev("""()=>{$('toast').classList.remove('show');const J=FARM.jumps.o122;P.x=J.x+3*Math.sin(J.ry);P.z=J.z+3*Math.cos(J.ry);LOOKP(J.x,J.z,-.22);if(P.horse)P.horse.ry=P.yaw+Math.PI;__run(3);if(P.horse){P.horse.sp=4;P.horse.j=gameMs()/1000;}return {horse:!!P.horse};}""")
         await g.step(8)
-        await snap(g, 'farm-jump-mid', f'the jump field, the horse in the air over jump o122 (first person, 0.45 s into the jump; {r})')
+        await snap(g, 'farm-jump-mid', f'the jump field, first person on a horse 0.45 s into the jump over jump o122: its head and neck in front of you, the bar below (you are up in the air with it; {r})')
         await g.ev("""()=>{$('toast').classList.remove('show');if(P.horse)farmOff(true);__run(4);__clockMs(msAt(S.day,21.6)-CLK.sk);__run(4);P.x=-92;P.z=-104;P.yaw=Math.PI*.55;P.pitch=-.08;__run(20);}""")
         await snap(g, 'farm-night', 'the farm yard at night (21:36)')
     await scene('farm', farm())

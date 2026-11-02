@@ -801,7 +801,7 @@ function vetStep(dt){if(!VX)return;const e=VX.L[VX.i],R=VK('Dr. Rūta'),N=VK('Ve
 /* Dr. Rūta and Leo step over to the big-pet platform for a bear or a seal, and back after */
 function vetBigStaff(on){const L=LOC.vet;for(const [n,x,z] of[['Dr. Rūta',1.75,-2.2],['Vet nurse Leo',4.6,-1.4]]){const k=VK(n);if(!k)continue;if(on&&!k.home)k.home=[k.x,k.z];
     const [X,Z]=on?[L.ox+x,L.oz+UPZ+z]:k.home||[k.x,k.z];if(!on)k.home=null;k.x=X;k.z=Z;k.p.root.position.set(X,0,Z);}}
-function vetOff(e){const L=LOC.vet;e.ps=false;vetBigStaff(false);if(VX)VX.cl=0;e.x=L.ox-2.2;e.z=L.oz+UPZ-1.4;e.g.position.set(e.x,0,e.z);e.tag.visible=true;}
+function vetOff(e){const L=LOC.vet,big=['bear','seal'].includes(petKind(e.d));e.ps=false;vetBigStaff(false);if(VX)VX.cl=0;e.x=L.ox+(big?3.2:-2.2);e.z=L.oz+UPZ+(big?-1.35:-1.4);e.g.position.set(e.x,0,e.z);e.tag.visible=true;}   /* 🐻🦭 a bear or a seal gets off at the foot of its platform (picture pass 2: put on the small pets' spot, a metre in front of you, it filled the view) */
 function vetEnd(done){const R=VK('Dr. Rūta'),N=VK('Vet nurse Leo');for(const k of[R,N])if(k){if(k.mv)COZY_MOVES.play(k.p,k.mv,0,{kind:'person'});k.mv=null;k.lk=null;}
   const L=VX.L;for(const e of L)if(e.ps)vetOff(e);VX=null;if(!done)return;
   const c=vetCure(L.map(e=>e.d)),n=L.length;for(const e of L){e.sm=null;petMove(e,'pet.happyDance');}SFX.yay();

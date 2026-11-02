@@ -689,7 +689,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
     psUpdate(dt);dayTick();holTick(dt);fwTick(dt);confTick(dt);spookTick(dt);wxTick(dt);hsTick(dt);hsTutTick(dt);   /* 🎃 holidays from the real calendar; 👻 the spooky path; 🌦️ the weather */
     for(const k of KEEPERS)if(k.L===CUR){const f=k.lk||[P.x,P.z];k.p.root.rotation.y=angLerp(k.p.root.rotation.y,Math.atan2(f[0]-k.x,f[1]-k.z),.05);if(k.mv)COZY_MOVES.play(k.p,k.mv,(gameMs()-k.mv0)/1000,{kind:'person'});else animPerson(k.p,dt,false);}   /* (🩺 the vet and the nurse: their moves at the exam table, facing it: stage 4) */
     if(CUR&&CUR.id==='studio'&&!CR&&!fading){setLoc('city');P.x=-17;P.z=-4.6;P.yaw=0;P.pitch=0;P.sit=null;P.ride=null;$('hud').hidden=false;camera.clearViewOffset();resize();saveLocal();}
-    if(CUT)cutUpdate(dt);if(CLIMB)climbUpdate(dt);floorVis();
+    if(CUT)cutUpdate(dt);if(PS.sign)PS.sign.visible=!(CUT&&CUT.show);   /* 🏆 'Every Saturday!' hides during a show (picture pass 2: the big words sat on it, a stray pink 'Ev' showed) */if(CLIMB)climbUpdate(dt);floorVis();
     if(CR)crCam(dt);else if(P.ride)updateRide(dt);else updateCamera(dt);if(CUT)cutCam(dt);swingUI();
     if(DECO.on)decoUpdate();
     TARGET=(UI.open||DECO.on||CUT||CLIMB||TUT||DTUT)?null:findTarget();showAction();jobTick(dt);

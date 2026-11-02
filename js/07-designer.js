@@ -384,7 +384,7 @@ function psPanel(kind){const C=CUT,n=C.order.length;let h;const x=C.order[C.ri];
 /* the next turn: alone, at once; in a shared show at its time on the one clock (everyone's turns line up) */
 function psTurnAt(i){const C=CUT;if(C.ts==null)return 0;let t=C.ts+3.4;for(let k=0;k<i;k++)t+=psTurnLen(C.order[k]);return t;}
 function psNext(){const C=CUT;const i=C.ri+1;if(C.ts!=null&&psSec()<psTurnAt(i)-.05){psGo('wait');C.wi=i;return;}psBegin(i);}
-function psBegin(i){const C=CUT;C.ri=i;for(const f of FLOATS)f.t=f.life;   /* the last pet's words above the stage go before the next name pops up (picture pass: 'PERFECT!' sat on 'Bean!') */
+function psBegin(i){const C=CUT;C.ri=i;for(const f of FLOATS)f.t=f.life;popDrop();   /* (picture pass 2: and big words still waiting, so a skipped turn's name never pops up over the next one) */   /* the last pet's words above the stage go before the next name pops up (picture pass: 'PERFECT!' sat on 'Bean!') */
   if(i>=C.order.length){psResultsAt();return;}const x=C.order[i];
   if(x.you){psToYou();return;}x.r.busy=true;x.k=0;psGo('rin');psPanel('rival');popText(PET_TYPES[x.kind].icon+' '+psNm(x)+'!');const snd=SFX[PET_TYPES[x.kind].snd];if(snd)snd();}
 function psToYou(){const C=CUT,g=C.p.g;C.ix=g.position.x;C.iy=g.position.y;C.iz=g.position.z;C.round=0;C.pts=0;C.res=[];psGo('in');psPanel('you');popText('⭐ Your turn!');}

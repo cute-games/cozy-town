@@ -1,7 +1,7 @@
-# HANDOFF — read this first (one page; updated 2 Nov 2026, Pets and Farm Update: all 6 stages built, full check done, picture pass 1 fixed)
+# HANDOFF — read this first (one page; updated 2 Nov 2026, Pets and Farm Update: all 6 stages built, full check done, picture passes 1 and 2 fixed)
 
 ## Where things stand
-- Live: `main` = a47bb1a (pet update 1, stamp 2026102902). Backups: `backup-2026-10-31` and `backup-2026-11-01` = main a47bb1a (A2 wants today's date: a new dated backup each day).
+- Live: `main` = a47bb1a (pet update 1, stamp 2026102902). Backups: `backup-2026-10-31`, `backup-2026-11-01` and `backup-2026-11-02` = main a47bb1a (A2 wants today's date: a new dated backup each day).
 - Building the **Pets and Farm Update** (PFU) on branch `claude/exciting-feynman-ea1031` (stands in for the run doc's `pfu` branch). Six stages, one
   helper each; no pull request until all six pass and the foreman's full check is done. Never push to main.
 - **Stage 1 done** (stamp 2026103102): economy rebalance patch (2 commits, as written: it targets the split js/ files), night skip, morning bus home,
@@ -59,7 +59,11 @@
   Quick kit 87 of 89 PASS (A2: backup branch dated 2026-11-01, needs `backup-2026-11-02`; P19 no GPU); check_split S1-S4 PASS; 2,336,482 bytes.
   `shots_pfu.py` takes `ONLY='yard 3,farm,...'` (scene names) for retakes. Not changed: the run-4 crawler teleports without collision (crawl pictures can look
   from inside walls): the owner's/foreman's call.
-- **Next**: Sonnet viewers on the retakes (45 pictures, the foreman's scratchpad `pics-fix1/` + `list.txt`), then the one pull request. `tools/PFU-TRY-IT.md` = the "Try it for real" list for Karolis and Izabele (guard 7).
+- **Picture pass 2 fixed** (stamp 2026110204; `tools/PFU-REPORT.md` section 10): a bear/seal gets off at the foot of its vet platform (`vetOff`; it stood 1 m in front of you),
+  capes on the capybara/seal shorter and off the neck, the snake's rides on its body piece (`BACK_FIT` + 5th value tilt), 'Every Saturday!' hides during a show (main loop) and `psBegin` drops
+  waiting big words. Framing only (no game change): stable, P34 trough, vet platform, wait-outside, riding/jump (horse heads where you look), moods note. Bear on the platform stays grade 1
+  (sits on the mat, measured). New kit line P40. Quick kit 88 of 90 PASS (P19 no GPU; P25 74% in the run, alone PASS 100%); check_split PASS; 2,337,485 bytes.
+- **Next**: Sonnet viewers on the retakes (30 pictures, the foreman's scratchpad `pics-fix2/` + `list.txt`), then the one pull request. `tools/PFU-TRY-IT.md` = the "Try it for real" list for Karolis and Izabele (guard 7).
 
 ## Read first (each stage)
 1. `CLAUDE.md`, this file. 2. The run doc `kit/kits/pfu-night-run.json` (field `text`; its Guards and Corrections hold). 3. Your brief
