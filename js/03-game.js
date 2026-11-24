@@ -17,7 +17,7 @@ const clockNow=()=>clockAt(gameMs());
 function clockSync(){if(!S)return false;const c=clockNow();HOUR=hourLen(c.time);if(c.day===S.day){if(Math.abs(c.time-S.time)>.1)hudT=1;S.time=c.time;return false;}   /* (run 4 finish: after a jump of the clock, a phone waking up, the chip is right at once, not half a second later) */const d0=S.day;S.day=c.day;S.time=c.time;dayJump(d0);return true;}   /* true = a new day began */
 function dayJump(d0){if(!S.garden)return;for(const st of S.garden)if(st&&st.seed&&st.g<1&&st.w>0&&st.w<S.day)st.g=1;}   /* 🌱 a plant watered on a day that has passed finished growing */
 function clockLoad(){for(const k in BUS_DAY)delete BUS_DAY[k];if(!S.intro){const c=clockNow();S.day=c.day;S.time=c.time;busWelcome();}else clockSync();}   /* a new player starts at the real time; an old save jumps once to the shared day */
-function clockServer(h){try{const d=Date.parse(h.get('date')||''),age=+h.get('age')||0;if(!isFinite(d)||age>10)return;const o=d+500-Date.now();if(Math.abs(o)<400*864e5&&Math.abs(o-CLK.off)>1500)CLK.off=o;}catch(e){}}   /* the server's clock: the Date header of a fresh response (1 s steps, so +500 ms) */
+function clockServer(h){if(CLK.fb)return;try{const d=Date.parse(h.get('date')||''),age=+h.get('age')||0;if(!isFinite(d)||age>10)return;const o=d+500-Date.now();if(Math.abs(o)<400*864e5&&Math.abs(o-CLK.off)>1500)CLK.off=o;}catch(e){}}   /* the server's clock: the Date header of a fresh response (1 s steps, so +500 ms) */
 const P={x:-17,z:-4.8,yaw:0,pitch:0,bobT:0,bobA:0,moving:false,sit:null,jy:0,vy:0,dip:0,run:false,hd:Math.PI};
 let S=null,PLAYING=false,PET_ACTORS=[],FRIEND_ACTORS=[],PEN=[],KEEPERS=[],LITTER=[],HOME_ITEMS=new Map(),TARGET=null;
 const UI={open:false,onClose:null,lock:false};
@@ -2149,6 +2149,7 @@ const nsMine=()=>zzIn()&&!!CUR&&CUR.id==='home';
 function nsAwake(){let n=0;for(const a of MP.peers.values())if(!a.aw&&a.ob!==1)n++;return n;}   /* players online who are not in their own bed */
 function nsInit(){if(NS.ref||!(window.WEBNET&&WEBNET.on)||typeof window.WEBROOM!=='function')return;
   WEBROOM().then(()=>{NS.ref=window.firebase.database().ref('worlds/cozy-town/'+WORLD+'/peers/clock');
+    try{window.firebase.database().ref('.info/serverTimeOffset').on('value',s=>{const o=Number(s&&s.val());if(Number.isFinite(o)&&Math.abs(o)<400*864e5){CLK.off=o;CLK.fb=1;}},()=>{});}catch(e){}   /* (24 Nov: players' clocks were 10 game minutes apart = 6 real seconds: the clock now follows the database server to the millisecond, not the web page's 1-second date) */
     NS.ref.on('value',s=>{const v=s&&s.val(),k=v&&Number(v.sk);if(Number.isFinite(k)&&k>CLK.sk&&k<1e11)CLK.sk=k;},()=>{});}).catch(()=>{});}
 function nsTick(dt){const t=S.time;if(!(t>=21||t<7)||!nsMine()||nsAwake()){NS.t=0;return;}
   if((NS.t+=dt)<2)return;NS.t=-3;nsSkip();}   /* (everyone has been in bed for 2 s; then at most one try in 5 s) */
