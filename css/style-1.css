@@ -465,3 +465,5 @@ body.shoot #moveBtns,body.shoot #tasks,body.shoot #pad,body.shoot #job,body.shoo
 .licStamp small{font-size:10px;font-weight:700}.licStamp.gold{border-color:#9a6e08;color:#9a6e08;box-shadow:inset 0 0 0 3px #f3e6c4,inset 0 0 0 5px #9a6e08}
 .licSig{margin-top:10px;font-size:14px;color:#7a5a36;font-style:italic}
 .note.trk{font-size:14px;margin-top:6px}
+
+/* riding lesson guide (24 Nov 2026) */#lessonGuide{position:fixed;z-index:29;pointer-events:none;left:50%;top:calc(env(safe-area-inset-top,0px) + 72px);transform:translateX(-50%);background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:18px;padding:8px 16px;text-align:center;font-weight:800;max-width:min(92vw,520px);box-shadow:0 4px 0 rgba(0,0,0,.12)}#lessonGuide[hidden]{display:none}#lessonGuide .lgl{font-size:18px}#lessonGuide .lgd{font-size:15px;opacity:.8;margin-top:2px}#lessonGuide.now{background:#ffd45c;color:#3d2c5e}#lessonGuide .lga{font-size:34px;line-height:1;margin-top:4px;display:inline-block}#lessonGuide .lga[hidden]{display:none}

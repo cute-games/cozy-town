@@ -2525,7 +2525,7 @@ $('bar').addEventListener('click',e=>{const b=e.target.closest('[data-d]');if(!b
    Speed (run doc guard 3): nothing here runs while you are far from the farm; near it, animals further than 70 m are hidden and those past 22 m move every 3rd frame */
 const FARM={L:null,on:false,st:null,inst:[],ground:[],stables:[],troughs:[],jumps:{},flags:{},trails:[],eggs:null,milk:null,bucket:null,an:[],hs:[],ppl:[],riders:[],dyn:null,
   fr:0,feed:null,lesson:null,said:{},ln:{},townT:0,tick:0,ms:0,deln:0,mvn:0};
-const FARM_OPEN=[7,21],FARM_SPD={w:2.4,t:4.8,g:7.6},FARM_LESSON=100,FARM_PAY=10,FARM_SEAT=1.63;
+const FARM_GA={walk:.3,trot:.42,gallop:.55},FARM_OPEN=[7,21],FARM_SPD={w:2.4,t:4.8,g:7.6},FARM_LESSON=100,FARM_PAY=10,FARM_SEAT=1.63;
 const farmOpen=()=>S&&S.time>=FARM_OPEN[0]&&S.time<FARM_OPEN[1];
 const farmHash=(s)=>{let h=2166136261;s=String(s);for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0)/4294967296;};
 const FA_SPD={cow:.45,sheep:.55,pig:.6,chicken:.8,horse:.8},FA_SND={cow:'moo',sheep:'baa',pig:'oink',chicken:'cluck',horse:'neigh'};
@@ -2562,8 +2562,8 @@ function farmWanderSpot(a,ms){const k=Math.floor(ms/11000+farmHash(a.id||a.key)*
 const FA_IDLE={cow:['cow.graze','cow.stand'],sheep:['sheep.graze','sheep.look'],pig:['pig.root','pig.root'],chicken:['chicken.peck','chicken.peck'],horse:['horse.idle','horse.idle']};
 function farmTick(dt){if(!FARM.L)return;const inCity=CUR&&CUR.id==='city',near=inCity&&(farmNear(P.x,P.z,40)||!!P.horse);if(FARM.q&&inCity&&farmNear(P.x,P.z,70))FARM.q();
   if(near!==FARM.on){FARM.on=near;FARM.dyn.visible=near;if(near)FARM.L.g.add(FARM.dyn);else FARM.L.g.remove(FARM.dyn);if(!near&&P.horse)farmOff(true);}   /* (far away the living things leave the scene: no matrix work for them each frame) */
-  if(!near)return;FARM.tick++;const ms=gameMs(),now=ms/1000,cx=camera.position.x,cz=camera.position.z;
-  if(P.horse)farmRide(dt);else if(!P.sit&&!P.ride)for(const q of farmSolids([])){const p=pushOut(P.x,P.z,.3,q);if(p){P.x=p[0];P.z=p[1];}}farmLessonTick(dt);
+  if(!near){if(LGD.el)LGD.el.hidden=true;if(LGD.g)LGD.g.visible=false;return;}FARM.tick++;const ms=gameMs(),now=ms/1000,cx=camera.position.x,cz=camera.position.z;
+  if(P.horse)farmRide(dt);else if(!P.sit&&!P.ride)for(const q of farmSolids([])){const p=pushOut(P.x,P.z,.3,q);if(p){P.x=p[0];P.z=p[1];}}farmLessonTick(dt);farmGuide(dt);
   /* the trail riders */
   for(const h of FARM.riders){const at=farmRiderAt(h,ms);h.m.root.visible=!!at&&Math.hypot(at?at.x-cx:0,at?at.z-cz:0)<55;if(!h.m.root.visible)continue;
     const slow=FARM.said['r'+h.rider.who]>performance.now();h.x=at.x;h.z=at.z;h.m.root.position.set(at.x,0,at.z);h.m.root.rotation.y=at.ry;
@@ -2624,10 +2624,11 @@ function farmRide(dt){const r=P.horse,h=r.h,now=gameMs()/1000;
     if(!farmZone(nx,nz)){r.sp=0;if(!r.ref||now-r.ref>2.2){r.ref=now;SFX.snort();if(!r.said){r.said=true;toast("🐴 Your horse won't go into town.",3);}}}
     else{const o=[P.x,P.z];[P.x,P.z]=collideXZ(nx,nz,.7,CUR,solids());r.dist+=Math.hypot(P.x-o[0],P.z-o[1]);r.ry=angLerp(r.ry,Math.atan2(dx,dz),Math.min(1,dt*3.5));}}
   else if(r.sp<.3)r.sp=0;
-  r.g=jumping?'jump':r.sp<.05?'idle':r.sp<3.2?'walk':r.sp<6?'trot':'gallop';P.moving=r.sp>.05;
+  {const pg=r.g==='jump'||r.g==='idle'?'walk':r.g,up=pg==='walk'?[3.4,99]:pg==='trot'?[6.2,2.9]:[99,5.6];   /* (riding fix 24 Nov: gaits change with a gap, so the horse doesn't flick between walk and trot at one speed) */
+    r.g=jumping?'jump':r.sp<.05?'idle':pg==='walk'?(r.sp>up[0]?'trot':'walk'):pg==='trot'?(r.sp>up[0]?'gallop':r.sp<up[1]?'walk':'trot'):(r.sp<up[1]?'trot':'gallop');}P.moving=r.sp>.05;
   h.x=P.x;h.z=P.z;h.ry=r.ry;h.m.root.position.set(P.x,0,P.z);h.m.root.rotation.y=r.ry;
-  const pl=r.g==='jump'?COZY_MOVES.play(h.m,'horse.jump',now-r.j,{}):r.ref&&now-r.ref<2?COZY_MOVES.play(h.m,'horse.refuse',now-r.ref,{}):r.g==='idle'?COZY_MOVES.play(h.m,'horse.idle',now,{}):COZY_MOVES.play(h.m,'horse.'+r.g,now,{dist:r.dist});
-  P.jy=Math.max(0,(pl&&pl.lift)||0);h.m.b.updateWorldMatrix(true,false);const e=h.m.b.matrixWorld.elements,fl=Math.hypot(e[8],e[9],e[10])||1;P.hp=r.g==='jump'?2.3*Math.asin(Math.max(0,Math.min(1,e[9]/fl))):0;   /* (picture pass 3: as the horse takes off your view tips up with it (a bit more than its body: the neck rises too), so its neck stays at the bottom instead of filling the screen (picture pass 4: 1.7 -> 2.3, the neck still filled the lower half); landing nose down, the neck drops out of view by itself) */
+  const pl=r.g==='jump'?COZY_MOVES.play(h.m,'horse.jump',now-r.j,{}):r.ref&&now-r.ref<2?COZY_MOVES.play(h.m,'horse.refuse',now-r.ref,{}):r.g==='idle'?COZY_MOVES.play(h.m,'horse.idle',now,{}):(r.ph=(r.ph||0)+(r.dist-(r.pd??r.dist))/COZY_MOVES.stride(h.m,FARM_GA[r.g]),r.pd=r.dist,COZY_MOVES.play(h.m,'horse.'+r.g,now,{dist:r.ph*COZY_MOVES.stride(h.m,FARM_GA[r.g]),calm:1}));   /* (riding fix: the step count carries on across gait changes: no leg snap) */
+  {const lf=Math.max(0,(pl&&pl.lift)||0);r.cy=lerp(r.cy||0,r.g==='jump'?lf:lf*.3,Math.min(1,dt*(r.g==='jump'?12:5)));P.jy=r.cy;}   /* (riding fix 24 Nov: your eyes follow the saddle softly, not every hoof beat) */h.m.b.updateWorldMatrix(true,false);const e=h.m.b.matrixWorld.elements,fl=Math.hypot(e[8],e[9],e[10])||1;r.hp=lerp(r.hp||0,r.g==='jump'?1.6*Math.asin(Math.max(0,Math.min(1,e[9]/fl))):0,Math.min(1,dt*5));P.hp=r.hp;   /* (riding fix: the view tips up and back down gently, never snaps) */   /* (picture pass 3: as the horse takes off your view tips up with it (a bit more than its body: the neck rises too), so its neck stays at the bottom instead of filling the screen (picture pass 4: 1.7 -> 2.3, the neck still filled the lower half); landing nose down, the neck drops out of view by itself) */
   if(r.g!=='idle'&&r.g!=='jump'){r.clop=(r.clop||0)+r.sp*dt;if(r.clop>3.2){r.clop=0;SFX.clop();}}}
 function farmJump(){const r=P.horse;if(!r)return false;const now=gameMs()/1000;if(now-r.j<1.7||r.sp<1)return true;r.j=now;SFX.jump();return true;}
 function farmStamp(st){const r=P.horse;st.rd=r?[r.h.i,{idle:'i',walk:'w',trot:'t',gallop:'g',jump:'j'}[r.g]||'i',Math.round(r.ry*100)/100]:null;}   /* 🐴 riding: [horse, gait, its heading] (old versions ignore it) */
@@ -2660,7 +2661,26 @@ function farmLessonTick(dt){const L=FARM.lesson;if(!L)return;L.t+=dt;const r=P.h
   else if(L.step===2&&near([F.red.x,F.red.z],3)){L.step=3;L.t=0;farmSay('Stan',LESSON_SAY[3]);}
   else if(L.step===3&&near([J.x,J.z],1.6)){if(gameMs()/1000-r.j<1.7){L.step=4;L.t=0;farmSay('Stan',LESSON_SAY[4]);SFX.yay();}else if(!r.ref||gameMs()/1000-r.ref>2.5){r.ref=gameMs()/1000;r.sp=0;SFX.snort();const a=Math.atan2(P.x-J.x,P.z-J.z);P.x=J.x+Math.sin(a)*2.4;P.z=J.z+Math.cos(a)*2.4;toast('⤴️ Press jump just before the jump!',3);}}
   else if(L.step===4&&near(SN,4)&&r.sp<.4){FARM.lesson=null;S.ride.lesson=1;change();addXP('sport',2);farmOff(true);SFX.yay();toast("🎉 Stan: “You're a natural! Ieva will lend you a horse anytime.”",4.5);}
-  else if(L.t>12&&L.step>=1&&L.step<=4){L.t=0;farmSay('Stan',LESSON_SAY[L.step]);}}
+}   /* (riding fix 24 Nov: Stan's line stays in the lesson guide at the top, so no repeat every 12 s) */
+/* ---- lesson guide (riding fix 24 Nov): where to go, always shown while the lesson is on: a glowing ring + bobbing arrow on the target,
+   Stan's line + distance at the top of the screen, and an arrow at the screen edge when the target is behind you ---- */
+const LGD={g:null,el:null,ring:null,arw:null,col:null};
+function farmGuide(dt){const L=FARM.lesson,on=!!L&&CUR&&CUR.id==='city'&&PLAYING&&!UI.open;
+  if(!LGD.el){const d=document.createElement('div');d.id='lessonGuide';d.innerHTML='<div class="lgl"></div><div class="lgd"></div><div class="lga">➤</div>';document.body.appendChild(d);LGD.el=d;}
+  if(!on){LGD.el.hidden=true;if(LGD.g)LGD.g.visible=false;return;}
+  if(!LGD.g){const g=new THREE.Group(),m=new THREE.MeshBasicMaterial({color:'#ffd45c',transparent:true,opacity:.85,depthWrite:false});
+    const ring=new THREE.Mesh(new THREE.TorusGeometry(1.6,.12,8,40),m);ring.rotation.x=Math.PI/2;ring.position.y=.08;
+    const arw=new THREE.Mesh(new THREE.ConeGeometry(.55,1.1,16),m);arw.rotation.x=Math.PI;g.add(ring,arw);scene.add(g);Object.assign(LGD,{g,ring,arw,col:m});}
+  const F=FARM.flags,J=FARM.jumps[FARMD.lesson.jump],SN=FARMD.lesson.stan,hz=FARM.hs.find(h=>h.kind==='lesson');
+  const T=[hz?{x:hz.x,z:hz.z,c:'#ffd45c',n:'🐴 Lesson horse',r:1.4}:null,F.blue&&{x:F.blue.x,z:F.blue.z,c:'#5aa9ff',n:'🔵 Blue flag',r:2.6},F.red&&{x:F.red.x,z:F.red.z,c:'#ff5a5a',n:'🔴 Red flag',r:2.6},J&&{x:J.x,z:J.z,c:'#ffd45c',n:'⤴️ The jump',r:1.6},{x:SN[0],z:SN[1],c:'#7be07b',n:'🤠 Stan',r:3.5}][L.step];
+  if(!T){LGD.el.hidden=true;LGD.g.visible=false;return;}
+  const t=performance.now()/1000;LGD.g.visible=true;LGD.g.position.set(T.x,0,T.z);LGD.col.color.set(T.c);LGD.ring.scale.setScalar(T.r/1.6*(1+.06*Math.sin(t*4)));LGD.arw.position.y=3.4+.35*Math.sin(t*3);
+  const d=Math.hypot(T.x-P.x,T.z-P.z),el=LGD.el;el.hidden=false;
+  const near=L.step===3&&d<7&&P.horse;el.querySelector('.lgl').textContent='🤠 '+(near?(TOUCHY?'Tap ⬆️ Jump now!':'Press Space to jump now!'):LESSON_SAY[L.step]);el.classList.toggle('now',!!near);
+  el.querySelector('.lgd').textContent=T.n+' · '+Math.round(d/1.23)+' m';
+  /* edge arrow: points from the screen middle toward the target when it is off screen or behind */
+  camera.updateMatrixWorld();const v=new THREE.Vector3(T.x,1.5,T.z).applyMatrix4(camera.matrixWorldInverse),a=el.querySelector('.lga'),vis=v.z<0&&Math.abs(v.x/-v.z)<.9;
+  a.hidden=vis;if(!vis){const ang=Math.atan2(v.x,-v.z);a.style.transform='rotate('+(ang*180/Math.PI-90)+'deg)';a.style.color=T.c;}}
 /* ---- talking ---- */
 function farmSay(who,l){toast((who==='Stan'?'🤠 Stan':who==='Ieva'?'🐴 Ieva':who)+`: “${l}”`,3.2);}
 function farmLine(k,L){let i=Math.floor(Math.random()*L.length);if(L.length>1&&i===FARM.ln[k])i=(i+1)%L.length;FARM.ln[k]=i;return L[i];}   /* (never the same line twice in a row) */
