@@ -876,7 +876,7 @@ function buildingIn(g,o){
   /* 🚪 a little roof over the front door (shops have their awning) */
   if(o.door&&!o.shop){const p=new THREE.Group();p.position.set(o.door.x,0,fz+f*.02);p.rotation.y=ry;g.add(p);
     if(o.gable)prism(p,.95,2.1,.5,o.roof,0,2.62,.47,{ry:Math.PI/2,ol:.03});else box(p,2.3,.16,1.0,o.door.glass?trim:o.door.c,0,2.62,.5,{ol:.03});
-    for(const s of[-1,1])box(p,.1,.36,.42,'#ffffff',s*.9,2.26,.21,{ol:.012});if(o.gable){bake(p,false);p.userData.keep=1;}}   /* (run 4, stage 3: a house's little door roof and its brackets cast no shadow: on the wall they were dark smudges round the door) */
+    for(const s of[-1,1])box(p,.1,.36,.42,'#ffffff',s*.9,2.26,.21,{ol:.012});bake(p,false);p.userData.keep=1;}   /* (24 Nov 2026: the flat door roofs too, school, library, flats: in the morning sun its shadow was a dark band down the wall beside the school door) */   /* (run 4, stage 3: a house's little door roof and its brackets cast no shadow: on the wall they were dark smudges round the door) */
   if(o.shop){const p=new THREE.Group();p.position.set(x,0,fz);p.rotation.y=ry;g.add(p);
     const ww=Math.min((w-2.2)/2-.45,w/2-1.8);   /* the frame and sill end 3 cm short of the corner post (run 4, stage 3: they ran 7 to 22 cm into it, and its side, seen almost edge-on, flickered through the glass as a dashed line) */
     for(const s of[-1,1]){const cx=s*(1.1+.25+ww/2);box(p,ww+.2,2.0,.14,'#ffffff',cx,.55,.02);box(p,ww,1.8,.08,null,cx,.65,.09,{mat:WINM,ol:false});box(p,ww+.3,.12,.35,'#ffffff',cx,.45,.12,{ol:.02});

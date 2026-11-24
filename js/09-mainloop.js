@@ -318,7 +318,7 @@ const PT_MAX=4,PT_PAY=[0,30,35,60,90,120],PT_IN=[.88,.84];   /* PT_IN: inside th
 const PT_SPOTS={
   park:{n:'Cozy Park',at:[-22,11.6],bgs:[{id:'fountain',n:'the fountain',g:[-22,15.0],face:Math.PI},{id:'flowers',n:'the flower beds',g:[-28.6,13.6],face:Math.PI*.7},{id:'stage',n:'the Pet Show stage',g:[-33.6,19.4],face:Math.PI*.5}]},
   pond:{n:'Duck Pond',at:[34.6,-31.4],bgs:[{id:'pond',n:'the duck pond',g:[36.2,-33.3],face:0},{id:'bench',n:'the bench',g:[32.6,-37.9],face:Math.PI}]},
-  school:{n:'Cozy Town School',at:[-25,-53.2],bgs:[{id:'school',n:'the school door',g:[-25,-56.6],face:0},{id:'flag',n:'the school sign',g:[-23.0,-55.2],face:-.25,at:[-22.4,3.3,-57.5]}]},
+  school:{n:'Cozy Town School',at:[-25,-53.2],bgs:[{id:'school',n:'the school door',g:[-25,-56.6],face:0},{id:'flag',n:'the school sign',g:[-22.2,-55.2],face:-.25,at:[-21.6,3.3,-57.5]}]},
   corner:{n:'Flower Corner',at:[-17,-3.6],bgs:[{id:'gate',n:'the garden gate',g:[-17,-6.1],face:0},{id:'hedge',n:'the hedge',g:[-19.8,-6.0],face:.2}]}};   /* (run 4, stage 3: the hedge spot moved 1.8 m east: the pavement tree stood right between the family and the photographer) */
 const PT_KINDS={family:{n:'family photo',i:'👨‍👩‍👧',who:3,l:'our family photo'},wedding:{n:'wedding photo',i:'💒',who:2,grown:1,l:'our wedding photo'},birthday:{n:'birthday photo',i:'🎂',who:3,hats:1,l:"my birthday photo with my friends"},pets:{n:'photo with our pets',i:'🐾',who:2,pet:1,l:'a photo with our pet'}};
 const PT_POSES=[['smile','😊','Smile'],['wave','👋','Wave'],['peace','✌️','Peace sign'],['jump','🦘','Jump'],['hug','🤗','Hug'],['sit','🧘','Sit']];
@@ -334,17 +334,20 @@ function ptNew(){const d=pt();if(d.o||d.done>=PT_MAX)return false;const kind=pic
 function ptSpotOf(o){return o&&PT_SPOTS[o.spot];}
 function ptTarget(){const o=S.pt&&S.pt.o,Sp=ptSpotOf(o);return Sp?{x:Sp.at[0],z:Sp.at[1]}:null;}
 /* the 📸 spot at every photo place: it shows only when your booking is there and not set up yet */
-function ptInters(){if(PHO.inters||!LOC.city)return;PHO.inters=1;for(const k in PT_SPOTS){const Sp=PT_SPOTS[k];inter(LOC.city,{x:Sp.at[0],z:Sp.at[1],r:3.4,icon:'📸',label:'Set up the photo',pri:()=>true,when:()=>!!(S&&S.job==='photo'&&S.pt&&S.pt.o&&S.pt.o.spot===k&&S.pt.o.st==='go'),act:()=>ptSetup()});}}
+function ptInters(){if(PHO.inters||!LOC.city)return;PHO.inters=1;for(const k in PT_SPOTS){const Sp=PT_SPOTS[k];inter(LOC.city,{x:Sp.at[0],z:Sp.at[1],r:2.4,icon:'📸',label:'Set up the photo',pri:()=>true,when:()=>!!(S&&S.job==='photo'&&S.pt&&S.pt.o&&S.pt.o.spot===k&&S.pt.o.st==='go'),act:()=>ptSetup()});}}
 function ptLookOf(id,K,i){const l=Object.assign({},(WHO[id]&&WHO[id].look)||pick(TOWNFOLK));if(K.hats){l.hat='party';l.hatc=pick(['#ff6b6b','#7cc8ff','#ffd45c','#5fd4b0']);}if(K.grown&&i===0){l.top='#ffffff';l.bottom='#ffffff';}return l;}
 /* the people (and the pet) of the booking appear at the first background, in a row, facing where the photo is taken from */
-function ptSetup(){const d=pt(),o=d.o;if(!o||o.st!=='go')return;const K=PT_KINDS[o.kind];o.st='shoot';PHO.bg=null;PHO.zoom=1;PHO.group=[];
+function ptSetup(){const d=pt(),o=d.o;if(!o||o.st!=='go')return;o.st='shoot';PHO.bg=null;PHO.zoom=1;if(!PHO.group.length)ptGroup(o);   /* the clients already waiting there are the ones in the photo */
+  PHO.on=1;document.body.classList.add('shoot');$('ptvf').hidden=false;$('note').hidden=true;ptPlace(o.bg);ptAside(true);ptMarks();SFX.pop();toast('📸 Pose everyone, then\u00a0Snap!',3.6);change();jobHud(true);}
+/* 📸 the booking's people (and its pet), made once: they wait at the place from the moment the booking comes (24 Nov 2026, the owner: "no people actually waiting for the photo": they were made only when you pressed Set up the photo) */
+function ptGroup(o){const K=PT_KINDS[o.kind];PHO.group=[];
   o.who.forEach((id,i)=>{const look=ptLookOf(id,K,i),p=makePerson(look);bakePerson(p);scene.add(p.root);const nm=(WHO[id]&&WHO[id].nm)||'Friend';const tg=label(nm,.3);tg.position.y=1.95*(look.scale||1)+.1;tg.material.depthTest=false;tg.renderOrder=30;p.root.add(tg);   /* (run 4, stage 3: a name tag is drawn over anyone nearer the camera, so it is always readable) */
     const m={p,root:p.root,nm,pose:null,t:Math.random()*6,kind:'person',lab:tg};PHO.group.push(m);
-    m.tg=inter(LOC.city,{x:0,z:0,r:2.4,pri:()=>true,icon:'🧍',label:()=>(m.pose?PT_POSES.find(q=>q[0]===m.pose)[1]+' ':'')+'Pose: '+nm,act:()=>ptPoseCard(PHO.group.indexOf(m)),obj:p.root,pt:1});});
-  if(o.pet){const pm=makePet(o.pet,PET_TYPES[o.pet].cols[0]);scene.add(pm.root);const m={p:pm,root:pm.root,nm:PET_TYPES[o.pet].name,pose:'sit',t:0,kind:'pet'};PHO.group.push(m);}
-  PHO.on=1;document.body.classList.add('shoot');$('ptvf').hidden=false;$('note').hidden=true;ptPlace(o.bg);ptAside(true);SFX.pop();toast('📸 Pose everyone, then\u00a0Snap!',3.6);change();jobHud(true);}
-function ptPlace(bg){const o=pt().o,Sp=ptSpotOf(o),B=Sp.bgs.find(b=>b.id===bg)||Sp.bgs[0];PHO.bg=B.id;const n=PHO.group.length,sx=Math.cos(B.face),sz=-Math.sin(B.face);
-  PHO.group.forEach((m,i)=>{const k=i-(n-1)/2,x=B.g[0]+sx*k*1.0,z=B.g[1]+sz*k*1.0;   /* (1 m apart: waving arms went into the next head; run 4, stage 3) */m.x=x;m.z=z;m.y=groundY(x,z);m.root.position.set(x,m.y,z);m.root.rotation.y=B.face;m.face=B.face;if(m.tg){m.tg.x=x;m.tg.z=z;}});ptBar();ptCamGo(B);}
+    m.tg=inter(LOC.city,{x:0,z:0,r:2.4,pri:()=>true,icon:'🧍',label:()=>(m.pose?PT_POSES.find(q=>q[0]===m.pose)[1]+' ':'')+'Pose: '+nm,act:()=>PHO.on?ptPoseCard(PHO.group.indexOf(m)):ptSetup(),obj:p.root,pt:1,when:()=>!!PHO.on});});   /* (waiting: no button by them, the 📸 spot has it; a tap on one sets the photo up) */
+  if(o.pet){const pm=makePet(o.pet,PET_TYPES[o.pet].cols[0]);scene.add(pm.root);const m={p:pm,root:pm.root,nm:PET_TYPES[o.pet].name,pose:'sit',t:0,kind:'pet'};PHO.group.push(m);}}
+function ptPlace(bg){const B=ptLine(bg);PHO.bg=B.id;ptBar();ptCamGo(B);}
+function ptLine(bg){const o=pt().o,Sp=ptSpotOf(o),B=Sp.bgs.find(b=>b.id===bg)||Sp.bgs[0];const n=PHO.group.length,sx=Math.cos(B.face),sz=-Math.sin(B.face);
+  PHO.group.forEach((m,i)=>{const k=i-(n-1)/2,x=B.g[0]+sx*k*1.0,z=B.g[1]+sz*k*1.0;   /* (1 m apart: waving arms went into the next head; run 4, stage 3) */m.x=x;m.z=z;m.y=groundY(x,z);m.root.position.set(x,m.y,z);m.root.rotation.y=B.face;m.face=B.face;if(m.tg){m.tg.x=x;m.tg.z=z;}});return B;}
 function ptNextBg(){const o=pt().o,Sp=ptSpotOf(o);if(!PHO.on||!Sp)return;const i=Sp.bgs.findIndex(b=>b.id===PHO.bg);ptPlace(Sp.bgs[(i+1)%Sp.bgs.length].id);SFX.tap();}   /* (the bar shows the background's name; run 4, stage 3: a toast with it sat on the family's legs) */
 /* the photo bar (bottom right, where the run and jump buttons are: those hide during a shoot) */
 function ptBar(){const o=pt().o,Sp=ptSpotOf(o),bar=$('ptbar');if(!PHO.on||!Sp){bar.hidden=true;bar.innerHTML='';return;}const B=Sp.bgs.find(b=>b.id===PHO.bg)||Sp.bgs[0];
@@ -423,15 +426,37 @@ ACT.ptsnap=()=>{if(!PHO.on||CUT||fading)return;const d=pt(),o=d.o;if(!o)return;c
   openPanel(`<div class="who" style="--c:#ffd45c">📸 ${esc(nm)}</div>${pic?`<img class="ptpic" src="${big||pic}" alt="The photo">`:''}<p class="line">${esc(line).replace(/ (\S+)$/,'\u00a0$1')}</p><p class="earn">${starsHalf5(sc.st)}<br>You got <b>${pay} 🪙</b>!</p><div class="row"><button class="btn mint" data-a="ptbye">👋 Bye!</button></div>`,{bottom:true,lock:true,cls:'ptres'});PHO.res=1;
   $('ptvf').hidden=true;$('ptbar').hidden=true;toastOff();for(const q of PHO.group)if(q.lab)q.lab.visible=false;   /* 📸 the photo is taken: the frame, the bar and the background toast go, the result card has the screen (run 4, stage 3) */
   change();jobHud(true);};
-ACT.ptbye=()=>{if(document.querySelector('#card [data-a="ptbye"]'))closePanel();ptClear();const d=pt();d.o=null;d.wait=rand(18,40);change();jobHud(true);setTimeout(()=>{if(PLAYING)toast(d.done>=PT_MAX?`🌟 That's ${PT_MAX} photos today! Great job! More bookings tomorrow.`:'📸 Nice work! The next booking will come soon.',3.4);},400);};
+ACT.ptbye=()=>{if(document.querySelector('#card [data-a="ptbye"]'))closePanel();ptLeave();ptClear();const d=pt();d.o=null;d.wait=rand(18,40);change();jobHud(true);setTimeout(()=>{if(PLAYING)toast(d.done>=PT_MAX?`🌟 That's ${PT_MAX} photos today! Great job! More bookings tomorrow.`:'📸 Nice work! The next booking will come soon.',3.4);},400);};
 function ptInFan(x,z){if(!FAN.on||!CUR||FAN.loc!==CUR.id)return false;const cx=camera.position.x,cz=camera.position.z;for(const f of FRIEND_ACTORS){if(!f.fan||f.loc!==CUR.id)continue;const dx=f.fan[0]-cx,dz=f.fan[1]-cz,L2=dx*dx+dz*dz||1,u=((x-cx)*dx+(z-cz)*dz)/L2;if(u>.08&&u<.92&&Math.hypot(x-(cx+dx*u),z-(cz+dz*u))<.7)return true;}return false;}   /* 👫 between you and a friend standing round you? A passer-by there steps out of view, like out of a photo (run 4 finish: one stood in front of Luna and Theo) */
 function ptInShot(x,z){if(!PHO.on||!PHO.group.length)return false;const m=PHO.group[0],cx=camera.position.x,cz=camera.position.z,dx=m.x-cx,dz=m.z-cz,L2=dx*dx+dz*dz||1;const u=clamp(((x-cx)*dx+(z-cz)*dz)/L2,-.4,1.4);return Math.hypot(x-(cx+dx*u),z-(cz+dz*u))<3;}   /* within 3 m of the line from the camera to the family? */
 function ptAside(on){for(const w of PET_ACTORS)if(w.loc==='city'||!on)w.g.visible=!on;for(const f of FRIEND_ACTORS)if(f.mode==='follow'||!on)f.g.visible=!on;}   /* 🐾 your pets and the friends who follow you wait out of the picture during a shoot (run 4, stage 3: they photobombed every photo) */
 function ptClear(){ptAside(false);for(const m of PHO.group){scene.remove(m.root);m.root.traverse(o=>{if(o.geometry&&!o.userData.keep)o.geometry.dispose();});}PHO.group=[];PHO.on=0;PHO.res=0;PHO.zoom=1;PHO.bg=null;if(LOC.city)LOC.city.inter=LOC.city.inter.filter(t=>!t.pt);
   document.body.classList.remove('shoot');$('ptvf').hidden=true;ptBar();if(UI.open&&document.querySelector('#card [data-a="ptbye"],#card [data-a^="ptpose"]'))closePanel();}
-function ptTick(dt){const d=pt();ptInters();if(PHO.on&&PHO.res&&!(UI.open&&document.querySelector('#card [data-a="ptbye"]'))){ACT.ptbye();return;}   /* 📸 the result card went another way (the phone or the bag opened over it): the shoot ends as with Bye (run 4 finish: it stayed on, the map and the notepad hidden) */if(S.job!=='photo'){if(PHO.on||PHO.group.length)ptClear();return;}
+/* 📸 the photo place you are booked at shows: a cream mat with a pink edge where you stand and a 📸 bobbing above it, while the booking waits (24 Nov 2026, the owner: "an invisible zone":
+   the Set up the photo button came up 3.4 m round an empty spot; now it comes up 1.2 m round the mat's edge) */
+const PT_MK={},PT_LEAVE=[];
+function ptMarks(){const o=S&&S.job==='photo'&&S.pt&&S.pt.o,on=!!(o&&o.st==='go'&&!PHO.on&&LOC.city);
+  for(const k in PT_SPOTS){let M=PT_MK[k];const show=on&&o.spot===k;if(!M){if(!show)continue;const Sp=PT_SPOTS[k];M=new THREE.Group();M.position.set(Sp.at[0],groundY(Sp.at[0],Sp.at[1]),Sp.at[1]);
+      const d=new THREE.Mesh(new THREE.CircleGeometry(1.0,32),new THREE.MeshBasicMaterial({color:'#fff3c4',transparent:true,opacity:.92,depthWrite:false}));d.rotation.x=-Math.PI/2;d.position.y=.04;M.add(d);
+      const r=new THREE.Mesh(new THREE.RingGeometry(1.0,1.16,40),new THREE.MeshBasicMaterial({color:'#ff7aa8',transparent:true,depthWrite:false}));r.rotation.x=-Math.PI/2;r.position.y=.045;M.add(r);
+      const pin=label('📸',1.0,{bg:null,bw:0,pad:6});pin.position.y=2.9;M.add(pin);M.pin=pin;LOC.city.dyn.add(M);PT_MK[k]=M;}
+    M.visible=show;if(show)M.pin.position.y=2.9+Math.sin(performance.now()/300)*.2;}}
+/* 📸 while they wait: they stand where the photo will be taken, facing the street; the one who booked waves when you come near */
+function ptWaitAnim(dt){const m0=PHO.group[0],near=m0&&Math.hypot(m0.x-P.x,m0.z-P.z)<14;
+  for(const m of PHO.group){m.t+=dt;if(m.kind==='pet'){animPet(m.p,dt,false);continue;}const p=m.p;animPerson(p,dt,false,.6);p.root.position.y=m.y||0;
+    if(m===m0&&near){p.arms[1].rotation.z=2.8+Math.sin(m.t*9)*.22;p.arms[1].rotation.x=.6;}}}
+/* 📸 after Bye they wave, then walk off along the pavement and are gone */
+function ptLeave(){for(const m of PHO.group.splice(0)){if(m.lab)m.lab.visible=false;m.lt=0;PT_LEAVE.push(m);}}
+function ptDrop(m){scene.remove(m.root);m.root.traverse(o=>{if(o.geometry&&!o.userData.keep)o.geometry.dispose();});}
+function ptLeaveTick(dt){for(let i=PT_LEAVE.length-1;i>=0;i--){const m=PT_LEAVE[i],p=m.p;m.lt+=dt;m.t=(m.t||0)+dt;
+  if(!CUR||CUR.id!=='city'||m.lt>7){ptDrop(m);PT_LEAVE.splice(i,1);continue;}
+  if(m.lt<1.2){if(m.kind==='pet'){animPet(p,dt,false);continue;}animPerson(p,dt,false,.6);p.root.position.y=m.y||0;p.arms[1].rotation.z=2.8+Math.sin(m.t*9)*.22;p.arms[1].rotation.x=.6;continue;}
+  const f=m.face||0,dx=Math.cos(f),dz=-Math.sin(f),q=collideXZ(m.x+dx*1.3*dt,m.z+dz*1.3*dt,.3,LOC.city);m.x=q[0];m.z=q[1];m.y=groundY(m.x,m.z);
+  m.root.position.set(m.x,m.y,m.z);m.root.rotation.y=f+Math.PI/2;if(m.kind==='pet')animPet(p,dt,true);else animPerson(p,dt,true,1);}}
+function ptTick(dt){const d=pt();ptInters();ptMarks();ptLeaveTick(dt);if(PHO.on&&PHO.res&&!(UI.open&&document.querySelector('#card [data-a="ptbye"]'))){ACT.ptbye();return;}   /* 📸 the result card went another way (the phone or the bag opened over it): the shoot ends as with Bye (run 4 finish: it stayed on, the map and the notepad hidden) */if(S.job!=='photo'){if(PHO.on||PHO.group.length)ptClear();return;}
   if(!d.o&&d.done<PT_MAX&&!CUT&&isDaytime()&&CUR&&CUR.id==='city'){d.wait-=dt;if(d.wait<=0)ptNew();}
-  if(PHO.on){if(CUR.id!=='city'){ptClear();if(d.o)d.o.st='go';}else{ptAnim(dt);tagsApart(PHO.group.filter(m=>m.lab&&m.lab.visible).map(m=>({tag:m.lab})));}}   /* (the family's name tags step apart on screen) */
+  if(PHO.on){if(CUR.id!=='city'){ptClear();if(d.o)d.o.st='go';}else{ptAnim(dt);tagsApart(PHO.group.filter(m=>m.lab&&m.lab.visible).map(m=>({tag:m.lab})));}}
+  else if(d.o&&d.o.st==='go'&&CUR.id==='city'){if(!PHO.group.length){ptGroup(d.o);ptLine(d.o.bg);}ptWaitAnim(dt);}else if(PHO.group.length)ptClear();   /* 📸 the clients wait at the place (they go when you leave town, and come back with you) */   /* (the family's name tags step apart on screen) */
   if(d.o&&d.o.st==='shoot'&&!PHO.on)d.o.st='go';   /* (a shoot that was cut short, e.g. by a reload: set it up again) */
   if(S.intro&&!S.ptTut&&!TUT&&!DTUT&&!UI.open&&!CUT&&!fading&&PLAYING){PHO.t+=dt;if(PHO.t>.8)ptTutStart();}else PHO.t=0;}
 const PT_TUT=[{t:'Photographer 📸',x:'A booking comes as a message.',pic:'f1'},{t:'Go there 🗺️',x:'Follow the dot to the place.',pic:'f2'},{t:'Poses 🧍',x:'Pick a background, tap each person for a pose.',pic:'f3'},{t:'Snap! 📸',x:'Everyone in, nobody cut off.',pic:'f4'}];
