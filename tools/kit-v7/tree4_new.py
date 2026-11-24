@@ -17,8 +17,9 @@ BOT = r"""()=>{window.OB={};const touch=TOUCHY;
  OB.edge=(a,b)=>{const dx=b.x-a.x,dz=b.z-a.z,L=Math.hypot(dx,dz),ux=dx/L,uz=dz/L;let t;if(a.r)t=a.r-.06;else{const ex=Math.abs(ux)>1e-6?(a.w/2-.06)/Math.abs(ux):1e9,ez=Math.abs(uz)>1e-6?(a.d/2-.06)/Math.abs(uz):1e9;t=Math.min(ex,ez);}return [a.x+ux*t,a.z+uz*t];};
  OB.gap=(a,b)=>{const dx=Math.max(0,Math.abs(a.x-b.x)-(a.r?a.r:a.w/2)-(b.r?b.r:b.w/2)),dz=Math.max(0,Math.abs(a.z-b.z)-(a.r?a.r:a.d/2)-(b.r?b.r:b.d/2));return Math.hypot(dx,dz);};
  OB.hop=(k,i,run)=>{const a=OB.pl(k,i),b=OB.pl(k,i+1);if(TP.on!==a)return {err:'not on '+i};
-   if(b.mv){let best=9,bt=0;for(let w=0;w<400;w++){const g=OB.gap(a,b);if(g<best-.001){best=g;bt=0;}else if(++bt>2&&g<=best+.05)break;OB.step(1);}}
+   
    const [ex,ez]=OB.edge(a,b);for(let fr=0;fr<200&&TP.on===a;fr++){const d=Math.hypot(P.x-ex,P.z-ez);if(d<.3)break;P.yaw=Math.atan2(-(ex-P.x),-(ez-P.z));OB.keys(true,false);if(d<.5){OB.keys(false,false);P.x+=(ex-P.x)*.5;P.z+=(ez-P.z)*.5;}OB.step(1);}
+   if(b.mv){let best=9,bt=0;for(let w=0;w<400;w++){const g=OB.gap(a,b);if(g<best-.001){best=g;bt=0;}else if(++bt>2&&g<=best+.05)break;OB.step(1);}}
    OB.keys(true,run);const g=OB.gap(a,b),dh=b.h-a.h;P.yaw=Math.atan2(-(b.x-P.x),-(b.z-P.z));jump();let air=0,held=true;
    for(;air<120;air++){OB.step(1);if(held&&P.jy+(P.cy||0)>b.h-.05&&(b.r?Math.hypot(P.x-b.x,P.z-b.z)<b.r*.45:Math.abs(P.x-b.x)<b.w*.25&&Math.abs(P.z-b.z)<b.d*.25)){OB.keys(false,false);held=false;}if(held)P.yaw=Math.atan2(-(b.x-P.x),-(b.z-P.z));
      if(TP.on&&TP.on!==a&&P.jy<=0)break;if(!TP.run&&!TP.on&&P.cy===0)break;if(TP.on===a&&air>3&&P.jy<=0)break;}
