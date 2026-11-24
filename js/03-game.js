@@ -80,6 +80,7 @@ function snap(){let loc=CUR?CUR.id:'city',x=P.x,z=P.z,yaw=P.yaw;
   if(CR&&CR.prev){loc=CR.prev.loc;x=CR.prev.x;z=CR.prev.z;yaw=CR.prev.yaw;}
   if(loc==='client'){const hid=S.ds&&((S.ds.o&&S.ds.o.h)||S.ds.prevH),H=hid&&HOUSE(hid);if(H){loc='city';x=H.x+Math.sin(H.ry)*1.7;z=H.z+Math.cos(H.ry)*1.7;yaw=H.ry+Math.PI;}else loc='studio';}
   if(loc==='visit'){const d=laneHostDoor();loc='city';x=d[0];z=d[1];yaw=d[2];}
+  if(loc==='treepark'){loc='city';x=77.6;z=-38;yaw=-Math.PI/2;}   /* 🌲 the Tree Park is in town now (24 Nov 2026): saved by its gate */
   if(loc==='studio'||!LOC[loc]||!isFinite(x)||!isFinite(z)){loc='city';x=-17;z=-4.6;yaw=0;}
   {const q=toSave(loc,x,z);S.yq=(q[0]!==x||q[1]!==z)?1:0;if(q[0]!==x&&LANE_PLOTS[LANE.mine].s>0)yaw-=Math.PI;x=q[0];z=q[1];}   /* in your yard: saved as the old town-yard spot (startGame turns it back); yq says so, because the Flower Corner (the same spot in town) can be walked in now (run 4, job 4) */
   S.loc=loc;S.px=x;S.pz=z;S.yaw=yaw;S.t=Date.now();}

@@ -482,7 +482,7 @@ function buildCity(){
    box(st,.24,.7,4.3,'#8f6244',GX,3.0,GZ,{ol:.03});flat(st,4.4,3.2,'#d9b98a',GX-2.2,.045,GZ);flat(st,6,2.4,'#d9b98a',GX+3,.044,GZ);disc(st,1.2,'#d9b98a',GX+6,.043,GZ);   /* (the path goes on through the gate: run 4, stage 3; its far end is round: run 4 finish, it stopped in a straight edge) */
    const sg=signPlane('🌲 Tree Park',3.8,.56,'#8f6244','#ffffff');sg.position.set(GX-.14,3.35,GZ);sg.rotation.y=-Math.PI/2;L.g.add(sg);
    for(const [x,z,s] of [[76.6,-41.2,1.2],[77.0,-34.6,1.15],[70.6,-33.4,1.0],[80.6,-42.4,1.3]]){tree(st,x,z,s);colC(L,x,z,.3);}   /* (the big tree behind the gate stepped aside: it stood dead centre in the gateway) */
-   inter(L,{x:GX-1.6,z:GZ,r:1.8,rect:{x1:GX-3.6,z1:GZ-2.3,x2:GX-.2,z2:GZ+2.3},icon:'🌲',label:'Climb into the Tree Park',act:()=>enter('treepark')});}
+   /* (24 Nov 2026: no button here any more: the Tree Park is in town, you walk on through the gate; js/09-mainloop.js buildTreePark) */}
   // scatter nature along the edges of town, away from paths and buildings
   /* (stage 5: the nature scatter still sees the park as it was before the Pet Show area (its walls marked ps5 are skipped, the old ones stand in), so every bush and rock keeps its place) */
   {const r=seeded(77);let placed=0;const PS5_OLD=[{x1:-37.9,z1:28.4,x2:-36.5,z2:33.8},{x1:-38.05,z1:19.7,x2:-34.5,z2:24.3},{x1:-33.15,z1:20.3,x2:-31.7,z2:23.7},{x1:-35.45,z1:9.5,x2:-32.25,z2:14.65},{cx:-37.4,cz:16.2,cr:.28}];

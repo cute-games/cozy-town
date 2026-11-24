@@ -198,75 +198,105 @@ function dnHudTick(){const D=DANCE,lane=$('dnLane');if(!lane)return;const H=lane
 function dnHudPop(d,pts,perfect){DANCE.popTxt=(perfect?'✨ Perfect +':'+')+pts;DANCE.popT=performance.now()+420;}
 /* the Dance! spot on the floor of your house and of a house you visit (its place follows the floor) */
 DANCE.tg={x:0,z:0,r:2.0,icon:'🕺',label:'Dance!',pri:()=>true,when:()=>dnCan(),act:dnAsk,dnc:1};
-/* ===== 🌲 run 4, job 16 (item 29): the Tree Adventure Park. A free climbing park up in the trees, its own place (like the beach) behind a wooden gate in the woods east of the
-   Toy Store, so the town stays smooth. Three paths with signs (🟢 Easy, 🟡 Medium, 🔴 Hard): you pick one at the start, climb the ladder, then jump from deck to deck, cross
-   plank bridges and ride a zip line to the finish bell. Falling is cozy: you land softly and pop back up on the last deck you stood on. On the map. TP = the park's state;
-   tpTick runs every frame after updatePlayer: it is the park's floor physics (decks and bridges are the floor where you stand, their sides are solid, the ground is a fall) ===== */
-const TP_Z=-1000,TP={decks:[],walk:[],zips:[],signs:[],last:null,path:null,px:0,pz:0,in:0,falling:0,hand:null,rung:{}};
+/* ===== 🌲 the Tree Park, IN TOWN (24 Nov 2026, the owner: "the monkey trees challenge needs to be in the same world as the real game ... a parkour challenge like we do in Roblox").
+   No teleport any more: through the wooden gate in the woods behind the Toy Store (x 74, z -38) a dirt trail leads east into a fenced clearing in the forest (x 92-144, z -60 to -31;
+   the town's walkable area reaches out there and only there: walls keep the rest of the east edge at x 80 as before). Three obby paths start side by side at the clearing's west end:
+   🟢 Easy, 🟡 Medium, 🔴 Hard. Real jumps (the game's own jump, P.vy/P.jy, the ⬆️ button or Space) from stump to deck to log, a rope bridge, a moving deck, the Hard path's tree tower.
+   Checkpoint flags light up when you land on them; touch the ground during a run and you are back on your last checkpoint at once. The timer starts when you leave the start pad and
+   stops when you land on the finish; your best time per path is saved (S.tp.best, a new field: old saves simply have none yet). Coins the first time, hardEvent and qEvent at every finish
+   as before. A zip line at each finish takes you down to the meadow. The gaps come from the measured jump (run speed, sport level 1, not hungry: 4.26 m on the level; easy at most 60 %,
+   medium 80 %, hard 92 % of the most you can jump at that height step; tools/obby/design.py). TP = the park's state; tpTick (every frame after updatePlayer) is the platforms' floor
+   physics: where you stand is your floor (P.cy), their sides are solid, walking off one is a fall. Friends see you up there (your floor height P.cy goes with your place: presence cy, main 24 Nov). The old separate place (LOC.treepark,
+   run 4) stays as an empty place: a game saved inside it starts at the gate in town ===== */
+const TP_Z=-1000,TP={pl:[],zips:[],signs:[],flags:[],mv:[],run:null,on:null,last:null,pf:0,zone:0,hand:null,mark:null,done:null,el:null,gk:''};
 const TP_PATHS={easy:{n:'Easy path',e:'🟢',c:'#5fd4b0',coins:20},medium:{n:'Medium path',e:'🟡',c:'#ffd45c',coins:30},hard:{n:'Hard path',e:'🔴',c:'#ff6b6b',coins:40}};
-function tp(){const d=S.tp||(S.tp={done:{},falls:0});if(!d.done)d.done={};return d;}
-/* the course: decks (x,z = the middle, s = the side, h = the floor height), b = a plank bridge to the next deck, zip = a zip line to the next deck */
-const TP_COURSE={
-  easy:[{x:-10,z:10,h:2.6},{x:-10,z:6.6,h:2.6,b:1},{x:-10,z:2.4,h:2.8},{x:-12.2,z:-1.2,h:2.8},{x:-9,z:-4.6,h:3},{x:-9,z:-8,h:3,zip:1},{x:-9,z:-22,h:2,fin:1}],
-  medium:[{x:0,z:9,h:3},{x:0,z:5.2,h:3},{x:2.6,z:1.6,h:3.3},{x:2.6,z:-2.6,h:3.3,b:1},{x:6.6,z:-2.6,h:3.3},{x:6.6,z:-6.6,h:3.6},{x:3.6,z:-10.4,h:3.6},{x:3.6,z:-14.4,h:3.6,zip:1},{x:3.6,z:-30,h:2.4},{x:3.6,z:-33.8,h:2.4,fin:1}],
-  hard:[{x:12,z:9,h:3.6},{x:12,z:4.8,h:3.6},{x:15.4,z:1.6,h:4},{x:15.4,z:-2.6,h:4,s:2,b:1},{x:19,z:-2.6,h:4.2,s:2},{x:19,z:-6.8,h:4.4,s:2},{x:15.6,z:-10,h:4.4,s:2},{x:15.6,z:-14.2,h:4.6,s:2},{x:15.6,z:-18.4,h:4.8,s:2,zip:1},{x:15.6,z:-36,h:3,s:2},{x:15.6,z:-40.2,h:3,fin:1}]};
-const TP_MATS={};function tpCrown(c){return TP_MATS[c]||(TP_MATS[c]=toon({color:c,emissive:new THREE.Color(c),emissiveIntensity:.28}));}   /* 🌳 the park's crowns keep their colour on the shady side too (run 4, stage 3: a crown seen from its dark side was a muddy olive) */
-function tpTallTree(g,x,z,hh,c){cyl(g,.42,.52,hh,'#8f6244',x,0,z,{seg:8,ol:.03});const m=tpCrown(c);sph(g,2.1,c,x,hh+.7,z,{ws:9,hs:6,mat:m});sph(g,1.5,c,x+1.4,hh+.1,z+.3,{ws:8,hs:5,mat:m});sph(g,1.4,c,x-1.3,hh+.2,z-.5,{ws:8,hs:5,mat:m});}
-function tpDeck(L,st,d,c,i,prev,next){const s=d.s||2.4,x=d.x,z=d.z,h=d.h;box(st,s,.14,s,'#c99a66',x,h-.14,z,{ol:.02});for(let k=1;k<5;k++)box(st,s-.1,.016,.06,'#a06e45',x,h,z-s/2+k*s/5,{ol:false});   /* the plank lines (four, run 4, stage 3) */
-  /* its tree: on the side farthest from the deck before and the deck after (never in a bridge or a jump), not where the ladder (west) or the finish sign (north) is */
-  const off=1.95*(s/2.4),cands=[[off,0],[-off,0],[0,off],[0,-off]].filter(([ox,oz])=>!((i===0||d.fin)&&ox<0)&&!(d.fin&&oz<0));
-  const far=([ox,oz])=>Math.min(...[prev,next].filter(Boolean).map(q=>Math.hypot(x+ox-q.x,z+oz-q.z)),99);cands.sort((a,b)=>far(b)-far(a));const [ox,oz]=cands[0],tx=x+ox,tz=z+oz;
-  tpTallTree(st,tx,tz,h+(d.fin?4.2:5.4)+(i%3)*.5,pick(TREE_COLS));colC(L,tx,tz,.56);box(st,Math.max(.16,Math.abs(ox)),.16,Math.max(.16,Math.abs(oz)),'#8f6244',(x+tx)/2,h-.32,(z+tz)/2,{ol:.012});   /* the beam that holds the deck */
-  cyl(st,.04,.04,1.3,'#8f6244',x+s/2-.12,h,z+s/2-.12,{seg:6,ol:false});sph(st,.05,'#ffd45c',x+s/2-.12,h+1.32,z+s/2-.12,{ws:6,hs:5,ol:false});cone(st,.19,.56,c,x+s/2-.12+.3,h+1.04,z+s/2-.12,{rz:-Math.PI/2,center:true,seg:3,ol:.012,s:[1,1,.12]});   /* the path's little pennant on its pole (run 4, stage 3: it was a flat slab) */
-  TP.decks.push({x:L.ox+x,z:L.oz+z,w:s,d:s,h,i,path:d.path,fin:!!d.fin});}
-function tpBridge(L,st,a,b){const h=a.h,dx=b.x-a.x,dz=b.z-a.z,len=Math.hypot(dx,dz),ax=Math.abs(dx)>Math.abs(dz),sa=(a.s||2.4)/2,sb=(b.s||2.4)/2,x0=ax?a.x+Math.sign(dx)*sa:a.x,z0=ax?a.z:a.z+Math.sign(dz)*sa,gap=len-sa-sb;
-  const mx=(x0+(ax?Math.sign(dx)*gap/2:0)),mz=(z0+(ax?0:Math.sign(dz)*gap/2));box(st,ax?gap:.9,.1,ax?.9:gap,'#c99a66',mx,h-.1,mz,{ol:.02});
-  for(let k=0;k<Math.floor(gap/.5);k++){const u=(k+.5)*.5;box(st,ax?.03:.8,.012,ax?.8:.03,'#8f6244',ax?x0+Math.sign(dx)*u:mx,h,ax?mz:z0+Math.sign(dz)*u,{ol:false});}
-  for(const sd of[-1,1]){const px=ax?0:sd*.46,pz=ax?sd*.46:0;for(const u of[.15,gap/2,gap-.15]){cyl(st,.05,.05,.95,'#8f6244',(ax?x0+Math.sign(dx)*u:mx)+px,h,(ax?mz:z0+Math.sign(dz)*u)+pz,{seg:6,ol:.01});}
-    box(st,ax?gap:.07,.07,ax?.07:gap,'#e8d7b0',mx+px,h+.9,mz+pz,{ol:.01});box(st,ax?gap:.05,.05,ax?.05:gap,'#e8d7b0',mx+px,h+.45,mz+pz,{ol:false});}   /* rope rails: a top rope and a middle rope (run 4, stage 3: thicker, seen from a distance) */
-  TP.walk.push({x1:L.ox+mx-(ax?gap/2:.45),x2:L.ox+mx+(ax?gap/2:.45),z1:L.oz+mz-(ax?.45:gap/2),z2:L.oz+mz+(ax?.45:gap/2),h});}
-function tpZipLine(L,st,a,b,c){const sa=(a.s||2.4)/2,sb=(b.s||2.4)/2,dx=b.x-a.x,dz=b.z-a.z,len=Math.hypot(dx,dz),ux=dx/len,uz=dz/len;const ax=a.x+ux*(sa-.3),az=a.z+uz*(sa-.3),bx=b.x-ux*(sb-.3),bz=b.z-uz*(sb-.3);
-  for(const [x,z,h] of[[ax,az,a.h],[bx,bz,b.h]]){cyl(st,.07,.08,2.3,'#8f6244',x,h,z,{seg:7,ol:.012});}
-  const A=new THREE.Vector3(ax,a.h+2.3,az),B=new THREE.Vector3(bx,b.h+2.3,bz),D=B.clone().sub(A),cab=new THREE.Mesh(new THREE.CylinderGeometry(.025,.025,D.length(),5),mat('#5a5f8c'));
+function tp(){const d=S.tp||(S.tp={done:{},falls:0});if(!d.done)d.done={};if(!d.best||typeof d.best!=='object')d.best={};return d;}
+/* the course (from tools/obby/design.py): [kind, x, z, width (x), depth (z), top height, flags, moving]. Kinds: p start pad, s stump (round), d deck, l log, m moving deck.
+   Flags: c checkpoint flag, f finish, b a rope bridge from the platform before, t on the Hard path's tree tower. Moving: [axis, how far each way, seconds for a full swing] */
+const TP_COURSE={easy:[['p',94,-38.2,2.4,2.4,0.35],
+  ['s',97.1,-37.6,1.4,1.4,0.65],['s',99.8,-38.5,1.4,1.4,0.9],['d',103.0,-38.2,2.2,2.2,1.1,'c'],['d',107.4,-38.2,2.2,2.2,1.1,'b'],['l',111.2,-38.7,2.8,0.9,1.35],
+  ['s',114.6,-38.1,1.4,1.4,1.6],['d',117.8,-37.1,2.2,2.2,1.85,'c'],['s',121.0,-36.7,1.4,1.4,2.1],['d',124.4,-36.9,2.4,2.4,2.4,'f']],
+ medium:[['p',94,-45.4,2.4,2.4,0.35],
+  ['s',97.85,-44.6,1.3,1.3,0.7],['s',101.35,-46.1,1.3,1.3,1.05],['d',105.3,-45.4,2.0,2.0,1.4,'c'],['l',110.0,-45.4,3.0,0.7,1.7],['s',114.5,-44.5,1.2,1.2,2.0],
+  ['m',117.8,-45.1,1.8,1.8,2.0,'',['x',1.2,6]],['d',121.5,-45.0,2.0,2.0,2.3,'c'],['s',125.6,-45.3,1.2,1.2,2.65],['d',129.8,-43.9,2.4,2.4,3.0,'f']],
+ hard:[['p',94,-53.6,2.4,2.4,0.35],
+  ['s',98.5,-52.7,1.0,1.0,0.75],['s',102.5,-54.1,1.0,1.0,1.1],['d',106.7,-53.5,1.6,1.6,1.55,'c'],['l',112.0,-53.5,2.6,0.5,1.85],['s',117.05,-52.6,0.9,0.9,2.05],
+  ['m',121.2,-53.5,1.4,1.4,2.35,'',['z',1.4,5]],['d',125.3,-53.3,1.6,1.6,2.65,'c'],['s',128.2,-54.3,1.1,1.1,3.05,'t'],['s',130.62,-57.63,1.1,1.1,3.45,'t'],
+  ['d',134.53,-56.36,1.1,1.1,3.85,'t'],['s',134.53,-52.24,1.1,1.1,4.25,'ct'],['s',130.62,-50.97,1.1,1.1,4.65,'t'],['d',129.95,-54.3,2.0,2.0,5.1,'ft']]};
+const TP_LAND={easy:[139.5,-36.6,.9,0],medium:[139.5,-44.6,.9,0],hard:[121.6,-49.3,-.45,.65]},TP_TOWER=[131.7,-54.3];   /* each finish's zip line: where it lands (a low pad), where it starts (from the finish deck's middle); the tower's trunk */
+const TP_MATS={};function tpCrown(c){return TP_MATS[c]||(TP_MATS[c]=toon({color:c,emissive:new THREE.Color(c),emissiveIntensity:.28}));}   /* 🌳 the park's crowns keep their colour on the shady side too (run 4, stage 3) */
+function tpTallTree(g,x,z,hh,c,k=1){cyl(g,.42*k,.52*k,hh,'#8f6244',x,0,z,{seg:8,ol:.03});const m=tpCrown(c);sph(g,2.1*k,c,x,hh+.7*k,z,{ws:9,hs:6,mat:m});sph(g,1.5*k,c,x+1.4*k,hh+.1*k,z+.3*k,{ws:8,hs:5,mat:m});sph(g,1.4*k,c,x-1.3*k,hh+.2*k,z-.5*k,{ws:8,hs:5,mat:m});}
+function tpIn(x,z){return(x>79.6&&x<=92&&z>-42&&z<-31)||(x>92&&x<144&&z>-60&&z<-31);}   /* in the park (the trail from the gate, then the clearing) */
+function tpInside(p,x,z){return p.r?Math.hypot(x-p.x,z-p.z)<=p.r:Math.abs(x-p.x)<=p.w/2&&Math.abs(z-p.z)<=p.d/2;}
+function tpNext(p){return p&&p.i>=0?TP.pl.find(q=>q.k===p.k&&q.i===p.i+1)||null:null;}
+const tpTime=t=>Math.floor(t/60)+':'+(t%60).toFixed(1).padStart(4,'0');
+/* a rope bridge between two decks in a row along x (the plank strip is a platform you walk on) */
+function tpBridge(st,a,b){const h=a.h,x0=a.x+a.w/2,x1=b.x-b.w/2,gap=x1-x0,mx=(x0+x1)/2,z=a.z;box(st,gap,.1,.9,'#c99a66',mx,h-.1,z,{ol:.02});
+  for(let k=0;k<Math.floor(gap/.5);k++)box(st,.03,.012,.8,'#8f6244',x0+(k+.5)*.5,h,z,{ol:false});
+  for(const sd of[-1,1]){for(const u of[.15,gap/2,gap-.15])cyl(st,.05,.05,.95,'#8f6244',x0+u,h,z+sd*.46,{seg:6,ol:.01});box(st,gap,.07,.07,'#e8d7b0',mx,h+.9,z+sd*.46,{ol:.01});box(st,gap,.05,.05,'#e8d7b0',mx,h+.45,z+sd*.46,{ol:false});}
+  TP.pl.push({k:a.k,i:-2,t:'w',x:mx,z,w:gap,d:.9,h,r:0,th:.1,posts:[]});}
+function tpZipLine(L,st,f,k){const [lx,lz,sx,sz]=TP_LAND[k],lh=.6,ax=f.x+sx,az=f.z+sz,ul=Math.hypot(lx-ax,lz-az),bx=lx-(lx-ax)/ul*.9,bz=lz-(lz-az)/ul*.9;
+  for(const [x,z,h] of[[ax,az,f.h],[bx,bz,lh]])cyl(st,.07,.08,2.3,'#8f6244',x,h,z,{seg:7,ol:.012});
+  const A=new THREE.Vector3(ax,f.h+2.3,az),B=new THREE.Vector3(bx,lh+2.3,bz),D=B.clone().sub(A),cab=new THREE.Mesh(new THREE.CylinderGeometry(.025,.025,D.length(),5),mat('#5a5f8c'));
   cab.position.copy(A).add(B).multiplyScalar(.5);cab.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),D.clone().normalize());st.add(cab);
-  const Z={ax:L.ox+ax,az:L.oz+az,ay:a.h+2.3,bx:L.ox+bx,bz:L.oz+bz,by:b.h+2.3,T:D.length()/5.5,to:null,from:null};TP.zips.push(Z);
-  inter(L,{x:ax-ux*.9,z:az-uz*.9,r:1.5,icon:'🪢',label:'Ride the zip line!',pri:()=>true,when:()=>Math.abs((P.cy||0)-a.h)<.7&&!P.ride,act:()=>tpZipGo(Z)});return Z;}
+  /* the landing pad on the meadow */
+  cyl(st,1.1,1.15,lh,'#c99a66',lx,0,lz,{seg:18,ol:.02});cyl(st,1.13,1.13,.08,TP_PATHS[k].c,lx,lh-.12,lz,{seg:18,ol:false});
+  const pad={k,i:-1,t:'z',x:lx,z:lz,w:2.2,d:2.2,h:lh,r:1.1,th:lh,posts:[]};TP.pl.push(pad);
+  const len=D.length(),ux=(bx-ax)/Math.hypot(bx-ax,bz-az),uz=(bz-az)/Math.hypot(bx-ax,bz-az);
+  const Z={ax,az,ay:f.h+2.3,bx,bz,by:lh+2.3,T:len/5.5,to:pad,from:f};TP.zips.push(Z);
+  inter(L,{x:ax-ux*.9,z:az-uz*.9,r:1.5,icon:'🪢',label:'Ride the zip line!',pri:()=>true,when:()=>TP.on===f&&!P.ride,act:()=>tpZipGo(Z)});}
 function buildTreePark(){
-  const L=makeLoc('treepark','out',0,TP_Z,[-32,-52,36,30]);const st=new THREE.Group();L.g.add(st);const r=seeded(29);
-  const gr=new THREE.Mesh(new THREE.PlaneGeometry(1400,1400),toon({color:'#8fd47a',polygonOffset:true,polygonOffsetFactor:4,polygonOffsetUnits:8}));gr.rotation.x=-Math.PI/2;gr.receiveShadow=true;gr.userData.keep=1;L.g.add(gr);
-  flat(st,9,14,'#d9b98a',0,.012,19);flat(st,3,6,'#d9b98a',0,.014,27);   /* the earth floor of the start deck and the way in */
-  /* far hills and a few clouds (the town's sky things stay in town) */
-  const hl=new THREE.Group();L.g.add(hl);for(let i=0;i<8;i++){const a=i/8*TAU;sph(hl,rand(38,52),pick(['#86d37c','#79c973','#93dc85']),Math.cos(a)*170,-rand(8,14),Math.sin(a)*170,{ol:.9,ws:12,hs:7,s:[1,.45,1]});}bake(hl,false);
-  for(let i=0;i<4;i++){const c=new THREE.Group();const n=3+(i%2);for(let k=0;k<n;k++)sph(c,rand(5,8),null,k*6.5-n*3.2,rand(-1.5,1.5),rand(-3,3),{mat:CLOUD,ol:false,ws:9,hs:6,s:[1,.68,1]});c.position.set(rand(-120,120),rand(56,74),-60-rand(0,120));bake(c,false);L.g.add(c);}
-  /* the gate back to town (south), with a fence */
-  for(const s of[-1,1]){box(st,.3,3.6,.3,'#8f6244',s*2.2,0,26,{ol:.03});sph(st,.27,'#5fd4b0',s*2.2,3.85,26,{ws:10,hs:8});colC(L,s*2.2,26,.25);}
-  box(st,4.9,.7,.24,'#8f6244',0,3.0,26,{ol:.03});{const sg=signPlane('🏘 To town',3.6,.56,'#8f6244','#ffffff');sg.position.set(0,3.35,25.86);sg.rotation.y=Math.PI;L.g.add(sg);}
-  for(const s of[-1,1]){for(let x=3.2;x<16;x+=1.6){cyl(st,.06,.07,1.1,'#8f6244',s*x,0,26,{seg:5,ol:false});}box(st,12.6,.07,.07,'#b98a5e',s*9.6,.95,26,{ol:false});box(st,12.6,.07,.07,'#b98a5e',s*9.6,.55,26,{ol:false});col(L,s*3.0,25.7,s*16,26.3);}
-  inter(L,{x:0,z:25.2,r:1.8,rect:{x1:-1.9,z1:TP_Z+24.2,x2:1.9,z2:TP_Z+26.4},icon:'🏘',label:'Back to town',act:()=>exitTo('treepark')});   /* (rect: world coordinates) */
-  /* the three paths: a signpost and a ladder each, then the decks, bridges and zip lines */
-  const keys=['easy','medium','hard'];keys.forEach((k,pi)=>{const PA=TP_PATHS[k],C=TP_COURSE[k],x0=[-9,0,9][pi];
-    const sx=[-3.2,0,3.2][pi];cyl(st,.07,.08,2.0,'#8f6244',sx,0,16.5,{seg:7,ol:.012});const sg=signPlane(PA.e+' '+PA.n,k==='medium'?2.75:2.3,.56,PA.c,'#3d2c5e');   /* (the longer name gets a longer sign: the same letters as the others) */sg.position.set(sx,1.75,16.6);   /* (the sign 2 cm in front of its post; run 4, stage 3: the three signposts stand side by side, all three in view from the clearing) */L.g.add(sg);TP.signs.push(sg);colC(L,sx,16.5,.12);
-    inter(L,{x:sx,z:17.6,r:1.7,icon:'🪜',label:'Climb up: the '+PA.n.toLowerCase(),pri:()=>true,when:()=>(P.cy||0)<.3&&!P.ride,act:()=>tpStart(k)});
-    C.forEach((d,i)=>{d.path=k;tpDeck(L,st,d,PA.c,i,C[i-1],C[i+1]);if(i===0||d.fin){const l=d.x-(d.s||2.4)/2-.25,lz=d.z;for(const s of[-.22,.22])box(st,.07,d.h+.3,.07,'#b98a5e',l,0,lz+s,{rx:0,ol:false});for(let y=.35;y<d.h;y+=.42)box(st,.09,.05,.5,'#b98a5e',l,y,lz,{ol:false});   /* a ladder on the west side */
-        inter(L,{x:l+.5,z:d.z,r:1.1,icon:'🪜',label:'Climb down',when:()=>Math.abs((P.cy||0)-d.h)<.7&&!P.ride,act:()=>tpDown()});}
-      if(d.fin){const bx=d.x-.85;cyl(st,.06,.07,1.95,'#8f6244',bx,d.h,d.z,{seg:6,ol:false});cone(st,.42,.3,'#d3262f',bx,d.h+2.05,d.z,{seg:6,ol:.012});sph(st,.17,'#ffd45c',bx,d.h+1.8,d.z,{s:[1,.8,1],ws:12,hs:8,ol:.015});cyl(st,.16,.33,.5,'#ffd45c',bx,d.h+1.3,d.z,{seg:16,ol:.02});cyl(st,.37,.37,.07,'#e0a800',bx,d.h+1.25,d.z,{seg:16,ol:.012});sph(st,.08,'#8f6244',bx,d.h+1.16,d.z,{ws:6,hs:5,ol:false});box(st,.025,.42,.025,'#e8d7b0',bx,d.h+.74,d.z,{ol:false});   /* (a real bell: a dome, a flared mouth with a rim, the clapper and a rope; run 4, stage 3) */   /* 🔔 a big golden bell under a little red roof, on the deck's free side (run 4, stage 3: it hid behind the deck's tree) */
-        const fx=d.x-.5,fs=signPlane('🏁 Finish',1.4,.46,PA.c,'#3d2c5e');fs.position.set(fx,d.h+2.62,d.z-(d.s||2.4)/2+.18);fs.rotation.y=0;L.g.add(fs);TP.signs.push(fs);for(const s of[-.65,.65])cyl(st,.05,.05,2.62,'#8f6244',fx+s,d.h,d.z-(d.s||2.4)/2+.1,{seg:5,ol:false});   /* (run 4, stage 3: the banner hangs behind the bell, so it shows while you ring it, and above the bell's roof) */   /* (the sign 3 cm in front of its posts) */
-        inter(L,{x:bx,z:d.z,r:1.6,icon:'🔔',label:'Ring the bell!',pri:()=>true,when:()=>Math.abs((P.cy||0)-d.h)<.7&&!P.ride,act:()=>tpFinish(k)});}
-      if(i<C.length-1){const n=C[i+1];if(d.b)tpBridge(L,st,d,n);else if(d.zip){const Z=tpZipLine(L,st,d,n,PA.c);Z.from=TP.decks[TP.decks.length-1];Z.toIdx=TP.decks.length;}}});
-    TP.zips.forEach(Z=>{if(Z.toIdx!==undefined&&!Z.to){Z.to=TP.decks[Z.toIdx];}});});
-  TP.zips.forEach(Z=>{if(!Z.to)Z.to=TP.decks.find(d=>Math.abs(d.x-Z.bx)<2&&Math.abs(d.z-Z.bz)<2.5);});
-  /* the woods around: bushes, flowers and plenty of trees away from the course */
-  const onCourse=(x,z)=>TP.decks.some(d=>Math.abs(d.x-L.ox-x)<4.5&&Math.abs(d.z-L.oz-z)<4.5)||(Math.abs(x)<16&&z>12&&z<30);
-  for(let i=0,n=0;i<900&&n<74;i++){const x=-31+r()*66,z=-51+r()*79;if(onCourse(x,z))continue;const k=r();
-    if(k<.5){const s=.8+r()*.5;if(r()<.4)pineLo(st,x,0,z,s*1.3,pick(PINE_COLS));else treeLo(st,x,0,z,s,pick(TREE_COLS));colC(L,x,z,.3);}
-    else if(k<.75){const c=pick(['#5fbf74','#6cc97c','#4fae64']);sph(st,.5,c,x,.35,z,{ws:7,hs:5});sph(st,.36,c,x+.4,.28,z+.15,{ws:7,hs:5});colC(L,x,z,.55);}
-    else if(k<.9){for(let q=0;q<3;q++){const fx=x+r()*1.2-.6,fz=z+r()*1.2-.6;cyl(st,.014,.014,.26,'#4fae5c',fx,0,fz,{seg:4,ol:false});sph(st,.07,pick(['#ff7aa8','#ffd45c','#ffffff','#b79cff']),fx,.3,fz,{ws:6,hs:5,ol:.01});}}
-    else{const h=.14+r()*.1;cyl(st,.04,.05,h,'#fff4e0',x,0,z,{seg:6,ol:.01});sph(st,.11,'#ff5d6c',x,h,z,{s:[1,.6,1],ws:8,hs:6,ol:.012});}n++;}
-  bake(st,true,32);
-  /* the zip-line handle you hang from (shows during a ride) */
-  const hd=new THREE.Group();box(hd,.6,.05,.05,'#5a5f8c',0,0,0,{ol:false});for(const s of[-.22,.22])box(hd,.04,.5,.04,'#e8d7b0',s,-.5,0,{ol:false});box(hd,.5,.04,.04,'#8f6244',0,-.5,0,{ol:false});hd.visible=false;L.g.add(hd);TP.hand=hd;
-  const mk=new THREE.Group();{const m=new THREE.Mesh(starGeo(.42,0,.12),STARM);mk.add(m);hull(mk,starGeo(.42,.042,.12),m,{});}   /* (run 4, stage 3: a turning star; the arrow looked like a floating pencil in two pieces) */mk.visible=false;mk.userData.keep=1;L.g.add(mk);TP.mark=mk;   /* ⬇️ a bobbing yellow arrow over the next deck of your path (run 4, stage 3) */
-  return L;}
+  makeLoc('treepark','out',0,TP_Z,[-4,-4,4,4]);   /* the old place (run 4), now empty: an old save made in it starts at the gate in town (tpTick) */
+  const L=LOC.city,st=new THREE.Group();L.g.add(st);const r=seeded(31),TC=()=>TREE_COLS[(r()*TREE_COLS.length)|0];
+  /* the walkable area reaches into the park, and only there: walls keep the rest of the town's east edge at x 80 */
+  L.bounds.x2=Math.max(L.bounds.x2,144);col(L,80,-200,92,-42);col(L,92,-200,200,-60);col(L,80,-31,200,200);
+  /* the forest's own trees in the park get trunks you bump into (they were only scenery out there) */
+  for(const [x,z] of [...mapTrees(),...FAR_TREES])if(tpIn(x,z)||tpIn(x+.6,z)||tpIn(x-.6,z)||tpIn(x,z+.6)||tpIn(x,z-.6))colC(L,x,z,.42);
+  /* the dirt trail from the gate's path into the park, and the clearing where the three paths start */
+  const T=[[79.4,-38],[85.2,-35.2],[92,-35.4]];for(let i=0;i<T.length-1;i++){const [a,b]=[T[i],T[i+1]],len=Math.hypot(b[0]-a[0],b[1]-a[1]);flat(st,2.4,len,'#d9b98a',(a[0]+b[0])/2,.046,(a[1]+b[1])/2,{ry:Math.atan2(b[0]-a[0],b[1]-a[1])});disc(st,1.2,'#d9b98a',b[0],.047,b[1]);}
+  flat(st,6.4,21.8,'#d9b98a',95.2,.045,-45.6);
+  /* a low log fence round the park (gaps where a forest tree stands in its line) */
+  const trees=[...mapTrees(),...FAR_TREES].filter(([x,z])=>x>78&&x<146&&z>-62&&z<-29),clear=(x,z,d)=>!trees.some(([a,b])=>Math.hypot(a-x,b-z)<d);
+  for(const [x0,z0,x1,z1] of [[80,-42,92,-42],[92,-42,92,-60],[92,-60,144,-60],[144,-60,144,-31],[144,-31,80.4,-31]]){const len=Math.hypot(x1-x0,z1-z0),n=Math.ceil(len/2.6);let prev=null;
+    for(let i=0;i<=n;i++){const x=x0+(x1-x0)*i/n,z=z0+(z1-z0)*i/n,ok=clear(x,z,.75);if(ok)cyl(st,.07,.08,1.0,'#8f6244',x,0,z,{seg:5,ol:false});
+      if(prev&&ok&&prev[2]&&clear((x+prev[0])/2,(z+prev[1])/2,.7)){const mx=(x+prev[0])/2,mz=(z+prev[1])/2,l=Math.hypot(x-prev[0],z-prev[1]),ry=Math.atan2(z-prev[1],x-prev[0]);for(const y of[.5,.85])box(st,l,.07,.07,'#b98a5e',mx,y,mz,{ry:-ry,ol:false});}
+      prev=[x,z,ok];}}
+  /* the Hard path's tree tower: one big tree, its decks on beams round the trunk */
+  {const [tx,tz]=TP_TOWER;tpTallTree(st,tx,tz,8.2,TC(),1.35);colC(L,tx,tz,.72);}
+  const keys=['easy','medium','hard'],all=[];for(const k of keys)TP_COURSE[k].forEach((q,i)=>all.push([k,i,...q]));
+  const near=(x,z,me)=>Math.min(...all.filter(a=>!(a[0]===me[0]&&a[1]===me[1])).map(a=>{const dx=Math.max(0,Math.abs(x-a[3])-a[5]/2),dz=Math.max(0,Math.abs(z-a[4])-a[6]/2);return Math.hypot(dx,dz);}));
+  for(const k of keys){const PA=TP_PATHS[k],C=TP_COURSE[k];C.forEach((q,i)=>{const [t,x,z,w,d,h,f='',mv]=q,p={k,i,t,x,z,w,d,h,r:t==='s'||t==='p'?w/2:0,cp:f.includes('c'),fin:f.includes('f'),tw:f.includes('t'),dx:0,dz:0,th:.3,posts:[]};TP.pl.push(p);
+    const pc=PA.c,prev=TP.pl.find(o=>o.k===k&&o.i===i-1);
+    if(f.includes('b')&&prev)tpBridge(st,prev,p);
+    if(p.tw){const [tx,tz]=TP_TOWER,dx=x-tx,dz=z-tz,l=Math.hypot(dx,dz);box(st,l,.16,.16,'#8f6244',tx+dx/2,h-.36,tz+dz/2,{ry:-Math.atan2(dz,dx),ol:.012});}   /* the beam from the trunk */
+    if(t==='p'){cyl(st,1.2,1.25,h,'#c99a66',x,0,z,{seg:22,ol:.02});cyl(st,1.22,1.22,.08,pc,x,h-.1,z,{seg:22,ol:false});disc(st,.62,pc,x,h+.004,z,{seg:22});
+      const sg=signPlane(PA.e+' '+PA.n,k==='medium'?2.75:2.3,.56,pc,'#3d2c5e');sg.position.set(x-1.62,1.75,z+1.02);sg.rotation.y=-Math.PI/2;L.g.add(sg);TP.signs.push(sg);cyl(st,.07,.08,2.0,'#8f6244',x-1.5,0,z+1.02,{seg:7,ol:.012});colC(L,x-1.5,z+1.02,.12);}
+    else if(t==='s'){const rr=w/2;if(!p.tw){cyl(st,.13,.16,h-.2,'#8f6244',x,0,z,{seg:7,ol:.015});p.posts.push([x,z,.16]);}
+      cyl(st,rr,rr,.22,'#c99a66',x,h-.22,z,{seg:16,ol:.02});cyl(st,rr+.02,rr+.02,.07,pc,x,h-.15,z,{seg:16,ol:false});disc(st,rr*.55,'#b08257',x,h+.004,z,{seg:16});p.th=.22;}
+    else if(t==='l'){const ax=w>d,len=Math.max(w,d),rr=Math.min(w,d)/2;cyl(st,rr,rr,len,'#9b6b4a',x,h-rr,z,{rz:ax?Math.PI/2:0,rx:ax?0:Math.PI/2,center:true,seg:10,ol:.02});
+      cyl(st,rr+.015,rr+.015,.14,pc,x,h-rr,z,{rz:ax?Math.PI/2:0,rx:ax?0:Math.PI/2,center:true,seg:10,ol:false});
+      for(const s of[-1,1]){const px=ax?x+s*(len/2-.35):x,pz=ax?z:z+s*(len/2-.35);cyl(st,.1,.12,h-2*rr+.06,'#8f6244',px,0,pz,{seg:6,ol:false});p.posts.push([px,pz,.12]);}p.th=2*rr;}
+    else if(t==='d'||t==='m'){const g=t==='m'?new THREE.Group():st,ox=t==='m'?0:x,oz=t==='m'?0:z;
+      box(g,w,.16,d,'#c99a66',ox,h-.16,oz,{ol:.02});for(let n=1;n<5;n++)box(g,w-.1,.016,.06,'#a06e45',ox,h,oz-d/2+n*d/5,{ol:false});box(g,w+.05,.07,d+.05,pc,ox,h-.23,oz,{ol:false});
+      if(t==='m'){g.position.set(x,0,z);g.userData.keep=1;L.g.add(g);p.mv={ax:mv[0],amp:mv[1],per:mv[2],x0:x,z0:z,g};TP.mv.push(p);p.th=.25;
+        const a=mv[0]==='x',e=mv[1]+(a?w:d)/2+.15;box(st,a?2*e:.08,.08,a?.08:2*e,'#8f6244',x,h-.55,z,{ol:false});for(const s of[-1,1])cyl(st,.08,.1,h-.5,'#8f6244',a?x+s*e:x,0,a?z:z+s*e,{seg:6,ol:false});}   /* (its track: a beam with a post at each end) */
+      else if(!p.tw){/* a tall tree beside it, on the side farthest from every other platform (never in a jump), else four posts */
+        const off=Math.max(w,d)/2+.85,cs=[[off,0],[-off,0],[0,off],[0,-off]].map(([a,b])=>[a,b,near(x+a,z+b,[k,i])]).sort((u,v)=>v[2]-u[2]),[a,b,dd]=cs[0];
+        if(dd>=1.4){const tx=x+a,tz=z+b;tpTallTree(st,tx,tz,h+4.6+(i%3)*.5,TC());colC(L,tx,tz,.56);box(st,Math.max(.16,Math.abs(a)),.16,Math.max(.16,Math.abs(b)),'#8f6244',(x+tx)/2,h-.32,(z+tz)/2,{ol:.012});}
+        else for(const [sx,sz] of[[-1,-1],[1,-1],[-1,1],[1,1]]){const px=x+sx*(w/2-.15),pz=z+sz*(d/2-.15);cyl(st,.08,.1,h-.16,'#8f6244',px,0,pz,{seg:6,ol:false});p.posts.push([px,pz,.1]);}}}
+    if(p.cp){/* 🚩 the checkpoint flag: grey until you land here, then your path's colour */
+      const fx=x-w/2+.16,fz=z+d/2-.16;cyl(st,.035,.04,1.75,'#8f6244',fx,h,fz,{seg:6,ol:false});sph(st,.06,'#ffd45c',fx,h+1.78,fz,{ws:6,hs:5,ol:false});
+      const fg=new THREE.Group();fg.userData.keep=1;L.g.add(fg);const m=cone(fg,.27,.72,null,fx+.37,h+1.42,fz,{rz:-Math.PI/2,center:true,seg:3,ol:.012,s:[1,1,.14],mat:mat('#dcd6cc')});TP.flags.push({p,m,on:mat(pc),off:m.material});p.flag=TP.flags[TP.flags.length-1];}
+    if(p.fin){/* 🔔 the finish: a golden bell under a little red roof, the 🏁 banner behind it, and the zip line down to the meadow */
+      const bx=x-.25,bz=z+d/2-.35;cyl(st,.06,.07,1.95,'#8f6244',bx,h,bz,{seg:6,ol:false});cone(st,.42,.3,'#d3262f',bx,h+2.05,bz,{seg:6,ol:.012});sph(st,.17,'#ffd45c',bx,h+1.8,bz,{s:[1,.8,1],ws:12,hs:8,ol:.015});cyl(st,.16,.33,.5,'#ffd45c',bx,h+1.3,bz,{seg:16,ol:.02});cyl(st,.37,.37,.07,'#e0a800',bx,h+1.25,bz,{seg:16,ol:.012});
+      const fs=signPlane('🏁 Finish',1.4,.46,pc,'#3d2c5e');fs.position.set(x-w/2+.12,h+2.62,z);fs.rotation.y=-Math.PI/2;L.g.add(fs);TP.signs.push(fs);for(const s of[-.65,.65])cyl(st,.05,.05,2.62,'#8f6244',x-w/2+.1,h,z+s,{seg:5,ol:false});
+      tpZipLine(L,st,p,k);}
+    if(p.cp)inter(L,{x,z,r:Math.max(w,d)/2+.4,icon:'🪜',label:'Climb down (stop the run)',when:()=>TP.on===p&&!P.ride,act:()=>tpDown(p)});});}
+  bake(st,true);
+  /* the zip-line handle you hang from (shows during a ride), and the turning star over your next platform */
+  const hd=new THREE.Group();box(hd,.6,.05,.05,'#5a5f8c',0,0,0,{ol:false});for(const s of[-.22,.22])box(hd,.04,.5,.04,'#e8d7b0',s,-.5,0,{ol:false});box(hd,.5,.04,.04,'#8f6244',0,-.5,0,{ol:false});hd.visible=false;hd.userData.keep=1;L.g.add(hd);TP.hand=hd;
+  const mk=new THREE.Group();{const m=new THREE.Mesh(starGeo(.42,0,.12),STARM);mk.add(m);hull(mk,starGeo(.42,.042,.12),m,{});}mk.visible=false;mk.userData.keep=1;L.g.add(mk);TP.mark=mk;
+  return LOC.treepark;}
 /* 🐾 the new Pet Shop's floors (stage 4b; js/02-world.js PSH): you walk up and down the stairs, the floor under you is your height (P.cy); a stair's side,
    the rails round the open middle and the stair holes stop you (you never fall). Pieces on a floor collide only on that floor (CFL) */
 function psTick(dt){const L=LOC.pets;if(!L||CUR!==L||!L.psh){PSH.in=0;CFL=0;return;}
@@ -276,39 +306,65 @@ function psTick(dt){const L=LOC.pets;if(!L||CUR!==L||!L.psh){PSH.in=0;CFL=0;retu
   if(h===null){const hx=psSupport(P.x-L.ox,PSH.pz-L.oz,c),hz=hx===null?psSupport(PSH.px-L.ox,P.z-L.oz,c):null;if(hx!==null){P.z=PSH.pz;h=hx;}else if(hz!==null){P.x=PSH.px;h=hz;}else{P.x=PSH.px;P.z=PSH.pz;}}   /* (24 Nov: brushing a stair side or a rail slides you along it instead of stopping you dead) */
   if(h!==null)P.cy=Math.abs(h-c)<.01?h:lerp(c,h,Math.min(1,dt*18));
   PSH.px=P.x;PSH.pz=P.z;CFL=psFl(P.cy||0);}
-/* ---- the floor physics ---- */
-function tpSupport(x,z,feet){let h=0;for(const d of TP.decks){if(d.h<=feet+.5&&Math.abs(x-d.x)<=d.w/2&&Math.abs(z-d.z)<=d.d/2)h=Math.max(h,d.h);}for(const w of TP.walk){if(w.h<=feet+.5&&x>=w.x1&&x<=w.x2&&z>=w.z1&&z<=w.z2)h=Math.max(h,w.h);}return h;}
-function tpDeckAt(x,z,h){return TP.decks.find(d=>Math.abs(d.h-h)<.3&&Math.abs(x-d.x)<=d.w/2&&Math.abs(z-d.z)<=d.d/2)||null;}
-function tpMark(){const L=LOC.treepark,mk=TP.mark;if(!mk||!L)return;const last=TP.last,nx=last&&!last.fin&&(P.cy||0)>.3&&CUR===L?TP.decks.find(d=>d.path===last.path&&d.i===last.i+1):null;mk.visible=!!nx;if(nx){mk.position.set(nx.x-L.ox,nx.h+2.3+Math.sin(performance.now()/260)*.14,nx.z-L.oz);mk.rotation.y=Math.atan2(camera.position.x-nx.x,camera.position.z-nx.z)+Math.sin(performance.now()/500)*.35;}}
-function tpTick(dt){tpMark();const T=TP;if(!CUR||CUR.id!=='treepark'){if(T.in){T.in=0;T.last=null;T.path=null;if(P.ride&&P.ride.kind==='zip')P.ride=null;if(T.hand)T.hand.visible=false;}return;}
-  if(!T.in){T.in=1;T.last=null;T.path=null;T.px=P.x;T.pz=P.z;setTimeout(()=>{if(CUR&&CUR.id==='treepark')toast('🌲 Welcome to the Tree Park! Pick a path at the signs and climb up. Falling is fine: you pop back up! 🍃',4.5);},700);}
-  if(!PLAYING||CUT||fading)return;
-  if(P.ride&&P.ride.kind==='zip'){tpZip(dt);return;}
-  const c=P.cy||0;
-  if(P.jy<=0&&P.vy<=0){const h=tpSupport(P.x,P.z,c);
-    if(Math.abs(h-c)<.4){P.cy=h;if(h>0){const d=tpDeckAt(P.x,P.z,h);if(d)T.last=d;}}
-    else if(h>c){P.x=T.px;P.z=T.pz;}   /* a deck's side: solid */
-    else{P.jy=c-h;P.cy=h;P.vy=0;}   /* walked off an edge: the same height, but the floor is now the lower one: down you go */
-    if((P.cy||0)===0&&T.last&&!T.falling&&P.jy<=0)tpFall();}
-  else{const a=c+P.jy,h=tpSupport(P.x,P.z,a);
-    if(h>a+.03){P.x=T.px;P.z=T.pz;}   /* jumping into a deck's side */
-    else if(h>c){if(P.vy<=0&&a<=h+.12){P.cy=h;P.jy=0;P.vy=0;P.dip=.07;SFX.land();const d=tpDeckAt(P.x,P.z,h);if(d)T.last=d;}}
-    else if(h<c){P.jy+=c-h;P.cy=h;}}   /* over lower ground: the same height, a lower floor */
-  T.px=P.x;T.pz=P.z;}
-function tpFall(){const T=TP,d=T.last;if(!d)return;T.falling=1;const s=tp();s.falls=(s.falls||0)+1;SFX.pop();toast('Whoops! 🍃 Soft landing… back up to the last deck!',2.6);
-  fade(()=>{P.x=d.x;P.z=d.z;P.cy=d.h;P.jy=0;P.vy=0;P.pitch=0;T.px=P.x;T.pz=P.z;T.falling=0;});}
-function tpStart(k){const C=TP_COURSE[k],d=TP.decks.find(q=>q.path===k&&q.i===0);if(!d||P.ride)return;SFX.tap();const PA=TP_PATHS[k];
-  fade(()=>{P.x=d.x;P.z=d.z;P.cy=d.h;P.jy=0;P.vy=0;P.pitch=-.05;const n=TP.decks.find(q=>q.path===k&&q.i===1);if(n)P.yaw=Math.atan2(-(n.x-d.x),-(n.z-d.z));TP.last=d;TP.path=k;TP.px=P.x;TP.pz=P.z;TP.rung[k]=0;
-    toast(PA.e+' Jump from deck to deck ('+(TOUCHY?'⬆️':'⬆️ or Space')+'), then ring the bell! 🔔',4);});}
-function tpDown(){if(P.ride)return;SFX.tap();fade(()=>{P.x=TP_PATHS[TP.path]?[-9,0,9][['easy','medium','hard'].indexOf(TP.path)]:0;P.z=TP_Z+19.5;P.cy=0;P.jy=0;P.vy=0;P.yaw=Math.PI;TP.last=null;TP.path=null;TP.px=P.x;TP.pz=P.z;});}
-function tpZipGo(Z){if(P.ride||!Z)return;SFX.pop();P.ride={kind:'zip',Z,t:0};P.jy=0;P.vy=0;if(TP.hand)TP.hand.visible=true;toast('🪢 Hold on tight! Wheee!',1.8);}
+/* ---- the Tree Park's floor physics (in town, 24 Nov 2026) ---- */
+function tpMove(){const t=gameMs()/1000;for(const p of TP.mv){const m=p.mv,o=m.amp*Math.sin(t/m.per*TAU),nx=m.ax==='x'?m.x0+o:m.x0,nz=m.ax==='z'?m.z0+o:m.z0;p.dx=nx-p.x;p.dz=nz-p.z;p.x=nx;p.z=nz;m.g.position.set(nx,0,nz);}}   /* the moving decks follow the one clock: friends see them in the same place */
+function tpMark(){const mk=TP.mark;if(!mk)return;const R=TP.run,nx=R&&R.go&&CUR&&CUR.id==='city'?tpNext(R.last):null;mk.visible=!!nx;
+  if(nx){mk.position.set(nx.x,nx.h+2.3+Math.sin(performance.now()/260)*.14,nx.z);mk.rotation.y=Math.atan2(camera.position.x-nx.x,camera.position.z-nx.z)+Math.sin(performance.now()/500)*.35;}}
+function tpTick(dt){const T=TP;
+  if(CUR&&CUR.id==='treepark'){if(!fading&&!CUT)exitTo('treepark');return;}   /* the old separate park (a save made inside it): out at the gate in town */
+  const city=!!CUR&&CUR.id==='city';if(city&&P.x>60)tpMove();tpMark();
+  if(T.hand&&T.hand.visible&&!(P.ride&&P.ride.kind==='zip'))T.hand.visible=false;
+  const inz=city&&tpIn(P.x,P.z);T.zone=inz?1:0;
+  if(!inz||P.horse||CLIMB){if(T.run)T.run=null;T.on=null;T.pf=(P.cy||0)+P.jy;tpGuide();return;}
+  if(P.ride&&P.ride.kind==='zip'){tpZip(dt);tpGuide();return;}
+  if(!PLAYING||CUT||fading||P.sit||P.ride){T.pf=(P.cy||0)+P.jy;tpGuide();return;}
+  if(T.on&&T.on.mv&&P.jy<=0&&P.vy<=0)[P.x,P.z]=collideXZ(P.x+T.on.dx,P.z+T.on.dz,.3,CUR);   /* a moving deck takes you along */
+  const c=P.cy||0,f0=Math.max(T.pf,c+P.jy),grounded=P.jy<=0&&P.vy<=0;let feet=c+P.jy;
+  /* solid sides: a platform whose top is above your knees and whose underside is below your head; under a platform, its posts */
+  for(const p of T.pl){if(Math.abs(p.x-P.x)>4.5||Math.abs(p.z-P.z)>4.5)continue;
+    const bot=p.h-p.th;if(bot>=T.pf+1.6-.001){if(feet+1.6>bot&&tpInside(p,P.x,P.z)){P.jy=Math.max(0,bot-1.6-c);P.vy=Math.min(P.vy,0);feet=c+P.jy;}   /* under it: you bump your head, and its posts are solid */
+      for(const [x,z,rr] of p.posts){const q=pushOut(P.x,P.z,.3,{cx:x,cz:z,cr:rr});if(q){P.x=q[0];P.z=q[1];}}}
+    else if(p.h>feet+.36&&bot<feet+1.6){const q=p.r?pushOut(P.x,P.z,.3,{cx:p.x,cz:p.z,cr:p.r}):pushOut(P.x,P.z,.3,{x1:p.x-p.w/2,x2:p.x+p.w/2,z1:p.z-p.d/2,z2:p.z+p.d/2});if(q){P.x=q[0];P.z=q[1];}}}
+  /* the floor under you: the highest platform top you are over that you were above a moment ago (or can step up onto) */
+  let best=0,bp=null;for(const p of T.pl){if(Math.abs(p.x-P.x)>3.5||Math.abs(p.z-P.z)>3.5||p.h>f0+(grounded?.36:.02))continue;if(p.h>best&&tpInside(p,P.x,P.z)){best=p.h;bp=p;}}
+  if(best>c){if(grounded||feet<=best+.001){const air=P.jy>.05||P.vy<0;P.cy=best;P.jy=0;P.vy=0;if(air){P.dip=.07;SFX.land();}}else{P.jy=feet-best;P.cy=best;}}
+  else if(best<c){P.jy=feet-best;P.cy=best;}   /* walked off an edge (or the deck moved away): the same height, but a lower floor: down you go */
+  const on=P.jy<=0&&P.vy<=0&&bp&&Math.abs(bp.h-P.cy)<.01?bp:null;T.on=on;
+  const R=T.run;if(R&&!R.go&&on!==R.pad)R.go=true;   /* ⏱ the timer starts when you leave the start pad */
+  if(on)tpLand(on);
+  if(T.run&&T.run.go&&!on&&(P.cy||0)===0&&P.jy<=0)tpFall();
+  if(T.run&&T.run.go&&!UI.open)T.run.t+=dt;
+  T.pf=(P.cy||0)+P.jy;tpGuide();}
+function tpLand(p){const T=TP;let R=T.run;
+  if(p.t==='p'){if(!R||R.k!==p.k||R.go){T.run={k:p.k,t:0,go:false,pad:p,cp:p,last:p,cpn:0,n:T.flags.filter(f=>f.p.k===p.k).length,lit:new Set()};T.done=null;for(const f of T.flags)if(f.p.k===p.k)f.m.material=f.off;if(S.hunger<=0)toast('😋 Too hungry to jump far! Eat something from your 🎒 bag first.',3.2);}else R.t=0;return;}   /* on a start pad: ready (the timer waits at 0:00) */
+  if(!R||R.k!==p.k||p.i<0)return;   /* another path's platform, a bridge or a landing pad: nothing */
+  if(p.i>R.last.i)R.last=p;
+  if(p.cp&&!R.lit.has(p)){R.lit.add(p);R.cp=p;R.cpn=R.lit.size;p.flag.m.material=p.flag.on;SFX.ding();toast('🚩 Checkpoint '+R.cpn+' of '+R.n+'!',1.6);}
+  if(p.fin)tpFinish(R);}
+function tpPut(p){const n=tpNext(p);P.x=p.x;P.z=p.z;P.cy=p.h;P.jy=0;P.vy=0;P.pitch=-.05;if(n)P.yaw=Math.atan2(-(n.x-p.x),-(n.z-p.z));TP.pf=p.h;TP.on=p;}
+function tpFall(){const R=TP.run,p=R.cp,s=tp();if(R.last===R.pad&&p===R.pad){TP.run=null;return;}   /* stepped off the start pad: no run yet */
+  s.falls=(s.falls||0)+1;R.last=p;SFX.pop();tpPut(p);toast(p===R.pad?'Whoops! 🍃 Back to the start!':'Whoops! 🍃 Back to checkpoint '+R.cpn+'!',1.8);}   /* a fall: straight back to your last checkpoint (no fade) */
+function tpDown(p){if(P.ride)return;SFX.tap();TP.run=null;let at=null;
+  for(const [ux,uz] of[[0,1],[0,-1],[-1,0],[1,0]]){const x=p.x+ux*(p.w/2+.7),z=p.z+uz*(p.d/2+.7),q=collideXZ(x,z,.3,CUR);if(Math.hypot(q[0]-x,q[1]-z)<.02&&!TP.pl.some(o=>o.h<2.2&&tpInside(o,x,z))){at=[x,z];break;}}
+  if(!at)at=[p.x,p.z+p.d/2+.7];P.x=at[0];P.z=at[1];P.cy=0;P.jy=0;P.vy=0;TP.on=null;TP.pf=0;toast('🪜 Down you go! Jump on a start pad to try again.',2.4);}
+function tpFinish(R){const k=R.k,PA=TP_PATHS[k],s=tp(),first=!s.done[k],t=Math.round(R.t*10)/10,old=s.best[k],nb=!(old>0)||t<old;TP.run=null;s.done[k]=1;if(nb)s.best[k]=t;
+  TP.done={k,t,nb,old,at:performance.now()};SFX.ding();setTimeout(()=>SFX.yay(),250);addXP('sport',4);
+  if(first){S.coins+=PA.coins;popText('+'+PA.coins+' 🪙','coin');}hardEvent('treepark',1);qEvent('treepark');change();
+  const all=['easy','medium','hard'].every(q=>s.done[q]);
+  toast('🏁 '+PA.n+' in '+tpTime(t)+'!'+(nb&&old>0?' A new best time! 🏆':'')+(first?' +'+PA.coins+' coins.':'')+(all?' All three paths done, you are a tree-top champion! 🏆':' Ride the zip line down! 🪢'),4.5);}
+function tpZipGo(Z){if(P.ride||!Z)return;TP.run=null;SFX.pop();P.ride={kind:'zip',Z,t:0};P.jy=0;P.vy=0;if(TP.hand)TP.hand.visible=true;toast('🪢 Hold on tight! Wheee!',1.8);}
 function tpZip(dt){const r=P.ride,Z=r.Z;r.t+=dt;const u=Math.min(1,r.t/Z.T),e=u<.15?u*u/.15*.5+u*.5:u;   /* a soft start */
   const x=lerp(Z.ax,Z.bx,e),z=lerp(Z.az,Z.bz,e),y=lerp(Z.ay,Z.by,e)-.35*4*e*(1-e);P.x=x;P.z=z;P.cy=y-2.05;P.jy=0;P.vy=0;P.yaw=Math.atan2(-(Z.bx-Z.ax),-(Z.bz-Z.az));P.moving=false;
-  if(TP.hand){TP.hand.position.set(x-LOC.treepark.ox,y-.08,z-LOC.treepark.oz);TP.hand.rotation.y=P.yaw;}
-  if(u>=1){P.ride=null;if(TP.hand)TP.hand.visible=false;const d=Z.to;if(d){P.cy=d.h;TP.last=d;}P.dip=.07;SFX.land();TP.px=P.x;TP.pz=P.z;qEvent('zip');}}
-function tpFinish(k){const PA=TP_PATHS[k];if(TP.rung[k])return;TP.rung[k]=1;const s=tp(),first=!s.done[k];s.done[k]=1;SFX.ding();setTimeout(()=>SFX.yay(),250);addXP('sport',4);
-  if(first){S.coins+=PA.coins;popText('+'+PA.coins+' 🪙','coin');}hardEvent('treepark',1);qEvent('treepark');change();
-  const all=['easy','medium','hard'].every(q=>s.done[q]);toast((first?'🎉 You finished the '+PA.n.toLowerCase()+'! ':'🔔 Ding! The '+PA.n.toLowerCase()+' again! ')+(all?'All three paths done, you are a tree-top champion! 🏆':first?'+'+PA.coins+' coins. Climb down for another path!':'Great jumping!'),4.5);}
+  if(TP.hand){TP.hand.position.set(x,y-.08,z);TP.hand.rotation.y=P.yaw;}
+  if(u>=1){P.ride=null;if(TP.hand)TP.hand.visible=false;const d=Z.to;P.x=d.x;P.z=d.z;P.cy=d.h;TP.on=d;P.dip=.07;SFX.land();TP.pf=d.h;qEvent('zip');}
+  TP.pf=(P.cy||0)+P.jy;}
+/* the box at the top of the screen (like the riding lesson's): your path, the timer, checkpoints and your best time */
+function tpGuide(){const T=TP;if(!T.el){const d=document.createElement('div');d.id='obGuide';d.hidden=true;d.innerHTML='<div class="lgl"></div><div class="lgd"></div>';document.body.appendChild(d);T.el=d;}
+  const R=T.run,D=T.done&&performance.now()-T.done.at<6000?T.done:null,show=PLAYING&&!UI.open&&!CUT&&CUR&&CUR.id==='city'&&(R||D)&&S;let a='',b='',now=false;
+  if(show){const best=k=>{const v=S.tp&&S.tp.best&&S.tp.best[k];return v>0?'Best '+tpTime(v):'No best time yet';};
+    if(R){const PA=TP_PATHS[R.k];if(!R.go){a=PA.e+' '+PA.n+': ready!';b='Jump off the pad to start the timer · '+best(R.k);}else{a=PA.e+' '+PA.n+' · ⏱ '+tpTime(R.t);b='🚩 Checkpoint '+R.cpn+' of '+R.n+' · '+best(R.k);}}
+    else{const PA=TP_PATHS[D.k];a='🏁 '+PA.n+': '+tpTime(D.t);b=D.nb&&D.old>0?'🏆 A new best time!':D.nb?'🏆 Your first best time!':best(D.k);now=true;}}
+  const key=show?a+'|'+b+'|'+now:'';if(key===T.gk)return;T.gk=key;T.el.hidden=!show;if(!show)return;T.el.querySelector('.lgl').textContent=a;T.el.querySelector('.lgd').textContent=b;T.el.classList.toggle('now',now);}
 /* ===== 📸 run 4, job 15 (item 9): the Photographer job. Rosie offers it like the others. A booking arrives as a text message (a family, a wedding, a birthday, pets with their owners) with the
    place; the map shows the way. At the spot: pick the background (2 or 3 per spot: one button cycles them, the group walks over), tap a person (or walk up and use the action button) for pose
    buttons, then frame, zoom and snap. Pay by how good the photo is (stars 1 to 5, pay 15/35/60/90/120 like the hairstylist): everyone inside the dashed frame and nobody cut off, faces towards
