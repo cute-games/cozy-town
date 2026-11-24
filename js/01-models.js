@@ -1445,7 +1445,7 @@ function pigRoll(m,t,o){const R=rig(m);const u=clock(t,3.2);const down=seg(u,0,.
 function horseGait(m,t,o){const R=rig(m);o=o||{};const g=o.gait||'walk';const A=g==='gallop'?.55:g==='trot'?.42:.3;const ph=phaseOf(R,t,o,A);
   gaitLegs(R,ph,A,1,g==='gallop'?'gallop':g==='trot'?'trot':'walk',.9);
   const rock=g==='gallop'?.09*Math.sin(TAU*ph):g==='trot'?.02*Math.sin(TAU*2*ph):.015*Math.sin(TAU*2*ph);
-  rotAbout(R,'x',rock,0,R.bCenter.y,R.bCenter.z);if(m.head)m.head.rotation.x+=(g==='gallop'?-.1:.06)*Math.sin(TAU*(g==='walk'?2:1)*ph+.5)-rock;
+  const ck=o.calm?.45:1;rotAbout(R,'x',rock*ck,0,R.bCenter.y,R.bCenter.z);if(m.head)m.head.rotation.x+=ck*((g==='gallop'?-.1:.06)*Math.sin(TAU*(g==='walk'?2:1)*ph+.5)-rock);   /* (o.calm: the horse you ride rocks less, so its neck in front of your eyes doesn't swing) */
   if(m.tail){m.tail.rotation.x+=g==='gallop'?.5:g==='trot'?.2:0;m.tail.rotation.z+=.12*Math.sin(TAU*ph);}
   const lift=g==='trot'?R.H*.025*Math.abs(Math.sin(TAU*ph)):g==='gallop'?R.H*.05*Math.max(0,Math.sin(TAU*ph-1)):0;
   R.last={gait:g,ph,lift};return {lift};}
@@ -2256,7 +2256,7 @@ function play(m,name,t,o){o=o||{};const R=rig(m,o.kind?{kind:o.kind}:null);reset
   let r;try{r=e[0](m,Math.max(0,t),o)||{};}catch(err){if(!R.warned){R.warned=1;console.warn('COZY_MOVES',name,err);}reset(m);r={};}
   if(!r.noGround&&!o.noGround){if(o.slope)slopeGround(R,o.slope);else ground(m,o);}if(r.lift)(R.top||R.b).position.y+=r.lift;
   r.name=name;if(e[1]&&t>=e[1])r.done=true;return r;}
-window.COZY_MOVES={version:'2026-10-31d (pets: the moves the game uses)',play,list:Object.keys(M),KIND,stairH,tankPath,TRICKS,trickGear,TRICK_LEN,TRICK_KIND,TT};
+window.COZY_MOVES={version:'2026-10-31d (pets: the moves the game uses)',play,list:Object.keys(M),KIND,stairH,tankPath,TRICKS,trickGear,TRICK_LEN,TRICK_KIND,TT,stride};
 })();
 /* 🐾 the book's picked pack models as data (pets and farm update, stage 4b; made by tools/pfu-wip/export-pack.js from kit/files/tools: living pack v7, model pack v164).
    PACKM.g = shapes, PACKM.m = materials, PACKM.o = models; packBuild(key) draws one with the game's own shapes */
