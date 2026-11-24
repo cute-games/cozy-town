@@ -1943,7 +1943,7 @@ function buildPetShop(){
     {type:'owl',kinds:['owl'],x0:Math.cos(.3)*.83,x1:Math.cos(.3)*.83,z0:.3+Math.sin(.3)*.83,z1:.3+Math.sin(.3)*.83,y:4.16,fl:1,face:Math.atan2(-Math.cos(.3),-Math.sin(.3))+Math.PI/2},
     {type:'bear',kinds:['bear'],x0:-5.35,x1:-5.35,z0:-2.4,z1:-2.4,y:F[2]+.42,fl:2,mv:'bear.tv',face:Math.PI},{type:'seal',kinds:['seal'],x0:.95,x1:.95,z0:-3.2,z1:-3.2,y:F[2]+.24,fl:2,mv:'seal.swim',face:.8,swim:1},
     {type:'monkey',kinds:['monkey'],x0:-5.85,x1:-5.85,z0:3.4,z1:3.4,y:F[2]+2.62,fl:2,mv:'monkey.happy',face:Math.PI/2}];
-  {const s=signPlane('🐒 🦭 🐻 🐍 Big pets',3.0,.6,'#ffd45c','#2f8f78');s.position.set(0,F[2]+3.35,-D/2+.33);L.g.add(s);}   /* one 'Big pets' board over the big pets' wall (its board is in the room's bake, with the windows) */
+  {const s=signPlane('🐒 🦭 🐻 🐍 Big pets',3.0,.6,'#ffd45c','#2f8f78');s.position.set(0,F[2]+3.35,-D/2+.34);L.g.add(s);}   /* one 'Big pets' board over the big pets' wall (its board is in the room's bake, with the windows) */
   inter(L,{x:4.2,z:-3.6,r:1.8,icon:'🔒',label:'Big pets',when:()=>psFl(P.cy||0)===2,act:openBig});   /* 🔒 what the big-needs pets still need (Ms. Paws says it), and adopting them */
   inter(L,{x:0,z:4.3,r:1.9,icon:'🚪',label:'Go outside',when:()=>psFl(P.cy||0)===0,act:()=>exitTo('pets')});
   inter(L,{x:4.4,z:2.4,r:2,icon:'🛒',label:'Buy pet food, toys & clothes',when:()=>psFl(P.cy||0)===0,act:()=>openShop('pets')});

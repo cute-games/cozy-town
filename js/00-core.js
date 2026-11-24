@@ -17,10 +17,11 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 
 let renderer,scene,camera,hemi,sun,lamp,skyMesh,skyU,stars,sunSprite,moonSprite,FOG,outside,clouds=[];
 const TREES=[];   /* 🌳 every round tree in town (x, z, size, its group): the autumn leaves fall from the crowns near you (run 4, item 18) */
-let GRAD=null,OL=null,OLP=null,WIN,LAMP,WATER,PANE,PANES,GLOW,CLOUD,OLC,SWIN,WINM;
+let GRAD=null,OL=null,OLP=null,WIN,LAMP,WATER,PANE,GLOW,CLOUD,OLC,SWIN,WINM;
 /* 🖼️ the painted view in a window seen from inside (24 Nov, the owner: "fake, but painterly"): sky, clouds, hills, then 0 town roofs, 1 park trees and a pond,
-   2 a meadow with a fence and a barn; soft brush dabs over every shape and a glass gleam. Painted once (3 small canvases); updSky tints them for the time of day */
-function paneView(k){const N=256,c=document.createElement('canvas');c.width=c.height=N;const x=c.getContext('2d'),r=seeded(41+k*17);
+   2 a meadow with a fence and a barn; soft brush dabs over every shape and a glass gleam. Painted once, side by side on one small canvas, so every window is one material
+   (one draw per room, like the plain glass before); updSky tints it for the time of day */
+function paneView(x,k){const N=256,r=seeded(41+k*17);x.save();x.translate(k*N,0);x.beginPath();x.rect(0,0,N,N);x.clip();
   const dab=(cx,cy,rw,rh,col,n,a,sz)=>{x.fillStyle=col;for(let i=0;i<n;i++){x.globalAlpha=a*(.5+r()*.5);x.beginPath();x.ellipse(cx+(r()-.5)*rw*2,cy+(r()-.5)*rh*2,sz*(.6+r()*.8),sz*(.35+r()*.4),r()*Math.PI,0,Math.PI*2);x.fill();}x.globalAlpha=1;};
   const blob=(cx,cy,rad,col,hi,lo)=>{x.fillStyle=col;x.beginPath();x.arc(cx,cy,rad,0,Math.PI*2);x.fill();dab(cx-rad*.25,cy-rad*.3,rad*.45,rad*.35,hi,10,.5,rad*.28);dab(cx+rad*.2,cy+rad*.35,rad*.5,rad*.25,lo,10,.45,rad*.26);};
   const hill=(y0,amp,f,ph,col,hi)=>{x.fillStyle=col;x.beginPath();x.moveTo(0,N);for(let i=0;i<=N;i+=8)x.lineTo(i,y0-amp*Math.sin(i/N*Math.PI*f+ph)-amp*.4*Math.sin(i/N*Math.PI*f*2.3+ph*2));x.lineTo(N,N);x.fill();for(let i=0;i<26;i++){const px=r()*N;dab(px,y0-amp*Math.sin(px/N*Math.PI*f+ph)+10+r()*30,6,6,hi,2,.4,7);}};
@@ -38,8 +39,9 @@ function paneView(k){const N=256,c=document.createElement('canvas');c.width=c.he
   x.fillStyle='#7cc679';x.fillRect(0,232,N,N-232);dab(128,244,128,10,'#94d68a',60,.5,6);for(let i=0;i<22;i++)dab(r()*N,236+r()*16,1,1,['#ffffff','#ffd45c','#ff9ec4'][i%3],1,.9,2.4);
   dab(128,128,128,128,'#ffffff',90,.05,10);   /* the painter's soft brush over all of it */
   x.globalAlpha=.22;x.fillStyle='#ffffff';for(const [a,w] of[[40,26],[84,9]]){x.beginPath();x.moveTo(a,0);x.lineTo(a+w,0);x.lineTo(a+w-90,N);x.lineTo(a-90,N);x.fill();}x.globalAlpha=1;   /* the glass gleam */
-  const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t;}
-const paneFor=(x,y,z)=>PANES[Math.abs(Math.round(x*3.1+y*1.7+z*2.3))%3];
+  x.restore();}
+function paneAtlas(){const c=document.createElement('canvas');c.width=1024;c.height=256;const x=c.getContext('2d');for(let k=0;k<3;k++)paneView(x,k);const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t;}
+const paneFor=(m,x,y,z)=>{const k=Math.abs(Math.round(x*3.1+y*1.7+z*2.3))%3,u=m.geometry.attributes.uv;for(let i=0;i<u.count;i++)u.setX(i,(k+u.getX(i))/4);return m;};   /* this window's view: its quarter of the canvas */
 const MATS=new Map();
 /* 🧱 a wall almost edge-on to the sun (run 4, item 17): the shadow map cannot tell lit from shadowed there and drew pale diagonal streaks on it (the "white smear"), while the toon shade
    would light it at the middle tone; so within 7° of edge-on the side facing the sun counts as lit and the side facing away as shadowed, blending into the real shadow test beyond that */
@@ -60,7 +62,7 @@ function initMaterials(gl2){
   WIN=toon({color:'#9fd4f2',emissive:new THREE.Color('#ffc66b'),emissiveIntensity:0});SWIN=toon({color:'#9fd4f2',emissive:new THREE.Color('#ffc66b'),emissiveIntensity:0});WINM=WIN;   /* SWIN: shop glass, dim at night while closed */
   LAMP=toon({color:'#fff6d6',emissive:new THREE.Color('#ffd27a'),emissiveIntensity:0});
   WATER=toon({color:'#7fd8ff',emissive:new THREE.Color('#3aa6e0'),emissiveIntensity:.3,transparent:true,opacity:.9});
-  PANES=[0,1,2].map(k=>{const m=new THREE.MeshBasicMaterial({color:'#ffffff',map:paneView(k)});m.userData.uv=1;return m;});PANE=PANES[0];   /* 🖼️ windows inside show a painted storybook view of outside (24 Nov, owner) */
+  PANE=new THREE.MeshBasicMaterial({color:'#ffffff',map:paneAtlas()});PANE.userData.uv=1;   /* 🖼️ windows inside show a painted storybook view of outside (24 Nov, owner) */
   GLOW=new THREE.MeshBasicMaterial({color:'#fff3c4'});
   CLOUD=new THREE.ShaderMaterial({uniforms:{top:{value:new THREE.Color('#ffffff')},bot:{value:new THREE.Color('#dde4f0')}},   /* ☁️ soft puffs (run 4, item 18): a gentle top-to-bottom shade set by updSky, no outline, no hard dark faces */
     vertexShader:'varying float vy;void main(){vy=normalize(mat3(modelMatrix)*normal).y;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
