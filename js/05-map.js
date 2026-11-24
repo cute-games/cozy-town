@@ -25,6 +25,10 @@ const MAP_MQ=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
 function mapDark(){const t=document.documentElement.getAttribute('data-theme');return t==='dark'||(t!=='light'&&!!(MAP_MQ&&MAP_MQ.matches));}
 function mixC(a,b,t){const p=s=>[1,3,5].map(i=>parseInt(s.slice(i,i+2),16)),A=p(a),B=p(b);return'#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('');}
 const mapB=()=>({x1:Math.min(laneEnd()-8,-214),x2:110,z1:-168,z2:92});   /* (🐴 stage 6: the farm, the trail and the jump field are on the map) */   /* how far the map moves: the town, all of Friends Lane, the beach sign */
+/* 🐴 the farm's places on the map (24 Nov): a badge and a name each, tap one (or pick it in the list) for the way there; x,z = the badge, door = where you walk to */
+const MAP_FARM=[{id:'farm',n:'Farm',i:'🚜',x:-108,z:-103,door:[-92,-102.6]},{id:'stables',n:'Stables',i:'🐴',x:-118,z:-124.5,door:[-117,-116.4]},
+  {id:'jumps',n:'Jump field',i:'🏇',x:-185,z:-100,door:[-169.5,-97.5]},{id:'trail',n:'Horse trail',i:'🐎',x:-101,z:-152.4,door:[-101,-152.4]}];
+const mapPlace=id=>PLACES.find(p=>p.id===id)||MAP_FARM.find(p=>p.id===id);
 const mapShown=p=>!((p.id==='home'||p.id==='garden')&&p.x>-84);   /* your house and garden are on Friends Lane (not in town) */
 let MAP_TR=null;
 function mapTrees(){if(MAP_TR)return MAP_TR;const r=seeded(66),T=[];   /* soft round trees on the hills around town (not on Friends Lane or the beach path) */
@@ -43,7 +47,7 @@ function mapPaint(x,ox,oz,k,w,h,o){const P=o.dark?MAP_PAL.dark:MAP_PAL.light,u=o
     stroke(P.treeE,2.4*u);x.fillStyle=P.tree;x.fill();}
   x.fillStyle=P.gr;R(-88,-88,88,88,7);x.fill();if(!mini){R(le-4,-28.5,-80,28.5,5);x.fill();}   /* the town, and Friends Lane's valley */
   if(!mini){x.fillStyle=P.sand;C(97,0,7.5);x.fill();x.fillStyle=P.water;C(108,0,8.5);x.fill();}
-  if(!mini&&vis(-216,-170,-44,-37))farmMap(x,o.dark,X,Z,k,u,vis,pl,stroke);   /* 🐴 the farm (stage 6) */   /* 🏖️ a bit of beach past the east edge */
+  if(!mini&&vis(-232,-200,96,-37))farmMap(x,o.dark,X,Z,k,u,vis,pl,stroke);   /* 🐴 the farm (stage 6) */   /* 🏖️ a bit of beach past the east edge */
   /* 🌳 the park, the football field, ponds and the lake (flat PLACES, by shape) */
   for(const p of PLACES){if(!p.flat||!mapShown(p)||p.id==='beach'||p.id==='garden'||p.id==='bus')continue;const rr0=p.r||Math.max(p.w,p.d)/2;if(!vis(p.x-rr0,p.z-rr0,p.x+rr0,p.z+rr0))continue;
     if(p.id==='park'){R(p.x-p.w/2,p.z-p.d/2,p.x+p.w/2,p.z+p.d/2,2.6);x.fillStyle=P.park;x.fill();stroke(P.parkE,1.6*u);
@@ -104,12 +108,11 @@ function mapPaint(x,ox,oz,k,w,h,o){const P=o.dark?MAP_PAL.dark:MAP_PAL.light,u=o
   if(mini){x.textAlign='center';x.textBaseline='middle';x.font=`${Math.round(w/26)}px ${FONT}`;for(const p of PLACES)if(p.id!=='garden'&&p.x>-86&&mapShown(p))x.fillText(p.i,X(p.x),Z(p.z));   /* the job map: icons only */
     const ez=Z(0);x.fillStyle='#ff4d8d';x.strokeStyle='#ffffff';x.lineWidth=3;x.beginPath();x.moveTo(w*.006,ez);x.lineTo(w*.036,ez-w*.024);x.lineTo(w*.036,ez+w*.024);x.closePath();x.stroke();x.fill();x.fillText('🏠',w*.068,ez);}   /* 🏡 Friends Lane is past the west edge */
   x.restore();}
-/* the little job map (corner of the screen) uses the same painter: the whole town, icons only */
-function drawMapBase(x,W){mapPaint(x,-88,-88,W/176,W,W,{mini:1,u:W/176});}
 /* the badges and names: what can be tapped, by importance (0 = always shown) */
 function mapItems(){const it=[],C=LOC.city,nav=NAV&&!NAV.actor?NAV.id:'';
   for(const p of PLACES){if(!mapShown(p))continue;const a=MAP_AT[p.id]||[p.x,p.z],sel=p.id===nav;
     it.push({k:p.id,pl:p,i:p.i,n:p.id==='beach'?'Beach →':p.n,x:a[0],z:a[1],pri:sel||p.id==='home'||p.id==='beach'?0:p.flat&&p.id!=='bus'?2:1,me:p.id==='home',sel,ls:p.id==='beach'?[0,1,3]:null});}   /* (the 🏖️ beach sign at the east edge always shows: you go there by bus; its name never goes left, into the town) */
+  for(const p of MAP_FARM)it.push({k:p.id,pl:p,i:p.i,n:p.n,x:p.x,z:p.z,pri:p.id===nav?0:1,sel:p.id===nav});
   if(C&&C.lane)for(const lp of C.lane){const o=LANE.own[lp.j];if(!o||o.k===laneMe())continue;const k='lot'+lp.j;it.push({k,lot:lp.j,i:'🏠',n:o.nm,x:lp.hx,z:lp.hz,pri:k===nav?0:2,sel:k===nav});}
   it.push({k:'lane',deco:'lane',i:'🏡',n:'Friends Lane',x:-92,z:0,pri:1},{k:'fc',deco:'fc',i:HOL.cur==='halloween'?'🎃':HOL.cur==='xmas'?'🎄':HOL.cur==='easter'?'🐰':HOL.cur==='valentine'?'💗':'🌸',n:HOL.cur==='halloween'?'Spooky path':'Flower Corner',x:-17,z:-15.6,pri:HOL.cur?1:3});   /* 🚪 in a holiday month the gate is open and the badge says what is there (run 4) */
   return it;}
@@ -146,7 +149,16 @@ function mapPath(ax,az,bx,bz){if(Math.hypot(bx-ax,bz-az)<10)return[[ax,az],[bx,b
     for(const v of NEIGH[u]){const w=d[u]+Math.hypot(WP[u][0]-WP[v][0],WP[u][1]-WP[v][1]);if(w<d[v]){d[v]=w;pv[v]=u;}}}
   let best=-1,bc=1e9;for(const [dd,i] of near(bx,bz))if(d[i]+dd<bc){bc=d[i]+dd;best=i;}
   if(best<0)return[[ax,az],[bx,bz]];const out=[];for(let v=best;v>=0;v=pv[v])out.push(WP[v]);out.reverse();return[[ax,az],...out,[bx,bz]];}
-function mapWay(ax,az,bx,bz){const LN=-82,E=s=>WP[WPN[s<0?'E8':'E7']],sd=z=>z<0?-1:1,
+/* 🐴 the farm road: from the town's north gate (x -50) to the farm yard; the way to or from the farm follows it */
+const MAP_FROAD=[[-50,-79],[-50,-85.5],[-50,-93.4],[-53.8,-98.9],[-67.2,-101.6],[-80.1,-100.9],[-92.6,-102.9],[-105.2,-101.2],[-116.7,-99.4],[-126.1,-96.15],[-136.1,-91.2],[-150.6,-89.7],[-164.7,-90.3]];
+const mapFarmIn=(x,z)=>z<-80.5;
+function mapFarmLeg(x,z){let bi=0,bd=1e9;MAP_FROAD.forEach((p,i)=>{const d=Math.hypot(p[0]-x,p[1]-z);if(d<bd){bd=d;bi=i;}});return MAP_FROAD.slice(0,bi+1);}   /* the road from the gate to its point nearest (x,z) */
+function mapWay(ax,az,bx,bz){const fa=mapFarmIn(ax,az),fb=mapFarmIn(bx,bz);
+  if(fa&&fb)return[[ax,az],[bx,bz]];
+  if(fb){const g=MAP_FROAD[0];return[...mapWay(ax,az,g[0],g[1]),...mapFarmLeg(bx,bz).slice(1),[bx,bz]];}
+  if(fa){const g=MAP_FROAD[0];return[[ax,az],...mapFarmLeg(ax,az).reverse().slice(0,-1),...mapWay(g[0],g[1],bx,bz)];}
+  return mapWayT(ax,az,bx,bz);}
+function mapWayT(ax,az,bx,bz){const LN=-82,E=s=>WP[WPN[s<0?'E8':'E7']],sd=z=>z<0?-1:1,
     lane=(x,z)=>{const r=Math.abs(z)>6.8?laneOut(x,z):[],e=r.length?r[r.length-1]:[x,z];return[[x,z],...r,[e[0],sd(z)*5.6]];};   /* out of a yard by its gate, onto the pavement */
   if(ax>=LN&&bx>=LN)return mapPath(ax,az,bx,bz);
   if(ax<LN&&bx<LN)return[...lane(ax,az),...lane(bx,bz).reverse()];
@@ -191,7 +203,7 @@ function mapDraw(force){const cv=$('mapc');if(!MAPV.on)return;if(!cv){mapOff();r
     for(let i=1;i<pts.length;i++){const [a,c]=pts[i-1],[e,f]=pts[i],L=Math.hypot(e-a,f-c);let d=carry;for(;d<=L;d+=gap){x.beginPath();x.arc(a+(e-a)*d/L,c+(f-c)*d/L,3.8*dpr,0,TAU);x.fill();x.stroke();}carry=d-L;}}
   if(NAV){const G=NAV.goal||NAV.door,[gx,gy]=S2(G[0],G[1]),ph=(t%1.4)/1.4;x.beginPath();x.arc(gx,gy,(8+12*ph)*dpr,0,TAU);x.strokeStyle=`rgba(255,77,141,${.7*(1-ph)})`;x.lineWidth=3*dpr;x.stroke();
     x.beginPath();x.arc(gx,gy,6*dpr,0,TAU);x.fillStyle='#ff4d8d';x.fill();x.strokeStyle='#ffffff';x.lineWidth=2.5*dpr;x.stroke();}
-  {const T=jobTarget();if(T){const col=(S.dl&&S.dl.dot)||'#ff3b3b',[tx,ty]=S2(T.x,T.z);x.beginPath();x.arc(tx,ty,9*dpr,0,TAU);x.fillStyle=col;x.fill();x.lineWidth=3*dpr;x.strokeStyle=col==='#ffffff'?'#1d1622':'#ffffff';x.stroke();
+  {const T=jobTarget();if(T){const col=JOB_DOT,[tx,ty]=S2(T.x,T.z);x.beginPath();x.arc(tx,ty,9*dpr,0,TAU);x.fillStyle=col;x.fill();x.lineWidth=3*dpr;x.strokeStyle=col==='#ffffff'?'#1d1622':'#ffffff';x.stroke();
     if(S.job==='delivery'&&S.dl&&S.dl.o&&S.dl.o.r){x.beginPath();x.arc(tx,ty,14*dpr,0,TAU);x.lineWidth=4*dpr;x.strokeStyle='#ffc400';x.stroke();}}}
   x.textAlign='center';x.textBaseline='middle';
   const items=MAPV.lay.items.slice();if(NAV&&NAV.actor)items.push({i:NAV.i,n:NAV.n,x:NAV.door[0],z:NAV.door[1],R:18,sel:1,lab:null});
@@ -275,7 +287,7 @@ function mapEv(cv){const at=e=>{const r=cv.getBoundingClientRect();return[e.clie
 function openMap(){const narrow=window.matchMedia&&matchMedia(MAP_NARROW).matches;PH.app='map';PH.chat=null;
   Object.assign(MAPV,{on:true,W:0,H:0,g:null,tap:null,last:null,bv:null,lay:null,rk:'',rt:null,hint:'',ch:'',list:!narrow,you:performance.now()/1000});MAPV.ptr.clear();   /* "You!" pops up for a moment */
   if(!NAV)MAPV.beach=false;
-  const list=PLACES.filter(mapShown).map(p=>`<button class="place" data-a="mapsel:${p.id}" aria-pressed="false"><span class="pi">${p.i}</span>${esc(p.n)}</button>`).join('');
+  const list=PLACES.filter(mapShown).concat(MAP_FARM).map(p=>`<button class="place" data-a="mapsel:${p.id}" aria-pressed="false"><span class="pi">${p.i}</span>${esc(p.n)}</button>`).join('');
   openPanel(`<div class="mp${MAPV.list?' lst':''}" role="dialog" aria-label="Map"><div class="mp-hd"><button class="btn x" data-a="phapp:" aria-label="Back to the phone">‹</button><h2>🗺️ Map</h2>
     <button class="btn white mpl${MAPV.list?' on':''}" data-a="maplist" aria-pressed="${MAPV.list}">📋 Places</button><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
     <div class="mp-body"><div class="mp-list"><div class="places">${list}</div></div><div class="mp-wrap"><canvas id="mapc" aria-label="Map of Cozy Town"></canvas>
@@ -292,7 +304,7 @@ function mapTick(){if(!$('mapc')){mapOff();return;}mapCard();mapDraw();mapListMo
   +'.mp-list.more::after{content:"⬇️";position:sticky;bottom:0;z-index:3;display:block;height:46px;margin:-46px 0 0;padding-top:20px;box-sizing:border-box;background:linear-gradient(to bottom,transparent,var(--paper) 62%);font-size:19px;line-height:22px;text-align:center;pointer-events:none}body:has(#panel:not([hidden]) #card .mp) #left{visibility:hidden}';
  document.head.appendChild(st);}
 function mapListMore(){const l=document.querySelector('#card .mp-list');if(l)l.classList.toggle('more',!!MAPV.list&&l.scrollHeight-l.clientHeight-l.scrollTop>12);}
-ACT.mapsel=id=>{const pl=PLACES.find(p=>p.id===id);if(!pl)return;if(MAPV.list&&window.matchMedia&&matchMedia(MAP_NARROW).matches)ACT.maplist();mapPick({pl},true);};   /* from the list: show you and the place */
+ACT.mapsel=id=>{const pl=mapPlace(id);if(!pl)return;if(MAPV.list&&window.matchMedia&&matchMedia(MAP_NARROW).matches)ACT.maplist();mapPick({pl},true);};   /* from the list: show you and the place */
 ACT.mapgo=()=>{const n=NAV;closePanel();if(!n)return;SFX.pop();toast(CUR.id==='beach'?'🚌 Take the bus home first, then follow the arrow to '+theN(n)+'!':MAPV.beach&&n.id==='bus'?'🏖️ The beach bus leaves from the 🚌 bus stop at the park. Follow the arrow!':'📍 Follow the arrow to '+theN(n)+'!',3);};
 ACT.mapclr=()=>{clearNav();MAPV.beach=false;MAPV.hint='';mapCard();mapDraw();};
 ACT.mapme=()=>{mapHome(false);MAPV.you=performance.now()/1000;MAPV.hint='me';mapBounce('#card [data-a="mapme"]');mapCard();mapZui();mapDraw();};
@@ -317,6 +329,7 @@ function updNav(){if(!NAV)return;if(NAV.actor){const f=NAV.actor;if(f.mode==='aw
   if(CUR.id!=='city'){if(INSIDE_AT[CUR.id]===NAV.id){qEvent('find:'+NAV.id);toast('📍 You found '+theN(NAV)+'! 🎉',2.8,2);SFX.yay();clearNav();return;}if(CUR.id==='beach'){navBeach();return;}navSet(NAV.i+' '+NAV.n+': go outside first','none');return;}
   const G=NAV.goal;if(G){const a=P.x>-84,b=G[0]>-84;let w=a===b?G:[a?Math.max(P.x-12,-88):Math.min(P.x+12,-80),0];   /* 🏡 between town and Friends Lane: along the middle of the big road */
     if(!a&&Math.abs(P.z)>6.8){const r=laneOut(P.x,P.z);if(r.length>2)w=r.find(q=>Math.hypot(q[0]-P.x,q[1]-P.z)>1)||w;}   /* in a yard or garden on Friends Lane: out by the gate first */
+    const fi=mapFarmIn(P.x,P.z),fg=mapFarmIn(G[0],G[1]);if(fi!==fg){const L=mapFarmLeg(P.x,P.z),q=fi?(L.length>1&&Math.hypot(L[L.length-1][0]-P.x,L[L.length-1][1]-P.z)<6?L[L.length-2]:L[L.length-1]):MAP_FROAD[0];if(fi)w=q;else if(!a){if(Math.abs(P.z)<=6.8)w=[Math.min(P.x+12,-80),0];}else if(P.z>-77)w=q;}   /* 🐴 to or from the farm: along the farm road and through the town's north gate */
     NAV.door[0]=w[0];NAV.door[1]=w[1];}
   const dx=NAV.door[0]-P.x,dz=NAV.door[1]-P.z,d=G?Math.hypot(G[0]-P.x,G[1]-P.z):Math.hypot(dx,dz);if(d<3.2){if(NAV.id==='beach'){toast('🏖️ This gate is just for looking! 🚌 The beach bus leaves from the park.',3.4,2);SFX.pop();clearNav();return;}qEvent('find:'+NAV.id);toast('📍 You found '+theN(NAV)+'! 🎉'+(NAV.actor?' Talk to her!':''),2.8,2);SFX.yay();clearNav();return;}
   const fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw),rx=Math.cos(P.yaw),rz=-Math.sin(P.yaw),rel=Math.atan2(dx*rx+dz*rz,dx*fx+dz*fz);
@@ -633,11 +646,35 @@ function crCam(dt){const w=innerWidth,h=innerHeight,port=w/h<.95,th=Math.tan(15*
 $('panel').addEventListener('pointerdown',e=>{if(CR&&e.target===$('panel')){CR.drag=e.clientX;try{$('panel').setPointerCapture(e.pointerId);}catch(_){}}});
 $('panel').addEventListener('pointermove',e=>{if(CR&&CR.drag!==null){CR.rot+=(e.clientX-CR.drag)*.012;CR.drag=e.clientX;}});
 for(const ev of['pointerup','pointercancel'])$('panel').addEventListener(ev,()=>{if(CR)CR.drag=null;});
-/* 🐴 the farm on the map (stage 6): trodden ground and mud, the dirt roads and the horse trail, the barn, stables and coop, the jumps; its name */
-function farmMap(x,dark,X,Z,k,u,vis,pl,stroke){const dirt=dark?'#6f5d45':'#e6d3a3',mud=dark?'#5a4636':'#b48f66';
+/* 🐴 the farm on the map (stage 6; 24 Nov: drawn like the town): the farm's own woods and hills, trodden ground and mud, the dirt roads and the horse trail,
+   the barn, stables, coop and windmill (shadow, ink outline, soft roof), the jumps and the lesson flags, hay, troughs, and where the animals are (an emoji
+   for each kind). Its names are badges (MAP_FARM, in mapItems), like every place */
+function farmMap(x,dark,X,Z,k,u,vis,pl,stroke){const dirt=dark?'#6f5d45':'#e6d3a3',mud=dark?'#5a4636':'#b48f66',P=dark?MAP_PAL.dark:MAP_PAL.light,bc=c=>dark?mixC(c,'#241b42',.38):c,
+    C=(cx,cz,r)=>{x.moveTo(X(cx)+r*k,Z(cz));x.arc(X(cx),Z(cz),Math.max(.5,r*k),0,TAU);};
+  x.beginPath();for(const [kk,gx,gz,,s] of FARMD.p)if(kk==='mtn'&&vis(gx-16,gz-16,gx+16,gz+16))C(gx,gz,14*s);x.fillStyle=dark?'#33503f':'#b5d99f';x.fill();stroke(P.treeE,1.6*u);   /* ⛰️ the hills */
   for(const [kk,gx,gz,r,sm,sx] of FARMD.ground){if(kk===2||!vis(gx-r,gz-r,gx+r,gz+r))continue;x.beginPath();x.ellipse(X(gx),Z(gz),r*(sx||1)*k,r*k,0,0,TAU);x.fillStyle=kk===1?mud:dirt;x.fill();}
   for(const [kind,w,...pts] of FARMD.roads){const q=[];for(let i=0;i<pts.length;i+=2)q.push([pts[i],pts[i+1]]);x.beginPath();pl(q);stroke(kind===2?(dark?'#8a7656':'#dcc395'):(dark?'#7d6a52':'#d4b98c'),Math.max(u,w*k));}
-  const B={'farm.barn':[7.9,6.2,'#d9645a'],'farm.stable':[9,4.4,'#c98f5e'],'farm.coop':[2.1,2.5,'#e8b765'],'farm.windmill':[2,2,'#9aa3b5']};
-  for(const [kk,gx,gz,ry,s] of FARMD.p){const b=B[kk];if(b){x.save();x.translate(X(gx),Z(gz));x.rotate(-ry);x.fillStyle=dark?mixC(b[2],'#241b42',.38):b[2];x.fillRect(-b[0]*s*k/2,-b[1]*s*k/2,b[0]*s*k,b[1]*s*k);x.restore();}
-    else if(kk.startsWith('course.')){x.beginPath();x.arc(X(gx),Z(gz),Math.max(u,.9*k),0,TAU);x.fillStyle='#ff6b6b';x.fill();}}
-  if(k>.9*u){x.font=`800 ${Math.round(13*u)}px "Baloo 2",sans-serif`;x.textAlign='center';x.fillStyle=dark?'#fff6e4':'#5a3e2b';x.fillText('🐴 Farm',X(-110),Z(-128));x.fillText('🏇 Jump field',X(-186),Z(-127));}}
+  /* 🌲 the farm's trees: round ones in the forest green, pines and firs a little darker, bushes small */
+  const TR={tree:2.2,'nat.oak':2.4,'nat.birch':1.6,pine:1.7,'nat.fir':1.7,'nat.firs':2.3,bush:1},dk=dark?'#1f3a33':'#79b866';
+  for(const pass of[0,1]){x.beginPath();for(const [kk,gx,gz,,s] of FARMD.p){const r=TR[kk];if(!r||(pass!==(/pine|fir/.test(kk)?1:0)))continue;const R=r*s;if(vis(gx-R,gz-R,gx+R,gz+R))C(gx,gz,R);}
+    stroke(pass?(dark?'#152a24':'#5e9f55'):P.treeE,1.6*u);x.fillStyle=pass?dk:P.tree;x.fill();}
+  /* 🏠 the buildings: like the town's (a soft shadow, the ink outline, a lighter roof) */
+  const B={'farm.barn':[7.9,6.2,'#e0675d'],'farm.stable':[9,4.4,'#c98f5e'],'farm.coop':[2.1,2.5,'#f2c46d']},sh=Math.max(1.5*u,.5*k);
+  for(const [kk,gx,gz,ry,s] of FARMD.p){const b=B[kk];
+    if(b){const w=b[0]*s*k,d=b[1]*s*k,r=Math.min(1.2*k,w/4,d/4);x.save();x.translate(X(gx),Z(gz));x.rotate(-ry);
+      x.fillStyle=P.shade;rr(x,-w/2+sh,-d/2+sh,w,d,r);x.fill();rr(x,-w/2,-d/2,w,d,r);x.fillStyle=bc(b[2]);x.fill();x.strokeStyle=P.ink;x.lineWidth=1.6*u;x.stroke();
+      if(k>2*u&&w>6*u&&d>6*u){rr(x,-w/2+.6*k,-d/2+.6*k,w-1.2*k,d-1.2*k,Math.max(0,r-.4*k));x.fillStyle=dark?'rgba(255,255,255,.08)':'rgba(255,255,255,.35)';x.fill();}
+      if(kk==='farm.barn'&&k>2*u){x.beginPath();x.moveTo(-w/2+.8*k,0);x.lineTo(w/2-.8*k,0);x.strokeStyle=dark?'rgba(255,255,255,.25)':'rgba(255,255,255,.7)';x.lineWidth=Math.max(u,.3*k);x.stroke();}   /* (the barn's roof ridge) */
+      x.restore();}
+    else if(kk==='farm.windmill'){x.beginPath();x.arc(X(gx)+sh,Z(gz)+sh,1.3*k,0,TAU);x.fillStyle=P.shade;x.fill();x.beginPath();x.arc(X(gx),Z(gz),1.3*k,0,TAU);x.fillStyle=bc('#b8c0d4');x.fill();x.strokeStyle=P.ink;x.lineWidth=1.4*u;x.stroke();
+      if(k>2*u){x.save();x.translate(X(gx),Z(gz));x.rotate(-ry);x.beginPath();x.moveTo(-2.6*k,0);x.lineTo(2.6*k,0);x.moveTo(0,-2.6*k);x.lineTo(0,2.6*k);x.strokeStyle=P.ink;x.lineWidth=Math.max(1.2*u,.35*k);x.stroke();x.restore();}}
+    else if(kk==='farm.hay'&&k>1.5*u){x.beginPath();x.arc(X(gx),Z(gz),Math.max(1.2*u,.6*k),0,TAU);x.fillStyle=bc('#f1cf5b');x.fill();x.strokeStyle=bc('#b8913a');x.lineWidth=u;x.stroke();}
+    else if(kk==='farm.trough'&&k>1.5*u){x.save();x.translate(X(gx),Z(gz));x.rotate(-ry);x.fillStyle=bc('#8fb8e8');x.fillRect(-1.1*k,-.4*k,2.2*k,.8*k);x.strokeStyle=P.ink;x.lineWidth=u;x.strokeRect(-1.1*k,-.4*k,2.2*k,.8*k);x.restore();}
+    else if(kk==='farm.arch'){x.save();x.translate(X(gx),Z(gz));x.rotate(-ry);x.beginPath();x.moveTo(-3.05*k,0);x.lineTo(3.05*k,0);x.strokeStyle=P.ink;x.lineWidth=Math.max(2*u,.5*k)+2*u;x.stroke();x.strokeStyle='#c98f5e';x.lineWidth=Math.max(2*u,.5*k);x.stroke();x.restore();}   /* (the farm gate, like Friends Lane's) */
+    else if(kk.startsWith('course.')){if(k>1.6*u){x.save();x.translate(X(gx),Z(gz));x.rotate(-ry);const L=Math.max(3*u,1.6*k),T=Math.max(1.6*u,.45*k);x.fillStyle='#ffffff';x.fillRect(-L,-T/2,2*L,T);x.fillStyle='#ff6b6b';x.fillRect(-L,-T/2,L*.5,T);x.fillRect(L*.5,-T/2,L*.5,T);x.strokeStyle=P.ink;x.lineWidth=u;x.strokeRect(-L,-T/2,2*L,T);x.restore();}   /* 🏇 a jump: a red and white pole */
+      else{x.beginPath();x.arc(X(gx),Z(gz),Math.max(u,.9*k),0,TAU);x.fillStyle='#ff6b6b';x.fill();}}
+    else if(kk.startsWith('flag.')){x.beginPath();x.arc(X(gx),Z(gz),Math.max(2*u,.7*k),0,TAU);x.fillStyle=kk==='flag.blue'?'#4d8dff':'#ff4d4d';x.fill();x.strokeStyle='#ffffff';x.lineWidth=1.2*u;x.stroke();}}
+  /* 🐄 where the animals are: one emoji for each kind, in the middle of its group */
+  if(k>1.2*u){const G={};for(const [kk,gx,gz] of FARMD.p)if(kk.startsWith('fa.')&&kk!=='fa.lab'){const t=kk.split('.')[1],g=G[t]||(G[t]=[0,0,0]);g[0]+=gx;g[1]+=gz;g[2]++;}
+    x.textAlign='center';x.textBaseline='middle';x.font=`${Math.round(clamp(3.4*k,16*u,30*u))}px ${FONT}`;
+    for(const [t,e] of [['cow','🐄'],['sheep','🐑'],['pig','🐖'],['chicken','🐔'],['horse','🐎']]){const g=G[t];if(g&&vis(g[0]/g[2]-4,g[1]/g[2]-4,g[0]/g[2]+4,g[1]/g[2]+4))x.fillText(e,X(g[0]/g[2]),Z(g[1]/g[2]));}}}

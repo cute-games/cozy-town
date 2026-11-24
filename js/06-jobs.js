@@ -2,7 +2,7 @@
 /* ================= jobs: Rosie helps you pick one ================= */
 const JOBS={delivery:{i:'🍕',n:'Pizza delivery',d:"Bring pizzas to people's houses!"},designer:{i:'🎨',n:'Interior designer',d:'Decorate rooms for people and get stars!'},teacher:{i:'📚',n:'Teacher',d:'Teach a class and grade homework!'},hair:{i:'✂️',n:'Hairstylist',d:'Give people the hairstyle they want!'},photo:{i:'📸',n:'Photographer',d:'Take happy pictures for people!'}};   /* 📸 the 5th job (run 4, job 15) */
 const DLV_DAY=3,PIZZAS=['cheese','pepperoni','veggie','pineapple','mushroom','super cheesy'],DLV_TIMES=[120,180,300,1800],PIZZERIA=[59.2,8.6];
-const DOT_COLS=[['#ff3b3b','Red'],['#2f7bff','Blue'],['#16c75a','Green'],['#ffd000','Yellow'],['#a24dff','Purple'],['#ff8a00','Orange'],['#ff4fd8','Pink'],['#1d1622','Black'],['#ffffff','White']];
+const JOB_DOT='#ff3b3b';   /* 🔴 the job's dot on the maps: one easy-to-see red (24 Nov: no dot colour picker; an old save's S.dl.dot is kept and not used) */
 const WHO={
   n1:{nm:'Mia',look:{skin:'#f5cfb0',hair:'#5a3a24',style:'pigtails',top:'#ffd45c',bottom:'#7cc8ff',shoes:'#ff7aa8',eyes:'sparkle',mouth:'small',scale:.9}},
   n2:{nm:'Leo',look:{skin:'#ffd9bd',hair:'#e8734a',style:'short',top:'#7cc8ff',bottom:'#3f4c86',shoes:'#ffffff',eyes:'sparkle',mouth:'small',scale:.92}},
@@ -179,10 +179,10 @@ function showNote(t,x,rare,icon,chat){const n=$('note');$('noteT').textContent=t
 $('note').addEventListener('click',()=>{SFX.tap();$('note').hidden=true;if(NOTE_CHAT&&!CUT&&!UI.open)openPhone('msg',NOTE_CHAT);});
 
 /* the job box and the little map in the top left corner */
-let jobT=0,mmT=0,MMB=null,dcT=0;
+let jobT=0,mmT=0,dcT=0;
 function dlTarget(){const d=dl(),o=d.o;if(!o)return null;if(o.st==='wait')return{x:PIZZERIA[0],z:PIZZERIA[1]};const H=HOUSE(o.h);return{x:H.x+Math.sin(H.ry)*.8,z:H.z+Math.cos(H.ry)*.8};}
 function jobHud(force){const el=$('job'),job=!!(PLAYING&&S&&(S.job==='delivery'||S.job==='designer'||S.job==='teacher'||S.job==='hair'||S.job==='photo')),town=!!(PLAYING&&S&&CUR&&CUR.id==='city'),on=job||town;   /* 🗺️ the corner map is for everyone in town, job or not (run 4, item 10: without a job the whole box was hidden, map included) */
-  if(el.hidden===on)el.hidden=!on;const jt=$('jobTxt');if(jt.hidden!==!job)jt.hidden=!job;el.classList.toggle('nojob',!job);const mb=$('mmBtn'),al=job?'Your map. Tap to change the dot color':'Your map. Tap to open the big map';if(mb.getAttribute('aria-label')!==al)mb.setAttribute('aria-label',al);
+  if(el.hidden===on)el.hidden=!on;const jt=$('jobTxt');if(jt.hidden!==!job)jt.hidden=!job;el.classList.toggle('nojob',!job);const mb=$('mmBtn');
   if(!on)return;if(!job){if(mb.hidden!==!town)mb.hidden=!town;jobHud.last=null;return;}
   if(S.job==='photo'){const d=pt(),o=d.o;let h;   /* 📸 the photographer (run 4, job 15) */
     if(!o)h=d.done>=PT_MAX?`🌟 All ${PT_MAX} photos done today!`:!isDaytime()?workAt():`📸 Waiting for a booking… <small>(${d.done}/${PT_MAX})</small>`;
@@ -228,33 +228,50 @@ function jobHud(force){const el=$('job'),job=!!(PLAYING&&S&&(S.job==='delivery'|
   else h='🍕 Go to the <b>Pizzeria</b> to start work'+(CUR.id==='beach'?' <small class="nw">· 🚌 bus first</small>':'');   /* (at the beach the way to work is the bus) */
   if(force||h!==jobHud.last){$('jobTxt').innerHTML=h;jobHud.last=h;}
   $('jobTxt').classList.toggle('late',!!(o&&o.st==='carry'&&o.left<=0));$('jobTxt').classList.toggle('rare',!!(o&&o.r));const mh=CUR.id!=='city';if($('mmBtn').hidden!==mh)$('mmBtn').hidden=mh;}
-function mmBase(){if(MMB)return MMB;const c=document.createElement('canvas');c.width=c.height=704;try{drawMapBase(c.getContext('2d'),704,{labels:false});}catch(e){console.warn('map',e);}MMB=c;return c;}
-const MM0=-86,MMW=172;/* the corner map shows the whole town: find the dot yourself! */
+/* 🗺️ the corner map (24 Nov 2026): the whole world (the town, Friends Lane, the farm, the horse trail, the jump field, the beach path) is painted ONCE
+   into a picture by the big map's painter (MINI.k px a metre; painted again only when light/dark, the holiday or the houses on Friends Lane change).
+   Each time it is drawn it copies the 64 m round you (north up; your arrow turns with you) and puts the place badges, your pets, friends, the job's dot
+   and the place you are looking for on top. A tap opens the big map */
+const MINI={c:null,key:'',kt:-1e9,B:null,k:4,dark:false,items:[],spr:new Map(),ms:0,cost:0,n:0},MINI_R=32;
+function miniBase(){const now=performance.now();if(MINI.c&&now-MINI.kt<1500)return MINI.c;MINI.kt=now;
+  const dark=mapDark(),k=(devicePixelRatio||1)>1.4?5:4,key=dark+'|'+k+'|'+mapKey()+'|'+(HOL.cur||'');if(MINI.c&&MINI.key===key)return MINI.c;
+  const B=mapB(),w=Math.ceil((B.x2-B.x1)*k),h=Math.ceil((B.z2-B.z1)*k),c=MINI.c||document.createElement('canvas'),t0=performance.now();c.width=w;c.height=h;
+  try{mapPaint(c.getContext('2d'),B.x1,B.z1,k,w,h,{dark,u:1});}catch(e){console.warn('map',e);}
+  Object.assign(MINI,{c,key,B,k,dark,ms:Math.round(performance.now()-t0),items:mapItems().filter(it=>it.k!=='lane').sort((a,b)=>a.pri-b.pri)});MINI.spr.clear();return c;}
+function miniSpr(e,R){const key=e+'|'+R;let c=MINI.spr.get(key);if(c)return c;const P2=MINI.dark?MAP_PAL.dark:MAP_PAL.light,n=Math.ceil(R*2+R*.5+4),m=n/2;   /* a place's badge, made once */
+  c=document.createElement('canvas');c.width=c.height=n;const x=c.getContext('2d');x.beginPath();x.arc(m,m+R*.14,R,0,TAU);x.fillStyle=P2.shade;x.fill();
+  x.beginPath();x.arc(m,m,R,0,TAU);x.fillStyle=P2.badge;x.fill();x.lineWidth=Math.max(1.4,R*.15);x.strokeStyle=P2.badgeE;x.stroke();
+  x.font=`${Math.round(R*1.12)}px ${FONT}`;x.textAlign='center';x.textBaseline='middle';x.fillStyle='#3d2c5e';x.fillText(e,m,m+R*.08);MINI.spr.set(key,c);return c;}
 const MM={x:NaN,z:NaN,yaw:NaN,t:0};
-function miniTick(dt){if($('job').hidden||$('mmBtn').hidden)return;MM.t+=dt;if(P.x===MM.x&&P.z===MM.z&&P.yaw===MM.yaw&&MM.t<.07)return;MM.t=0;MM.x=P.x;MM.z=P.z;MM.yaw=P.yaw;MM.n=(MM.n|0)+1;drawMini();}   /* 🧭 the arrow turns the very frame you turn; the pulsing dot still beats 14 times a second */
+function miniTick(dt){if($('job').hidden||$('mmBtn').hidden)return;MM.t+=dt;if(P.x===MM.x&&P.z===MM.z&&P.yaw===MM.yaw&&MM.t<.07)return;MM.t=0;MM.x=P.x;MM.z=P.z;MM.yaw=P.yaw;MM.n=(MM.n|0)+1;drawMini();}   /* 🧭 the arrow turns the very frame you turn; the pulsing dots still beat 14 times a second */
 function drawMini(){const cv=$('mm');if(!cv||$('job').hidden||$('mmBtn').hidden)return;
-  const want=Math.max(120,Math.round(cv.clientWidth*Math.min(2.5,devicePixelRatio||1)));if(want&&cv.width!==want)cv.width=cv.height=want;
-  const x=cv.getContext('2d'),N=cv.width,k=N/MMW,B=mmBase(),M=v=>(clamp(v,MM0+2,MM0+MMW-2)-MM0)*k;
-  x.fillStyle='#9fe486';x.fillRect(0,0,N,N);x.drawImage(B,(MM0+88)*4,(MM0+88)*4,MMW*4,MMW*4,0,0,N,N);
-  const T=jobTarget(),col=dl().dot,edge=col==='#ffffff'?'#1d1622':'#ffffff';
-  if(T){const tx=M(T.x),tz=M(T.z),pl=.5+.5*Math.sin(performance.now()/170);
-    x.globalAlpha=.3+.3*(1-pl);x.beginPath();x.arc(tx,tz,N*(.05+.05*pl),0,TAU);x.fillStyle=col;x.fill();x.globalAlpha=1;
-    x.beginPath();x.arc(tx,tz,N*.045,0,TAU);x.fillStyle=col;x.fill();x.lineWidth=N*.016;x.strokeStyle=edge;x.stroke();
+  const want=Math.max(120,Math.round(cv.clientWidth*Math.min(2.5,devicePixelRatio||1)));if(want&&cv.width!==want){cv.width=cv.height=want;MINI.spr.clear();}
+  const t0=performance.now(),Bc=miniBase(),{B,k}=MINI,x=cv.getContext('2d'),N=cv.width,s=N/(2*MINI_R),me=mapMe(),P2=MINI.dark?MAP_PAL.dark:MAP_PAL.light,
+    S2=(wx,wz)=>[(wx-me.x)*s+N/2,(wz-me.z)*s+N/2],ed=m=>([a,b])=>[clamp(a,m,N-m),clamp(b,m,N-m)],ph=(performance.now()/1000%1.4)/1.4;
+  x.setTransform(1,0,0,1,0,0);x.fillStyle=P2.out;x.fillRect(0,0,N,N);
+  {const sx=(me.x-MINI_R-B.x1)*k,sz=(me.z-MINI_R-B.z1)*k,sw=2*MINI_R*k,a0=Math.max(0,sx),b0=Math.max(0,sz),a1=Math.min(Bc.width,sx+sw),b1=Math.min(Bc.height,sz+sw),f=N/sw;   /* (only the part inside the picture: Safari draws nothing for a part outside it) */
+    if(a1>a0&&b1>b0)x.drawImage(Bc,a0,b0,a1-a0,b1-b0,(a0-sx)*f,(b0-sz)*f,(a1-a0)*f,(b1-b0)*f);}
+  const R=Math.round(Math.max(7,N*.06)),put=[];   /* 🏷️ the badges: the more important ones first, none on top of another */
+  for(const it of MINI.items){const [bx,by]=S2(it.x,it.z);if(bx<-R||by<-R||bx>N+R||by>N+R||put.some(([px,py])=>Math.abs(px-bx)<R*1.8&&Math.abs(py-by)<R*1.8))continue;put.push([bx,by]);
+    const sp=miniSpr(it.i,R);x.drawImage(sp,Math.round(bx-sp.width/2),Math.round(by-sp.height/2));}
+  x.lineJoin='round';
+  for(const p of PET_ACTORS){if(p.loc!=='city'||!p.g||!p.g.visible)continue;const [px,py]=S2(p.x,p.z);if(px<0||py<0||px>N||py>N)continue;   /* 🐾 your pets: small soft dots */
+    x.globalAlpha=.85;x.beginPath();x.arc(px,py,N*.019,0,TAU);x.fillStyle=typeof p.d.col==='string'?p.d.col:'#ffb36b';x.fill();x.lineWidth=N*.008;x.strokeStyle='#ffffff';x.stroke();x.globalAlpha=1;}
+  for(const f of mapFriends()){const [fx,fy]=ed(N*.05)(S2(f.x,f.z)),r=N*(f.on?.034:.028);   /* 👫 friends (online ones bigger), at the edge when far */
+    x.beginPath();x.arc(fx,fy,r,0,TAU);x.fillStyle=f.c;x.fill();x.lineWidth=N*.013;x.strokeStyle='#ffffff';x.stroke();x.beginPath();x.arc(fx,fy,r+N*.011,0,TAU);x.lineWidth=N*.006;x.strokeStyle=P2.ink;x.stroke();}
+  if(NAV){const G=NAV.goal||NAV.door,[gx,gy]=ed(N*.06)(S2(G[0],G[1]));   /* 📍 the place you are looking for (pink, like the big map's) */
+    x.beginPath();x.arc(gx,gy,N*(.035+.05*ph),0,TAU);x.strokeStyle=`rgba(255,77,141,${.75*(1-ph)})`;x.lineWidth=N*.014;x.stroke();
+    x.beginPath();x.arc(gx,gy,N*.032,0,TAU);x.fillStyle='#ff4d8d';x.fill();x.lineWidth=N*.013;x.strokeStyle='#ffffff';x.stroke();}
+  const T=jobTarget();if(T){const [tx,tz]=ed(N*.07)(S2(T.x,T.z)),pl=.5+.5*Math.sin(performance.now()/170);   /* 🔴 the job's dot */
+    x.globalAlpha=.3+.3*(1-pl);x.beginPath();x.arc(tx,tz,N*(.05+.05*pl),0,TAU);x.fillStyle=JOB_DOT;x.fill();x.globalAlpha=1;
+    x.beginPath();x.arc(tx,tz,N*.045,0,TAU);x.fillStyle=JOB_DOT;x.fill();x.lineWidth=N*.016;x.strokeStyle='#ffffff';x.stroke();
     if(S.job==='delivery'&&dl().o&&dl().o.r){x.beginPath();x.arc(tx,tz,N*.072,0,TAU);x.lineWidth=N*.02;x.strokeStyle='#ffc400';x.stroke();}}
-  const s=N*.05,mg=s*1.6+N*.04;x.save();x.translate(clamp(M(P.x),mg,N-mg),clamp(M(P.z),mg,N-mg));x.rotate(-P.yaw);   /* (run 4, stage 3: a whole arrow inside the map's rounded frame, also at the edge of town) */x.lineJoin='round';
-  x.beginPath();x.moveTo(0,-s*1.5);x.lineTo(s,s);x.lineTo(0,s*.35);x.lineTo(-s,s);x.closePath();
-  x.lineWidth=N*.032;x.strokeStyle='#3d2c5e';x.stroke();x.lineWidth=N*.014;x.strokeStyle='#ffffff';x.stroke();x.fillStyle='#ff4d8d';x.fill();x.restore();}
-$('mmBtn').addEventListener('click',()=>{audioInit();if($('job').classList.contains('nojob'))openPhone('map');else openDot();});   /* without a job the corner map opens the big map (run 4, item 10) */
+  const a=N*.05;x.save();x.translate(N/2,N/2);x.rotate(-me.yaw);   /* ➤ you, in the middle */
+  x.beginPath();x.moveTo(0,-a*1.5);x.lineTo(a,a);x.lineTo(0,a*.35);x.lineTo(-a,a);x.closePath();
+  x.lineWidth=N*.032;x.strokeStyle='#3d2c5e';x.stroke();x.lineWidth=N*.014;x.strokeStyle='#ffffff';x.stroke();x.fillStyle='#ff4d8d';x.fill();x.restore();
+  const c=performance.now()-t0;MINI.cost=MINI.n?MINI.cost*.9+c*.1:c;MINI.n++;}   /* (the cost of one drawing, ms: the kit reads it) */
+$('mmBtn').addEventListener('click',()=>{audioInit();SFX.tap();openPhone('map');});   /* the corner map opens the big map (24 Nov: for everyone; the dot colour picker is gone) */
 $('jobTxt').addEventListener('click',()=>{audioInit();openPhone('job');});
-function openDot(){const d=dl();SFX.tap();
-  openPanel(`<div class="hd"><h2>🎨 Map dot color</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div><p class="note">Pick a color that's easy to see on your map!</p>
-    <div class="dots">${DOT_COLS.map(([c,n])=>`<button class="dotb${d.dot===c?' on':''}" data-a="dot:${c}" aria-label="${n}"><i style="background:${c}"></i>${n}</button>`).join('')}</div>
-    <canvas id="dotPrev" width="560" height="150" aria-label="How the dot looks on the map"></canvas>`);setTimeout(drawDotPrev,0);}
-function drawDotPrev(){const cv=$('dotPrev');if(!cv)return;const x=cv.getContext('2d'),W=cv.width,H=cv.height,col=dl().dot,edge=col==='#ffffff'?'#1d1622':'#ffffff';
-  [['#ff8f8f','🚒'],['#9fe486','🌳'],['#b9bcd6','🚗'],['#c7e6ff','📚']].forEach(([bg,ic],i)=>{const w=W/4;x.fillStyle=bg;x.fillRect(i*w,0,w,H);x.font=`${Math.round(H*.22)}px ${FONT}`;x.textAlign='center';x.textBaseline='middle';x.fillText(ic,i*w+w*.24,H*.24);
-    x.beginPath();x.arc(i*w+w/2,H*.55,H*.16,0,TAU);x.fillStyle=col;x.fill();x.lineWidth=5;x.strokeStyle=edge;x.stroke();});}
-ACT.dot=c=>{if(!DOT_COLS.some(v=>v[0]===c))return;dl().dot=c;SFX.pop();change();openDot();drawMini();};
-ACT.dotpick=()=>openDot();
 
 /* the pizza box you carry */
 let HELD=null;
