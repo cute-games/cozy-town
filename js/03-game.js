@@ -1701,7 +1701,7 @@ function mpTick(dt){if(!MP.grp)return;const loc=CUR?CUR.id:'city';
   MP.t+=dt;if(MP.t>=.15){MP.t=0;const st={nm:S.name||'Friend',lk:packLook(),loc,x:Math.round(P.x*100)/100,z:Math.round(P.z*100)/100,ry:Math.round((P.sit&&P.sit.bus?P.sit.yaw:P.yaw)*100)/100,mv:P.moving?1:0,v:COZY_BUILD};   /* v: my version stamp (run 4, job 2): a friend with none or a smaller one shows ⏳ older version */   /* (on the bus your body faces forward on the seat, wherever you look) */
     {const b=LOC.city.ball,m=S.match||{l:0,r:0,v:0},r2=v=>Math.round(v*100)/100;st.sc=[m.l|0,m.r|0,m.v|0];st.bl=BS.mine&&b?[r2(b.x),r2(b.z),r2(b.vx),r2(b.vz),BS.k,Math.round((b.reset||0)*10)/10]:null;}
     st.zz=zzIn()?1:null;st.ob=nsMine()?1:null;st.aw=AW.on?1:null;   /* 🌙 ob: in my own bed at home (the night skip) */
-    st.st=P.sit&&!P.sit.bed&&!P.sit.bus?1:null;   /* 🪑 sitting on a bench or a chair; 😴 zz: in bed (optional; null clears them: presence merges) */
+    st.st=P.sit&&!P.sit.bed&&!P.sit.bus?1:null;st.cy=(P.cy||0)>.02&&!P.horse?Math.round(P.cy*100)/100:null;   /* 🪜 how high I stand (Pet Shop floors, stairs, climbs; 24 Nov: friends saw you on the ground floor) */   /* 🪑 sitting on a bench or a chair; 😴 zz: in bed (optional; null clears them: presence merges) */
     mpStamp(st);   /* 🦘 jumps, 🐾 pets with me (optional) */
     laneStamp(st);hpStamp(st);const key=JSON.stringify(st);if(key!==MP.lastKey){MP.lastKey=key;MP.grp.presence(st).catch(()=>{});}}
   for(const a of MP.peers.values()){if(!a.av)continue;let sp=peerSpot(a);const vis=!!sp,lie=vis&&!!a.zz;a.av.root.visible=vis;if(lie)sp=mpBedSpot(a,sp);if(sp){a.tx=sp[0];a.tz=sp[1];a.ry=sp[2];}
@@ -1722,6 +1722,7 @@ function mpExtra(a,pr,fresh){const jp=Number.isInteger(pr.jp)?pr.jp:null;if(!fre
   if(a.pets)for(const q of a.pets)petUncode(q,Array.isArray(pr.pt)&&Array.isArray(pr.pt[q.i])?pr.pt[q.i][5]:null);
   a.vb=Array.isArray(pr.vb)&&pr.vb.length===2&&pr.vb.every(Number.isInteger)?pr.vb:null;psExtra(a,pr);farmExtra(a,pr);
   const pc=pr.pc;if(pc&&typeof pc==='object'&&MP.me&&pc.to===MP.me&&Number.isFinite(pc.n)){const last=PBR.pcSeen[a.peer];PBR.pcSeen[a.peer]=pc.n;if(!fresh&&last!==pc.n)petByFriend(a,pc);}
+  {const c=Number(pr.cy);a.tcy=Number.isFinite(c)&&c>0&&c<60?c:0;}
   a.bed=a.zz?mpBed(a):null;}
 function mpHop(a){if(a.zz||a.jy>0)return;a.jv=5.4;a.jy=.0001;if(a.pets)for(const q of a.pets)if(!q.hopT&&!q.hopA)q.hopT=.05+Math.random()*.15;}
 /* which bed they lie in: their house layout (hm, sent while they have a visitor) lists every bed; take the one whose pillow is closest to them.
@@ -1739,7 +1740,7 @@ function mpPose(a,dt,vis,lie,d){const p=a.av,R=p.root;
     if(lie){for(const l of p.legs)l.rotation.x=0;for(const r of p.arms)r.rotation.set(0,0,0);p.head.rotation.set(0,0,0);   /* tucked in under a puffy duvet in the bed's colour */
       const b=a.bed,bunk=!!b&&b[3]==='bunkbed';p.duv=new THREE.Group();box(p.duv,bunk?.96:1.2,.2,1.2,b?b[4]:'#ff9ec4');p.duv.position.set(0,-.12,.96);R.add(p.duv);p.bunk=bunk;}}
   if(a.jy>0||a.jv>0){a.jv-=18*dt;a.jy+=a.jv*dt;if(a.jy<=0)a.jy=a.jv=0;}
-  R.position.set(a.x,lie?0.62:(a.jy||0)+brAt(CUR.id,a.x,a.z)+(a.st&&!a.mv?-.07:0),a.z);R.rotation.y=lie?a.ry+Math.PI:angLerp(R.rotation.y,a.ry+Math.PI,Math.min(1,dt*8));
+  a.cy=Math.abs((a.tcy||0)-(a.cy||0))>4?(a.tcy||0):lerp(a.cy||0,a.tcy||0,Math.min(1,dt*8));R.position.set(a.x,lie?0.62:(a.jy||0)+(a.cy||0)+brAt(CUR.id,a.x,a.z)+(a.st&&!a.mv?-.07:0),a.z);R.rotation.y=lie?a.ry+Math.PI:angLerp(R.rotation.y,a.ry+Math.PI,Math.min(1,dt*8));
   if(vis&&!lie){animPerson(p,dt,a.mv&&d>.02&&!a.st);if(a.jy>0){p.legs[0].rotation.x=.55;p.legs[1].rotation.x=-.25;}if(a.st&&!a.mv){sitPose(p);p.b.position.y=0;}}   /* 🪑 sitting: legs forward, a little lower */
   const zz=vis&&(lie||!!a.aw);if(zz&&!a.zzs){a.zzs=label('💤',.42,{bg:null,bw:0,pad:8,stroke:'#ffffff',strokeW:10});R.add(a.zzs);}
   if(a.zzs){a.zzs.visible=zz;if(zz){a.zzT=(a.zzT||0)+dt;const b=Math.sin(a.zzT*2.4)*.07;if(lie)a.zzs.position.set(p.bunk?.72:0,(p.bunk?.42:.7)+b,-.1);else a.zzs.position.set(0,(a.bub?2.95:2.5)+b,0);}}
@@ -1771,7 +1772,7 @@ function mpPetsTick(a,dt,vis){const L=a.pets;if(!L)return;
     else{const dx=gx-q.x,dz=gz-q.z,dd=Math.hypot(dx,dz);
       if(dd>.06){const sp=Math.min(7,1+dd*3.2),s=Math.min(dd,sp*dt);let nx=q.x+dx/dd*s,nz=q.z+dz/dd*s;if(near)[nx,nz]=collideXZ(nx,nz,.3,CUR);q.wk+=Math.min(1,Math.hypot(nx-q.x,nz-q.z));q.x=nx;q.z=nz;q.face=Math.atan2(dx,dz);q.mv=dd>.15;q.spd=clamp(sp/3,.6,1.8);}
       else{q.mv=false;q.face=angLerp(q.face,Math.atan2(a.x-q.x,a.z-q.z),Math.min(1,dt*3));}}
-    q.g.visible=true;q.g.position.set(q.x,hopY(q,dt)+brAt(CUR.id,q.x,q.z),q.z);q.g.rotation.y=angLerp(q.g.rotation.y,q.face,Math.min(1,dt*8));if(q.rb!==q.rib){q.rb=q.rib;petRibbon(q.m,q.rib);}petPose(q.m,q.kind,q,gameMs()/1000,q.mv,q.look);q.tag.visible=!a.lie&&Math.hypot(P.x-q.x,P.z-q.z)>1.3;}}   /* (their owner asleep in bed or in the tent: no pet names floating on the pillow) */
+    q.g.visible=true;q.g.position.set(q.x,(a.cy||0)+hopY(q,dt)+brAt(CUR.id,q.x,q.z),q.z);q.g.rotation.y=angLerp(q.g.rotation.y,q.face,Math.min(1,dt*8));if(q.rb!==q.rib){q.rb=q.rib;petRibbon(q.m,q.rib);}petPose(q.m,q.kind,q,gameMs()/1000,q.mv,q.look);q.tag.visible=!a.lie&&Math.hypot(P.x-q.x,P.z-q.z)>1.3;}}   /* (their owner asleep in bed or in the tent: no pet names floating on the pillow) */
 /* jump right next to a friend, even into the shop they are in */
 function warpTo(loc,fx,fz,nm){if(!LOC[loc]||busWarp(loc,nm))return;if(DECO.on)decoEnd();if(P.ride)stopRide();if(P.sit)standUp();closePanel();SFX.door();
   fade(()=>{setLoc(loc);let x=fx+2.4,z=fz;const fr=[...MP.peers.values()].find(a=>a.nm===nm),ry=fr?fr.ry:0;
