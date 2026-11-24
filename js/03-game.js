@@ -2615,7 +2615,7 @@ function farmMount(h,lesson){if(P.horse||!h)return;if(!lesson){if(!S.ride.lesson
 function farmOff(quiet,why){const r=P.horse;if(!r)return;const h=r.h;P.horse=null;P.cy=0;const a=h.ry+Math.PI/2;[P.x,P.z]=collideXZ(h.x+Math.sin(a)*1.3,h.z+Math.cos(a)*1.3,.3,LOC.city);
   h.st=r.lesson?'home':'back';if(r.lesson){h.x=h.hx;h.z=h.hz;h.ry=h.hry0??h.ry;h.m.root.position.set(h.x,0,h.z);}
   for(const e of PET_ACTORS)if(e.fw){e.fw=null;e.sm='pet.greet';e.sm0=gameMs()/1000;}
-  if(why)toast(why,3.5);else if(!quiet&&!r.lesson)farmSay('Ieva','Thank you! She had fun.');}
+  if(why)toast(why,3.5);else if(!quiet&&r.lesson){FARM.lesson=null;toast('🤠 Stan: “Lesson stopped. Talk to me to start again!”',3.5);}else if(!quiet)if(farmAtStable())farmSay('Ieva','Thank you! She had fun.');else toast('🐴 Your horse trots back to the stable.',3);}
 function farmAtStable(){return FARM.stables.some(s=>Math.hypot(P.x-s.x,P.z-s.z)<9)||FARM.ppl.some(p=>p.who==='ieva'&&Math.hypot(P.x-p.x,P.z-p.z)<6);}
 function farmRide(dt){const r=P.horse,h=r.h,now=gameMs()/1000;
   if(!farmZone(P.x,P.z)){farmOff(true);return;}
@@ -2654,7 +2654,7 @@ function farmLessonStart(){if(S.ride.lesson){farmSay('Stan','Practise jumps here
   openPanel(`<div class="hd"><h2>🐴 Riding lesson</h2><div class="chip">🪙 <b id="pc">${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
     <p class="line">🤠 Stan: “Howdy! I'm Stan. Ready for your first lesson?”</p>
     <div class="grid" style="margin-top:8px"><div class="it"><span class="em">🐴</span><span>Get on</span><span class="pr">Tap the horse</span></div><div class="it"><span class="em">➡️</span><span>Go</span><span class="pr">Stick or W · Shift = faster</span></div>
-    <div class="it"><span class="em">⤴️</span><span>Jump</span><span class="pr">Jump button or Space</span></div><div class="it"><span class="em">🏠</span><span>Get off</span><span class="pr">At the stable</span></div></div>
+    <div class="it"><span class="em">⤴️</span><span>Jump</span><span class="pr">Jump button or Space</span></div><div class="it"><span class="em">🏠</span><span>Get off</span><span class="pr">Anywhere</span></div></div>
     <p class="note">One lesson, then every free horse at the stable is yours to ride, for free.</p>
     <div class="row"><button class="btn butter" data-a="flesson">Yes! ${S.ride.paid?"":"("+FARM_LESSON+" 🪙)"}</button><button class="btn white" data-a="close">Later</button></div>`,{bottom:true});}
 function farmActLesson(){if(!S.ride.paid){if(S.coins<FARM_LESSON){SFX.no();toast('You need '+FARM_LESSON+' 🪙 for the lesson.',2.5);return;}S.coins-=FARM_LESSON;S.ride.paid=1;SFX.coin();}closePanel();change();   /* (paid once: a lesson left half-way is free to start again) */
@@ -2712,7 +2712,7 @@ function farmHandFeed(h){const now=gameMs()/1000;h.act={mv:'horse.handEat',t0:no
 const FA_NAME={cow:'cow',sheep:'sheep',pig:'pig',chicken:'hen',horse:'horse'};
 /* the buttons out there (findTarget): only while you are near the farm */
 function farmTargets(out){if(!FARM.on)return;const T=FARM.tg||(FARM.tg=[]);T.length=0;const now=gameMs()/1000,r=P.horse;
-  if(r){if(!r.lesson&&farmAtStable())T.push({x:P.x,z:P.z,r:9,icon:'🏠',label:'Get off',act:()=>farmOff(false),pri:()=>true});}
+  if(r){T.push({x:P.x,z:P.z,r:9,icon:'🧍',label:'Get off',act:()=>{r.sp=0;farmOff(false);},pri:()=>true});}   /* (24 Nov, owner: get off anywhere; away from the stable the horse walks back by itself) */
   else{for(const p of FARM.ppl)T.push({x:p.x,z:p.z,r:2.6,icon:'💬',label:'Talk to '+(p.who==='ieva'?'Ieva':'Stan'),act:()=>{SFX.talk();if(p.who==='ieva')farmIeva();else if(FARM.lesson)farmSay('Stan',LESSON_SAY[FARM.lesson.step]);else farmLessonStart();},obj:p.m.root});
     for(const h of FARM.hs){if(h.st!=='home')continue;const d=Math.hypot(P.x-h.x,P.z-h.z);if(d>2.8)continue;
       if(h.kind==='lesson'){if(FARM.lesson&&FARM.lesson.step===0)T.push({x:h.x,z:h.z,r:2.8,icon:'🐴',label:'Get on',act:()=>{farmMount(h,true);FARM.lesson.step=1;FARM.lesson.t=0;farmSay('Stan',LESSON_SAY[1]);},pri:()=>true});continue;}
