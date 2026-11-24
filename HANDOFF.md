@@ -17,6 +17,10 @@
 - **Still open for the owner**: P19/P25 on the real iPad; `tools/PFU-TRY-IT.md` (try it for real: Karolis and Izabele); Sonnet viewers on the 12 retakes of picture pass 4
   (the foreman's scratchpad `pics-fix4/` + `list.txt`); the cows are the book's picked blocky model (grade 1, models frozen).
 
+- **Friends, texts, voice calls, global chat** (branch `claude/social`, stamp 2026112498): code at the end of `js/08-hud.js` (`SOC`, `soc*`, `gc*`, `call*`);
+  small hooks in `js/03-game.js` (presence `pi`, `socTargets`, badge, openChat) and `js/05-map.js` (Friends app). Firebase paths `worlds/cozy-town/social/...`;
+  rules to publish: `tools/social/firebase-rules.json` (until published it all rests and the old Friends app shows). Tests: `/home/claude/w/social/tests/so_flow.py`.
+
 ## Read first
 1. `CLAUDE.md`, this file. 2. `tools/PFU-REPORT.md` (sections 1-11: checks, rewrites, marks; section 12: every stage's code notes: save v2 names, night skip `CLK.sk`/`gameMs()`,
 pet brain, yard/gear, vet, big pets/`PACKM`/`packBuild`, Pet Show, farm). 3. The run doc `kit/kits/pfu-night-run.json` and briefs in `kit/entries/` (book copies; `kit/README.md`).

@@ -440,13 +440,13 @@ function callStart(id){if(!socOn()||!SOC.fr[id])return;const n=socName(id);if(SO
         return c.ref.set({f:SOC.me,n:socMyName(),id:c.id,at:window.firebase.database.ServerValue.TIMESTAMP,o:pc.localDescription.sdp,st:'ring'}).then(()=>{c.up=true;c.st='ring';for(const j of c.q.splice(0))callCand(c,j);
           c.w=socL(c.ref,s=>callOutSees(c,s&&s.val()));c.tm=setTimeout(()=>{if(SOC.call===c&&c.st==='ring')callEnd('noanswer');},30000);callUI();});});})
     .catch(e=>{if(SOC.call!==c)return;callEnd(e&&/NotAllowed|Permission|Security/i.test(e.name||'')?'mic':'fail');});}
-function callOutSees(c,v){if(SOC.call!==c)return;if(!v){if(c.up)callEnd(c.st==='ring'?'declined':'ended',true);return;}if(v.id!==c.id){callEnd('busy',true);return;}
+function callOutSees(c,v){if(SOC.call!==c)return;if(!v){if(c.up)callEnd(c.st==='ring'?'declined':c.st==='conn'?'fail':'ended',true);return;}if(v.id!==c.id){callEnd('busy',true);return;}
   if(v.st==='no'){callEnd('declined');return;}if(v.st==='busy'){callEnd('busy');return;}if(v.st==='end'){callEnd('ended');return;}
   if(typeof v.a==='string'&&!c.ans){c.ans=true;c.st='conn';clearTimeout(c.tm);callRing(false);callUI();callRemote(c,'answer',v.a).catch(()=>callEnd('fail'));c.tm=setTimeout(()=>{if(SOC.call===c&&c.st!=='live')callEnd('fail');},15000);}
   callCands(c,v.ac);}
 /* someone is calling me (call/<me>) */
 function socCallIn(v){const c=SOC.call,r=SOC.root&&SOC.root.child('call/'+SOC.me);
-  if(c&&c.dir==='in'){if(!v||v.id!==c.id){callEnd(c.st==='ring'?'missed':'ended',true);if(!v)return;}else{c.v=v;if(v.st==='end'){callEnd('ended',true);return;}
+  if(c&&c.dir==='in'){if(!v||v.id!==c.id){callEnd(c.st==='ring'?'missed':c.st==='conn'&&!v?'fail':'ended',true);if(!v)return;}else{c.v=v;if(v.st==='end'){callEnd('ended',true);return;}
     if(v.ab&&v.ab!==SOC.sid&&c.st==='ring'){callEnd('other',true);return;}if(c.pc)callCands(c,v.oc);return;}}
   if(!v||typeof v!=='object'||v.st!=='ring'||typeof v.id!=='string'||!socId(v.f)||typeof v.o!=='string')return;
   if(!Number.isFinite(v.at)||socNow()-v.at>40000)return;   /* an old ring left behind */
@@ -476,4 +476,4 @@ setInterval(()=>{const c=SOC.call;if(!c)return;if(!PLAYING||!socOn()){callEnd('e
   if(!socPeer(c.peer)){c.gone=(c.gone||0)+1;if(c.gone>=8)callEnd('lost');}else c.gone=0;},1000);   /* the friend left the game */
 addEventListener('pagehide',()=>{const c=SOC.call;if(c&&c.ref)try{c.ref.remove();}catch(e){}});
 /* the 👫 Friends app: the new one when it is on; the old list (with a short line when the Firebase rules for it are missing) when it rests */
-function socApp(hd){if(socOn())return socPhone(hd);return hd('👫 Friends')+(SOC.st==='dead'?'<p class="ph-sub">💤 Friend lists, texts and calls are resting right now. Playing together still works!</p>':'')+mpPhone();}
+function socApp(hd){if(socOn())return socPhone(hd);return hd('👫 Friends')+(SOC.st==='dead'?'<p class="ph-sub">💤 Friend lists, texts, calls and the chat for everyone are resting: they need a one-time online setup first (the grown-up's job). Playing together still works!</p>':'')+mpPhone();}
