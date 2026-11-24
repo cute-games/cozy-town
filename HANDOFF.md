@@ -19,7 +19,8 @@
 
 - **Friends, texts, voice calls, global chat** (branch `claude/social`, stamp 2026112501): code at the end of `js/08-hud.js` (`SOC`, `soc*`, `gc*`, `call*`);
   small hooks in `js/03-game.js` (presence `pi`, `socTargets`, badge, openChat) and `js/05-map.js` (Friends app). Firebase paths `worlds/cozy-town/social/...`;
-  rules to publish: `tools/social/firebase-rules.json` (until published it all rests and the old Friends app shows). Tests: `/home/claude/w/social/tests/so_flow.py`.
+  rules to publish: `tools/social/firebase-rules.json` (one whole block: players, ideas board, move, social; until published it all rests, the Friends app says it needs a one-time
+  online setup, and the old list shows). Tests: `tools/social/so_flow.py` (2-3 players, voice with Chromium's fake mic) and `so_shots.py` (phone pictures). No TURN server: some networks can't call.
 
 ## Read first
 1. `CLAUDE.md`, this file. 2. `tools/PFU-REPORT.md` (sections 1-11: checks, rewrites, marks; section 12: every stage's code notes: save v2 names, night skip `CLK.sk`/`gameMs()`,
