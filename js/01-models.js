@@ -1445,7 +1445,7 @@ function pigRoll(m,t,o){const R=rig(m);const u=clock(t,3.2);const down=seg(u,0,.
 function horseGait(m,t,o){const R=rig(m);o=o||{};const g=o.gait||'walk';const A=g==='gallop'?.55:g==='trot'?.42:.3;const ph=phaseOf(R,t,o,A);
   gaitLegs(R,ph,A,1,g==='gallop'?'gallop':g==='trot'?'trot':'walk',.9);
   const rock=g==='gallop'?.09*Math.sin(TAU*ph):g==='trot'?.02*Math.sin(TAU*2*ph):.015*Math.sin(TAU*2*ph);
-  const ck=o.calm?.45:1;rotAbout(R,'x',rock*ck,0,R.bCenter.y,R.bCenter.z);if(m.head)m.head.rotation.x+=ck*((g==='gallop'?-.1:.06)*Math.sin(TAU*(g==='walk'?2:1)*ph+.5)-rock);   /* (o.calm: the horse you ride rocks less, so its neck in front of your eyes doesn't swing) */
+  const ck=o.calm?(g==='gallop'?.7:.45):1;rotAbout(R,'x',rock*ck,0,R.bCenter.y,R.bCenter.z);if(m.head)m.head.rotation.x+=ck*((g==='gallop'?-.1:.06)*Math.sin(TAU*(g==='walk'?2:1)*ph+.5)-rock);   /* (o.calm: the horse you ride rocks less, so its neck in front of your eyes doesn't swing) */
   if(m.tail){m.tail.rotation.x+=g==='gallop'?.5:g==='trot'?.2:0;m.tail.rotation.z+=.12*Math.sin(TAU*ph);}
   const lift=g==='trot'?R.H*.025*Math.abs(Math.sin(TAU*ph)):g==='gallop'?R.H*.05*Math.max(0,Math.sin(TAU*ph-1)):0;
   R.last={gait:g,ph,lift};return {lift};}
