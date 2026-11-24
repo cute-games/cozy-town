@@ -476,4 +476,4 @@ setInterval(()=>{const c=SOC.call;if(!c)return;if(!PLAYING||!socOn()){callEnd('e
   if(!socPeer(c.peer)){c.gone=(c.gone||0)+1;if(c.gone>=8)callEnd('lost');}else c.gone=0;},1000);   /* the friend left the game */
 addEventListener('pagehide',()=>{const c=SOC.call;if(c&&c.ref)try{c.ref.remove();}catch(e){}});
 /* the 👫 Friends app: the new one when it is on; the old list (with a short line when the Firebase rules for it are missing) when it rests */
-function socApp(hd){if(socOn())return socPhone(hd);return hd('👫 Friends')+(SOC.st==='dead'?'<p class="ph-sub">💤 Friend lists, texts, calls and the chat for everyone are resting: they need a one-time online setup first (the grown-up's job). Playing together still works!</p>':'')+mpPhone();}
+function socApp(hd){if(socOn())return socPhone(hd);return hd('👫 Friends')+(SOC.st==='dead'?'<p class="ph-sub">💤 Friend lists, texts, calls and the chat for everyone are resting: they need a one-time online setup first. Playing together still works!</p>':'')+mpPhone();}
