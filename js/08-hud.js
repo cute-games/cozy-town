@@ -374,7 +374,7 @@ function socAddBtn(a){if(!socOn()||!a.pi||a.twin||a.pi===SOC.me||socS().bl[a.pi]
 /* 🌍 the chat for everyone online: the last 50 lines, names in colour; 🚩 on a line: block that player or report the line */
 function gcIn(v){v=v&&typeof v==='object'?v:{};const L=[];for(const k in v){const m=v[k];if(!/^[\w-]{4,40}$/.test(k)||!m||typeof m.t!=='string'||!socId(m.p))continue;L.push({k,p:m.p,n:socNm(m.n),t:m.t.slice(0,SOC.MAX),at:+m.at||0});}
   L.sort((a,b)=>a.k<b.k?-1:a.k>b.k?1:0);SOC.gc=L.slice(-SOC.GKEEP);const last=SOC.gc.length?SOC.gc[SOC.gc.length-1]:null,open=UI.open&&$('card').classList.contains('gccard');
-  if(last&&last.k>SOC.gcSeen&&SOC.gcSeen&&last.p!==SOC.me&&!open&&gcShown(last))SOC.gcNew=true;if(!SOC.gcSeen&&last)SOC.gcSeen=last.k;if(open&&last)SOC.gcSeen=last.k;
+  if(SOC.gcL&&last&&last.k>SOC.gcSeen&&last.p!==SOC.me&&!open&&gcShown(last))SOC.gcNew=true;if((!SOC.gcL||open)&&last)SOC.gcSeen=last.k;SOC.gcL=true;
   if(socOn())$('bChat').classList.toggle('gcnew',SOC.gcNew);if(open)gcLog();
   if(SOC.gc.length>SOC.GKEEP+10){const old=socNow()-60000;for(const m of SOC.gc.slice(0,SOC.gc.length-SOC.GKEEP-5))if(m.at<old)SOC.root.child('gc/'+m.k).remove().catch(()=>{});}}
 const gcShown=m=>!socS().bl[m.p]&&!SOC.hid.has(m.k)&&!bdBad(m.t);
@@ -436,7 +436,7 @@ function callStart(id){if(!socOn()||!SOC.fr[id])return;const n=socName(id);if(SO
   socOnce(c.ref).then(v=>{if(SOC.call!==c)return null;if(v&&v.st!=='end'&&Number.isFinite(v.at)&&socNow()-v.at<45000){callEnd('busy',true);return null;}return mic;})
     .then(ms=>{if(!ms||SOC.call!==c){if(ms)for(const t of ms.getTracks())t.stop();return;}c.ms=ms;const pc=callPc(c);
       return pc.createOffer({offerToReceiveAudio:true}).then(o=>pc.setLocalDescription(o)).then(()=>{if(SOC.call!==c)return;
-        try{c.ref.onDisconnect().remove();}catch(e){}
+        try{c.ref.onDisconnect().remove();c.od=1;}catch(e){}
         return c.ref.set({f:SOC.me,n:socMyName(),id:c.id,at:window.firebase.database.ServerValue.TIMESTAMP,o:pc.localDescription.sdp,st:'ring'}).then(()=>{c.up=true;c.st='ring';for(const j of c.q.splice(0))callCand(c,j);
           c.w=socL(c.ref,s=>callOutSees(c,s&&s.val()));c.tm=setTimeout(()=>{if(SOC.call===c&&c.st==='ring')callEnd('noanswer');},30000);callUI();});});})
     .catch(e=>{if(SOC.call!==c)return;callEnd(e&&/NotAllowed|Permission|Security/i.test(e.name||'')?'mic':'fail');});}
@@ -456,7 +456,7 @@ function socCallIn(v){const c=SOC.call,r=SOC.root&&SOC.root.child('call/'+SOC.me
   callUI();callRing(true,'in');n.tm=setTimeout(()=>{if(SOC.call===n&&n.st==='ring')callEnd('missed',true);},35000);}
 function callAnswer(){const c=SOC.call;if(!c||c.dir!=='in'||c.st!=='ring')return;if(!callCan()){callDecline();toast('📵 Calls don\'t work in this browser. Try Safari or Chrome!',3.4);return;}
   callRing(false);clearTimeout(c.tm);c.st='conn';const mic=callMic();callAudio(c);callUI();c.ref.update({ab:SOC.sid}).catch(()=>{});
-  mic.then(ms=>{if(SOC.call!==c){for(const t of ms.getTracks())t.stop();return;}c.ms=ms;const pc=callPc(c);c.up=true;try{c.ref.onDisconnect().remove();}catch(e){}
+  mic.then(ms=>{if(SOC.call!==c){for(const t of ms.getTracks())t.stop();return;}c.ms=ms;const pc=callPc(c);c.up=true;try{c.ref.onDisconnect().remove();c.od=1;}catch(e){}
     return callRemote(c,'offer',c.v.o).then(()=>{callCands(c,c.v.oc);return pc.createAnswer();}).then(a=>pc.setLocalDescription(a)).then(()=>{if(SOC.call!==c)return;
       return c.ref.update({a:pc.localDescription.sdp,st:'ok'}).then(()=>{for(const j of c.q.splice(0))callCand(c,j);});});})
     .catch(e=>{if(SOC.call!==c)return;callEnd(e&&/NotAllowed|Permission|Security/i.test(e.name||'')?'mic':'fail');});
@@ -466,7 +466,7 @@ function callLive(c){if(c.st==='live')return;clearTimeout(c.tm);callRing(false);
 /* ⛔ every way a call ends: tracks stopped, the connection closed, the Firebase call cleared, and one kind line */
 function callEnd(why,keepNode){const c=SOC.call;if(!c)return;SOC.call=null;clearTimeout(c.tm);clearTimeout(c.dt);callRing(false);socOff(c.w);
   if(c.ms)for(const t of c.ms.getTracks())t.stop();if(c.pc)try{c.pc.close();}catch(e){}if(c.au){try{c.au.pause();}catch(e){}c.au.srcObject=null;}
-  if(c.ref&&(!keepNode||c.dir==='out'&&c.up)){if(c.dir==='out'||c.st!=='ring')c.ref.remove().catch(()=>{});}try{c.ref.onDisconnect().cancel&&c.ref.onDisconnect().cancel();}catch(e){}
+  if(c.ref&&(!keepNode||c.dir==='out'&&c.up)){if(c.dir==='out'||c.st!=='ring')c.ref.remove().catch(()=>{});}if(c.od)try{const d=c.ref.onDisconnect();if(d.cancel)d.cancel();}catch(e){}
   callUI();const n=c.nm,M={busy:'📵 '+n+' is busy right now. Try again soon!',declined:'📵 '+n+' can\'t talk right now.',noanswer:'📵 '+n+' didn\'t answer.',
     fail:'😕 The call couldn\'t connect. Some internet networks block calls.',mic:'🎤 Calls need the microphone. Allow it for this game, then try again!',missed:'📵 You missed a call from '+n+'.',
     lost:'📵 The call with '+n+' was lost.',ended:'📞 The call with '+n+' ended'+(c.live?' ('+callTime(c)+')':'')+'.',hang:'📞 Call ended'+(c.live?' ('+callTime(c)+')':'')+'.'};
