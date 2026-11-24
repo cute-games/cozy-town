@@ -359,7 +359,7 @@ function renderPhone(){if(PH.app==='map'){openMap();return;}if(MAPV.on)mapOff();
     <button class="app" data-a="phapp:skills"><span class="ic" style="background:#b79cff">⭐</span>Skills</button>
     <button class="app" data-a="phapp:pets"><span class="ic" style="background:#7fdcb5">🐾</span>Pets</button>
     <button class="app" data-a="phapp:map"><span class="ic" style="background:#7cc8ff">🗺️</span>Map</button>
-    <button class="app" data-a="phapp:mp"><span class="ic" style="background:#ff9ec4">👫</span>Friends</button>
+    <button class="app" data-a="phapp:mp"><span class="ic" style="background:#ff9ec4">👫</span>Friends${socBadge()}</button>
     <button class="app" data-a="phapp:job"><span class="ic" style="background:#ffb36b">💼</span>Job${hasDlOrder()||(S.job==='designer'&&S.ds&&S.ds.o)||(S.job==='teacher'&&S.tc&&S.tc.o)?'<span class="badge">!</span>':''}</button>
     <button class="app" data-a="phapp:furn"><span class="ic" style="background:#ff9ec4">🛋️</span>Furniture</button>
     <button class="app" data-a="phapp:cal"><span class="ic calic" aria-hidden="true"><b>${wdName().slice(0,3).toUpperCase()}</b><i class="tm">${clockStr(S.time)}</i></span>Calendar${psLeft()?'<span class="badge">!</span>':''}</button></div>`;}
@@ -368,7 +368,7 @@ function renderPhone(){if(PH.app==='map'){openMap();return;}if(MAPV.on)mapOff();
       body=hd('🏆 Quest')+`<div class="ph-tabs"><button class="pill ${tab==='daily'?'on':''}" data-a="qtab:daily">📅 Daily${dr?' ('+dr+')':''}</button><button class="pill ${tab==='hard'?'on':''}" data-a="qtab:hard">🔥 Hard${hr?' ('+hr+')':''}</button></div>`;
       if(tab==='daily')body+=`<p class="ph-sub">Sign up for a quest, do it, and get money!</p>`+q.list.filter(k=>getQ(k)).map(k=>qCard(getQ(k),q.st[k],k,false)).join('')+`<p class="ph-sub" style="margin-top:14px;text-align:center">Finish a quest and a brand new one shows up!</p>`;
       else{const ord=k=>{const st=S.hard[k];return !st?2:st.s==='ready'?0:st.s==='on'?1:3;};body+=`<p class="ph-sub">Big challenges with big rewards! Finish one and a harder one pops up. 🔥</p>`+Object.keys(HARD).sort((a,b)=>ord(a)-ord(b)).map(k=>qCard(hq(k)||HARD[k],S.hard[k],k,true)).join('');}}
-    else if(a==='mp'){body=hd('👫 Friends')+mpPhone();}
+    else if(a==='mp'){body=socApp(hd);}
     else if(a==='job'){body=hd('💼 Job')+jobPhone();}
     else if(a==='furn'){body=hd('🛋️ Furniture')+furnPhone();setTimeout(thumbFill,0);}
     else if(a==='msg'){const C=PH.chat&&CHATS[PH.chat];body=(C?`<div class="ph-hd"><button class="btn ph-back" data-a="chat:" aria-label="Back to chats">‹</button><h3 class="chh"><span class="cav hcav" style="background:${C.c}">${C.av}</span>${C.h||C.n.split(' · ')[0]}</h3><span class="ph-coins">🪙 ${S.coins}</span></div>`:hd('💬 Messages'))+msgPhone();}

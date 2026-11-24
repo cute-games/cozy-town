@@ -1,0 +1,86 @@
+{
+  "rules": {
+    "worlds": {
+      "cozy-town": {
+        "social": {
+          "req": {
+            "$to": {
+              ".read": true,
+              "$from": {
+                ".write": true,
+                ".validate": "newData.hasChildren(['n','at']) && $from.matches(/^u[A-Za-z0-9_-]{6,30}$/)",
+                "n": { ".validate": "newData.isString() && newData.val().length <= 20" },
+                "at": { ".validate": "newData.isNumber() && newData.val() <= now" },
+                "$other": { ".validate": false }
+              }
+            }
+          },
+          "fr": {
+            "$pid": {
+              ".read": true,
+              "$friend": {
+                ".write": true,
+                ".validate": "newData.hasChildren(['n','at'])",
+                "n": { ".validate": "newData.isString() && newData.val().length <= 20" },
+                "at": { ".validate": "newData.isNumber() && newData.val() <= now" },
+                "$other": { ".validate": false }
+              }
+            }
+          },
+          "dm": {
+            "$pair": {
+              ".read": true,
+              ".validate": "$pair.matches(/^u[A-Za-z0-9_-]{6,30}_u[A-Za-z0-9_-]{6,30}$/)",
+              "$msg": {
+                ".write": "!data.exists() || !newData.exists()",
+                ".validate": "newData.hasChildren(['f','t','at'])",
+                "f": { ".validate": "newData.isString() && newData.val().length <= 32" },
+                "t": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 200" },
+                "at": { ".validate": "newData.isNumber() && newData.val() <= now" },
+                "$other": { ".validate": false }
+              }
+            }
+          },
+          "call": {
+            "$to": {
+              ".read": true,
+              ".write": true,
+              ".validate": "newData.hasChildren(['f','id','at','st'])",
+              "f": { ".validate": "newData.isString() && newData.val().length <= 32" },
+              "n": { ".validate": "newData.isString() && newData.val().length <= 20" },
+              "id": { ".validate": "newData.isString() && newData.val().length <= 40" },
+              "at": { ".validate": "newData.isNumber() && newData.val() <= now" },
+              "st": { ".validate": "newData.isString() && newData.val().matches(/^(ring|ok|no|busy|end)$/)" },
+              "o": { ".validate": "newData.isString() && newData.val().length <= 20000" },
+              "a": { ".validate": "newData.isString() && newData.val().length <= 20000" },
+              "ab": { ".validate": "newData.isString() && newData.val().length <= 40" },
+              "oc": { "$k": { ".validate": "newData.isString() && newData.val().length <= 1000" } },
+              "ac": { "$k": { ".validate": "newData.isString() && newData.val().length <= 1000" } },
+              "$other": { ".validate": false }
+            }
+          },
+          "gc": {
+            ".read": true,
+            "$msg": {
+              ".write": "!data.exists() || (!newData.exists() && data.child('at').val() < now - 60000)",
+              ".validate": "newData.hasChildren(['p','n','t','at'])",
+              "p": { ".validate": "newData.isString() && newData.val().length <= 32" },
+              "n": { ".validate": "newData.isString() && newData.val().length <= 20" },
+              "t": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 200" },
+              "at": { ".validate": "newData.isNumber() && newData.val() <= now" },
+              "$other": { ".validate": false }
+            }
+          },
+          "rep": {
+            "$id": {
+              ".write": "!data.exists()",
+              ".validate": "newData.hasChildren(['k','p','t','by','at'])",
+              "at": { ".validate": "newData.isNumber() && newData.val() <= now" },
+              "t": { ".validate": "newData.isString() && newData.val().length <= 200" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

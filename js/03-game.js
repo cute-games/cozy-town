@@ -413,7 +413,7 @@ function qEvent(type,amt=1,key){hardEvent(type,amt);if(!S||!S.q)return;let dirty
     else if((Q.ev||k)===type){if(key){st.seen=st.seen||[];if(st.seen.includes(key))continue;st.seen.push(key);}st.n=Math.min(Q.n,(st.n||0)+amt);dirty=true;if(st.n>=Q.n)qReady(Q,st);}}
   if(dirty){if(type!=='run')change();if(PH.app==='quest'&&!$('panel').hidden)renderPhone();}}
 function readyCount(){if(!S)return 0;return(S.q?Object.values(S.q.st).filter(s=>s.s==='ready').length:0)+(S.hard?Object.values(S.hard).filter(s=>s.s==='ready').length:0);}
-function updPhoneBadge(){const n=readyCount()+msgUnread();const b=$('phBadge');b.hidden=!n;b.textContent=n;}
+function updPhoneBadge(){const n=readyCount()+msgUnread()+(typeof socUnread==='function'?socUnread():0);const b=$('phBadge');b.hidden=!n;b.textContent=n;}
 
 /* ---- tasks ---- */
 function doneTask(id){return;if(!S||S.tasks[id])return;const T=TASKS.find(t=>t.id===id);if(!T)return;S.tasks[id]=1;S.coins+=T.r;SFX.yay();toast('✅ '+T.t+'  +'+T.r+' 🪙',3.2);change();}
@@ -1559,7 +1559,7 @@ function cleanLook(l){const o=Object.assign({},DEFAULT_LOOK);if(!l||typeof l!=='
   for(const k of['style','eyes','mouth'])if(LOOK_OPTS[k].some(([v])=>v===l[k]))o[k]=l[k];o.outfit=l.outfit==='dress'?'dress':'sweater';
   o.hat=CLOTHES[l.hat]&&CLOTHES[l.hat].hat?l.hat:'none';o.hatc=HEX.test(l.hatc)?l.hatc:null;o.glasses=CLOTHES[l.glasses]&&CLOTHES[l.glasses].gl?l.glasses:'none';o.glc=HEX.test(l.glc)?l.glc:null;o.co=COSTUMES[l.co]?l.co:null;return o;}
 function packLook(){const l=Object.assign({},DEFAULT_LOOK,S.look||{});const o={};for(const k of['skin','hair','style','eyes','mouth','top','bottom','shoes','outfit','hat','hatc','glasses','glc','co'])if(typeof l[k]==='string')o[k]=l[k];return o;}   /* co: a costume (run 4; old versions ignore it and show the clothes) */
-function mpUI(){if(PH.app==='mp'&&UI.open)renderPhone();}
+function mpUI(){if(PH.app==='mp'&&UI.open){if(PH.chat&&typeof socRefresh==='function')socRefresh();else renderPhone();}}   /* (a friend's text thread keeps what you are typing: only its parts change) */
 async function mpConnect(){if(MP.grp||MP.state==='connecting')return;MP.state='connecting';mpUI();let r=null;
   try{const use=window.claude&&typeof window.claude.use==='function'?window.claude.use.bind(window.claude):null;r=await(MP.tries===0&&EARLY.room?EARLY.room:use?use('room'):(window.WEBROOM?window.WEBROOM():null));}catch(e){r=null;}
   MP.tries++;if(!r){MP.state='off';mpUI();mpRetryLater();return;}
@@ -1745,14 +1745,14 @@ function mpStamp(st){if(P.jn)st.jp=P.jn;const pt=[];
     const row=[d.type,HEX.test(d.col)?d.col:PET_TYPES[d.type].cols[0],String(d.name||'').slice(0,14),Object.values(o).filter(k=>ACCS[k]).join('.')],e=PET_ACTORS.find(q=>q.d===d);
     if(petKind(d)!==d.type||!PBR.old)row.push(petKind(d));if(!PBR.old&&e)row.push(petCode(e));pt.push(row);}   /* 🐾 [5]: hearts, sick look, ribbon, move (stage 2; left out while an older version is online: its pets would be rebuilt at every change) */
   st.pt=pt.length?pt:null;psStampMine(st);   /* 🏆 ps: my place in a shared Pet Show (stage 5) */
-  st.pc=PBR.pc&&performance.now()-PBR.pcT<6000?PBR.pc:null;const b=S.vet&&S.vet.bk;st.vb=b?[b.d,b.h]:null;farmStamp(st);}   /* 💗 I petted or played with a friend's pet; 🩺 my vet time (one list for the room) */
+  st.pc=PBR.pc&&performance.now()-PBR.pcT<6000?PBR.pc:null;const b=S.vet&&S.vet.bk;st.vb=b?[b.d,b.h]:null;farmStamp(st);socStamp(st);}   /* 💗 I petted or played with a friend's pet; 🩺 my vet time (one list for the room) */
 function mpExtra(a,pr,fresh){const jp=Number.isInteger(pr.jp)?pr.jp:null;if(!fresh&&jp!==null&&jp!==a.jp)mpHop(a);a.jp=jp;
   const pk=JSON.stringify(Array.isArray(pr.pt)?pr.pt.slice(0,3).map(x=>Array.isArray(x)?x.slice(0,5):x):null);if(pk!==a.pk){mpPetsBuild(a,pr.pt);a.pk=pk;}   /* (a pet's code [5] changes often: never a rebuild) */
   if(a.pets)for(const q of a.pets)petUncode(q,Array.isArray(pr.pt)&&Array.isArray(pr.pt[q.i])?pr.pt[q.i][5]:null);
   a.vb=Array.isArray(pr.vb)&&pr.vb.length===2&&pr.vb.every(Number.isInteger)?pr.vb:null;psExtra(a,pr);farmExtra(a,pr);
   const pc=pr.pc;if(pc&&typeof pc==='object'&&MP.me&&pc.to===MP.me&&Number.isFinite(pc.n)){const last=PBR.pcSeen[a.peer];PBR.pcSeen[a.peer]=pc.n;if(!fresh&&last!==pc.n)petByFriend(a,pc);}
   {const c=Number(pr.cy);a.tcy=Number.isFinite(c)&&c>0&&c<60?c:0;}
-  a.bed=a.zz?mpBed(a):null;}
+  a.bed=a.zz?mpBed(a):null;socExtra(a,pr);}
 function mpHop(a){if(a.zz||a.jy>0)return;a.jv=5.4;a.jy=.0001;if(a.pets)for(const q of a.pets)if(!q.hopT&&!q.hopA)q.hopT=.05+Math.random()*.15;}
 /* which bed they lie in: their house layout (hm, sent while they have a visitor) lists every bed; take the one whose pillow is closest to them.
    [x,z,yaw] in their own house, like their head on the pillow (null = not found: then they lie where they are, turned like the nearest wall) */
@@ -1816,8 +1816,8 @@ function mpPhone(){
   const say=`<p class="ph-sub" style="margin-top:12px">Say something:</p><div class="qmsg">${QUICK.map((q,i)=>`<button class="pill" data-a="mpsay:${i}">${esc(q)}</button>`).join('')}</div><div class="qmsg">${EMOS.map((e,i)=>`<button class="emo" data-a="mpemo:${i}">${e}</button>`).join('')}</div>`;
   return`<p class="ph-sub">🟢 You are online! Everyone who opens Cozy Town plays in this world with you.</p>
     <p class="ph-sub" style="margin-top:10px">${list.length?'Playing now:':'No friends are playing right now. When they open Cozy Town, they will show up here! 💗'}</p>
-    ${list.map((a,i)=>`<div class="ph-row"><span>⭐ ${esc(a.nm)}${a.old?' <small>⏳ older version</small>':''}<br><small>${placeOf(a)}</small></span><span style="display:flex;gap:6px;flex:none"><button class="btn mint sm" data-a="mpgo:${i}">🚀 Go</button><button class="btn sm" data-a="mpvisit:${i}" aria-label="Visit their house">🏠</button></span></div>`).join('')}${list.length?say:''}`;}
-function openChat(){if(!MP.grp)return;openPanel(`<div class="hd"><h2>💬 Say something</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
+    ${list.map((a,i)=>`<div class="ph-row"><span>⭐ ${esc(a.nm)}${a.old?' <small>⏳ older version</small>':''}<br><small>${placeOf(a)}</small></span><span style="display:flex;gap:6px;flex:none"><button class="btn mint sm" data-a="mpgo:${i}">🚀 Go</button><button class="btn sm" data-a="mpvisit:${i}" aria-label="Visit their house">🏠</button>${socAddBtn(a)}</span></div>`).join('')}${list.length?say:''}`;}
+function openChat(){if(!MP.grp)return;if(socOn()){gcOpen();return;}openPanel(`<div class="hd"><h2>💬 Say something</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
   <div class="qmsg">${QUICK.map((q,i)=>`<button class="pill" data-a="mpsay:${i}">${esc(q)}</button>`).join('')}</div><div class="qmsg">${EMOS.map((e,i)=>`<button class="emo" data-a="mpemo:${i}">${e}</button>`).join('')}</div>`,{bottom:true});}
 
 /* ---- other people shopping in the stores ---- */
@@ -2382,6 +2382,7 @@ function targets(){const out=CUR.inter.slice();
   if(CUR.id==='pets')for(const a of PEN)out.push(a.target);
   if(S.time>=8&&S.time<20)for(const s of SHOPPERS)if(s.L===CUR)out.push(s.target);
   if(CUR.id==='city'){farmTargets(out);for(const l of LITTER)out.push(l.target);for(const w of WALKERS)if(w.state!=='home')out.push(w.target);for(const q of GRAN.g)if(q.on)out.push(q.target);if(sittersOut())for(const s of SITTERS)out.push(s.target);if(PSX.on)for(const j of PSX.judges)out.push(j.target);for(const k of FB.k)if(fbTgOn(k))out.push(k.tg);out.push(BALLT);}
+  socTargets(out);   /* 👫 a player next to you: their card (add, text, call, block) */
   return out;}
 function findTarget(){if(TN.on)return TN.tg;if(P.ride)return P.ride.kind==='swing'?{icon:'🧍',label:'Get off the swing',act:stopRide}:null;if(P.sit)return P.sit.bus?(BUS.ride&&BUS.ride.go?null:BUS_OFF):{icon:'🧍',label:P.sit.bed?'Get up':'Stand up',act:standUp};
   if(KC.on){if(ballNear())return BALLT;KC.on=false;kcClr();}

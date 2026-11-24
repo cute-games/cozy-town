@@ -91,7 +91,7 @@ function startGame(){if(S){awResume();return;}   /* back from the away title: th
   spawnLitter();gardenInit();for(const w of WALKERS)w.init();
   if(HOL.cur==='easter'&&HOL.eggs)eggsRebuild();   /* 🥚 the eggs were drawn for the title's town before the save was read: draw them again without the ones this player already found (run 4, stage 3, G4-001) */
   S.outfits=S.outfits||[];if(S.wardrobe)for(const k of Object.keys(S.wardrobe)){const C=CLOTHES[k];if(C&&(C.hat||C.gl)){if(!S.outfits.some(v=>v.k===k))S.outfits.push({k,c:C.cols[0]});delete S.wardrobe[k];}}
-  delete S.mpcode;drawScore();mpConnect();bdInit();nsInit();
+  delete S.mpcode;drawScore();mpConnect();bdInit();nsInit();socInit();
   psRefresh();S.hard=S.hard||{};hardMigrate();if(!S.q||S.q.day!==S.day)qNewDay(!!st);else{if(!S.q.used)S.q.used=S.q.list.slice();S.q.list=S.q.list.filter(k=>getQ(k));updPhoneBadge();}
   $('title').hidden=true;$('hud').hidden=false;PLAYING=true;if(innerWidth<600)$('tasks').classList.add('min');
   if(!S.intro){setLoc('city');startIntro();}
@@ -204,3 +204,276 @@ function bdTick(dt){const f=FRIEND_ACTORS[0],ok=f&&f.d.id==='rosie'&&f.mode!=='a
   const o=bdIdea();BD.cool=o?24:60;if(!o)return;const s=o.t.length>22?o.t.slice(0,21)+'…':o.t;   /* 💭 a thought bubble when you pass by */
   const b=label(o.top?`💭 “${s}” 🤔`:`💭 “${s}”? Hmm…`,.3);b.position.y=2.4;f.g.add(b);BD.bub=b;BD.bubT=6;}
 
+
+/* ===================== 👫 Friends, texts, voice calls and the chat for everyone (24 Nov 2026) =====================
+   GitHub version only (Firebase); inside Claude, or while the Firebase rules for it are missing, all of it rests and the Friends app is as before.
+   Firebase, under worlds/cozy-town/social: req/<to>/<from> friend requests · fr/<pid>/<friend> friends (written both ways when one says yes) ·
+   dm/<pidA>_<pidB>/<key> texts (the last 100 are kept) · call/<to> one call at a time (WebRTC offer, answer and ICE: the voice goes straight
+   between the two players, never through Firebase) · gc/<key> the chat for everyone (the last 50 are shown) · rep/<key> reported chat lines.
+   A player is known by S.pid (bdMe), sent in presence as pi (old versions don't send it: they can't be added). Blocked players are kept in
+   your save (S.soc.bl): their texts, requests, calls and chat lines never show. Every text goes through the Ideas Board's word filter (bdBad). */
+const SOC={st:'off',root:null,me:'',fr:{},req:{},th:{},gc:[],gcSeen:'',gcNew:false,hid:new Set(),refs:[],outW:{},sent:0,reqT:0,off:0,call:null,sid:uid(),gtab:'all',ask:'',
+  PATH:'worlds/cozy-town/social',ICE:[{urls:'stun:stun.l.google.com:19302'}],KEEP:100,GKEEP:50,MAX:200,GAP:2000,
+  COLS:['#d6336c','#1971c2','#2b8a3e','#d9480f','#7048e8','#0b7285','#a61e4d','#5c940d']};
+{const st=document.createElement('style');st.textContent='.soctabs{flex-wrap:wrap}.socrow{display:flex;gap:6px;flex:none}.socin{display:flex;gap:8px;margin-top:10px;align-items:center}.socin .inp{font-size:18px;flex:1;min-width:0;min-height:48px}.socin .btn{flex:none;min-height:48px}'
+  +'.sdot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-left:6px;vertical-align:0;flex:none}.sdot.on{background:#2fbf71}.sdot.offl{background:#b9b3c9}.socacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.socacts .btn{min-height:44px;font-size:15px}'
+  +'.socask{background:#fff;border:3px solid #3d2c5e;border-radius:16px;padding:10px 12px;margin-top:10px;font-weight:800;color:#3d2c5e}.socask .row{margin-top:8px}.ph-hd .sccall{flex:none;min-width:44px;min-height:44px;padding:4px 10px;font-size:20px}'
+  +'.gccard .gclog{max-height:min(320px,38vh);overflow:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:6px;margin-top:10px;padding-right:2px}'
+  +'.gcl{display:flex;align-items:flex-start;gap:8px;background:#fff;color:#3d2c5e;border:2.5px solid #3d2c5e;border-radius:14px;padding:6px 6px 6px 10px;font-weight:700;font-size:15px;line-height:1.3}'
+  +'.gcl p{flex:1;min-width:0;margin:3px 0;overflow-wrap:anywhere}.gcl b{font-weight:900}.gcl .tm{font-size:11px;opacity:.6;margin-left:6px;white-space:nowrap}.gcl .btn{flex:none;min-width:44px;min-height:44px;padding:0;font-size:18px;background:#fff}'
+  +'.gcl.me{background:#c9f2e3}.gcerr{margin:8px 0 0;font-weight:800}#bChat.gcnew:after{content:"";position:absolute;top:2px;right:2px;width:13px;height:13px;border-radius:50%;background:#ff4d6d;border:2px solid #3d2c5e}#bChat{position:relative}'
+  +'#callCard{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 74px);transform:translateX(-50%);z-index:9600;background:var(--paper);border:3px solid var(--line);border-radius:22px;padding:14px 16px 16px;box-shadow:0 6px 0 #3d2c5e;text-align:center;width:min(360px,90vw);color:var(--ink);animation:kcPop .35s ease-out}'
+  +'#callCard[hidden],#callBar[hidden]{display:none}#callCard .cc-i{font-size:44px;line-height:1.1}#callCard .cc-t{font-size:22px;font-weight:900;overflow-wrap:anywhere}#callCard .cc-m{margin:4px 0 12px;font-size:16px;font-weight:700}'
+  +'#callCard .cc-b{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}#callCard .cc-b .btn{min-height:52px;white-space:nowrap}.btn.hang{background:#ff6b6b}'
+  +'#callBar{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);transform:translateX(-50%);z-index:9400;display:flex;align-items:center;gap:8px;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:999px;padding:5px 6px 5px 14px;box-shadow:0 4px 0 #3d2c5e;font-weight:900;font-size:16px;max-width:calc(100vw - 24px)}'
+  +'#callBar .cb-n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;max-width:40vw}#callBar .cb-t{font-variant-numeric:tabular-nums;white-space:nowrap}#callBar .btn{min-width:46px;min-height:46px;padding:0 8px;font-size:20px;flex:none}#callBar .btn.on{background:var(--butter)}';
+  document.head.appendChild(st);}
+const socId=s=>typeof s==="string"&&/^u[\w-]{6,30}$/.test(s);
+const socOn=()=>SOC.st==='on';
+function socS(){const o=S.soc||(S.soc={});if(!o.bl||typeof o.bl!=='object')o.bl={};if(!o.rd||typeof o.rd!=='object')o.rd={};if(!o.out||typeof o.out!=='object')o.out={};return o;}
+const socPair=id=>[SOC.me,id].sort().join('_');
+const socMyName=()=>(S.name&&!bdBad(S.name)?cleanName(S.name):'A friend');
+const socNm=n=>{const c=cleanName(n);return bdBad(c)?'A friend':c;};
+const socCol=id=>SOC.COLS[bdHash(id)%SOC.COLS.length];
+const socNow=()=>Date.now()+SOC.off;
+function socPeer(id){for(const a of MP.peers.values())if(a.pi===id&&!a.twin)return a;return null;}   /* a friend playing right now (their presence says pi) */
+function socName(id){const a=socPeer(id);if(a)return a.nm;const f=SOC.fr[id]||SOC.req[id]||socS().out[id]||socS().bl[id];return f&&f.n?f.n:'A friend';}
+function socTm(at){if(!Number.isFinite(at)||at<=0)return'';const d=new Date(at),n=realDate(),p=v=>String(v).padStart(2,'0'),hm=p(d.getHours())+':'+p(d.getMinutes());
+  return d.toDateString()===n.toDateString()?hm:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()]+' '+hm;}
+function socL(ref,cb){ref.on('value',cb,()=>socFail());SOC.refs.push([ref,cb]);return[ref,cb];}
+function socOff(x){if(!x)return;try{x[0].off('value',x[1]);}catch(e){}const i=SOC.refs.indexOf(x);if(i>=0)SOC.refs.splice(i,1);}
+function socOnce(ref){return new Promise(ok=>{let done=false;const cb=s=>{if(done)return;done=true;try{ref.off('value',cb);}catch(e){}ok(s&&s.val());};ref.on('value',cb,()=>{if(!done){done=true;ok(null);}});setTimeout(()=>{if(!done){done=true;try{ref.off('value',cb);}catch(e){}ok(null);}},6000);});}
+function socFail(){if(SOC.st==='dead')return;const was=SOC.st==='on';SOC.st='dead';for(const x of SOC.refs.slice())socOff(x);if(SOC.call)callEnd('lost');SOC.fr={};SOC.req={};SOC.th={};SOC.gc=[];
+  $('bChat').classList.remove('gcnew');updPhoneBadge();if(was&&UI.open&&PH.app==='mp')renderPhone();if(UI.open&&$('card').classList.contains('gccard'))openChat();}
+/* 🔌 start: listen to my friends, my requests, my incoming call and the chat for everyone. Any read the rules refuse -> it all rests (socFail) */
+async function socInit(){if(SOC.st!=='off'||!(window.WEBNET&&WEBNET.on)||typeof window.WEBROOM!=='function')return;SOC.st='wait';
+  try{await WEBROOM();const db=window.firebase.database();SOC.root=db.ref(SOC.PATH);const me=SOC.me=bdMe();socS();
+    db.ref('.info/serverTimeOffset').on('value',s=>{SOC.off=+(s&&s.val())||0;});
+    socL(SOC.root.child('fr/'+me),s=>socFriends(s&&s.val()));
+    socL(SOC.root.child('req/'+me),s=>socReqs(s&&s.val()));
+    socL(SOC.root.child('call/'+me),s=>socCallIn(s&&s.val()));
+    const g=SOC.root.child('gc');socL(g.limitToLast?g.limitToLast(SOC.GKEEP):g,s=>gcIn(s&&s.val()));
+    for(const id in socS().out)socOutWatch(id);
+  }catch(e){socFail();}}
+function socFriends(v){v=v&&typeof v==='object'?v:{};const first=SOC.st!=='on',old=SOC.fr,o=socS();SOC.fr={};
+  for(const id in v){const x=v[id];if(!socId(id)||id===SOC.me||!x||typeof x!=='object')continue;if(o.bl[id]){SOC.root.child('fr/'+SOC.me+'/'+id).remove().catch(()=>{});continue;}
+    SOC.fr[id]={n:socNm(x.n),at:+x.at||0};if(o.out[id]){delete o.out[id];socOff(SOC.outW[id]);delete SOC.outW[id];change();}
+    if(!first&&!old[id]&&PLAYING){SFX.yay();toast('🎉 You and '+socName(id)+' are friends now!',3.2);}}
+  for(const id in old)if(!SOC.fr[id]){socOff(SOC.th[id]&&SOC.th[id].w);delete SOC.th[id];if(PH.app==='mp'&&PH.chat===id)PH.chat=null;}
+  for(const id in SOC.fr)if(!SOC.th[id])socThread(id);
+  if(first){SOC.st='on';$('bChat').classList.toggle('gcnew',SOC.gcNew);}
+  socRefresh(!first);}
+function socReqs(v){v=v&&typeof v==='object'?v:{};const old=SOC.req,o=socS();SOC.req={};
+  for(const id in v){const x=v[id];if(!socId(id)||id===SOC.me||!x||typeof x!=='object')continue;
+    if(o.bl[id]||SOC.fr[id]){SOC.root.child('req/'+SOC.me+'/'+id).remove().catch(()=>{});continue;}   /* a blocked player's request goes away unseen */
+    SOC.req[id]={n:socNm(x.n),at:+x.at||0};
+    if(o.out[id]){socAccept(id,true);continue;}   /* we both asked: friends */
+    if(!old[id]&&SOC.st==='on'&&PLAYING){SFX.ding();toast('👫 '+SOC.req[id].n+' wants to be your friend! Open 📱 👫 Friends.',3.6);}}
+  socRefresh(true);}
+/* a request I sent: when it is gone and we are not friends, they said no (it just goes; nobody is told) */
+function socOutWatch(id){if(SOC.outW[id]||!SOC.root)return;let seen=false;
+  SOC.outW[id]=socL(SOC.root.child('req/'+id+'/'+SOC.me),s=>{const v=s&&s.val(),o=socS().out[id];if(v){seen=true;if(o)o.s=1;return;}
+    if(!o||SOC.fr[id])return;if(!(seen||o.s)&&Date.now()-(+o.at||0)<15000)return;delete socS().out[id];socOff(SOC.outW[id]);delete SOC.outW[id];change();socRefresh(true);});}
+/* 💬 a thread with one friend: the last 100 texts, read live (texts to a friend who is away wait here until they come) */
+function socThread(id){const T=SOC.th[id]={L:[],first:true,w:null},r=SOC.root.child('dm/'+socPair(id));
+  T.w=socL(r.limitToLast?r.limitToLast(SOC.KEEP):r,s=>{const v=(s&&s.val())||{},L=[];if(SOC.th[id]!==T)return;
+    for(const k in v){const m=v[k];if(!/^[\w-]{4,40}$/.test(k)||!m||typeof m.t!=='string'||(m.f!==SOC.me&&m.f!==id))continue;const t=m.t.slice(0,SOC.MAX);if(bdBad(t))continue;L.push({k,f:m.f,t,at:+m.at||0});}
+    L.sort((a,b)=>a.k<b.k?-1:a.k>b.k?1:0);const prev=T.L.length?T.L[T.L.length-1].k:'',fresh=L.filter(m=>m.f===id&&m.k>prev);T.L=L;
+    const looking=socLooking(id);if(looking)socRead(id);
+    if(T.first){T.first=false;const u=socUnread1(id);if(u&&PLAYING)setTimeout(()=>{if(socUnread1(id))toast('💬 '+u+' new text'+(u>1?'s':'')+' from '+socName(id)+'!',3.2);},1500);}
+    else if(fresh.length&&!looking&&PLAYING){const m=fresh[fresh.length-1];SFX.pop();toast('💬 '+socName(id)+': '+m.t,3.6);}
+    socRefresh(true);});}
+const socLooking=id=>UI.open&&PH.app==='mp'&&PH.chat===id&&!!document.querySelector('#card .phone');
+function socRead(id){const T=SOC.th[id];if(!T||!T.L.length)return;const k=T.L[T.L.length-1].k,o=socS(),p=socPair(id);if((o.rd[p]||'')<k){o.rd[p]=k;change();}}
+function socUnread1(id){const T=SOC.th[id];if(!T)return 0;const r=socS().rd[socPair(id)]||'';let n=0;for(const m of T.L)if(m.f===id&&m.k>r)n++;return n;}
+function socUnread(){try{if(!socOn())return 0;let n=Object.keys(SOC.req).length;for(const id in SOC.fr)n+=socUnread1(id);return n;}catch(e){return 0;}}
+const socBadge=()=>{const n=socUnread();return n?`<span class="badge">${n}</span>`:'';};
+/* ✏️ the same rules for every text: kind and safe (the Ideas Board's filter), at most 200 letters, one every 2 seconds */
+function socClean(t){return String(t||'').replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]/g,' ').replace(/\s+/g,' ').trim().slice(0,SOC.MAX);}
+function socCheck(t){if(!t)return'Write something first! ✏️';if(bdBad(t))return"Let's keep it friendly and safe 💛";if(Date.now()-SOC.sent<SOC.GAP)return'Wait a moment… ⏳';return'';}
+function socSend(id,raw){if(!socOn()||!SOC.fr[id])return'';const t=socClean(raw),bad=socCheck(t);if(bad)return bad;SOC.sent=Date.now();
+  const r=SOC.root.child('dm/'+socPair(id)),k=uid();r.child(k).set({f:SOC.me,t,at:window.firebase.database.ServerValue.TIMESTAMP}).catch(()=>{toast("😕 That text didn't send. Try again!",3);});
+  const T=SOC.th[id];if(T&&T.L.length>=SOC.KEEP)for(const m of T.L.slice(0,T.L.length-SOC.KEEP+1))r.child(m.k).remove().catch(()=>{});   /* only the last 100 stay */
+  SFX.pop();return'';}
+/* 👫 friend requests: send, say yes or no, take back; remove a friend; block and unblock */
+function socAdd(id,nm){if(!socOn()||!socId(id)||id===SOC.me)return;const o=socS();if(SOC.fr[id]){toast('✅ '+socName(id)+' is already your friend!',2.6);return;}
+  if(o.bl[id]){toast('🚫 You blocked '+socName(id)+'. Unblock them in 👫 Friends › 📨 Requests first.',3.6);return;}
+  if(SOC.req[id]){socAccept(id);return;}if(o.out[id]){toast('⏳ You already asked '+socName(id)+'. Wait for their answer!',3);return;}
+  if(Date.now()-SOC.reqT<3000){SFX.no();toast('Wait a moment… ⏳',2);return;}SOC.reqT=Date.now();
+  o.out[id]={n:socNm(nm||socName(id)),at:Date.now()};change();
+  SOC.root.child('req/'+id+'/'+SOC.me).set({n:socMyName(),at:window.firebase.database.ServerValue.TIMESTAMP}).then(()=>socOutWatch(id),()=>{delete o.out[id];toast("😕 The request didn't send. Try again!",3);socRefresh(true);});
+  SFX.pop();toast('📨 Friend request sent to '+o.out[id].n+'!',2.8);socRefresh(true);}
+function socAccept(id,quiet){const r=SOC.req[id];if(!r||!socOn())return;const u={},TS=window.firebase.database.ServerValue.TIMESTAMP;
+  u['fr/'+SOC.me+'/'+id]={n:r.n,at:TS};u['fr/'+id+'/'+SOC.me]={n:socMyName(),at:TS};u['req/'+SOC.me+'/'+id]=null;u['req/'+id+'/'+SOC.me]=null;
+  delete SOC.req[id];SOC.root.update(u).catch(()=>toast("😕 That didn't work. Try again!",3));if(!quiet)SFX.yay();socRefresh(true);}
+function socDecline(id){if(!socOn())return;delete SOC.req[id];SOC.root.child('req/'+SOC.me+'/'+id).remove().catch(()=>{});SFX.tap();socRefresh(true);}
+function socCancel(id){const o=socS();if(!o.out[id])return;delete o.out[id];socOff(SOC.outW[id]);delete SOC.outW[id];change();if(SOC.root)SOC.root.child('req/'+id+'/'+SOC.me).remove().catch(()=>{});SFX.tap();socRefresh(true);}
+function socUnfriend(id){if(!SOC.root)return;const u={};u['fr/'+SOC.me+'/'+id]=null;u['fr/'+id+'/'+SOC.me]=null;SOC.root.update(u).catch(()=>{});if(SOC.call&&SOC.call.peer===id)callEnd('ended');}
+function socBlock(id,nm){if(!socId(id)||id===SOC.me)return;const o=socS();o.bl[id]={n:socNm(nm||socName(id)),at:Date.now()};socCancel(id);socUnfriend(id);delete SOC.req[id];delete SOC.fr[id];
+  if(SOC.root)SOC.root.child('req/'+SOC.me+'/'+id).remove().catch(()=>{});change();SFX.tap();toast('🚫 '+o.bl[id].n+' is blocked. You won\'t see their texts, calls or chat lines.',3.6);
+  if(UI.open&&$('card').classList.contains('gccard'))gcLog();socRefresh(true);}
+function socUnblock(id){const o=socS();if(!o.bl[id])return;const n=o.bl[id].n;delete o.bl[id];change();SFX.tap();toast('✅ '+n+' is unblocked.',2.6);socRefresh(true);if(UI.open&&$('card').classList.contains('gccard'))gcLog();}
+/* 📤 presence: my player id rides along (pi), so friends see me online and players can add me (old versions ignore it) */
+function socStamp(st){if(window.WEBNET&&WEBNET.on&&S)st.pi=bdMe();}
+function socExtra(a,pr){a.pi=socId(pr.pi)?pr.pi:'';}
+/* 👆 walk up to a player in town (or in a shop): the button says their name and opens their card */
+function socTargets(out){if(!socOn())return;for(const a of MP.peers.values()){if(!a.pi||a.twin||!a.av||!a.av.root.visible||a.pi===SOC.me)continue;const t=a.socT||(a.socT={r:1.9,icon:'👫',label:'',act:()=>socCard(a.pi,a.nm),obj:null});
+  t.x=a.x;t.z=a.z;t.obj=a.av.root;t.label=a.nm;out.push(t);}}
+function socCard(id,nm){if(!socOn()||!socId(id))return;if(SOC.cardId!==id)SOC.cask='';const o=socS(),n=socNm(nm||socName(id)),fr=!!SOC.fr[id],on=!!socPeer(id);
+  const main=o.bl[id]?`<button class="btn white" data-a="socunbl:${id}">✅ Unblock</button>`:fr?`<button class="btn mint" data-a="sfr:${id}">💬 Text</button><button class="btn sky" data-a="sccall:${id}">📞 Call</button>`
+    :SOC.req[id]?`<button class="btn mint" data-a="socyes:${id}">✅ Be friends</button>`:o.out[id]?`<button class="btn white" disabled>⏳ Asked</button>`:`<button class="btn mint" data-a="socadd:${id}">➕ Add friend</button>`;
+  openPanel(`<div class="hd"><h2>⭐ ${esc(n)}</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
+    <p class="note">${o.bl[id]?'🚫 You blocked this player.':fr?'👫 Your friend'+(on?' · 🟢 playing now':''):SOC.req[id]?'👫 Wants to be your friend!':o.out[id]?'⏳ You asked to be friends.':'Want to be friends? 💗'}</p>
+    <div class="row">${main}</div>${o.bl[id]?'':SOC.cask===id?`<div class="socask">🚫 Block ${esc(n)}? You won't see their texts, calls or chat lines.<div class="row"><button class="btn coral" data-a="socbl:${id}">🚫 Block</button><button class="btn white" data-a="socpbl:">Cancel</button></div></div>`:`<div class="socacts"><button class="btn white" data-a="socpbl:${id}">🚫 Block</button></div>`}`,{cls:'socpl'});SOC.cardId=id;SOC.cardNm=n;}
+ACT.socpbl=id=>{SOC.cask=id||'';SFX.tap();if(SOC.cardId)socCard(SOC.cardId,SOC.cardNm);};
+/* 📱 the 👫 Friends app: my friends (online first), everyone online, and requests */
+function socPhone(hd){const o=socS(),id=PH.chat;
+  if(id&&SOC.fr[id]){const on=!!socPeer(id),n=socName(id);setTimeout(socScroll,0);
+    return`<div class="ph-hd"><button class="btn ph-back" data-a="sfr:" aria-label="Back to my friends">‹</button><h3 class="chh"><span class="cav hcav" style="background:#ff9ec4">⭐</span>${esc(n)}<span class="sdot ${on?'on':'offl'}" aria-label="${on?'Playing now':'Not playing'}"></span></h3><button class="btn sky sccall" data-a="sccall:${id}" aria-label="Call ${esc(n)}">📞</button></div>
+      <div class="bubs" id="socBubs">${socBubs(id)}</div>
+      <div class="socin"><input class="inp" id="socIn" maxlength="${SOC.MAX}" placeholder="Text ${esc(n)}…" autocomplete="off" enterkeyhint="send" aria-label="Your text"><button class="btn mint" data-a="socsend" aria-label="Send">➤</button></div>
+      <p class="bdme gcerr" id="socErr" hidden></p>${SOC.ask?`<div class="socask">${SOC.ask==='rm'?`➖ Remove ${esc(n)} from your friends?`:`🚫 Block ${esc(n)}? You won't see their texts, calls or chat lines.`}<div class="row"><button class="btn coral" data-a="${SOC.ask==='rm'?'socrm':'socbl'}:${id}">${SOC.ask==='rm'?'➖ Remove':'🚫 Block'}</button><button class="btn white" data-a="socask:">Cancel</button></div></div>`
+        :`<div class="socacts"><button class="btn white" data-a="socask:rm">➖ Remove friend</button><button class="btn white" data-a="socask:bl">🚫 Block</button></div>`}`;}
+  PH.chat=null;const tab=PH.stab||'fr',nr=Object.keys(SOC.req).length,ids=Object.keys(SOC.fr),onl=ids.filter(i=>socPeer(i)).length;
+  const tb=(k,t)=>`<button class="pill ${tab===k?'on':''}" data-a="stab:${k}">${t}</button>`;
+  let h=hd('👫 Friends')+`<div class="ph-tabs soctabs">${tb('fr','👫 Friends'+(onl?' ('+onl+' 🟢)':''))}${tb('on','🌍 Online')}${tb('rq','📨 Requests'+(nr?' ('+nr+')':''))}</div>`;
+  if(tab==='on')return h+mpPhone();
+  if(tab==='rq'){const R=Object.keys(SOC.req),O=Object.keys(o.out),B=Object.keys(o.bl);
+    h+=`<p class="ph-sub">${R.length?'Want to be your friend:':'No friend requests right now. 💗'}</p>`+R.map(i=>`<div class="ph-row"><span>⭐ ${esc(SOC.req[i].n)}</span><span class="socrow"><button class="btn mint sm" data-a="socyes:${i}">✅ Yes</button><button class="btn white sm" data-a="socno:${i}" aria-label="No thanks">✖</button></span></div>`).join('');
+    if(O.length)h+=`<p class="ph-sub" style="margin-top:12px">You asked (waiting for an answer):</p>`+O.map(i=>`<div class="ph-row"><span>⏳ ${esc(o.out[i].n)}</span><button class="btn white sm" data-a="soccan:${i}">↩️ Take back</button></div>`).join('');
+    if(B.length)h+=`<p class="ph-sub" style="margin-top:12px">🚫 Blocked:</p>`+B.map(i=>`<div class="ph-row"><span>${esc(o.bl[i].n)}</span><button class="btn white sm" data-a="socunbl:${i}">Unblock</button></div>`).join('');
+    return h;}
+  ids.sort((a,b)=>(socPeer(b)?1:0)-(socPeer(a)?1:0)||socName(a).localeCompare(socName(b)));
+  if(!ids.length)return h+`<p class="ph-sub">No friends yet! Open 🌍 Online and tap ➕ next to a player, or walk up to a player in town. 💗</p>`;
+  return h+`<div class="chats">${ids.map(i=>{const T=SOC.th[i],last=T&&T.L[T.L.length-1],u=socUnread1(i),pr=socPeer(i);
+    return`<button class="chat" data-a="sfr:${i}"><span class="cav" style="background:#ff9ec4">⭐</span><span class="cmid"><b>${esc(socName(i))}<span class="sdot ${pr?'on':'offl'}"></span></b><small>${last?esc((last.f===SOC.me?'You: ':'')+last.t):pr?esc(placeOf(pr).replace(/<[^>]*>/g,'')):'Not playing right now'}</small></span>${u?`<span class="cbadge">${u}</span>`:''}</button>`;}).join('')}</div>`;}
+function socBubs(id){const T=SOC.th[id];if(!T||!T.L.length)return`<p class="ph-sub">No texts yet. Say hi! 👋</p>`;
+  return T.L.map(m=>`<div class="bub ${m.f===SOC.me?'me':'them'}">${esc(m.t)}<span class="tm">${socTm(m.at)}</span></div>`).join('');}
+function socScroll(){const sc=document.querySelector('#card .ph-screen');if(sc&&$('socBubs'))sc.scrollTop=sc.scrollHeight;}
+/* 🔄 something changed: badges, and the open screen (a text box being typed in is never thrown away) */
+function socRefresh(lists){updPhoneBadge();if(!UI.open)return;const c=$('card');
+  if(c.querySelector('.phone')){if(PH.app==='mp'&&PH.chat){const b=$('socBubs');if(b&&SOC.fr[PH.chat]){const h=socBubs(PH.chat);if(b.innerHTML!==h){const sc=b.closest('.ph-screen'),end=sc&&sc.scrollHeight-sc.scrollTop-sc.clientHeight<40;b.innerHTML=h;if(end)socScroll();}
+        const d=c.querySelector('.ph-hd .sdot'),on=!!socPeer(PH.chat);if(d){d.className='sdot '+(on?'on':'offl');}socRead(PH.chat);return;}}
+    if(lists&&(PH.app==='mp'||!PH.app))renderPhone();return;}
+  if(c.classList.contains('socpl')&&lists&&SOC.cardId)socCard(SOC.cardId,SOC.cardNm);}
+ACT.stab=k=>{PH.stab=k||'fr';SOC.ask='';SFX.tap();renderPhone();};
+ACT.sfr=id=>{closeIfCard();PH.app='mp';PH.chat=id&&SOC.fr[id]?id:null;SOC.ask='';if(PH.chat){PH.stab='fr';socRead(id);updPhoneBadge();}SFX.tap();renderPhone();if(PH.chat&&!TOUCHY){const i=$('socIn');if(i)i.focus({preventScroll:true});}};
+function closeIfCard(){if(UI.open&&!$('card').querySelector('.phone'))closePanel();}
+ACT.socsend=()=>{const i=$('socIn'),e=$('socErr'),id=PH.chat;if(!i||!id)return;const bad=socSend(id,i.value);if(bad){SFX.no();e.textContent=bad;e.hidden=false;return;}i.value='';e.hidden=true;if(!TOUCHY)i.focus({preventScroll:true});};
+document.addEventListener('keydown',e=>{const t=e.target;if(!t||t.id!=='socIn'&&t.id!=='gcIn')return;if(e.key==='Enter'){e.preventDefault();if(t.id==='socIn')ACT.socsend();else ACT.gcsend();}else if(e.key==='Escape'){e.preventDefault();t.blur();closePanel();}});
+ACT.socask=k=>{SOC.ask=k||'';SFX.tap();renderPhone();};
+ACT.socrm=id=>{const n=socName(id);SOC.ask='';socUnfriend(id);delete SOC.fr[id];PH.chat=null;SFX.tap();toast('➖ '+n+' is not on your friends list any more.',3);renderPhone();};
+ACT.socbl=id=>{SOC.ask='';SOC.cask='';if(PH.chat===id)PH.chat=null;socBlock(id,SOC.cardId===id?SOC.cardNm:socName(id));if(UI.open&&$('card').classList.contains('socpl'))closePanel();else if(UI.open&&$('card').querySelector('.phone'))renderPhone();};
+ACT.socunbl=id=>{socUnblock(id);if(UI.open&&$('card').classList.contains('socpl'))socCard(id,SOC.cardNm);};
+ACT.socadd=id=>{const a=[...MP.peers.values()].find(p=>p.pi===id);socAdd(id,a?a.nm:SOC.cardNm);};
+ACT.socyes=id=>socAccept(id);ACT.socno=id=>socDecline(id);ACT.soccan=id=>socCancel(id);
+/* ➕ in the 🌍 Online list: add a player (✅ already friends, ⏳ asked) */
+function socAddBtn(a){if(!socOn()||!a.pi||a.twin||a.pi===SOC.me||socS().bl[a.pi])return'';if(SOC.fr[a.pi])return`<button class="btn white sm" data-a="sfr:${a.pi}" aria-label="Text ${esc(a.nm)}">💬</button>`;
+  if(socS().out[a.pi])return`<button class="btn white sm" disabled aria-label="Asked to be friends">⏳</button>`;return`<button class="btn butter sm" data-a="socadd:${a.pi}" aria-label="Add ${esc(a.nm)} as a friend">➕</button>`;}
+
+/* 🌍 the chat for everyone online: the last 50 lines, names in colour; 🚩 on a line: block that player or report the line */
+function gcIn(v){v=v&&typeof v==='object'?v:{};const L=[];for(const k in v){const m=v[k];if(!/^[\w-]{4,40}$/.test(k)||!m||typeof m.t!=='string'||!socId(m.p))continue;L.push({k,p:m.p,n:socNm(m.n),t:m.t.slice(0,SOC.MAX),at:+m.at||0});}
+  L.sort((a,b)=>a.k<b.k?-1:a.k>b.k?1:0);SOC.gc=L.slice(-SOC.GKEEP);const last=SOC.gc.length?SOC.gc[SOC.gc.length-1]:null,open=UI.open&&$('card').classList.contains('gccard');
+  if(last&&last.k>SOC.gcSeen&&SOC.gcSeen&&last.p!==SOC.me&&!open&&gcShown(last))SOC.gcNew=true;if(!SOC.gcSeen&&last)SOC.gcSeen=last.k;if(open&&last)SOC.gcSeen=last.k;
+  if(socOn())$('bChat').classList.toggle('gcnew',SOC.gcNew);if(open)gcLog();
+  if(SOC.gc.length>SOC.GKEEP+10){const old=socNow()-60000;for(const m of SOC.gc.slice(0,SOC.gc.length-SOC.GKEEP-5))if(m.at<old)SOC.root.child('gc/'+m.k).remove().catch(()=>{});}}
+const gcShown=m=>!socS().bl[m.p]&&!SOC.hid.has(m.k)&&!bdBad(m.t);
+function gcLines(){const L=SOC.gc.filter(gcShown);if(!L.length)return'<p class="ph-sub">No one has said anything yet. Say hi to everyone! 👋</p>';
+  return L.map(m=>{const me=m.p===SOC.me;return`<div class="gcl${me?' me':''}"><p><b style="color:${socCol(m.p)}">${me?'You':esc(m.n)}:</b> ${esc(m.t)}<span class="tm">${socTm(m.at)}</span></p>${me?'':`<button class="btn" data-a="gcflag:${m.k}" aria-label="Block or report ${esc(m.n)}">🚩</button>`}</div>`;}).join('');}
+function gcLog(){const el=$('gcLog');if(!el)return;const h=gcLines();if(el.innerHTML===h)return;const end=el.scrollHeight-el.scrollTop-el.clientHeight<40;el.innerHTML=h;if(end)el.scrollTop=el.scrollHeight;}
+const quickHtml=()=>`<div class="qmsg">${QUICK.map((q,i)=>`<button class="pill" data-a="mpsay:${i}">${esc(q)}</button>`).join('')}</div><div class="qmsg">${EMOS.map((e,i)=>`<button class="emo" data-a="mpemo:${i}">${e}</button>`).join('')}</div>`;
+function gcOpen(){const all=SOC.gtab!=='hi',f=SOC.flag&&SOC.gc.find(m=>m.k===SOC.flag);SOC.gcNew=false;$('bChat').classList.remove('gcnew');if(SOC.gc.length)SOC.gcSeen=SOC.gc[SOC.gc.length-1].k;
+  const tb=(k,t)=>`<button class="pill ${(k==='all')===all?'on':''}" data-a="gctab:${k}">${t}</button>`;
+  openPanel(`<div class="hd"><h2>💬 Chat</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div><div class="ph-tabs">${tb('all','🌍 Everyone')}${tb('hi','👋 Say hi')}</div>
+    ${all?(f?`<div class="socask">🚩 ${esc(f.n)}: “${esc(f.t)}”<div class="row"><button class="btn coral" data-a="gcbl:${f.k}">🚫 Block ${esc(f.n)}</button><button class="btn butter" data-a="gcrep:${f.k}">🚩 Report this line</button><button class="btn white" data-a="gcflag:">Cancel</button></div></div>`
+      :`<div class="gclog" id="gcLog">${gcLines()}</div><div class="socin"><input class="inp" id="gcIn" maxlength="${SOC.MAX}" placeholder="Say something to everyone…" autocomplete="off" enterkeyhint="send" aria-label="Your chat line"><button class="btn mint" data-a="gcsend" aria-label="Send">➤</button></div><p class="bdme gcerr" id="gcErr" hidden></p>`):quickHtml()}`,{bottom:true,cls:'gccard'});
+  const el=$('gcLog');if(el)el.scrollTop=el.scrollHeight;if(all&&!f&&!TOUCHY){const i=$('gcIn');if(i)i.focus({preventScroll:true});}}
+ACT.gctab=k=>{SOC.gtab=k==='hi'?'hi':'all';SOC.flag=null;SFX.tap();gcOpen();};
+ACT.gcsend=()=>{const i=$('gcIn'),e=$('gcErr');if(!i||!socOn())return;const t=socClean(i.value),bad=socCheck(t);if(bad){SFX.no();e.textContent=bad;e.hidden=false;return;}
+  SOC.sent=Date.now();const k=uid();SOC.root.child('gc/'+k).set({p:SOC.me,n:socMyName(),t,at:window.firebase.database.ServerValue.TIMESTAMP}).catch(()=>toast("😕 That didn't send. Try again!",3));
+  i.value='';e.hidden=true;SFX.pop();if(MP.peers.size)qEvent('mproom');if(!TOUCHY)i.focus({preventScroll:true});};
+ACT.gcflag=k=>{SOC.flag=k||null;SFX.tap();gcOpen();};
+ACT.gcbl=k=>{const m=SOC.gc.find(x=>x.k===k);SOC.flag=null;if(m)socBlock(m.p,m.n);gcOpen();};
+ACT.gcrep=k=>{const m=SOC.gc.find(x=>x.k===k);SOC.flag=null;if(m&&SOC.root){SOC.hid.add(k);SOC.root.child('rep/'+uid()).set({k,p:m.p,n:m.n,t:m.t,by:SOC.me,at:window.firebase.database.ServerValue.TIMESTAMP}).catch(()=>{});toast('🚩 Thank you! A grown-up will look at it. The line is hidden for you.',3.6);}gcOpen();};
+/* ⌨️ PC: / opens the chat (Enter too, when there is nothing in front of you to use) */
+addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT'||document.body.classList.contains('away')||!PLAYING||UI.open||CUT||DECO.on||!socOn()||!MP.grp)return;
+  if(e.code==='Slash'||(e.code==='Enter'&&!TARGET)){e.preventDefault();SOC.gtab='all';openChat();}});
+
+/* 📞 voice calls between friends (WebRTC with Google's public STUN server; no TURN server, so some school or phone networks can't connect).
+   The caller writes call/<friend>: offer + its ICE candidates; the friend answers there. Ringing waits 30 s; a call that doesn't connect in 15 s stops.
+   Leaving the game ends the call (onDisconnect removes it). iPad Safari: the microphone and the sound start from the tap on 📞 or Answer */
+ACT.sccall=id=>callStart(id);
+function callUI(){const c=SOC.call;let el=$('callCard'),bar=$('callBar');
+  if(!el){el=document.createElement('div');el.id='callCard';el.setAttribute('role','alertdialog');el.hidden=true;document.body.appendChild(el);}
+  if(!bar){bar=document.createElement('div');bar.id='callBar';bar.setAttribute('role','status');bar.hidden=true;document.body.appendChild(bar);}
+  if(!c){el.hidden=true;bar.hidden=true;return;}
+  if(c.st==='live'){el.hidden=true;bar.innerHTML=`<span>📞</span><span class="cb-n">${esc(c.nm)}</span><span class="cb-t" id="cbT">${callTime(c)}</span>${c.deaf?'<button class="btn butter" id="cbHear" aria-label="Tap to hear">🔊</button>':''}<button class="btn white${c.mute?' on':''}" id="cbMute" aria-label="${c.mute?'Unmute':'Mute'}" aria-pressed="${c.mute?'true':'false'}">${c.mute?'🔇':'🎤'}</button><button class="btn hang" id="cbEnd" aria-label="Hang up">📵</button>`;bar.hidden=false;
+    $('cbMute').onclick=()=>{c.mute=!c.mute;if(c.ms)for(const t of c.ms.getAudioTracks())t.enabled=!c.mute;SFX.tap();callUI();};$('cbEnd').onclick=()=>callEnd('hang');if($('cbHear'))$('cbHear').onclick=()=>{c.au.play().then(()=>{c.deaf=false;callUI();}).catch(()=>{});};return;}
+  bar.hidden=true;const inc=c.dir==='in'&&c.st==='ring';
+  el.innerHTML=`<div class="cc-i">📞</div><div class="cc-t">${esc(c.nm)}</div><div class="cc-m">${inc?'is calling you…':c.st==='conn'?'Connecting…':'Calling…'}</div><div class="cc-b">${inc?'<button class="btn mint" id="ccYes">📞 Answer</button><button class="btn hang" id="ccNo">📵 Decline</button>':'<button class="btn hang" id="ccNo">📵 Hang up</button>'}</div>`;
+  el.hidden=false;if($('ccYes'))$('ccYes').onclick=()=>callAnswer();$('ccNo').onclick=()=>inc?callDecline():callEnd('hang');}
+const callTime=c=>{const s=c.live?Math.floor((Date.now()-c.live)/1000):0;return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
+function callRing(on,kind){clearInterval(SOC.ringT);SOC.ringT=0;if(!on)return;const f=()=>{if(kind==='in'){tone(880,.22,'sine',.16);tone(740,.22,'sine',.16,.26);tone(880,.22,'sine',.16,.9);tone(740,.22,'sine',.16,1.16);try{if(navigator.vibrate)navigator.vibrate([200,120,200]);}catch(e){}}else tone(425,.9,'sine',.06);};
+  audioInit();f();SOC.ringT=setInterval(f,kind==='in'?2600:3000);}
+/* the far side's voice: an <audio> started inside the tap (iPad Safari plays it later only if it was started by a tap) */
+function callAudio(c){if(c.au)return;c.rs=new MediaStream();const a=c.au=new Audio();a.autoplay=true;a.playsInline=true;a.setAttribute('playsinline','');a.srcObject=c.rs;a.play().catch(()=>{});}
+function callPc(c){const pc=c.pc=new RTCPeerConnection({iceServers:SOC.ICE});for(const t of c.ms.getTracks())pc.addTrack(t,c.ms);c.q=[];c.rq=[];
+  pc.ontrack=e=>{if(SOC.call!==c)return;if(!c.rs.getTracks().includes(e.track))c.rs.addTrack(e.track);c.au.play().then(()=>{c.deaf=false;},()=>{c.deaf=true;callUI();});};
+  pc.onicecandidate=e=>{if(!e.candidate||SOC.call!==c)return;const j=JSON.stringify(e.candidate.toJSON?e.candidate.toJSON():e.candidate);if(c.up)callCand(c,j);else c.q.push(j);};
+  const st=()=>{if(SOC.call!==c)return;const s=pc.connectionState||pc.iceConnectionState;if(s==='connected'||s==='completed'||pc.iceConnectionState==='connected'||pc.iceConnectionState==='completed')callLive(c);
+    else if(s==='failed')callEnd('fail');else if(s==='disconnected'){clearTimeout(c.dt);c.dt=setTimeout(()=>{if(SOC.call===c&&/disconnected|failed/.test(pc.connectionState||pc.iceConnectionState))callEnd('lost');},6000);}};
+  pc.onconnectionstatechange=st;pc.oniceconnectionstatechange=st;return pc;}
+function callCand(c,j){c.ref.child((c.dir==='out'?'oc/':'ac/')+uid()).set(j).catch(()=>{});}
+function callCands(c,o){if(!o||typeof o!=='object')return;for(const k in o){if(c.seen.has(k)||typeof o[k]!=='string')continue;c.seen.add(k);let x=null;try{x=JSON.parse(o[k]);}catch(e){}if(!x)continue;if(c.rem)c.pc.addIceCandidate(x).catch(()=>{});else c.rq.push(x);}}
+function callRemote(c,type,sdp){return c.pc.setRemoteDescription({type,sdp}).then(()=>{c.rem=true;for(const x of c.rq.splice(0))c.pc.addIceCandidate(x).catch(()=>{});});}
+function callMic(){return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false});}
+const callCan=()=>!!(window.RTCPeerConnection&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaStream);
+function callStart(id){if(!socOn()||!SOC.fr[id])return;const n=socName(id);if(SOC.call){toast('📞 You are already in a call.',2.6);return;}
+  if(!callCan()){SFX.no();toast('📵 Calls don\'t work in this browser. Try Safari or Chrome!',3.4);return;}
+  if(!socPeer(id)){SFX.no();toast('📵 '+n+' isn\'t playing right now. Send a text instead! 💬',3.4);return;}
+  closeIfCard();const c=SOC.call={id:uid(),peer:id,nm:n,dir:'out',st:'dial',ref:SOC.root.child('call/'+id),t0:Date.now(),seen:new Set()};
+  const mic=callMic();callAudio(c);callUI();callRing(true,'out');   /* both inside the tap */
+  socOnce(c.ref).then(v=>{if(SOC.call!==c)return null;if(v&&v.st!=='end'&&Number.isFinite(v.at)&&socNow()-v.at<45000){callEnd('busy',true);return null;}return mic;})
+    .then(ms=>{if(!ms||SOC.call!==c){if(ms)for(const t of ms.getTracks())t.stop();return;}c.ms=ms;const pc=callPc(c);
+      return pc.createOffer({offerToReceiveAudio:true}).then(o=>pc.setLocalDescription(o)).then(()=>{if(SOC.call!==c)return;
+        try{c.ref.onDisconnect().remove();}catch(e){}
+        return c.ref.set({f:SOC.me,n:socMyName(),id:c.id,at:window.firebase.database.ServerValue.TIMESTAMP,o:pc.localDescription.sdp,st:'ring'}).then(()=>{c.up=true;c.st='ring';for(const j of c.q.splice(0))callCand(c,j);
+          c.w=socL(c.ref,s=>callOutSees(c,s&&s.val()));c.tm=setTimeout(()=>{if(SOC.call===c&&c.st==='ring')callEnd('noanswer');},30000);callUI();});});})
+    .catch(e=>{if(SOC.call!==c)return;callEnd(e&&/NotAllowed|Permission|Security/i.test(e.name||'')?'mic':'fail');});}
+function callOutSees(c,v){if(SOC.call!==c)return;if(!v){if(c.up)callEnd(c.st==='ring'?'declined':'ended',true);return;}if(v.id!==c.id){callEnd('busy',true);return;}
+  if(v.st==='no'){callEnd('declined');return;}if(v.st==='busy'){callEnd('busy');return;}if(v.st==='end'){callEnd('ended');return;}
+  if(typeof v.a==='string'&&!c.ans){c.ans=true;c.st='conn';clearTimeout(c.tm);callRing(false);callUI();callRemote(c,'answer',v.a).catch(()=>callEnd('fail'));c.tm=setTimeout(()=>{if(SOC.call===c&&c.st!=='live')callEnd('fail');},15000);}
+  callCands(c,v.ac);}
+/* someone is calling me (call/<me>) */
+function socCallIn(v){const c=SOC.call,r=SOC.root&&SOC.root.child('call/'+SOC.me);
+  if(c&&c.dir==='in'){if(!v||v.id!==c.id){callEnd(c.st==='ring'?'missed':'ended',true);if(!v)return;}else{c.v=v;if(v.st==='end'){callEnd('ended',true);return;}
+    if(v.ab&&v.ab!==SOC.sid&&c.st==='ring'){callEnd('other',true);return;}if(c.pc)callCands(c,v.oc);return;}}
+  if(!v||typeof v!=='object'||v.st!=='ring'||typeof v.id!=='string'||!socId(v.f)||typeof v.o!=='string')return;
+  if(!Number.isFinite(v.at)||socNow()-v.at>40000)return;   /* an old ring left behind */
+  if(socS().bl[v.f]||!SOC.fr[v.f]){r.update({st:'no'}).catch(()=>{});return;}
+  if(SOC.call||!PLAYING){if(!SOC.call||SOC.call.id!==v.id)r.update({st:'busy'}).catch(()=>{});return;}
+  const n=SOC.call={id:v.id,peer:v.f,nm:socName(v.f),dir:'in',st:'ring',ref:r,t0:Date.now(),seen:new Set(),v};
+  callUI();callRing(true,'in');n.tm=setTimeout(()=>{if(SOC.call===n&&n.st==='ring')callEnd('missed',true);},35000);}
+function callAnswer(){const c=SOC.call;if(!c||c.dir!=='in'||c.st!=='ring')return;if(!callCan()){callDecline();toast('📵 Calls don\'t work in this browser. Try Safari or Chrome!',3.4);return;}
+  callRing(false);clearTimeout(c.tm);c.st='conn';const mic=callMic();callAudio(c);callUI();c.ref.update({ab:SOC.sid}).catch(()=>{});
+  mic.then(ms=>{if(SOC.call!==c){for(const t of ms.getTracks())t.stop();return;}c.ms=ms;const pc=callPc(c);c.up=true;try{c.ref.onDisconnect().remove();}catch(e){}
+    return callRemote(c,'offer',c.v.o).then(()=>{callCands(c,c.v.oc);return pc.createAnswer();}).then(a=>pc.setLocalDescription(a)).then(()=>{if(SOC.call!==c)return;
+      return c.ref.update({a:pc.localDescription.sdp,st:'ok'}).then(()=>{for(const j of c.q.splice(0))callCand(c,j);});});})
+    .catch(e=>{if(SOC.call!==c)return;callEnd(e&&/NotAllowed|Permission|Security/i.test(e.name||'')?'mic':'fail');});
+  c.tm=setTimeout(()=>{if(SOC.call===c&&c.st!=='live')callEnd('fail');},15000);}
+function callDecline(){const c=SOC.call;if(!c||c.dir!=='in')return;c.ref.update({st:'no'}).catch(()=>{});callEnd('nothanks',true);}
+function callLive(c){if(c.st==='live')return;clearTimeout(c.tm);callRing(false);c.st='live';c.live=Date.now();SFX.yay();callUI();}
+/* ⛔ every way a call ends: tracks stopped, the connection closed, the Firebase call cleared, and one kind line */
+function callEnd(why,keepNode){const c=SOC.call;if(!c)return;SOC.call=null;clearTimeout(c.tm);clearTimeout(c.dt);callRing(false);socOff(c.w);
+  if(c.ms)for(const t of c.ms.getTracks())t.stop();if(c.pc)try{c.pc.close();}catch(e){}if(c.au){try{c.au.pause();}catch(e){}c.au.srcObject=null;}
+  if(c.ref&&(!keepNode||c.dir==='out'&&c.up)){if(c.dir==='out'||c.st!=='ring')c.ref.remove().catch(()=>{});}try{c.ref.onDisconnect().cancel&&c.ref.onDisconnect().cancel();}catch(e){}
+  callUI();const n=c.nm,M={busy:'📵 '+n+' is busy right now. Try again soon!',declined:'📵 '+n+' can\'t talk right now.',noanswer:'📵 '+n+' didn\'t answer.',
+    fail:'😕 The call couldn\'t connect. Some internet networks block calls.',mic:'🎤 Calls need the microphone. Allow it for this game, then try again!',missed:'📵 You missed a call from '+n+'.',
+    lost:'📵 The call with '+n+' was lost.',ended:'📞 The call with '+n+' ended'+(c.live?' ('+callTime(c)+')':'')+'.',hang:'📞 Call ended'+(c.live?' ('+callTime(c)+')':'')+'.'};
+  SOC.lastEnd=why;if(M[why]&&PLAYING){if(why!=='hang'&&why!=='ended')SFX.no();toast(M[why],3.4);}}
+setInterval(()=>{const c=SOC.call;if(!c)return;if(!PLAYING||!socOn()){callEnd('ended');return;}
+  if(c.st==='live'){const t=$('cbT');if(t)t.textContent=callTime(c);}
+  if(!socPeer(c.peer)){c.gone=(c.gone||0)+1;if(c.gone>=8)callEnd('lost');}else c.gone=0;},1000);   /* the friend left the game */
+addEventListener('pagehide',()=>{const c=SOC.call;if(c&&c.ref)try{c.ref.remove();}catch(e){}});
+/* the 👫 Friends app: the new one when it is on; the old list (with a short line when the Firebase rules for it are missing) when it rests */
+function socApp(hd){if(socOn())return socPhone(hd);return hd('👫 Friends')+(SOC.st==='dead'?'<p class="ph-sub">💤 Friend lists, texts and calls are resting right now. Playing together still works!</p>':'')+mpPhone();}
