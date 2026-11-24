@@ -1895,7 +1895,7 @@ function buildStudio(){BENCH_L=null;const L=makeLoc('studio','in',700,0,[-4,-4,4
    floor collide only on that floor (col .fl, see collideXZ). Animals: each kind at its cozy spot (moves-petshop-spots), no cages */
 const PSH={F:[0,3.34,6.54],R:3.34,SX:[[-6.75,-5.15,0],[5.15,6.75,1]],SZ0:.1,SZ1:4.2,N:14,VX:3.2,VZ0:-2,VZ1:2.6};
 /* the height of the stairs of flight k at z (room frame): the top of the step you stand on */
-function psStairH(k,z){const n=clamp(Math.floor((PSH.SZ1-z)/((PSH.SZ1-PSH.SZ0)/PSH.N)),0,PSH.N-1);return PSH.F[k]+(n+1)*PSH.R/PSH.N;}
+function psStairH(k,z){return PSH.F[k]+Math.min(PSH.R,clamp((PSH.SZ1-z)/(PSH.SZ1-PSH.SZ0),0,1)*PSH.R+PSH.R/PSH.N/2);}   /* (24 Nov, owner: running up the stairs was scuffy: you hopped up every step. Now you glide up a smooth slope through the middle of the steps, half a step at most from each step top) */
 /* where you can stand at x,z (room frame) with your feet at c: the highest floor within a step up; null = solid (a stair's side, or a drop) */
 function psSupport(x,z,c){let h=-1;const inM=Math.abs(x)<PSH.VX&&z>PSH.VZ0&&z<PSH.VZ1;
   const cand=y=>{if(y<=c+.45&&y>h)h=y;};cand(0);
