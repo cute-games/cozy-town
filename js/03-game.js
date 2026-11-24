@@ -2155,7 +2155,9 @@ function nsInit(){if(NS.ref||!(window.WEBNET&&WEBNET.on)||typeof window.WEBROOM!
 function nsTick(dt){const t=S.time;if(!(t>=21||t<7)||!nsMine()||nsAwake()){NS.t=0;return;}
   if((NS.t+=dt)<2)return;NS.t=-3;nsSkip();}   /* (everyone has been in bed for 2 s; then at most one try in 5 s) */
 function nsSkip(){const c=clockNow(),d=c.time>=21?c.day+1:c.day,add=msAt(d,7)+1500-gameMs();if(!(add>0))return;   /* to 7:00 (and a second and a half) */
-  const sk=CLK.sk+add;CLK.sk=sk;if(NS.ref)NS.ref.set({sk,d,at:Date.now()}).catch(()=>{});}
+  const sk=CLK.sk+add,others=MP.peers&&[...MP.peers.values()].some(a=>a.av);
+  if(NS.ref){NS.ref.set({sk,d,at:Date.now()}).then(()=>{if(sk>CLK.sk)CLK.sk=sk;}).catch(()=>{if(!others&&sk>CLK.sk)CLK.sk=sk;});return;}   /* (24 Nov: one player jumped to morning and the other didn't: the jump now happens only once the shared clock has it, so everyone jumps together; if it can't be shared, only a player alone skips) */
+  if(!others)CLK.sk=sk;}
 function zzMorning(){for(const e of PET_ACTORS)if(e.nap)e.d.happy=Math.min(100,e.d.happy+15);   /* 😴 a nap makes them happier (stage 2) */
   standUp();S.hunger=Math.max(S.hunger,40);toast('Good morning! It\'s '+wdName()+' ☀️',4);doneTask('sleep');change();}
 /* the sleep screen: a soft night over the game, 💤 drifting up, the time and the weekday, and a Wake up button (at least 44 px) */
