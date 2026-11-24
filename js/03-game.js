@@ -2669,11 +2669,12 @@ function farmRide(dt){const r=P.horse,h=r.h,now=gameMs()/1000;
 /* 🐴 horses walk home by themselves (25 Nov, owner: get off anywhere in town and the horse walks home at walking speed on the pavements and zebra crossings; horses on their way home
    join up). Where a horse is, is worked out from what went online alone (hh: [horse, x, z, when] of every "got off") and the one clock: every player sees the same, nothing is
    random and nothing is moved step by step. The way: straight to a path node it can reach without a road or a wall, the walkers' paths (WP: they cross at the zebra crossings)
-   to the north-west corner, the pavement of the x -50 road up to the farm road, the farm road, its own spot. Joining up: a horse that would pass the farm gate within FARM_HJOIN s
+   to the north-west corner, the pavement of the x -50 road north to the gap in the town's edge (that gap is on the road's dead end: 8 m along its edge), the farm road, its own spot. Joining up: a horse that would pass the farm gate within FARM_HJOIN s
    of another one stands and waits (off the road) until they pass it together, one behind the other. A horse on its way can be ridden again. */
-const FARM_HW=2.4,FARM_HJOIN=40,FARM_HGATE=[-55.5,-82.5];
+const FARM_HW=2.4,FARM_HJOIN=40,FARM_HGATE=[-55.5,-75];
 const farmZebra=(x,z)=>[-50,0,50].some(c=>{const a=Math.abs(x-c),b=Math.abs(z-c);return a>=4&&a<=7||b>=4&&b<=7;});   /* on a road: where a pavement goes on across it (the white stripes) */
-function farmHomeClear(x,z,B){const L=LOC.city,C={cols:L.cols,dcols:[],fgrid:L.fgrid,bounds:L.bounds},d=Math.hypot(B[0]-x,B[1]-z),n=Math.ceil(d/.5);let off=false;
+const farmHomeCols=()=>{const L=LOC.city;return {cols:L.cols,dcols:[],fgrid:L.fgrid,bounds:L.bounds};};   /* the town's standing things (the same for every player) */
+function farmHomeClear(x,z,B){const C=farmHomeCols(),d=Math.hypot(B[0]-x,B[1]-z),n=Math.ceil(d/.25);let off=false;
   for(let k=1;k<n;k++){const px=x+(B[0]-x)*k/n,pz=z+(B[1]-z)*k/n;if(!onRoad(px,pz))off=true;else if(!farmZebra(px,pz)&&(off||k*d/n>6))return false;   /* (a horse left on the road walks off it first) */
     const q=collideXZ(px,pz,.35,C);if(Math.hypot(q[0]-px,q[1]-pz)>.02)return false;}return true;}
 /* from every path node the next one on the shortest way to the north-west corner (node O1), never along a path that crosses a road away from a zebra crossing */
@@ -2683,10 +2684,11 @@ function farmHomeNext(){if(FARM.hn)return FARM.hn;const n=WP.length,d=new Array(
   return nx;}
 function farmHomeWay(x,z,h){const R=MAP_FROAD,nr=(px,pz)=>{let b=0,bd=1e9;R.forEach((p,i)=>{const d=Math.hypot(p[0]-px,p[1]-pz);if(d<bd){bd=d;b=i;}});return b;},j=Math.max(2,nr(h.hx,h.hz)),pts=[[x,z]];let g=null;
   if(farmZone(x,z)){if(Math.hypot(h.hx-x,h.hz-z)>25)for(let k=nr(x,z);;k+=j>k?1:-1){pts.push(R[k]);if(k===j)break;}}   /* on the farm's land: along the farm road */
-  else{let a;if(x<-84){const s=z<0?-1:1;pts.push([x,s*5.6]);a=WPN[s<0?'E8':'E7'];}   /* Friends Lane: its pavement, then into town */
+  else{let a;if(onRoad(x,z)&&!farmZebra(x,z)){const c=v=>Math.round(clamp(v,-50,50)/50)*50,cx=c(x),cz=c(z);if(Math.abs(x-cx)<Math.abs(z-cz))x=cx+(x<cx?-5.5:5.5);else z=cz+(z<cz?-5.5:5.5);pts.push([x,z]);}   /* left on a road: first straight off it, onto the pavement */
+    if(x<-84){const s=z<0?-1:1;pts.push([x,s*5.6]);a=WPN[s<0?'E8':'E7'];}   /* Friends Lane: its pavement, then into town */
     else{const o=WP.map((p,i)=>[Math.hypot(p[0]-x,p[1]-z),i]).sort((p,q)=>p[0]-q[0]);a=(o.slice(0,12).find(q=>farmHomeClear(x,z,WP[q[1]]))||o[0])[1];}
     for(let n=a;n>=0;n=farmHomeNext()[n])pts.push(WP[n]);
-    g=pts.length;pts.push(FARM_HGATE,[-53,-85.5]);for(let k=2;k<=j;k++)pts.push(R[k]);}
+    g=pts.length;pts.push(FARM_HGATE,[-52.4,-79.5],[-52.4,-82.5]);for(let k=2;k<=j;k++)pts.push(R[k]);}
   pts.push([h.hx,h.hz]);return {pts,g};}
 /* every horse on its way home now: mine and my friends', the newest "got off" of each horse, none that is ridden */
 function farmHomeList(){const now=gameMs()/100,by=new Map(),add=e=>{const q=by.get(e[0]);if(!q||e[3]>q[3])by.set(e[0],e);};
@@ -2706,7 +2708,7 @@ function farmHomePlan(list,dt){const key=JSON.stringify(list),now=gameMs()/1000,
   let any=false;for(const h of FARM.hs){const p=FARM.hp.find(q=>q.h===h),D=p?farmHomeD(p,now-p.rk*.85):0;
     if(!p||D>=p.L){if(h.hw){h.hw=null;if(h.st==='home'){h.x=h.hx;h.z=h.hz;h.ry=h.hry0??h.ry;}}continue;}
     any=true;if(h.st==='back')h.st='home';let o=h.hw;if(!o||o.k!==p.k||D-o.d>60)o=h.hw={k:p.k,d:D,mv:0};   /* (the plan changed under it: it stands until its place catches up, or trots after it) */
-    const nd=D>o.d?Math.min(D,o.d+6.5*dt):o.d,v=dt>0?(nd-o.d)/dt:0;o.mv=v<.05?0:v>3.5?2:1;o.d=nd;const q=farmHomeXZ(p,nd);h.x=q[0];h.z=q[1];if(o.mv)h.ry=angLerp(h.ry,q[2],Math.min(1,dt*4));}
+    const nd=D>o.d?Math.min(D,o.d+6.5*dt):o.d,v=dt>0?(nd-o.d)/dt:0;o.mv=v<.05?0:v>3.5?2:1;o.d=nd;const q=farmHomeXZ(p,nd);if(p.Lg!=null&&nd<p.Lg)[q[0],q[1]]=collideXZ(q[0],q[1],.36,farmHomeCols());h.x=q[0];h.z=q[1];   /* (in town it steps round a lamp post or a wall's corner that stands on the path) */if(o.mv)h.ry=angLerp(h.ry,q[2],Math.min(1,dt*4));}
   return any;}
 function farmJump(){const r=P.horse;if(!r)return false;const now=gameMs()/1000;if(now-r.j<1.7||r.sp<1)return true;r.j=now;SFX.jump();return true;}
 function farmStamp(st){const r=P.horse;st.rd=r?[r.h.i,{idle:'i',walk:'w',trot:'t',gallop:'g',jump:'j'}[r.g]||'i',Math.round(r.ry*100)/100]:null;st.hh=FARM.hh.length?FARM.hh:null;}   /* 🐴 riding: [horse, gait, its heading]; hh: my horses walking home, each [horse, x, z, when I got off] (old versions ignore both) */

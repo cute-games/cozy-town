@@ -1229,7 +1229,7 @@ P32_JS = r"""()=>{const bad=[],o={},now=()=>gameMs()/1000,msg=()=>(TQ.q.length?S
   /* into town (25 Nov, owner: horses ride anywhere in town): past the town's north edge and on to the middle of town, still on the horse */
   P.x=-50;P.z=-88;P.yaw=Math.PI;for(let i=0;i<90;i++){IN.keys.KeyW=true;farmRide(1/30);}IN.keys.KeyW=false;o.edge=[+P.z.toFixed(2),!!P.horse];if(P.z<-76||!P.horse)bad.push('did not ride into town '+o.edge);
   const ride=(x,z)=>{for(let i=0;i<900&&P.horse&&Math.hypot(P.x-x,P.z-z)>1.5;i++){P.yaw=Math.atan2(-(x-P.x),-(z-P.z));IN.keys.KeyW=true;farmRide(1/30);}IN.keys.KeyW=false;};
-  for(const [x,z] of [[-55.5,-70],[-55.5,-56],[-30,-55.5],[-5.6,-44.5],[-5.6,-20],[20,-5.6]])ride(x,z);o.town=[+P.x.toFixed(1),+P.z.toFixed(1),!!P.horse];if(!P.horse||Math.hypot(P.x-20,P.z+5.6)>3)bad.push('did not ride to the middle of town '+o.town);
+  for(const [x,z] of [[-50,-76],[-55.5,-70],[-55.5,-56],[-30,-55.5],[-5.6,-44.5],[-5.6,-20],[20,-5.6]])ride(x,z);o.town=[+P.x.toFixed(1),+P.z.toFixed(1),!!P.horse];if(!P.horse||Math.hypot(P.x-20,P.z+5.6)>3)bad.push('did not ride to the middle of town '+o.town);
   const ft=findTarget();o.townBtn=ft&&ft.label;if(o.townBtn!=='Get off')bad.push('in town on a horse the button is '+o.townBtn);
   /* pets wait at the stable */
   o.wait=PET_ACTORS.filter(e=>e.fw).length;const fol=PET_ACTORS.filter(e=>!e.d.stay&&e.loc==='city').length;if(o.wait!==fol)bad.push('pets waiting '+o.wait+' of '+fol);
@@ -1237,13 +1237,13 @@ P32_JS = r"""()=>{const bad=[],o={},now=()=>gameMs()/1000,msg=()=>(TQ.q.length?S
      crossings only, worked out from where and when you got off and the one clock (the same for every player); on its way it can be ridden again */
   const S0=FARM.stables[0],off=tg().find(t=>t.label==='Get off');o.offFar=!!off;if(!off)bad.push('no Get off in town');
   const hh=P.horse.h;off.act();const st={};farmStamp(st);o.after=[!!P.horse,hh.st,PET_ACTORS.filter(e=>e.fw).length,JSON.stringify(st.hh)];if(P.horse||o.after[2]||!st.hh||st.hh.length!==1||st.hh[0][0]!==hh.i||Math.hypot(st.hh[0][1]-20,st.hh[0][2]+5.6)>3)bad.push('after getting off '+o.after);
-  const plan=()=>farmHomePlan(farmHomeList(),.05);plan();const p=FARM.hp.find(q=>q.h===hh);
+  const plan=dt=>farmHomePlan(farmHomeList(),dt||.05);plan();const p=FARM.hp.find(q=>q.h===hh);
   if(!p)bad.push('no way home for the horse');else{let road=0,len=0;const zeb=(x,z)=>[-50,0,50].some(c=>{const a=Math.abs(x-c),b=Math.abs(z-c);return a>=4&&a<=7||b>=4&&b<=7;});
-    for(let i=1;i<p.pts.length;i++){const A=p.pts[i-1],B=p.pts[i],d=Math.hypot(B[0]-A[0],B[1]-A[1]),m=Math.max(1,Math.ceil(d/.25));for(let k=1;k<=m;k++){const x=A[0]+(B[0]-A[0])*k/m,z=A[1]+(B[1]-A[1])*k/m;if(z>-82.4&&onRoad(x,z)&&!zeb(x,z))road++;}len+=d;}
+    for(let i=1;i<p.pts.length;i++){const A=p.pts[i-1],B=p.pts[i],d=Math.hypot(B[0]-A[0],B[1]-A[1]),m=Math.max(1,Math.ceil(d/.25));for(let k=1;k<=m;k++){const x=A[0]+(B[0]-A[0])*k/m,z=A[1]+(B[1]-A[1])*k/m;if(!(z<-74&&x<-51)&&onRoad(x,z)&&!zeb(x,z))road++;   /* (the gap in the town's edge is on the dead end of the x -50 road: its last 8 m are along the road's edge) */}len+=d;}
     const e=p.pts[p.pts.length-1],at=t=>farmHomeXZ(p,farmHomeD(p,p.t0+t)),a10=at(10),a20=at(20),v=Math.hypot(a20[0]-a10[0],a20[1]-a10[1])/10;
     o.way=[p.pts.length,+len.toFixed(0),road,+v.toFixed(2),+Math.hypot(e[0]-hh.hx,e[1]-hh.hz).toFixed(2)];if(road||len<150||Math.abs(p.L-len)>.01||v<1||v>3||o.way[4]>.01)bad.push('the way home (points, metres, samples on a road away from a zebra crossing, m/s, end to its spot) '+o.way);
     /* 20 s on: it is on its way (moved, drawn there), and a Ride button stands by it: on again, off again */
-    __clockMs(realMs()+20000);plan();o.mid=[!!hh.hw,+Math.hypot(hh.x-20,hh.z+5.6).toFixed(1)];if(!hh.hw||o.mid[1]<20)bad.push('20 s later the horse is not on its way '+o.mid);
+    __clockMs(realMs()+20000);plan(20);o.mid=[!!hh.hw,+Math.hypot(hh.x-20,hh.z+5.6).toFixed(1)];if(!hh.hw||o.mid[1]<20)bad.push('20 s later the horse is not on its way '+o.mid);
     P.x=hh.x+1.2;P.z=hh.z;const rb2=tg().find(t=>t.label==='Ride'&&Math.hypot(t.x-hh.x,t.z-hh.z)<.01);if(rb2)rb2.act();o.again=[!!rb2,!!P.horse&&P.horse.h===hh,FARM.hh.length];if(!rb2||!P.horse||P.horse.h!==hh||FARM.hh.length)bad.push('riding it again on its way '+o.again);
     if(P.horse){farmRide(1/30);farmOff(true);}plan();const p2=FARM.hp.find(q=>q.h===hh);
     if(!p2)bad.push('no way home after the second ride');else{__clockMs(realMs()+Math.ceil(p2.L/2.4+3)*1000);const walking=plan();o.home=[walking,!!hh.hw,hh.st,+Math.hypot(hh.x-hh.hx,hh.z-hh.hz).toFixed(2)];if(walking||hh.hw||hh.st!=='home'||o.home[3]>.01)bad.push('the horse did not come home '+o.home);}}
