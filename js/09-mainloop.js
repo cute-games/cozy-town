@@ -208,7 +208,7 @@ DANCE.tg={x:0,z:0,r:2.0,icon:'🕺',label:'Dance!',pri:()=>true,when:()=>dnCan()
    medium 80 %, hard 92 % of the most you can jump at that height step; tools/obby/design.py). TP = the park's state; tpTick (every frame after updatePlayer) is the platforms' floor
    physics: where you stand is your floor (P.cy), their sides are solid, walking off one is a fall. Friends see you up there (your floor height P.cy goes with your place: presence cy, main 24 Nov). The old separate place (LOC.treepark,
    run 4) stays as an empty place: a game saved inside it starts at the gate in town ===== */
-const TP_Z=-1000,TP={pl:[],zips:[],signs:[],flags:[],mv:[],run:null,on:null,last:null,pf:0,zone:0,hand:null,mark:null,done:null,el:null,gk:''};
+const TP_Z=-1000,TP={g:null,pl:[],zips:[],signs:[],flags:[],mv:[],run:null,on:null,last:null,pf:0,zone:0,hand:null,mark:null,done:null,el:null,gk:''};
 const TP_PATHS={easy:{n:'Easy path',e:'🟢',c:'#5fd4b0',coins:20},medium:{n:'Medium path',e:'🟡',c:'#ffd45c',coins:30},hard:{n:'Hard path',e:'🔴',c:'#ff6b6b',coins:40}};
 function tp(){const d=S.tp||(S.tp={done:{},falls:0});if(!d.done)d.done={};if(!d.best||typeof d.best!=='object')d.best={};return d;}
 /* the course (from tools/obby/design.py): [kind, x, z, width (x), depth (z), top height, flags, moving]. Kinds: p start pad, s stump (round), d deck, l log, m moving deck.
@@ -247,7 +247,7 @@ function tpZipLine(L,st,f,k){const [lx,lz,sx,sz]=TP_LAND[k],lh=.6,ax=f.x+sx,az=f
   inter(L,{x:ax-ux*.9,z:az-uz*.9,r:1.5,icon:'🪢',label:'Ride the zip line!',pri:()=>true,when:()=>TP.on===f&&!P.ride,act:()=>tpZipGo(Z)});}
 function buildTreePark(){
   makeLoc('treepark','out',0,TP_Z,[-4,-4,4,4]);   /* the old place (run 4), now empty: an old save made in it starts at the gate in town (tpTick) */
-  const L=LOC.city,st=new THREE.Group();L.g.add(st);const r=seeded(31),TC=()=>TREE_COLS[(r()*TREE_COLS.length)|0];
+  const L=LOC.city,st=new THREE.Group();L.g.add(st);TP.g=st;const r=seeded(31),TC=()=>TREE_COLS[(r()*TREE_COLS.length)|0];
   /* the walkable area reaches into the park, and only there: walls keep the rest of the town's east edge at x 80 */
   L.bounds.x2=Math.max(L.bounds.x2,144);col(L,80,-200,92,-42);col(L,92,-200,200,-60);col(L,80,-31,200,200);
   /* the forest's own trees in the park get trunks you bump into (they were only scenery out there) */
