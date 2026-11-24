@@ -195,9 +195,7 @@ button{font-family:inherit}
 #job{pointer-events:none;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
 #mmBtn{pointer-events:auto;position:relative;padding:0;margin:0;width:140px;height:140px;border:4px solid var(--line);border-radius:50%;background:#9fe486;box-shadow:0 4px 0 var(--soft);cursor:pointer;touch-action:manipulation}
 #mmBtn[hidden]{display:none}
-#job.nojob .mmPal{display:none}
 #mm{display:block;width:100%;height:100%;border-radius:50%}
-.mmPal{position:absolute;right:-8px;bottom:-4px;width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid var(--line);font-size:15px;line-height:24px;text-align:center}
 #jobTxt{pointer-events:auto;cursor:pointer;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:16px;box-shadow:0 4px 0 var(--soft);padding:9px 12px;font-weight:700;font-size:16px;line-height:1.3;max-width:min(270px,100%);min-height:44px;align-content:center}
 #jobTxt .tm{font-weight:800;font-size:20px}
 #jobTxt small{font-weight:600;opacity:.8}
@@ -245,7 +243,6 @@ button{font-family:inherit}
 .dotb{font:800 16px var(--font);color:var(--ink);background:#fff;border:3px solid var(--line);border-radius:16px;padding:8px;display:flex;align-items:center;gap:8px;cursor:pointer;touch-action:manipulation}
 .dotb i{flex:0 0 30px;height:30px;border-radius:50%;border:3px solid var(--line)}
 .dotb.on{background:var(--butter);box-shadow:0 0 0 3px var(--line)}
-#dotPrev{width:100%;height:auto;border:3px solid var(--line);border-radius:14px;display:block}
 .earn{font-size:20px;font-weight:700;margin:6px 0 0}
 @media (max-width:600px){#mmBtn{width:112px;height:112px}#jobTxt{font-size:14px;padding:10px 10px}#jobTxt .tm{font-size:17px}.jobc .ji{font-size:30px}.jobc b{font-size:14px}.jobc small{font-size:12.5px}.dots{grid-template-columns:repeat(3,1fr)}.dotb{font-size:14px;padding:6px;gap:6px}.dotb i{flex-basis:24px;height:24px}#note span#noteX{font-size:15px}#note .ni{font-size:32px}}
 @media (max-height:500px){#mmBtn{width:100px;height:100px}}

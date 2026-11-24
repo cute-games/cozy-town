@@ -178,6 +178,36 @@ def fix_house4(s):
     # Old: the yard has exactly 36 spots (6 beds + 30 pots). New: exactly 42 (6 beds + 30 pots + the 6 back beds); every other part of the line is unchanged.
     return rep(s, """    if gd['plots'] != 36 or gd['pots'] != 30 or gd['garden'] < 6: probs.append(f"not 6 beds + 30 pots: {gd['plots']} spots, {gd['pots']} pots, {gd['garden']} slots")""",
                """    if gd['plots'] != 42 or gd['pots'] != 30 or gd['garden'] < 6: probs.append(f"not 6 beds + 30 pots + 6 back beds (garden levels 2 and 3): {gd['plots']} spots, {gd['pots']} pots, {gd['garden']} slots")""")
+def fix_map4(s):
+    # N26 (24 Nov 2026, the owner: "the mini map ... does not include the farm. Pressing it should expand and show everything"; and "we do not need the map
+    # dot editor"). The corner map now shows the 64 m round you (north up, your arrow in the middle) from one picture of the whole world, and a tap opens
+    # the big map for everyone. Old -> new:
+    #  1. the pink arrow is looked for at your spot on the old whole-town map (MM0/MMW, gone) -> in the middle of the corner map (same pixel test, same radius)
+    #  2. with a job the label must say 'dot color' (the picker) -> must say 'big map' (the picker is gone; the tap opens the big map)
+    #  New checks (nothing removed): a tap on the corner map with a job opens the big map and no dot picker exists; every PLACES entry shown on the map and
+    #  the farm's places are on the big map inside its bounds; the corner map draws (12+ colours) at the farm, on the horse trail and on Friends Lane;
+    #  one corner-map drawing costs under 1 ms (200 drawings, the canvas read back after them)
+    s = rep(s, "k=N/MMW,M=v=>(clamp(v,MM0+2,MM0+MMW-2)-MM0)*k,px=M(P.x),pz=M(P.z),cols=new Set();", "px=N/2,pz=N/2,cols=new Set();")
+    s = rep(s, "if not r['shown'] or not r['txt'] or r['colours'] < 12 or 'dot color' not in (r['label'] or ''): probs.append(f'{prof}: corner map with the {jb} job wrong: {r}')",
+               "if not r['shown'] or not r['txt'] or r['colours'] < 12 or 'big map' not in (r['label'] or ''): probs.append(f'{prof}: corner map with the {jb} job wrong: {r}')")
+    s = rep(s, """        inside = await g.ev("()=>{S.job=null;__goto('salon');""", """        await g.ev("()=>{S.job='delivery';jobHud(true);miniTick(1);}"); await g.step(2); tp = await g.tap('#mmBtn'); await g.step(8)
+        tb = await g.ev("()=>({on:MAPV.on,canvas:!!$('mapc'),picker:typeof openDot!=='undefined'||!!document.querySelector('[data-a^=dot]')})")
+        det.append(f"{prof}: tap on the corner map with a job: {tp}, big map open {tb['on'] and tb['canvas']}, dot picker anywhere {tb['picker']}")
+        if tp != 'ok' or not tb['on'] or not tb['canvas'] or tb['picker']: probs.append(f'{prof}: a tap on the corner map with a job does not open the big map, or the dot picker is still there: {tp} {tb}')
+        await g.ev("()=>{closePanel();S.job=null;jobHud(true);}"); await g.step(3)
+        if prof == 'ipad-landscape':
+            pl = await g.ev("()=>{openPhone('map');const B=mapB(),it=new Set(mapItems().map(i=>i.k)),miss=[];for(const p of PLACES.filter(mapShown).concat(MAP_FARM)){const a=(MAP_AT[p.id]||[p.x,p.z]);if(!it.has(p.id)||a[0]<B.x1||a[0]>B.x2||a[1]<B.z1||a[1]>B.z2)miss.push(p.id);}const n=PLACES.filter(mapShown).length;closePanel();return {n,farm:MAP_FARM.map(p=>p.id),miss};}")
+            det.append(f"{prof}: big map: {pl['n']} places + farm places {pl['farm']} inside its bounds, missing {pl['miss']}")
+            if pl['miss'] or pl['n'] < 20 or len(pl['farm']) < 4: probs.append(f'{prof}: places missing from the big map: {pl}')
+            for nm, js in (('farm', 'P.x=-100;P.z=-101;'), ('trail', 'P.x=-101;P.z=-152.4;'), ('lane', 'P.x=laneEnd()+40;P.z=0;')):
+                r = await g.ev("(js)=>{__goto('city');S.job=null;jobHud(true);eval(js);miniTick(1);const cv=$('mm'),N=cv.width,d=cv.getContext('2d').getImageData(0,0,N,N).data,c=new Set();for(let q=0;q<d.length;q+=32)c.add((d[q]>>4)+','+(d[q+1]>>4)+','+(d[q+2]>>4));return {shown:!$('mmBtn').hidden,colours:c.size};}", js)
+                det.append(f"{prof}: corner map at the {nm}: {r['colours']} colours"); await g.step(2); await g.shot('corner-map-' + nm, both=False)
+                if not r['shown'] or r['colours'] < 12: probs.append(f'{prof}: the corner map at the {nm} is flat or hidden: {r}')
+            c = await g.ev("()=>{P.x=-20;P.z=14;drawMini();const cv=$('mm'),t0=performance.now();for(let i=0;i<200;i++){P.x+=.05;drawMini();}cv.getContext('2d').getImageData(0,0,1,1);return +((performance.now()-t0)/200).toFixed(3);}")
+            det.append(f"{prof}: one corner-map drawing {c} ms (200 in a row)")
+            if not (c < 1): probs.append(f'{prof}: a corner-map drawing costs {c} ms (limit 1 ms)')
+        inside = await g.ev("()=>{S.job=null;__goto('salon');""")
+    return s
 src = zipfile.ZipFile(SRC); out = io.BytesIO(); dst = zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED)
 for info in src.infolist():
     data = src.read(info.filename)
@@ -190,6 +220,7 @@ for info in src.infolist():
     if info.filename == 'cozycheck/fonts.css': data = data + (b"@font-face{font-family:'Alfa Slab One';font-style:normal;font-weight:400;font-display:swap;src:url(https://fonts.gstatic.com/__cozytest/alfaslabone-400.woff2) format('woff2')}\n"
                                                              b"@font-face{font-family:'Roboto Slab';font-style:normal;font-weight:700;font-display:swap;src:url(https://fonts.gstatic.com/__cozytest/robotoslab-700.woff2) format('woff2')}\n"
                                                              b"@font-face{font-family:'Roboto Slab';font-style:normal;font-weight:800;font-display:swap;src:url(https://fonts.gstatic.com/__cozytest/robotoslab-800.woff2) format('woff2')}\n")
+    if info.filename == 'cozycheck/map4.py': data = fix_map4(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
     if info.filename == 'cozycheck/pets4.py': data = fix_n28(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
     dst.writestr(info, data)
 # fixtures that were only in tools/check-fixtures (31 Oct 2026): N8's save-prepet1-designer2.json, the save made by main before the
