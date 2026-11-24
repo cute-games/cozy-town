@@ -333,6 +333,18 @@ function packBuild(key,txt){const R=PACKM.o[key];if(!R)return null;const L=[];PK
     if(kids)for(const c of kids)o.add(mk(c));return o;};
   const root=mk(R.n),m=Object.assign({root},R.d||{});
   for(const [k,v] of Object.entries(R.r||{}))m[k]=Array.isArray(v)?v.map(i=>L[i]):L[v];
+  if(/^fa\.horse\./.test(key))horseJoints(m);   /* 🐴 24 Nov: hidden knees, fetlocks and a neck pivot (nothing moves at rest) */
+  return m;}
+/* 🐴 the horse's joints (24 Nov; packBuild, every fa.horse.* model; the moves pack's horse gaits use them): pivot groups put in between the pieces, the pieces moved by the pivot's offset, so nothing moves at rest */
+function horseJoints(m){const b=m.b;if(!b||!m.legs)return m;m.lower=[];m.fetl=[];
+  for(const l of m.legs){const ms=l.children.filter(c=>c.isMesh),ys=[...new Set(ms.map(c=>c.position.y))].sort((p,q)=>q-p);if(ys.length<3)return m;
+    const bb=c=>{c.geometry.computeBoundingBox();return c.geometry.boundingBox;};const up=ms.find(c=>c.position.y===ys[0]),hf=ms.find(c=>c.position.y===ys[2]);
+    const kY=ys[0]+bb(up).min.y,fY=ys[2]+bb(hf).max.y,K=new THREE.Group(),F=new THREE.Group();K.position.set(0,kY,0);F.position.set(0,fY-kY,0);l.add(K);K.add(F);
+    for(const c of ms){if(c.position.y===ys[1]){l.remove(c);c.position.y-=kY;K.add(c);}else if(c.position.y===ys[2]){l.remove(c);c.position.y-=fY;F.add(c);}}
+    m.lower.push(K);m.fetl.push(F);}
+  const nk=b.children.find(c=>!c.isMesh&&c!==m.head&&c!==m.tail&&!m.legs.includes(c));
+  if(nk){const N=new THREE.Group(),i=b.children.indexOf(nk);N.position.copy(nk.position);b.remove(nk);b.add(N);b.children.splice(b.children.indexOf(N),1);b.children.splice(i,0,N);
+    nk.position.set(0,0,0);N.add(nk);if(m.head&&m.head.parent===b){b.remove(m.head);m.head.position.sub(N.position);N.add(m.head);}m.neckP=N;}
   return m;}
 /* the pets drawn from the pack: the four big-needs pets, and today's pug and capybara redrawn to the kept versions (pug 'new', capybara 'real').
    Monkeys and bears: the kind is the colour (PET_TYPES cols = each kind's fur). A saved capybara keeps its old colour value: the same place in the list picks the new one */
@@ -1146,7 +1158,7 @@ function boxIn(root,obj,out,skip,precise){root.updateMatrixWorld(true);_inv.copy
     for(const c of o.children)walk(c);};
   walk(obj);return out;}
 /* ---------- core: rig (rest pose snapshot) ---------- */
-const GROUP_LISTS=['legs','lower','arms','ears','rear','segs','hips','wings'];   /* wings: c14 duck/owl   /* hips: added by c13 petPose (posed models) */
+const GROUP_LISTS=['legs','lower','arms','ears','rear','segs','hips','wings','fetl'];   /* fetl: the horse's hooves (horseJoints) */   /* wings: c14 duck/owl   /* hips: added by c13 petPose (posed models) */
 function headCore(m){const h=m.head;if(!h)return null;const c=h.children&&h.children[0];return c&&c.isGroup&&!c.isMesh?c:null;}
 function rig(m,o){o=o||{};if(m.__mv&&!o.force){if(o.kind)m.__mv.kind=o.kind;return m.__mv;}
   const root=m.root||m,b=m.b||(m.isObject3D&&m.children&&m.children[0])||m;
@@ -1158,7 +1170,7 @@ function rig(m,o){o=o||{};if(m.__mv&&!o.force){if(o.kind)m.__mv.kind=o.kind;retu
     if(lb.isEmpty()||lb.min.y<-.25*(lb.max.y-lb.min.y))return l;const top=lb.max.y-.04*(lb.max.y-lb.min.y);
     const Hj=new THREE.Group();Hj.position.copy(l.position).add(new THREE.Vector3(0,top,0).multiply(l.scale).applyQuaternion(l.quaternion));l.parent.add(Hj);Hj.updateWorldMatrix(true,false);Hj.attach(l);Hj.userData.packHip=1;return Hj;});
   R.legG.forEach(snap);
-  snap(b);snap(m.neck);snap(m.head);snap(m.tail);snap(headCore(m));snap(m.sitPivot);snap(m.tongue);for(const k of GROUP_LISTS)(m[k]||[]).forEach(snap);
+  snap(b);snap(m.neck);snap(m.neckP);snap(m.head);snap(m.tail);snap(headCore(m));snap(m.sitPivot);snap(m.tongue);for(const k of GROUP_LISTS)(m[k]||[]).forEach(snap);
   R.top=m.sitPivot&&m.sitPivot.parent===root?m.sitPivot:b;   /* the piece the ground fix moves (petPose 'sit' hangs b under sitPivot) */
   R.posed=m.sitPivot?'sit':m.hips?'lie':null;R.hide=[];R.show=[];
   if(m.arms&&m.arms.length&&!o.kind)R.kind='person';
@@ -1441,27 +1453,117 @@ function pigRoot(m,t,o){const R=rig(m);headDown(R,.45+.12*Math.sin(TAU*2.5*t));i
 function pigRoll(m,t,o){const R=rig(m);const u=clock(t,3.2);const down=seg(u,0,.15)*(1-seg(u,.86,1));const roll=seg(u,.18,.82);
   lieDown(R,down);rotAbout(R,'z',TAU*2*roll,0,R.bCenter.y,R.bCenter.z);
   const kick=bell(u,.18,.82);R.legs.forEach((l,i)=>{l.g.rotation.x+=.6*Math.sin(TAU*6*u+i*1.7)*kick;});wag(R,.6,4,t);return {};}
-/* horse: walk / trot / gallop (o.gait). Hooves planted with o.dist. The game horse has one-piece legs (no knees) */
-function horseGait(m,t,o){const R=rig(m);o=o||{};const g=o.gait||'walk';const A=g==='gallop'?.55:g==='trot'?.42:.3;const ph=phaseOf(R,t,o,A);
+/* 🐴 horse: walk / trot / gallop (o.gait), 24 Nov: a real horse's legs. The pack horse gets hidden joints (horseJoints: a knee / hock in each leg, a fetlock
+   above each hoof, a neck pivot carrying the neck and head; at rest it looks exactly as before). Each hoof is placed where a real horse puts it: in stance it stays
+   planted on the ground (no sliding) while the body passes over it, in the swing it lifts, the knee folds, it reaches forward and lands. The legs are solved to the
+   hoof (two pieces and a hoof that stays flat on the ground). Footfalls: walk 4 beats (left hind, left fore, right hind, right fore), trot 2 beats on the
+   diagonals with a short float, gallop 4 beats (right hind, left hind, right fore, left fore) and a float with all four legs tucked. The back rocks like a
+   rocking chair in the gallop, the neck pumps down-forward with each stride. Speed comes from o.dist (distance walked, world units): longer, slower strides
+   when fast; the stride count carries on across gaits and the gaits blend in a third of a second (no snap). Other moves fade in from the last pose. */
+const HG={
+  walk:{D:.62,o:{BL:0,FL:.25,BR:.5,FR:.75},f:v=>.6+.37*v,lf:.11,lh:.08,c:{F:.05,H:-.03},reach:0,
+    body:u=>({h:-.012+.006*Math.cos(4*PI*(u-.1)),p:.012*Math.sin(4*PI*u),r:0,n:.05*Math.sin(4*PI*u-.6),hd:-.02*Math.sin(4*PI*u-.6),tl:0})},
+  trot:{D:.40,o:{FL:0,BR:0,FR:.5,BL:.5},f:v=>1.2+.17*v,lf:.22,lh:.16,c:{F:.06,H:-.04},reach:.04,
+    body:u=>({h:-.018+.02*Math.cos(4*PI*(u-.45)),p:.012*Math.sin(4*PI*(u-.2)),r:0,n:.03+.02*Math.sin(4*PI*(u-.1)),hd:-.03,tl:.25})},
+  gallop:{D:.27,o:{BR:0,BL:.12,FR:.33,FL:.45},f:v=>1.6+.085*v,lf:.34,lh:.27,c:{F:.08,H:-.05},reach:.08,
+    body:u=>({h:-.03+.045*Math.cos(TAU*(u-.86)),p:.075*Math.sin(TAU*(u-.35)),r:0,n:.08+.13*Math.sin(TAU*(u-.3)),hd:-.12-.05*Math.sin(TAU*(u-.3)),tl:.55})}};
+/* per-leg sizes, measured once: hip (rest), upper piece (hip to knee), lower piece (knee to fetlock), fetlock height over the sole */
+function hjInit(R){if(R.hj)return R.hj;const m=R.m;if(!m.fetl||!m.lower||m.fetl.length!==R.legs.length){R.hj=[];return R.hj;}
+  R.hj=R.legs.map((l,i)=>{const K=m.lower[i],F=m.fetl[i];const lb=boxIn(F,F,new THREE.Box3());return {l,g:l.g,K,F,id:legId(l),front:l.front,p0:R.rest.get(l.g).p.clone(),L1:-K.position.y,L2:-F.position.y,Hh:-lb.min.y};});
+  R.hb0=-R.base;return R.hj;}
+const HJ_UP=.05,HJ_DN=.06;   /* how far a leg's top may slide up / down inside the body (the shoulder and hip: hidden in the body) */
+/* the body at phase u for gait g: height, pitch (+ nose down), roll, neck, head */
+function hjBody(g,u,ck){const B=HG[g].body(frac(u));return {h:B.h*(ck?.8:1),p:B.p*ck,r:B.r,n:(B.n-(g==='gallop'?.08:0))*ck+(g==='gallop'?.08:0),hd:B.hd,tl:B.tl};}
+/* where gait g wants leg j's fetlock at global phase u (root frame y,z), how much it is in the swing (0 stance .. 1), and its top slide */
+function hjLeg(R,j,g,u,ck){const G=HG[g],L=R.hj[j],off=G.o[L.id]||0,ul=frac(u-off),S=R.hS[g],T=S*G.D,c=G.c[L.front?'F':'H'],z0=L.p0.z+c;
+  if(ul<G.D){const z=z0+T/2-S*ul;return {y:L.Hh,z,s:0,d:hjSlide(R,L,hjBody(g,u,ck),L.Hh,z)};}
+  const w=(ul-G.D)/(1-G.D),ez=L.front?ease(cl((w-.08)/.84)):ease(w),lift=(L.front?G.lf:G.lh)*Math.sin(PI*Math.pow(w,L.front?.8:1));
+  const z=z0-T/2+T*ez+G.reach*(L.front?1:.3)*bell(w,.55,1),y=L.Hh+lift;
+  const dA=hjSlide(R,L,hjBody(g,u-(ul-G.D),ck),L.Hh,z0-T/2),dB=hjSlide(R,L,hjBody(g,u+(1-ul),ck),L.Hh,z0+T/2);
+  return {y,z,s:Math.sin(PI*w),d:dA+(dB-dA)*ease(w)};}
+/* the body's hip of leg L in the root frame for body B; the slide (down +) so a planted hoof is just reached */
+function hjHip(R,L,B){const c=R.bCenter,y0=L.p0.y-c.y,z0=L.p0.z-c.z,cp=Math.cos(B.p),sp=Math.sin(B.p);return [c.y+R.hb0+B.h+y0*cp-z0*sp,c.z+y0*sp+z0*cp];}
+function hjSlide(R,L,B,ty,tz){const [hy,hz]=hjHip(R,L,B),Lm=L.L1+L.L2,cp=Math.cos(B.p),sp=Math.sin(B.p);
+  /* in the body frame: the slide is along the body's own down */
+  const dy=ty-hy,dz=tz-hz,by=dy*cp+dz*sp,bz=-dy*sp+dz*cp;if(Math.abs(bz)>=Lm)return HJ_DN;return cl(-by-Math.sqrt(Lm*Lm-bz*bz),-HJ_UP,HJ_DN);}
+/* two-piece leg solved to the fetlock target (body frame); front knees fold the foot back, hind hocks point back */
+function hjSolve(L,by,bz,s,flex,pitch){const d=Math.max(1e-4,Math.min(L.L1+L.L2-1e-5,Math.hypot(by,bz))),a=Math.atan2(-bz,-by);
+  const a1=Math.acos(cl((L.L1*L.L1+d*d-L.L2*L.L2)/(2*L.L1*d),-1,1)),kn=PI-Math.acos(cl((L.L1*L.L1+L.L2*L.L2-d*d)/(2*L.L1*L.L2),-1,1));
+  const up=L.front?a-a1:a+a1,k=L.front?kn:-kn;L.g.rotation.x=up;L.K.rotation.x=k;
+  const tot=pitch+up+k;L.F.rotation.x=(1-s)*(-tot)+s*flex;}
+function horseGait(m,t,o){const R=rig(m);if(!hjInit(R).length)return horseGaitOld(m,t,o||{});hjGait(m,t,o);return hjFade(R,'gait',t,{noGround:true});}
+function hjGait(m,t,o){const R=rig(m);o=o||{};const g=HG[o.gait]?o.gait:'walk',hj=R.hj;const ck=o.calm?.65:1;
+  const sc=(R.root.scale&&R.root.scale.y)||1,dist=o.dist!=null?o.dist:t*(1.2*stride(m,.3)),dt=R.ht!=null?t-R.ht:0,dd=R.hd!=null?dist-R.hd:0;R.ht=t;R.hd=dist;
+  const jump=!(dt>0&&dt<.5)||dd<0||dd>4;if(R.hv==null||jump&&R.hv==null)R.hv=g==='gallop'?10:g==='trot'?5:2;
+  if(!jump)R.hv+=(dd/dt-R.hv)*Math.min(1,dt*5);const v=Math.max(.05,R.hv);
+  /* blend weights of the three gaits */
+  if(!R.hw)R.hw={walk:0,trot:0,gallop:0,[g]:1};const kb=jump?.5:Math.min(1,dt/.3);for(const k in R.hw)R.hw[k]+=((k===g?1:0)-R.hw[k])*kb;
+  let ws=0;for(const k in R.hw){if(R.hw[k]<.002)R.hw[k]=0;ws+=R.hw[k];}for(const k in R.hw)R.hw[k]/=ws||1;
+  R.hS={};let Sm=0;for(const k in HG){R.hS[k]=Math.max(.05,v/HG[k].f(v)/sc);Sm+=R.hw[k]*R.hS[k];}
+  if(!jump)R.gph=(R.gph||0)+dd/sc/Sm;const u=R.gph||0;
+  /* the body */
+  const B={h:0,p:0,r:0,n:0,hd:0,tl:0};for(const k in R.hw){const w=R.hw[k];if(!w)continue;const b=hjBody(k,u,ck);for(const q in B)B[q]+=w*b[q];}
+  const b=R.b,c=R.bCenter;_q.setFromAxisAngle(X,B.p);_q2.setFromAxisAngle(Z,B.r);b.quaternion.copy(_q).multiply(_q2);
+  b.position.copy(c).sub(c.clone().applyQuaternion(b.quaternion));b.position.y+=R.hb0+B.h;
+  if(m.neckP)m.neckP.rotation.x+=B.n;if(m.head)m.head.rotation.x+=B.hd;
+  if(m.tail){m.tail.rotation.x+=B.tl;m.tail.rotation.z+=.12*Math.sin(TAU*u);}
+  /* the legs */
+  const cp=Math.cos(B.p),sp=Math.sin(B.p);
+  hj.forEach((L,j)=>{let y=0,z=0,s=0,d=0;for(const k in R.hw){const w=R.hw[k];if(!w)continue;const q=hjLeg(R,j,k,u,ck);y+=w*q.y;z+=w*q.z;s+=w*q.s;d+=w*q.d;}
+    const [hy,hz]=hjHip(R,L,B),dy=y-hy,dz=z-hz,by=dy*cp+dz*sp,bz=-dy*sp+dz*cp;L.g.position.y=L.p0.y-d;hjSolve(L,by+d,bz,s,L.front?.7:.45,B.p);});
+  let lead=null,lw=0;for(const k in R.hw)if(R.hw[k]>lw){lw=R.hw[k];lead=k;}
+  R.last={gait:lead,ph:frac(u),lift:0};}
+/* a short fade from the last pose when the horse changes move (idle, jump, refuse, the gaits) */
+function hjJ(R){const m=R.m;if(R.hjL)return R.hjL;const L=[R.b,m.neckP,m.head,m.tail];for(const l of R.legs)L.push(l.g);for(const k of['lower','fetl'])(m[k]||[]).forEach(q=>L.push(q));return R.hjL=L.filter(Boolean);}
+function hjFade(R,name,t,r){const L=hjJ(R);
+  if(R.hfn!==name){R.hf=R.hsn?{k:0,p:R.hsn.map(a=>a[0].clone()),q:R.hsn.map(a=>a[1].clone())}:null;R.hfn=name;R.hft=t;}
+  else if(R.hf){const dt=t-R.hft;R.hf.k+=dt>0?Math.min(.5,dt/.3):.05;R.hft=t;}
+  if(R.hf){if(R.hf.k>=1)R.hf=null;else{const e=ease(R.hf.k);L.forEach((g,i)=>{g.position.lerpVectors(R.hf.p[i],g.position.clone(),e);_q.copy(g.quaternion);g.quaternion.copy(R.hf.q[i]).slerp(_q,e);});}}
+  if(!R.hsn)R.hsn=L.map(g=>[new THREE.Vector3(),new THREE.Quaternion()]);L.forEach((g,i)=>{R.hsn[i][0].copy(g.position);R.hsn[i][1].copy(g.quaternion);});
+  return r;}
+/* the old one-piece-legs gait (a horse model without the joints) */
+function horseGaitOld(m,t,o){const R=rig(m);o=o||{};const g=o.gait||'walk';const A=g==='gallop'?.55:g==='trot'?.42:.3;const ph=phaseOf(R,t,o,A);
   gaitLegs(R,ph,A,1,g==='gallop'?'gallop':g==='trot'?'trot':'walk',.9);
   const rock=g==='gallop'?.09*Math.sin(TAU*ph):g==='trot'?.02*Math.sin(TAU*2*ph):.015*Math.sin(TAU*2*ph);
-  const ck=o.calm?(g==='gallop'?.7:.45):1;rotAbout(R,'x',rock*ck,0,R.bCenter.y,R.bCenter.z);if(m.head)m.head.rotation.x+=ck*((g==='gallop'?-.1:.06)*Math.sin(TAU*(g==='walk'?2:1)*ph+.5)-rock);   /* (o.calm: the horse you ride rocks less, so its neck in front of your eyes doesn't swing) */
+  const ck=o.calm?(g==='gallop'?.7:.45):1;rotAbout(R,'x',rock*ck,0,R.bCenter.y,R.bCenter.z);if(m.head)m.head.rotation.x+=ck*((g==='gallop'?-.1:.06)*Math.sin(TAU*(g==='walk'?2:1)*ph+.5)-rock);
   if(m.tail){m.tail.rotation.x+=g==='gallop'?.5:g==='trot'?.2:0;m.tail.rotation.z+=.12*Math.sin(TAU*ph);}
   const lift=g==='trot'?R.H*.025*Math.abs(Math.sin(TAU*ph)):g==='gallop'?R.H*.05*Math.max(0,Math.sin(TAU*ph-1)):0;
   R.last={gait:g,ph,lift};return {lift};}
-/* horse jump (1.6 s): gathers, lifts its front, then back legs, tucks over the fence, lands front first */
-function horseJump(m,t,o){const R=rig(m);const u=cl(t/1.6);let lift=0;
-  const crouch=bell(u,0,.24),up=bell(u,.16,.42),air=bell(u,.25,.78),down=bell(u,.62,.86),land=bell(u,.8,1);
-  rotAbout(R,'x',-.32*up+.22*down,0,R.bCenter.y,R.bCenter.z);
-  R.front.forEach(l=>{l.g.rotation.x+=1.0*air+(-.35)*down-.15*crouch;});R.hind.forEach(l=>{l.g.rotation.x+=-.35*crouch+(-.75)*air*seg(u,.36,.5)+.35*up;});
-  lift=arc(u,.25,.8,(o&&o.height||.9)/((R.root.scale&&R.root.scale.y)||1));squash(R,.6*land+.4*crouch);if(m.head)m.head.rotation.x+=.25*up-.2*down;if(m.tail)m.tail.rotation.x+=.6*air;
-  R.last={gait:'jump',ph:u,lift};return {lift,done:t>=1.6};}
-/* horse idle: tail swish, weight shift, head nods (grazing head-down needs a neck group: README) */
+/* keyframes: smooth steps through [u, value] pairs */
+function hjKey(u,K){if(u<=K[0][0])return K[0][1];for(let i=1;i<K.length;i++)if(u<=K[i][0]){const a=K[i-1],b=K[i];return a[1]+(b[1]-a[1])*ease((u-a[0])/(b[0]-a[0]));}return K[K.length-1][1];}
+const HJ_JUMP={
+  p:[[0,0],[.14,.05],[.34,-.25],[.44,-.1],[.55,.08],[.70,.28],[.82,.16],[.94,0],[1,0]],
+  fa:[[0,0],[.14,-.25],[.22,-.15],[.30,-.95],[.55,-1.05],[.68,-.45],[.76,-.3],[.86,.1],[.94,.2],[1,0]],
+  fk:[[0,0],[.14,0],[.22,.35],[.30,2.0],[.55,2.1],[.66,.6],[.74,0],[.9,0],[.95,.5],[1,0]],
+  ha:[[0,0],[.16,-.4],[.24,-.3],[.32,.3],[.42,.55],[.52,.35],[.62,-.15],[.76,-.35],[.86,-.3],[.94,0],[1,0]],
+  hk:[[0,0],[.16,-.35],[.24,-.25],[.32,-.12],[.42,-.25],[.55,-1.1],[.68,-1.2],[.78,-.6],[.88,-.1],[1,0]],
+  n:[[0,0],[.16,.24],[.3,.3],[.45,.32],[.6,.18],[.76,-.04],[.9,.04],[1,0]],
+  hd:[[0,0],[.3,.1],[.45,-.05],[.76,.1],[1,0]]};
+function hjJumpPose(R,u){const m=R.m,J=HJ_JUMP;rotAbout(R,'x',hjKey(u,J.p),0,R.bCenter.y,R.bCenter.z);
+  (R.hj||[]).forEach(L=>{const v=u+(L.l.left?.025:0);if(L.front){L.g.rotation.x+=hjKey(v,J.fa);L.K.rotation.x+=hjKey(v,J.fk);}else{L.g.rotation.x+=hjKey(v,J.ha);L.K.rotation.x+=hjKey(v,J.hk);}
+    const flat=L.front?bell(v,.62,1.0):bell(v,0,.3)+bell(v,.78,1.05);const tot=hjKey(u,J.p)+L.g.rotation.x+L.K.rotation.x;L.F.rotation.x+=-tot*Math.min(1,flat*1.6);});
+  if(m.neckP)m.neckP.rotation.x+=hjKey(u,J.n);if(m.head)m.head.rotation.x+=hjKey(u,J.hd);if(m.tail)m.tail.rotation.x+=.6*bell(u,.25,.85);}
+/* horse jump (1.6 s): gathers (hind legs under, neck down), pushes off from the hind legs with the front knees tucked tight, arcs over the fence (nose up, level,
+   nose down), lands on the front legs one after the other, then the hind legs. The body keeps its arc while the legs tuck (no dip) */
+function horseJump(m,t,o){const R=rig(m);const u=cl(t/1.6),hj=hjInit(R);let lift=0;const hh=(o&&o.height||.9)/((R.root.scale&&R.root.scale.y)||1);
+  if(!hj.length){const crouch=bell(u,0,.24),up=bell(u,.16,.42),air=bell(u,.25,.78),down=bell(u,.62,.86),land=bell(u,.8,1);
+    rotAbout(R,'x',-.32*up+.22*down,0,R.bCenter.y,R.bCenter.z);R.front.forEach(l=>{l.g.rotation.x+=1.0*air+(-.35)*down-.15*crouch;});R.hind.forEach(l=>{l.g.rotation.x+=-.35*crouch+(-.75)*air*seg(u,.36,.5)+.35*up;});
+    lift=arc(u,.25,.8,hh);squash(R,.6*land+.4*crouch);if(m.head)m.head.rotation.x+=.25*up-.2*down;if(m.tail)m.tail.rotation.x+=.6*air;R.last={gait:'jump',ph:u,lift};return {lift,done:t>=1.6};}
+  const A=.27,Bq=.82;if(!R.cache.hjg){const gA=(reset(m),hjJumpPose(R,A),-lowY(R,[R.b])),gB=(reset(m),hjJumpPose(R,Bq),-lowY(R,[R.b]));R.cache.hjg=[gA,gB];reset(m);}
+  /* the last strides before the take-off and the first after the landing: the gait goes on under the jump (no sliding on frozen legs) */
+  const G0=R.hfn!=='jump'||t<R.hjT;R.hjT=t;if(G0){R.hjS=R.hw&&R.ht!=null?{t:R.ht,d:R.hd||0,v:R.hv||8,g:R.last&&HG[R.last.gait]?R.last.gait:'gallop',k:0}:null;}
+  let live=null;const LW=.24,LE=.8;if(R.hjS&&(u<LW||u>LE)){const s=R.hjS;hjGait(m,s.t+t,{gait:s.g,dist:s.d+s.v*t,calm:o&&o.calm});live=hjJ(R).map(g=>[g.position.clone(),g.quaternion.clone()]);reset(m);}
+  hjJumpPose(R,u);if(u>A&&u<Bq){const [gA,gB]=R.cache.hjg;R.b.position.y+=gA+(gB-gA)*ease((u-A)/(Bq-A));lift=arc(u,A,Bq,hh);}else ground(m,o);
+  if(live){const e=u<LW?ease(u/LW):1-ease((u-LE)/(1-LE)*1.15);hjJ(R).forEach((g,i)=>{g.position.lerpVectors(live[i][0],g.position.clone(),e);_q.copy(g.quaternion);g.quaternion.copy(live[i][1]).slerp(_q,e);});}
+  R.last={gait:'jump',ph:u,lift};const r=hjFade(R,'jump',t,{lift,done:t>=1.6,noGround:true});if(live)R.hf=null;return r;}
+/* horse idle: tail swish, weight shift (rests a hind leg, the hock bent), head nods (grazing head-down needs a neck group: README) */
 function horseIdle(m,t,o){const R=rig(m);const u=clock(t,5);if(m.tail)m.tail.rotation.z+=.25*S1(u*2)+.6*bell(u,.6,.72);if(m.head)m.head.rotation.x+=.08*S1(u*3);
-  R.hind.forEach((l,i)=>{if(i===0)l.g.rotation.x+=-.12*bell(u,.2,.45);});R.last={gait:'idle',ph:u,lift:0};return {};}
+  R.hind.forEach((l,i)=>{if(i===0){const k=bell(u,.2,.45);l.g.rotation.x+=-.12*k;if(l.lower)l.lower.rotation.x+=-.12*k;}});R.last={gait:'idle',ph:u,lift:0};
+  if(!hjInit(R).length)return {};ground(m,o);return hjFade(R,'idle',t,{noGround:true});}
 /* horse stops at the town edge: refuses, tosses its head, shakes (2 s) */
 function horseRefuse(m,t,o){const R=rig(m);const u=cl(t/2);rotAbout(R,'x',-.12*bell(u,0,.4),0,R.bCenter.y,-R.Lz*.3);if(m.head){m.head.rotation.x+=-.35*bell(u,.1,.5);m.head.rotation.z+=.3*Math.sin(TAU*4*u)*bell(u,.45,1);}
-  R.front.forEach(l=>{l.g.rotation.x+=-.3*bell(u,0,.4);});if(m.tail)m.tail.rotation.z+=.5*Math.sin(TAU*3*u);R.last={gait:'idle',ph:u,lift:0};return {done:t>=2};}
+  R.front.forEach(l=>{l.g.rotation.x+=-.3*bell(u,0,.4);});if(m.tail)m.tail.rotation.z+=.5*Math.sin(TAU*3*u);R.last={gait:'idle',ph:u,lift:0};
+  if(!hjInit(R).length)return {done:t>=2};ground(m,o);return hjFade(R,'refuse',t,{done:t>=2,noGround:true});}
 /* farm dog (St. Bernard): asleep, slow calm breathing (one breath per 3 s, about 20 a minute). Works on the sleep models (no part groups): the whole body piece breathes */
 function farmdogSleep(m,t,o){const R=rig(m,{kind:'farmdog'});const s=Math.sin(TAU*t/3);R.b.scale.y*=1+.025*s;R.b.scale.z*=1+.012*s;if(m.tail)m.tail.rotation.z+=.0;return {noGround:!m.b};}
 /* ---------- people (makePerson: legs[] at the hip, arms[] at the shoulder, head; no knees or elbows) ---------- */
