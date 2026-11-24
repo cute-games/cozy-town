@@ -2529,7 +2529,7 @@ $('bar').addEventListener('click',e=>{const b=e.target.closest('[data-d]');if(!b
    Speed (run doc guard 3): nothing here runs while you are far from the farm; near it, animals further than 70 m are hidden and those past 22 m move every 3rd frame */
 const FARM={L:null,on:false,st:null,inst:[],ground:[],stables:[],troughs:[],jumps:{},flags:{},trails:[],eggs:null,milk:null,bucket:null,an:[],hs:[],ppl:[],riders:[],dyn:null,
   fr:0,feed:null,lesson:null,said:{},ln:{},townT:0,tick:0,ms:0,deln:0,mvn:0};
-const FARM_GA={walk:.3,trot:.42,gallop:.55},FARM_OPEN=[7,21],FARM_SPD={w:2.4,t:4.8,g:7.6},FARM_LESSON=100,FARM_PAY=10,FARM_SEAT=1.63;
+const FARM_GA={walk:.3,trot:.42,gallop:.55},FARM_OPEN=[7,21],FARM_SPD={w:3,t:6.5,g:13},FARM_LESSON=100,FARM_PAY=10,FARM_SEAT=1.63;
 const farmOpen=()=>S&&S.time>=FARM_OPEN[0]&&S.time<FARM_OPEN[1];
 const farmHash=(s)=>{let h=2166136261;s=String(s);for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0)/4294967296;};
 const FA_SPD={cow:.45,sheep:.55,pig:.6,chicken:.8,horse:.8},FA_SND={cow:'moo',sheep:'baa',pig:'oink',chicken:'cluck',horse:'neigh'};
@@ -2628,7 +2628,7 @@ function farmRide(dt){const r=P.horse,h=r.h,now=gameMs()/1000;
     if(!farmZone(nx,nz)){r.sp=0;if(!r.ref||now-r.ref>2.2){r.ref=now;SFX.snort();if(!r.said){r.said=true;toast("🐴 Your horse won't go into town.",3);}}}
     else{const o=[P.x,P.z];[P.x,P.z]=collideXZ(nx,nz,.7,CUR,solids());r.dist+=Math.hypot(P.x-o[0],P.z-o[1]);r.ry=angLerp(r.ry,Math.atan2(dx,dz),Math.min(1,dt*3.5));}}
   else if(r.sp<.3)r.sp=0;
-  {const pg=r.g==='jump'||r.g==='idle'?'walk':r.g,up=pg==='walk'?[3.4,99]:pg==='trot'?[6.2,2.9]:[99,5.6];   /* (riding fix 24 Nov: gaits change with a gap, so the horse doesn't flick between walk and trot at one speed) */
+  {const pg=r.g==='jump'||r.g==='idle'?'walk':r.g,up=pg==='walk'?[4,99]:pg==='trot'?[9.5,3.5]:[99,8.5];   /* (24 Nov: horse speeds w 2.4 t 4.8 g 7.6 -> 3 / 6.5 / 13: the gallop was slower than running on foot; riding fix: gaits change with a gap, so the horse doesn't flick between walk and trot at one speed) */
     r.g=jumping?'jump':r.sp<.05?'idle':pg==='walk'?(r.sp>up[0]?'trot':'walk'):pg==='trot'?(r.sp>up[0]?'gallop':r.sp<up[1]?'walk':'trot'):(r.sp<up[1]?'trot':'gallop');}P.moving=r.sp>.05;
   h.x=P.x;h.z=P.z;h.ry=r.ry;h.m.root.position.set(P.x,0,P.z);h.m.root.rotation.y=r.ry;
   const pl=r.g==='jump'?COZY_MOVES.play(h.m,'horse.jump',now-r.j,{}):r.ref&&now-r.ref<2?COZY_MOVES.play(h.m,'horse.refuse',now-r.ref,{}):r.g==='idle'?COZY_MOVES.play(h.m,'horse.idle',now,{}):(r.ph=(r.ph||0)+(r.dist-(r.pd??r.dist))/COZY_MOVES.stride(h.m,FARM_GA[r.g]),r.pd=r.dist,COZY_MOVES.play(h.m,'horse.'+r.g,now,{dist:r.ph*COZY_MOVES.stride(h.m,FARM_GA[r.g]),calm:1}));   /* (riding fix: the step count carries on across gait changes: no leg snap) */
