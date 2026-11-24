@@ -2297,6 +2297,7 @@ function setupInput(){
   const joyHome=()=>{joy.style.left='';joy.style.top='';joy.style.bottom='';joy.classList.remove('on');knob.style.transform='';};
   T.addEventListener('pointerdown',e=>{
     if(!PLAYING||UI.open)return;audioInit();
+    if(e.pointerType==='mouse'&&!TOUCHY&&e.button===0){if(document.pointerLockElement===T){tapAt(innerWidth/2,innerHeight/2);return;}if(mlCan()){try{T.requestPointerLock();}catch(_){}return;}}   /* (decorating and mini-games keep the old drag-to-look and click-where-you-point) */   /* 🖱️ PC (24 Nov): click once and the mouse looks around, like a normal PC game; a click uses what's in the middle; Esc gives the mouse back */
     const w=innerWidth,h=innerHeight;
     if(!(CUT&&CUT.tch)&&IN.joy.id===null&&e.pointerType!=='mouse'&&e.clientX<w*.42&&e.clientY>h*.3){
       IN.joy.id=e.pointerId;const ox=clamp(e.clientX,74,w*.42),oy=clamp(e.clientY,74,h-74);IN.joy.ox=ox;IN.joy.oy=oy;IN.joy.x=0;IN.joy.y=0;
@@ -2322,6 +2323,8 @@ function setupInput(){
     if(e.code==='Space'){e.preventDefault();if(PHO.on)ACT.ptsnap();else jump();}if(PHO.on&&(e.code==='Equal'||e.code==='NumpadAdd'))ACT.ptzoom('+');if(PHO.on&&(e.code==='Minus'||e.code==='NumpadSubtract'))ACT.ptzoom('-');if(PHO.on&&e.code==='KeyN')ptNextBg();   /* 📸 Space snaps, + and - zoom, N the next background (run 4, job 15) */
     if(e.code==='KeyE'||e.code==='Enter'){e.preventDefault();if(DECO.on)return;if(TARGET===BALLT){if(!e.repeat)ballHold(true,null);}else if(TARGET)useTarget();}
     if(e.code==='KeyB')openBag();if(e.code==='KeyP')openPhone();if(e.code==='KeyM')openPhone('map');if(e.code==='KeyR'&&DECO.placing)decoTurn();});
+  if(!TOUCHY){addEventListener('mousemove',e=>{if(document.pointerLockElement!==T)return;if(!mlCan()){document.exitPointerLock();return;}const k=.0028*SET.look;ballLookMine();P.yaw-=e.movementX*k;P.pitch=clamp(P.pitch-e.movementY*k,-1.25,1.25);});
+    setInterval(()=>{const on=document.pointerLockElement===T;if(on&&!mlCan())document.exitPointerLock();const h=$('mlHint');if(h)h.hidden=on||!mlCan();},200);}
   addEventListener('keyup',e=>{IN.keys[e.code]=false;if(KC.key&&(e.code==='KeyE'||e.code==='Enter'))ballLet();});
   addEventListener('blur',()=>{IN.keys={};KC.on=false;});
 }
@@ -2332,6 +2335,7 @@ for(const t of['gesturestart','gesturechange','gestureend'])document.addEventLis
 document.addEventListener('touchmove',e=>{if(e.touches.length<2||!e.cancelable)return;const t=e.target;if(t&&t.closest&&t.closest('#touch,#hud,input,textarea,.card,.ph-screen'))return;e.preventDefault();},{passive:false});
 document.addEventListener('dblclick',e=>{const t=e.target;if(!(t&&t.closest&&t.closest('input,textarea')))e.preventDefault();});
 const RAY=new THREE.Raycaster(),NDC=new THREE.Vector2();
+function mlCan(){return PLAYING&&!UI.open&&!CUT&&!DECO.on&&!document.body.classList.contains('away');}   /* 🖱️ when the mouse may look around (PC): not over a card, a mini-game, decorating or the away screen */
 function tapAt(cx,cy){if(CUT){if(CUT.tch)tcTap(cx,cy);return;}if(DECO.on){decoTap(cx,cy);return;}if(TN.on){tnSwing();return;}
   NDC.set(cx/innerWidth*2-1,-(cy/innerHeight)*2+1);RAY.setFromCamera(NDC,camera);
   const ts=targets().filter(t=>t.obj&&t.obj.visible!==false);if(!ts.length)return;
