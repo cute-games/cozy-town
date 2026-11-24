@@ -694,8 +694,28 @@ function spookTick(dt){const c=SPOOK.cur;if(c){c.t+=dt;const g=c.g,k=c.t<.3?c.t/
     const g=SPOOK.m[q.k];if(!g)return;g.position.set(q.px,.1,q.pz);g.visible=true;g.scale.setScalar(.01);const yaw=Math.atan2(P.x-q.px,P.z-q.pz);SPOOK.cur={g,t:0,yaw,k:q.k,face:Math.atan2(-(q.px-P.x),-(q.pz-P.z))};
     P.freeze=1.0;SHAKE.t=.4;floatText(SPOOK_SAY[q.k],q.px,1.4,q.pz,{h:.5,life:1.6});SFX.spook(q.k);P.pitch=clamp(P.pitch*.5,-1.2,1.2);});}
 
-function applyGfx(){const nice=SET.gfx!=='fast';renderer.setPixelRatio(Math.min(devicePixelRatio||1,nice?2:1));renderer.shadowMap.enabled=nice;sun.castShadow=nice;
-  scene.traverse(o=>{if(o.material){(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.needsUpdate=true);}});resize();}
+/* ⚡ auto speed: when the game stays slow for a few seconds it draws a bit less: first less sharp, then softer and then no shadows, last not so far.
+   When it runs well again it steps back up. Only this device: kept in its own key (not in the save, nothing sent online). Graphics 'Fast' in Settings starts lower. */
+const AQ_STEPS=[{pr:2,sh:2048},{pr:1.5,sh:2048},{pr:1.25,sh:1024},{pr:1,sh:0},{pr:1,sh:0,far:130}];
+const AQ={lv:0,n:0,acc:0,pt:0,good:0,hold:0,lock:20000,tryT:0,farT:0,farL:null,farList:null};
+try{AQ.lv=Math.min(AQ_STEPS.length-1,Math.max(0,parseInt(localStorage.getItem('cozytown-q'))||0));}catch(e){}
+function aqKey(lv){const q=AQ_STEPS[lv],nice=SET.gfx!=='fast';return [nice?Math.min(devicePixelRatio||1,q.pr):1,nice?q.sh:0,q.far||0].join('|');}
+function aqStep(dir){const k=aqKey(AQ.lv);for(let l=AQ.lv+dir;l>=0&&l<AQ_STEPS.length;l+=dir)if(aqKey(l)!==k){AQ.lv=l;try{localStorage.setItem('cozytown-q',String(l));}catch(e){}applyGfx();return true;}return false;}
+function aqTick(){if(navigator.webdriver&&!window.__aqTest)return;   /* (test browsers step the game by hand: their frame times say nothing about speed) */
+  const t=performance.now(),d=t-(AQ.pt||t);AQ.pt=t;if(!PLAYING||d<=0||d>1500||document.hidden){AQ.acc=AQ.n=0;return;}   /* (a very long stop, like the app coming back from the background, is not counted) */
+  AQ.acc+=d;AQ.n++;if(AQ.acc<3000)return;const fps=AQ.n*1000/AQ.acc;AQ.acc=AQ.n=0;
+  if(fps<27){AQ.good=0;const tried=AQ.tryT&&t-AQ.tryT<12000;if(aqStep(1)){if(tried)AQ.lock=Math.min(600000,AQ.lock*2);AQ.tryT=0;AQ.hold=t;}}   /* (a step up that was too much: wait twice as long before the next try) */
+  else if(fps>50){if(++AQ.good>=4&&t-AQ.hold>AQ.lock){AQ.good=0;if(aqStep(-1)){AQ.tryT=t;AQ.hold=t;}}}else AQ.good=0;}
+function aqFar(){const f=AQ_STEPS[AQ.lv].far,L=CUR&&CUR.type==='out'&&f?CUR:null;   /* the last step: far-away things in the place you are in are not drawn (they sit in the fog) */
+  if(AQ.farL!==L){if(AQ.farList)for(const o of AQ.farList)o.layers.mask=o.__lm;AQ.farList=null;AQ.farL=L;}if(!L)return;
+  if(!AQ.farList){AQ.farList=[];L.g.traverse(o=>{if(!o.isMesh||!o.geometry)return;if(!o.geometry.boundingSphere)o.geometry.computeBoundingSphere();if(o.geometry.boundingSphere.radius*o.matrixWorld.getMaxScaleOnAxis()<40){o.__lm=o.layers.mask;AQ.farList.push(o);}});}
+  const c=camera.position,v=_aqV;for(const o of AQ.farList){v.copy(o.geometry.boundingSphere.center).applyMatrix4(o.matrixWorld);o.layers.mask=Math.hypot(v.x-c.x,v.z-c.z)>f+o.geometry.boundingSphere.radius?0:o.__lm;}}
+const _aqV=new THREE.Vector3();
+function applyGfx(){const nice=SET.gfx!=='fast',q=AQ_STEPS[AQ.lv],sh=nice&&q.sh>0;renderer.setPixelRatio(Math.min(devicePixelRatio||1,nice?q.pr:1));
+  if(sh&&sun.shadow.mapSize.x!==q.sh){sun.shadow.mapSize.set(q.sh,q.sh);if(sun.shadow.map){sun.shadow.map.dispose();sun.shadow.map=null;}}
+  if(renderer.shadowMap.enabled!==sh||sun.castShadow!==sh){renderer.shadowMap.enabled=sh;sun.castShadow=sh;
+    scene.traverse(o=>{if(o.material){(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.needsUpdate=true);}});}
+  AQ.farT=0;aqFar();resize();}
 function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;BASEFOV=w<h?80:70;camera.fov=BASEFOV;camera.updateProjectionMatrix();}
 let last=performance.now(),saveT=0,titleT=0,hardT=0,navT=0;
 function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last)/1000);last=now;
@@ -737,7 +757,8 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
   updTVs(dt);updFloats(dt);updBeach(dt);popFades();
   const tx=Math.round(camera.position.x),tz=Math.round(camera.position.z);sun.target.position.set(tx,0,tz);sun.position.set(tx+SUND.x*70,SUND.y*70,tz+SUND.z*70);
   skyMesh.position.copy(camera.position);stars.position.copy(camera.position);
-  updSky();renderer.render(scene,camera);
+  updSky();if(AQ_STEPS[AQ.lv].far&&CUR&&CUR.type==='out'){const f=AQ_STEPS[AQ.lv].far;FOG.far=Math.min(FOG.far,f);FOG.near=Math.min(FOG.near,f*.45);}
+  aqTick();AQ.farT+=dt;if(AQ.farT>.5||AQ.farL!==(AQ_STEPS[AQ.lv].far&&CUR&&CUR.type==='out'?CUR:null)){AQ.farT=0;aqFar();}renderer.render(scene,camera);
 }
 async function boot(){
   capsEarly();
@@ -746,7 +767,10 @@ async function boot(){
     renderer.shadowMap.type=THREE.PCFSoftShadowMap;
     {const K=THREE.ShaderChunk,f=K.shadowmap_pars_fragment;if(f.includes('return shadow;'))K.shadowmap_pars_fragment=f.replace('return shadow;','return mix(shadow,1.0,smoothstep(.72,.98,max(abs(shadowCoord.x-.5),abs(shadowCoord.y-.5))*2.));');}   /* 🌳 shadows fade out softly far away instead of popping in */
     initMaterials(renderer.capabilities.isWebGL2);
-    scene=new THREE.Scene();FOG=new THREE.Fog('#c4ecff',55,270);scene.fog=FOG;
+    scene=new THREE.Scene();
+    scene.updateMatrixWorld=function(force){if(this.matrixAutoUpdate)this.updateMatrix();if(this.matrixWorldNeedsUpdate||force){this.matrixWorld.copy(this.matrix);this.matrixWorldNeedsUpdate=false;force=true;}
+      for(const c of this.children)if(c.visible||force||!c.__mw0){c.updateMatrixWorld(force);c.__mw0=1;}};   /* ⚡ speed: hidden places (the rooms you are not in, about 4,000 parts) are not re-sized every frame; each is done once, and again when shown */
+    FOG=new THREE.Fog('#c4ecff',55,270);scene.fog=FOG;
     camera=new THREE.PerspectiveCamera(70,1,.1,700);camera.rotation.order='YXZ';
     hemi=new THREE.HemisphereLight('#ffffff','#a8c69a',.75);scene.add(hemi);
     sun=new THREE.DirectionalLight('#fff4e0',.9);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);const sc=sun.shadow.camera;sc.left=-30;sc.right=30;sc.top=30;sc.bottom=-30;sc.near=1;sc.far=150;sun.shadow.bias=-.0006;sun.shadow.normalBias=.09;scene.add(sun);scene.add(sun.target);
