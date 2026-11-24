@@ -232,7 +232,10 @@ function jobHud(force){const el=$('job'),job=!!(PLAYING&&S&&(S.job==='delivery'|
    into a picture by the big map's painter (MINI.k px a metre; painted again only when light/dark, the holiday or the houses on Friends Lane change).
    Each time it is drawn it copies the 64 m round you (north up; your arrow turns with you) and puts the place badges, your pets, friends, the job's dot
    and the place you are looking for on top. A tap opens the big map */
-const MINI={c:null,key:'',kt:-1e9,B:null,k:4,dark:false,items:[],spr:new Map(),ms:0,cost:0,n:0},MINI_R=32;
+const MINI={c:null,key:'',kt:-1e9,B:null,k:4,dark:false,items:[],spr:new Map(),ms:0,cost:0,n:0};let MINI_R=32;const MINI_ZS=[16,32,64,128,256];   /* 🔍 how many metres from you to the map's edge: − and + change it (24 Nov, owner); remembered on this device */
+try{const z=+localStorage.getItem('cozyMiniR');if(MINI_ZS.includes(z))MINI_R=z;}catch(e){}
+function miniZoom(d){const i=clamp(MINI_ZS.indexOf(MINI_R)+d,0,MINI_ZS.length-1);MINI_R=MINI_ZS[i];try{localStorage.setItem('cozyMiniR',MINI_R);}catch(e){}SFX.tap();drawMini();$('mmIn').disabled=i===0;$('mmOut').disabled=i===MINI_ZS.length-1;}
+for(const [id,d] of [['mmIn',-1],['mmOut',1]]){const b=document.getElementById(id);if(b)b.addEventListener('click',e=>{e.stopPropagation();miniZoom(d);});}
 function miniBase(){const now=performance.now();if(MINI.c&&now-MINI.kt<1500)return MINI.c;MINI.kt=now;
   const dark=mapDark(),k=(devicePixelRatio||1)>1.4?5:4,key=dark+'|'+k+'|'+mapKey()+'|'+(HOL.cur||'');if(MINI.c&&MINI.key===key)return MINI.c;
   const B=mapB(),w=Math.ceil((B.x2-B.x1)*k),h=Math.ceil((B.z2-B.z1)*k),c=MINI.c||document.createElement('canvas'),t0=performance.now();c.width=w;c.height=h;
