@@ -1,6 +1,10 @@
 # HANDOFF — read this first (one page; updated 2 Nov 2026: Pets and Farm Update ready for its pull request)
 
 ## Where things stand
+- **Horses in town** (24 Nov, branch `claude/horse-town`, stamp 2026112497+): ride anywhere in town (door = "horses wait outside"; the lesson stays at the farm);
+  a horse let go walks home on pavements/zebras/park paths/farm roads (`HN` block in `js/03-game.js` after `RIDE_POSE_X`: 0.5 m walk map + one way-home field,
+  built a few ms a frame in town; walk = fixed 0.1 s steps from the record [horse,x,z,time], sent online as presence `rh`), groups of near horses (2 wide, single
+  file at zebras). The only town-farm way is the x -50 road's end between the farm walls (`hnMouth`, crossed like a zebra). Proof: a ride-into-town script (outside the repo).
 - **Speed (24 Nov, branch `claude/perf-1`, stamp 2026112496, pull request "Speed: less lag on weak devices")**: exact faster ground fix for pets and animals (`boxIn`),
   hidden places skipped in the per-frame matrix update (`scene.updateMatrixWorld` in `boot`), Ieva's brush (an undefined store that made all later vector maths make garbage),
   auto speed steps `AQ`/`AQ_STEPS` in `09-mainloop.js` (pixel ratio 2 -> 1.5 -> 1.25 + 1024 shadows + small things cast none -> 1 no shadows -> far things hidden at 130 m; key `cozytown-q`;
