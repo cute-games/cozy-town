@@ -272,8 +272,9 @@ function buildTreePark(){
 function psTick(dt){const L=LOC.pets;if(!L||CUR!==L||!L.psh){PSH.in=0;CFL=0;return;}
   if(!PSH.in){PSH.in=1;PSH.px=P.x;PSH.pz=P.z;}
   if(!PLAYING||CUT||fading||P.sit){PSH.px=P.x;PSH.pz=P.z;CFL=psFl(P.cy||0);return;}
-  const c=P.cy||0,h=psSupport(P.x-L.ox,P.z-L.oz,c);
-  if(h===null){P.x=PSH.px;P.z=PSH.pz;}else P.cy=Math.abs(h-c)<.01?h:lerp(c,h,Math.min(1,dt*14));
+  const c=P.cy||0;let h=psSupport(P.x-L.ox,P.z-L.oz,c);
+  if(h===null){const hx=psSupport(P.x-L.ox,PSH.pz-L.oz,c),hz=hx===null?psSupport(PSH.px-L.ox,P.z-L.oz,c):null;if(hx!==null){P.z=PSH.pz;h=hx;}else if(hz!==null){P.x=PSH.px;h=hz;}else{P.x=PSH.px;P.z=PSH.pz;}}   /* (24 Nov: brushing a stair side or a rail slides you along it instead of stopping you dead) */
+  if(h!==null)P.cy=Math.abs(h-c)<.01?h:lerp(c,h,Math.min(1,dt*18));
   PSH.px=P.x;PSH.pz=P.z;CFL=psFl(P.cy||0);}
 /* ---- the floor physics ---- */
 function tpSupport(x,z,feet){let h=0;for(const d of TP.decks){if(d.h<=feet+.5&&Math.abs(x-d.x)<=d.w/2&&Math.abs(z-d.z)<=d.d/2)h=Math.max(h,d.h);}for(const w of TP.walk){if(w.h<=feet+.5&&x>=w.x1&&x<=w.x2&&z>=w.z1&&z<=w.z2)h=Math.max(h,w.h);}return h;}
