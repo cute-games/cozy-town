@@ -1132,8 +1132,8 @@ const KIND={
   bunny:{A:.6,f:1.8,gait:'bound',wag:.15,wagF:1,hop:.18},
   hamster:{A:.7,f:3.4,gait:'walk',wag:.1,wagF:1,sway:.05},
   capybara:{A:.4,f:1.5,gait:'walk',wag:0,wagF:0,sway:.04},
-  duck:{A:.45,f:2.4,gait:'waddle',wag:.2,wagF:2,sway:.15},
-  owl:{A:.3,f:1.6,gait:'hop',wag:.1,wagF:1,hop:.12},
+  duck:{A:.45,f:2.4,gait:'waddle',wag:.2,wagF:1,sway:.1,step:.8,maxF:1.6},   /* 🦆🦉 step, maxF: the calm birds (birdPhase) */
+  owl:{A:.3,f:1.6,gait:'hop',wag:.1,wagF:1,hop:.12,step:.7,maxF:1.5},
   bear:{A:.38,f:1.3,gait:'walk',wag:.1,wagF:1,sway:.07,headSwing:.12},
   monkey:{A:.5,f:2,gait:'walk',wag:.3,wagF:.8,sway:.05},
   seal:{A:0,f:1.4,gait:'galumph',wag:.2,wagF:1},
@@ -1253,11 +1253,15 @@ function airLegs(R,u){const s=Math.sin(PI*cl(u));R.legs.forEach(l=>{if(R.biped){
 /* a crouch before a jump and a squash on landing (whole-body scale only) */
 function squash(R,k){R.b.scale.y*=1-.12*k;R.b.scale.x*=1+.06*k;R.b.scale.z*=1+.06*k;}
 /* ---------- pet moves ---------- */
+/* 🦆🦉 calm birds (25 Nov): with feet planted, legs this short took 20 (duck) to 55 (owl) steps a second at a follower's speed: a twitching blur.
+   A bird takes K.step metres a waddle or hop (so slow walks step slowly), and never more than K.maxF a second however fast it comes along */
+function birdPhase(R,t,o,step){const K=kindOf(R),c=R.cache;if(o.dist==null)return t*(o.f||K.f)*(o.speed||1);
+  const dt=t-c.bt,dd=o.dist-c.bd;c.bt=t;c.bd=o.dist;if(dt>0&&dt<.5&&dd>0)c.bp=(c.bp||0)+Math.min(dd/(step*scOf(R)),K.maxF*dt);return c.bp||0;}
 /* walk (per type: walk, trot, bunny bound, duck waddle, owl hop, chicken head-bob, seal galumph, snake slither). o.dist = metres walked (feet planted); o.mood: 'sad'|'sick'|'happy' */
 function petWalk(m,t,o){const R=rig(m),K=kindOf(R);o=o||{};const mood=o.mood;
   if(K.gait==='slither')return snakeSlither(m,t,o);
   if(K.gait==='galumph')return sealGalumph(m,t,o);
-  const amp=(mood==='sad'?.6:mood==='sick'?.5:1)*(o.amp==null?1:o.amp);const A=K.A*(o.big||1);const ph=phaseOf(R,t,o,A*(mood==='sad'?.6:mood==='sick'?.5:1));let lift=0;   /* o.amp only fades the legs in/out; the stride follows the mood */
+  const amp=(mood==='sad'?.6:mood==='sick'?.5:1)*(o.amp==null?1:o.amp);const A=K.A*(o.big||1);const ph=K.step?birdPhase(R,t,o,K.step*(mood==='sad'?.6:mood==='sick'?.5:1)):phaseOf(R,t,o,A*(mood==='sad'?.6:mood==='sick'?.5:1));let lift=0;   /* o.amp only fades the legs in/out; the stride follows the mood */
   if(K.gait==='bob')return chickenWalk(m,t,o);
   if(K.gait==='hop'){const u=frac(ph);lift=arc(u,0,.7,R.H*K.hop*amp);R.legs.forEach(l=>{l.g.rotation.x+=.35*Math.sin(PI*cl(u/.7))*amp;});}
   else if(K.gait==='bound'){gaitLegs(R,ph,A,amp,'bound',K.knee);const u=frac(ph+.75);lift=arc(u,0,.62,R.H*K.hop*amp);rotAbout(R,'x',.18*Math.sin(TAU*ph)*amp,0,R.bCenter.y,R.bCenter.z);}

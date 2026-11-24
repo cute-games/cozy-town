@@ -1646,7 +1646,7 @@ function peerSpot(a){const me=CUR.id,VD=VOX-LOC.home.ox;
   if(a.loc==='studio'||a.loc==='client')return null;
   return a.loc===me?[a.rx,a.rz,a.rry]:null;}
 function placeOf(a){if(a.loc==='visit'){if(MP.me&&a.ho===MP.me)return'🏠 Visiting your house!';const h=MP.peers.get(a.ho);return'🏠 At '+(h?esc(h.nm)+"'s house":"a friend's house");}return PLACE_OF[a.loc]||'📍 In town';}
-function laneFields(a,pr,fresh){a.jt=Number.isFinite(pr.jt)?pr.jt:undefined;a.bh=pr.bh?1:0;a.ho=typeof pr.ho==='string'?pr.ho:null;a.gd=typeof pr.gd==='string'?pr.gd.slice(0,600):'';a.yd=typeof pr.yd==='string'?pr.yd.slice(0,12):'';
+function laneFields(a,pr,fresh){a.jt=Number.isFinite(pr.jt)?pr.jt:undefined;a.bh=pr.bh?1:0;a.ho=typeof pr.ho==='string'?pr.ho:null;a.gd=typeof pr.gd==='string'?pr.gd.slice(0,600):'';a.yd=typeof pr.yd==='string'?pr.yd.slice(0,12):'';a.hc=typeof pr.hc==='string'?pr.hc:'';   /* 🎨 25 Nov: a friend's house colour was sent (laneStamp) but never read here, so nobody saw a painted house but its owner */
   const obj=v=>v&&typeof v==='object'?v:null;a.kn=obj(pr.kn);a.an=obj(pr.an);a.hm=obj(pr.hm);hpFields(a,pr);
   const guest=!!MP.me&&a.loc==='visit'&&a.ho===MP.me;if(guest&&!a.guest&&!fresh){SFX.yay();toast('🏠 '+a.nm+' is visiting your house!',3);}a.guest=guest;
   hostSeeKnock(a);}
@@ -1985,22 +1985,30 @@ function openBigHouse(){const n=homeFloors();if(n>=6){toast('🏡 Six floors! Yo
     <div class="ph-row"><span>🪙 ${BIG_PRICE} coins</span><span>${S.coins>=BIG_PRICE?'✅':S.coins+' / '+BIG_PRICE}</span></div>${S.coins<BIG_PRICE?`<div class="coinbar" aria-hidden="true"><i style="width:${Math.round(100*S.coins/BIG_PRICE)}%"></i></div>`:''}
     ${ok?`<div class="row" style="justify-content:center;margin-top:12px"><button class="btn mint" data-a="bighouse">🏡 ${n===1?'Buy it!':'Add the floor!'}</button></div>`
       :`<p class="ph-sub" style="margin-top:12px">${lv<need?'Put furniture in your house to level up Decorating 🛋️':'Keep saving your coins 🪙'}</p>`}`,{bottom:true});}
-/* 🎨 the outside of your house, any colour (run 4, item 23): 12 ready colours and a "pick any colour" slider; free; everyone sees it through the lane fields (hc) */
+/* 🎨 the outside of your house, any colour (run 4, item 23): 12 ready colours and a "pick any colour" slider; everyone sees it through the lane fields (hc).
+   25 Nov: a paint job costs HOUSE_PAINT coins: a tap or the slider only picks (HP_PICK: null = nothing picked, '' = the lane's own colour), the "Paint it!" button pays once and paints; the colour the house has costs nothing */
+const HOUSE_PAINT=50;let HP_PICK=null;
 const HOUSE_COLS=[['#b79cff','Purple'],['#ffd6e0','Pink'],['#bfe6ff','Blue'],['#b5e3a1','Green'],['#fff1b8','Yellow'],['#ffe0c4','Peach'],['#e6dbff','Lilac'],['#bff0dc','Mint'],['#ffb3a7','Coral'],['#9fd0ff','Sky'],['#fff7e6','Cream'],['#ffffff','White']];   /* (run 4, stage 3: Green and Sky were almost Mint and Blue) */
 const houseCol=()=>S&&S.home&&HEX.test(S.home.col||'')?S.home.col:null;
-function openHousePaint(){const cur=houseCol();
-  openPanel(`<div class="hd"><h2>🎨 House colour</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div><p class="note">Paint the outside of your house. Everyone on Friends Lane sees it!</p>
+function openHousePaint(){const cur=houseCol();HP_PICK=null;
+  openPanel(`<div class="hd"><h2>🎨 House colour</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div><p class="note">Everyone on Friends Lane sees your house! A new colour costs <b>${HOUSE_PAINT}&nbsp;🪙</b>.</p>
     <div class="dots">${HOUSE_COLS.map(([c,n])=>`<button class="dotb${houseColNow()===c?' on':''}" data-a="hcol:${c}" aria-label="${n}"><i style="background:${c}"></i>${n}</button>`).join('')}</div>
     <div class="opt" style="margin-top:10px"><span>Pick any colour</span><input type="range" id="hcHue" min="0" max="360" value="${Math.round(hexHue(houseColNow()))}" aria-label="Any colour" style="flex:1;min-width:140px"></div>
     <div class="opt"><span>Your house now</span><i id="hcNow" class="hcNow" style="background:${houseColNow()}" aria-hidden="true"></i></div>
-    <div class="row" style="justify-content:center;margin-top:8px"><button class="dotb lane${cur?'':' on'}" id="hcLane" data-a="hcol:" aria-label="The lane's own colour"><i style="background:${laneOwnCol()}"></i>🏡 The lane's own colour</button></div>`,{cls:'setcard hpaint'});   /* (run 4, stage 3: the colour the house has now is marked, the lane's own colour is a colour like the others, not a button with a tick that read as a status) */
-  const sl=$('hcHue');if(sl)sl.addEventListener('input',()=>setHouseCol(hslHex(+sl.value,.72,.82)),{passive:true});}
+    <div class="row" style="justify-content:center;margin-top:8px"><button class="dotb lane${cur?'':' on'}" id="hcLane" data-a="hcol:" aria-label="The lane's own colour"><i style="background:${laneOwnCol()}"></i>🏡 The lane's own colour</button></div>
+    <div class="row" style="justify-content:center;margin-top:8px"><button class="btn mint" id="hcPay" data-a="hpay"></button></div>`,{cls:'setcard hpaint'});   /* (run 4, stage 3: the colour the house has now is marked, the lane's own colour is a colour like the others, not a button with a tick that read as a status) */
+  const sl=$('hcHue');if(sl)sl.addEventListener('input',()=>hpPick(hslHex(+sl.value,.72,.82)),{passive:true});hpShow();}
+function hpPick(c){if(c&&!HEX.test(c))return;HP_PICK=c||'';hpShow();}
+/* the card now: the picked colour is marked, and the button says what it costs (or that the house has this colour already) */
+function hpShow(){const b=$('hcPay');if(!b)return;const pk=HP_PICK==null?houseColNow():HP_PICK||laneOwnCol(),lane=HP_PICK==null?!houseCol():!HP_PICK,same=pk===houseColNow();
+  for(const d of document.querySelectorAll('#card .dotb'))d.classList.toggle('on',d.id==='hcLane'?lane:d.dataset.a==='hcol:'+pk);$('hcNow').style.background=houseColNow();
+  b.disabled=same;b.innerHTML=same?'✅ Your house has this colour':`<i class="hcDot" style="background:${pk}"></i>🎨 Paint it! ${HOUSE_PAINT}&nbsp;🪙`;
+  const sl=$('hcHue');if(sl&&document.activeElement!==sl)sl.value=Math.round(hexHue(pk));}
 function hexHue(h){const r=parseInt(h.slice(1,3),16)/255,g=parseInt(h.slice(3,5),16)/255,b=parseInt(h.slice(5,7),16)/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;if(!d)return 0;let hu=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;return (hu*60+360)%360;}
 function hslHex(h,s,l){const c=(1-Math.abs(2*l-1))*s,x=c*(1-Math.abs((h/60)%2-1)),m=l-c/2;let r=0,g=0,b=0;if(h<60){r=c;g=x;}else if(h<120){r=x;g=c;}else if(h<180){g=c;b=x;}else if(h<240){g=x;b=c;}else if(h<300){r=x;b=c;}else{r=c;b=x;}return'#'+[r,g,b].map(v=>Math.round((v+m)*255).toString(16).padStart(2,'0')).join('');}
 function laneOwnCol(){return LANE_PAL[hashStr((S.name||'').toLowerCase())%LANE_PAL.length][0];}
 function houseColNow(){return houseCol()||laneOwnCol();}   /* the colour the house shows right now (yours, or the lane's own for your name) */
-function setHouseCol(c){if(c&&!HEX.test(c))return;if(c)S.home.col=c;else delete S.home.col;change();laneRefresh(true);const sw=$('hcNow');if(sw)sw.style.background=houseColNow();
-  const now=houseColNow();for(const b of document.querySelectorAll('#card .dotb'))b.classList.toggle('on',b.id==='hcLane'?!c:b.dataset.a==='hcol:'+now);const sl=$('hcHue');if(sl&&document.activeElement!==sl)sl.value=Math.round(hexHue(houseColNow()));}
+function setHouseCol(c){if(c&&!HEX.test(c))return;if(c)S.home.col=c;else delete S.home.col;change();laneRefresh(true);HP_PICK=null;hpShow();}
 function setFloor(k){if(FLOOR_M.map)FLOOR_M.map.dispose();FLOOR_M.map=floorTex(k);FLOOR_M.map.repeat.set(HOMEW/2,HOMED/2);FLOOR_M.needsUpdate=true;}
 let tvT=0,tvLast=-1;
 function useFurn(rec,fx,fz){const F=FURN[furnOf(rec.it)];
