@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Baloo+2:wght@500;700;800&family=Roboto+Slab:wght@700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style-1.css?v=3490a59d2d" data-cozy="css/style-1.css">
+<link rel="stylesheet" href="css/style-1.css?v=1d6950a9d4" data-cozy="css/style-1.css">
 </head>
 <body>
 <canvas id="c"></canvas>
@@ -29,7 +29,7 @@
     </div>
     <div id="tasks" hidden></div>
     <div id="nav" hidden><span id="navArrow">⬆️</span><b id="navTxt"></b><button class="btn x" id="navX" aria-label="Stop showing the way">✕</button></div>
-    <div id="job" hidden><button id="mmBtn" aria-label="Your map. Tap to open the big map"><canvas id="mm" width="264" height="264"></canvas></button><div id="jobTxt" role="button" tabindex="0"></div></div>
+    <div id="job" hidden><span id="mmWrap"><button id="mmBtn" aria-label="Your map. Tap to open the big map"><canvas id="mm" width="264" height="264"></canvas></button><span id="mmZoom"><button id="mmOut" aria-label="Show more of the map">−</button><button id="mmIn" aria-label="Show less of the map">+</button></span></span><div id="jobTxt" role="button" tabindex="0"></div></div>
     <div id="pad" aria-label="Notepad"><canvas id="padC"></canvas><span id="padH">✏️ Write here!</span><span id="padN">1/1</span></div>
     <div id="dcard" hidden role="button" tabindex="0" aria-label="What your client wants"></div>
   </div>
@@ -104,8 +104,8 @@
 </script>
 <script>
 'use strict';
-const COZY_BUILD=2026112492;   /* ✨ version stamp: make this number BIGGER on every update (date + a counter: 2026100901, 2026100902…). The Home Screen app compares it with the file online and updates itself */
-/* files: e31fb4133a (written by tools/split/split.py) */
+const COZY_BUILD=2026112493;   /* ✨ version stamp: make this number BIGGER on every update (date + a counter: 2026100901, 2026100902…). The Home Screen app compares it with the file online and updates itself */
+/* files: a36177d03c (written by tools/split/split.py) */
 </script>
 <script src="js/00-core.js?v=e537c7a55d" data-cozy="js/00-core.js"></script>
 <script src="js/01-models.js?v=518458b4aa" data-cozy="js/01-models.js"></script>
@@ -113,7 +113,7 @@ const COZY_BUILD=2026112492;   /* ✨ version stamp: make this number BIGGER on 
 <script src="js/03-game.js?v=23e01451b3" data-cozy="js/03-game.js"></script>
 <script src="js/04-panels.js?v=ac70100cb1" data-cozy="js/04-panels.js"></script>
 <script src="js/05-map.js?v=ce572f4af2" data-cozy="js/05-map.js"></script>
-<script src="js/06-jobs.js?v=9d895a0450" data-cozy="js/06-jobs.js"></script>
+<script src="js/06-jobs.js?v=026d748a0b" data-cozy="js/06-jobs.js"></script>
 <script src="js/07-designer.js?v=2b90381367" data-cozy="js/07-designer.js"></script>
 <script src="js/08-hud.js?v=c493f3647f" data-cozy="js/08-hud.js"></script>
 <script src="js/09-mainloop.js?v=07a616769c" data-cozy="js/09-mainloop.js"></script>
