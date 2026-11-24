@@ -64,9 +64,9 @@ function starOn(g,x,y,z,r,c){for(const ry of[0,Math.PI/2]){const m=new THREE.Mes
 function prism(g,len,base,height,c,x,y,z,o={}){const m=place(g,new THREE.Mesh(prismGeo(len,base,height),o.mat||mat(c)),o,x,y,z);if(o.ol!==false)hull(g,prismGeo(len,base,height,o.ol||OT),m,o);return m;}
 
 /* ---- merge all static meshes of a group into one mesh per material (few draw calls on iPad) ---- */
-function bake(root,shadow=true,chunk=0){const _v=new THREE.Vector3();
+function bake(root,shadow=true,chunk=0,frame=null){const _v=new THREE.Vector3();   /* frame: bake the shapes in that object's frame (the merged piece sits in root, moved back by the frame's offset: 24 Nov, the horse's joints look exactly as before) */
   root.updateMatrixWorld(true);
-  const inv=new THREE.Matrix4().copy(root.matrixWorld).invert();
+  const inv=new THREE.Matrix4().copy((frame||root).matrixWorld).invert(),rel=frame?new THREE.Matrix4().copy(root.matrixWorld).invert().multiply(frame.matrixWorld):null;
   const buckets=new Map(),kill=[];
   root.traverse(o=>{
     if(!o.isMesh||o.userData.keep)return;
@@ -89,7 +89,7 @@ function bake(root,shadow=true,chunk=0){const _v=new THREE.Vector3();
     const P=new Float32Array(n*3),N=new Float32Array(n*3),Cc=vc?new Float32Array(n*3):null;let off=0;
     for(const g of l){P.set(g.attributes.position.array,off*3);N.set(g.attributes.normal.array,off*3);if(Cc)Cc.set(g.attributes.color.array,off*3);off+=g.attributes.position.count;g.dispose();}
     const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(P,3));geo.setAttribute('normal',new THREE.BufferAttribute(N,3));if(Cc)geo.setAttribute('color',new THREE.BufferAttribute(Cc,3));geo.computeBoundingSphere();
-    const mesh=new THREE.Mesh(geo,m);const isOL=m.side===THREE.BackSide;
+    const mesh=new THREE.Mesh(geo,m);const isOL=m.side===THREE.BackSide;if(rel)rel.decompose(mesh.position,mesh.quaternion,mesh.scale);
     mesh.castShadow=shadow&&!isOL&&!m.transparent;mesh.receiveShadow=!isOL;root.add(mesh);out.push(mesh);
   }
   return out;
