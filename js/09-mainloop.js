@@ -694,7 +694,7 @@ function spookTick(dt){const c=SPOOK.cur;if(c){c.t+=dt;const g=c.g,k=c.t<.3?c.t/
     const g=SPOOK.m[q.k];if(!g)return;g.position.set(q.px,.1,q.pz);g.visible=true;g.scale.setScalar(.01);const yaw=Math.atan2(P.x-q.px,P.z-q.pz);SPOOK.cur={g,t:0,yaw,k:q.k,face:Math.atan2(-(q.px-P.x),-(q.pz-P.z))};
     P.freeze=1.0;SHAKE.t=.4;floatText(SPOOK_SAY[q.k],q.px,1.4,q.pz,{h:.5,life:1.6});SFX.spook(q.k);P.pitch=clamp(P.pitch*.5,-1.2,1.2);});}
 
-/* ⚡ auto speed: when the game stays slow for a few seconds it draws a bit less: first less sharp, then softer and then no shadows, last not so far.
+/* ⚡ auto speed: when the game stays slow for a few seconds it draws a bit less: first less sharp, then softer shadows and none under small things, then no shadows, last not so far.
    When it runs well again it steps back up. Only this device: kept in its own key (not in the save, nothing sent online). Graphics 'Fast' in Settings starts lower. */
 const AQ_STEPS=[{pr:2,sh:2048},{pr:1.5,sh:2048},{pr:1.25,sh:1024},{pr:1,sh:0},{pr:1,sh:0,far:130}];
 const AQ={lv:0,n:0,acc:0,pt:0,good:0,hold:0,lock:20000,tryT:0,farT:0,farL:null,farList:null};
@@ -715,6 +715,8 @@ function applyGfx(){const nice=SET.gfx!=='fast',q=AQ_STEPS[AQ.lv],sh=nice&&q.sh>
   if(sh&&sun.shadow.mapSize.x!==q.sh){sun.shadow.mapSize.set(q.sh,q.sh);if(sun.shadow.map){sun.shadow.map.dispose();sun.shadow.map=null;}}
   if(renderer.shadowMap.enabled!==sh||sun.castShadow!==sh){renderer.shadowMap.enabled=sh;sun.castShadow=sh;
     scene.traverse(o=>{if(o.material){(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.needsUpdate=true);}});}
+  const sm=sh&&AQ.lv>=2;if(AQ.small!==sm){AQ.small=sm;scene.traverse(o=>{if(!o.isMesh)return;   /* from the third step small things (under 1 m across: lamps, cups, pet and people parts) cast no shadow */
+    if(sm){if(o.castShadow&&o.geometry){if(!o.geometry.boundingSphere)o.geometry.computeBoundingSphere();if(o.geometry.boundingSphere.radius*o.matrixWorld.getMaxScaleOnAxis()<.5){o.castShadow=false;o.__cs=1;}}}else if(o.__cs){o.castShadow=true;o.__cs=0;}});}
   AQ.farT=0;aqFar();resize();}
 function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;BASEFOV=w<h?80:70;camera.fov=BASEFOV;camera.updateProjectionMatrix();}
 let last=performance.now(),saveT=0,titleT=0,hardT=0,navT=0;

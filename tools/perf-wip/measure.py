@@ -16,6 +16,12 @@ async def _enter(self):
   self.browser=await self.pw.chromium.launch(args=['--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--autoplay-policy=no-user-gesture-required','--enable-precise-memory-info','--js-flags=--expose-gc'])
   return self
 Run.__aenter__=_enter
+# GOTO_PATCH: slow machine
+from playwright.async_api import Page as _Pg
+_og=_Pg.goto
+async def _goto(self,url,**k):
+  k.setdefault('timeout',240000); return await _og(self,url,**k)
+_Pg.goto=_goto
 
 INSTALL=r"""()=>{if(window.__pf)return;const T=window.__pf={t:{},n:0};
  const names=['updatePlayer','farmTick','tpTick','psTick','fanTick','petTick','tagsApart','updatePen','wkStat','walkersApart','granTick','updateCars','mpTick','hpTick','laneTick','zzTick',
