@@ -2597,7 +2597,7 @@ function farmAnimal(a,dt,ms,now){const R=a.m.root,MV=a.lo?{play:()=>null}:COZY_M
   const I=FA_IDLE[a.type]||['farm.walk'],k=Math.floor(now/12+farmHash(a.id||a.key)*5)%2;MV.play(a.m,a.type==='pig'&&FARMD.ground.some(g=>g[0]===1&&Math.hypot(g[1]-a.x,g[2]-a.z)<g[3])&&k?'pig.roll':I[k],now%120,{kind:a.type,fast:true,lamb:a.baby});}
 function farmPerson(p,now){const R=p.m.root;
   if(p.who==='ieva'){const h=FARM.hs.find(q=>q.kind==='pad'&&q.st==='home'&&Math.hypot(q.x-p.x,q.z-p.z)<4);
-    if(h&&!(P.horse)&&Math.hypot(P.x-p.x,P.z-p.z)>2.5){R.rotation.y=angLerp(R.rotation.y,Math.atan2(h.x-p.x,h.z-p.z),.1);const r=COZY_MOVES.play(p.m,'person.groom',now,{kind:'person',dist:.3});p.brush.visible=true;if(r&&r.brush){p.brush.position.copy(r.brush.p);if(r.brush.q)p.brush.quaternion.copy(r.brush.q);}
+    if(h&&!(P.horse)&&Math.hypot(P.x-p.x,P.z-p.z)>2.5){R.rotation.y=angLerp(R.rotation.y,Math.atan2(h.x-p.x,h.z-p.z),.1);const r=COZY_MOVES.play(p.m,'person.groom',now,{kind:'person',dist:.3});p.brush.visible=true;if(r&&r.brush){p.brush.position.fromArray(r.brush.p);if(r.brush.q)p.brush.quaternion.fromArray(r.brush.q);}
       if(!h.act||now>h.act.t1)h.act={mv:'horse.groomed',t0:now,t1:now+6,o:{look:.5}};return;}
     p.brush.visible=false;}
   const near=Math.hypot(P.x-p.x,P.z-p.z)<7;if(near)R.rotation.y=angLerp(R.rotation.y,Math.atan2(P.x-p.x,P.z-p.z),.08);

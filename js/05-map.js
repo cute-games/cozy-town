@@ -441,7 +441,7 @@ let WIPE=false;
 ACT.slook=v=>{SET.look=+v;saveSet();openSettings();};
 ACT.ssound=()=>{SET.sound=!SET.sound;saveSet();audioInit();openSettings();};
 ACT.spad=()=>{SET.pad=SET.pad===false;saveSet();dcardUpd(true);leftFit();openSettings();};   /* ✏️ the Notepad switch (run 4, item 24): off hides the notepad, on brings it back; the notes stay in their own storage */
-ACT.sgfx=v=>{SET.gfx=v;saveSet();applyGfx();openSettings();};
+ACT.sgfx=v=>{SET.gfx=v;saveSet();if(v==='nice'){AQ.lv=0;AQ.lock=20000;try{localStorage.removeItem('cozytown-q');}catch(e){}}applyGfx();openSettings();};   /* (tapping Pretty starts the auto speed steps from the top again) */
 ACT.padrest=()=>{if(!PAD.del){toast('No deleted page to bring back',2);return;}SFX.tap();
   openPanel(`<div class="hd"><h2>✏️ Last page</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div><p class="line">Do you want to bring back the last page you deleted?</p><canvas id="padPrev" width="340" height="230"></canvas><div class="row"><button class="btn mint" data-a="padyes">✅ Yes, bring it back</button><button class="btn white" data-a="padno">No</button></div>`);
   const c=$('padPrev');padPaint(c.getContext('2d'),c.width,c.height,PAD.del,2,false);};

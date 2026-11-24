@@ -1,6 +1,10 @@
 # HANDOFF — read this first (one page; updated 2 Nov 2026: Pets and Farm Update ready for its pull request)
 
 ## Where things stand
+- **Speed (24 Nov, branch `claude/perf-1`, stamp 2026112496, pull request "Speed: less lag on weak devices")**: exact faster ground fix for pets and animals (`boxIn`),
+  hidden places skipped in the per-frame matrix update (`scene.updateMatrixWorld` in `boot`), Ieva's brush (an undefined store that made all later vector maths make garbage),
+  auto speed steps `AQ`/`AQ_STEPS` in `09-mainloop.js` (pixel ratio 2 -> 1.5 -> 1.25 + 1024 shadows + small things cast none -> 1 no shadows -> far things hidden at 130 m; key `cozytown-q`;
+  off in test browsers (`navigator.webdriver`) unless `window.__aqTest`; tapping Pretty resets). Measure scripts: `tools/perf-wip/`. Real devices NOT VERIFIED.
 - Live: `main` = a47bb1a (pet update 1, stamp 2026102902). Backups: `backup-2026-10-31`, `backup-2026-11-01`, `backup-2026-11-02` = main a47bb1a
   (kit A2 wants a backup branch dated today: make `backup-YYYY-MM-DD` from main on the day of a check).
 - **Pets and Farm Update (PFU)**, branch `claude/exciting-feynman-ea1031` (stands in for the run doc's `pfu` branch): all 6 stages built (economy, night skip,

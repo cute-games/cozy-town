@@ -1153,7 +1153,12 @@ const _inv=new THREE.Matrix4(),_m=new THREE.Matrix4(),_v=new THREE.Vector3(),_bx
 function boxIn(root,obj,out,skip,precise){root.updateMatrixWorld(true);_inv.copy(root.matrixWorld).invert();out.makeEmpty();
   const walk=o=>{if(!o.visible||(skip&&skip.has(o)))return;
     if(o.isMesh&&!o.userData.noGround&&o.geometry){const g=o.geometry;_m.multiplyMatrices(_inv,o.matrixWorld);const pa=g.attributes&&g.attributes.position;
-      if(precise!==false&&pa&&pa.count<=1200){const st=pa.count>400?2:1;for(let i=0;i<pa.count;i+=st)out.expandByPoint(_v.fromBufferAttribute(pa,i).applyMatrix4(_m));}
+      if(precise!==false&&pa&&pa.count<=1200){const st=pa.count>400?2:1;
+        if(pa.isInterleavedBufferAttribute||pa.normalized||pa.itemSize!==3)for(let i=0;i<pa.count;i+=st)out.expandByPoint(_v.fromBufferAttribute(pa,i).applyMatrix4(_m));
+        else{const A=pa.array,e=_m.elements,n=pa.count,mn=out.min,mx=out.max;let x0=mn.x,y0=mn.y,z0=mn.z,x1=mx.x,y1=mx.y,z1=mx.z;   /* ⚡ speed: the same sums as applyMatrix4 + expandByPoint, read straight from the array (no garbage; pets and animals do this every frame) */
+          for(let i=0;i<n;i+=st){const j=i*3,x=A[j],y=A[j+1],z=A[j+2],w=1/(e[3]*x+e[7]*y+e[11]*z+e[15]),px=(e[0]*x+e[4]*y+e[8]*z+e[12])*w,py=(e[1]*x+e[5]*y+e[9]*z+e[13])*w,pz=(e[2]*x+e[6]*y+e[10]*z+e[14])*w;
+            x0=Math.min(x0,px);y0=Math.min(y0,py);z0=Math.min(z0,pz);x1=Math.max(x1,px);y1=Math.max(y1,py);z1=Math.max(z1,pz);}
+          mn.set(x0,y0,z0);mx.set(x1,y1,z1);}}
       else{if(!g.boundingBox)g.computeBoundingBox();_bx.copy(g.boundingBox).applyMatrix4(_m);out.union(_bx);}}
     for(const c of o.children)walk(c);};
   walk(obj);return out;}
