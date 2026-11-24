@@ -116,7 +116,15 @@ window.addEventListener('pagehide',()=>{saveLocal();});
 const KF=[[0,'#0f1538','#2a2c66',.26,.4,'#8b94ff','#3a3560','#a9b8ff'],[5,'#0f1538','#2a2c66',.26,.4,'#8b94ff','#3a3560','#a9b8ff'],[6.5,'#6f8fe0','#ffb38a',.42,.44,'#ffd0b0','#8a7a9a','#ffcf9e'],
   [8,'#4fb4ff','#c4ecff',.56,.58,'#ffffff','#c6d4bb','#fff4e0'],[17,'#4fb4ff','#c4ecff',.56,.58,'#ffffff','#c6d4bb','#fff4e0'],[19,'#7a6fe0','#ffa07a',.45,.44,'#ffc0a0','#8a7a9a','#ffb98a'],
   [20.5,'#1d2356','#463c7d',.28,.4,'#9a98ff','#3a3560','#b0b8ff'],[24,'#0f1538','#2a2c66',.26,.4,'#8b94ff','#3a3560','#a9b8ff']];
-const _c1=new THREE.Color(),_c2=new THREE.Color(),SUND=new THREE.Vector3();
+const _c1=new THREE.Color(),_c2=new THREE.Color(),_c3=new THREE.Color(),SUND=new THREE.Vector3(),SUN_T=new THREE.Vector3(),MOON_T=new THREE.Vector3();
+const sstep=(e0,e1,x)=>{const t=clamp((x-e0)/(e1-e0),0,1);return t*t*(3-2*t);};
+/* ☀️ the sun and 🌙 the moon (sky update). Town: +x is east (the beach), +z south, -x west (Friends Lane, the farm). The sun rises due east at 6:00, stands 60° high in the
+   south at 12:45 and sets due west at 19:30; at night it goes on round below the ground. The moon takes the other half: it rises in the east as the sun sets, stands 45° high in the
+   south at 0:45 and sets in the west as the sun rises, so the two are never up together. SUN_T/MOON_T: the true directions (the pictures in the sky);
+   SUND: where the light comes from, the sun's or the moon's, never lower than 15° (its strength fades to nothing as either nears the horizon, so the swap at dusk never jumps) */
+const SKYP={sr:6,ss:19.5,pk:60*Math.PI/180,mpk:45*Math.PI/180};
+function sunAng(h){const d=SKYP.ss-SKYP.sr;return h>=SKYP.sr&&h<=SKYP.ss?Math.PI*(h-SKYP.sr)/d:Math.PI*(1+((h-SKYP.ss+24)%24)/(24-d));}
+function skyArc(a,pk,o){return o.set(Math.cos(a),Math.sin(a)*Math.sin(pk),Math.sin(a)*Math.cos(pk));}
 function nightF(h){if(h<5||h>=20.5)return 1;if(h<7)return 1-(h-5)/2;if(h>18.5)return(h-18.5)/2;return 0;}
 const isNight=()=>S.time>=21.5||S.time<7;
 function clockStr(h){const H=Math.floor(h),M=Math.floor((h-H)*6)*10;return H+':'+(M<10?'0':'')+M;}   /* one hour digit before 10:00, like "9:40 Wed" (the owner's 17 Oct list; run 4, after stage 3) */
@@ -129,21 +137,32 @@ function updSky(){
   if(CURTAIN){CURTAIN.color.set(nf>.5?'#7d86d6':'#d6f2ff');JET.color.copy(CURTAIN.color);}
   WIN.emissive.set(nf>.5?'#ffc66b':'#5ab4e8');WIN.emissiveIntensity=nf>.5?nf*.9:.22*(1-nf);const shut=!!S&&!isDaytime();SWIN.emissive.copy(WIN.emissive);SWIN.emissiveIntensity=WIN.emissiveIntensity*(shut&&nf>.5?.4:1);if(CLOSED){CLOSED.visible=shut;CLOSED_L.visible=!!S&&!longOpen();}LAMP.emissiveIntensity=nf*1.2;WATER.emissiveIntensity=.3*(1-.85*nf);   /* (water glows less at night, like the grass round it darkens; run 4, stage 3: the pond stayed daytime blue) */
   if(NGLOW){NGLOW.uniforms.op.value=nf;NGLOW.visible=out&&nf>.01;}
-  {const so=nf*(1-(out?WX.sky:0));stars.material.opacity=so;stars.visible=out&&so>.01;}   /* (run 4 finish: no stars through a grey rainy sky) */
+  skyArc(sunAng(h),SKYP.pk,SUN_T);skyArc(sunAng(h)-Math.PI,SKYP.mpk,MOON_T);const es=SUN_T.y,em=MOON_T.y,ov=out?WX.ov:0;
+  {const so=sstep(-.04,-.2,es)*(1-(out?WX.sky:0));stars.material.opacity=so;stars.visible=out&&so>.01;}   /* (run 4 finish: no stars through a grey rainy sky; sky update: they come out as the sun goes 2° to 12° below the horizon) */
   PANE.color.copy(skyU.bot.value).lerp(_c2.set('#ffffff'),.25);
   if(out){const hal=HOL.cur==='halloween'?nf:0;if(hal>0){skyU.top.value.lerp(_c2.set('#3b1d5e'),hal*.55);skyU.bot.value.lerp(_c2.set('#5b2a7a'),hal*.5);FOG.color.copy(skyU.bot.value);}FOG.near=lerp(60,34,hal);FOG.far=lerp(340,230,hal);
-    const gk=WX.sky;if(gk>0){const G=WX_SKY[WX.kind]||WX_SKY.cloudy;skyU.top.value.lerp(_c2.set(G[0]).lerp(_c1.set('#181b28'),nf),gk);skyU.bot.value.lerp(_c2.set(G[1]).lerp(_c1.set('#2b2f42'),nf),gk);FOG.color.copy(skyU.bot.value);FOG.near*=1-.35*gk;FOG.far*=1-.3*gk;}}   /* 🎃 Halloween nights: a purple sky and closer fog; 🌧️ grey weather: a proper grey sky, never blue under rain (run 4, item 2) */
-  {const gk=out?WX.sky:0,U=CLOUD.uniforms;U.top.value.set('#ffffff').lerp(_c2.set('#d3d9e4'),gk).lerp(_c1.set('#9aa1c8'),nf);U.bot.value.set('#dde4f0').lerp(_c2.set('#a9b2c2'),gk).lerp(_c1.set('#5d6489'),nf);}   /* ☁️ clouds: white tops and blue-grey undersides by day, grey in grey weather, gently lit blue-grey at night (run 4, item 18) */
+    const gk=WX.sky;if(gk>0){skyU.top.value.lerp(wxCol(WX_SKY,0,_c2).lerp(_c1.set('#181b28'),nf),gk);skyU.bot.value.lerp(wxCol(WX_SKY,1,_c2).lerp(_c1.set('#2b2f42'),nf),gk);FOG.color.copy(skyU.bot.value);FOG.near*=1-.35*gk;FOG.far*=1-.3*gk;}}   /* 🎃 Halloween nights: a purple sky and closer fog; 🌧️ grey weather: a proper grey sky, never blue under rain (run 4, item 2) */
+  {const gk=out?WX.sky:0,U=CLOUD.uniforms,warm=sstep(-.04,.04,es)*(1-sstep(.1,.4,es))*(1-gk);U.top.value.set('#ffffff').lerp(wxCol(WX_CLD,0,_c2),gk).lerp(_c2.set('#ffe2c8'),.5*warm).lerp(_c1.set('#9aa1c8').lerp(_c3.set('#3c4152'),gk),nf);
+   U.bot.value.set('#dde4f0').lerp(wxCol(WX_CLD,1,_c2),gk).lerp(_c2.set('#f4ad9a'),.7*warm).lerp(_c1.set('#5d6489').lerp(_c3.set('#282c39'),gk),nf);}   /* (sky update: darker clouds in rain, rosy undersides at sunrise and sunset, dark grey at night under a grey sky) */   /* ☁️ clouds: white tops and blue-grey undersides by day, grey in grey weather, gently lit blue-grey at night (run 4, item 18) */
   if(out){
-    SHLIFT.value=1;hemi.intensity=lerp(a[4],b[4],t)*(1-.2*WX.grey);hemi.color.copy(C(5));hemi.groundColor.copy(C(6));sun.color.copy(C(7));sun.intensity=lerp(a[3],b[3],t)*(1-.55*WX.grey);
-    let u,day=h>=6&&h<=18.5;u=day?(h-6)/12.5:(((h+24-18.5)%24)/11.5);const ang=Math.PI*u;
-    SUND.set(Math.cos(ang)*.85,.32+Math.sin(ang)*.9,.45).normalize();lamp.intensity=0;busLamp();
+    /* ☁️ overcast (sky update): the sun's light goes into the soft sky light, so shadows fade away in rain (the owner saw hard shadows under a grey sky); a cooler light;
+       at dawn and dusk the light that fades from the low sun goes into the sky light too */
+    const sI=lerp(a[3],b[3],t),ks=sstep(0,.12,es),km=sstep(0,.12,em),kd=Math.max(ks,km);SHLIFT.value=1;
+    hemi.intensity=lerp(a[4],b[4],t)*(1+.22*ov*(1-nf))+.5*sI*(1-kd);hemi.color.copy(C(5)).lerp(_c2.set('#dfe6f2'),.6*ov);hemi.groundColor.copy(C(6)).lerp(_c2.set('#9aa0aa'),.45*ov);
+    sun.color.copy(C(7)).lerp(_c2.set('#d4ddef'),ov);sun.intensity=sI*kd*(1-.85*ov);
+    SUND.copy(ks>=km?SUN_T:MOON_T);SUND.y=Math.max(SUND.y,.26);SUND.normalize();lamp.intensity=0;busLamp();
     sun.shadow.normalBias=.09+.25*(1-clamp(Math.abs(SUND.x)/.2,0,1));   /* 🧱 around noon the sun runs almost along the east and west walls, and the shadow map drew pale diagonal streaks on them (the "white smear", run 4, item 17): a bigger normal bias then; the sun is high, so shadows hardly move */
-    sunSprite.visible=day&&h>6.2&&h<18.3&&WX.sky<.5;moonSprite.visible=(!day||h<6.4||h>18.2)&&WX.sky<.5;
-    const sp=day?sunSprite:moonSprite;sp.position.copy(camera.position).addScaledVector(SUND,320);
-    if(day)moonSprite.position.set(camera.position.x-SUND.x*320,camera.position.y+SUND.y*320,camera.position.z-SUND.z*320);
+    /* the sun and moon pictures sit on their true paths (the light comes from them); none through thick cloud; the sun turns orange near the horizon, and hills hide it as it sets */
+    const sv=1-sstep(.2,.75,ov);sunSprite.material.opacity=sv*sstep(-.1,-.02,es);moonSprite.material.opacity=sv*sstep(-.1,-.02,em);sunSprite.visible=sunSprite.material.opacity>.02;moonSprite.visible=moonSprite.material.opacity>.02;
+    sunSprite.material.color.set('#ffffff').lerp(_c2.set('#ffb27a'),1-sstep(.04,.32,es));
+    sunSprite.position.copy(camera.position).addScaledVector(SUN_T,320);moonSprite.position.copy(camera.position).addScaledVector(MOON_T,320);
+    skyU.sunD.value.copy(SUN_T);skyU.monD.value.copy(MOON_T);
+    skyU.glo.value.set('#fff2d0').lerp(_c2.set('#ffa870'),1-sstep(.05,.45,es)).multiplyScalar(sstep(-.12,.04,es)*(1-.9*ov)*(.25+.55*(1-sstep(.05,.5,es))));
+    skyU.mgl.value.set('#8f9ccc').multiplyScalar(.25*sstep(-.05,.1,em)*(1-ov));
+    skyU.bandC.value.set('#c4d6ea').lerp(_c2.set('#e9c6ae'),1-sstep(.05,.35,es));skyU.bandA.value=WX.sky*(.32*WX.rain*(1-WX.hv)+.18*WX.cloud)*(1-nf);   /* light rain and cloudy days: a paler strip low down, brightest towards the sun */
+    {const rb=(WX.rbw||0)*(1-WX.sky)*(1-WX.sky)*sstep(.02,.1,es)*(1-sstep(.5,.62,es));RBOW.visible=rb>.01;if(RBOW.visible){RBOW.material.uniforms.op.value=.34*rb;RBOW.position.copy(camera.position).addScaledVector(SUN_T,-300);RBOW.lookAt(camera.position);}}   /* 🌈 only with the sun up and under 38° high, the sky clear */
   }else{
-    SHLIFT.value=0;hemi.intensity=.52;hemi.color.set('#ffffff');hemi.groundColor.set('#e6d8f0');sun.color.set('#fff3e0');sun.intensity=.4;SUND.set(.25,1,.35).normalize();sun.shadow.normalBias=.2;   /* (indoors the light comes from above: a bigger normal bias keeps the counters' sides free of shadow stripes; run 4, stage 3) */
+    SHLIFT.value=0;RBOW.visible=false;hemi.intensity=.52;hemi.color.set('#ffffff');hemi.groundColor.set('#e6d8f0');sun.color.set('#fff3e0');sun.intensity=.4;SUND.set(.25,1,.35).normalize();sun.shadow.normalBias=.2;   /* (indoors the light comes from above: a bigger normal bias keeps the counters' sides free of shadow stripes; run 4, stage 3) */
     lamp.intensity=.35;lamp.position.set(CUR.ox,1.9+(CUR.psh?P.cy||0:0),CUR.oz+(CUR.fls&&CUR.fls.length>1?UPZ*flOf(CUR,P.z):0));   /* 💡 the room's warm light follows you to the floor you are on (run 4, stage 3: floors 2 to 6 were dimmer than floor 1) */
   }
 }
@@ -900,18 +919,27 @@ function wkSpawnApart(w){for(let t=0;t<6;t++){const o=WALKERS.find(q=>q!==w&&q.s
    the same clock see the same weather, and nothing new is sent online. The last game hour of a block fades into the next (wxNow().k).
    Rain: a greyer sky, a softer sun, rain lines around you, a quiet rain sound outdoors (only with sound on). Snow: flakes around you, and
    the grass turns white while it snows and for the next block. Nothing falls indoors. No thunder. wxForce(kind) is for the tests */
-const WX={force:null,cur:'sunny',grey:0,rain:0,snow:0,cover:0,t:0,snd:null,sndG:null,sky:0,kind:'cloudy'};
+const WX={force:null,forceHv:null,cur:'sunny',ov:0,rain:0,snow:0,cloud:0,hv:0,rbw:0,cover:0,t:0,snd:null,sndG:null,sky:0,kind:'cloudy'};
 /* 🌫️ the sky in bad weather (top, bottom), by day; at night it goes towards a dark grey. Rain and snow only fall once the sky is grey (item 2: the owner saw rain under a blue sky: the old
    sky only went 60% grey, and the rain lines started in the first minutes of the change while the sky was still blue) */
-const WX_SKY={cloudy:['#9ba7b5','#d3dae2'],rain:['#6e7a8b','#a9b2be'],snow:['#aab4c1','#e4e9ef']};
+const WX_SKY={cloudy:['#9ba7b5','#d3dae2'],rain:['#7c889a','#b9c1cb'],rainH:['#5f6a7a','#99a2ae'],snow:['#aab4c1','#e4e9ef']};   /* (sky update: light rain a little lighter, heavy rain darker) */
+/* ☁️ the clouds' top and underside in grey weather (sky update: they used to stay nearly white under a rainy sky) */
+const WX_CLD={cloudy:['#c4cad3','#9199a6'],rain:['#99a1ae','#727a87'],rainH:['#79818e','#535a66'],snow:['#dfe4ea','#b5bdc8']};
+/* the weather's colour from a table, each kind weighted by how much of it there is now, so a change of weather never jumps (i: 0 top, 1 bottom) */
+function wxCol(T,i,o){const w=[['cloudy',WX.cloud],['rain',WX.rain*(1-WX.hv)],['rainH',WX.rain*WX.hv],['snow',WX.snow]];let n=0;o.setRGB(0,0,0);
+  for(const [k,v] of w)if(v>0){o.add(_c3.set(T[k][i]).multiplyScalar(v));n+=v;}return n>0?o.multiplyScalar(1/n):o.set(T.cloudy[i]);}
+/* 🌧️ heavy or light rain: one seeded number per 3-hour block, the same for everyone (sky update) */
+function wxHv(d,b){return wxHash((d|0)+50000,b)<.5?1:0;}
 const WX_SHARE={spring:[['sunny',55],['cloudy',20],['rain',25]],summer:[['sunny',70],['cloudy',15],['rain',15]],autumn:[['sunny',45],['cloudy',25],['rain',30]],
   winter:[['sunny',30],['cloudy',30],['snow',35],['rain',5]],xmas:[['sunny',20],['cloudy',20],['snow',60]]};
 function wxHash(d,b){let x=(Math.imul(d|0,8)+(b|0)+11)>>>0;x=Math.imul(x^(x>>>16),2246822519)>>>0;x=Math.imul(x^(x>>>13),3266489917)>>>0;x^=x>>>16;return(x>>>0)/4294967296;}
 function wxSeason(){return HOL.cur==='xmas'?'xmas':seasonOf(realDate());}
 function wxAt(day,hour){const b=Math.floor(hour/3),T=WX_SHARE[wxSeason()]||WX_SHARE.summer;let u=wxHash(day,b)*100;for(const [k,p] of T){if(u<p)return k;u-=p;}return T[0][0];}
-function wxNow(){if(WX.force)return{a:WX.force,b:WX.force,k:0};const d=S?S.day|0:1,h=S?S.time:12,b=Math.floor(h/3),hm=h-b*3;let d2=d,b2=b+1;if(b2>7){b2=0;d2++;}
-  return{a:wxAt(d,b*3+1.5),b:wxAt(d2,b2*3+1.5),k:hm>2?clamp(hm-2,0,1):0};}
-function wxForce(k){WX.force=k||null;}
+function wxNow(){if(WX.force)return{a:WX.force,b:WX.force,k:0,hv:WX.forceHv??1,rbw:WX.force==='rainbow'?1:0};const d=S?S.day|0:1,h=S?S.time:12,b=Math.floor(h/3),hm=h-b*3;let d2=d,b2=b+1;if(b2>7){b2=0;d2++;}
+  const wa=wxAt(d,b*3+1.5),wb=wxAt(d2,b2*3+1.5),k=hm>2?clamp(hm-2,0,1):0;let d0=d,b0=b-1;if(b0<0){b0=7;d0--;}
+  const rbw=wa==='rain'&&wb==='sunny'?1:wa==='sunny'&&wxAt(d0,b0*3+1.5)==='rain'?1-sstep(1,2,hm):0;   /* 🌈 a rainbow may show while rain clears to sun and for the first game hour after, then fades (updSky adds the sun's height and the clouds) */
+  return{a:wa,b:wb,k,hv:lerp(wxHv(d,b),wxHv(d2,b2),k),rbw};}
+function wxForce(k,hv){WX.force=k||null;WX.forceHv=hv==null?null:hv;}   /* (tests; 'rainbow': a clear sky just after rain; hv: 0 light rain, 1 heavy, the default) */
 function wxKind(){const w=wxNow();return w.k<.5?w.a:w.b;}   /* the grandmas, the butterflies and the birds ask this */
 /* a falling cloud of drops around the camera, moved on the GPU: y wraps every H metres, so it never runs out */
 function wxCloud(kind,n){const H=18,W=28,rain=kind==='rain',pos=new Float32Array(n*(rain?6:3)),spd=new Float32Array(n*(rain?2:1)),ph=new Float32Array(n*(rain?2:1)),dy=new Float32Array(n*2);
@@ -957,8 +985,9 @@ function wxSound(v){if(!AC||!SET.sound){v=0;}if(v>0&&!WX.snd){try{const n=AC.sam
     const s=AC.createBufferSource();s.buffer=b;s.loop=true;const f=AC.createBiquadFilter();f.type='lowpass';f.frequency.value=800;const g=AC.createGain();g.gain.value=0;s.connect(f);f.connect(g);g.connect(AC.destination);s.start();WX.snd=s;WX.sndG=g;}catch(e){WX.snd=null;}}
   if(WX.sndG){const g=WX.sndG.gain,t=AC.currentTime;g.cancelScheduledValues(t);g.setTargetAtTime(v*.055,t,.4);if(v<=0){const s=WX.snd,gg=WX.sndG;WX.snd=null;WX.sndG=null;setTimeout(()=>{try{s.stop();s.disconnect();gg.disconnect();}catch(e){}},1500);}}}
 function wxTick(dt){if(!scene)return;wxBuild();const w=wxNow(),mix=(k)=>(w.a===k?1-w.k:0)+(w.b===k?w.k:0),rain=mix('rain'),snow=mix('snow'),cloud=mix('cloudy');
-  WX.cur=w.k<.5?w.a:w.b;WX.rain=rain;   /* (run 4 finish: the chip's weather changes with the sky's, not up to half a second later) */WX.snow=snow;WX.grey=Math.max(cloud*.55,rain*.9,snow*.7);WX.t+=dt;
-  {const bad=clamp((cloud+rain+snow)/.4,0,1);WX.sky=bad*bad*(3-2*bad);WX.kind=snow>=rain&&snow>=cloud?'snow':rain>=cloud?'rain':'cloudy';}   /* the sky is fully grey in the first part of a change (run 4, item 2) */
+  WX.cur=w.k<.5?w.a:w.b;WX.rain=rain;   /* (run 4 finish: the chip's weather changes with the sky's, not up to half a second later) */WX.snow=snow;WX.cloud=cloud;WX.hv=w.hv;WX.rbw=w.rbw;WX.t+=dt;
+  {const bad=clamp((cloud+rain+snow)/.4,0,1);WX.sky=bad*bad*(3-2*bad);WX.kind=snow>=rain&&snow>=cloud?'snow':rain>=cloud?'rain':'cloudy';
+   WX.ov=WX.sky*(cloud*.8+rain*(.9+.1*w.hv)+snow*.85)/(cloud+rain+snow||1);}   /* ☁️ how overcast: 0 clear, .8 cloudy, .9 light rain, 1 heavy rain (sky update: it softens the sun and its shadows) */   /* the sky is fully grey in the first part of a change (run 4, item 2) */
   {const ic=S?skyIc():'';if(ic!==WX.shown){WX.shown=ic;hudT=1;}}   /* the chip shows a new sky at once (run 4 finish: the sky as you see it) */
   /* snow stays on the grass for the block after a snow block */
   let cover=snow;if(S&&!WX.force&&cover<1){const h=S.time,b=Math.floor(h/3);let d0=S.day|0,b0=b-1;if(b0<0){b0=7;d0--;}if(wxAt(d0,b0*3+1.5)==='snow')cover=1;}
@@ -967,7 +996,7 @@ function wxTick(dt){if(!scene)return;wxBuild();const w=wxNow(),mix=(k)=>(w.a===k
   const cam=camera.position;for(const o of[RAINM,SNOWM]){if(!o)continue;o.position.set(cam.x,cam.y-5,cam.z);o.material.uniforms.t.value=WX.t;}
   const leaf=out&&SEASON==='autumn'&&rain<.3&&snow<.3?1-Math.max(rain,snow):0;
   const rv=clamp((rain-.3)/.7,0,1),snv=clamp((snow-.3)/.7,0,1);   /* rain and snow only once the sky is grey (run 4, item 2) */
-  RAINM.visible=out&&rv>.02;RAINM.material.uniforms.op.value=rv;SNOWM.visible=out&&snv>.02;SNOWM.material.uniforms.op.value=snv;leafTick(dt,leaf);
+  RAINM.visible=out&&rv>.02;RAINM.material.uniforms.op.value=rv*(1-.45*(1-w.hv));SNOWM.visible=out&&snv>.02;SNOWM.material.uniforms.op.value=snv;leafTick(dt,leaf);
   const sv=out&&rv>.02&&PLAYING?rv:0;if(Math.abs(sv-(WX.sv||0))>.02||(sv===0&&WX.snd)){WX.sv=sv;wxSound(sv);}}
 /* 🍂 the season's colours for the trees, set when the town is built */
 const SEASON_COLS={spring:{tree:['#9fe08a','#b4ea8e','#8fd97e','#a6e68c','#ffc9dc'],pine:['#5fc484','#6bcf8c']},summer:{tree:['#7ed37a','#6cc97c','#93dc76'],pine:['#4fb37a','#5bbf7e']},

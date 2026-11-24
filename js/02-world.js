@@ -42,12 +42,24 @@ function collideXZ(x,z,r,L,extra){
 }
 
 /* ---- sky ---- */
+let RBOW=null;
 function buildSky(){
-  skyU={top:{value:new THREE.Color('#4fb4ff')},bot:{value:new THREE.Color('#c4ecff')}};
+  skyU={top:{value:new THREE.Color('#4fb4ff')},bot:{value:new THREE.Color('#c4ecff')},sunD:{value:new THREE.Vector3(0,1,0)},monD:{value:new THREE.Vector3(0,-1,0)},
+    glo:{value:new THREE.Color(0,0,0)},mgl:{value:new THREE.Color(0,0,0)},bandC:{value:new THREE.Color('#c4d6ea')},bandA:{value:0}};   /* 🌅 sky (sky update): a soft glow round the sun (warm when it is low, faint through thin cloud) and the moon, and a brighter strip low over the horizon in light rain */
   skyMesh=new THREE.Mesh(new THREE.SphereGeometry(470,24,14),new THREE.ShaderMaterial({uniforms:skyU,side:THREE.BackSide,depthWrite:false,fog:false,
     vertexShader:'varying vec3 vP;void main(){vP=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
-    fragmentShader:'uniform vec3 top;uniform vec3 bot;varying vec3 vP;void main(){float h=normalize(vP).y;gl_FragColor=vec4(mix(bot,top,smoothstep(-0.02,0.5,h)),1.0);}'}));
+    fragmentShader:'uniform vec3 top,bot,sunD,monD,glo,mgl,bandC;uniform float bandA;varying vec3 vP;void main(){vec3 d=normalize(vP);float h=d.y,s=max(dot(d,sunD),0.0),m=max(dot(d,monD),0.0);vec3 c=mix(bot,top,smoothstep(-0.02,0.5,h));'+
+      'c+=glo*(pow(s,5.0)*.5+pow(s,40.0)*.7)+mgl*pow(m,24.0);c=mix(c,bandC,bandA*(1.0-smoothstep(0.0,0.2,h))*smoothstep(-0.08,0.0,h)*(.55+.45*s));gl_FragColor=vec4(c,1.0);}'}));
   skyMesh.frustumCulled=false;skyMesh.renderOrder=-10;scene.add(skyMesh);
+  /* 🌈 the rainbow (sky update): one ring 300 m out, centred on the point opposite the sun (as far below the horizon as the sun is above it), red outside at 42°, violet inside, a faint
+     second bow at 50-53° with the colours turned round; it fades out at the horizon and buildings and hills stand in front of it. updSky moves it and sets how strong it shows */
+  const R0=300,dg=Math.PI/180;RBOW=new THREE.Mesh(new THREE.RingGeometry(R0*Math.tan(39*dg),R0*Math.tan(54*dg),96,1),new THREE.ShaderMaterial({uniforms:{op:{value:0},R0:{value:R0}},
+    transparent:true,depthWrite:false,fog:false,blending:THREE.AdditiveBlending,
+    vertexShader:'varying vec3 vL,vW;void main(){vL=position;vec4 w=modelMatrix*vec4(position,1.0);vW=w.xyz-cameraPosition;gl_Position=projectionMatrix*viewMatrix*w;}',
+    fragmentShader:'uniform float op,R0;varying vec3 vL,vW;vec3 hue(float t){return clamp(abs(mod(t*6.0+vec3(0.0,4.0,2.0),6.0)-3.0)-1.0,0.0,1.0);}'+
+      'void main(){float a=degrees(atan(length(vL.xy),R0)),p=(a-40.4)/2.0,q=(a-50.2)/3.2;vec3 c=hue(.78*(1.0-clamp(p,0.0,1.0)))*smoothstep(0.0,.18,p)*smoothstep(1.0,.82,p)'+
+      '+.35*hue(.78*clamp(q,0.0,1.0))*smoothstep(0.0,.2,q)*smoothstep(1.0,.8,q);gl_FragColor=vec4(c*op*smoothstep(-0.005,0.05,normalize(vW).y),1.0);}'}));
+  RBOW.frustumCulled=false;RBOW.visible=false;RBOW.renderOrder=-9;scene.add(RBOW);
   const discTex=(c1,c2)=>{const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');const g=x.createRadialGradient(64,64,8,64,64,64);g.addColorStop(0,c1);g.addColorStop(.42,c1);g.addColorStop(.5,c2);g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(0,0,128,128);return new THREE.CanvasTexture(c);};
   sunSprite=new THREE.Sprite(new THREE.SpriteMaterial({map:discTex('#fff6c8','rgba(255,226,140,.55)'),fog:false,depthWrite:false,transparent:true}));sunSprite.scale.set(70,70,1);scene.add(sunSprite);
   moonSprite=new THREE.Sprite(new THREE.SpriteMaterial({map:discTex('#f4f2ff','rgba(200,200,255,.4)'),fog:false,depthWrite:false,transparent:true}));moonSprite.scale.set(46,46,1);scene.add(moonSprite);
