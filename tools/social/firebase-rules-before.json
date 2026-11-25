@@ -1,0 +1,46 @@
+{
+  "rules": {
+    "worlds": {
+      "cozy-town": {
+        "$world": {
+          "peers": {
+            ".read": true,
+            "$peer": { ".write": true }
+          }
+        },
+        "board": {
+          "notes": {
+            ".read": true,
+            "$note": {
+              ".write": "!data.exists()",
+              ".validate": "newData.hasChildren(['t','n','at','p'])",
+              "t": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 100" },
+              "n": { ".validate": "newData.isString() && newData.val().length <= 24" },
+              "at": { ".validate": "newData.isNumber() && newData.val() <= now" },
+              "p": { ".validate": "newData.isString() && newData.val().length <= 30" },
+              "h": {
+                "$pid": {
+                  ".write": true,
+                  ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 3"
+                }
+              },
+              "$other": { ".validate": false }
+            }
+          }
+        },
+        "move": {
+          "$code": {
+            ".read": true,
+            ".write": "!data.exists() || !newData.exists() || data.child('exp').val() < now",
+            ".validate": "$code.length == 6 && $code.matches(/^[A-Z]+$/) && newData.hasChildren(['s','at','exp','v'])",
+            "s": { ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 60000" },
+            "at": { ".validate": "newData.isNumber() && newData.val() <= now" },
+            "exp": { ".validate": "newData.isNumber() && newData.val() > now && newData.val() <= now + 660000" },
+            "v": { ".validate": "newData.isNumber()" },
+            "$other": { ".validate": false }
+          }
+        }
+      }
+    }
+  }
+}

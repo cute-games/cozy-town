@@ -1,0 +1,266 @@
+{
+  "rules": {
+    "worlds": {
+      "cozy-town": {
+        "$world": {
+          "peers": {
+            ".read": true,
+            "$peer": {
+              ".write": true
+            }
+          }
+        },
+        "board": {
+          "notes": {
+            ".read": true,
+            "$note": {
+              ".write": "!data.exists()",
+              ".validate": "newData.hasChildren(['t','n','at','p'])",
+              "t": {
+                ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 100"
+              },
+              "n": {
+                ".validate": "newData.isString() && newData.val().length <= 24"
+              },
+              "at": {
+                ".validate": "newData.isNumber() && newData.val() <= now"
+              },
+              "p": {
+                ".validate": "newData.isString() && newData.val().length <= 30"
+              },
+              "h": {
+                "$pid": {
+                  ".write": true,
+                  ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 3"
+                }
+              },
+              "$other": {
+                ".validate": false
+              }
+            }
+          }
+        },
+        "move": {
+          "$code": {
+            ".read": true,
+            ".write": "!data.exists() || !newData.exists() || data.child('exp').val() < now",
+            ".validate": "$code.length == 6 && $code.matches(/^[A-Z]+$/) && newData.hasChildren(['s','at','exp','v'])",
+            "s": {
+              ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 60000"
+            },
+            "at": {
+              ".validate": "newData.isNumber() && newData.val() <= now"
+            },
+            "exp": {
+              ".validate": "newData.isNumber() && newData.val() > now && newData.val() <= now + 660000"
+            },
+            "v": {
+              ".validate": "newData.isNumber()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "social": {
+          "in": {
+            "$sid": {
+              ".read": true,
+              "$id": {
+                ".write": "(!data.exists() && newData.exists() && newData.parent().parent().parent().child('ir').child($sid).child('t').val() == now && newData.parent().parent().parent().child('ir').child($sid).child('id').val() == $id) || (data.exists() && !newData.exists() && data.child('at').val() < now - 1209600000)",
+                ".validate": "$sid.matches(/^[-A-Za-z0-9_]{22}$/) && $id.matches(/^[0-9a-z]{12}$/) && newData.hasChildren(['e', 'c', 'at'])",
+                "e": {
+                  ".validate": "newData.isString() && newData.val().length == 87"
+                },
+                "c": {
+                  ".validate": "newData.isString() && newData.val().length >= 100 && newData.val().length <= 300"
+                },
+                "at": {
+                  ".validate": "newData.val() == now"
+                },
+                "$other": {
+                  ".validate": false
+                }
+              }
+            }
+          },
+          "ir": {
+            "$sid": {
+              ".write": "newData.exists()",
+              ".validate": "$sid.matches(/^[-A-Za-z0-9_]{22}$/) && newData.hasChildren(['t', 'id']) && newData.child('t').val() == now && (!data.exists() || data.child('t').val() < now - 3000) && newData.child('id').isString() && newData.parent().parent().child('in').child($sid).child(newData.child('id').val()).child('at').val() == now",
+              "t": {
+                ".validate": "newData.isNumber()"
+              },
+              "id": {
+                ".validate": "newData.isString() && newData.val().matches(/^[0-9a-z]{12}$/)"
+              },
+              "$other": {
+                ".validate": false
+              }
+            }
+          },
+          "t": {
+            "$tid": {
+              ".validate": "$tid.matches(/^[-A-Za-z0-9_]{43}$/)",
+              "s": {
+                ".read": true,
+                "a": {
+                  ".write": true,
+                  ".validate": "newData.hasChildren(['s', 'at'])",
+                  "s": {
+                    ".validate": "newData.isString() && newData.val().matches(/^[ryn]$/)"
+                  },
+                  "at": {
+                    ".validate": "newData.val() == now"
+                  },
+                  "n": {
+                    ".validate": "newData.isString() && newData.val().length <= 160"
+                  },
+                  "$other": {
+                    ".validate": false
+                  }
+                },
+                "b": {
+                  ".write": true,
+                  ".validate": "newData.hasChildren(['s', 'at'])",
+                  "s": {
+                    ".validate": "newData.isString() && newData.val().matches(/^[ryn]$/)"
+                  },
+                  "at": {
+                    ".validate": "newData.val() == now"
+                  },
+                  "n": {
+                    ".validate": "newData.isString() && newData.val().length <= 160"
+                  },
+                  "$other": {
+                    ".validate": false
+                  }
+                },
+                "ca": {
+                  ".write": "!newData.exists() || newData.child('k').val() == 'x' || (data.parent().child('a/s').exists() && data.parent().child('a/s').val() != 'n' && data.parent().child('b/s').exists() && data.parent().child('b/s').val() != 'n')",
+                  ".validate": "newData.hasChildren(['i', 'k', 'at'])",
+                  "i": {
+                    ".validate": "newData.isString() && newData.val().matches(/^[0-9a-z]{12}$/)"
+                  },
+                  "k": {
+                    ".validate": "newData.isString() && newData.val().matches(/^[oax]$/)"
+                  },
+                  "d": {
+                    ".validate": "newData.isString() && newData.val().length <= 16000"
+                  },
+                  "at": {
+                    ".validate": "newData.val() == now"
+                  },
+                  "$other": {
+                    ".validate": false
+                  }
+                },
+                "cb": {
+                  ".write": "!newData.exists() || newData.child('k').val() == 'x' || (data.parent().child('a/s').exists() && data.parent().child('a/s').val() != 'n' && data.parent().child('b/s').exists() && data.parent().child('b/s').val() != 'n')",
+                  ".validate": "newData.hasChildren(['i', 'k', 'at'])",
+                  "i": {
+                    ".validate": "newData.isString() && newData.val().matches(/^[0-9a-z]{12}$/)"
+                  },
+                  "k": {
+                    ".validate": "newData.isString() && newData.val().matches(/^[oax]$/)"
+                  },
+                  "d": {
+                    ".validate": "newData.isString() && newData.val().length <= 16000"
+                  },
+                  "at": {
+                    ".validate": "newData.val() == now"
+                  },
+                  "$other": {
+                    ".validate": false
+                  }
+                }
+              },
+              "m": {
+                ".read": true,
+                "$id": {
+                  ".write": "(!data.exists() && newData.exists() && data.parent().parent().child('s').child('a/s').exists() && data.parent().parent().child('s').child('a/s').val() != 'n' && data.parent().parent().child('s').child('b/s').exists() && data.parent().parent().child('s').child('b/s').val() != 'n' && ((newData.child('f').val() == 'a' && newData.parent().parent().child('x/a/t').val() == now && newData.parent().parent().child('x/a/id').val() == $id) || (newData.child('f').val() == 'b' && newData.parent().parent().child('x/b/t').val() == now && newData.parent().parent().child('x/b/id').val() == $id))) || (data.exists() && !newData.exists())",
+                  ".validate": "$id.matches(/^[0-9a-z]{12}$/) && newData.hasChildren(['f', 'c', 'at'])",
+                  "f": {
+                    ".validate": "newData.val() == 'a' || newData.val() == 'b'"
+                  },
+                  "c": {
+                    ".validate": "newData.isString() && newData.val().length >= 30 && newData.val().length <= 900"
+                  },
+                  "at": {
+                    ".validate": "newData.val() == now"
+                  },
+                  "$other": {
+                    ".validate": false
+                  }
+                }
+              },
+              "x": {
+                "a": {
+                  ".write": "newData.exists()",
+                  ".validate": "newData.hasChildren(['t', 'id']) && newData.child('t').val() == now && (!data.exists() || data.child('t').val() < now - 800) && newData.child('id').isString() && newData.parent().parent().child('m').child(newData.child('id').val()).child('at').val() == now && newData.parent().parent().child('m').child(newData.child('id').val()).child('f').val() == 'a'",
+                  "t": {
+                    ".validate": "newData.isNumber()"
+                  },
+                  "id": {
+                    ".validate": "newData.isString() && newData.val().matches(/^[0-9a-z]{12}$/)"
+                  },
+                  "$other": {
+                    ".validate": false
+                  }
+                },
+                "b": {
+                  ".write": "newData.exists()",
+                  ".validate": "newData.hasChildren(['t', 'id']) && newData.child('t').val() == now && (!data.exists() || data.child('t').val() < now - 800) && newData.child('id').isString() && newData.parent().parent().child('m').child(newData.child('id').val()).child('at').val() == now && newData.parent().parent().child('m').child(newData.child('id').val()).child('f').val() == 'b'",
+                  "t": {
+                    ".validate": "newData.isNumber()"
+                  },
+                  "id": {
+                    ".validate": "newData.isString() && newData.val().matches(/^[0-9a-z]{12}$/)"
+                  },
+                  "$other": {
+                    ".validate": false
+                  }
+                }
+              }
+            }
+          },
+          "g": {
+            ".read": true,
+            "$id": {
+              ".write": "(!data.exists() && newData.exists() && newData.parent().parent().child('gl/t').val() == now && newData.parent().parent().child('gl/id').val() == $id) || (data.exists() && !newData.exists() && data.child('at').val() < now - 86400000)",
+              ".validate": "$id.matches(/^[0-9a-z]{12}$/) && newData.hasChildren(['s', 'n', 't', 'at'])",
+              "s": {
+                ".validate": "newData.isString() && newData.val().matches(/^[-A-Za-z0-9_]{22}$/)"
+              },
+              "n": {
+                ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 14"
+              },
+              "t": {
+                ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 120"
+              },
+              "at": {
+                ".validate": "newData.val() == now"
+              },
+              "$other": {
+                ".validate": false
+              }
+            }
+          },
+          "gl": {
+            ".write": "newData.exists()",
+            ".validate": "newData.hasChildren(['t', 'id']) && newData.child('t').val() == now && (!data.exists() || data.child('t').val() < now - 1000) && newData.child('id').isString() && newData.parent().child('g').child(newData.child('id').val()).child('at').val() == now",
+            "t": {
+              ".validate": "newData.isNumber()"
+            },
+            "id": {
+              ".validate": "newData.isString() && newData.val().matches(/^[0-9a-z]{12}$/)"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        }
+      }
+    }
+  }
+}
