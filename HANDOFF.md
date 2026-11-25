@@ -1,7 +1,7 @@
 # HANDOFF — read this first (one page; updated 25 Nov 2026: the night of 24-25 Nov is live; the Foreman file is `FOREMAN.md` on branch `claude/foreman-handoff`)
 
 ## Where things stand (25 Nov 2026)
-- **Live: `main` = the merge of pull request #34, stamp 2026112504, joined game 2,463,690 bytes.** Backups: `backup-2026-11-25` (c974534), `backup-2026-11-25c` (ad8827f, main before #34).
+- **Live: `main` = 79f7803, stamp 2026112506 (mini-map zoom row + window views with glass, 25 Nov), joined game 2,484,521 bytes.** Backups: `backup-2026-11-25e` (2198a6f), `backup-2026-11-25` (c974534), `backup-2026-11-25c` (ad8827f, main before #34).
 - Merged in the night of 24-25 Nov: #29 Pet Shop taller top floor + painted windows in all interiors; #30 house paint works and costs 150 coins, friends see the colour, calm duck and owl;
   #31 Tree Park parkour obby in town; #32 horses ride anywhere and walk home in groups; #34 friends (accept, remove, block), texts, voice calls, world chat.
 - **#34 rests until the owner pastes the new Firebase rules** (`tools/social/FIREBASE-STEPS.md`, rules `tools/social/firebase-rules.json`): until then the Friends app says "Coming soon".
@@ -47,6 +47,8 @@ pet brain, yard/gear, vet, big pets/`PACKM`/`packBuild`, Pet Show, farm). 3. The
      --live-web ... --backup <live> --backup-title backup-YYYY-MM-DD --only files,counts,saves,night3,run4,pfu` (quick kit, ~75 min) or `--full` (~140 min).
   3. `python3 tools/split/split.py split <bundle> .` 4. `tools/split/check_split.py --site . --tested ... --live ... --three <kit>/cozycheck/three-r128.min.js`.
 - PFU kit lines: `tools/kit-v7/pfu.py` (stage `pfu`; `PFU_ONLY=P36` runs some with `--only pfu`). Fixtures: `tools/check-fixtures/save-pfu*.json`.
+- P2, P9, P29, P35, P36 need PFU_OLD_WEB=<join of a47bb1a>; B1 accepts a new friends key for a save that had none (25 Nov, owner's OK). New line B3 (`tools/kit-v7/sockey.py`): the friends key
+  is made once and kept. Fixture `save-soc1-friends.json` (key, 2 friends, 1 blocked) comes with `save-soc1-friends.online` (its friends' threads for the test database).
   Pictures: `tools/pfu-wip/shots_pfu.py <kit>/cozycheck <joined> <out>` (`ONLY='farm,...'` for some scenes). Playwright 1.63.0.
 - **Kit timing**: the teacher stages (T1-T4) play on the real one clock (a game day = 15 real minutes); classes come only at game 8:00-20:00. A stage that starts late
   in the game day fails with 'no message from the school came'. Rerun it alone just after game 8:00 (game time = clockAt(Date.now()): 8:00 is 252.9 s into each

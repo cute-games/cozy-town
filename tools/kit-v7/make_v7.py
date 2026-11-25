@@ -9,6 +9,15 @@ def rep(s, a, b, n=1):
     if s.count(a) != n: sys.exit(f'STOP: expected {n} x {a[:60]!r}, found {s.count(a)}')
     return s.replace(a, b)
 def fix_check(s):
+    # B3 (25 Nov 2026, the owner's OK; new line, starts as FAIL): the friends key is stored the moment the game starts, is the same on 3 reopens, is carried
+    # by Move my game, and a new game gets a new one while the kept old game keeps its own (tools/kit-v7/sockey.py)
+    s = rep(s, "    d['lines'].append(L('B2', 'the new version keeps the same save key', 'same key: NO' not in det and 'same key: yes' in det, 'key cozytown-save-1'))\n",
+            "    d['lines'].append(L('B2', 'the new version keeps the same save key', 'same key: NO' not in det and 'same key: yes' in det, 'key cozytown-save-1'))\n"
+            "    ok3, det3 = False, 'not run'\n"
+            "    try:\n"
+            "        import sockey; ok3, det3 = await sockey.check_key(run, new_wb, FIX)\n"
+            "    except Exception as e: ok3, det3 = False, f'the check stopped: {str(e)[:300]}'\n"
+            "    d['lines'].append(L('B3', 'the friends key is made once and kept (25 Nov): in the stored save the moment the game starts, the same on 3 reopens, carried by Move my game, a new one for a new game while the kept old game keeps its own', ok3 is True, det3))\n")
     # C2b (25 Nov 2026, the owner: the Tree Park is in town, no separate place to enter). Old: every area of the live game, 'treepark' too, must be entered by the crawl.
     # New: the same for every other area; 'treepark' counts as reached only when N37 passed (it walks in through the gate and plays all three paths on 4 devices).
     s = rep(s, "    unreached = [x for x in all_areas if", "    if any(l[0] == 'N37' and l[2] is True for l in lines): reached.add('treepark')   # 25 Nov 2026: the Tree Park is in town; N37 walks in and plays it\n    unreached = [x for x in all_areas if")
@@ -85,7 +94,7 @@ def fix_checks(s):
     # Old: compared exactly. New: compared like happiness, only as 'still there'. Everything else is compared as before.
     # B1 again (1 Nov 2026, stage 4b, the owner's ask): old (stage 4): 'sad' only as 'still there'; new: still there AND within 0.1 (minutes) of the saved value,
     # the same small tolerance P1 uses for a new pet's sad (it starts counting at once)
-    return rep(s, "            if path.startswith('pets.') and path.count('.') == 2 and k == 'happy': continue\n",
+    s = rep(s, "            if path.startswith('pets.') and path.count('.') == 2 and k == 'happy': continue\n",
                "            if path.startswith('pets.') and path.count('.') == 2 and k == 'happy': continue\n"
                "            # 1 Nov 2026 (kit v7, pets and farm update stage 4): the sickness timer 'sad' drifts like happiness now that sickness is on: compared only as 'still there'\n"
                "            if path.startswith('pets.') and path.count('.') == 2 and k == 'sad':\n"
@@ -93,6 +102,29 @@ def fix_checks(s):
                "                # 1 Nov 2026 (stage 4b, the owner's ask): the value is compared too, with a small tolerance like P1's (0.1 minute): two loads a few frames apart\n"
                "                elif not isinstance(b[k], (int, float)) or not isinstance(v, (int, float)) or abs(b[k] - v) > 0.1: out.append(f'{path}{k}: {v} -> {b[k]} (more than 0.1 apart)')\n"
                "                continue\n")
+    # B1 (25 Nov 2026, the owner's OK; friends update, pull request #34): a save that never had a friends key (soc.k) gets a new random one when it loads, in the
+    # live game and in the new one, so the two loads could never match (every old save showed 3 differences: soc.k.d, soc.k.x, soc.k.y).
+    # Old: no rule for the key. New: like the player id: a save file with no key may get one (the note says so); a save that has a key must keep exactly
+    # the same one. Nothing else is excused: the friends list (soc.fr) and the blocked list (soc.bl) are compared as before.
+    s = rep(s, "        if 'laneT' not in fx: d = [x for x in d if x.split(':', 1)[0] != 'laneT']\n",
+            "        if 'laneT' not in fx: d = [x for x in d if x.split(':', 1)[0] != 'laneT']\n"
+            "        # 25 Nov 2026 (kit v7, the owner's OK): the same for the friends key soc.k (pull request #34): a save that never had one gets a new random key at\n"
+            "        # load. A save that has one must keep exactly the same key. The friends and blocked lists (soc.fr, soc.bl) are always compared.\n"
+            "        has_key = isinstance(fx.get('soc'), dict) and bool(fx['soc'].get('k'))\n"
+            "        new_key = not has_key and any(x.startswith('soc.k.') for x in d)\n"
+            "        if not has_key: d = [x for x in d if not x.startswith('soc.k.')]\n"
+            "        # stricter (25 Nov): what the save FILE holds about friends (its key, friends list, blocked list) must be in the new version's load exactly,\n"
+            "        # not only what the live version's load kept of it\n"
+            "        if isinstance(fx.get('soc'), dict): d += [x for x in save_diff({'soc': fx['soc']}, {'soc': b.get('soc') or {}}) if x not in d]\n")
+    # B1's fixture with friends (25 Nov): a friend stays on the list only while the shared database has the two players' thread (both said yes), so the fixture
+    # save-soc1-friends.json comes with save-soc1-friends.online: those threads, put into the run's stand-in database before the save is loaded
+    s = rep(s, "        go = await run.open(old_web, 'web', 'ipad-landscape', 'light', 'save-old', save=fx)\n",
+            "        on_ = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fixtures', fname[:-5] + '.online')   # 25 Nov 2026: what this save needs online (its friends' threads)\n"
+            "        if fname.endswith('.json') and os.path.exists(on_):\n"
+            "            for p_, v_ in json.load(open(on_)).items(): run.relay._set(p_, v_)\n"
+            "        go = await run.open(old_web, 'web', 'ipad-landscape', 'light', 'save-old', save=fx)\n")
+    s = rep(s, """{"; a Friends Lane time given (the save had none)" if new_lane else ""}""", """{"; a Friends Lane time given (the save had none)" if new_lane else ""}{"; new friends key given (the save had none)" if new_key else ""}""")
+    return s
 NIGHT3 = 'tools/prerun4-index.html'   # the night-3 game (md5 709bf763), the live file of run 4: it does not know costumes
 def fix_run4(s):
     # N19 (29 Oct, the owner's decision): its old-version friend was the live file, which knows costumes since run 4, so the line failed for every
@@ -236,11 +268,13 @@ for info in src.infolist():
 # fixtures that were only in tools/check-fixtures (31 Oct 2026): N8's save-prepet1-designer2.json, the save made by main before the
 # Pets and Farm Update, and the saves made by each of its stages; and the stage 'pfu' module
 have = {i.filename for i in src.infolist()}
-for f in sorted(glob.glob('tools/check-fixtures/save-prepet1-designer2.json') + glob.glob('tools/check-fixtures/save-prepfu-*.json') + glob.glob('tools/check-fixtures/save-pfu*.json')):
+for f in sorted(glob.glob('tools/check-fixtures/save-prepet1-designer2.json') + glob.glob('tools/check-fixtures/save-prepfu-*.json') + glob.glob('tools/check-fixtures/save-pfu*.json') + glob.glob('tools/check-fixtures/save-soc*.json')):   # (25 Nov: save-soc1-friends.json, a save with a friends key, 2 friends and 1 blocked player, for B1)
     n = 'cozycheck/fixtures/' + os.path.basename(f)
     if n in have: sys.exit(f'STOP: {n} is already in {SRC}')
     json.load(open(f)); dst.write(f, n)
+    if os.path.exists(f[:-5] + '.online'): json.load(open(f[:-5] + '.online')); dst.write(f[:-5] + '.online', n[:-5] + '.online')   # (25 Nov: the threads a save with friends needs online)
 pf = open('tools/kit-v7/pfu.py', 'rb').read(); compile(pf, 'cozycheck/pfu.py', 'exec'); dst.writestr('cozycheck/pfu.py', pf)
+sk = open('tools/kit-v7/sockey.py', 'rb').read(); compile(sk, 'cozycheck/sockey.py', 'exec'); dst.writestr('cozycheck/sockey.py', sk)   # B3 (25 Nov)
 dst.write('tools/kit-v7/pfu-trees-stage3.json', 'cozycheck/pfu-trees-stage3.json')
 # the license card's fonts (1 Nov 2026, stage 5, screens-license-card: Alfa Slab One + Roboto Slab 700/800 from Google Fonts): the test copy serves them locally
 # like Baloo 2 (npm @fontsource/alfa-slab-one 5.0.21 and @fontsource/roboto-slab 5.0.21, latin files); fonts.css gets their faces
