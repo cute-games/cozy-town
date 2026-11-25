@@ -91,7 +91,7 @@ function startGame(){if(S){awResume();return;}   /* back from the away title: th
   spawnLitter();gardenInit();for(const w of WALKERS)w.init();
   if(HOL.cur==='easter'&&HOL.eggs)eggsRebuild();   /* 🥚 the eggs were drawn for the title's town before the save was read: draw them again without the ones this player already found (run 4, stage 3, G4-001) */
   S.outfits=S.outfits||[];if(S.wardrobe)for(const k of Object.keys(S.wardrobe)){const C=CLOTHES[k];if(C&&(C.hat||C.gl)){if(!S.outfits.some(v=>v.k===k))S.outfits.push({k,c:C.cols[0]});delete S.wardrobe[k];}}
-  delete S.mpcode;drawScore();mpConnect();bdInit();nsInit();
+  delete S.mpcode;drawScore();mpConnect();bdInit();nsInit();socInit();
   psRefresh();S.hard=S.hard||{};hardMigrate();if(!S.q||S.q.day!==S.day)qNewDay(!!st);else{if(!S.q.used)S.q.used=S.q.list.slice();S.q.list=S.q.list.filter(k=>getQ(k));updPhoneBadge();}
   $('title').hidden=true;$('hud').hidden=false;PLAYING=true;if(innerWidth<600)$('tasks').classList.add('min');
   if(!S.intro){setLoc('city');startIntro();}
@@ -203,4 +203,253 @@ function bdTick(dt){const f=FRIEND_ACTORS[0],ok=f&&f.d.id==='rosie'&&f.mode!=='a
   if((BD.cool-=dt)>0||!ok||!BD.on||wdIdx()!==6||Math.hypot(P.x-f.x,P.z-f.z)>7)return;
   const o=bdIdea();BD.cool=o?24:60;if(!o)return;const s=o.t.length>22?o.t.slice(0,21)+'…':o.t;   /* 💭 a thought bubble when you pass by */
   const b=label(o.top?`💭 “${s}” 🤔`:`💭 “${s}”? Hmm…`,.3);b.position.y=2.4;f.g.add(b);BD.bub=b;BD.bubT=6;}
+/* ================= 💌 friends, texting, voice calls and the world chat (25 Nov 2026) =================
+   GitHub version only (inside Claude there is no shared database: all of this stays off and the Friends app looks as before).
+   • Who is who: every game makes one key pair (ECDH P-256), kept in the save (S.soc.k), so it moves with "Move my game". The public half rides in
+     presence (so) and names the player; 22 letters of it are the short id (sid). The database has no sign-in, so keys do the job of one.
+   • Two players' keys give both of them, and nobody else, the same secret: the name of their private thread (tid) and the key that locks their
+     names, texts and call set-up (AES-GCM). Nobody can list the threads; what is stored in them is locked.
+   • Friends: asking = my side of the thread says 'r', plus a sealed note in the other player's inbox. They answer 'y' or 'n'. Remove or block = 'n'.
+     My own list (S.soc.fr) is the truth for what I said yes to: nothing written online can make me the friend of somebody I never answered.
+   • The database says no (the new rules are not in yet) = "coming soon", and nothing else in the game changes.
+   Paths under worlds/cozy-town/social: in/<sid>/<id> sealed notes · ir/<sid> last note time · t/<tid>/s/{a,b} the two sides, {ca,cb} call set-up ·
+   t/<tid>/m/<id> texts · t/<tid>/x/{a,b} last text time · g/<id> world chat lines · gl last line time. Rules: tools/social/firebase-rules.json */
+const SOC={st:'off',PATH:'worlds/cozy-town/social',ref:null,me:null,th:{},pings:{},g:[],gtop:0,gseen:0,qg:null,cg:null,call:null,ring:0,rang:'',inv:null,sent:-1e9,said:-1e9,rt:0,pt:-1e9,MAXF:40};
+const SOCPK=/^B[A-Za-z0-9_-]{86}$/,SOCEC={name:'ECDH',namedCurve:'P-256'},SOCICE=[{urls:['stun:stun.l.google.com:19302','stun:stun.cloudflare.com:3478']}];
+const SOCFAIL="😕 The call could not connect. Some Wi-Fi and phone networks don't let calls through. Try again on another Wi-Fi!";
+const b64u=b=>{let s='';for(const x of new Uint8Array(b))s+=String.fromCharCode(x);return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');};
+const ub64=s=>Uint8Array.from(atob(String(s).replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0));
+const socOn=()=>SOC.st==='on',socSid=pk=>pk.slice(2,24),socNow=()=>Date.now()+CLK.off,socTS=()=>window.firebase.database.ServerValue.TIMESTAMP;
+const socId=()=>('00000000'+socNow().toString(36)).slice(-9)+Math.random().toString(36).slice(2,5).padEnd(3,'0');   /* ids sort by time */
+const socClean=(s,n)=>String(s==null?'':s).replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]/g,' ').replace(/\s+/g,' ').trim().slice(0,n).replace(/[\ud800-\udbff]$/,'');
+const socBad=t=>bdBad(t)||/\d{5,}/.test(t)||(t.match(/\d/g)||[]).length>6;   /* 🧼 the ideas board's filter (rude words, links, emails, addresses, phone numbers) and no long numbers at all */
+function socName(n){const s=cleanName(n);return bdBad(s)?'Friend':s;}
+const socCount=s=>Object.values(S.soc.fr).filter(f=>!s||f.s===s).length;
+const socAskN=()=>socOn()?socCount('in'):0;
+function socUnreadOf(sid){const f=S.soc.fr[sid],T=SOC.th[sid];return f&&f.s==='ok'&&T?T.msgs.filter(m=>m.f!==T.slot&&m.at>(f.r||0)).length:0;}
+const socUnread=()=>socOn()?Object.keys(S.soc.fr).reduce((n,k)=>n+socUnreadOf(k),0):0;
+function socPeerOf(sid){const f=S.soc.fr[sid];if(f)for(const a of MP.peers.values())if(a.so===f.k)return a;return null;}   /* this friend's player, if they are playing now */
+const socLooking=sid=>phoneOpen()&&PH.app==='sms'&&PH.fc===sid;
+function socTime(at){const d=new Date(at),t=d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');return d.toDateString()===realDate().toDateString()?t:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()]+' '+t;}
+function socStamp(st){st.so=socOn()?SOC.me.pk:null;}   /* my public key in presence (old versions ignore it; a player without it gets no ➕) */
+function socPeer(a,pr){const k=typeof pr.so==='string'&&SOCPK.test(pr.so)?pr.so:'';if(k===a.so)return;a.so=k;if(!k||!socOn())return;const f=S.soc.fr[socSid(k)];if(f&&f.k===k&&f.n!==a.nm&&socName(a.nm)===a.nm){f.n=a.nm;change();}}   /* (a friend's name follows the name they play with) */
+/* 🔑 keys */
+async function socKeys(){const C=crypto.subtle,imp=k=>C.importKey('jwk',{kty:'EC',crv:'P-256',d:k.d,x:k.x,y:k.y,ext:true},SOCEC,false,['deriveBits']);let k=S.soc.k,priv=null;
+  try{if(k&&typeof k.d==='string'&&typeof k.x==='string'&&typeof k.y==='string')priv=await imp(k);}catch(e){}
+  if(!priv){const j=await C.exportKey('jwk',(await C.generateKey(SOCEC,true,['deriveBits'])).privateKey);k=S.soc.k={d:j.d,x:j.x,y:j.y};S.soc.fr={};saveLocal();priv=await imp(k);}   /* a new key = a new player online: an old list would not know it */
+  const raw=new Uint8Array(65);raw[0]=4;raw.set(ub64(k.x),1);raw.set(ub64(k.y),33);const pk=b64u(raw);return{priv,pk,sid:socSid(pk)};}
+async function socShared(priv,pk){return new Uint8Array(await crypto.subtle.deriveBits({name:'ECDH',public:await crypto.subtle.importKey('raw',ub64(pk),SOCEC,false,[])},priv,256));}
+async function socPair(pk){const C=crypto.subtle,sh=await socShared(SOC.me.priv,pk),h=t=>C.digest('SHA-256',Uint8Array.from([...sh,...TENC.encode(t)]));
+  return{tid:b64u(await h('cozy-thread')),key:await C.importKey('raw',await h('cozy-key'),'AES-GCM',false,['encrypt','decrypt'])};}
+async function socEnc(key,s){const iv=crypto.getRandomValues(new Uint8Array(12)),ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},key,TENC.encode(s))),o=new Uint8Array(12+ct.length);o.set(iv);o.set(ct,12);return b64u(o);}
+async function socDec(key,c){try{const b=ub64(c);return new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:b.slice(0,12)},key,b.slice(12)));}catch(e){return null;}}
+/* ✉️ a sealed note: only the player it is for can open it and see who it is from (a one-time key pair for each note) */
+async function socSeal(pk){const C=crypto.subtle,kp=await C.generateKey(SOCEC,true,['deriveBits']),key=await C.importKey('raw',await C.digest('SHA-256',await socShared(kp.privateKey,pk)),'AES-GCM',false,['encrypt']);
+  return{e:b64u(await C.exportKey('raw',kp.publicKey)),c:await socEnc(key,SOC.me.pk)};}
+async function socOpen(p){try{if(!SOCPK.test(p.e))return null;const C=crypto.subtle,key=await C.importKey('raw',await C.digest('SHA-256',await socShared(SOC.me.priv,p.e)),'AES-GCM',false,['decrypt']),pk=await socDec(key,p.c);return pk&&SOCPK.test(pk)?pk:null;}catch(e){return null;}}
+/* 🚪 start: keys, then one look into my own inbox. The database answers = on; it says no = coming soon (asked again every 2 minutes and when the Friends app opens) */
+async function socInit(){if(SOC.st!=='off'||!(window.WEBNET&&WEBNET.on)||typeof window.WEBROOM!=='function'||!window.crypto||!crypto.subtle)return;SOC.st='wait';
+  try{await WEBROOM();if(!S.soc||typeof S.soc!=='object')S.soc={};for(const k of['fr','bl'])if(!S.soc[k]||typeof S.soc[k]!=='object')S.soc[k]={};
+    SOC.me=await socKeys();SOC.ref=window.firebase.database().ref(SOC.PATH);socProbe();}catch(e){SOC.st='off';}}
+function socProbe(){if((SOC.st!=='wait'&&SOC.st!=='soon')||!SOC.ref||performance.now()-SOC.pt<20000)return;SOC.pt=performance.now();clearTimeout(SOC.rt);const r=SOC.ref.child('in/'+SOC.me.sid);
+  (r.limitToLast?r.limitToLast(30):r).on('value',s=>{if(SOC.st!=='on'){SOC.st='on';socStart();}SOC.inv=(s&&s.val())||{};socInbox(SOC.inv).catch(()=>{});},
+    ()=>{if(SOC.st==='on')return;SOC.st='soon';mpUI();SOC.rt=setTimeout(()=>{if(PLAYING)socProbe();else SOC.rt=setTimeout(socProbe,120000);},120000);});}
+function socStart(){const fr=S.soc.fr;for(const sid of Object.keys(fr)){const f=fr[sid];if(!f||typeof f!=='object'||!SOCPK.test(f.k||'')||socSid(f.k)!==sid||!/^(out|in|ok)$/.test(f.s)){delete fr[sid];continue;}
+    f.n=socName(f.n);socThread(sid,f.k);if(f.s==='out')socPing(sid,f.k);}   /* (a request still waiting: its note again, in case the first got lost or tidied away) */
+  socWorld(SET.wchat!==false);socNews();}
+/* 📬 my inbox: sealed notes from players who ask to be friends. The note only points to the thread; the thread says if it is a real, open request */
+async function socInbox(v){for(const id in v){if(SOC.pings[id])continue;SOC.pings[id]=1;const p=v[id];if(!p||typeof p!=='object')continue;
+    if(+p.at<socNow()-14*864e5){SOC.ref.child('in/'+SOC.me.sid+'/'+id).remove().catch(()=>{});continue;}   /* two weeks old: tidied away */
+    const pk=typeof p.e==='string'&&typeof p.c==='string'?await socOpen(p):null;if(!pk||pk===SOC.me.pk)continue;const sid=socSid(pk);
+    if(!S.soc.bl[sid]&&!S.soc.fr[sid]&&!SOC.th[sid])socThread(sid,pk);}}
+async function socPing(sid,pk,n){try{const p=await socSeal(pk);p.at=socTS();await SOC.ref.update({['in/'+sid+'/'+socId()]:p,['ir/'+sid]:socTS()});}
+  catch(e){if((n|0)<3)setTimeout(()=>socPing(sid,pk,(n|0)+1),3500);}}   /* (an inbox takes one note every 3 s: try again a little later) */
+/* 🧵 a thread: everything between me and one other player. One for every friend and request in my list, and for a new note in my inbox */
+function socThread(sid,pk){let T=SOC.th[sid];if(T)return T;T=SOC.th[sid]={sid,pk,tid:'',key:null,slot:SOC.me.sid<sid?'a':'b',v:{},msgs:[],txt:{},top:0,got:0,gn:0,want:'',wt:-1e9,wp:null,qs:null,cs:null,qm:null,cm:null};
+  T.go=socPair(pk).then(p=>{if(SOC.th[sid]!==T)return;T.tid=p.tid;T.key=p.key;T.qs=SOC.ref.child('t/'+p.tid+'/s');T.cs=T.qs.on('value',s=>{socState(T,s&&s.val()).catch(()=>{});},()=>{});}).catch(()=>socDrop(T));return T;}
+function socDrop(T){if(SOC.th[T.sid]===T)delete SOC.th[T.sid];try{if(T.qs)T.qs.off('value',T.cs);if(T.qm)T.qm.off('value',T.cm);}catch(e){}T.qs=T.qm=null;if(SOC.call&&SOC.call.T===T)socCallEnd();}
+function socSet(T,s){if(!T.tid)return Promise.resolve();if(T.want===s&&performance.now()-T.wt<4000)return T.wp;T.want=s;T.wt=performance.now();   /* my side of the thread: 'r' I ask · 'y' yes · 'n' no (the same word is not sent twice within 4 s) */
+  return T.wp=socEnc(T.key,socName(S.name)).then(n=>SOC.ref.child('t/'+T.tid+'/s/'+T.slot).set({s,at:socTS(),n})).catch(()=>{});}
+const socSide=x=>x&&typeof x==='object'&&/^[ryn]$/.test(x.s)&&Number.isFinite(x.at)?x:null;
+/* what the thread says against what my list says. I am a friend only of a player I asked, or said yes to, with my own tap: nothing the thread says can do that for me (the
+   other side could write my half of it). Their no, or my own no from my other iPad, takes a player off my list */
+async function socState(T,v){v=v&&typeof v==='object'?v:{};T.v=v;const fr=S.soc.fr,o=T.slot==='a'?'b':'a',me=socSide(v[T.slot]),th=socSide(v[o]),mine=me&&me.s,busy=performance.now()-T.wt<4000;let f=fr[T.sid];
+  const drop=msg=>{delete fr[T.sid];socDrop(T);change();socNews();if(msg)toast(msg,3.6);};
+  if(!f){   /* a note in my inbox pointed here: a real request, newer than my last answer? */
+    if(!(th&&th.s==='r'&&(!me||me.at<th.at))||S.soc.bl[T.sid]||socCount('in')>=10||socCount()>=SOC.MAXF){socDrop(T);return;}
+    const nm=socName(await socDec(T.key,th.n||''));if(fr[T.sid]||SOC.th[T.sid]!==T)return;
+    fr[T.sid]={k:T.pk,n:nm,s:'in',t:th.at};change();socNews();SFX.ding();toast('💌 '+nm+' wants to be your friend! Open 📱 Friends to answer.',4.2);return;}
+  if(f.s==='out'){if(mine==='r'&&f.t!==me.at){f.t=me.at;change();}
+    if(!f.t||!me){socSet(T,'r');return;}   /* my request is not up yet (or got lost): put it up */
+    if(mine==='n'){if(!busy&&me.at>f.t)drop();return;}   /* my other iPad took it back */
+    if(th&&(th.s==='r'||(th.s==='y'&&th.at>f.t))){f.s='ok';f.t=socNow();if(mine!=='y')socSet(T,'y');socMsgs(T);change();socNews();SFX.yay();toast('💗 '+f.n+' is your friend now!',3.6);}   /* their yes is newer than my request (or we both asked) */
+    else if(th&&th.s==='n'&&th.at>f.t){socSet(T,'n');drop('💛 '+f.n+" can't be friends right now.");}
+    return;}
+  if(f.s==='in'){if(!th||th.s!=='r'||(mine==='n'&&me.at>th.at&&!busy))drop();return;}   /* they took it back, or my other iPad said no */
+  if(!th||th.s==='n'){if(mine&&mine!=='n')socSet(T,'n');drop('💛 '+f.n+' is not on your friends list any more.');return;}
+  if(!busy){if(mine==='n'){drop();return;}
+    if(th.s==='r'&&mine==='y'&&th.at>me.at){if(SOC.call&&SOC.call.T===T)socCallEnd();f.s='in';f.t=th.at;change();socNews();toast('💌 '+f.n+' wants to be your friend! Open 📱 Friends to answer.',4.2);return;}   /* they removed me and asked again: a new request */
+    if(!me||mine==='r')socSet(T,'y');}
+  socMsgs(T);socRing(T,v['c'+o]);}
+function socNews(){updPhoneBadge();if(!phoneOpen())return;const a=PH.app;if(a==='mp'||a==='fc'||a==='blk'||(a==='msg'&&!PH.chat))renderPhone();else if(a==='sms'||a==='gc')socFill();}
+/* 👫 asking, answering, removing, blocking */
+async function socAsk(pk,nm){try{if(!socOn()||!SOCPK.test(pk)||pk===SOC.me.pk)return;const sid=socSid(pk),fr=S.soc.fr,f=fr[sid];
+    if(f){if(f.s==='in')socAnswer(sid,1);return;}
+    if(socCount()>=SOC.MAXF){SFX.no();toast('Your friends list is full! 💛',3);return;}
+    delete S.soc.bl[sid];fr[sid]={k:pk,n:socName(nm),s:'out',t:0};change();socNews();SFX.pop();toast('💌 You asked '+fr[sid].n+' to be your friend!',3);
+    const T=socThread(sid,pk);await T.go;if(SOC.th[sid]!==T||!T.tid)return;await socSet(T,'r');if(fr[sid]&&fr[sid].s==='out')await socPing(sid,pk);}catch(e){}}
+function socAnswer(sid,yes){const f=S.soc.fr[sid],T=SOC.th[sid];if(!socOn()||!f||f.s!=='in'||!T||!T.tid)return;
+  if(yes){f.s='ok';f.t=socNow();socSet(T,'y');socMsgs(T);SFX.yay();toast('💗 You and '+f.n+' are friends now!',3.4);}else{socSet(T,'n');delete S.soc.fr[sid];socDrop(T);}
+  change();socNews();}
+function socRemove(sid){const T=SOC.th[sid];if(!S.soc.fr[sid])return;if(T){socSet(T,'n');socDrop(T);}delete S.soc.fr[sid];change();socNews();}
+function socBlock(sid,nm){const b=S.soc.bl,ks=Object.keys(b);if(ks.length>=80)delete b[ks[0]];b[sid]=socName(nm);socRemove(sid);change();socNews();}   /* 🚫 they cannot ask, write or call, and their world chat lines are hidden */
+/* 💬 texts: stored online in the thread (so they wait there until the friend plays again), locked, the newest 60 shown */
+function socMsgs(T){if(T.qm||!T.tid)return;const r=SOC.ref.child('t/'+T.tid+'/m');T.qm=r.limitToLast?r.limitToLast(60):r;T.cm=T.qm.on('value',s=>{socGot(T,(s&&s.val())||{}).catch(()=>{});},()=>{});socPrune(r,30*864e5);}
+async function socGot(T,v){const n=++T.gn,L=[];for(const id in v){const m=v[id];if(m&&(m.f==='a'||m.f==='b')&&typeof m.c==='string'&&Number.isFinite(m.at))L.push({id,f:m.f,c:m.c,at:m.at});}
+  L.sort((a,b)=>a.at-b.at||(a.id<b.id?-1:1));const M=L.slice(-60);
+  for(const m of M)if(T.txt[m.id]===undefined){const t=socClean(await socDec(T.key,m.c),200);T.txt[m.id]=t&&!socBad(t)?t:'';}   /* ('' shows as 🙈: it could not be opened, or it is not kind or safe) */
+  if(n!==T.gn||SOC.th[T.sid]!==T)return;const first=!T.got,f=S.soc.fr[T.sid],last=M.filter(m=>m.f!==T.slot).pop();T.got=1;T.msgs=M;
+  if(last&&last.at>T.top){T.top=last.at;if(!first&&f&&f.s==='ok'&&!socLooking(T.sid)){SFX.pop();toast('💬 '+f.n+': '+(T.txt[last.id]||'🙈').slice(0,60),3.6);}}
+  socNews();}
+function socRead(sid){const f=S.soc.fr[sid],T=SOC.th[sid];if(!f||!T||T.top<=(f.r||0))return;f.r=T.top;change();updPhoneBadge();}
+async function socSend(sid,raw){try{const f=S.soc.fr[sid],T=SOC.th[sid],t=socClean(raw,200);if(!socOn()||!f||f.s!=='ok'||!T||!T.tid||!t)return false;
+    if(socBad(t)){SFX.no();toast("Let's keep messages friendly and safe 💛",3);return false;}
+    if(performance.now()-SOC.sent<1500){toast('🐢 Slow down a little!',2);return false;}SOC.sent=performance.now();
+    await SOC.ref.child('t/'+T.tid).update({['m/'+socId()]:{f:T.slot,c:await socEnc(T.key,t),at:socTS()},['x/'+T.slot]:socTS()});return true;}
+  catch(e){SFX.no();toast("😕 That message didn't go through. Try again in a moment!",3.2);return false;}}
+function socPrune(r,age){if(!r.orderByKey)return;try{const q=r.orderByKey().limitToFirst(20),cb=s=>{q.off('value',cb);const v=(s&&s.val())||{},old=socNow()-age;for(const id in v)if(v[id]&&+v[id].at<old)r.child(id).remove().catch(()=>{});};q.on('value',cb,()=>{});}catch(e){}}   /* the oldest lines, once per start: old ones go */
+/* 🌍 the world chat: one room for everyone who is playing, the newest 50 lines. Lines that are not kind or safe and blocked players are left out when
+   they are drawn (so a changed game cannot push them onto other screens). A grown-up can turn it off in Settings (this iPad's setting, SET.wchat) */
+function socWorld(on){if(!on){if(SOC.qg)try{SOC.qg.off('value',SOC.cg);}catch(e){}SOC.qg=null;SOC.g=[];SOC.gtop=0;return;}if(SOC.qg||!socOn())return;
+  const r=SOC.ref.child('g');SOC.qg=r.limitToLast?r.limitToLast(50):r;SOC.cg=SOC.qg.on('value',s=>socLines((s&&s.val())||{}),()=>{});socPrune(r,864e5);}
+function socLines(v){const L=[];for(const id in v){const m=v[id];if(m&&typeof m.s==='string'&&typeof m.n==='string'&&typeof m.t==='string'&&Number.isFinite(m.at))L.push({id,s:m.s,n:socName(m.n),t:socClean(m.t,120),at:m.at});}
+  L.sort((a,b)=>a.at-b.at||(a.id<b.id?-1:1));SOC.g=L.slice(-50);const top=L.length?L[L.length-1].at:0;if(!SOC.gtop)SOC.gseen=top;SOC.gtop=top||1;   /* (what was there when I came is not new) */
+  if(phoneOpen()&&PH.app==='gc')socFill();else if(phoneOpen()&&PH.app==='mp'){const t=document.querySelector('#card .ph-tabs [data-a="phapp:gc"]'),n=socNewLines();if(t)t.textContent='🌍 World chat'+(n?' ('+n+')':'');}}   /* (only the tab's number changes: the list under your finger stays) */
+const socShown=()=>SOC.g.filter(m=>m.t&&!S.soc.bl[m.s]&&!socBad(m.t));
+const socNewLines=()=>socShown().filter(m=>m.at>SOC.gseen&&m.s!==SOC.me.sid).length;
+async function socSay(raw){const t=socClean(raw,120);if(!socOn()||SET.wchat===false||!t)return false;
+  if(socBad(t)){SFX.no();toast("Let's keep the chat friendly and safe 💛",3);return false;}
+  if(performance.now()-SOC.said<4000){toast('🐢 Slow down a little! You can write again in a moment.',2.4);return false;}SOC.said=performance.now();
+  const put=()=>SOC.ref.update({['g/'+socId()]:{s:SOC.me.sid,n:socName(S.name),t,at:socTS()},gl:socTS()});
+  try{await put();return true;}catch(e){try{await new Promise(ok=>setTimeout(ok,1300));await put();return true;}catch(e2){SFX.no();toast("😕 That didn't go through. Try again in a moment!",3);return false;}}}   /* (the room takes one line a second: one more try) */
+/* 📞 a voice call between two friends who are both playing: WebRTC sound, set up through the thread (the offer and the answer, locked like texts).
+   Public STUN servers find a way through most home Wi-Fi; there is no relay (TURN) server, so some networks cannot connect: then a kind line says so.
+   The microphone is asked for only when you call or answer. Each side's call note (ca, cb) goes away by itself when that player leaves */
+const socCallRef=T=>SOC.ref.child('t/'+T.tid+'/s/c'+T.slot);
+function socBye(r){try{const p=r.onDisconnect().remove();if(p&&p.catch)p.catch(()=>{});}catch(e){}}   /* my call note goes when I go */
+const socCanCall=()=>!!(window.RTCPeerConnection&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
+const socMicMsg=e=>e&&(e.name==='NotAllowedError'||e.name==='SecurityError')?'🎤 Cozy Town may not use the microphone. Allow it to make calls.':e&&(e.name==='NotFoundError'||e.name==='NotReadableError')?'🎤 No microphone was found for the call.':SOCFAIL;
+function socFree(c){clearTimeout(c.tm);clearInterval(c.iv);try{if(c.pc){c.pc.ontrack=c.pc.onconnectionstatechange=c.pc.oniceconnectionstatechange=null;c.pc.close();}}catch(e){}
+  try{if(c.ms)for(const t of c.ms.getTracks())t.stop();if(c.au){c.au.pause();c.au.srcObject=null;c.au.remove();}}catch(e){}}
+async function socMedia(c){c.ms=await navigator.mediaDevices.getUserMedia({audio:true});const pc=c.pc=new RTCPeerConnection({iceServers:SOCICE});for(const t of c.ms.getTracks())pc.addTrack(t,c.ms);
+  pc.ontrack=e=>{let a=c.au;if(!a){a=c.au=document.createElement('audio');a.autoplay=true;a.setAttribute('playsinline','');document.body.appendChild(a);}   /* the friend's voice: a sound element on the page (Safari plays it best there) */
+    a.srcObject=e.streams[0]||new MediaStream([e.track]);const p=a.play();if(p&&p.catch)p.catch(()=>{if(SOC.call===c){c.tap=1;socCallUI();}});};   /* (the sound did not start by itself: a 🔊 button does it) */
+  const st=()=>{const s=pc.connectionState,i=pc.iceConnectionState;if(s==='connected'||(!s&&(i==='connected'||i==='completed')))socCallOn(c);else if(s==='failed'||i==='failed'){if(SOC.call===c)socCallEnd(SOCFAIL);}};
+  pc.onconnectionstatechange=st;pc.oniceconnectionstatechange=st;}
+async function socSdp(c,offer){const pc=c.pc;await pc.setLocalDescription(offer?await pc.createOffer():await pc.createAnswer());   /* the whole description in one go: wait (at most 2.5 s) until the ways in are found */
+  await new Promise(ok=>{if(pc.iceGatheringState==='complete'){ok();return;}const t=setTimeout(ok,2500);pc.addEventListener('icegatheringstatechange',()=>{if(pc.iceGatheringState==='complete'){clearTimeout(t);ok();}});});
+  return pc.localDescription.sdp;}
+async function socCall(sid){const f=S.soc.fr[sid],T=SOC.th[sid];if(SOC.call||!socOn()||!f||f.s!=='ok'||!T||!T.tid)return;
+  if(!socPeerOf(sid)){toast('📞 '+f.n+' is not playing right now. Write a message instead! 💬',3.4);return;}
+  if(!socCanCall()){toast("📞 Calls don't work on this iPad or phone.",3.2);return;}
+  const c=SOC.call={sid,T,id:socId(),st:'out',nm:f.n};socCallUI();
+  try{await socMedia(c);if(SOC.call!==c){socFree(c);return;}const sdp=await socSdp(c,true),d=await socEnc(T.key,sdp);if(SOC.call!==c){socFree(c);return;}if(d.length>16000)throw 0;
+    const r=socCallRef(T);socBye(r);c.put=1;await r.set({i:c.id,k:'o',d,at:socTS()});
+    if(SOC.call===c&&c.st==='out')c.tm=setTimeout(()=>{if(SOC.call===c&&c.st==='out')socCallEnd('😴 '+c.nm+" didn't answer. Try again later!");},35000);}
+  catch(e){if(SOC.call===c)socCallEnd(socMicMsg(e));else socFree(c);}}
+async function socPick(){const c=SOC.call;if(!c||c.st!=='in')return;const T=c.T;c.st='join';clearTimeout(c.tm);socCallUI();
+  try{await socMedia(c);if(SOC.call!==c){socFree(c);return;}await c.pc.setRemoteDescription({type:'offer',sdp:await socDec(T.key,c.offer)});const d=await socEnc(T.key,await socSdp(c,false));if(SOC.call!==c){socFree(c);return;}if(d.length>16000)throw 0;
+    const r=socCallRef(T);socBye(r);c.put=1;await r.set({i:c.id,k:'a',d,at:socTS()});
+    if(SOC.call===c&&c.st==='join')c.tm=setTimeout(()=>{if(SOC.call===c&&c.st==='join')socCallEnd(SOCFAIL);},20000);}
+  catch(e){if(SOC.call===c)socCallEnd(socMicMsg(e));else socFree(c);}}
+function socCallOn(c){if(SOC.call!==c||c.st==='on')return;c.st='on';clearTimeout(c.tm);c.t1=performance.now();SFX.pop();socCallUI();
+  c.iv=setInterval(()=>{const e=document.querySelector('#socCall .sc-t');if(e)e.textContent=socCallT(c);},1000);}
+const socCallT=c=>{const s=Math.floor((performance.now()-c.t1)/1000);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
+function socCallEnd(msg){const c=SOC.call;if(!c)return;SOC.call=null;socFree(c);if(c.put||c.in)socCallRef(c.T).set({i:c.id,k:'x',at:socTS()}).catch(()=>{});   /* 'x' tells the other side */
+  socCallUI();if(msg)toast(msg,4);}
+/* the other side's call note changed (or my game just saw it for the first time) */
+function socRing(T,o){const c=SOC.call,f=S.soc.fr[T.sid];o=o&&typeof o==='object'&&typeof o.i==='string'?o:null;
+  if(c&&c.T===T&&c.st==='out'&&T.slot==='b'&&o&&o.k==='o'&&o.i!==c.id&&socNow()-o.at<40000){socCallEnd();socRing(T,o);return;}   /* we both called at the same moment: my call goes, theirs rings */
+  if(c&&c.T===T){if(!o||o.i!==c.id){if(c.in||c.st!=='out')socCallEnd(c.st==='in'?'📞 You missed a call from '+c.nm+'.':'📞 '+c.nm+' left the call.');return;}   /* their note is gone: they left */
+    if(o.k==='x'){socCallEnd(c.st==='out'?'💛 '+c.nm+" can't talk right now.":c.st==='in'?'📞 You missed a call from '+c.nm+'.':'📞 The call ended.');return;}
+    if(o.k==='a'&&c.st==='out'){c.st='join';clearTimeout(c.tm);socCallUI();
+      socDec(T.key,o.d||'').then(sdp=>c.pc.setRemoteDescription({type:'answer',sdp})).then(()=>{if(SOC.call===c&&c.st==='join')c.tm=setTimeout(()=>{if(SOC.call===c&&c.st==='join')socCallEnd(SOCFAIL);},20000);}).catch(()=>{if(SOC.call===c)socCallEnd(SOCFAIL);});}
+    return;}
+  if(!o||o.k!=='o'||typeof o.d!=='string'||SOC.rang===o.i||!(socNow()-o.at<40000)||!f||f.s!=='ok')return;SOC.rang=o.i;
+  if(c||!PLAYING||!socCanCall()){socCallRef(T).set({i:o.i,k:'x',at:socTS()}).catch(()=>{});return;}   /* busy, away, or no calls on this device: say so */
+  const n=SOC.call={sid:T.sid,T,id:o.i,st:'in',in:1,nm:f.n,offer:o.d};n.tm=setTimeout(()=>{if(SOC.call===n&&n.st==='in')socCallEnd('📞 You missed a call from '+n.nm+'.');},38000);socCallUI();}
+function socMute(){const c=SOC.call;if(!c||!c.ms)return;c.mute=!c.mute;for(const t of c.ms.getAudioTracks())t.enabled=!c.mute;socCallUI();}
+/* the call card: on top of everything, small while you talk, so you can keep playing */
+function socCallUI(){const c=SOC.call;let el=$('socCall');clearInterval(SOC.ring);SOC.ring=0;if(!c){if(el)el.hidden=true;return;}
+  if(!el){el=document.createElement('div');el.id='socCall';el.setAttribute('role','dialog');el.setAttribute('aria-label','Call');document.body.appendChild(el);
+    el.addEventListener('click',e=>{const b=e.target.closest('[data-c]'),k=b&&b.dataset.c,q=SOC.call;if(!k||!q)return;audioInit();SFX.tap();
+      if(k==='yes')socPick();else if(k==='mute')socMute();else if(k==='hear'){q.tap=0;if(q.au)q.au.play().catch(()=>{});socCallUI();}else socCallEnd(q.st==='on'||q.st==='join'?'📞 The call ended.':'');});}
+  const nm=esc(c.nm),bye=t=>`<button class="btn coral" data-c="bye">${t}</button>`;
+  el.className=c.st==='on'?'on':'';el.innerHTML=c.st==='in'?`<div class="sc-m">📞 <b>${nm}</b> is calling you!</div><div class="sc-b"><button class="btn mint" data-c="yes">✅ Answer</button>${bye('🙅 Not now')}</div>`
+    :c.st==='out'?`<div class="sc-m">📞 Calling <b>${nm}</b>…</div><div class="sc-b">${bye('Hang up')}</div>`
+    :c.st==='join'?`<div class="sc-m">📞 Connecting with <b>${nm}</b>…</div><div class="sc-b">${bye('Hang up')}</div>`
+    :`<div class="sc-m">📞 <b>${nm}</b> · <span class="sc-t">${socCallT(c)}</span></div><div class="sc-b">${c.tap?'<button class="btn butter" data-c="hear">🔊 Tap to hear</button>':''}<button class="btn ${c.mute?'butter':'white'}" data-c="mute" aria-pressed="${!!c.mute}">${c.mute?'🔇 Muted':'🎤 Mute'}</button>${bye('Hang up')}</div>`;
+  el.hidden=false;if(c.st==='in'||c.st==='out'){const ring=()=>{if(c.st==='in')SFX.ding();else tone(440,.5,'sine',.06);};ring();SOC.ring=setInterval(ring,2400);}}
+addEventListener('pagehide',()=>{if(SOC.call)socCallEnd();});
+/* 📱 in the phone. Friends app: two tabs (Friends · World chat), requests on top, ➕ next to a player, then my friends and who I blocked */
+function socTabs(a){if(!socOn())return'';const n=SET.wchat===false?0:socNewLines();return`<div class="ph-tabs"><button class="pill ${a==='mp'?'on':''}" data-a="phapp:mp">👫 Friends</button><button class="pill ${a==='gc'?'on':''}" data-a="phapp:gc">🌍 World chat${n&&a!=='gc'?' ('+n+')':''}</button></div>`;}
+const socRowH=(n,sub,btns)=>`<div class="ph-row"><span class="socn">${n}${sub?`<br><small>${sub}</small>`:''}</span><span class="socb">${btns}</span></div>`;
+function socAsks(){if(!socOn())return'';const fr=S.soc.fr,L=Object.keys(fr).filter(k=>fr[k].s==='in');
+  return L.length?`<p class="ph-sub" style="margin-top:10px">💌 They want to be your friend:</p>`+L.map(k=>socRowH('💌 '+esc(fr[k].n),'',`<button class="btn mint sm" data-a="fyes:${k}">✅ Yes</button><button class="btn white sm" data-a="fno:${k}">No</button><button class="btn white sm" data-a="fc:${k}" aria-label="More about ${esc(fr[k].n)}">⋯</button>`)).join(''):'';}
+function socRow(a,i){if(!socOn()||!a.so||a.so===SOC.me.pk)return'';const sid=socSid(a.so),f=S.soc.fr[sid],n=esc(a.nm);if(S.soc.bl[sid]||(f&&f.k!==a.so))return'';
+  return!f?`<button class="btn sky sm" data-a="fadd:${i}" aria-label="Ask ${n} to be your friend">➕</button>`:f.s==='ok'?`<button class="btn butter sm" data-a="sms:${sid}" aria-label="Write to ${n}">💬</button>`
+    :f.s==='in'?`<button class="btn mint sm" data-a="fyes:${sid}" aria-label="Yes, be friends with ${n}">💗</button>`:`<button class="btn white sm" data-a="fc:${sid}" aria-label="You asked ${n} to be your friend">⏳</button>`;}
+function socMine(){if(SOC.st==='soon'){setTimeout(socProbe,0);return`<p class="ph-sub" style="margin-top:14px">💌 Coming soon: a friends list, messages, calls and a world chat!</p>`;}if(!socOn())return'';
+  const fr=S.soc.fr,L=Object.keys(fr).filter(k=>fr[k].s!=='in').sort((a,b)=>fr[a].n.localeCompare(fr[b].n)),nb=Object.keys(S.soc.bl).length;
+  return`<p class="ph-sub" style="margin-top:14px">💗 My friends:</p>`+(L.map(k=>{const f=fr[k],n=esc(f.n),on=!!socPeerOf(k),u=socUnreadOf(k);
+      return socRowH('💗 '+n,f.s==='out'?'⏳ Waiting for their answer':on?'🟢 Playing now':'⚪ Not here right now',(f.s==='ok'?`<button class="btn butter sm" data-a="sms:${k}" aria-label="Write to ${n}">💬${u?' '+u:''}</button>`+(on?`<button class="btn mint sm" data-a="fcall:${k}" aria-label="Call ${n}">📞</button>`:''):'')+`<button class="btn white sm" data-a="fc:${k}" aria-label="More about ${n}">⋯</button>`);}).join('')
+    ||`<p class="ph-sub">No friends yet. Tap ➕ next to a player to ask them!</p>`)+(nb?`<div class="creply"><button class="btn white" data-a="phapp:blk">🚫 Blocked players (${nb})</button></div>`:'');}
+/* Messages app: my friends' threads sit on top of the list, the one with the newest text first */
+function socChats(){if(!socOn())return'';const fr=S.soc.fr;return Object.keys(fr).filter(k=>fr[k].s==='ok').map(k=>{const T=SOC.th[k],m=T&&T.msgs[T.msgs.length-1];return{k,T,m,at:m?m.at:0};}).sort((a,b)=>b.at-a.at)
+  .map(o=>{const u=socUnreadOf(o.k),x=o.m?(o.m.f===o.T.slot?'You: ':'')+(o.T.txt[o.m.id]||'🙈'):'No messages yet';
+    return`<button class="chat" data-a="sms:${o.k}"><span class="cav" style="background:#ffd1e3">💗</span><span class="cmid"><b>${esc(fr[o.k].n)}</b><small>${esc(x)}</small></span>${u?`<span class="cbadge">${u}</span>`:''}</button>`;}).join('');}
+const socHd=(back,lbl,t,more)=>`<div class="ph-hd"><button class="btn ph-back" data-a="phapp:${back}" aria-label="${lbl}">‹</button><h3 class="chh">${t}</h3>${more||''}</div>`;
+const socBar=(max,ph,act)=>`<div class="socbar"><input class="inp" id="socIn" maxlength="${max}" placeholder="${ph}" autocomplete="off" enterkeyhint="send" aria-label="${ph}"><button class="btn mint sm" data-a="${act}" aria-label="Send">➤</button></div>`;
+function socBubs(){if(PH.app==='gc'){const L=socShown();return L.length?L.map(m=>{const me=m.s===SOC.me.sid,n=esc(m.n);
+      return`<div class="bub ${me?'me':'them gcl'}"${me?'':` data-a="gline:${m.id}" role="button" tabindex="0" aria-label="${n}: more"`}>${me?'':`<b>${n}</b><br>`}${esc(m.t)}<span class="tm">${socTime(m.at)}</span></div>`
+        +(PH.gsel===m.id&&!me?`<div class="creply"><p class="ph-sub">🚫 Block ${n}? You will not see what they write any more.</p><button class="btn coral" data-a="ghide:${m.id}">🚫 Block</button><button class="btn white" data-a="gline:">No</button></div>`:'');}).join('')
+      :`<p class="ph-sub">Nobody has said anything yet. Say hi! 👋</p>`;}
+  const T=SOC.th[PH.fc];return T&&T.msgs.length?T.msgs.map(m=>`<div class="bub ${m.f===T.slot?'me':'them'}">${T.txt[m.id]?esc(T.txt[m.id]):'🙈'}<span class="tm">${socTime(m.at)}</span></div>`).join(''):`<p class="ph-sub">No messages yet. Say hi! 👋</p>`;}
+const SOCAPP={
+  sms(){const k=PH.fc,f=socOn()&&S.soc.fr[k];if(!f||f.s!=='ok')return socHd('msg','Back to chats','💬 Messages')+`<p class="ph-sub">This chat is closed: you are not friends right now.</p>`;const n=esc(f.n);
+    return socHd('msg','Back to chats',`<span class="cav hcav" style="background:#ffd1e3">💗</span>${n}`,`<button class="btn mint sm" data-a="fcall:${k}" aria-label="Call ${n}">📞</button><button class="btn white sm" data-a="fc:${k}" aria-label="More about ${n}">⋯</button>`)+`<div class="bubs" id="socBubs">${socBubs()}</div>`+socBar(200,'Message…','ssend');},
+  gc(){const top=socHd('','Back to home screen','🌍 World chat')+socTabs('gc');if(!socOn())return top+`<p class="ph-sub">The world chat is resting right now. Try again later!</p>`;
+    if(SET.wchat===false)return top+`<div style="font-size:54px;text-align:center;margin-top:14px">🤫</div><p class="ph-sub" style="text-align:center">The world chat is turned off on this iPad. A grown-up can turn it on in ⚙️ Settings.</p>`;
+    return top+`<p class="ph-sub">Everyone who is playing can read this. Be kind! 💛 Tap a line to block that player.</p><div class="bubs" id="socBubs">${socBubs()}</div>`+socBar(120,'Say something to everyone…','gsend');},
+  fc(){const k=PH.fc,f=socOn()&&S.soc.fr[k];if(!f)return socHd('mp','Back to friends','👫 Friends')+`<p class="ph-sub">This player is not on your list any more.</p>`;const n=esc(f.n),out=f.s==='out',on=!!socPeerOf(k);
+    return socHd('mp','Back to friends','💗 '+n)+`<p class="ph-sub">${out?'⏳ You asked to be friends. Waiting for their answer.':f.s==='in'?'💌 Wants to be your friend.':on?'🟢 Playing now':'⚪ Not here right now'}</p>`
+      +(f.s==='ok'?`<div class="creply"><button class="btn butter" data-a="sms:${k}">💬 Write a message</button><button class="btn mint" data-a="fcall:${k}">📞 Call</button></div>`:f.s==='in'?`<div class="creply"><button class="btn mint" data-a="fyes:${k}">✅ Yes, be friends</button><button class="btn white" data-a="fno:${k}">No</button></div>`:'')
+      +(PH.ask==='rm'?`<p class="ph-sub" style="margin-top:14px">${out?'Take your request back?':'Remove '+n+' from your friends? You can ask again later.'}</p><div class="creply"><button class="btn coral" data-a="frm:${k}">${out?'↩️ Yes, take it back':'💔 Yes, remove'}</button><button class="btn white" data-a="fask:">No</button></div>`
+        :PH.ask==='bl'?`<p class="ph-sub" style="margin-top:14px">Block ${n}? They cannot ask to be your friend, write to you or call you, and you will not see what they write in the world chat.</p><div class="creply"><button class="btn coral" data-a="fblk:${k}">🚫 Yes, block</button><button class="btn white" data-a="fask:">No</button></div>`
+        :`<div class="creply" style="margin-top:14px">${f.s==='in'?'':`<button class="btn white" data-a="fask:rm">${out?'↩️ Take back my request':'💔 Remove friend'}</button>`}<button class="btn white" data-a="fask:bl">🚫 Block</button></div>`);},
+  blk(){const b=socOn()?S.soc.bl:{},L=Object.keys(b);return socHd('mp','Back to friends','🚫 Blocked')+`<p class="ph-sub">Blocked players cannot ask to be your friend, write to you or call you, and you do not see what they write in the world chat.</p>`
+    +(L.map(k=>socRowH('🚫 '+esc(b[k]),'',`<button class="btn white sm" data-a="funb:${k}">Unblock</button>`)).join('')||`<p class="ph-sub">Nobody is blocked. 💛</p>`);}};
+/* after a thread or the world chat is drawn: newest at the bottom, Enter sends, and the keyboard stays up when you tap ➤ */
+function socAfter(){const i=$('socIn'),sc=document.querySelector('#card .ph-screen');if(sc&&i)sc.classList.add('socsc');if(sc&&$('socBubs'))sc.scrollTop=sc.scrollHeight;
+  if(i){i.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();socSendUI();}else if(e.key==='Escape')i.blur();});
+    i.addEventListener('focus',()=>{$('card').classList.add('typing');setTimeout(()=>{if(sc)sc.scrollTop=sc.scrollHeight;},350);});i.addEventListener('blur',()=>$('card').classList.remove('typing'));   /* ⌨️ typing: the phone fits above the keyboard (kbFit sets the card's height) */
+    const b=i.nextElementSibling;if(b)b.addEventListener('pointerdown',e=>e.preventDefault());}
+  if(PH.app==='sms')socRead(PH.fc);else if(PH.app==='gc')SOC.gseen=SOC.gtop;}
+function socFill(){const b=$('socBubs');if(!b||!phoneOpen()||(PH.app!=='sms'&&PH.app!=='gc'))return;const sc=b.closest('.ph-screen'),end=!sc||sc.scrollHeight-sc.clientHeight-sc.scrollTop<80;
+  b.innerHTML=socBubs();if(sc&&end)sc.scrollTop=sc.scrollHeight;if(PH.app==='sms')socRead(PH.fc);else SOC.gseen=SOC.gtop;try{cardMore();}catch(e){}}   /* (only the lines are drawn again: what you are typing stays) */
+async function socSendUI(){const i=$('socIn'),w=PH.app==='gc';if(!i)return;const v=i.value;if(!socClean(v,9)){SFX.no();toast('✏️ Write something first!',2);return;}
+  if(await(w?socSay(v):socSend(PH.fc,v))){if($('socIn')===i&&i.value===v)i.value='';SFX.pop();}}
+ACT.fadd=i=>{const a=MP.list[+i];if(a&&a.so)socAsk(a.so,a.nm);};
+ACT.fyes=k=>socAnswer(k,1);ACT.fno=k=>socAnswer(k,0);
+ACT.sms=k=>{const f=socOn()&&S.soc.fr[k];if(!f||f.s!=='ok')return;PH.app='sms';PH.fc=k;PH.chat=null;renderPhone();};
+ACT.fc=k=>{if(!socOn()||!S.soc.fr[k])return;PH.app='fc';PH.fc=k;PH.ask='';renderPhone();};
+ACT.fask=k=>{PH.ask=k;renderPhone();};
+ACT.frm=k=>{const f=socOn()&&S.soc.fr[k];if(!f)return;const n=f.n,out=f.s==='out';socRemove(k);PH.app='mp';renderPhone();toast(out?'↩️ You took your request back.':'💔 '+n+' is not on your friends list any more.',3);};
+ACT.fblk=k=>{const f=socOn()&&S.soc.fr[k];if(!f)return;const n=f.n;socBlock(k,n);PH.app='mp';renderPhone();toast('🚫 '+n+' is blocked. You can undo it in 📱 Friends.',3.6);};
+ACT.funb=k=>{if(!socOn()||!S.soc.bl[k])return;const n=S.soc.bl[k];delete S.soc.bl[k];change();renderPhone();toast('💛 '+n+' is not blocked any more.',3);SOC.pings={};socInbox(SOC.inv||{}).catch(()=>{});};   /* (a request of theirs that waited in my inbox shows up now) */
+ACT.fcall=k=>{socCall(k);if(SOC.call)closePanel();};   /* (the phone goes away: you see the town and the call card) */
+ACT.ssend=()=>{socSendUI();};ACT.gsend=()=>{socSendUI();};
+ACT.gline=id=>{PH.gsel=PH.gsel===id?'':id;socFill();};
+ACT.ghide=id=>{const m=SOC.g.find(x=>x.id===id);PH.gsel='';if(m&&socOn()&&m.s!==SOC.me.sid){socBlock(m.s,m.n);toast('🚫 '+m.n+' is blocked. You can undo it in 📱 Friends.',3.6);}socFill();};
+ACT.swchat=()=>{SET.wchat=SET.wchat===false;saveSet();socWorld(SET.wchat!==false);openSettings();};   /* 🌍 the grown-ups' switch for the world chat */
 

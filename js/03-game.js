@@ -413,7 +413,7 @@ function qEvent(type,amt=1,key){hardEvent(type,amt);if(!S||!S.q)return;let dirty
     else if((Q.ev||k)===type){if(key){st.seen=st.seen||[];if(st.seen.includes(key))continue;st.seen.push(key);}st.n=Math.min(Q.n,(st.n||0)+amt);dirty=true;if(st.n>=Q.n)qReady(Q,st);}}
   if(dirty){if(type!=='run')change();if(PH.app==='quest'&&!$('panel').hidden)renderPhone();}}
 function readyCount(){if(!S)return 0;return(S.q?Object.values(S.q.st).filter(s=>s.s==='ready').length:0)+(S.hard?Object.values(S.hard).filter(s=>s.s==='ready').length:0);}
-function updPhoneBadge(){const n=readyCount()+msgUnread();const b=$('phBadge');b.hidden=!n;b.textContent=n;}
+function updPhoneBadge(){const n=readyCount()+msgUnread()+socAskN();const b=$('phBadge');b.hidden=!n;b.textContent=n;}
 
 /* ---- tasks ---- */
 function doneTask(id){return;if(!S||S.tasks[id])return;const T=TASKS.find(t=>t.id===id);if(!T)return;S.tasks[id]=1;S.coins+=T.r;SFX.yay();toast('✅ '+T.t+'  +'+T.r+' 🪙',3.2);change();}
@@ -1581,7 +1581,7 @@ function mpUpsert(p){const pr=p.presence||{};if(!pr.nm)return;let a=MP.peers.get
   const s=pr.say;if(s&&typeof s==='object'&&s.id!==a.sayId){a.sayId=s.id;const txt=Number.isInteger(s.m)&&QUICK[s.m]?QUICK[s.m]:Number.isInteger(s.e)&&EMOS[s.e]?EMOS[s.e]:null;if(txt&&!fresh)mpBubble(a,txt);}
   const bk=JSON.stringify(pr.bl||null);if(bk!==a.bk){a.bk=bk;if(pr.bl)ballFrom(a,pr.bl);else if(!BS.mine&&BS.own===a.peer)ballOwnerGone();}
   const ck=JSON.stringify(pr.sc||null);if(ck!==a.ck){a.ck=ck;if(pr.sc)scoreFrom(a,pr.sc);}
-  a.zz=pr.zz===1?1:0;a.ob=pr.ob===1?1:0;a.aw=pr.aw===1?1:0;a.st=pr.st===1?1:0;mpExtra(a,pr,fresh);}
+  a.zz=pr.zz===1?1:0;a.ob=pr.ob===1?1:0;a.aw=pr.aw===1?1:0;a.st=pr.st===1?1:0;mpExtra(a,pr,fresh);socPeer(a,pr);}
 /* 🕰️ run 4, job 1: there is one clock for everyone (clockNow), so nobody takes a friend's clock any more and presence carries no ck */
 function mpBuildAv(a,look){mpDropAv(a);const p=makePerson(lookToPerson(look));bakePerson(p);const txt='⭐ '+a.nm+(a.old?' · ⏳ older version':''),tg=label(txt,.3);tg.userData.txt=txt;tg.position.y=2.0;p.root.add(tg);p.tag=tg;scene.add(p.root);a.av=p;a.av.root.position.set(a.x,0,a.z);}
 function mpDropAv(a){if(a.av){scene.remove(a.av.root);a.av=null;}a.bub=null;a.lie=false;a.lieK='';if(a.zzs){a.zzs.material.map.dispose();a.zzs.material.dispose();a.zzs=null;}mpPetsDrop(a);}
@@ -1731,7 +1731,7 @@ function mpTick(dt){if(!MP.grp)return;const loc=CUR?CUR.id:'city';
     {const b=LOC.city.ball,m=S.match||{l:0,r:0,v:0},r2=v=>Math.round(v*100)/100;st.sc=[m.l|0,m.r|0,m.v|0];st.bl=BS.mine&&b?[r2(b.x),r2(b.z),r2(b.vx),r2(b.vz),BS.k,Math.round((b.reset||0)*10)/10]:null;}
     st.zz=zzIn()?1:null;st.ob=nsMine()?1:null;st.aw=AW.on?1:null;   /* 🌙 ob: in my own bed at home (the night skip) */
     st.st=P.sit&&!P.sit.bed&&!P.sit.bus?1:null;st.cy=(P.cy||0)>.02&&!P.horse?Math.round(P.cy*100)/100:null;   /* 🪜 how high I stand (Pet Shop floors, stairs, climbs; 24 Nov: friends saw you on the ground floor) */   /* 🪑 sitting on a bench or a chair; 😴 zz: in bed (optional; null clears them: presence merges) */
-    mpStamp(st);   /* 🦘 jumps, 🐾 pets with me (optional) */
+    mpStamp(st);socStamp(st);   /* 🦘 jumps, 🐾 pets with me (optional); 💌 so: my key for friend requests (25 Nov) */
     laneStamp(st);hpStamp(st);const key=JSON.stringify(st);if(key!==MP.lastKey){MP.lastKey=key;MP.grp.presence(st).catch(()=>{});}}
   for(const a of MP.peers.values()){if(!a.av)continue;let sp=peerSpot(a);const vis=!!sp,lie=vis&&!!a.zz;a.av.root.visible=vis;if(lie)sp=mpBedSpot(a,sp);if(sp){a.tx=sp[0];a.tz=sp[1];a.ry=sp[2];}
     const d=Math.hypot(a.tx-a.x,a.tz-a.z);if(d>8||lie!==!!a.lie){a.x=a.tx;a.z=a.tz;}else{const k=Math.min(1,dt*8);a.x+=(a.tx-a.x)*k;a.z+=(a.tz-a.z)*k;}
@@ -1814,9 +1814,9 @@ function mpPhone(){
       ${MP.help&&!c?`<p class="ph-sub" style="margin-top:12px">${window.WEBNET&&WEBNET.on?'Check that this iPad is online, then tap <b>Try again</b>. Still not working? Ask a grown-up to check the game\'s online setup.':'Friends can only play together if they were invited by email in the <b>Share</b> menu. In Share, <b>Anyone with the link</b> must be turned off, because people who open a plain link can\'t play together.'}</p>`:''}`;}
   const list=MP.list=[...MP.peers.values()];
   const say=`<p class="ph-sub" style="margin-top:12px">Say something:</p><div class="qmsg">${QUICK.map((q,i)=>`<button class="pill" data-a="mpsay:${i}">${esc(q)}</button>`).join('')}</div><div class="qmsg">${EMOS.map((e,i)=>`<button class="emo" data-a="mpemo:${i}">${e}</button>`).join('')}</div>`;
-  return`<p class="ph-sub">🟢 You are online! Everyone who opens Cozy Town plays in this world with you.</p>
+  return`${socTabs('mp')}<p class="ph-sub">🟢 You are online! Everyone who opens Cozy Town plays in this world with you.</p>${socAsks()}
     <p class="ph-sub" style="margin-top:10px">${list.length?'Playing now:':'No friends are playing right now. When they open Cozy Town, they will show up here! 💗'}</p>
-    ${list.map((a,i)=>`<div class="ph-row"><span>⭐ ${esc(a.nm)}${a.old?' <small>⏳ older version</small>':''}<br><small>${placeOf(a)}</small></span><span style="display:flex;gap:6px;flex:none"><button class="btn mint sm" data-a="mpgo:${i}">🚀 Go</button><button class="btn sm" data-a="mpvisit:${i}" aria-label="Visit their house">🏠</button></span></div>`).join('')}${list.length?say:''}`;}
+    ${list.map((a,i)=>`<div class="ph-row"><span class="socn">⭐ ${esc(a.nm)}${a.old?' <small>⏳ older version</small>':''}<br><small>${placeOf(a)}</small></span><span style="display:flex;gap:6px;flex:none"><button class="btn mint sm" data-a="mpgo:${i}">🚀 Go</button><button class="btn sm" data-a="mpvisit:${i}" aria-label="Visit their house">🏠</button>${socRow(a,i)}</span></div>`).join('')}${list.length?say:''}${socMine()}`;}   /* 💌 25 Nov: the two tabs, friend requests, ➕ next to a player and my friends (js/08-hud.js) */
 function openChat(){if(!MP.grp)return;openPanel(`<div class="hd"><h2>💬 Say something</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
   <div class="qmsg">${QUICK.map((q,i)=>`<button class="pill" data-a="mpsay:${i}">${esc(q)}</button>`).join('')}</div><div class="qmsg">${EMOS.map((e,i)=>`<button class="emo" data-a="mpemo:${i}">${e}</button>`).join('')}</div>`,{bottom:true});}
 
@@ -2208,7 +2208,7 @@ const AW={t:0,on:0,IDLE:180,WAIT:30},NET={on:0,lost:0,t:0,w:0,fb:null,WAIT:20};
 function awake(e){AW.t=0;const t=e&&e.target;if(AW.on&&!(t&&t.closest&&t.closest('#awayBox'))){if(e.type==='keydown')e.stopPropagation();awBack();}}   /* a key only wakes me (no bag/Escape underneath) */   /* a tap on the card itself closes it on click */
 for(const t of['pointerdown','touchstart','keydown','wheel'])addEventListener(t,awake,{capture:true,passive:true});
 function awBack(){AW.on=0;AW.t=0;awBox();}
-function awTick(dt){if(IN.joy.id!==null||CUT||zzIn())AW.t=0;AW.t+=dt;   /* holding the joystick is playing too; a scene (the Pet Show, a client's visit) is watching, not being away (night 3); in bed you are waiting for the morning (run 4) */
+function awTick(dt){if(IN.joy.id!==null||CUT||zzIn()||SOC.call)AW.t=0;AW.t+=dt;   /* holding the joystick is playing too; a scene (the Pet Show, a client's visit) is watching, not being away (night 3); in bed you are waiting for the morning (run 4) */
   if(!AW.on&&AW.t>=AW.IDLE){AW.on=1;SFX.ding();awBox();}
   if(AW.on&&AW.t>=AW.IDLE+AW.WAIT)awayExit('You took a break, so we saved your game.\u00a0💤');}
 function netTick(dt){
@@ -2227,7 +2227,7 @@ function awBox(){let el=$('awayBox');const k=NET.lost?'net':AW.on?'aw':'';toastH
 function mpLeave(){clearTimeout(MP.rt);if(MP.grp){ballOwnerGone();if(MP.unsub){try{MP.unsub();}catch(e){}MP.unsub=null;}MP.grp=null;for(const a of MP.peers.values())mpDropAv(a);MP.peers.clear();$('bChat').hidden=true;}
   if(MP.state!=='connecting')MP.state='idle';}
 function awayExit(msg){if(!PLAYING)return;saveLocal();if(CSAVE.ref){CSAVE.dirty=true;clearTimeout(CSAVE.tm);cloudFlush();}
-  if(HOST.cur)hostAnswer(false,true);mpLeave();PLAYING=false;if(TN.on)tnStop('gone');if(HELD)HELD.visible=false;AW.on=0;AW.t=0;NET.lost=0;NET.on=0;awBox();
+  if(HOST.cur)hostAnswer(false,true);if(SOC.call)socCallEnd();mpLeave();PLAYING=false;if(TN.on)tnStop('gone');if(HELD)HELD.visible=false;AW.on=0;AW.t=0;NET.lost=0;NET.on=0;awBox();
   document.body.classList.add('away');AW.hud=$('hud').hidden;$('hud').hidden=true;   /* game cards wait hidden underneath until Play (the HUD stays hidden in the clothes creator) */
   const T=$('title'),b=$('tPlay');let m=$('tMsg');if(!m){m=document.createElement('p');m.id='tMsg';m.setAttribute('role','status');T.insertBefore(m,T.querySelector('.menu'));}
   m.textContent=msg;T.hidden=false;b.disabled=false;b.textContent='Play';try{b.focus({preventScroll:true});}catch(e){}}
