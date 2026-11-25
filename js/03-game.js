@@ -1962,7 +1962,27 @@ function renderTank(){const it=TK.it,F=FURN.snaketank,off=it.c==='#5a5f72';openP
   <div class="row"><button class="btn ${off?'white':'mint'}" data-a="tank:on">💡 On</button><button class="btn ${off?'mint':'white'}" data-a="tank:off">🌙 Off</button></div>
   <div class="swrow">${F.cols.slice(0,8).map((c,i)=>`<button class="sw${it.c===c?' on':''}" style="background:${c}" data-a="tank:${i}" aria-label="${TANK_LIGHT[c][2]}"></button>`).join('')}</div>
   <div class="row"><button class="btn white" data-a="close">Bye!</button></div>`,{bottom:true,onClose:()=>{TK=null;}});}
-function setLamp(rec){rec.g.traverse(o=>{if(o.userData.shade)o.material.emissiveIntensity=rec.it.on?.6:0;});}
+function setLamp(rec){rec.g.traverse(o=>{if(o.userData.shade)o.material.emissiveIntensity=rec.it.on?.6:0;});lampPool(rec.g,!!rec.it.on);}
+/* 💡 lamps light the room (lamp update, slice 1): every switched-on lamp lays a soft pool of light in its own colour on the floor
+   (one shared picture, almost free to draw), and the 4 lamps nearest you also get a real light that lights you, pets and furniture.
+   The 4 real lights always exist indoors and are only moved and dimmed, so switching a lamp never makes the game rebuild its shaders.
+   Brighter in the evening and at night; a room that has lamps gets a little darker at night (on or off), so switching them on lights it up. Nothing is saved: on/off was saved before. */
+let LPOOL_T=null;const LITS=[],LAMPS_N=4,_lv=new THREE.Vector3();
+function lampPool(g,on){let m=g.userData.pool;
+  if(!m){if(!LPOOL_T){const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d'),gr=x.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.45,'rgba(255,255,255,.45)');gr.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gr;x.fillRect(0,0,64,64);LPOOL_T=new THREE.CanvasTexture(c);}
+    let sh=null;g.traverse(o=>{if(!sh&&o.userData.shade)sh=o;});if(!sh)return;
+    const col=new THREE.Color(sh.material.map?'#d9e0ff':sh.material.color.getHex());
+    m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({map:LPOOL_T,color:col,transparent:true,depthWrite:false,opacity:.3}));
+    m.rotation.x=-Math.PI/2;m.position.y=.025;m.scale.setScalar(3.4);m.renderOrder=2;m.raycast=()=>{};g.add(m);g.userData.pool=m;g.userData.shadeM=sh;g.userData.lcol=col;}
+  m.visible=on;g.userData.lampOn=on;}
+function lampTick(){
+  if(!LITS.length)for(let i=0;i<LAMPS_N;i++){const l=new THREE.PointLight('#ffffff',0,4.5,2);l.visible=false;scene.add(l);LITS.push(l);}
+  const inn=!!CUR&&CUR.type!=='out'&&!!CUR.items;for(const l of LITS)l.visible=inn;if(!inn)return;
+  const nf=nightF(S?S.time:clockNow().time),k=.45+.55*nf,fl=CUR.fls&&CUR.fls.length>1?flOf(CUR,P.z):0,on=[];let any=0;
+  for(const g of CUR.items.children)if(g.userData.pool&&++any&&g.userData.lampOn&&(g.userData.fl|0)===fl){g.userData.pool.material.opacity=.14+.3*nf;g.userData.shadeM.getWorldPosition(_lv);g.userData.ld=(_lv.x-P.x)**2+(_lv.z-P.z)**2;g.userData.lp=_lv.clone();on.push(g);}
+  on.sort((a,b)=>a.userData.ld-b.userData.ld);
+  for(let i=0;i<LAMPS_N;i++){const l=LITS[i],g=on[i];if(!g){l.intensity=0;continue;}l.position.copy(g.userData.lp);l.color.copy(g.userData.lcol);l.intensity=.8*k;}
+  if(any&&nf>0){hemi.intensity*=1-.3*nf;sun.intensity*=1-.35*nf;}}
 function rebuildHome(){for(const u of [...HOME_ITEMS.keys()])removeHomeItem(u);for(const it of S.home.items)addHomeItem(it);WALL_M.color.set(S.home.wall);setFloor(S.home.floor);}
 /* ---- the big house: Decorating level 10 + BIG_PRICE coins (a big dream: about a week of work) ---- */
 const BIG_PRICE=2500;

@@ -815,7 +815,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
   updTVs(dt);updFloats(dt);updBeach(dt);popFades();
   const tx=Math.round(camera.position.x),tz=Math.round(camera.position.z);sun.target.position.set(tx,0,tz);sun.position.set(tx+SUND.x*70,SUND.y*70,tz+SUND.z*70);
   skyMesh.position.copy(camera.position);stars.position.copy(camera.position);
-  updSky();if(AQ_STEPS[AQ.lv].far&&CUR&&CUR.type==='out'){const f=AQ_STEPS[AQ.lv].far;FOG.far=Math.min(FOG.far,f);FOG.near=Math.min(FOG.near,f*.45);}
+  updSky();lampTick();if(AQ_STEPS[AQ.lv].far&&CUR&&CUR.type==='out'){const f=AQ_STEPS[AQ.lv].far;FOG.far=Math.min(FOG.far,f);FOG.near=Math.min(FOG.near,f*.45);}
   aqTick();AQ.farT+=dt;if(AQ.farT>.5||AQ.farL!==(AQ_STEPS[AQ.lv].far&&CUR&&CUR.type==='out'?CUR:null)){AQ.farT=0;aqFar();}renderer.render(scene,camera);
 }
 async function boot(){
