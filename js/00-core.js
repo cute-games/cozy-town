@@ -23,11 +23,11 @@ let GRAD=null,OL=null,OLP=null,WIN,LAMP,WATER,PANE,GLOW,CLOUD,OLC,SWIN,WINM;
    The windows of one wall share one wide picture, each a little further along it, like one landscape seen through several windows. paneLook paints the pictures of the place you
    step into (flats, a friend's house and the houses you decorate are one room for many buildings, so it cannot be done once at the start): sky, clouds, mountains, hills, then
    the real roads, park, field, water, trees and buildings that stand that way (the game's own lists; the park, the yards on the lane and the Tree Park piece by piece), near ones big, far ones small, seen from higher on upper floors; soft brush
-   dabs over every shape and a glass gleam. Nothing per frame; updSky tints the material for the time of day */
+   dabs over every shape. The glass itself (sheen, the slide of the picture as you move) is PANE's shader. Nothing per frame in the game loop; updSky tints the material for the time of day */
 let PANE_LV=0;   /* the floor being built, where floors stand side by side (houses, the vet, the flats) */
 const PV={x:null,t:null};
 function paneAtlas(){const c=document.createElement('canvas');c.width=2048;c.height=1024;PV.x=c.getContext('2d');PV.x.fillStyle='#bfe3f7';PV.x.fillRect(0,0,2048,1024);PV.t=new THREE.CanvasTexture(c);PV.t.anisotropy=4;return PV.t;}
-const paneFor=(m,x,y,z,ry,w=1.4)=>{const di=(Math.round(ry/(Math.PI/2))%4+4)%4,lv=clamp(PANE_LV+Math.round((y-1)/3.2),0,3),uw=.5*w/1.4,u0=.5+clamp((x*Math.cos(ry)-z*Math.sin(ry))*.027,-.24,.24)-uw/2,u=m.geometry.attributes.uv;
+const paneFor=(m,x,y,z,ry,w=1.4)=>{const di=(Math.round(ry/(Math.PI/2))%4+4)%4,lv=clamp(PANE_LV+Math.round((y-1)/3.2),0,3),uw=.5*w/1.4,u0=.5+clamp((x*Math.cos(ry)-z*Math.sin(ry))*.027,-.24,.24)-uw/2,u=m.geometry.attributes.uv;m.geometry.setAttribute('pane',u.clone());   /* (pane: the glass's own 0..1 across and up, for the sheen and the frame's shade) */
   for(let i=0;i<u.count;i++)u.setXY(i,(di+u0+u.getX(i)*uw)/4,(3-lv+.002+u.getY(i)*.996)/4);return m;};   /* this window's part of its wall's picture */
 /* what really stands in town, on the lane and at the farm: buildings [x,z,w,d,h,wall,accent,kind: 0 block, 1 shop with an awning, 2 house with a roof, 3 block with a sign], trees, ground shapes [corners, colour, white lines, grass] */
 function paneWorld(){const B=[],T=[],G=[],M=[],Q=[],FN=[[-38,8.4,-24.2,8.4],[-19.8,8.4,-8.3,8.4],[-8.3,8.4,-8.3,19.4],[-8.3,24.6,-8.3,37.8],[-40.4,10,-40.4,38.6],[-38.6,40.6,-9.4,40.6]],C=LOC.city,
@@ -122,8 +122,7 @@ function paneView(x,ci,lv,vx,vz,ox,oz,rx,rz,W,own){const N=256,F=183,e=1.6+3.2*l
         x.fillStyle=a;x.fillRect(x0-.3*s,H(3.2),w+.6*s,.75*s);dab(mid,H(2.85),w/2,.2*s,'#ffffff',clamp(w/14|0,2,10),.3,clamp(.3*s,1.5,8));if(h>=4.2){x.fillStyle='#ffffff';x.fillRect(mid-Math.min(wm-1,7)*s/2,H(4.2),Math.min(wm-1,7)*s,.85*s);}}
       if(k===3){const sw=Math.min(wm*.5,7)*s;x.fillStyle='#ffffff';x.fillRect(mid-sw/2-1,H(h*.82)-1,sw+2,1.1*s+2);x.fillStyle=a;x.fillRect(mid-sw/2,H(h*.82),sw,1.1*s);}}]);}
   th.sort((p,q)=>q[0]-p[0]);for(const t of th)t[1]();
-  dab(256,128,256,128,'#ffffff',180,.05,10);   /* the painter's soft brush over all of it */
-  x.globalAlpha=.22;x.fillStyle='#ffffff';for(const [a,w] of[[40,26],[84,9],[296,26],[340,9]]){x.beginPath();x.moveTo(a,0);x.lineTo(a+w,0);x.lineTo(a+w-90,N);x.lineTo(a-90,N);x.fill();}x.globalAlpha=1;   /* the glass gleam */
+  dab(256,128,256,128,'#ffffff',90,.035,10);   /* the painter's soft brush over all of it (lighter since 25 Nov: it read as canvas) */
   x.restore();}
 /* paint the views of the place you are in: which real building it is (mapMe: the door you came in by), which way each of its walls faces out there */
 function paneLook(){const L=CUR,x=PV.x;if(!L||L.type!=='in'||!x)return;
@@ -154,7 +153,21 @@ function initMaterials(gl2){
   WIN=toon({color:'#9fd4f2',emissive:new THREE.Color('#ffc66b'),emissiveIntensity:0});SWIN=toon({color:'#9fd4f2',emissive:new THREE.Color('#ffc66b'),emissiveIntensity:0});WINM=WIN;   /* SWIN: shop glass, dim at night while closed */
   LAMP=toon({color:'#fff6d6',emissive:new THREE.Color('#ffd27a'),emissiveIntensity:0});
   WATER=toon({color:'#7fd8ff',emissive:new THREE.Color('#3aa6e0'),emissiveIntensity:.3,transparent:true,opacity:.9});
-  PANE=new THREE.MeshBasicMaterial({color:'#ffffff',map:paneAtlas()});PANE.userData.uv=1;   /* 🖼️ windows inside show a painted storybook view of outside (24 Nov, owner) */
+  PANE=new THREE.MeshBasicMaterial({color:'#ffffff',map:paneAtlas()});PANE.userData.uv=1;PANE.userData.n={value:0};
+  /* 🪟 glass, not a painting (25 Nov, the owner): the picture lies far behind the pane, so it slides against the frame as you move or look (worked out in the shader from where
+     the camera is, nothing per window in the game loop); on the pane itself a cool tint, two soft sheen streaks that slide a little with the view, a brighter top, the frame's
+     shade along the inner edge, paler when seen from the side, and at night a faint warm glow of the room low on the glass (paneN: how much night, set by updSky) */
+  PANE.onBeforeCompile=sh=>{sh.uniforms.paneN=PANE.userData.n;   /* (the camera's place comes from viewMatrix: three sets no cameraPosition for this kind of material) */
+    sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nattribute vec2 pane;varying vec3 vPane;').replace('#include <uv_vertex>',`#include <uv_vertex>
+      {vec3 wp=(modelMatrix*vec4(position,1.)).xyz,wn=normalize(mat3(modelMatrix)*normal),vt=viewMatrix[3].xyz,dv=wp+vec3(dot(viewMatrix[0].xyz,vt),dot(viewMatrix[1].xyz,vt),dot(viewMatrix[2].xyz,vt));
+       vec2 t=clamp(vec2(dot(dv.xz,vec2(wn.z,-wn.x)),dv.y)/max(-dot(dv,wn),.6),-1.3,1.3),c0=floor(vUv*4.)*.25;
+       vUv=clamp(vUv+t*vec2(.049,.098),c0+.003,c0+.247);vPane=vec3(pane,t.x);}`);
+    sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vPane;uniform float paneN;').replace('#include <map_fragment>',`#include <map_fragment>
+      {vec2 q=vPane.xy;float e=min(min(q.x,1.-q.x),min(q.y,1.-q.y)),d=q.x*.8+q.y*.55-vPane.z*.22,day=1.-.75*paneN;vec3 c=diffuseColor.rgb*vec3(.93,.975,1.);
+       c=mix(c,vec3(.86,.94,1.)*(1.-.8*paneN),clamp(abs(vPane.z)*.22,0.,.3));
+       c+=day*((1.-smoothstep(0.,.09,abs(d-.45)))*.14+(1.-smoothstep(0.,.035,abs(d-.64)))*.1+.05*smoothstep(.55,1.,q.y));
+       c+=vec3(1.,.74,.42)*paneN*.2*(1.-smoothstep(0.,.42,length((q-vec2(.5-vPane.z*.12,.16))*vec2(1.,1.5))));
+       diffuseColor.rgb=c*(1.-.28*(1.-smoothstep(0.,.09,e)));}`);};   /* 🖼️ windows inside show a painted storybook view of outside (24 Nov, owner) */
   GLOW=new THREE.MeshBasicMaterial({color:'#fff3c4'});
   CLOUD=new THREE.ShaderMaterial({uniforms:{top:{value:new THREE.Color('#ffffff')},bot:{value:new THREE.Color('#dde4f0')}},   /* ☁️ soft puffs (run 4, item 18): a gentle top-to-bottom shade set by updSky, no outline, no hard dark faces */
     vertexShader:'varying float vy;void main(){vy=normalize(mat3(modelMatrix)*normal).y;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
@@ -191,7 +204,7 @@ function bake(root,shadow=true,chunk=0,frame=null){const _v=new THREE.Vector3();
     const g=new THREE.BufferGeometry();
     g.setAttribute('position',src.attributes.position.clone());
     g.setAttribute('normal',src.attributes.normal.clone());
-    g.applyMatrix4(new THREE.Matrix4().multiplyMatrices(inv,o.matrixWorld));if(o.material.userData.uv)g.setAttribute('uv',src.attributes.uv.clone());   /* (the painted window views keep their picture when baked) */
+    g.applyMatrix4(new THREE.Matrix4().multiplyMatrices(inv,o.matrixWorld));if(o.material.userData.uv){g.setAttribute('uv',src.attributes.uv.clone());g.setAttribute('pane',src.attributes.pane.clone());}   /* (the painted window views keep their picture when baked) */
     const vc=!!o.material.userData.plain;
     if(vc){const n=g.attributes.position.count,C=new Float32Array(n*3),c=o.material.color;for(let i=0;i<n;i++){C[i*3]=c.r;C[i*3+1]=c.g;C[i*3+2]=c.b;}g.setAttribute('color',new THREE.BufferAttribute(C,3));}
     let k=vc?'vc':o.material.uuid;if(chunk){o.getWorldPosition(_v);k+=':'+Math.floor(_v.x/chunk)+','+Math.floor(_v.z/chunk);}
@@ -202,9 +215,9 @@ function bake(root,shadow=true,chunk=0,frame=null){const _v=new THREE.Vector3();
   const out=[];
   for(const {m,l,vc} of buckets.values()){
     let n=0;for(const g of l)n+=g.attributes.position.count;
-    const P=new Float32Array(n*3),N=new Float32Array(n*3),Cc=vc?new Float32Array(n*3):null,U=m.userData.uv?new Float32Array(n*2):null;let off=0;
-    for(const g of l){P.set(g.attributes.position.array,off*3);N.set(g.attributes.normal.array,off*3);if(Cc)Cc.set(g.attributes.color.array,off*3);if(U)U.set(g.attributes.uv.array,off*2);off+=g.attributes.position.count;g.dispose();}
-    const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(P,3));geo.setAttribute('normal',new THREE.BufferAttribute(N,3));if(Cc)geo.setAttribute('color',new THREE.BufferAttribute(Cc,3));if(U)geo.setAttribute('uv',new THREE.BufferAttribute(U,2));geo.computeBoundingSphere();
+    const P=new Float32Array(n*3),N=new Float32Array(n*3),Cc=vc?new Float32Array(n*3):null,U=m.userData.uv?new Float32Array(n*2):null,U2=U?new Float32Array(n*2):null;let off=0;
+    for(const g of l){P.set(g.attributes.position.array,off*3);N.set(g.attributes.normal.array,off*3);if(Cc)Cc.set(g.attributes.color.array,off*3);if(U){U.set(g.attributes.uv.array,off*2);U2.set(g.attributes.pane.array,off*2);}off+=g.attributes.position.count;g.dispose();}
+    const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(P,3));geo.setAttribute('normal',new THREE.BufferAttribute(N,3));if(Cc)geo.setAttribute('color',new THREE.BufferAttribute(Cc,3));if(U){geo.setAttribute('uv',new THREE.BufferAttribute(U,2));geo.setAttribute('pane',new THREE.BufferAttribute(U2,2));}geo.computeBoundingSphere();
     const mesh=new THREE.Mesh(geo,m);const isOL=m.side===THREE.BackSide;if(rel)rel.decompose(mesh.position,mesh.quaternion,mesh.scale);
     mesh.castShadow=shadow&&!isOL&&!m.transparent;mesh.receiveShadow=!isOL;root.add(mesh);out.push(mesh);
   }
