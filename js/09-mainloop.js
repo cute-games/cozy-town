@@ -262,7 +262,7 @@ function buildTreePark(){
       if(prev&&ok&&prev[2]&&clear((x+prev[0])/2,(z+prev[1])/2,.7)){const mx=(x+prev[0])/2,mz=(z+prev[1])/2,l=Math.hypot(x-prev[0],z-prev[1]),ry=Math.atan2(z-prev[1],x-prev[0]);for(const y of[.5,.85])box(st,l,.07,.07,'#b98a5e',mx,y,mz,{ry:-ry,ol:false});}
       prev=[x,z,ok];}}
   /* the Hard path's tree tower: one big tree, its decks on beams round the trunk */
-  {const [tx,tz]=TP_TOWER;tpTallTree(st,tx,tz,8.2,TC(),1.35);colC(L,tx,tz,.72);}
+  {const [tx,tz]=TP_TOWER;tpTallTree(st,tx,tz,10,TC(),1.35);colC(L,tx,tz,.72);}
   const keys=['easy','medium','hard'],all=[];for(const k of keys)TP_COURSE[k].forEach((q,i)=>all.push([k,i,...q]));
   const near=(x,z,me)=>Math.min(...all.filter(a=>!(a[0]===me[0]&&a[1]===me[1])).map(a=>{const dx=Math.max(0,Math.abs(x-a[3])-a[5]/2),dz=Math.max(0,Math.abs(z-a[4])-a[6]/2);return Math.hypot(dx,dz);}));
   for(const k of keys){const PA=TP_PATHS[k],C=TP_COURSE[k];C.forEach((q,i)=>{const [t,x,z,w,d,h,f='',mv]=q,p={k,i,t,x,z,w,d,h,r:t==='s'||t==='p'?w/2:0,cp:f.includes('c'),fin:f.includes('f'),tw:f.includes('t'),dx:0,dz:0,th:.3,posts:[]};TP.pl.push(p);
@@ -278,7 +278,7 @@ function buildTreePark(){
       for(const s of[-1,1]){const px=ax?x+s*(len/2-.35):x,pz=ax?z:z+s*(len/2-.35);cyl(st,.1,.12,h-2*rr+.06,'#8f6244',px,0,pz,{seg:6,ol:false});p.posts.push([px,pz,.12]);}p.th=2*rr;}
     else if(t==='d'||t==='m'){const g=t==='m'?new THREE.Group():st,ox=t==='m'?0:x,oz=t==='m'?0:z;
       box(g,w,.16,d,'#c99a66',ox,h-.16,oz,{ol:.02});for(let n=1;n<5;n++)box(g,w-.1,.016,.06,'#a06e45',ox,h,oz-d/2+n*d/5,{ol:false});box(g,w+.05,.07,d+.05,pc,ox,h-.23,oz,{ol:false});
-      if(t==='m'){g.position.set(x,0,z);g.userData.keep=1;L.g.add(g);p.mv={ax:mv[0],amp:mv[1],per:mv[2],x0:x,z0:z,g};TP.mv.push(p);p.th=.25;
+      if(t==='m'){bake(g,true);g.position.set(x,0,z);g.userData.keep=1;L.g.add(g);p.mv={ax:mv[0],amp:mv[1],per:mv[2],x0:x,z0:z,g};TP.mv.push(p);p.th=.25;
         const a=mv[0]==='x',e=mv[1]+(a?w:d)/2+.15;box(st,a?2*e:.08,.08,a?.08:2*e,'#8f6244',x,h-.55,z,{ol:false});for(const s of[-1,1])cyl(st,.08,.1,h-.5,'#8f6244',a?x+s*e:x,0,a?z:z+s*e,{seg:6,ol:false});}   /* (its track: a beam with a post at each end) */
       else if(!p.tw){/* a tall tree beside it, on the side farthest from every other platform (never in a jump), else four posts */
         const off=Math.max(w,d)/2+.85,cs=[[off,0],[-off,0],[0,off],[0,-off]].map(([a,b])=>[a,b,near(x+a,z+b,[k,i])]).sort((u,v)=>v[2]-u[2]),[a,b,dd]=cs[0];
@@ -286,7 +286,7 @@ function buildTreePark(){
         else for(const [sx,sz] of[[-1,-1],[1,-1],[-1,1],[1,1]]){const px=x+sx*(w/2-.15),pz=z+sz*(d/2-.15);cyl(st,.08,.1,h-.16,'#8f6244',px,0,pz,{seg:6,ol:false});p.posts.push([px,pz,.1]);}}}
     if(p.cp){/* 🚩 the checkpoint flag: grey until you land here, then your path's colour */
       const fx=x-w/2+.16,fz=z+d/2-.16;cyl(st,.035,.04,1.75,'#8f6244',fx,h,fz,{seg:6,ol:false});sph(st,.06,'#ffd45c',fx,h+1.78,fz,{ws:6,hs:5,ol:false});
-      const fg=new THREE.Group();fg.userData.keep=1;L.g.add(fg);const m=cone(fg,.27,.72,null,fx+.37,h+1.42,fz,{rz:-Math.PI/2,center:true,seg:3,ol:.012,s:[1,1,.14],mat:mat('#dcd6cc')});TP.flags.push({p,m,on:mat(pc),off:m.material});p.flag=TP.flags[TP.flags.length-1];}
+      const fg=new THREE.Group();fg.userData.keep=1;L.g.add(fg);const m=cone(fg,.27,.72,null,fx+.37,h+1.42,fz,{rz:-Math.PI/2,center:true,seg:3,ol:false,s:[1,1,.14],mat:mat('#dcd6cc')});TP.flags.push({p,m,on:mat(pc),off:m.material});p.flag=TP.flags[TP.flags.length-1];}
     if(p.fin){/* 🔔 the finish: a golden bell under a little red roof, the 🏁 banner behind it, and the zip line down to the meadow */
       const bx=x-.25,bz=z+d/2-.35;cyl(st,.06,.07,1.95,'#8f6244',bx,h,bz,{seg:6,ol:false});cone(st,.42,.3,'#d3262f',bx,h+2.05,bz,{seg:6,ol:.012});sph(st,.17,'#ffd45c',bx,h+1.8,bz,{s:[1,.8,1],ws:12,hs:8,ol:.015});cyl(st,.16,.33,.5,'#ffd45c',bx,h+1.3,bz,{seg:16,ol:.02});cyl(st,.37,.37,.07,'#e0a800',bx,h+1.25,bz,{seg:16,ol:.012});
       const fs=signPlane('🏁 Finish',1.4,.46,pc,'#3d2c5e');fs.position.set(x-w/2+.12,h+2.62,z);fs.rotation.y=-Math.PI/2;L.g.add(fs);TP.signs.push(fs);for(const s of[-.65,.65])cyl(st,.05,.05,2.62,'#8f6244',x-w/2+.1,h,z+s,{seg:5,ol:false});
@@ -294,7 +294,7 @@ function buildTreePark(){
     if(p.cp)inter(L,{x,z,r:Math.max(w,d)/2+.4,icon:'🪜',label:'Climb down (stop the run)',when:()=>TP.on===p&&!P.ride,act:()=>tpDown(p)});});}
   bake(st,true);
   /* the zip-line handle you hang from (shows during a ride), and the turning star over your next platform */
-  const hd=new THREE.Group();box(hd,.6,.05,.05,'#5a5f8c',0,0,0,{ol:false});for(const s of[-.22,.22])box(hd,.04,.5,.04,'#e8d7b0',s,-.5,0,{ol:false});box(hd,.5,.04,.04,'#8f6244',0,-.5,0,{ol:false});hd.visible=false;hd.userData.keep=1;L.g.add(hd);TP.hand=hd;
+  const hd=new THREE.Group();box(hd,.6,.05,.05,'#5a5f8c',0,0,0,{ol:false});for(const s of[-.22,.22])box(hd,.04,.5,.04,'#e8d7b0',s,-.5,0,{ol:false});box(hd,.5,.04,.04,'#8f6244',0,-.5,0,{ol:false});bake(hd,false);hd.visible=false;hd.userData.keep=1;L.g.add(hd);TP.hand=hd;
   const mk=new THREE.Group();{const m=new THREE.Mesh(starGeo(.42,0,.12),STARM);mk.add(m);hull(mk,starGeo(.42,.042,.12),m,{});}mk.visible=false;mk.userData.keep=1;L.g.add(mk);TP.mark=mk;
   return LOC.treepark;}
 /* 🐾 the new Pet Shop's floors (stage 4b; js/02-world.js PSH): you walk up and down the stairs, the floor under you is your height (P.cy); a stair's side,
