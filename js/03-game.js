@@ -1189,7 +1189,7 @@ function updateCars(dt){const inCity=CUR.id==='city',peds=[],h=S?S.time:12;if(in
       const ok=()=>!carSeen(c)&&!(inCity&&Math.hypot(P.x-c.x,P.z-c.z)<10)&&!CARS.some(o=>o!==c&&!o.away&&Math.hypot(o.x-c.x,o.z-c.z)<9),d0=c.d;let k=0;
       for(;k<6;k++){if(k){c.d=d0+c.total*k/6;carPlace(c);}if(ok())break;}if(k>=6){c.d=d0;carPlace(c);continue;}if(k)c.yaw=c.ty;}
     c.away=off;c.v=0;c.g.visible=false;for(const X of XS){const i=X.occ.indexOf(c);if(i>=0)X.occ.splice(i,1);}}
-  for(const w of WALKERS)if(w.state!=='home')peds.push([w.x,w.z,1.4,0]);for(const q of GRAN.g)if(q.on&&!q.sitting)peds.push([q.x,q.z,1.4,0]);for(const f of FRIEND_ACTORS)if(f.loc==='city'&&f.mode!=='away')peds.push([f.x,f.z,1.4,0]);for(const p of PET_ACTORS)if(p.loc==='city')peds.push([p.x,p.z,1.1,0]);for(const a of MP.peers.values())if(a.loc==='city')peds.push([a.x,a.z,1.4,0]);
+  for(const w of WALKERS)if(w.state!=='home')peds.push([w.x,w.z,1.4,0]);for(const q of GRAN.g)if(q.on&&!q.sitting)peds.push([q.x,q.z,1.4,0]);for(const f of FRIEND_ACTORS)if(f.loc==='city'&&f.mode!=='away')peds.push([f.x,f.z,1.4,0]);for(const p of PET_ACTORS)if(p.loc==='city')peds.push([p.x,p.z,1.1,0]);for(const a of MP.peers.values())if(a.loc==='city')peds.push([a.x,a.z,1.4,0]);for(const q of FARM.hs)if(q.hw)peds.push([q.x,q.z,1.7,0]);   /* 🐴 cars wait for a horse walking home */
   for(const c of CARS){if(c.away)continue;const fx=Math.sin(c.yaw),fz=Math.cos(c.yaw);let block=null;
     for(const [px,pz,w,me] of peds){const dx=px-c.x,dz=pz-c.z,f=dx*fx+dz*fz,l=Math.abs(dx*fz-dz*fx);if(f>0&&f<6.5&&l<w){block=me?'player':'ped';break;}}
     if(!block)for(const o of CARS){if(o===c||o.away)continue;const dx=o.x-c.x,dz=o.z-c.z,f=dx*fx+dz*fz,l=Math.abs(dx*fz-dz*fx);if(f>0&&f<7.5&&l<2.2){block='car';break;}}
@@ -2570,7 +2570,7 @@ $('bar').addEventListener('click',e=>{const b=e.target.closest('[data-d]');if(!b
    day (S.farm), sold at the Market for 10 each. Feeding (the free bucket) and petting any time.
    Speed (run doc guard 3): nothing here runs while you are far from the farm; near it, animals further than 70 m are hidden and those past 22 m move every 3rd frame */
 const FARM={L:null,on:false,st:null,inst:[],ground:[],stables:[],troughs:[],jumps:{},flags:{},trails:[],eggs:null,milk:null,bucket:null,an:[],hs:[],ppl:[],riders:[],dyn:null,
-  fr:0,feed:null,lesson:null,said:{},ln:{},townT:0,tick:0,ms:0,deln:0,mvn:0};
+  fr:0,feed:null,lesson:null,said:{},ln:{},townT:0,tick:0,ms:0,deln:0,mvn:0,hh:[],hp:[],hk:''};
 const FARM_GA={walk:.3,trot:.42,gallop:.55},FARM_OPEN=[7,21],FARM_SPD={w:3,t:6.5,g:13},FARM_LESSON=100,FARM_PAY=10,FARM_SEAT=1.63;
 const farmOpen=()=>S&&S.time>=FARM_OPEN[0]&&S.time<FARM_OPEN[1];
 const farmHash=(s)=>{let h=2166136261;s=String(s);for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0)/4294967296;};
@@ -2606,7 +2606,7 @@ function farmRiderAt(h,ms){const [v,g,off]=FR_RIDE[h.rider.who],T=FARM.trailD,le
 /* animal wander: a new spot near home every 9-14 s from the clock (friends see the same); grazing/idle moves while standing */
 function farmWanderSpot(a,ms){const k=Math.floor(ms/11000+farmHash(a.id||a.key)*7),r=a.type==='chicken'?3:a.type==='horse'?2.2:a.baby?2.5:4,u=farmHash(a.id+':'+k),v=farmHash(a.id+';'+k);return [a.hx+Math.cos(u*TAU)*r*v,a.hz+Math.sin(u*TAU)*r*v];}
 const FA_IDLE={cow:['cow.graze','cow.stand'],sheep:['sheep.graze','sheep.look'],pig:['pig.root','pig.root'],chicken:['chicken.peck','chicken.peck'],horse:['horse.idle','horse.idle']};
-function farmTick(dt){if(!FARM.L)return;const inCity=CUR&&CUR.id==='city',near=inCity&&(farmNear(P.x,P.z,40)||!!P.horse);if(FARM.q&&inCity&&farmNear(P.x,P.z,70))FARM.q();
+function farmTick(dt){if(!FARM.L)return;const inCity=CUR&&CUR.id==='city',hl=inCity?farmHomeList():[];if(hl.length)farmLiveAll();const hw=(hl.length||FARM.hp.length)&&FARM.hs.length?farmHomePlan(hl,dt):false,near=inCity&&(farmNear(P.x,P.z,40)||!!P.horse||hw);if(FARM.q&&inCity&&farmNear(P.x,P.z,70))FARM.q();   /* (25 Nov: the farm's living things also run while a horse walks home through town) */
   if(near!==FARM.on){FARM.on=near;FARM.dyn.visible=near;if(near)FARM.L.g.add(FARM.dyn);else FARM.L.g.remove(FARM.dyn);if(!near&&P.horse)farmOff(true);}   /* (far away the living things leave the scene: no matrix work for them each frame) */
   if(!near){if(LGD.el)LGD.el.hidden=true;if(LGD.g)LGD.g.visible=false;return;}FARM.tick++;const ms=gameMs(),now=ms/1000,cx=camera.position.x,cz=camera.position.z;
   if(P.horse)farmRide(dt);else if(!P.sit&&!P.ride)for(const q of farmSolids([])){const p=pushOut(P.x,P.z,.3,q);if(p){P.x=p[0];P.z=p[1];}}farmLessonTick(dt);farmGuide(dt);
@@ -2621,6 +2621,7 @@ function farmTick(dt){if(!FARM.L)return;const inCity=CUR&&CUR.id==='city',near=i
   for(const p of FARM.ppl){const d=Math.hypot(p.x-cx,p.z-cz);p.m.root.visible=d<80;if(d>45&&FARM.tick%3)continue;farmPerson(p,now);}}
 function farmAnimal(a,dt,ms,now){const R=a.m.root,MV=a.lo?{play:()=>null}:COZY_MOVES;let mv=a.mv,t=now-a.mv0;
   if(a.type==='lab'){MV.play(a.m,'farmdog.sleep',now,{fast:true});return;}
+  if(a.hw){R.position.set(a.x,0,a.z);R.rotation.y=a.ry;MV.play(a.m,a.hw.mv?(a.hw.mv>1?'horse.trot':'horse.walk'):'horse.idle',now,{dist:a.hw.d,fast:true});return;}   /* 🐴 on its way home (farmHomePlan) */
   if(a.st==='back'){const dx=a.hx-a.x,dz=a.hz-a.z,dd=Math.hypot(dx,dz);if(dd<.2){a.st='home';a.ry=a.hry0??a.ry;}else{const s=Math.min(dd,1.5*dt);a.x+=dx/dd*s;a.z+=dz/dd*s;a.ry=angLerp(a.ry,Math.atan2(dx,dz),Math.min(1,dt*4));a.dist=(a.dist||0)+s;
       R.position.set(a.x,0,a.z);R.rotation.y=a.ry;MV.play(a.m,'horse.walk',now,{dist:a.dist,fast:true});return;}}
   if(a.act&&now<a.act.t1){R.position.set(a.x,0,a.z);R.rotation.y=a.ry=angLerp(a.ry,a.act.f??a.ry,.2);MV.play(a.m,a.act.mv,now-a.act.t0,Object.assign({kind:a.type,fast:true},a.act.o||{}));return;}
@@ -2650,25 +2651,23 @@ function farmHorseFree(h){return h&&h.st==='home'&&!farmPeerOn(h.i);}
 function farmPeerOn(i){for(const a of MP.peers.values())if(a.rd&&a.rd[0]===i)return a;return null;}
 function farmMount(h,lesson){if(P.horse||!h)return;if(!lesson){if(!S.ride.lesson){SFX.no();toast('🐴 Ask the instructor for a lesson first! Stan is at the jump field.',3.5);return;}
     if(!farmOpen()){SFX.no();toast('🐴 The stable is open 7:00 – 21:00.',3);return;}if(!farmHorseFree(h)){toast('🐴 Someone is riding that horse.',2.5);return;}}
-  SFX.neigh();h.st='me';h.act=null;P.horse={h,sp:0,g:'idle',j:-9,said:false,ry:h.ry,dist:0,lesson:!!lesson};P.x=h.x;P.z=h.z;P.yaw=h.ry+Math.PI;P.pitch=-.12;P.cy=FARM_SEAT-.62;
+  SFX.neigh();h.st='me';h.act=null;h.hw=null;FARM.hh=FARM.hh.filter(e=>e[0]!==h.i);P.horse={h,sp:0,g:'idle',j:-9,ry:h.ry,dist:0,lesson:!!lesson};P.x=h.x;P.z=h.z;P.yaw=h.ry+Math.PI;P.pitch=-.12;P.cy=FARM_SEAT-.62;
   /* your pets wait at the stable (moves-farm-wait-stable) */
   const S0=FARM.stables[0];let n=0;for(const e of PET_ACTORS){if(e.d.stay||e.loc!=='city'||e.gp)continue;const a=Math.PI*(.3+n*.22);e.fw={f:S0.ry,t0:gameMs()/1000};[e.x,e.z]=collideXZ(S0.x-3+Math.cos(a)*(2+n*.4),S0.z+4+Math.sin(a)*1.2,.4,LOC.city);e.tx=e.x;e.tz=e.z;n++;}
 }   /* (picture pass 4: Ieva says it when you talk to her with pets, never over your ride) */
-function farmOff(quiet,why){const r=P.horse;if(!r)return;const h=r.h;P.horse=null;P.cy=0;const a=h.ry+Math.PI/2;[P.x,P.z]=collideXZ(h.x+Math.sin(a)*1.3,h.z+Math.cos(a)*1.3,.3,LOC.city);
-  h.st=r.lesson?'home':'back';if(r.lesson){h.x=h.hx;h.z=h.hz;h.ry=h.hry0??h.ry;h.m.root.position.set(h.x,0,h.z);}
+function farmOff(quiet,why){const r=P.horse;if(!r)return;const h=r.h;P.horse=null;P.cy=0;const a=h.ry+Math.PI/2;if(CUR&&CUR.id==='city')[P.x,P.z]=collideXZ(h.x+Math.sin(a)*1.3,h.z+Math.cos(a)*1.3,.3,LOC.city);
+  h.st='home';if(r.lesson){h.x=h.hx;h.z=h.hz;h.ry=h.hry0??h.ry;h.m.root.position.set(h.x,0,h.z);}else FARM.hh=[...FARM.hh.slice(-5),[h.i,Math.round(h.x*100)/100,Math.round(h.z*100)/100,Math.round(gameMs()/100)]];   /* 🐴 it walks home from here: [horse, x, z, when] goes online (farmHomePlan) */
   for(const e of PET_ACTORS)if(e.fw){e.fw=null;e.sm='pet.greet';e.sm0=gameMs()/1000;}
-  if(why)toast(why,3.5);else if(!quiet&&r.lesson){FARM.lesson=null;toast('🤠 Stan: “Lesson stopped. Talk to me to start again!”',3.5);}else if(!quiet)if(farmAtStable())farmSay('Ieva','Thank you! She had fun.');else toast('🐴 Your horse trots back to the stable.',3);}
+  if(why)toast(why,3.5);else if(!quiet&&r.lesson){FARM.lesson=null;toast('🤠 Stan: “Lesson stopped. Talk to me to start again!”',3.5);}else if(!quiet)if(farmAtStable())farmSay('Ieva','Thank you! She had fun.');else toast('🐴 Your horse walks home to the stable.',3);}
 function farmAtStable(){return FARM.stables.some(s=>Math.hypot(P.x-s.x,P.z-s.z)<9)||FARM.ppl.some(p=>p.who==='ieva'&&Math.hypot(P.x-p.x,P.z-p.z)<6);}
 function farmRide(dt){const r=P.horse,h=r.h,now=gameMs()/1000;
-  if(!farmZone(P.x,P.z)){farmOff(true);return;}
   if(!r.lesson&&!farmOpen()){farmOff(false,'🕘 The stable is closing. Time to get off: your horse walks back.');return;}
   let f=0,s=0;if(!UI.open&&!CUT){if(IN.joy.id!==null){f=-IN.joy.y;s=IN.joy.x;}const K=IN.keys;f+=(K.KeyW||K.ArrowUp?1:0)-(K.KeyS||K.ArrowDown?1:0);s+=(K.KeyD?1:0)-(K.KeyA?1:0);const turn=(K.ArrowRight?1:0)-(K.ArrowLeft?1:0);if(turn)P.yaw-=turn*1.8*dt;}
   let m=Math.hypot(f,s);if(m>1){f/=m;s/=m;m=1;}const run=!!(IN.keys.ShiftLeft||IN.keys.ShiftRight||IN.run),joy=IN.joy.id!==null;
   const g=m<.06?'idle':run||(joy&&m>.92)?'gallop':(joy&&m<.55)||f<0?'walk':'trot',want=g==='idle'?0:FARM_SPD[g[0]]*(f<0&&!joy?.5:1);
   const jumping=now-r.j<1.6;r.sp=jumping?Math.max(r.sp,3.5):lerp(r.sp,want,Math.min(1,dt*2.5));
   if(r.sp>.05&&m>.06){const sy=Math.sin(P.yaw),cy=Math.cos(P.yaw),dx=(-sy*f+cy*s),dz=(-cy*f-sy*s),dl=Math.hypot(dx,dz)||1,nx=P.x+dx/dl*r.sp*dt,nz=P.z+dz/dl*r.sp*dt;
-    if(!farmZone(nx,nz)){r.sp=0;if(!r.ref||now-r.ref>2.2){r.ref=now;SFX.snort();if(!r.said){r.said=true;toast("🐴 Your horse won't go into town.",3);}}}
-    else{const o=[P.x,P.z];[P.x,P.z]=collideXZ(nx,nz,.7,CUR,solids());r.dist+=Math.hypot(P.x-o[0],P.z-o[1]);r.ry=angLerp(r.ry,Math.atan2(dx,dz),Math.min(1,dt*3.5));}}
+    const o=[P.x,P.z];[P.x,P.z]=collideXZ(nx,nz,.7,CUR,solids());r.dist+=Math.hypot(P.x-o[0],P.z-o[1]);r.ry=angLerp(r.ry,Math.atan2(dx,dz),Math.min(1,dt*3.5));}   /* (25 Nov, owner: horses ride anywhere in town, not only on the farm's land) */
   else if(r.sp<.3)r.sp=0;
   {const pg=r.g==='jump'||r.g==='idle'?'walk':r.g,up=pg==='walk'?[4,99]:pg==='trot'?[9.5,3.5]:[99,8.5];   /* (24 Nov: horse speeds w 2.4 t 4.8 g 7.6 -> 3 / 6.5 / 13: the gallop was slower than running on foot; riding fix: gaits change with a gap, so the horse doesn't flick between walk and trot at one speed) */
     r.g=jumping?'jump':r.sp<.05?'idle':pg==='walk'?(r.sp>up[0]?'trot':'walk'):pg==='trot'?(r.sp>up[0]?'gallop':r.sp<up[1]?'walk':'trot'):(r.sp<up[1]?'trot':'gallop');}P.moving=r.sp>.05;
@@ -2676,9 +2675,54 @@ function farmRide(dt){const r=P.horse,h=r.h,now=gameMs()/1000;
   const pl=r.g==='jump'?COZY_MOVES.play(h.m,'horse.jump',now-r.j,{}):r.ref&&now-r.ref<2?COZY_MOVES.play(h.m,'horse.refuse',now-r.ref,{}):r.g==='idle'?COZY_MOVES.play(h.m,'horse.idle',now,{}):COZY_MOVES.play(h.m,'horse.'+r.g,now,{dist:r.dist,calm:1});if(r.g!=='jump'&&r.g!=='idle'&&h.m.__mv&&h.m.__mv.gph!=null)r.ph=h.m.__mv.gph;   /* (24 Nov, horse joints: the legs follow the real distance ridden, so the hooves stay planted; the horse picks a real horse's stride and rhythm for its speed (walk ~1.7, trot ~2.3, gallop ~2.7 strides a second at full speed) and blends the gaits by itself; your view rocks with its strides) */
   {const lf=Math.max(0,(pl&&pl.lift)||0);r.cy=lerp(r.cy||0,r.g==='jump'?lf:0,Math.min(1,dt*(r.g==='jump'?12:5)));const ga={walk:.006,trot:.013,gallop:.033}[r.g]||0;   /* (24 Nov, horse joints: the strides are quicker now (the real rhythm for this speed), so the rocking is a little smaller: the view moves no faster than before) */r.ba=lerp(r.ba||0,ga,Math.min(1,dt*3));P.jy=r.cy+r.ba*(1+Math.sin(TAU*(r.ph||0)))*.5;P.hr=r.g==='gallop'?r.ba*.5*Math.sin(TAU*(r.ph||0)+.8):0;}   /* (24 Nov: a smooth rocking with each stride, like sitting on a real horse: soft at the walk, a big rocking-chair swing at the gallop) */   /* (riding fix 24 Nov: your eyes follow the saddle softly, not every hoof beat) */h.m.b.updateWorldMatrix(true,false);const e=h.m.b.matrixWorld.elements,fl=Math.hypot(e[8],e[9],e[10])||1;r.hp=lerp(r.hp||0,r.g==='jump'?1.6*Math.asin(Math.max(0,Math.min(1,e[9]/fl))):0,Math.min(1,dt*5));P.hp=r.hp;   /* (riding fix: the view tips up and back down gently, never snaps) */   /* (picture pass 3: as the horse takes off your view tips up with it (a bit more than its body: the neck rises too), so its neck stays at the bottom instead of filling the screen (picture pass 4: 1.7 -> 2.3, the neck still filled the lower half); landing nose down, the neck drops out of view by itself) */
   if(r.g!=='idle'&&r.g!=='jump'){r.clop=(r.clop||0)+r.sp*dt;if(r.clop>3.2){r.clop=0;SFX.clop();}}}
+/* 🐴 horses walk home by themselves (25 Nov, owner: get off anywhere in town and the horse walks home at walking speed on the pavements and zebra crossings; horses on their way home
+   join up). Where a horse is, is worked out from what went online alone (hh: [horse, x, z, when] of every "got off") and the one clock: every player sees the same, nothing is
+   random and nothing is moved step by step. The way: straight to a path node it can reach without a road or a wall, the walkers' paths (WP: they cross at the zebra crossings)
+   to the north-west corner, the pavement of the x -50 road north to the gap in the town's edge (that gap is on the road's dead end: 8 m along its edge), the farm road, its own spot. Joining up: a horse that would pass the farm gate within FARM_HJOIN s
+   of another one stands and waits (off the road) until they pass it together, one behind the other. A horse on its way can be ridden again. */
+const FARM_HW=2.4,FARM_HJOIN=40,FARM_HGATE=[-55.5,-75];
+const farmZebra=(x,z)=>[-50,0,50].some(c=>{const a=Math.abs(x-c),b=Math.abs(z-c);return a>=4&&a<=7||b>=4&&b<=7;});   /* on a road: where a pavement goes on across it (the white stripes) */
+const farmHomeCols=()=>{const L=LOC.city;return {cols:L.cols,dcols:[],fgrid:L.fgrid,bounds:L.bounds};};   /* the town's standing things (the same for every player) */
+function farmHomeClear(x,z,B){const C=farmHomeCols(),d=Math.hypot(B[0]-x,B[1]-z),n=Math.ceil(d/.25);let off=false;
+  for(let k=1;k<n;k++){const px=x+(B[0]-x)*k/n,pz=z+(B[1]-z)*k/n;if(!onRoad(px,pz))off=true;else if(!farmZebra(px,pz)&&(off||k*d/n>6))return false;   /* (a horse left on the road walks off it first) */
+    const q=collideXZ(px,pz,.35,C);if(Math.hypot(q[0]-px,q[1]-pz)>.02)return false;}return true;}
+/* from every path node the next one on the shortest way to the north-west corner (node O1), never along a path that crosses a road away from a zebra crossing */
+function farmHomeNext(){if(FARM.hn)return FARM.hn;const n=WP.length,d=new Array(n).fill(1e9),nx=FARM.hn=new Array(n).fill(-1),dn=[];d[WPN.O1]=0;
+  for(;;){let u=-1;for(let i=0;i<n;i++)if(!dn[i]&&d[i]<1e9&&(u<0||d[i]<d[u]))u=i;if(u<0)break;dn[u]=1;
+    for(const v of NEIGH[u]){const mx=(WP[u][0]+WP[v][0])/2,mz=(WP[u][1]+WP[v][1])/2,w=d[u]+Math.hypot(WP[u][0]-WP[v][0],WP[u][1]-WP[v][1]);if(w<d[v]&&!(onRoad(mx,mz)&&!farmZebra(mx,mz))){d[v]=w;nx[v]=u;}}}
+  return nx;}
+function farmHomeWay(x,z,h){const R=MAP_FROAD,nr=(px,pz)=>{let b=0,bd=1e9;R.forEach((p,i)=>{const d=Math.hypot(p[0]-px,p[1]-pz);if(d<bd){bd=d;b=i;}});return b;},j=Math.max(2,nr(h.hx,h.hz)),pts=[[x,z]];let g=null;
+  if(farmZone(x,z)){if(Math.hypot(h.hx-x,h.hz-z)>25)for(let k=nr(x,z);;k+=j>k?1:-1){pts.push(R[k]);if(k===j)break;}}   /* on the farm's land: along the farm road */
+  else{let a;if(onRoad(x,z)&&!farmZebra(x,z)){const c=v=>Math.round(clamp(v,-50,50)/50)*50,cx=c(x),cz=c(z);if(Math.abs(x-cx)<Math.abs(z-cz))x=cx+(x<cx?-5.5:5.5);else z=cz+(z<cz?-5.5:5.5);pts.push([x,z]);}   /* left on a road: first straight off it, onto the pavement */
+    if(x<-84){const s=z<0?-1:1;pts.push([x,s*5.6]);a=WPN[s<0?'E8':'E7'];}   /* Friends Lane: its pavement, then into town */
+    else{const o=WP.map((p,i)=>[Math.hypot(p[0]-x,p[1]-z),i]).sort((p,q)=>p[0]-q[0]);a=(o.slice(0,12).find(q=>farmHomeClear(x,z,WP[q[1]]))||o[0])[1];}
+    for(let n=a;n>=0;n=farmHomeNext()[n])pts.push(WP[n]);
+    g=pts.length;pts.push(FARM_HGATE,[-52.4,-79.5],[-52.4,-82.5]);for(let k=2;k<=j;k++)pts.push(R[k]);}
+  pts.push([h.hx,h.hz]);return {pts,g};}
+/* every horse on its way home now: mine and my friends', the newest "got off" of each horse, none that is ridden */
+function farmHomeList(){const now=gameMs()/100,by=new Map(),add=e=>{const q=by.get(e[0]);if(!q||e[3]>q[3])by.set(e[0],e);};
+  for(const a of MP.peers.values())if(a.hh)for(const e of a.hh)add(e);
+  if(FARM.hh.length)FARM.hh=FARM.hh.filter(e=>{const q=by.get(e[0]);return !(q&&q[3]>e[3])&&!farmPeerOn(e[0])&&now-e[3]<6000;});   /* (mine go when a friend rode that horse after me, and after 10 minutes) */
+  for(const e of FARM.hh)add(e);
+  return [...by.values()].filter(e=>!(P.horse&&P.horse.h.i===e[0])&&!farmPeerOn(e[0])&&now-e[3]<6000).sort((p,q)=>p[3]-q[3]||p[0]-q[0]);}
+const farmHomeD=(p,t)=>{let w=t-p.t0;for(const [s,d] of p.w)w-=clamp(t-s,0,d);return clamp(w*FARM_HW,0,p.L);};   /* how far along its way at clock time t (s), the waiting taken off */
+function farmHomeXZ(p,D){let n=1;while(n<p.cum.length-1&&p.cum[n]<D)n++;const A=p.pts[n-1],B=p.pts[n],l=p.cum[n]-p.cum[n-1]||1,u=clamp((D-p.cum[n-1])/l,0,1);return [A[0]+(B[0]-A[0])*u,A[1]+(B[1]-A[1])*u,Math.atan2(B[0]-A[0],B[1]-A[1])];}
+/* the plan for that list (made again only when the list changes), then every horse to its place for this moment. true = a horse is still on its way */
+function farmHomePlan(list,dt){const key=JSON.stringify(list),now=gameMs()/1000,gt=p=>p.t0+p.Lg/FARM_HW+p.w.reduce((s,q)=>s+q[1],0);   /* gt: when it passes the farm gate */
+  if(key!==FARM.hk){FARM.hk=key;const old=FARM.hp,N=FARM.hp=list.filter(e=>FARM.hs[e[0]]&&FARM.hs[e[0]].kind!=='lesson').map(e=>{const k=e.join(),o=old.find(p=>p.k===k),h=FARM.hs[e[0]],W=o?o.W:farmHomeWay(e[1],e[2],h),cum=[0];
+      for(let n=1;n<W.pts.length;n++)cum.push(cum[n-1]+Math.hypot(W.pts[n][0]-W.pts[n-1][0],W.pts[n][1]-W.pts[n-1][1]));return {k,h,t0:e[3]/10,W,pts:W.pts,cum,L:cum[cum.length-1],Lg:W.g==null?null:cum[W.g],w:[],rk:0};});
+    N.forEach((p,n)=>{if(p.Lg==null)return;const c=N.slice(0,n).filter(q=>q.Lg!=null&&gt(q)>p.t0&&Math.abs(gt(q)-gt(p))<=FARM_HJOIN);if(!c.length)return;c.push(p);const G=Math.max(...c.map(gt));
+      for(const q of c){const d=G-gt(q);if(d<.01)continue;const l=q.w[q.w.length-1];let s=Math.max(p.t0,l?l[0]+l[1]:0);for(let k=0;k<20&&onRoad(...farmHomeXZ(q,farmHomeD(q,s)));k++)s+=.5;q.w.push([s,d]);}});
+    N.forEach((p,n)=>{p.rk=p.Lg==null?0:N.slice(0,n).filter(q=>q.Lg!=null&&Math.abs(gt(q)-gt(p))<.01).length;});}   /* rk: its place in the row */
+  let any=false;for(const h of FARM.hs){const p=FARM.hp.find(q=>q.h===h),D=p?farmHomeD(p,now-p.rk*.85):0;
+    if(!p||D>=p.L){if(h.hw){h.hw=null;if(h.st==='home'){h.x=h.hx;h.z=h.hz;h.ry=h.hry0??h.ry;}}continue;}
+    any=true;if(h.st==='back')h.st='home';let o=h.hw;if(!o||o.k!==p.k||D-o.d>60)o=h.hw={k:p.k,d:D,mv:0};   /* (the plan changed under it: it stands until its place catches up, or trots after it) */
+    const nd=D>o.d?Math.min(D,o.d+6.5*dt):o.d,v=dt>0?(nd-o.d)/dt:0;o.mv=v<.05?0:v>3.5?2:1;o.d=nd;const q=farmHomeXZ(p,nd);if(p.Lg!=null&&nd<p.Lg)[q[0],q[1]]=collideXZ(q[0],q[1],.36,farmHomeCols());h.x=q[0];h.z=q[1];   /* (in town it steps round a lamp post or a wall's corner that stands on the path) */if(o.mv)h.ry=angLerp(h.ry,q[2],Math.min(1,dt*4));}
+  return any;}
 function farmJump(){const r=P.horse;if(!r)return false;const now=gameMs()/1000;if(now-r.j<1.7||r.sp<1)return true;r.j=now;SFX.jump();return true;}
-function farmStamp(st){const r=P.horse;st.rd=r?[r.h.i,{idle:'i',walk:'w',trot:'t',gallop:'g',jump:'j'}[r.g]||'i',Math.round(r.ry*100)/100]:null;}   /* 🐴 riding: [horse, gait, its heading] (old versions ignore it) */
+function farmStamp(st){const r=P.horse;st.rd=r?[r.h.i,{idle:'i',walk:'w',trot:'t',gallop:'g',jump:'j'}[r.g]||'i',Math.round(r.ry*100)/100]:null;st.hh=FARM.hh.length?FARM.hh:null;}   /* 🐴 riding: [horse, gait, its heading]; hh: my horses walking home, each [horse, x, z, when I got off] (old versions ignore both) */
 function farmExtra(a,pr){const v=pr.rd;a.rd=Array.isArray(v)&&v.length===3&&Number.isInteger(v[0])&&v[0]>=0&&v[0]<10&&typeof v[1]==='string'&&Number.isFinite(v[2])?v:null;
+  a.hh=Array.isArray(pr.hh)?pr.hh.filter(e=>Array.isArray(e)&&e.length===4&&e.every(Number.isFinite)&&Number.isInteger(e[0])&&e[0]>=0&&e[0]<10).slice(0,6):null;
   if(a.rd&&P.horse&&!P.horse.lesson&&P.horse.h.i===a.rd[0]&&String(a.peer)<String(MP.me))farmOff(true,'🐴 A friend took this horse first. Pick another one!');}
 /* a friend on a horse: their horse under them, their body in the riding pose */
 function farmPeer(a,dt,vis){const on=!!(a.rd&&vis&&CUR&&CUR.id==='city');if(on&&!a.fh){a.fh=farmModel('fa.horse.adult.'+(a.rd[0]%4));scene.add(a.fh.root);}
