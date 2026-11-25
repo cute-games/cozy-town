@@ -203,4 +203,4 @@ async def main():
         print('audit issues', len(issues)); 
         for i in issues[:40]: print('  ', i)
     print('\nSUMMARY', sum(1 for r in RES if r[1]), 'of', len(RES), 'PASS')
-asyncio.run(main())
+if __name__ == "__main__": asyncio.run(main())

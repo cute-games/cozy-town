@@ -226,7 +226,8 @@ const SOC={st:'off',root:null,me:'',fr:{},req:{},th:{},gc:[],gcSeen:'',gcNew:fal
   +'#callCard[hidden],#callBar[hidden]{display:none}#callCard .cc-i{font-size:44px;line-height:1.1}#callCard .cc-t{font-size:22px;font-weight:900;overflow-wrap:anywhere}#callCard .cc-m{margin:4px 0 12px;font-size:16px;font-weight:700}'
   +'#callCard .cc-b{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}#callCard .cc-b .btn{min-height:52px;white-space:nowrap}.btn.hang{background:#ff6b6b}'
   +'#callBar{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);transform:translateX(-50%);z-index:9400;display:flex;align-items:center;gap:8px;background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:999px;padding:5px 6px 5px 14px;box-shadow:0 4px 0 #3d2c5e;font-weight:900;font-size:16px;max-width:calc(100vw - 24px)}'
-  +'#callBar .cb-n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;max-width:40vw}#callBar .cb-t{font-variant-numeric:tabular-nums;white-space:nowrap}#callBar .btn{min-width:46px;min-height:46px;padding:0 8px;font-size:20px;flex:none}#callBar .btn.on{background:var(--butter)}';
+  +'#callBar .cb-n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;max-width:40vw}#callBar .cb-t{font-variant-numeric:tabular-nums;white-space:nowrap}#callBar .btn{min-width:46px;min-height:46px;padding:0 8px;font-size:20px;flex:none}#callBar .btn.on{background:var(--butter)}'
+  +'@media (max-width:600px) and (orientation:portrait){#callBar{top:calc(env(safe-area-inset-top,0px) + 68px);bottom:auto;left:auto;right:8px;transform:none}#callBar .cb-n{display:none}}';   /* (a phone held upright: the bar sits under the top buttons, off the run and jump buttons) */
   document.head.appendChild(st);}
 const socId=s=>typeof s==="string"&&/^u[\w-]{6,30}$/.test(s);
 const socOn=()=>SOC.st==='on';
