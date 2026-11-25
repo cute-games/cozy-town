@@ -51,8 +51,9 @@ const seeded = core.match(/^function seeded.*$/m)[0];
 const roundSource = loop.slice(loop.indexOf('/* BEGIN DANCE SOURCES'), loop.indexOf('/* The new profile is a continuous stereo file'));
 function danceClient() {
   const context = { window: {}, MP: { me: 'ZZTEST' }, realMs: () => 1795580000000 };
-  return vm.runInNewContext(seeded + '\n' + roundSource +
-    '\nconst { DanceChart, DanceJudge } = window; ({dnRoundId,dnOnBeat,dnChart,dnClassic,DN_TRACK,dnStyle,dnMoveKind,dnRememberMove,DN_TYPES,DN_LOOP,dnProfile,dnBeatAt})',
+  const bot = loop.slice(loop.indexOf('function dnBotPlan'), loop.indexOf('function dnBotTick'));
+  return vm.runInNewContext(seeded + '\n' + roundSource + '\n' + bot +
+    '\nconst { DanceChart, DanceJudge } = window; ({dnRoundId,dnOnBeat,dnChart,dnClassic,DN_TRACK,dnStyle,dnMoveKind,dnRememberMove,DN_TYPES,DN_LOOP,dnProfile,dnBeatAt,dnRating,dnTally,dnTallyRating,dnPeerGrade,dnLeadTarget,dnBotPlan,DN_RATINGS})',
   context);
 }
 const dance = danceClient();
@@ -165,4 +166,30 @@ function printSync(notes,onsets,label){
 test('20 sampled chart events meet the 25 ms median against independently detected onsets', () => {
   printSync(dance.dnChart(slice3ID),fullLoop.profiles.fast.verify,'MP3 fast');
   printSync(dance.dnChart(slice3ID.replace('beat3s-', 'beat3n-')),fullLoop.profiles.steady.verify,'MP3 steady');
+});
+
+test('five duel ratings keep the full inclusive hit window and reset combo on either miss', () => {
+  assert.deepEqual([0,.10,.1001,.19,.1901,.28,.2801,-.28].map(dance.dnRating), [0,0,1,1,2,2,3,2]);
+  assert.deepEqual(Array.from(dance.DN_RATINGS.slice(0,5), r=>r.points), [15,10,5,0,0]);
+  const tally=dance.dnTally();
+  for(const grade of [0,1,2,3,0,4,2])dance.dnTallyRating(tally,grade);
+  assert.deepEqual(Array.from(tally.counts),[2,1,2,1,1]);
+  assert.equal(tally.combo,1);
+  assert.equal(tally.best,3);
+});
+test('peer score deltas classify only single known hits and signed leads stay bounded', () => {
+  assert.deepEqual([dance.dnPeerGrade(15,1,false),dance.dnPeerGrade(10,1,true),
+    dance.dnPeerGrade(5,1,true),dance.dnPeerGrade(10,1,false),dance.dnPeerGrade(15,2,true)],[0,1,2,5,5]);
+  assert.deepEqual([dance.dnLeadTarget(15,0),dance.dnLeadTarget(0,15),dance.dnLeadTarget(900,5),
+    dance.dnLeadTarget(5,900),dance.dnLeadTarget(10,10)],[.03125,-.03125,1,-1,0]);
+});
+test('the bot plays a seeded chart with real hit grades and separate empty-note misses', () => {
+  const chart=dance.dnChart(slice3ID),events=dance.dnBotPlan(slice3ID,chart);
+  assert.equal(JSON.stringify(events),JSON.stringify(danceClient().dnBotPlan(slice3ID,chart)));
+  const marks=Array.from(events).filter(e=>e.i>=0);
+  assert.equal(marks.length,chart.length);
+  assert.equal(new Set(marks.map(e=>e.i)).size,chart.length);
+  assert.equal(marks.filter(e=>e.grade<=2).length,Math.round(chart.length*.8));
+  assert.equal(new Set(events.map(e=>e.grade)).size,5);
+  assert.ok(events.every((e,i)=>!i||e.t>=events[i-1].t));
 });
