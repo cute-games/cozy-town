@@ -232,31 +232,31 @@ function jobHud(force){const el=$('job'),job=!!(PLAYING&&S&&(S.job==='delivery'|
    into a picture by the big map's painter (MINI.k px a metre; painted again only when light/dark, the holiday or the houses on Friends Lane change).
    Each time it is drawn it copies the 64 m round you (north up; your arrow turns with you) and puts the place badges, your pets, friends, the job's dot
    and the place you are looking for on top. A tap opens the big map */
-const MINI={c:null,key:'',kt:-1e9,B:null,k:4,dark:false,items:[],spr:new Map(),ms:0,cost:0,n:0};let MINI_R=32;const MINI_ZS=[16,32,64,128];   /* 🔍 how many metres from you to the map's edge: − and + change it (24 Nov, owner); remembered on this device */
+const MINI={c:null,key:'',kt:-1e9,B:null,k:4,dark:false,items:[],spr:new Map(),ms:0,cost:0,n:0,F:{c:null,key:'',kt:-1e9,B:null,k:2},cur:null};let MINI_R=32;const MINI_ZS=[16,32,64,128];   /* 🔍 how many metres from you to the map's edge: − and + change it (24 Nov, owner); remembered on this device */
 try{const z=+localStorage.getItem('cozyMiniR');if(MINI_ZS.includes(z))MINI_R=z;else if(z>128)MINI_R=128;}catch(e){}   /* (26 Nov: the widest step, 256 m, is gone: the town was a small patch in the woods; a device that kept it gets 128) */
 function miniZoom(d){const i=clamp(MINI_ZS.indexOf(MINI_R)+d,0,MINI_ZS.length-1);MINI_R=MINI_ZS[i];try{localStorage.setItem('cozyMiniR',MINI_R);}catch(e){}SFX.tap();drawMini();$('mmIn').disabled=i===0;$('mmOut').disabled=i===MINI_ZS.length-1;}
 for(const [id,d] of [['mmIn',-1],['mmOut',1]]){const b=document.getElementById(id);if(b)b.addEventListener('click',e=>{e.stopPropagation();miniZoom(d);});}
-function miniBase(){const now=performance.now();if(MINI.c&&now-MINI.kt<1500)return MINI.c;MINI.kt=now;
-  const dark=mapDark(),k=(devicePixelRatio||1)>1.4?5:4,key=dark+'|'+k+'|'+mapKey()+'|'+(HOL.cur||'');if(MINI.c&&MINI.key===key)return MINI.c;
-  const B=mapB(),w=Math.ceil((B.x2-B.x1)*k),h=Math.ceil((B.z2-B.z1)*k),c=MINI.c||document.createElement('canvas'),t0=performance.now();c.width=w;c.height=h;
+function miniBase(){const far=MINI_R>=64,L=far?MINI.F:MINI,now=performance.now();MINI.cur=L;if(L.c&&now-L.kt<1500)return L.c;L.kt=now;   /* (26 Nov: zoomed out (64 m and more) a second, plainer picture: painted at 2 px a metre, the painter leaves out the small things (street trees, fences, dots), which turned to noise) */
+  const dark=mapDark(),k=far?2:(devicePixelRatio||1)>1.4?5:4,key=dark+'|'+k+'|'+mapKey()+'|'+(HOL.cur||'');if(L.c&&L.key===key)return L.c;
+  const B=mapB(),w=Math.ceil((B.x2-B.x1)*k),h=Math.ceil((B.z2-B.z1)*k),c=L.c||document.createElement('canvas'),t0=performance.now();c.width=w;c.height=h;
   try{mapPaint(c.getContext('2d'),B.x1,B.z1,k,w,h,{dark,u:1});}catch(e){console.warn('map',e);}
-  Object.assign(MINI,{c,key,B,k,dark,ms:Math.round(performance.now()-t0),items:mapItems().filter(it=>it.k!=='lane').sort((a,b)=>a.pri-b.pri)});MINI.spr.clear();return c;}
+  Object.assign(L,{c,key,B,k,dark,ms:Math.round(performance.now()-t0)});Object.assign(MINI,{dark,items:mapItems().filter(it=>it.k!=='lane').sort((a,b)=>a.pri-b.pri)});MINI.spr.clear();return c;}
 function miniSpr(e,R){const key=e+'|'+R;let c=MINI.spr.get(key);if(c)return c;const P2=MINI.dark?MAP_PAL.dark:MAP_PAL.light,n=Math.ceil(R*2+R*.5+4),m=n/2;   /* a place's badge, made once */
   c=document.createElement('canvas');c.width=c.height=n;const x=c.getContext('2d');x.beginPath();x.arc(m,m+R*.14,R,0,TAU);x.fillStyle=P2.shade;x.fill();
   x.beginPath();x.arc(m,m,R,0,TAU);x.fillStyle=P2.badge;x.fill();x.lineWidth=Math.max(1.4,R*.15);x.strokeStyle=P2.badgeE;x.stroke();
   x.font=`${Math.round(R*1.12)}px ${FONT}`;x.textAlign='center';x.textBaseline='middle';x.fillStyle='#3d2c5e';x.fillText(e,m,m+R*.08);MINI.spr.set(key,c);return c;}
-const MINI_SKIP=new Set(['fountain','pond','lake','fc']),MINI_FAR=new Set(['market','pets','toys','school','pizza','beach','treepark','farm']);   /* the corner map leaves out the spots you only look at (the big map keeps them); zoomed out (128 m) only the 8 big places a kid goes to (and the one you are looking for) */
+const MINI_SKIP=new Set(['fountain','pond','lake','fc']),MINI_FAR=new Set(['market','pets','toys','beach']);   /* the corner map leaves out the spots you only look at (the big map keeps them); zoomed out (128 m) only 4 big places a kid goes to (and the one you are looking for) */
 const MM={x:NaN,z:NaN,yaw:NaN,t:0};
 function miniTick(dt){if($('job').hidden||$('mmBtn').hidden)return;MM.t+=dt;if(P.x===MM.x&&P.z===MM.z&&P.yaw===MM.yaw&&MM.t<.07)return;MM.t=0;MM.x=P.x;MM.z=P.z;MM.yaw=P.yaw;MM.n=(MM.n|0)+1;drawMini();}   /* 🧭 the arrow turns the very frame you turn; the pulsing dots still beat 14 times a second */
 function drawMini(){const cv=$('mm');if(!cv||$('job').hidden||$('mmBtn').hidden)return;
   const want=Math.max(120,Math.round(cv.clientWidth*Math.min(2.5,devicePixelRatio||1)));if(want&&cv.width!==want){cv.width=cv.height=want;MINI.spr.clear();}
-  const t0=performance.now(),Bc=miniBase(),{B,k}=MINI,x=cv.getContext('2d'),N=cv.width,s=N/(2*MINI_R),me=mapMe(),P2=MINI.dark?MAP_PAL.dark:MAP_PAL.light,
+  const t0=performance.now(),Bc=miniBase(),{B,k}=MINI.cur,x=cv.getContext('2d'),N=cv.width,s=N/(2*MINI_R),me=mapMe(),P2=MINI.dark?MAP_PAL.dark:MAP_PAL.light,
     S2=(wx,wz)=>[(wx-me.x)*s+N/2,(wz-me.z)*s+N/2],ed=m=>([a,b])=>[clamp(a,m,N-m),clamp(b,m,N-m)],ph=(performance.now()/1000%1.4)/1.4;
   x.setTransform(1,0,0,1,0,0);x.fillStyle=P2.out;x.fillRect(0,0,N,N);
   {const sx=(me.x-MINI_R-B.x1)*k,sz=(me.z-MINI_R-B.z1)*k,sw=2*MINI_R*k,a0=Math.max(0,sx),b0=Math.max(0,sz),a1=Math.min(Bc.width,sx+sw),b1=Math.min(Bc.height,sz+sw),f=N/sw;   /* (only the part inside the picture: Safari draws nothing for a part outside it) */
     if(a1>a0&&b1>b0)x.drawImage(Bc,a0,b0,a1-a0,b1-b0,(a0-sx)*f,(b0-sz)*f,(a1-a0)*f,(b1-b0)*f);}
-  const R=Math.round(Math.max(7*N/Math.max(1,cv.clientWidth),N*.048)),put=[[N/2,N/2]];   /* 🏷️ the badges: the more important ones first, none on top of another or under your arrow (26 Nov, owner: "too many emojis and too big": smaller, a wider gap, so fewer when you zoom out) */
-  for(const it of MINI.items){if(MINI_SKIP.has(it.k)||(MINI_R>=128&&!it.sel&&!MINI_FAR.has(it.k)))continue;const [bx,by]=S2(it.x,it.z);if(bx<-R||by<-R||bx>N+R||by>N+R||put.some(([px,py])=>Math.hypot(px-bx,py-by)<R*2.6))continue;put.push([bx,by]);
+  const R=Math.round(Math.max(7*N/Math.max(1,cv.clientWidth),N*.048)),put=[],aw=N*.065*1.5+N*.026+R*1.15,cr=Math.min(N*.3,18*N/Math.max(1,cv.clientWidth)),inMap=(bx,by)=>{const m=R*1.15,qx=Math.max(cr-bx,bx-(N-cr),0),qy=Math.max(cr-by,by-(N-cr),0);return bx>=m&&by>=m&&bx<=N-m&&by<=N-m&&Math.hypot(qx,qy)<=cr-m+.5;};   /* (26 Nov: a badge shows only whole: inside the map's rounded square, and clear of your arrow and its halo) */   /* 🏷️ the badges: the more important ones first, none on top of another or under your arrow (26 Nov, owner: "too many emojis and too big": smaller, a wider gap, so fewer when you zoom out) */
+  for(const it of MINI.items){if(MINI_SKIP.has(it.k)||(MINI_R>=128&&!it.sel&&!MINI_FAR.has(it.k)))continue;const [bx,by]=S2(it.x,it.z);if(!inMap(bx,by)||Math.hypot(bx-N/2,by-N/2)<aw||put.some(([px,py])=>Math.hypot(px-bx,py-by)<R*2.6))continue;put.push([bx,by]);
     const sp=miniSpr(it.i,R);x.drawImage(sp,Math.round(bx-sp.width/2),Math.round(by-sp.height/2));}
   x.lineJoin='round';   /* (26 Nov, owner: no dots for the town's people (Rosie and the others) and none for your pets, who sit on your arrow anyway: only real friends who are online) */
   for(const f of mapFriends()){if(!f.on)continue;const [fx,fy]=ed(N*.05)(S2(f.x,f.z)),r=N*.034;   /* 👫 friends online, at the edge when far */
