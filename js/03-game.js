@@ -80,6 +80,7 @@ function snap(){let loc=CUR?CUR.id:'city',x=P.x,z=P.z,yaw=P.yaw;
   if(CR&&CR.prev){loc=CR.prev.loc;x=CR.prev.x;z=CR.prev.z;yaw=CR.prev.yaw;}
   if(loc==='client'){const hid=S.ds&&((S.ds.o&&S.ds.o.h)||S.ds.prevH),H=hid&&HOUSE(hid);if(H){loc='city';x=H.x+Math.sin(H.ry)*1.7;z=H.z+Math.cos(H.ry)*1.7;yaw=H.ry+Math.PI;}else loc='studio';}
   if(loc==='visit'){const d=laneHostDoor();loc='city';x=d[0];z=d[1];yaw=d[2];}
+  if(loc==='treepark'){loc='city';x=77.6;z=-38;yaw=-Math.PI/2;}   /* 🌲 the Tree Park is in town now (24 Nov 2026): saved by its gate */
   if(loc==='studio'||!LOC[loc]||!isFinite(x)||!isFinite(z)){loc='city';x=-17;z=-4.6;yaw=0;}
   {const q=toSave(loc,x,z);S.yq=(q[0]!==x||q[1]!==z)?1:0;if(q[0]!==x&&LANE_PLOTS[LANE.mine].s>0)yaw-=Math.PI;x=q[0];z=q[1];}   /* in your yard: saved as the old town-yard spot (startGame turns it back); yq says so, because the Flower Corner (the same spot in town) can be walked in now (run 4, job 4) */
   S.loc=loc;S.px=x;S.pz=z;S.yaw=yaw;S.t=Date.now();}
@@ -660,7 +661,14 @@ function petBrain(e,dt,now){const d=e.d,h=petHearts(d);if(e.gp||e.wo||e.fw)retur
 function petPlay(m,n,t,o){const p=m.root.position,dx=p.x-camera.position.x,dz=p.z-camera.position.z,d=Math.hypot(dx,dz);
   if(d>2.5){const a=camera.rotation.y,c=(-dx*Math.sin(a)-dz*Math.cos(a))/d;if(c<Math.cos(Math.min(1.45,Math.atan(Math.tan(camera.fov*Math.PI/360)*camera.aspect)+.45)))return null;}
   return COZY_MOVES.play(m,n,t,o);}
-function petPose(m,k,e,now,moving,look){if(!m.root.visible)return;let n=e.sm,t=now-e.sm0;
+/* 🦆 24 Nov (the owner: "the duck is jumpy and weird when following"): the duck's and owl's legs are tiny, so steps tied to the distance walked made
+   20-35 waddles (or hops) a second at follow speed. They now step at most PET_CAD times a second (like the horse's real rhythm), and their walk fades
+   in and out (e.wa) instead of snapping between walking and standing when they start, stop or creep near you */
+const PET_CAD={duck:2.6,owl:2.2};
+function petCad(m,k,e,moving,dt){const c=PET_CAD[k];if(!c)return false;if(e.stm!==m){e.stm=m;e.str=COZY_MOVES.stride(m);e.wk0=e.wk||0;}
+  const d=Math.max(0,(e.wk||0)-(e.wk0||0));e.wk0=e.wk||0;e.wd=(e.wd||0)+Math.min(d,c*e.str*(dt||0));
+  e.wa=clamp((e.wa||0)+(moving?1/.25:-1/.2)*(dt||0),0,1);return true;}
+function petPose(m,k,e,now,moving,look,dt){if(!m.root.visible)return;let n=e.sm,t=now-e.sm0;const cad=petCad(m,k,e,moving,dt);if(cad&&!moving&&e.wa>.02&&!n)moving=1;   /* (fading out of the walk) */
   if(e.tk){snakeTankPose(m,e,now);return;}
   if(!moving&&HOME_NAP[k]&&bigRest(e.d)){petPlay(m,HOME_NAP[k],now%600,{kind:k});return;}
   {const w=e.wo||e.fw;if(w){petPlay(m,now-w.t0>18?'pet.waitLie':'pet.wait',now-w.t0>18?now-w.t0-18:now-w.t0,{kind:k});return;}}
@@ -669,10 +677,10 @@ function petPose(m,k,e,now,moving,look){if(!m.root.visible)return;let n=e.sm,t=n
   if(!n){n=moving?(look==='s'?'pet.sickWalk':'pet.walk'):look==='s'?'pet.sickLie':look==='d'?'pet.sad':'pet.idle';t=now%600;}
   const far=Math.hypot(m.root.position.x-camera.position.x,m.root.position.z-camera.position.z)>8;
   if(e.gp&&e.gm){e.gr=COZY_MOVES.play(m,e.gm,e.gt,Object.assign({kind:k,fast:far},e.go));return;}
-  petPlay(m,n,t,{kind:k,dist:e.wk||0,mood:moving&&look==='d'?'sad':undefined,fast:far});}
+  petPlay(m,n,t,{kind:k,dist:cad?e.wd:e.wk||0,amp:cad&&n==='pet.walk'?e.wa:undefined,mood:moving&&look==='d'?'sad':undefined,fast:far});}
 const petLk=d=>d.sick?'s':petHearts(d)<=1?'d':'';
 function petAnim(e,dt){const d=e.d,now=gameMs()/1000,mv=Math.hypot(e.x-(e.lx===undefined?e.x:e.lx),e.z-(e.lz===undefined?e.z:e.lz));e.lx=e.x;e.lz=e.z;if(mv<1)e.wk=(e.wk||0)+mv;
-  petBrain(e,dt,now);const rb=petRib();if(e.rb!==rb){e.rb=rb;petRibbon(e.m,rb);}petPose(e.m,petKind(d),e,now,e.moving,petLk(d));}
+  petBrain(e,dt,now);const rb=petRib();if(e.rb!==rb){e.rb=rb;petRibbon(e.m,rb);}petPose(e.m,petKind(d),e,now,e.moving,petLk(d),dt);}
 /* 🎀 the green ribbon (the Pet Show rosette from the book's model pack, in green) on the pet's side */
 function rosette(g,x,y,z,s,c){const p=new THREE.Group();p.position.set(x,y,z);p.scale.setScalar(s);g.add(p);
   for(let k=0;k<12;k++){const a=k/12*TAU;const m=new THREE.Mesh(new THREE.CircleGeometry(.09,6),mat(k%2?c:shade(c,.12)));m.position.set(Math.cos(a)*.11,Math.sin(a)*.11,0);p.add(m);}
@@ -1647,6 +1655,7 @@ function peerSpot(a){const me=CUR.id,VD=VOX-LOC.home.ox;
   return a.loc===me?[a.rx,a.rz,a.rry]:null;}
 function placeOf(a){if(a.loc==='visit'){if(MP.me&&a.ho===MP.me)return'🏠 Visiting your house!';const h=MP.peers.get(a.ho);return'🏠 At '+(h?esc(h.nm)+"'s house":"a friend's house");}return PLACE_OF[a.loc]||'📍 In town';}
 function laneFields(a,pr,fresh){a.jt=Number.isFinite(pr.jt)?pr.jt:undefined;a.bh=pr.bh?1:0;a.ho=typeof pr.ho==='string'?pr.ho:null;a.gd=typeof pr.gd==='string'?pr.gd.slice(0,600):'';a.yd=typeof pr.yd==='string'?pr.yd.slice(0,12):'';
+  a.hc=typeof pr.hc==='string'&&HEX.test(pr.hc)?pr.hc:'';a.hf=Number.isFinite(pr.hf)?pr.hf:0;   /* 🎨 their house colour and floors (24 Nov: laneStamp sent them, but they were never read, so friends saw the lane's own colour and at most 2 floors) */
   const obj=v=>v&&typeof v==='object'?v:null;a.kn=obj(pr.kn);a.an=obj(pr.an);a.hm=obj(pr.hm);hpFields(a,pr);
   const guest=!!MP.me&&a.loc==='visit'&&a.ho===MP.me;if(guest&&!a.guest&&!fresh){SFX.yay();toast('🏠 '+a.nm+' is visiting your house!',3);}a.guest=guest;
   hostSeeKnock(a);}
@@ -1801,7 +1810,7 @@ function mpPetsTick(a,dt,vis){const L=a.pets;if(!L)return;
     else{const dx=gx-q.x,dz=gz-q.z,dd=Math.hypot(dx,dz);
       if(dd>.06){const sp=Math.min(7,1+dd*3.2),s=Math.min(dd,sp*dt);let nx=q.x+dx/dd*s,nz=q.z+dz/dd*s;if(near)[nx,nz]=collideXZ(nx,nz,.3,CUR);q.wk+=Math.min(1,Math.hypot(nx-q.x,nz-q.z));q.x=nx;q.z=nz;q.face=Math.atan2(dx,dz);q.mv=dd>.15;q.spd=clamp(sp/3,.6,1.8);}
       else{q.mv=false;q.face=angLerp(q.face,Math.atan2(a.x-q.x,a.z-q.z),Math.min(1,dt*3));}}
-    q.g.visible=true;q.g.position.set(q.x,(a.cy||0)+hopY(q,dt)+brAt(CUR.id,q.x,q.z),q.z);q.g.rotation.y=angLerp(q.g.rotation.y,q.face,Math.min(1,dt*8));if(q.rb!==q.rib){q.rb=q.rib;petRibbon(q.m,q.rib);}petPose(q.m,q.kind,q,gameMs()/1000,q.mv,q.look);q.tag.visible=!a.lie&&Math.hypot(P.x-q.x,P.z-q.z)>1.3;}}   /* (their owner asleep in bed or in the tent: no pet names floating on the pillow) */
+    q.g.visible=true;q.g.position.set(q.x,(a.cy||0)+hopY(q,dt)+brAt(CUR.id,q.x,q.z),q.z);q.g.rotation.y=angLerp(q.g.rotation.y,q.face,Math.min(1,dt*8));if(q.rb!==q.rib){q.rb=q.rib;petRibbon(q.m,q.rib);}petPose(q.m,q.kind,q,gameMs()/1000,q.mv,q.look,dt);q.tag.visible=!a.lie&&Math.hypot(P.x-q.x,P.z-q.z)>1.3;}}   /* (their owner asleep in bed or in the tent: no pet names floating on the pillow) */
 /* jump right next to a friend, even into the shop they are in */
 function warpTo(loc,fx,fz,nm){if(!LOC[loc]||busWarp(loc,nm))return;if(DECO.on)decoEnd();if(P.ride)stopRide();if(P.sit)standUp();closePanel();SFX.door();
   fade(()=>{setLoc(loc);let x=fx+2.4,z=fz;const fr=[...MP.peers.values()].find(a=>a.nm===nm),ry=fr?fr.ry:0;
@@ -1985,22 +1994,34 @@ function openBigHouse(){const n=homeFloors();if(n>=6){toast('🏡 Six floors! Yo
     <div class="ph-row"><span>🪙 ${BIG_PRICE} coins</span><span>${S.coins>=BIG_PRICE?'✅':S.coins+' / '+BIG_PRICE}</span></div>${S.coins<BIG_PRICE?`<div class="coinbar" aria-hidden="true"><i style="width:${Math.round(100*S.coins/BIG_PRICE)}%"></i></div>`:''}
     ${ok?`<div class="row" style="justify-content:center;margin-top:12px"><button class="btn mint" data-a="bighouse">🏡 ${n===1?'Buy it!':'Add the floor!'}</button></div>`
       :`<p class="ph-sub" style="margin-top:12px">${lv<need?'Put furniture in your house to level up Decorating 🛋️':'Keep saving your coins 🪙'}</p>`}`,{bottom:true});}
-/* 🎨 the outside of your house, any colour (run 4, item 23): 12 ready colours and a "pick any colour" slider; free; everyone sees it through the lane fields (hc) */
+/* 🎨 the outside of your house, any colour (run 4, item 23): 12 ready colours and a "pick any colour" slider; everyone sees it through the lane fields (hc).
+   24 Nov (the owner): painting costs PAINT_PRICE coins. A colour button or the slider only picks (the card shows it next to the colour you have);
+   🎨 Paint pays and paints. Closing the card without paying keeps the old colour. Going back to the lane's own colour is free */
 const HOUSE_COLS=[['#b79cff','Purple'],['#ffd6e0','Pink'],['#bfe6ff','Blue'],['#b5e3a1','Green'],['#fff1b8','Yellow'],['#ffe0c4','Peach'],['#e6dbff','Lilac'],['#bff0dc','Mint'],['#ffb3a7','Coral'],['#9fd0ff','Sky'],['#fff7e6','Cream'],['#ffffff','White']];   /* (run 4, stage 3: Green and Sky were almost Mint and Blue) */
+const PAINT_PRICE=150;   /* about a mid-price piece of furniture (the furniture's middle price is 100, a bed 200) */
 const houseCol=()=>S&&S.home&&HEX.test(S.home.col||'')?S.home.col:null;
-function openHousePaint(){const cur=houseCol();
+const HP={pick:null};   /* the colour picked on the card (null = the lane's own), not paid yet */
+function openHousePaint(){const cur=houseCol();HP.pick=cur;
   openPanel(`<div class="hd"><h2>🎨 House colour</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div><p class="note">Paint the outside of your house. Everyone on Friends Lane sees it!</p>
     <div class="dots">${HOUSE_COLS.map(([c,n])=>`<button class="dotb${houseColNow()===c?' on':''}" data-a="hcol:${c}" aria-label="${n}"><i style="background:${c}"></i>${n}</button>`).join('')}</div>
     <div class="opt" style="margin-top:10px"><span>Pick any colour</span><input type="range" id="hcHue" min="0" max="360" value="${Math.round(hexHue(houseColNow()))}" aria-label="Any colour" style="flex:1;min-width:140px"></div>
-    <div class="opt"><span>Your house now</span><i id="hcNow" class="hcNow" style="background:${houseColNow()}" aria-hidden="true"></i></div>
-    <div class="row" style="justify-content:center;margin-top:8px"><button class="dotb lane${cur?'':' on'}" id="hcLane" data-a="hcol:" aria-label="The lane's own colour"><i style="background:${laneOwnCol()}"></i>🏡 The lane's own colour</button></div>`,{cls:'setcard hpaint'});   /* (run 4, stage 3: the colour the house has now is marked, the lane's own colour is a colour like the others, not a button with a tick that read as a status) */
-  const sl=$('hcHue');if(sl)sl.addEventListener('input',()=>setHouseCol(hslHex(+sl.value,.72,.82)),{passive:true});}
+    <div class="opt"><span>Your house now</span><i id="hcNow" class="hcNow" style="background:${houseColNow()}" aria-hidden="true"></i><span aria-hidden="true">➜</span><i id="hcNew" class="hcNow" style="background:${houseColNow()}" aria-hidden="true"></i></div>
+    <div class="row" style="justify-content:center;margin-top:8px"><button class="dotb lane${cur?'':' on'}" id="hcLane" data-a="hcol:" aria-label="The lane's own colour"><i style="background:${laneOwnCol()}"></i>🏡 The lane's own colour</button></div>
+    <div class="row" style="justify-content:center;margin-top:8px"><button class="btn mint" id="hcPay" data-a="hpaint" disabled>🎨 Paint!</button></div><p class="note" id="hcCost" style="text-align:center">🪙 ${PAINT_PRICE} to paint · the lane's own colour is free</p>`,{cls:'setcard hpaint'});   /* (run 4, stage 3: the colour the house has now is marked, the lane's own colour is a colour like the others, not a button with a tick that read as a status) */
+  const sl=$('hcHue');if(sl)sl.addEventListener('input',()=>hpPick(hslHex(+sl.value,.72,.82)),{passive:true});hpShow();}
+function hpCost(){return HP.pick&&HP.pick!==houseCol()?PAINT_PRICE:0;}   /* the lane's own colour is free */
+function hpPick(c){if(c&&!HEX.test(c))return;HP.pick=c||null;hpShow();}
+function hpShow(){const c=HP.pick,now=c||laneOwnCol(),sw=$('hcNow'),nw=$('hcNew'),pay=$('hcPay'),same=c===houseCol();if(sw)sw.style.background=houseColNow();if(nw)nw.style.background=now;
+  for(const b of document.querySelectorAll('#card .dotb'))b.classList.toggle('on',b.id==='hcLane'?!c:b.dataset.a==='hcol:'+now);const sl=$('hcHue');if(sl&&document.activeElement!==sl)sl.value=Math.round(hexHue(now));
+  if(pay){pay.disabled=same;pay.textContent=same?'🎨 Your house is this colour':hpCost()?`🎨 Paint! 🪙 ${PAINT_PRICE}`:'🎨 Paint! (free)';}}
+function hpPay(){const c=HP.pick;if(c===houseCol())return;const cost=hpCost();
+  if(S.coins<cost){SFX.no();toast('Not enough coins yet! 🪙 '+earnTip(),3.6);return;}
+  S.coins-=cost;if(cost)SFX.coin();SFX.yay();setHouseCol(c);closePanel();toast('🎨 Your house is painted! Everyone on Friends Lane sees it.',3.2);}
 function hexHue(h){const r=parseInt(h.slice(1,3),16)/255,g=parseInt(h.slice(3,5),16)/255,b=parseInt(h.slice(5,7),16)/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;if(!d)return 0;let hu=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;return (hu*60+360)%360;}
 function hslHex(h,s,l){const c=(1-Math.abs(2*l-1))*s,x=c*(1-Math.abs((h/60)%2-1)),m=l-c/2;let r=0,g=0,b=0;if(h<60){r=c;g=x;}else if(h<120){r=x;g=c;}else if(h<180){g=c;b=x;}else if(h<240){g=x;b=c;}else if(h<300){r=x;b=c;}else{r=c;b=x;}return'#'+[r,g,b].map(v=>Math.round((v+m)*255).toString(16).padStart(2,'0')).join('');}
 function laneOwnCol(){return LANE_PAL[hashStr((S.name||'').toLowerCase())%LANE_PAL.length][0];}
 function houseColNow(){return houseCol()||laneOwnCol();}   /* the colour the house shows right now (yours, or the lane's own for your name) */
-function setHouseCol(c){if(c&&!HEX.test(c))return;if(c)S.home.col=c;else delete S.home.col;change();laneRefresh(true);const sw=$('hcNow');if(sw)sw.style.background=houseColNow();
-  const now=houseColNow();for(const b of document.querySelectorAll('#card .dotb'))b.classList.toggle('on',b.id==='hcLane'?!c:b.dataset.a==='hcol:'+now);const sl=$('hcHue');if(sl&&document.activeElement!==sl)sl.value=Math.round(hexHue(houseColNow()));}
+function setHouseCol(c){if(c&&!HEX.test(c))return;if(c)S.home.col=c;else delete S.home.col;change();laneRefresh(true);if($('hcNow'))hpShow();}   /* paints the house and saves it (the card's 🎨 Paint, after paying) */
 function setFloor(k){if(FLOOR_M.map)FLOOR_M.map.dispose();FLOOR_M.map=floorTex(k);FLOOR_M.map.repeat.set(HOMEW/2,HOMED/2);FLOOR_M.needsUpdate=true;}
 let tvT=0,tvLast=-1;
 function useFurn(rec,fx,fz){const F=FURN[furnOf(rec.it)];

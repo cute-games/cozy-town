@@ -292,8 +292,9 @@ ACT.cbuy=()=>{const F=FURN[CAT.sel];if(S.coins<F.p)return;S.coins-=F.p;SFX.coin(
 ACT.cplace=i=>{if(!(CUR.id==='home'&&DECO.on&&DX()===HOMEX)){SFX.no();toast('🏠 Go home to place it! Tap 🛋️ in your house.',3.2);return;}const it=S.home.store.splice(+i,1)[0];if(!it)return;closePanel();startPlacing(it);change();};
 ACT.bighouse=()=>{const n=homeFloors();if(n>=6||sk('decor').lv<10*n||S.coins<BIG_PRICE)return;S.coins-=BIG_PRICE;if(n===1)S.bighouse=true;else S.home.xf=(S.home.xf|0)+1;closePanel();
   applyHouse();rebuildHome();SFX.coin();SFX.yay();change();toast(n===1?'🎉 You got the big house! Go inside: the stairs are in the west wall! 🪜':'🎉 Floor '+(n+1)+' is yours! The stairs go on up 🪜',4.5);
-  laneRefresh(true);
-ACT.hcol=c=>{SFX.pop();setHouseCol(c||null);};   /* 🎨 the house-colour buttons (run 4, item 23) */const [hx,hz]=yardPt(-17,-10.5);for(let i=0;i<8;i++)setTimeout(()=>floatText(pick(['🎉','⭐','✨','🏡']),hx+rand(-3,3),4.5+rand(0,3),hz+rand(-1,1),{h:.8}),i*150);};
+  laneRefresh(true);const [hx,hz]=yardPt(-17,-10.5);for(let i=0;i<8;i++)setTimeout(()=>floatText(pick(['🎉','⭐','✨','🏡']),hx+rand(-3,3),4.5+rand(0,3),hz+rand(-1,1),{h:.8}),i*150);};
+ACT.hcol=c=>{SFX.pop();hpPick(c||null);};   /* 🎨 the house-colour buttons (run 4, item 23): they only pick; 🎨 Paint pays and paints (24 Nov: this line sat inside ACT.bighouse, so the buttons did nothing until you bought a floor) */
+ACT.hpaint=()=>hpPay();
 ACT.wall=c=>{S.home.wall=c;WALL_M.color.set(c);SFX.pop();change();renderCatalog();};
 ACT.floor=k=>{S.home.floor=k;setFloor(k);SFX.pop();change();renderCatalog();};
 
@@ -313,7 +314,7 @@ const PLACES=[
 /* nq: not used for quests (old saves must get the same quests as before) */
 PLACES.push({id:'beach',n:'Beach',i:'🏖️',x:80,z:0,w:8,d:14,c:'#f6dfa9',door:[77.4,0],flat:1,nq:1});
 PLACES.push({id:'bus',n:'Bus stop',i:'🚌',x:-16.2,z:7.6,w:4,d:1.5,c:'#ffd9c2',door:[-14.3,5.2],flat:1,nq:1});
-PLACES.push({id:'treepark',n:'Tree Park',i:'🌲',x:75.6,z:-40.6,w:9,d:9,c:'#9fd88a',door:[71.6,-38],flat:1,nq:1});   /* 🌲 run 4, job 16: the gate in the woods behind the Toy Store */
+PLACES.push({id:'treepark',n:'Tree Park',i:'🌲',x:118,z:-45.5,w:52,d:29,c:'#9fd88a',door:[93,-36],flat:1,nq:1});   /* 🌲 the clearing in the woods past the gate behind the Toy Store (in town since 24 Nov 2026; run 4: the gate, x 75.6 z -40.6) */
 PLACES.push({id:'vet',n:'Vet Station',i:'🩺',x:14.2,z:-77.2,w:9,d:12,c:'#e6dbff',door:[9.4,-77.2],nq:1});   /* 🩺 pets and farm update, stage 4 */
 const theN=pl=>pl.nt?pl.n:'the '+pl.n;
 const BLDS=[[-31,-15,7,7,'#bff0dc'],[-22,-31,18,8,'#ffd0b5'],[23,-31,20,8,'#c7e6ff'],[24,31,18,8,'#ffe0c4'],[13,-61.5,8,7,'#ffd6e0'],[25,-61.5,8,7,'#c9f2e3'],[37,-61.5,8,7,'#fff1b8'],[13,61.5,8,7,'#e6dbff'],[25,61.5,8,7,'#d9e8ff'],[37,61.5,8,7,'#ffe0c4'],[-66,25,10,20,'#ffd0b5']];

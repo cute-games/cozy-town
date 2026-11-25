@@ -97,6 +97,7 @@ function startGame(){if(S){awResume();return;}   /* back from the away title: th
   if(!S.intro){setLoc('city');startIntro();}
   else{let loc=S.loc;P.x=S.px;P.z=S.pz;P.yaw=isFinite(S.yaw)?S.yaw:0;P.pitch=0;if(loc==='home'&&P.x>LOC.home.ox+UPX/2){P.x-=UPX;P.z+=UPZ;}   /* 🪜 a save made upstairs before run 4 (the upstairs used to stand 40 m east; now floor 1 stands 40 m north) */
     if(loc==='city'&&inYardR(P.x,P.z)&&S.yq!==0){[P.x,P.z]=fromSave(loc,P.x,P.z);if(LANE_PLOTS[LANE.mine].s>0)P.yaw+=Math.PI;}   /* in your yard (an old save: the old town yard): in your yard on Friends Lane; a run-4 save in the Flower Corner stays there */
+    if(loc==='treepark'){loc='city';P.x=77.6;P.z=-38;P.yaw=-Math.PI/2;}   /* 🌲 a save made inside the old Tree Park (run 4): it is in town now, through this gate (24 Nov 2026) */
     if(!LOC[loc]||loc==='studio'){loc='city';P.x=-17;P.z=-4.6;P.yaw=0;}
     loc=safeSpot(loc)||'city';setLoc(loc);[P.x,P.z]=collideXZ(P.x,P.z,.3,CUR);
     let n=0;for(const p of PET_ACTORS)if(!p.d.stay&&p.loc!==CUR.id)nearMe(p,++n);
