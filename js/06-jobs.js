@@ -245,6 +245,7 @@ function miniSpr(e,R){const key=e+'|'+R;let c=MINI.spr.get(key);if(c)return c;co
   c=document.createElement('canvas');c.width=c.height=n;const x=c.getContext('2d');x.beginPath();x.arc(m,m+R*.14,R,0,TAU);x.fillStyle=P2.shade;x.fill();
   x.beginPath();x.arc(m,m,R,0,TAU);x.fillStyle=P2.badge;x.fill();x.lineWidth=Math.max(1.4,R*.15);x.strokeStyle=P2.badgeE;x.stroke();
   x.font=`${Math.round(R*1.12)}px ${FONT}`;x.textAlign='center';x.textBaseline='middle';x.fillStyle='#3d2c5e';x.fillText(e,m,m+R*.08);MINI.spr.set(key,c);return c;}
+const MINI_SKIP=new Set(['fountain','pond','lake','fc']);   /* the corner map leaves out the spots you only look at (the big map keeps them) */
 const MM={x:NaN,z:NaN,yaw:NaN,t:0};
 function miniTick(dt){if($('job').hidden||$('mmBtn').hidden)return;MM.t+=dt;if(P.x===MM.x&&P.z===MM.z&&P.yaw===MM.yaw&&MM.t<.07)return;MM.t=0;MM.x=P.x;MM.z=P.z;MM.yaw=P.yaw;MM.n=(MM.n|0)+1;drawMini();}   /* 🧭 the arrow turns the very frame you turn; the pulsing dots still beat 14 times a second */
 function drawMini(){const cv=$('mm');if(!cv||$('job').hidden||$('mmBtn').hidden)return;
@@ -254,13 +255,11 @@ function drawMini(){const cv=$('mm');if(!cv||$('job').hidden||$('mmBtn').hidden)
   x.setTransform(1,0,0,1,0,0);x.fillStyle=P2.out;x.fillRect(0,0,N,N);
   {const sx=(me.x-MINI_R-B.x1)*k,sz=(me.z-MINI_R-B.z1)*k,sw=2*MINI_R*k,a0=Math.max(0,sx),b0=Math.max(0,sz),a1=Math.min(Bc.width,sx+sw),b1=Math.min(Bc.height,sz+sw),f=N/sw;   /* (only the part inside the picture: Safari draws nothing for a part outside it) */
     if(a1>a0&&b1>b0)x.drawImage(Bc,a0,b0,a1-a0,b1-b0,(a0-sx)*f,(b0-sz)*f,(a1-a0)*f,(b1-b0)*f);}
-  const R=Math.round(Math.max(7,N*.06)),put=[];   /* 🏷️ the badges: the more important ones first, none on top of another */
-  for(const it of MINI.items){const [bx,by]=S2(it.x,it.z);if(bx<-R||by<-R||bx>N+R||by>N+R||put.some(([px,py])=>Math.abs(px-bx)<R*1.8&&Math.abs(py-by)<R*1.8))continue;put.push([bx,by]);
+  const R=Math.round(Math.max(8,N*.048)),put=[[N/2,N/2]];   /* 🏷️ the badges: the more important ones first, none on top of another or under your arrow (26 Nov, owner: "too many emojis and too big": smaller, a wider gap, so fewer when you zoom out) */
+  for(const it of MINI.items){if(MINI_SKIP.has(it.k))continue;const [bx,by]=S2(it.x,it.z);if(bx<-R||by<-R||bx>N+R||by>N+R||put.some(([px,py])=>Math.hypot(px-bx,py-by)<R*2.6))continue;put.push([bx,by]);
     const sp=miniSpr(it.i,R);x.drawImage(sp,Math.round(bx-sp.width/2),Math.round(by-sp.height/2));}
-  x.lineJoin='round';
-  for(const p of PET_ACTORS){if(p.loc!=='city'||!p.g||!p.g.visible)continue;const [px,py]=S2(p.x,p.z);if(px<0||py<0||px>N||py>N)continue;   /* 🐾 your pets: small soft dots */
-    x.globalAlpha=.85;x.beginPath();x.arc(px,py,N*.019,0,TAU);x.fillStyle=typeof p.d.col==='string'?p.d.col:'#ffb36b';x.fill();x.lineWidth=N*.008;x.strokeStyle='#ffffff';x.stroke();x.globalAlpha=1;}
-  for(const f of mapFriends()){const [fx,fy]=ed(N*.05)(S2(f.x,f.z)),r=N*(f.on?.034:.028);   /* 👫 friends (online ones bigger), at the edge when far */
+  x.lineJoin='round';   /* (26 Nov, owner: no dots for the town's people (Rosie and the others) and none for your pets, who sit on your arrow anyway: only real friends who are online) */
+  for(const f of mapFriends()){if(!f.on)continue;const [fx,fy]=ed(N*.05)(S2(f.x,f.z)),r=N*.034;   /* 👫 friends online, at the edge when far */
     x.beginPath();x.arc(fx,fy,r,0,TAU);x.fillStyle=f.c;x.fill();x.lineWidth=N*.013;x.strokeStyle='#ffffff';x.stroke();x.beginPath();x.arc(fx,fy,r+N*.011,0,TAU);x.lineWidth=N*.006;x.strokeStyle=P2.ink;x.stroke();}
   if(NAV){const G=NAV.goal||NAV.door,[gx,gy]=ed(N*.06)(S2(G[0],G[1]));   /* 📍 the place you are looking for (pink, like the big map's) */
     x.beginPath();x.arc(gx,gy,N*(.035+.05*ph),0,TAU);x.strokeStyle=`rgba(255,77,141,${.75*(1-ph)})`;x.lineWidth=N*.014;x.stroke();
