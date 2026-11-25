@@ -416,6 +416,10 @@ function openSettings(){const fromTitle=!PLAYING;
   openPanel(`<div class="hd"><h2>⚙️ Settings</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
     <div class="opt"><span>Look speed</span><span class="row" style="margin:0">${[['Slow',.6],['Normal',1],['Fast',1.6]].map(([n,v])=>`<button class="btn ${SET.look===v?'butter':'white'}" data-a="slook:${v}">${n}</button>`).join('')}</span></div>
     <div class="opt"><span>Sound</span><button class="btn ${SET.sound?'mint':'white'}" data-a="ssound">${SET.sound?'🔊 On':'🔇 Off'}</button></div>
+    <div class="opt"><label for="danceLatency">Dance audio delay</label>
+      <span class="row" style="margin:0;align-items:center;justify-content:flex-end"><input id="danceLatency" type="range" aria-description="Positive values help when speakers play the beat late" min="-200" max="200" step="5" value="${dnLatency()}" style="width:min(160px,37vw);height:44px;accent-color:#9b53bc">
+      <output id="danceLatencyValue" for="danceLatency" style="min-width:65px;text-align:right;color:#3d2c5e">${dnLatency()} ms</output></span>
+    </div>
     <div class="opt"><span>Graphics</span><span class="row" style="margin:0"><button class="btn ${SET.gfx==='nice'?'butter':'white'}" data-a="sgfx:nice">Pretty</button><button class="btn ${SET.gfx==='fast'?'butter':'white'}" data-a="sgfx:fast">Fast</button></span></div>
     <div class="opt"><span>🍕 Pizza job</span><button class="btn white" data-a="tutgo">📖 Show me the tips</button></div>
     <div class="opt"><span>🎨 Designer job</span><button class="btn white" data-a="dtutgo">📖 Show me the tips</button></div>
@@ -428,7 +432,11 @@ function openSettings(){const fromTitle=!PLAYING;
     ${MV.on?'<div class="opt"><span>📱 Another iPad or phone</span><button class="btn sky" data-a="mvopen">📦 Move my game</button></div>':''}
     ${mvBefore()?'<div class="opt"><span>↩️ Your old game</span><button class="btn white" data-a="mvundo">↩️ Bring it back</button></div>':''}
     <p class="note">${TOUCHY?'Walk: drag on the left side. Look: drag on the right side. Jump: ⬆️. Run: 🏃. Tap things to use them.':'Walk: WASD. Look: drag with the mouse. Jump: Space. Run: hold Shift. Use things: E or click. Bag: B.'}<br>✏️ Notepad: draw on it! Tap it 2× for a new page, 3× to go back, 4× to delete.</p>
-    <div class="row"><button class="btn coral" data-a="wipe">🗑️ Start a new game</button></div>`,{cls:'setcard',onClose:()=>{WIPE=false;}});}
+    <div class="row"><button class="btn coral" data-a="wipe">🗑️ Start a new game</button></div>`,{cls:'setcard',onClose:()=>{WIPE=false;}});
+  const delay=$('danceLatency'),value=$('danceLatencyValue');
+  delay.oninput=()=>{value.textContent=delay.value+' ms';};
+  delay.onchange=()=>{SET.danceLatency=Number(delay.value);saveSet();};
+}
 ACT.fetchpets=()=>{if(!S||!S.pets.length){toast('You don\'t have any pets yet! Adopt one at the Pet Shop. 🐾',3);return;}
   /* 🐾 up to 3 come (pet update 1): the ones following you first, then pets waiting somewhere, then pets at home; a pet left waiting somewhere else goes home */
   const go=[...PET_ACTORS.filter(p=>!p.d.stay),...PET_ACTORS.filter(p=>p.d.stay&&!petAtHome(p.d)),...PET_ACTORS.filter(p=>petAtHome(p.d))].slice(0,PET_FOLLOW);
