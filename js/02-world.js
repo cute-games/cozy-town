@@ -1290,7 +1290,7 @@ function stairsIn(g,up,W,H,wm,both){const n=12,sd=4.2/n,sr=H/n,x0=-W/2,t=.3,a=Ma
   {const y=up?H:-H,dw=both?.74:1.3;box(g,.07,2.1,dw,'#5fd4b0',x0-4.2+.04,y,zc,{ol:.015});box(g,.09,.5,both?.36:.5,'#bde9ff',x0-4.2+.05,y+1.35,zc,{ol:.012});sph(g,.045,'#ffd45c',x0-4.2+.1,y+1.0,zc+(both?.25:.42),{ws:6,hs:5,ol:false});plate(pg,up?'⬆️ Upstairs':'⬇️ Downstairs','#ffffff','#3d2c5e',both?.7:1.22,both?.24:.3,x0-4.2+.1,y+.72,zc,Math.PI/2,false,'⬇️ Downstairs');}}   /* 🚪 the stairs end at a door with a window and a knob (run 4, stage 3: they ran into a flat wall) */
 /* every floor of a house (yours or a friend's): its own group, baked on its own, with its doors (floor 0), windows and stairs; flag = the inter tag ('hdoor' / 'vdoor') */
 function houseFloors(L,n,W,D,H,wm,fm,wide,flag){const hw=W/2,hd=D/2,gx=wide?6.6:4.4,fls=[];
-  for(let k=0;k<n;k++){const g=new THREE.Group(),sh=new THREE.Group();g.add(sh);g.position.set(0,0,UPZ*k);const F={k,g,sh,grid:null};fls.push(F);
+  for(let k=0;k<n;k++){const g=new THREE.Group(),sh=new THREE.Group();g.add(sh);g.position.set(0,0,UPZ*k);const F={k,g,sh,grid:null};fls.push(F);PANE_LV=k;
     shell({ox:L.ox,oz:L.oz+UPZ*k,cols:L.cols},sh,W,D,H,wm,fm,'#f7eef2',g,n>1?UPG:0);
     if(k===0){doorAt(sh,0,hd-.02,Math.PI,'#5fd4b0',false,true);doorAt(sh,gx,-hd+.02,0,'#5fd4b0',false,true);
       for(const x of wide?[-6.5,-3,1.5]:[-3,1.5])windowIn(sh,x,1.0,-hd+.02,0);
@@ -1304,8 +1304,8 @@ function houseFloors(L,n,W,D,H,wm,fm,wide,flag){const hw=W/2,hd=D/2,gx=wide?6.6:
     const gh=new THREE.GridHelper(W,W*2,0xb79cff,0xd9c8ff);gh.scale.z=D/W;gh.position.set(0,.012,UPZ*k);gh.visible=false;L.g.add(gh);F.grid=gh;
     if(k<n-1)inter(L,{x:-hw+.9,z:UPZ*k-.6,r:1.6,icon:'⬆️',label:'Go upstairs',act:()=>hclimb(1),[flag]:1});
     if(k>0)inter(L,{x:-hw+.9,z:UPZ*k+.6,r:1.6,icon:'⬇️',label:'Go downstairs',act:()=>hclimb(-1),[flag]:1});}
-  L.fls=fls;L.g.add(fls[0].g);L.vf=-1;L.grid=fls[0].grid;
-  L.bounds={x1:L.ox-hw,z1:L.oz-hd,x2:L.ox+hw,z2:L.oz+UPZ*(n-1)+hd};return fls;}
+  PANE_LV=0;L.fls=fls;L.g.add(fls[0].g);L.vf=-1;L.grid=fls[0].grid;
+  L.bounds={x1:L.ox-hw,z1:L.oz-hd,x2:L.ox+hw,z2:L.oz+UPZ*(n-1)+hd};if(CUR===L)paneLook();return fls;}   /* (🖼️ a house rebuilt while you are in it: its window views painted again) */
 function homeShell(L,n){n=clamp(n|0,1,6);if(L.nfl===n&&L.fls)return;L.nfl=n;L.big=n>1;
   if(L.fls)for(const F of L.fls){if(F.g.parent)F.g.parent.remove(F.g);F.g.traverse(o=>{if(o.geometry&&!o.userData.keep)o.geometry.dispose();});if(F.grid.parent)F.grid.parent.remove(F.grid);}
   const W=12,D=10,H=3.2;HOMEW=W/2;HOMED=D/2;HOMEGX=4.4;L.cols.length=0;L.inter=L.inter.filter(i=>!i.hdoor);
@@ -1522,7 +1522,7 @@ function yardPlace(){const j=LANE.mine,C=LOC.city;if(j==null||!YARD.g||j===YARD.
   YARD.g.position.set(cx,0,cz);YARD.g.rotation.y=p.s<0?0:Math.PI;YARD.g.visible=true;
   yardColsSet(j);
   YARD.j=j;YARD.on=true;for(const t of YARD.ints)yardT(t,j);benchYard(j);
-  const yw=v=>p.s<0?v:v+Math.PI,d=lotPt(j,-17,-9.6),bk=lotPt(j,-14,-19.7);DOORS.home.city=[d[0],d[1],yw(Math.PI)];DOORS.homeback.city=[bk[0],bk[1],yw(0)];
+  const yw=v=>p.s<0?v:v+Math.PI,d=lotPt(j,-17,-9.6),bk=lotPt(j,-14,-19.7);DOORS.home.city=[d[0],d[1],yw(Math.PI)];DOORS.homeback.city=[bk[0],bk[1],yw(0)];paneLook();   /* (🖼️ at home when your lot is set or moves: the window views painted for the new spot) */
   for(const [id,x,z,dx,dz] of[['home',-17,-15,-17,-6.9],['garden',-16.75,-21.5,-11.45,-6.9]]){const pl=PLACES.find(q=>q.id===id);[pl.x,pl.z]=lotPt(j,x,z);pl.door=lotPt(j,dx,dz);   /* the arrow aims at the pavement in front of your gate / garden path */
     if(NAV&&NAV.id===id&&!NAV.actor)setNavTo(pl,true);}
   if(a!=null)yardHop(a,j);}
@@ -1878,7 +1878,7 @@ function buildAptFloor(f){const W=19,D=4.4,H=3,hx=W/2,hz=D/2,C=FLOOR_C[f],L=make
   if(f===1){doorAt(sh,-hx,0,Math.PI/2,null,true,true);inter(L,{x:-8.6,z:0,r:1.7,icon:'🚪',label:'Go outside',act:()=>exitApt()});}
   else{windowAt(sh,-hx+.02,1.0,0,Math.PI/2,'#ffffff',1,1.25,{view:1});const pl=buildFurn('plant');pl.position.set(-8.9,0,1.6);sh.add(pl);}
 }
-function buildApts(){for(let f=1;f<=3;f++)buildAptFloor(f);}
+function buildApts(){for(let f=1;f<=3;f++){PANE_LV=f-1;buildAptFloor(f);}PANE_LV=0;}
 function buildPizzeria(){const {L,sh,pr}=room('pizza',1600,'#fff0e0','pizza');
   // the counter where you pick up pizzas
   box(pr,5.2,1.0,.9,'#ff6b6b',0,0,-3.0);box(pr,5.4,.1,1.04,'#ffffff',0,1.0,-3.0,{ol:.02});for(let i=0;i<5;i++)box(pr,.5,.6,.02,'#ffffff',-2+i,.2,-2.54,{ol:false});col(L,-2.75,-3.55,2.75,-2.45);
@@ -2007,7 +2007,7 @@ function vetClinic(g){const t=VT,W=12,D=9,H=6.6;
 function buildVet(){const t=VT,W=11,D=8,H=3.2,L=makeLoc('vet','in',4500,0,[-W/2,-D/2,W/2,D/2]),wm=mat(t.wall),fm=toon({color:t.floor});L.W=W/2;L.D=D/2;L.items=new THREE.Group();scene.add(L.items);
   const fls=[];for(let k=0;k<2;k++){const g=new THREE.Group(),sh=new THREE.Group(),pr=new THREE.Group();g.add(sh,pr);g.position.set(0,0,UPZ*k);fls.push({k,g,sh,pr});
     shell({ox:L.ox,oz:L.oz+UPZ*k,cols:L.cols},sh,W,D,H,wm,fm,'#f7f2ff',g,UPG);if(!k)doorAt(sh,0,D/2-.02,Math.PI,t.acc,true,true);
-    for(const x of[-2.5,2.5])windowIn(sh,x,1.0,k?-D/2+.02:D/2-.02,k?0:Math.PI,t.sun);windowIn(sh,W/2-.02,1.0,0,-Math.PI/2,t.sun);stairsIn(sh,1-k,W,H,wm);}
+    PANE_LV=k;for(const x of[-2.5,2.5])windowIn(sh,x,1.0,k?-D/2+.02:D/2-.02,k?0:Math.PI,t.sun);windowIn(sh,W/2-.02,1.0,0,-Math.PI/2,t.sun);PANE_LV=0;stairsIn(sh,1-k,W,H,wm);}
   L.fls=fls;L.g.add(fls[0].g);L.vf=-1;L.bounds={x1:L.ox-W/2,z1:L.oz-D/2,x2:L.ox+W/2,z2:L.oz+UPZ+D/2};
   const put=(g,f,x,z,ry,y)=>{const p=new THREE.Group();p.position.set(x,y||0,z);p.rotation.y=ry||0;g.add(p);f(p,t);return p;},a=fls[0].pr,b=fls[1].pr,Z=UPZ;
   /* the lobby */
