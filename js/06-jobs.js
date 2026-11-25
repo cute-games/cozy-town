@@ -80,13 +80,13 @@ function jobHello(k){const later=' Want a different job later? '+(JOBCTX==='msg'
 function setJob(k){if(S.job===k)return;if(S.dl)S.dl.o=null;if(S.ds)S.ds.o=null;if(S.tc)S.tc.o=null;tcClear();hsClear();if(S.pt)S.pt.o=null;ptClear();if(CUR&&CUR.id==='client')exitClient();S.job=k||null;S.jobAsk=true;change();jobHud(true);dcardUpd(true);}
 /* 💬 Messages: chats with the Pizzeria and Rosie, saved in your game */
 function msgs(){const m=S.msg||(S.msg={pz:[],ro:[]});if(!m.pz)m.pz=[];if(!m.ro)m.ro=[];if(!m.cl)m.cl=[];if(!m.dr)m.dr=[];if(!m.pc)m.pc=[];if(!m.u)m.u={pz:0,ro:0};return m;}
-const msgUnread=()=>S?Object.values(msgs().u).reduce((a,b)=>a+(b|0),0):0;
+const msgUnread=()=>S?Object.values(msgs().u).reduce((a,b)=>a+(b|0),0)+socUnread():0;   /* (and unread texts from friends, 25 Nov) */
 const phoneOpen=()=>UI.open&&!!document.querySelector('#card .phone');
 function addMsg(ch,from,text,o){const m=msgs(),L=m[ch];L.push(Object.assign({f:from,x:text,d:S.day,h:+S.time.toFixed(2)},o||{}));if(L.length>40)L.splice(0,L.length-40);
   const looking=phoneOpen()&&PH.app==='msg'&&PH.chat===ch;if(from!=='me'&&!(o&&o.q)&&!looking)m.u[ch]=Math.min(L.length,(m.u[ch]|0)+1);change();updPhoneBadge();if(looking)renderPhone();}
 const CHATS={pz:{n:'Pizzeria · Chef Blaze',av:'👨‍🍳',c:'#ffb36b'},ro:{n:'Rosie',av:'👧',c:'#ff9ec4'},cl:{n:'Clients',av:'🎨',c:'#b79cff'},dr:{n:'School · Mrs. Maple',av:'👩‍🏫',c:'#7fdcb5'},pc:{n:'Photo bookings',h:'Photos',av:'📸',c:'#ffd45c'}};
 function msgPhone(){const m=msgs(),c=PH.chat;
-  if(!c)return`<p class="ph-sub">Your chats. Orders from the Pizzeria are saved here!</p><div class="chats">${Object.keys(CHATS).map(k=>{const C=CHATS[k],L=m[k],last=L[L.length-1],u=m.u[k]|0;
+  if(!c)return`<p class="ph-sub">Your chats. Orders from the Pizzeria are saved here!</p><div class="chats">${socChats()}${Object.keys(CHATS).map(k=>{const C=CHATS[k],L=m[k],last=L[L.length-1],u=m.u[k]|0;
     return`<button class="chat" data-a="chat:${k}"><span class="cav" style="background:${C.c}">${C.av}</span><span class="cmid"><b>${C.n}</b><small>${last?esc((last.f==='me'?'You: ':'')+last.x):'No messages yet'}</small></span>${u?`<span class="cbadge">${u}</span>`:''}</button>`;}).join('')}</div>`;
   const C=CHATS[c],L=m[c];let h=`<div class="bubs">`;
   h+=L.length?L.map(b=>`<div class="bub ${b.f==='me'?'me':'them'}${b.r?' r':''}">${b.t2?`<b>${esc(b.t2)}</b><br>`:''}${b.img?ptImg(b.img):''}${esc(b.x)}<span class="tm">${wdName(b.d).slice(0,3)} · ${clockStr(b.h)}</span></div>`).join(''):`<p class="ph-sub">No messages yet.</p>`;h+='</div>';
