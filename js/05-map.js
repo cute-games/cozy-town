@@ -84,10 +84,10 @@ function mapPaint(x,ox,oz,k,w,h,o){const P=o.pal||(o.dark?MAP_PAL.dark:MAP_PAL.l
   /* 🏠 buildings: rounded blocks in their colours, the game's ink outline and a soft shadow */
   const blds=[...PLACES.filter(p=>!p.flat&&p.id!=='home'&&mapShown(p)).map(p=>[p.x,p.z,p.w||p.r*2,p.d||p.r*2,p.c,p.r]),...(o.big?BLDS.filter(b=>b[2]*b[3]>=o.big):BLDS)];   /* (o.big: the corner map's widest picture leaves out the small houses) */
   const bus=PLACES.find(p=>p.id==='bus');if(bus)blds.push([bus.x,bus.z,bus.w,bus.d,bus.c]);
-  for(const [bx,bz,bw,bd,c,round] of blds){if(!vis(bx-bw/2,bz-bd/2,bx+bw/2,bz+bd/2))continue;const r=Math.min(1.4,bw/4,bd/4),sh=Math.max(1.5*u,.5*k);
+  for(const [bx,bz,bw,bd,c,round] of blds){if(!vis(bx-bw/2,bz-bd/2,bx+bw/2,bz+bd/2))continue;if(o.big)x.globalAlpha=bw*bd<o.big?.4:1;   /* (o.big: small shops faint, so roads and the park read first) */const r=Math.min(1.4,bw/4,bd/4),sh=Math.max(1.5*u,.5*k);
     x.fillStyle=P.shade;if(round){x.beginPath();x.arc(X(bx)+sh,Z(bz)+sh,bw/2*k,0,TAU);}else rr(x,X(bx-bw/2)+sh,Z(bz-bd/2)+sh,bw*k,bd*k,r*k);x.fill();
     if(round)C(bx,bz,bw/2);else R(bx-bw/2,bz-bd/2,bx+bw/2,bz+bd/2,r);x.fillStyle=bc(c||'#d8cfe6');x.fill();stroke(P.ink,(mini?1.3:1.6)*u);
-    if(!mini&&!round&&k>2.5*u&&bw>2.5&&bd>2.5){R(bx-bw/2+.7,bz-bd/2+.7,bx+bw/2-.7,bz+bd/2-.7,Math.max(.4,r-.5));x.fillStyle=o.dark?'rgba(255,255,255,.08)':'rgba(255,255,255,.4)';x.fill();}}   /* a soft roof */
+    if(!mini&&!round&&k>2.5*u&&bw>2.5&&bd>2.5){R(bx-bw/2+.7,bz-bd/2+.7,bx+bw/2-.7,bz+bd/2-.7,Math.max(.4,r-.5));x.fillStyle=o.dark?'rgba(255,255,255,.08)':'rgba(255,255,255,.4)';x.fill();}}x.globalAlpha=1;   /* a soft roof */
   /* 🏡 Friends Lane: the gate, hedges, every lot (a house when a friend lives there), your garden, the end of the lane */
   x.beginPath();pl([[-84.6,-4.5],[-84.6,4.5]]);stroke(P.ink,Math.max(2*u,.55*k)+2*u);stroke('#ff7aa8',Math.max(2*u,.55*k));
   if(!mini){x.beginPath();for(const s of[-1,1])pl([[-80.3,s*37.5],[le-.9,s*37.5]]);pl([[le-1.35,-38],[le-1.35,38]]);stroke(P.hedge,Math.max(2*u,1*k));
