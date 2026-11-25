@@ -161,11 +161,44 @@ function printSync(notes,onsets,label){
   const absolute = errors.map(Math.abs).sort((a,b)=>a-b), median=(absolute[9]+absolute[10])/2;
   console.log(`${label}, arrow hit minus onset in ms: ${errors.map(n=>Math.abs(n)<.05?'0.0':(n>=0?'+':'')+n.toFixed(1)).join(', ')}`);
   console.log(`${label}, median absolute: ${median.toFixed(1)} ms`);
-  assert.ok(median<25);
+  return median;
 }
 test('20 sampled chart events meet the 25 ms median against independently detected onsets', () => {
-  printSync(dance.dnChart(slice3ID),fullLoop.profiles.fast.verify,'MP3 fast');
-  printSync(dance.dnChart(slice3ID.replace('beat3s-', 'beat3n-')),fullLoop.profiles.steady.verify,'MP3 steady');
+  assert.ok(printSync(dance.dnChart(slice3ID),fullLoop.profiles.fast.verify,'MP3 fast')<25);
+  assert.ok(printSync(dance.dnChart(slice3ID.replace('beat3s-', 'beat3n-')),fullLoop.profiles.steady.verify,'MP3 steady')<25);
+});
+
+test('both clients use the owner’s times, melody lanes and opposite arrows for doubles', () => {
+  for (const mode of ['steady','fast']) {
+    const fast = mode === 'fast';
+    const source = require('../charts/alley-' + mode + '.json');
+    const round = dance.dnRoundId({v: 2026112601, dp: fast}, true);
+    assert.ok(round.startsWith(fast?'beat4s-':'beat4n-'));
+    const chart = dance.dnChart(round), second = danceClient().dnChart(round);
+    const expected = source.flatMap(([t,d,double]) => double ? [[t,d],[t,3-d]] : [[t,d]]);
+    assert.equal(JSON.stringify(chart), JSON.stringify(second));
+    assert.deepEqual(Array.from(chart, n=>[n.t,n.d]), expected);
+    assert.ok(chart.every((n,i)=>n.t>=0&&n.t<85&&(!i||n.t>=chart[i-1].t)));
+    assert.ok(chart.length/85>=1&&chart.length/85<1.12);
+    const bot = dance.dnBotPlan(round,chart);
+    const played = Array.from(bot).filter(e=>e.i>=0);
+    assert.equal(played.length,chart.length);
+    assert.ok(played.every(e=>e.d===chart[e.i].d&&e.t>=chart[e.i].t));
+    assert.equal(played.filter(e=>e.grade<=2).length,Math.round(chart.length*.8));
+    console.log(`Owner’s ${mode} chart: ${chart.length} arrows, ${chart.length-source.length} doubles, ${(chart.length/85).toFixed(2)} arrows/s`);
+    printSync(chart,fullLoop.profiles[mode].verify,'Owner’s '+mode+' chart');
+  }
+});
+
+test('Slice 5 peers still negotiate the previous chart and newer peers can use steady playback', () => {
+  for(const [version,pitch,prefix] of [
+    [2026112510,true,'beat3s-'],[2026112510,false,'beat3n-'],
+    [2026112601,true,'beat4s-'],[2026112601,false,'beat4n-']
+  ]) {
+    const r = dance.dnRoundId({v:version,dp:pitch},true);
+    assert.ok(r.startsWith(prefix));
+    assert.ok(version===2026112510 ? dance.dnChart(r).length>135 : dance.dnChart(r).length<=93);
+  }
 });
 
 test('five duel ratings keep the full inclusive hit window and reset combo on either miss', () => {
