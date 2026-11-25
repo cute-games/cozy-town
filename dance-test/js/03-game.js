@@ -2370,7 +2370,7 @@ function setupInput(){
     else if(e.pointerId===IN.look.id){IN.look.id=null;const cl=IN.look.cls;if(e.type==='pointerup'&&IN.look.moved<(cl?40:12)&&performance.now()-IN.look.t<(cl?700:350))tapAt(e.clientX,e.clientY);}};
   T.addEventListener('pointerup',up);T.addEventListener('pointercancel',up);
   addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT'||document.body.classList.contains('away'))return;IN.keys[e.code]=true;
-    if(DANCE.on&&/^Arrow(Left|Right|Up|Down)$/.test(e.code)){e.preventDefault();if(!e.repeat||!DANCE.style)dnPress({ArrowLeft:0,ArrowDown:1,ArrowUp:2,ArrowRight:3}[e.code]);return;}   /* 🕺 the dance-off takes the arrows (run 4, job 17) */   /* away title: keys only press Play */
+    if(DANCE.on&&DN_KEYS[e.code]!==undefined){e.preventDefault();if(!e.repeat||!DANCE.style)dnPress(DN_KEYS[e.code]);return;}   /* 🕺 the dance-off takes the arrows (run 4, job 17) */   /* away title: keys only press Play */
     if(DN_TEST)return;
     if(e.code==='Escape'){if(UI.open&&!UI.lock)closePanel();else if(DECO.placing)decoCancel();return;}
     if(MAPV.on&&UI.open&&mapKeys(e))return;   /* 🗺️ + − zoom, arrows move the map, M closes it */

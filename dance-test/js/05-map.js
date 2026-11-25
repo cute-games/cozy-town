@@ -420,6 +420,9 @@ function openSettings(){const fromTitle=!PLAYING;
       <span class="row" style="margin:0;align-items:center;justify-content:flex-end"><input id="danceLatency" type="range" aria-description="Positive values help when speakers play the beat late" min="-200" max="200" step="5" value="${dnLatency()}" style="width:min(160px,37vw);height:44px;accent-color:#9b53bc">
       <output id="danceLatencyValue" for="danceLatency" style="min-width:65px;text-align:right;color:#3d2c5e">${dnLatency()} ms</output></span>
     </div>
+    <div class="opt"><span>Dance arrow travel</span><span class="row" style="margin:0"><button class="btn ${!SET.danceUp?'butter':'white'}" data-a="dnopt:down" aria-pressed="${!SET.danceUp}">Down ↓</button><button class="btn ${SET.danceUp?'butter':'white'}" data-a="dnopt:up" aria-pressed="${!!SET.danceUp}">Up ↑</button></span></div>
+    <div class="opt"><span>Dance arrow size</span><span class="row" style="margin:0"><button class="btn ${SET.danceSmall?'butter':'white'}" data-a="dnopt:standard" aria-pressed="${!!SET.danceSmall}">Standard</button><button class="btn ${!SET.danceSmall?'butter':'white'}" data-a="dnopt:large" aria-pressed="${!SET.danceSmall}">Large</button></span></div>
+    <div class="opt"><span>Dance motion</span><span class="row" style="margin:0"><button class="btn ${!SET.danceCalm?'butter':'white'}" data-a="dnopt:regular" aria-pressed="${!SET.danceCalm}">Regular</button><button class="btn ${SET.danceCalm?'butter':'white'}" data-a="dnopt:calm" aria-pressed="${!!SET.danceCalm}">Calm</button></span></div>
     <div class="opt"><span>Graphics</span><span class="row" style="margin:0"><button class="btn ${SET.gfx==='nice'?'butter':'white'}" data-a="sgfx:nice">Pretty</button><button class="btn ${SET.gfx==='fast'?'butter':'white'}" data-a="sgfx:fast">Fast</button></span></div>
     <div class="opt"><span>🍕 Pizza job</span><button class="btn white" data-a="tutgo">📖 Show me the tips</button></div>
     <div class="opt"><span>🎨 Designer job</span><button class="btn white" data-a="dtutgo">📖 Show me the tips</button></div>
@@ -448,6 +451,14 @@ ACT.gohome=()=>{if(CUR.id==='beach'&&!CR){closePanel();if(DECO.on)decoEnd();fade
   closePanel();if(DECO.on)decoEnd();fade(()=>{if(CR){if(CR.av)scene.remove(CR.av.root);CR=null;camera.clearViewOffset();}setLoc('home');const L=LOC.home;P.x=L.ox;P.z=L.oz+DOORS.home.inside[1];P.yaw=0;P.pitch=0;P.sit=null;P.ride=null;
   $('hud').hidden=false;resize();bringFollowers();saveLocal();toast('Home sweet home! 🏡',2.6);});};
 let WIPE=false;
+ACT.dnopt=v=>{
+  if(v==='up'||v==='down')SET.danceUp=v==='up';
+  if(v==='standard'||v==='large')SET.danceSmall=v==='standard';
+  if(v==='calm'||v==='regular')SET.danceCalm=v==='calm';
+  if(DANCE.laneFx)DANCE.laneFx.dirty=true;
+  $('dnHud')?.classList.toggle('dnCalm',dnCalm());
+  saveSet();openSettings();
+};
 ACT.slook=v=>{SET.look=+v;saveSet();openSettings();};
 ACT.ssound=()=>{SET.sound=!SET.sound;saveSet();audioInit();openSettings();};
 ACT.spad=()=>{SET.pad=SET.pad===false;saveSet();dcardUpd(true);leftFit();openSettings();};   /* ✏️ the Notepad switch (run 4, item 24): off hides the notepad, on brings it back; the notes stay in their own storage */
