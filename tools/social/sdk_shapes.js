@@ -16,15 +16,15 @@ const out=vm.runInContext(`(()=>{const fb=self.firebase,app=fb.initializeApp({da
   const cb=()=>{};
   t('SDK version '+fb.SDK_VERSION,()=>0);
   t('inbox: child(in/sid).limitToLast(30).on(value, cb, cancel)',()=>{const r=R.child('in/'+sid);if(typeof r.limitToLast!=='function')throw new Error('no limitToLast');r.limitToLast(30).on('value',cb,cb);});
-  t('sealed note: update({in/sid/id: {e,c,at:TS}, ir/sid: TS})',()=>R.update({['in/'+sid+'/'+id]:{e:'B'+'e'.repeat(86),c:'c'.repeat(154),at:TS},['ir/'+sid]:TS}));
+  t('sealed note: update({in/sid/id: {e,c,at:TS}, ir/sid: {t:TS,id}})',()=>R.update({['in/'+sid+'/'+id]:{e:'B'+'e'.repeat(86),c:'c'.repeat(154),at:TS},['ir/'+sid]:{t:TS,id}}));
   t('tidy a note: child(in/sid/id).remove()',()=>R.child('in/'+sid+'/'+id).remove());
   t('thread: child(t/tid/s).on / off',()=>{const q=R.child('t/'+tid+'/s'),c=q.on('value',cb,cb);if(c!==cb)throw new Error('on() did not hand back the callback');q.off('value',c);});
   t('my side: child(t/tid/s/a).set({s,at:TS,n})',()=>R.child('t/'+tid+'/s/a').set({s:'r',at:TS,n:'n'.repeat(75)}));
   t('texts: child(t/tid/m).limitToLast(60).on / off',()=>{const q=R.child('t/'+tid+'/m').limitToLast(60);q.on('value',cb,cb);q.off('value',cb);});
-  t('a text: child(t/tid).update({m/id: {f,c,at:TS}, x/a: TS})',()=>R.child('t/'+tid).update({['m/'+id]:{f:'a',c:'c'.repeat(60),at:TS},['x/a']:TS}));
+  t('a text: child(t/tid).update({m/id: {f,c,at:TS}, x/a: {t:TS,id}})',()=>R.child('t/'+tid).update({['m/'+id]:{f:'a',c:'c'.repeat(60),at:TS},['x/a']:{t:TS,id}}));
   t('tidy old lines: orderByKey().limitToFirst(20).on / off, child(id).remove()',()=>{const r=R.child('g');if(typeof r.orderByKey!=='function')throw new Error('no orderByKey');const q=r.orderByKey().limitToFirst(20);q.on('value',cb,cb);q.off('value',cb);r.child(id).remove();});
   t('world chat: child(g).limitToLast(50).on / off',()=>{const q=R.child('g').limitToLast(50);q.on('value',cb,cb);q.off('value',cb);});
-  t('a chat line: update({g/id: {s,n,t,at:TS}, gl: TS})',()=>R.update({['g/'+id]:{s:sid,n:'ZZTEST',t:'Hello 👋 ąčę',at:TS},gl:TS}));
+  t('a chat line: update({g/id: {s,n,t,at:TS}, gl: {t:TS,id}})',()=>R.update({['g/'+id]:{s:sid,n:'ZZTEST',t:'Hello 👋 ąčę',at:TS},gl:{t:TS,id}}));
   t('call note: child(t/tid/s/ca).onDisconnect().remove() and set({i,k,d,at:TS})',()=>{const r=R.child('t/'+tid+'/s/ca'),p=r.onDisconnect().remove();if(!p||!p.catch)throw new Error('onDisconnect().remove() gave no promise');p.catch(()=>{});return r.set({i:id,k:'o',d:'d'.repeat(5000),at:TS});});
   t('hang up: set({i,k:x,at:TS})',()=>R.child('t/'+tid+'/s/ca').set({i:id,k:'x',at:TS}));
   return res;})()`,ctx);

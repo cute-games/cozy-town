@@ -213,8 +213,9 @@ function bdTick(dt){const f=FRIEND_ACTORS[0],ok=f&&f.d.id==='rosie'&&f.mode!=='a
    • Friends: asking = my side of the thread says 'r', plus a sealed note in the other player's inbox. They answer 'y' or 'n'. Remove or block = 'n'.
      My own list (S.soc.fr) is the truth for what I said yes to: nothing written online can make me the friend of somebody I never answered.
    • The database says no (the new rules are not in yet) = "coming soon", and nothing else in the game changes.
-   Paths under worlds/cozy-town/social: in/<sid>/<id> sealed notes · ir/<sid> last note time · t/<tid>/s/{a,b} the two sides, {ca,cb} call set-up ·
-   t/<tid>/m/<id> texts · t/<tid>/x/{a,b} last text time · g/<id> world chat lines · gl last line time. Rules: tools/social/firebase-rules.json */
+   Paths under worlds/cozy-town/social: in/<sid>/<id> sealed notes · ir/<sid> the inbox's timer · t/<tid>/s/{a,b} the two sides, {ca,cb} call set-up ·
+   t/<tid>/m/<id> texts · t/<tid>/x/{a,b} each side's text timer · g/<id> world chat lines · gl the room's timer. A timer is {t: the database's time,
+   id: the one note, text or line it came with}: the rules let it change only together with that one item. Rules: tools/social/firebase-rules.json */
 const SOC={st:'off',PATH:'worlds/cozy-town/social',ref:null,me:null,th:{},pings:{},g:[],gtop:0,gseen:0,qg:null,cg:null,call:null,ring:0,rang:'',inv:null,sent:-1e9,said:-1e9,rt:0,pt:-1e9,MAXF:40};
 const SOCPK=/^B[A-Za-z0-9_-]{86}$/,SOCEC={name:'ECDH',namedCurve:'P-256'},SOCICE=[{urls:['stun:stun.l.google.com:19302','stun:stun.cloudflare.com:3478']}];
 const SOCFAIL="😕 The call could not connect. Some Wi-Fi and phone networks don't let calls through. Try again on another Wi-Fi!";
@@ -263,7 +264,7 @@ async function socInbox(v){for(const id in v){if(SOC.pings[id])continue;SOC.ping
     if(+p.at<socNow()-14*864e5){SOC.ref.child('in/'+SOC.me.sid+'/'+id).remove().catch(()=>{});continue;}   /* two weeks old: tidied away */
     const pk=typeof p.e==='string'&&typeof p.c==='string'?await socOpen(p):null;if(!pk||pk===SOC.me.pk)continue;const sid=socSid(pk);
     if(!S.soc.bl[sid]&&!S.soc.fr[sid]&&!SOC.th[sid])socThread(sid,pk);}}
-async function socPing(sid,pk,n){try{const p=await socSeal(pk);p.at=socTS();await SOC.ref.update({['in/'+sid+'/'+socId()]:p,['ir/'+sid]:socTS()});}
+async function socPing(sid,pk,n){try{const p=await socSeal(pk),id=socId();p.at=socTS();await SOC.ref.update({['in/'+sid+'/'+id]:p,['ir/'+sid]:{t:socTS(),id}});}   /* (the inbox's timer names this one note: one write = one note) */
   catch(e){if((n|0)<3)setTimeout(()=>socPing(sid,pk,(n|0)+1),3500);}}   /* (an inbox takes one note every 3 s: try again a little later) */
 /* 🧵 a thread: everything between me and one other player. One for every friend and request in my list, and for a new note in my inbox */
 function socThread(sid,pk){let T=SOC.th[sid];if(T)return T;T=SOC.th[sid]={sid,pk,tid:'',key:null,slot:SOC.me.sid<sid?'a':'b',v:{},msgs:[],txt:{},top:0,got:0,gn:0,want:'',wt:-1e9,wp:null,qs:null,cs:null,qm:null,cm:null};
@@ -316,7 +317,7 @@ function socRead(sid){const f=S.soc.fr[sid],T=SOC.th[sid];if(!f||!T||T.top<=(f.r
 async function socSend(sid,raw){try{const f=S.soc.fr[sid],T=SOC.th[sid],t=socClean(raw,200);if(!socOn()||!f||f.s!=='ok'||!T||!T.tid||!t)return false;
     if(socBad(t)){SFX.no();toast("Let's keep messages friendly and safe 💛",3);return false;}
     if(performance.now()-SOC.sent<1500){toast('🐢 Slow down a little!',2);return false;}SOC.sent=performance.now();
-    await SOC.ref.child('t/'+T.tid).update({['m/'+socId()]:{f:T.slot,c:await socEnc(T.key,t),at:socTS()},['x/'+T.slot]:socTS()});return true;}
+    const id=socId();await SOC.ref.child('t/'+T.tid).update({['m/'+id]:{f:T.slot,c:await socEnc(T.key,t),at:socTS()},['x/'+T.slot]:{t:socTS(),id}});return true;}
   catch(e){SFX.no();toast("😕 That message didn't go through. Try again in a moment!",3.2);return false;}}
 function socPrune(r,age){if(!r.orderByKey)return;try{const q=r.orderByKey().limitToFirst(20),cb=s=>{q.off('value',cb);const v=(s&&s.val())||{},old=socNow()-age;for(const id in v)if(v[id]&&+v[id].at<old)r.child(id).remove().catch(()=>{});};q.on('value',cb,()=>{});}catch(e){}}   /* the oldest lines, once per start: old ones go */
 /* 🌍 the world chat: one room for everyone who is playing, the newest 50 lines. Lines that are not kind or safe and blocked players are left out when
@@ -331,7 +332,7 @@ const socNewLines=()=>socShown().filter(m=>m.at>SOC.gseen&&m.s!==SOC.me.sid).len
 async function socSay(raw){const t=socClean(raw,120);if(!socOn()||SET.wchat===false||!t)return false;
   if(socBad(t)){SFX.no();toast("Let's keep the chat friendly and safe 💛",3);return false;}
   if(performance.now()-SOC.said<4000){toast('🐢 Slow down a little! You can write again in a moment.',2.4);return false;}SOC.said=performance.now();
-  const put=()=>SOC.ref.update({['g/'+socId()]:{s:SOC.me.sid,n:socName(S.name),t,at:socTS()},gl:socTS()});
+  const put=()=>{const id=socId();return SOC.ref.update({['g/'+id]:{s:SOC.me.sid,n:socName(S.name),t,at:socTS()},gl:{t:socTS(),id}});};
   try{await put();return true;}catch(e){try{await new Promise(ok=>setTimeout(ok,1300));await put();return true;}catch(e2){SFX.no();toast("😕 That didn't go through. Try again in a moment!",3);return false;}}}   /* (the room takes one line a second: one more try) */
 /* 📞 a voice call between two friends who are both playing: WebRTC sound, set up through the thread (the offer and the answer, locked like texts).
    Public STUN servers find a way through most home Wi-Fi; there is no relay (TURN) server, so some networks cannot connect: then a kind line says so.

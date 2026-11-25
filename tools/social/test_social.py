@@ -322,20 +322,24 @@ async def rules(run, part='rules'):
       out.list_all=await rd(S);out.list_threads=await rd(S+'/t');out.list_inboxes=await rd(S+'/in');out.guess_thread=await rd(S+'/t/'+'A'.repeat(43));
       await wr('wipe',db.ref(S).remove());await wr('wipe_chat',db.ref(S+'/g').remove());
       await wr('chat_no_timer',db.ref(S+'/g/zz0000000009').set({s:'x'.repeat(22),n:'ZZTEST-HACK',t:'hi',at:TS}));
-      await wr('chat_long',db.ref(S).update({'g/zz0000000010':{s:'x'.repeat(22),n:'ZZTEST-HACK',t:'L'.repeat(500),at:TS},gl:TS}));
-      await wr('chat_old_time',db.ref(S).update({'g/zz0000000011':{s:'x'.repeat(22),n:'ZZTEST-HACK',t:'hi',at:5},gl:TS}));
-      await wr('chat_extra',db.ref(S).update({'g/zz0000000012':{s:'x'.repeat(22),n:'ZZTEST-HACK',t:'hi',at:TS,img:'x'},gl:TS}));
+      const L=(t,o)=>Object.assign({s:'x'.repeat(22),n:'ZZTEST-HACK',t,at:TS},o||{}),tm=id=>({t:TS,id});
+      await wr('chat_long',db.ref(S).update({'g/zz0000000010':L('L'.repeat(500)),gl:tm('zz0000000010')}));
+      await wr('chat_old_time',db.ref(S).update({'g/zz0000000011':L('hi',{at:5}),gl:tm('zz0000000011')}));
+      await wr('chat_extra',db.ref(S).update({'g/zz0000000012':L('hi',{img:'x'}),gl:tm('zz0000000012')}));
+      await wr('chat_two_in_one',db.ref(S).update({'g/zz0000000018':L('one'),'g/zz0000000019':L('two'),gl:tm('zz0000000018')}));
+      await wr('chat_timer_alone',db.ref(S+'/gl').set(tm('zz0000000020')));
+      await wr('inbox_timer_alone',db.ref(S+'/ir/'+'B'.repeat(22)).set(tm('zz0000000021')));
       await wr('inbox_junk',db.ref(S+'/in/'+'B'.repeat(22)+'/zz0000000013').set({e:'x',c:'y',at:TS}));
-      await wr('thread_text',db.ref(S+'/t/'+'A'.repeat(43)).update({'m/zz0000000014':{f:'a',c:'c'.repeat(60),at:TS},'x/a':TS}));
+      await wr('thread_text',db.ref(S+'/t/'+'A'.repeat(43)).update({'m/zz0000000014':{f:'a',c:'c'.repeat(60),at:TS},'x/a':tm('zz0000000014')}));
       await wr('thread_call',db.ref(S+'/t/'+'A'.repeat(43)+'/s/ca').set({i:'zz0000000015',k:'o',d:'x',at:TS}));
       await wr('elsewhere',db.ref('worlds/cozy-town/social2/x').set(1));
-      await wr('flood1',db.ref(S).update({'g/zz0000000016':{s:'x'.repeat(22),n:'ZZTEST-HACK',t:'one',at:TS},gl:TS}));
-      await wr('flood2',db.ref(S).update({'g/zz0000000017':{s:'x'.repeat(22),n:'ZZTEST-HACK',t:'two',at:TS},gl:TS}));
+      await wr('flood1',db.ref(S).update({'g/zz0000000016':L('one'),gl:tm('zz0000000016')}));
+      await wr('flood2',db.ref(S).update({'g/zz0000000017':L('two'),gl:tm('zz0000000017')}));
       return out;}"""
     await b.wait(1200); h = await b.ev(HOSTILE)
     want = dict(list_all='refused', list_threads='refused', list_inboxes='refused', guess_thread='refused', wipe='refused', wipe_chat='refused', chat_no_timer='refused', chat_long='refused', chat_old_time='refused',
-                chat_extra='refused', inbox_junk='refused', thread_text='refused', thread_call='refused', elsewhere='refused', flood1='written', flood2='refused')
-    line(part, "a stranger cannot list or wipe anything, cannot write into a thread, and cannot flood the chat", h == want, {k: v for k, v in h.items() if want.get(k) != v} or 'all 16 tries as wanted')
+                chat_extra='refused', chat_two_in_one='refused', chat_timer_alone='refused', inbox_timer_alone='refused', inbox_junk='refused', thread_text='refused', thread_call='refused', elsewhere='refused', flood1='written', flood2='refused')
+    line(part, "a stranger cannot list or wipe anything, cannot write into a thread, cannot move a timer alone, and cannot put two lines in one write", h == want, {k: v for k, v in h.items() if want.get(k) != v} or f'all {len(want)} tries as wanted')
     for g in (a, b, c): await run.close(g)
 
 async def soon(run, part='soon'):

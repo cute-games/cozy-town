@@ -48,6 +48,6 @@ If your old rules also hold things for other apps (names other than `worlds` at 
 - Nobody can list the players' inboxes or private threads. A thread can only be opened by the two players who can work out its secret name from their keys.
 - Texts, names and call set-up are stored locked. Only the two friends' games can unlock them.
 - Every write is checked: the right shape, a size limit, the database's own time, nothing extra.
-- Speed limits kept by the database: one world chat line a second for the whole room, one text every 0.8 s for each side of a thread, one friend request note every 3 s for each inbox.
+- Speed limits kept by the database: one world chat line a second for the whole room, one text every 0.8 s for each side of a thread, one friend request note every 3 s for each inbox. One write can carry only one line, text or note, and nobody can move a timer on its own.
 - World chat lines cannot be changed, and can only be tidied away after a day.
 - The database has no sign-in, so it cannot know who is who. The game's secret keys (kept in each saved game) do that job. "Move my game" moves the key; "Start a new game" makes a new one.

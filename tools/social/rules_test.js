@@ -10,6 +10,7 @@ const NEW = load('firebase-rules.json'), OLD = load('firebase-rules-before.json'
 const S = 'worlds/cozy-town/social/', NOW = 1795000000000, TS = { '.sv': 'timestamp' };
 const SIDA = 'A'.repeat(22), SIDB = 'B'.repeat(22), TID = 'T'.repeat(43), E = 'B' + 'e'.repeat(86), C = 'c'.repeat(154);
 const id = n => ('00000000' + (NOW + n).toString(36)).slice(-9) + 'abc';
+const tm = i => ({ t: TS, id: i });   /* a timer that names the one note, text or line it comes with */
 let n = 0, bad = 0;
 function expect(what, res, want) { n++; if (res.allowed !== want) { bad++; console.log('WRONG | ' + what + ' | allowed ' + res.allowed + ', wanted ' + want + '\n' + res.info); } else console.log((want ? 'allowed' : 'refused') + ' | ' + what); }
 const db = (rules, data, now) => { const d = targaryen.database(rules, data || {}, now || NOW), o = { now: now || NOW };   /* every try happens at the time given (NOW if none) */
@@ -45,11 +46,14 @@ for (const [nm, R] of [['old rules', OLD], ['new rules', NEW]]) {
 { const d = db(OLD);
   expect('old rules: look into my inbox', d.read(S + 'in/' + SIDA), false);
   expect('old rules: read the world chat', d.read(S + 'g'), false);
-  expect('old rules: write a chat line', d.update(S, { ['g/' + id(0)]: { s: SIDA, n: 'ZZTEST', t: 'hi', at: TS }, gl: TS }), false);
+  expect('old rules: write a chat line', d.update(S, { ['g/' + id(0)]: { s: SIDA, n: 'ZZTEST', t: 'hi', at: TS }, gl: tm(id(0)) }), false);
   expect('old rules: read a thread', d.read(S + 't/' + TID + '/s'), false);
   expect('old rules: write my side of a thread', d.write(S + 't/' + TID + '/s/a', { s: 'r', at: TS, n: 'x' }), false); }
-/* ---- 3. the new places ---- */
-{ const d = db(NEW), ping = { e: E, c: C, at: TS }, P = S + 'in/' + SIDB + '/' + id(0);
+/* ---- 3. the new places ----
+   A timer ({t: the database's time, id: the one item it came with}) keeps each speed limit: it can change only together with that one note,
+   text or line, so one write carries one item and nobody can move a timer on its own. */
+{ const d = db(NEW), ping = { e: E, c: C, at: TS }, P = S + 'in/' + SIDB + '/' + id(0), I = S + 'ir/' + SIDB;
+  const note = (D, key, p, timer, now) => db(NEW, D, now).update(S, Object.assign({ ['in/' + SIDB + '/' + key]: p }, timer === null ? {} : { ['ir/' + SIDB]: timer === undefined ? tm(key) : timer }));
   expect('nobody can list the social part', d.read(S.slice(0, -1)), false);
   expect('nobody can list the inboxes', d.read(S + 'in'), false);
   expect('nobody can list the threads', d.read(S + 't'), false);
@@ -57,23 +61,33 @@ for (const [nm, R] of [['old rules', OLD], ['new rules', NEW]]) {
   expect('nobody can read the text timers', d.read(S + 't/' + TID + '/x'), false);
   expect('nobody can read the inbox timers', d.read(S + 'ir'), false);
   expect('look into an inbox (sealed notes)', d.read(S + 'in/' + SIDB), true);
-  expect('a friend request note, with its timer', d.update(S, { ['in/' + SIDB + '/' + id(0)]: ping, ['ir/' + SIDB]: TS }), true);
+  expect('a friend request note, with the inbox timer that names it', note({}, id(0), ping), true);
   expect('a note without the timer', d.write(P, ping), false);
-  expect('a note with an old time', d.update(S, { ['in/' + SIDB + '/' + id(0)]: at(ping, 'at', NOW - 9), ['ir/' + SIDB]: TS }), false);
-  expect('a note with an extra field', d.update(S, { ['in/' + SIDB + '/' + id(0)]: at(ping, 'x', 1), ['ir/' + SIDB]: TS }), false);
-  expect('a note with a short key', d.update(S, { ['in/' + SIDB + '/' + id(0)]: at(ping, 'e', 'Bshort'), ['ir/' + SIDB]: TS }), false);
-  expect('a note that is far too big', d.update(S, { ['in/' + SIDB + '/' + id(0)]: at(ping, 'c', 'c'.repeat(301)), ['ir/' + SIDB]: TS }), false);
-  expect('a note with a bad name (id)', d.update(S, { ['in/' + SIDB + '/BAD']: ping, ['ir/' + SIDB]: TS }), false);
-  expect('a note into a badly named inbox', d.update(S, { ['in/short/' + id(0)]: ping, 'ir/short': TS }), false);
-  const one = tree({ [S + 'in/' + SIDB + '/' + id(0)]: { e: E, c: C, at: NOW }, [S + 'ir/' + SIDB]: NOW });
-  expect('a second note into the same inbox 1 s later', db(NEW, one, NOW + 1000).update(S, { ['in/' + SIDB + '/' + id(1000)]: ping, ['ir/' + SIDB]: TS }), false);
-  expect('a second note 4 s later', db(NEW, one, NOW + 4000).update(S, { ['in/' + SIDB + '/' + id(4000)]: ping, ['ir/' + SIDB]: TS }), true);
-  expect('change a note that is there', db(NEW, one, NOW + 4000).update(S, { ['in/' + SIDB + '/' + id(0)]: ping, ['ir/' + SIDB]: TS }), false);
+  expect('a note with an old time', note({}, id(0), at(ping, 'at', NOW - 9)), false);
+  expect('a note with an extra field', note({}, id(0), at(ping, 'x', 1)), false);
+  expect('a note with a short key', note({}, id(0), at(ping, 'e', 'Bshort')), false);
+  expect('a note that is far too big', note({}, id(0), at(ping, 'c', 'c'.repeat(301))), false);
+  expect('a note with a bad name (id)', note({}, 'BAD', ping), false);
+  expect('a note into a badly named inbox', d.update(S, { ['in/short/' + id(0)]: ping, 'ir/short': tm(id(0)) }), false);
+  const one = tree({ [S + 'in/' + SIDB + '/' + id(0)]: { e: E, c: C, at: NOW }, [I]: { t: NOW, id: id(0) } });
+  expect('a second note into the same inbox 1 s later', note(one, id(1000), ping, undefined, NOW + 1000), false);
+  expect('a second note 4 s later', note(one, id(4000), ping, undefined, NOW + 4000), true);
+  expect('change a note that is there', note(one, id(0), ping, undefined, NOW + 4000), false);
   expect('delete a fresh note', db(NEW, one, NOW + 4000).write(P, null), false);
   expect('tidy away a note after 2 weeks', db(NEW, one, NOW + 15 * 864e5).write(P, null), true);
-  expect('delete the inbox timer', db(NEW, one, NOW + 4000).write(S + 'ir/' + SIDB, null), false);
+  expect('delete the inbox timer', db(NEW, one, NOW + 4000).write(I, null), false);
+  /* the attacks the timers must stop */
+  const stuff = { [I.slice(S.length)]: tm(id(4000)) }; for (let i = 0; i < 500; i++) stuff['in/' + SIDB + '/' + id(4000 + i)] = ping;
+  expect('ATTACK 500 junk notes in one write', db(NEW, one, NOW + 4000).update(S, stuff), false);
+  expect('ATTACK two notes in one write (the timer names one)', db(NEW, {}).update(S, { ['in/' + SIDB + '/' + id(0)]: ping, ['in/' + SIDB + '/' + id(1)]: ping, ['ir/' + SIDB]: tm(id(0)) }), false);
+  expect('ATTACK move the inbox timer alone (to block a child\'s friend requests)', db(NEW, one, NOW + 4000).write(I, { t: NOW + 4000, id: id(4000) }), false);
+  expect('ATTACK move the inbox timer alone, naming an old note', db(NEW, one, NOW + 4000).write(I, { t: NOW + 4000, id: id(0) }), false);
+  expect('ATTACK move only the timer\'s time (ir/<sid>/t)', db(NEW, one, NOW + 4000).write(I + '/t', NOW + 4000), false);
+  expect('ATTACK a note whose timer names another note', note({}, id(0), ping, tm(id(7))), false);
+  expect('ATTACK the timer as a plain number (the first shape)', note({}, id(0), ping, TS), false);
+  expect('ATTACK a timer with an extra field', note({}, id(0), ping, { t: TS, id: id(0), big: 'x'.repeat(5000) }), false);
 }
-{ const T = S + 't/' + TID + '/', side = { s: 'r', at: TS, n: 'n'.repeat(60) }, d = db(NEW);
+{ const T = S + 't/' + TID + '/', TH = T.slice(0, -1), side = { s: 'r', at: TS, n: 'n'.repeat(60) }, d = db(NEW);
   expect('my side of a thread: I ask', d.write(T + 's/a', side), true);
   expect('my side: yes', d.write(T + 's/b', at(side, 's', 'y')), true);
   expect('my side: no, without a name', d.write(T + 's/b', { s: 'n', at: TS }), true);
@@ -87,25 +101,32 @@ for (const [nm, R] of [['old rules', OLD], ['new rules', NEW]]) {
   expect('read the two sides (who knows the thread\'s name)', d.read(T + 's'), true);
   expect('read the texts', d.read(T + 'm'), true);
   const fr = (a, b) => tree(Object.assign({}, a ? { [T + 's/a']: { s: a, at: NOW - 9000 } } : {}, b ? { [T + 's/b']: { s: b, at: NOW - 8000 } } : {}));
-  const msg = f => ({ f, c: 'm'.repeat(60), at: TS }), put = (data, f, extra, now) => db(NEW, data, now).update(T.slice(0, -1), Object.assign({ ['m/' + id(0)]: msg(f), ['x/' + f]: TS }, extra || {}));
-  expect('a text between friends (asked + yes)', put(fr('r', 'y'), 'a'), true);
+  const msg = f => ({ f, c: 'm'.repeat(60), at: TS });
+  const put = (data, f, now, m, key) => { key = key || id(now ? now - NOW : 0); return db(NEW, data, now).update(TH, { ['m/' + key]: m || msg(f), ['x/' + f]: tm(key) }); };
+  expect('a text between friends (asked + yes), with my timer that names it', put(fr('r', 'y'), 'a'), true);
   expect('a text between friends (yes + yes), from side b', put(fr('y', 'y'), 'b'), true);
   expect('a text when one side said no', put(fr('y', 'n'), 'a'), false);
   expect('a text when the other side never answered', put(fr('r', null), 'a'), false);
   expect('a text in an empty thread', put({}, 'a'), false);
   expect('a text without its timer', db(NEW, fr('y', 'y')).write(T + 'm/' + id(0), msg('a')), false);
-  expect('a text with the other side\'s timer', db(NEW, fr('y', 'y')).update(T.slice(0, -1), { ['m/' + id(0)]: msg('a'), 'x/b': TS }), false);
-  const sent = Object.assign(fr('y', 'y'));
-  sent.worlds['cozy-town'].social.t[TID].x = { a: NOW }; sent.worlds['cozy-town'].social.t[TID].m = { [id(0)]: { f: 'a', c: 'm'.repeat(60), at: NOW } };
-  expect('a second text half a second later', db(NEW, sent, NOW + 500).update(T.slice(0, -1), { ['m/' + id(500)]: msg('a'), 'x/a': TS }), false);
-  expect('a second text a second later', db(NEW, sent, NOW + 1000).update(T.slice(0, -1), { ['m/' + id(1000)]: msg('a'), 'x/a': TS }), true);
-  expect('the other side answers at once', db(NEW, sent, NOW + 100).update(T.slice(0, -1), { ['m/' + id(100)]: msg('b'), 'x/b': TS }), true);
-  expect('change a text', db(NEW, sent, NOW + 1000).update(T.slice(0, -1), { ['m/' + id(0)]: msg('a'), 'x/a': TS }), false);
+  expect('a text with the other side\'s timer', db(NEW, fr('y', 'y')).update(TH, { ['m/' + id(0)]: msg('a'), 'x/b': tm(id(0)) }), false);
+  const sent = fr('y', 'y');
+  sent.worlds['cozy-town'].social.t[TID].x = { a: { t: NOW, id: id(0) } }; sent.worlds['cozy-town'].social.t[TID].m = { [id(0)]: { f: 'a', c: 'm'.repeat(60), at: NOW } };
+  expect('a second text half a second later', put(sent, 'a', NOW + 500), false);
+  expect('a second text a second later', put(sent, 'a', NOW + 1000), true);
+  expect('the other side answers at once', put(sent, 'b', NOW + 100), true);
+  expect('change a text', put(sent, 'a', NOW + 1000, null, id(0)), false);
   expect('delete a text', db(NEW, sent, NOW + 1000).write(T + 'm/' + id(0), null), true);
-  expect('a text that is far too long', db(NEW, fr('y', 'y')).update(T.slice(0, -1), { ['m/' + id(0)]: at(msg('a'), 'c', 'm'.repeat(901)), 'x/a': TS }), false);
-  expect('a text from side c', db(NEW, fr('y', 'y')).update(T.slice(0, -1), { ['m/' + id(0)]: msg('c'), 'x/a': TS }), false);
-  expect('a text with an extra field', db(NEW, fr('y', 'y')).update(T.slice(0, -1), { ['m/' + id(0)]: at(msg('a'), 'z', 1), 'x/a': TS }), false);
+  expect('a text that is far too long', put(fr('y', 'y'), 'a', 0, at(msg('a'), 'c', 'm'.repeat(901))), false);
+  expect('a text from side c', db(NEW, fr('y', 'y')).update(TH, { ['m/' + id(0)]: msg('c'), 'x/a': tm(id(0)) }), false);
+  expect('a text with an extra field', put(fr('y', 'y'), 'a', 0, at(msg('a'), 'z', 1)), false);
   expect('delete a text timer', db(NEW, sent, NOW + 1000).write(T + 'x/a', null), false);
+  const many = { 'x/a': tm(id(2000)) }; for (let i = 0; i < 300; i++) many['m/' + id(2000 + i)] = msg('a');
+  expect('ATTACK 300 texts in one write', db(NEW, sent, NOW + 2000).update(TH, many), false);
+  expect('ATTACK move my text timer alone', db(NEW, sent, NOW + 2000).write(T + 'x/a', { t: NOW + 2000, id: id(0) }), false);
+  expect('ATTACK move the other side\'s timer alone (to stop them writing)', db(NEW, sent, NOW + 2000).write(T + 'x/b', { t: NOW + 2000, id: id(0) }), false);
+  expect('ATTACK the other side\'s timer with my own text', db(NEW, sent, NOW + 2000).update(TH, { ['m/' + id(2000)]: msg('a'), 'x/a': tm(id(2000)), 'x/b': tm(id(2000)) }), false);
+  expect('(known) one of the two friends writes a text in the other\'s name: the rules cannot tell the two apart', put(sent, 'b', NOW + 2000), true);
   const call = k => ({ i: id(0), k, d: 'd'.repeat(5000), at: TS });
   expect('call a friend', db(NEW, fr('y', 'y')).write(T + 's/ca', call('o')), true);
   expect('answer a friend\'s call', db(NEW, fr('r', 'y')).write(T + 's/cb', call('a')), true);
@@ -117,10 +138,11 @@ for (const [nm, R] of [['old rules', OLD], ['new rules', NEW]]) {
   expect('a call note with another word', db(NEW, fr('y', 'y')).write(T + 's/ca', call('z')), false);
   expect('a call note with an extra field', db(NEW, fr('y', 'y')).write(T + 's/ca', at(call('o'), 'z', 1)), false);
 }
-{ const line = { s: SIDA, n: 'ZZTEST', t: 'Hello everyone!', at: TS }, d = db(NEW), say = (D, l, now, extra) => db(NEW, D, now).update(S.slice(0, -1), Object.assign({ ['g/' + id(now ? now - NOW : 0)]: l }, extra === undefined ? { gl: TS } : extra));
+{ const line = { s: SIDA, n: 'ZZTEST', t: 'Hello everyone!', at: TS }, d = db(NEW), G = S.slice(0, -1);
+  const say = (D, l, now, timer) => { const k = id(now ? now - NOW : 0); return db(NEW, D, now).update(G, Object.assign({ ['g/' + k]: l }, timer === null ? {} : { gl: timer === undefined ? tm(k) : timer })); };
   expect('read the world chat', d.read(S + 'g'), true);
-  expect('a world chat line, with the room\'s timer', say({}, line), true);
-  expect('a line without the timer', say({}, line, 0, {}), false);
+  expect('a world chat line, with the room\'s timer that names it', say({}, line), true);
+  expect('a line without the timer', say({}, line, 0, null), false);
   expect('a line of 121 letters', say({}, at(line, 't', 'x'.repeat(121))), false);
   expect('an empty line', say({}, at(line, 't', '')), false);
   expect('a line with a 15-letter name', say({}, at(line, 'n', 'x'.repeat(15))), false);
@@ -128,15 +150,24 @@ for (const [nm, R] of [['old rules', OLD], ['new rules', NEW]]) {
   expect('a line with an extra field', say({}, at(line, 'url', 'x')), false);
   expect('a line with an old time', say({}, at(line, 'at', NOW - 60000)), false);
   expect('a line that is a number', say({}, 5), false);
-  const one = tree({ [S + 'g/' + id(0)]: { s: SIDA, n: 'ZZTEST', t: 'hi', at: NOW }, [S + 'gl']: NOW });
+  const one = tree({ [S + 'g/' + id(0)]: { s: SIDA, n: 'ZZTEST', t: 'hi', at: NOW }, [S + 'gl']: { t: NOW, id: id(0) } });
   expect('a second line half a second later (anyone)', say(one, line, NOW + 500), false);
   expect('a second line 1.2 s later', say(one, line, NOW + 1200), true);
-  expect('change a line', db(NEW, one, NOW + 5000).update(S.slice(0, -1), { ['g/' + id(0)]: line, gl: TS }), false);
+  expect('change a line', db(NEW, one, NOW + 5000).update(G, { ['g/' + id(0)]: line, gl: tm(id(0)) }), false);
   expect('delete a fresh line', db(NEW, one, NOW + 5000).write(S + 'g/' + id(0), null), false);
   expect('tidy away a line after a day', db(NEW, one, NOW + 864e5 + 5000).write(S + 'g/' + id(0), null), true);
   expect('delete the whole chat', db(NEW, one, NOW + 864e5 + 5000).write(S + 'g', null), false);
   expect('delete the room\'s timer', db(NEW, one, NOW + 5000).write(S + 'gl', null), false);
-  expect('wipe the whole social part', db(NEW, one, NOW + 5000).write(S.slice(0, -1), null), false);
+  expect('wipe the whole social part', db(NEW, one, NOW + 5000).write(G, null), false);
+  const flood = { gl: tm(id(5000)) }; for (let i = 0; i < 50; i++) flood['g/' + id(5000 + i)] = at(line, 't', 'spam ' + i);
+  expect('ATTACK 50 chat lines in one write', db(NEW, one, NOW + 5000).update(G, flood), false);
+  expect('ATTACK two chat lines in one write (the timer names one)', db(NEW, one, NOW + 5000).update(G, { ['g/' + id(5000)]: line, ['g/' + id(5001)]: line, gl: tm(id(5000)) }), false);
+  expect('ATTACK move the room\'s timer alone (to stop the chat for everyone)', db(NEW, one, NOW + 5000).write(S + 'gl', { t: NOW + 5000, id: id(5000) }), false);
+  expect('ATTACK move the room\'s timer alone, naming an old line', db(NEW, one, NOW + 5000).write(S + 'gl', { t: NOW + 5000, id: id(0) }), false);
+  expect('ATTACK move only the timer\'s time (gl/t)', db(NEW, one, NOW + 5000).write(S + 'gl/t', NOW + 5000), false);
+  expect('ATTACK a line whose timer names another line', say(one, line, NOW + 5000, tm(id(1))), false);
+  expect('ATTACK the timer as a plain number (the first shape)', say(one, line, NOW + 5000, TS), false);
+  expect('ATTACK a timer with an extra field', say(one, line, NOW + 5000, { t: TS, id: id(5000), big: 'x'.repeat(5000) }), false);
 }
 console.log('RULES: ' + (n - bad) + ' of ' + n + ' as expected' + (bad ? ' · ' + bad + ' WRONG' : ''));
 process.exit(bad ? 1 : 0);
