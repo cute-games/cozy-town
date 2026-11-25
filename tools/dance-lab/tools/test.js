@@ -40,3 +40,37 @@ test('a miss clears the combo and keeps the best combo', () => {
   const second = score(first, judge(0.17));
   assert.deepEqual(score(second, judge(0.30)), { total: 25, combo: 0, best: 2, perfect: 1 });
 });
+
+const fs = require('node:fs');
+const path = require('node:path');
+const vm = require('node:vm');
+const repo = path.resolve(__dirname, '../../..');
+const core = fs.readFileSync(path.join(repo, 'js/00-core.js'), 'utf8');
+const loop = fs.readFileSync(path.join(repo, 'js/09-mainloop.js'), 'utf8');
+const seeded = core.match(/^function seeded.*$/m)[0];
+const roundSource = loop.slice(loop.indexOf('/* BEGIN DANCE SOURCES'), loop.indexOf('/* Only the countdown'));
+const context = { window: {}, MP: { me: 'ZZTEST' }, realMs: () => 1795580000000 };
+const dance = vm.runInNewContext(seeded + '\n' + roundSource +
+  '\nconst { DanceChart, DanceJudge } = window; ({dnRoundId,dnOnBeat,dnChart,dnClassic,DN_TRACK})', context);
+
+test('both clients get the same Alley Cat beat chart from the round id', () => {
+  const r = dance.dnRoundId({ v: 2026112506 });
+  const chart = dance.dnChart(r);
+  assert.equal(dance.DN_TRACK.src, 'music/alley-cat-dumpster-divin.mp3');
+  assert.ok(dance.dnOnBeat(r));
+  assert.deepEqual(chart, dance.dnChart(r));
+  assert.ok(chart.every(note => {
+    const beat = (note.t - dance.DN_TRACK.firstBeat) * dance.DN_TRACK.bpm / 30;
+    return Math.abs(beat - Math.round(beat)) < 1e-8;
+  }));
+});
+test('an older partner keeps the classic chart and older spectators can read the moves', () => {
+  const r = dance.dnRoundId({ v: 2026112505 });
+  const classic = dance.dnChart(r);
+  assert.ok(!dance.dnOnBeat(r));
+  assert.equal(classic.length, 20);
+  assert.ok(classic.every((note, i) => Math.abs(note.t - (2 + i * 1.15)) < 1e-8));
+  const newer = dance.dnRoundId({ v: 2026112506 });
+  const oldView = dance.dnClassic(newer);
+  assert.ok(dance.dnChart(newer).every(note => oldView[note.move]?.d === note.d));
+});

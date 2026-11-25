@@ -603,7 +603,7 @@ ACT.mvyes=async()=>{const g=MV.got;if(!g||MV.go)return;MV.go=true;
     m.textContent=n!==null?'📦 Your game is here'+(n?', '+n:'')+'! Tap Play 💗':'🌱 A brand-new game! Your old one is safe in ⚙️ Settings → ↩️ Bring it back.';
     T.classList.add('mvd');T.insertBefore(m,T.querySelector('.menu'));
     $('tPlay').addEventListener('click',()=>{if($('tMsg')===m&&!document.body.classList.contains('away')){m.remove();T.classList.remove('mvd');}});}}
-setTimeout(mvInit,600);
+if(!DN_TEST)setTimeout(mvInit,600);
 
 /* character maker (from the drawing: name on top, avatar on the left, choices on the right) */
 let CR=null;

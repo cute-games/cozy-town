@@ -2263,7 +2263,7 @@ function awResume(){const m=$('tMsg');if(m)m.remove();document.body.classList.re
    Newer on the title: save and reload at once. Newer while playing: a "✨ New Cozy Town update!" button; tap = save, then reload.
    Loop guard: at most one automatic reload per new version per session (sessionStorage + the ?u= address), so a server that
    still sends the old file can never cause a reload loop: the button shows instead. No internet = no reload, nothing changes. */
-const UPD={on:!!(window.WEBNET&&window.WEBNET.on)&&!window.claude&&/^https?:$/.test(location.protocol),el:null,me:'',came:'',last:-1e9,fail:-1e9,busy:false,go:false,newer:null,iv:0,K:'cozytown-update'};
+const UPD={on:!DN_TEST&&!!(window.WEBNET&&window.WEBNET.on)&&!window.claude&&/^https?:$/.test(location.protocol),el:null,me:'',came:'',last:-1e9,fail:-1e9,busy:false,go:false,newer:null,iv:0,K:'cozytown-update'};
 function updHash(s){let h=2166136261;for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),16777619);return(h>>>0).toString(36)+'.'+s.length.toString(36);}
 function updMine(){if(UPD.me==='')UPD.me=(s=>s?COZY_BUILD+':'+updHash(s.text.replace(/\r\n?/g,'\n')):null)(UPD.el||[...document.scripts].find(x=>x.text.includes('const COZY_BUILD=')));return UPD.me;}   /* this copy: stamp + its game script */
 function updRead(t){t=t.replace(/\r\n?/g,'\n');const k=t.indexOf('const COZY_BUILD='),s=k<0?-1:t.lastIndexOf('<script',k),a=s<0?-1:t.indexOf('>',s)+1,b=a<1?-1:t.indexOf('<\/script>',k);if(b<0)return null;   /* the file online: the same two things */
@@ -2370,6 +2370,7 @@ function setupInput(){
   T.addEventListener('pointerup',up);T.addEventListener('pointercancel',up);
   addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT'||document.body.classList.contains('away'))return;IN.keys[e.code]=true;
     if(DANCE.on&&/^Arrow(Left|Right|Up|Down)$/.test(e.code)){e.preventDefault();dnPress({ArrowLeft:0,ArrowDown:1,ArrowUp:2,ArrowRight:3}[e.code]);return;}   /* 🕺 the dance-off takes the arrows (run 4, job 17) */   /* away title: keys only press Play */
+    if(DN_TEST)return;
     if(e.code==='Escape'){if(UI.open&&!UI.lock)closePanel();else if(DECO.placing)decoCancel();return;}
     if(MAPV.on&&UI.open&&mapKeys(e))return;   /* 🗺️ + − zoom, arrows move the map, M closes it */
     if(CUT&&CUT.show&&(e.code==='Space'||e.code==='Enter'||e.code==='KeyE')){e.preventDefault();ACT.pstap();return;}
