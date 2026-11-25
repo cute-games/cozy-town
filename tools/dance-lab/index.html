@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#171325">
+  <title>Dance Lab · Cozy Town</title>
+  <link rel="icon" href="icon.png" type="image/png">
+  <link rel="stylesheet" href="lab.css">
+  <script src="songs-data.js" defer></script>
+  <script src="chart.js" defer></script>
+  <script src="judge.js" defer></script>
+  <script src="dance-fx.js" defer></script>
+  <script src="lab.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="identity">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <div><span>Cozy Town</span><h1>Dance Lab</h1></div>
+      </div>
+      <div class="top-actions">
+        <button id="back" class="button quiet" aria-label="Songs" hidden>← <span>Songs</span></button>
+        <button id="restart" class="button quiet" aria-label="Restart" hidden>↻ <span>Restart</span></button>
+        <button id="settings" class="button quiet gear" aria-label="Guide settings" aria-expanded="false" aria-controls="guide"><span aria-hidden="true"></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="lab" class="layout">
+    <section class="stage-column" aria-labelledby="song-title">
+      <div class="stage-header">
+        <div>
+          <p id="theme-name" class="eyebrow"></p>
+          <h2 id="song-title"></h2>
+          <p class="byline"><span id="artist"></span><span id="tempo"></span></p>
+        </div>
+        <span id="play-mode" class="mode" hidden>Auto-play</span>
+      </div>
+      <div class="stage-card">
+        <div class="scoreboard" id="scoreboard" hidden>
+          <div class="score-side"><span class="score-avatar player-avatar" aria-hidden="true">↑</span>
+            <div><span class="score-label">You</span><strong id="player-score">0</strong></div></div>
+          <div class="score-track" id="score-track" aria-hidden="true"></div>
+          <div class="score-side opponent"><div><span class="score-label">Rival</span><strong id="bot-score">0</strong></div>
+            <span class="score-avatar bot-avatar" aria-hidden="true">✦</span></div>
+        </div>
+        <div class="scene">
+          <canvas id="stage" width="900" height="600" aria-label="The song’s animated stage and two dancers" role="img"></canvas>
+          <div class="stage-label"><span></span><span id="stage-caption">Stage preview</span></div>
+          <div class="count" id="count" hidden></div>
+          <div class="end-overlay" id="play-gate" hidden>
+            <button id="resume" class="button primary">Play round</button>
+          </div>
+          <div class="end-overlay" id="result" hidden>
+            <section class="result-card" aria-labelledby="result-title">
+              <p class="eyebrow">Round complete</p>
+              <h3 id="result-title" tabindex="-1">Nice dancing!</h3>
+              <dl class="result-stats">
+                <div><dt>Your score</dt><dd id="final-player"></dd></div>
+                <div><dt>Rival score</dt><dd id="final-bot"></dd></div>
+                <div><dt>Best combo</dt><dd id="final-combo"></dd></div>
+                <div><dt>Perfect hits</dt><dd id="final-perfect"></dd></div>
+              </dl>
+              <button id="again" class="button primary">Play again</button>
+            </section>
+          </div>
+        </div>
+        <div class="stage-footer">
+          <div class="preview-controls" id="preview-controls">
+            <label id="version-control" class="version-control">Version <select id="version" aria-label="Song version"></select></label>
+            <button id="start" class="button primary"><span aria-hidden="true">▶︎</span> Play song</button>
+          </div>
+          <div class="transport" id="transport" hidden>
+            <span id="elapsed">0:00</span>
+            <progress id="progress" value="0" max="1" aria-label="Song progress"></progress>
+            <span id="duration"></span>
+          </div>
+          <p class="message" id="message" role="status" hidden></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="playlist panel" id="playlist" aria-labelledby="playlist-title">
+      <div class="panel-heading"><h2 id="playlist-title">Pick a song</h2><span id="track-count"></span></div>
+      <div id="song-list" class="song-list"></div>
+    </section>
+
+    <section class="play-panel panel" id="play-panel" aria-labelledby="lane-title" hidden>
+      <div class="panel-heading lane-heading">
+        <h2 id="lane-title">Dance lane</h2>
+        <div class="callout" id="callout" aria-hidden="true"></div>
+        <div class="combo" id="combo"><strong id="combo-count">0</strong> combo</div>
+      </div>
+      <div class="lane">
+        <canvas id="arrows" width="400" height="435" role="img" aria-label="Four lanes of falling rhythm arrows"></canvas>
+      </div>
+      <div class="pads" aria-label="Dance controls">
+        <button class="pad" data-lane="0" aria-label="Left arrow"></button>
+        <button class="pad" data-lane="1" aria-label="Down arrow"></button>
+        <button class="pad" data-lane="2" aria-label="Up arrow"></button>
+        <button class="pad" data-lane="3" aria-label="Right arrow"></button>
+      </div>
+      <p class="lane-hint">Press an arrow as it reaches the ring.</p>
+    </section>
+  </main>
+
+  <aside id="guide" class="guide panel" aria-labelledby="guide-title" hidden>
+    <div class="panel-heading">
+      <h2 id="guide-title">Guide settings</h2>
+      <button id="close-guide" class="button quiet" aria-label="Close guide settings">×</button>
+    </div>
+    <div class="guide-body">
+      <label class="slider" for="level"><span>Level <output id="read-level" for="level"></output></span><input id="level" type="range" min="1" max="5" value="3"></label>
+      <label class="slider" for="speed"><span>Arrow speed <output id="read-speed" for="speed"></output></span><input id="speed" type="range" min="0.65" max="1.8" step="0.05" value="1"></label>
+      <label class="slider" for="window"><span>Hit window <output id="read-window" for="window"></output></span><input id="window" type="range" min="100" max="350" step="5" value="280"></label>
+      <label class="slider" for="strength"><span>Effect strength <output id="read-strength" for="strength"></output></span><input id="strength" type="range" min="0" max="100" step="5" value="75"></label>
+      <div class="switches">
+        <label>Calm lights <input id="calm" type="checkbox" role="switch"></label>
+        <label>Auto-play <input id="auto" type="checkbox" role="switch"></label>
+        <label>Show beat grid <input id="grid" type="checkbox" role="switch"></label>
+      </div>
+      <label class="slider" for="offset"><span>Timing offset <output id="read-offset" for="offset"></output></span><input id="offset" type="range" min="-250" max="250" step="1" value="0"></label>
+      <div class="calibration">
+        <button class="button secondary" id="calibrate">Tap to the beat</button>
+        <p id="calibration-status" aria-live="polite">10-second timing check</p>
+      </div>
+      <button class="button secondary" id="copy">Copy settings</button>
+      <textarea id="copy-text" aria-label="Settings to copy" rows="7" readonly hidden></textarea>
+      <p id="copy-status" role="status" hidden></p>
+    </div>
+  </aside>
+  <audio id="audio" preload="auto" playsinline></audio>
+</body>
+</html>
