@@ -292,8 +292,9 @@ ACT.cbuy=()=>{const F=FURN[CAT.sel];if(S.coins<F.p)return;S.coins-=F.p;SFX.coin(
 ACT.cplace=i=>{if(!(CUR.id==='home'&&DECO.on&&DX()===HOMEX)){SFX.no();toast('🏠 Go home to place it! Tap 🛋️ in your house.',3.2);return;}const it=S.home.store.splice(+i,1)[0];if(!it)return;closePanel();startPlacing(it);change();};
 ACT.bighouse=()=>{const n=homeFloors();if(n>=6||sk('decor').lv<10*n||S.coins<BIG_PRICE)return;S.coins-=BIG_PRICE;if(n===1)S.bighouse=true;else S.home.xf=(S.home.xf|0)+1;closePanel();
   applyHouse();rebuildHome();SFX.coin();SFX.yay();change();toast(n===1?'🎉 You got the big house! Go inside: the stairs are in the west wall! 🪜':'🎉 Floor '+(n+1)+' is yours! The stairs go on up 🪜',4.5);
-  laneRefresh(true);
-ACT.hcol=c=>{SFX.pop();setHouseCol(c||null);};   /* 🎨 the house-colour buttons (run 4, item 23) */const [hx,hz]=yardPt(-17,-10.5);for(let i=0;i<8;i++)setTimeout(()=>floatText(pick(['🎉','⭐','✨','🏡']),hx+rand(-3,3),4.5+rand(0,3),hz+rand(-1,1),{h:.8}),i*150);};
+  laneRefresh(true);const [hx,hz]=yardPt(-17,-10.5);for(let i=0;i<8;i++)setTimeout(()=>floatText(pick(['🎉','⭐','✨','🏡']),hx+rand(-3,3),4.5+rand(0,3),hz+rand(-1,1),{h:.8}),i*150);};
+ACT.hcol=c=>{SFX.pop();hpPick(c||null);};   /* 🎨 the house-colour buttons (run 4, item 23): they only pick; 🎨 Paint pays and paints (24 Nov: this line sat inside ACT.bighouse, so the buttons did nothing until you bought a floor) */
+ACT.hpaint=()=>hpPay();
 ACT.wall=c=>{S.home.wall=c;WALL_M.color.set(c);SFX.pop();change();renderCatalog();};
 ACT.floor=k=>{S.home.floor=k;setFloor(k);SFX.pop();change();renderCatalog();};
 
