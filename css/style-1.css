@@ -265,7 +265,7 @@ button{font-family:inherit}
 #padPrev{display:block;width:100%;max-width:340px;height:auto;margin:10px auto 0;border:3px solid #3d2c5e;border-radius:14px}
 .cut #pad{visibility:hidden}
 @media (max-width:600px){#mmBtn{width:132px;height:132px}#pad{width:132px;height:90px}}
-@media (max-height:500px){#mmBtn{width:104px;height:104px}#pad{width:104px;height:68px}#padH{font-size:11px}}
+@media (max-height:500px){#mmBtn{width:84px;height:84px}#pad{width:104px;height:68px}#padH{font-size:11px}}
 @media (max-height:500px) and (orientation:landscape){#joy{left:calc(env(safe-area-inset-left,0px) + 300px);bottom:calc(env(safe-area-inset-bottom,0px) + 16px)}body.shoot #joy{left:calc(env(safe-area-inset-left,0px) + 26px)}}
 /* 💬 Messages */
 .chats{display:flex;flex-direction:column;gap:8px;margin-top:8px}
