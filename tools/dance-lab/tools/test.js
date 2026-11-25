@@ -48,11 +48,11 @@ const repo = path.resolve(__dirname, '../../..');
 const core = fs.readFileSync(path.join(repo, 'js/00-core.js'), 'utf8');
 const loop = fs.readFileSync(path.join(repo, 'js/09-mainloop.js'), 'utf8');
 const seeded = core.match(/^function seeded.*$/m)[0];
-const roundSource = loop.slice(loop.indexOf('/* BEGIN DANCE SOURCES'), loop.indexOf('/* Only the countdown'));
+const roundSource = loop.slice(loop.indexOf('/* BEGIN DANCE SOURCES'), loop.indexOf('/* The new profile is a continuous stereo file'));
 function danceClient() {
   const context = { window: {}, MP: { me: 'ZZTEST' }, realMs: () => 1795580000000 };
   return vm.runInNewContext(seeded + '\n' + roundSource +
-    '\nconst { DanceChart, DanceJudge } = window; ({dnRoundId,dnOnBeat,dnChart,dnClassic,DN_TRACK,dnStyle,dnMoveKind,dnRememberMove,DN_TYPES})',
+    '\nconst { DanceChart, DanceJudge } = window; ({dnRoundId,dnOnBeat,dnChart,dnClassic,DN_TRACK,dnStyle,dnMoveKind,dnRememberMove,DN_TYPES,DN_LOOP,dnProfile,dnBeatAt})',
   context);
 }
 const dance = danceClient();
@@ -102,4 +102,67 @@ test('5- and 10-combo moves stay shared when another note lands', () => {
   dance.dnRememberMove(wire, chart[5], 5, 10, 2);
   assert.equal(wire.at, 2000);
   assert.equal(dance.dnMoveKind(chart[wire.m].variant, wire.c), 13);
+});
+
+const fullLoop = require('../alley-cat-loop.json');
+const slice3ID = 'beat3s-alley-cat-slice-3';
+test('both players get the same five loops, tempo steps and steady fallback', () => {
+  const other = danceClient(), r = dance.dnRoundId({v: 2026112508, dp: true}, true);
+  const fast = dance.dnProfile(r);
+  assert.ok(fast);
+  assert.equal(JSON.stringify(fast), JSON.stringify(other.dnProfile(r)));
+  assert.deepEqual(Array.from(fast.segments.slice(0, 5), s => s[2]), [1, 1, 1.06, 1.12, 1.12]);
+  for (const [i, [start, end, speed]] of fast.segments.slice(0, 5).entries()) {
+    assert.ok(Math.abs((end - start) * speed - fullLoop.sourceLength) < .000025);
+    assert.equal(Math.round(dance.dnBeatAt(start, fast)), i * 32);
+    assert.ok(Math.abs(dance.dnBeatAt(start + .25, fast) - i*32 - .25*speed*fullLoop.bpm/60) < 1e-8);
+  }
+  for (const [local, remote] of [[false,true],[true,false]]) {
+    const steady = dance.dnRoundId({v: 2026112508, dp: remote}, local);
+    assert.ok(steady.startsWith('beat3n-'));
+    assert.ok(other.dnProfile(steady).segments.every(segment => segment[2] === 1));
+  }
+  assert.equal(fast.segments.at(-1)[1], 85);
+  assert.equal(dance.DN_LOOP.preroll, 1.5);
+});
+test('seeded chart uses attacks, short runs and doubles at faster density', () => {
+  const notes = dance.dnChart(slice3ID), {accents, segments} = dance.dnProfile(slice3ID);
+  assert.equal(JSON.stringify(notes), JSON.stringify(danceClient().dnChart(slice3ID)));
+  assert.notEqual(JSON.stringify(notes),JSON.stringify(dance.dnChart(slice3ID+'-2')));
+  const at = new Map(accents.map(([t, ,kind])=>[t,kind]));
+  assert.ok(notes.every(note=>at.get(note.t)===note.kind));
+  assert.equal(new Set(notes.map(note=>note.kind)).size,4);
+  const base = notes.filter(note=>note.t<segments[2][0]).length / segments[2][0];
+  const fast = notes.filter(note=>note.t>=segments[3][0]).length / (85-segments[3][0]);
+  const pairs = notes.filter((n,i)=>i>0&&n.t===notes[i-1].t&&n.d!==notes[i-1].d);
+  assert.ok(base>=1.6&&base<=2&&fast>base&&pairs.length>=2&&pairs.length<=22,
+    JSON.stringify({base,fast,doubles:pairs.length}));
+  assert.ok(notes.some((n,i)=>i>=2&&n.t-notes[i-2].t<.55&&n.t>notes[i-1].t&&notes[i-1].t>notes[i-2].t));
+  console.log(`Chart: ${base.toFixed(2)} arrows/s at base, ${fast.toFixed(2)} at +12%, ${pairs.length} doubles`);
+});
+test('quick runs keep the complete Funky move on its musical accent', () => {
+  const notes = dance.dnChart(slice3ID), profile = dance.dnProfile(slice3ID), wire = {};
+  dance.dnRememberMove(wire, notes[0], 0, 1, notes[0].t + .07, profile, notes);
+  const start = wire.at;
+  assert.equal(start, Math.round(notes[0].t * 1000));
+  dance.dnRememberMove(wire, notes[1], 1, 2, notes[1].t, profile, notes);
+  assert.equal(wire.at, start);
+  dance.dnRememberMove(wire, notes[2], 2, 5, notes[2].t, profile, notes);
+  assert.equal(wire.m, 2);
+});
+function printSync(notes,onsets,label){
+  const picks = Array.from({length:20}, (_,i)=>notes[Math.floor((i+.5)*notes.length/20)]);
+  const errors = picks.map(note => {
+    let best = Infinity;
+    for(const at of onsets){const error=(note.t-at)*1000;if(Math.abs(error)<Math.abs(best))best=error;}
+    return best;
+  });
+  const absolute = errors.map(Math.abs).sort((a,b)=>a-b), median=(absolute[9]+absolute[10])/2;
+  console.log(`${label}, arrow hit minus onset in ms: ${errors.map(n=>Math.abs(n)<.05?'0.0':(n>=0?'+':'')+n.toFixed(1)).join(', ')}`);
+  console.log(`${label}, median absolute: ${median.toFixed(1)} ms`);
+  assert.ok(median<25);
+}
+test('20 sampled chart events meet the 25 ms median against independently detected onsets', () => {
+  printSync(dance.dnChart(slice3ID),fullLoop.profiles.fast.verify,'MP3 fast');
+  printSync(dance.dnChart(slice3ID.replace('beat3s-', 'beat3n-')),fullLoop.profiles.steady.verify,'MP3 steady');
 });

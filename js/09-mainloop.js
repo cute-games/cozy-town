@@ -41,6 +41,14 @@ const HP_LEN=20*60000;   /* a party lasts 20 real minutes from its start */
 .dnCol{position:absolute;top:0;bottom:0;width:25%;border-right:2px dashed rgba(61,44,94,.18)}.dnCol:last-child{border:0}#dnLine{position:absolute;left:0;right:0;bottom:48px;height:4px;background:#ff4d8d}.dnHit{position:absolute;bottom:28px;width:25%;display:flex;justify-content:center;opacity:.4}.dnHit svg,.dnArr svg{display:block}
 .dnArr{position:absolute;width:25%;height:52px;display:flex;justify-content:center;margin-top:-26px;transition:none}.dnArr.hit{opacity:0;transform:scale(1.8);transition:opacity .35s,transform .35s}.dnArr.miss{opacity:.3;filter:grayscale(1)}
 #dnMsg{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 162px);transform:translateX(-50%);font-size:44px;font-weight:900;color:#ffd45c;white-space:nowrap;text-shadow:-2px -2px 0 #3d2c5e,2px -2px 0 #3d2c5e,-2px 2px 0 #3d2c5e,2px 2px 0 #3d2c5e,0 5px 0 #3d2c5e;pointer-events:none}
+#dnHud.dnCount #dnMsg[data-cue]{left:34%;right:auto;top:40%;bottom:auto;transform:translate(-50%,-50%);min-width:1.3em;padding:0 .22em;text-align:center;font-size:clamp(38px,7vw,72px);line-height:1.15;color:#ffe192}
+#dnHud.dnCount #dnMsg[data-cue="1"],#dnHud.dnCount #dnMsg[data-cue="3"]{animation:dnCue .22s cubic-bezier(.2,.8,.35,1) both}
+#dnHud.dnCount #dnMsg[data-cue="2"],#dnHud.dnCount #dnMsg[data-cue="GO!"]{animation:dnCueNext .22s cubic-bezier(.2,.8,.35,1) both}
+@keyframes dnCue{from{transform:translate(-50%,-50%) scale(.64);opacity:.57}65%{transform:translate(-50%,-50%) scale(1.13)}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+@keyframes dnCueNext{from{transform:translate(-50%,-50%) scale(.64);opacity:.57}65%{transform:translate(-50%,-50%) scale(1.13)}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+@media (orientation:landscape) and (max-height:500px){#dnHud.dnCount #dnMsg[data-cue]{top:27%;font-size:46px}}
+@media (prefers-reduced-motion:reduce){#dnHud.dnCount #dnMsg[data-cue]{animation:none}}
+
 #dnBtns{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translateX(-50%);display:flex;gap:10px;pointer-events:auto}#dnBtns .btn{width:66px;height:66px;min-height:66px;padding:0;display:flex;align-items:center;justify-content:center}#dnBtns .btn[data-a="dnp:0"]{background:#ffe6ef}#dnBtns .btn[data-a="dnp:1"]{background:#e3f3ff}#dnBtns .btn[data-a="dnp:2"]{background:#e4f8f0}#dnBtns .btn[data-a="dnp:3"]{background:#fff5d6}
 @media (orientation:portrait){body.dancing #stats{visibility:hidden}}
 body.dancing #joy,body.dancing #moveBtns,body.dancing #actWrap,body.dancing #pad,body.dancing #job,body.dancing #note,body.dancing #toast{visibility:hidden}
@@ -62,7 +70,7 @@ body.dancing #joy,body.dancing #moveBtns,body.dancing #actWrap,body.dancing #pad
 #dnFunkyCombo{margin-left:auto;padding:2px 7px;border-radius:13px;background:#fff8ff;color:#654277;font-size:13px}
 #dnFunkyCombo.lit{background:#ffe5aa;color:#713815}
 #dnFunkyCanvas{display:block;position:absolute;top:35px;left:0;width:100%;height:calc(100% - 35px)}`;document.head.appendChild(st);}   /* the cards' and the dance HUD's looks, in at load time */
-const HPT={seen:new Set(),queue:[],cur:null,rem:{},noted:{},ans:null,tiles:null,mats:null,ball:null,lit:false,key:'',t:0,ct:0};
+const HPT={seen:new Set(),queue:[],cur:null,rem:{},noted:{},ans:null,tiles:null,mats:null,balls:null,room:null,items:0,palette:null,lit:false,t:0,ct:0};
 function hpOn(h){h=h===undefined?S&&S.hp:h;return !!(h&&gameMs()>=h.at&&gameMs()<h.at+HP_LEN);}   /* (a party's time is on the one clock: gameMs, so a night skip brings it closer) */
 function hpSoon(h){h=h===undefined?S&&S.hp:h;return !!(h&&gameMs()<h.at+HP_LEN);}
 function hpWhen(h){const d=clockAt(h.at),n=clockNow();return (d.day===n.day?'today':d.day===n.day+1?'tomorrow':'on '+wdName(d.day))+' at '+clockStr(h.h!=null?h.h:d.time);}
@@ -80,8 +88,8 @@ ACT.hpset=v=>{const [d,h]=v.split(':').map(Number);if(!Number.isFinite(d)||!Numb
   toast(`🎉 Party ${d===clockNow().day?'today':'tomorrow'} at ${clockStr(h)}! Everyone playing hears about it. ${hpDisco()?'🪩 It will be a dance party!':'A 🪩 disco floor and a disco ball would make it a dance party!'}`,5);};
 ACT.hpcancel=()=>{S.hp=null;S.rsvpIn=null;change();closePanel();toast('The party is called off. Maybe another day! 💛',3);};
 /* what I send: my party, my answer, my dance round (optional fields: old versions ignore them) */
-function hpStamp(st){const h=S.hp;st.py=h&&hpSoon(h)?{id:h.id,at:h.at,h:h.h}:null;st.pa=HPT.ans||null;st.dn=DANCE.mine?Object.assign({},DANCE.mine):null;}
-function hpFields(a,pr){const obj=v=>v&&typeof v==='object'?v:null;a.py=obj(pr.py);a.pa=obj(pr.pa);a.dn=obj(pr.dn);}
+function hpStamp(st){const h=S.hp;st.py=h&&hpSoon(h)?{id:h.id,at:h.at,h:h.h}:null;st.pa=HPT.ans||null;st.dn=DANCE.mine?Object.assign({},DANCE.mine):null;st.dp=DN_PITCH?1:null;}
+function hpFields(a,pr){const obj=v=>v&&typeof v==='object'?v:null;a.py=obj(pr.py);a.pa=obj(pr.pa);a.dn=obj(pr.dn);a.dp=pr.dp===1;}
 /* 💌 the invitation card, like the knock card */
 function hpCard(){if(HPT.cur||!HPT.queue.length)return;const q=HPT.queue.shift();if(!MP.peers.has(q.peer)){hpCard();return;}HPT.cur=q;const when=hpWhen({at:q.at,h:q.h});
   SFX.ding();   /* (run 4, stage 3: the card says it all; the note that used to show behind it is gone) */
@@ -96,9 +104,20 @@ function hpNav(a,quiet){const j=LANE.slotOf.get(a.peer),ln=LOC.city.lane;if(j==n
 function hpLights(dt){const L=CUR&&(CUR.id==='home'||CUR.id==='visit')?CUR:null;let on=false;
   if(DANCE.spots&&DANCE.spots.userData.funky&&DANCE.spots.userData.funky.room===L)return;
   if(L){if(CUR.id==='home')on=hpOn()||DANCE.on;else{const a=MP.peers.get(VIS.host);on=DANCE.on||!!(a&&a.py&&hpOn(a.py));}}
-  const key=L?L.id+':'+L.items.children.length:'';if(key!==HPT.key){HPT.key=key;HPT.tiles=[];HPT.mats=[];HPT.ball=null;if(L)L.items.traverse(o=>{if(!o.isMesh||!o.userData)return;if(o.userData.tile!==undefined){HPT.tiles.push(o);if(!HPT.mats[o.userData.tile])HPT.mats[o.userData.tile]=o.material;}if(o.userData.ball)HPT.ball=o;});HPT.lit=false;}
-  if(!HPT.tiles||!HPT.tiles.length)return;const M=HPT.mats.filter(Boolean);
-  if(on){HPT.t+=dt;const step=Math.floor(HPT.t*3);for(const o of HPT.tiles){const m=M[(o.userData.tile+step)%M.length];if(m&&o.material!==m)o.material=m;}if(HPT.ball)HPT.ball.rotation.y+=dt*2.2;HPT.lit=true;}
+  if(L!==HPT.room||L&&L.danceFurniture!==HPT.items){
+    HPT.room=L;HPT.items=L?.danceFurniture;
+    HPT.tiles=[];HPT.mats=[];HPT.balls=[];
+    if(L)L.items.traverse(o=>{
+      if(o.userData.ball)HPT.balls.push(o);
+      if(o.isMesh&&o.userData.tile!==undefined){
+        HPT.tiles.push(o);HPT.mats[o.userData.tile]||=o.material;
+      }
+    });
+    HPT.palette=HPT.mats.filter(Boolean);HPT.lit=false;
+  }
+  if(HPT.balls)for(const ball of HPT.balls)ball.rotation.y+=dt*.33;
+  if(!HPT.tiles||!HPT.tiles.length)return;const M=HPT.palette;
+  if(on){HPT.t+=dt;const step=Math.floor(HPT.t*3);for(const o of HPT.tiles){const m=M[(o.userData.tile+step)%M.length];if(m&&o.material!==m)o.material=m;}HPT.lit=true;}
   else if(HPT.lit){for(const o of HPT.tiles){const m=HPT.mats[o.userData.tile];if(m)o.material=m;}HPT.lit=false;}}
 function hpTick(dt){if(!S)return;
   if(S.hp&&gameMs()>=S.hp.at+HP_LEN){S.hp=null;S.rsvpIn=null;change();if(PLAYING)toast('🎉 Your party is over. What a day!',3);}
@@ -201,6 +220,7 @@ function hpTick(dt){if(!S)return;
   else root.DanceJudge = api;
 }(typeof window === 'object' ? window : globalThis));
 const DN_TRACK={"id":"alley-cat","src":"music/alley-cat-dumpster-divin.mp3","bpm":112.994,"firstBeat":0.27,"duration":16.991};
+const DN_LOOP={"bpm":112.99996,"firstBeat":0,"beats":32,"duration":85,"preroll":1.5,"profiles":{"steady":{"src":"music/alley-cat-round-steady.mp3","segments":[[0,16.991156,1],[16.991156,33.982313,1],[33.982313,50.973469,1],[50.973469,67.964626,1],[67.964626,84.955782,1],[84.955782,85,1]],"accents":[[0.625,25,"snare"],[0.69,22,"snare"],[0.8,64,"snare"],[0.955,50,"melody"],[1.05,39,"kick"],[1.185,25,"kick"],[1.2625,40,"meow"],[1.595,100,"snare"],[1.8675,43,"kick"],[1.905,33,"kick"],[2.0075,25,"snare"],[2.0825,30,"snare"],[2.15,44,"snare"],[2.24,31,"snare"],[2.3,26,"snare"],[2.35,32,"snare"],[2.435,25,"snare"],[2.5325,28,"snare"],[2.66,69,"snare"],[2.74,17,"melody"],[2.925,61,"melody"],[3.0175,47,"kick"],[3.0775,41,"melody"],[3.19,32,"snare"],[3.315,23,"snare"],[3.575,16,"melody"],[3.7075,89,"snare"],[3.8625,34,"snare"],[3.9575,30,"snare"],[3.9925,57,"snare"],[4.15,19,"snare"],[4.205,29,"snare"],[4.285,37,"melody"],[4.3375,24,"snare"],[4.3875,31,"snare"],[4.485,36,"snare"],[4.63,17,"kick"],[4.77,42,"snare"],[5.0475,100,"snare"],[5.2025,31,"kick"],[5.2675,43,"kick"],[5.3,60,"melody"],[5.335,35,"kick"],[5.3975,22,"melody"],[5.59,22,"melody"],[5.8425,100,"snare"],[6.1075,100,"melody"],[6.155,56,"snare"],[6.235,30,"snare"],[6.3375,26,"snare"],[6.3975,40,"snare"],[6.4625,34,"snare"],[6.55,34,"snare"],[6.635,35,"snare"],[6.7325,34,"melody"],[6.8175,38,"snare"],[6.8525,38,"kick"],[6.8925,25,"snare"],[7.17,100,"snare"],[7.2975,36,"snare"],[7.345,28,"snare"],[7.4425,36,"snare"],[7.7025,100,"melody"],[7.7975,42,"kick"],[7.8575,42,"snare"],[7.955,43,"snare"],[7.99,35,"kick"],[8.1225,40,"snare"],[8.1825,42,"melody"],[8.2675,51,"kick"],[8.385,47,"snare"],[8.475,38,"snare"],[8.505,33,"snare"],[8.545,23,"snare"],[8.605,31,"snare"],[8.64,20,"melody"],[8.675,16,"melody"],[8.7225,29,"melody"],[8.7875,29,"kick"],[9.02,100,"melody"],[9.295,59,"snare"],[9.3975,36,"snare"],[9.47,21,"melody"],[9.515,24,"melody"],[9.5825,27,"snare"],[9.6875,35,"snare"],[9.7975,37,"melody"],[9.8675,39,"melody"],[9.9125,23,"melody"],[9.9475,34,"melody"],[10.09,87,"snare"],[10.195,24,"melody"],[10.265,28,"snare"],[10.31,20,"snare"],[10.3875,49,"melody"],[10.6675,38,"melody"],[10.755,25,"snare"],[10.79,38,"meow"],[10.8375,44,"meow"],[10.895,26,"snare"],[10.9675,24,"melody"],[11.005,30,"snare"],[11.1075,24,"melody"],[11.2675,22,"snare"],[11.33,81,"meow"],[11.3975,50,"meow"],[11.435,20,"kick"],[11.51,17,"kick"],[11.55,18,"melody"],[11.605,23,"kick"],[11.685,83,"snare"],[11.9475,16,"melody"],[11.9875,28,"melody"],[12.0825,25,"snare"],[12.1725,18,"snare"],[12.26,19,"melody"],[12.295,22,"melody"],[12.3425,22,"snare"],[12.5175,30,"kick"],[12.6075,27,"snare"],[12.655,29,"snare"],[12.7225,22,"snare"],[12.7775,40,"melody"],[12.8325,26,"snare"],[12.8825,27,"snare"],[12.98,29,"snare"],[13.0175,27,"snare"],[13.15,18,"kick"],[13.285,28,"snare"],[13.4425,39,"snare"],[13.5425,100,"meow"],[13.5925,52,"meow"],[13.64,30,"kick"],[13.8025,29,"melody"],[13.9175,19,"melody"],[14.34,100,"snare"],[14.6025,100,"melody"],[14.65,53,"melody"],[14.7375,30,"snare"],[14.8325,21,"snare"],[14.8675,19,"melody"],[14.9125,33,"kick"],[14.96,31,"snare"],[15.02,31,"kick"],[15.1425,54,"melody"],[15.225,36,"snare"],[15.2775,29,"snare"],[15.315,32,"snare"],[15.395,36,"snare"],[15.4925,29,"snare"],[15.565,31,"snare"],[15.675,48,"snare"],[15.7875,38,"melody"],[15.9225,24,"kick"],[16.0425,22,"kick"],[16.1975,100,"melody"],[16.295,58,"melody"],[16.455,49,"melody"],[16.575,69,"kick"],[16.7575,64,"melody"],[16.875,36,"snare"],[17.03,29,"snare"],[17.09,33,"snare"],[17.1375,36,"snare"],[17.2475,28,"snare"],[17.4125,37,"snare"],[17.4975,33,"snare"],[17.6325,25,"snare"],[17.665,22,"snare"],[17.79,64,"snare"],[17.945,50,"melody"],[18.0425,39,"kick"],[18.1625,25,"kick"],[18.2175,40,"meow"],[18.5875,100,"snare"],[18.86,43,"kick"],[18.895,33,"kick"],[18.9775,25,"snare"],[19.06,30,"snare"],[19.1525,44,"snare"],[19.2325,31,"snare"],[19.2975,26,"snare"],[19.3775,32,"snare"],[19.415,25,"snare"],[19.56,28,"snare"],[19.65,69,"snare"],[19.9175,61,"melody"],[20.01,47,"kick"],[20.07,41,"melody"],[20.165,32,"snare"],[20.27,23,"snare"],[20.7,89,"snare"],[20.8875,34,"snare"],[20.9825,57,"snare"],[21.175,29,"snare"],[21.2625,37,"melody"],[21.33,24,"snare"],[21.39,31,"snare"],[21.4275,36,"snare"],[21.5975,17,"kick"],[21.7625,42,"snare"],[22.0375,100,"snare"],[22.195,31,"kick"],[22.2925,60,"melody"],[22.325,35,"kick"],[22.355,22,"melody"],[22.58,22,"melody"],[22.835,100,"snare"],[23.1,100,"melody"],[23.145,56,"snare"],[23.2125,30,"snare"],[23.315,26,"snare"],[23.39,40,"snare"],[23.455,34,"snare"],[23.51,34,"snare"],[23.6375,35,"snare"],[23.735,34,"melody"],[23.8425,38,"kick"],[23.89,25,"snare"],[24.16,100,"snare"],[24.2575,36,"snare"],[24.3375,28,"snare"],[24.3975,36,"snare"],[24.6925,100,"melody"],[24.8175,42,"kick"],[24.8575,42,"snare"],[24.9475,43,"snare"],[24.9825,35,"kick"],[25.1125,40,"snare"],[25.1975,42,"melody"],[25.2675,51,"kick"],[25.3375,47,"snare"],[25.4975,38,"snare"],[25.5375,23,"snare"],[25.605,31,"snare"],[25.645,20,"melody"],[25.705,29,"melody"],[25.7775,29,"kick"],[26.01,100,"melody"],[26.285,59,"snare"],[26.3825,36,"snare"],[26.46,21,"melody"],[26.55,27,"snare"],[26.725,35,"snare"],[26.7875,37,"melody"],[26.8575,39,"melody"],[26.905,23,"melody"],[26.9375,34,"melody"],[27.08,87,"snare"],[27.1875,24,"melody"],[27.255,28,"snare"],[27.36,49,"melody"],[27.6375,38,"melody"],[27.74,25,"snare"],[27.7875,38,"meow"],[27.8225,44,"meow"],[27.8875,26,"snare"],[27.9575,24,"melody"],[28.02,30,"snare"],[28.0775,24,"melody"],[28.245,22,"snare"],[28.3225,81,"meow"],[28.3875,50,"meow"],[28.4475,20,"kick"],[28.4875,17,"kick"],[28.5275,18,"melody"],[28.5625,23,"kick"],[28.675,83,"snare"],[28.9525,16,"melody"],[28.9875,28,"melody"],[29.0475,25,"snare"],[29.195,18,"snare"],[29.2925,22,"melody"],[29.3275,22,"snare"],[29.5175,30,"kick"],[29.5975,29,"snare"],[29.7675,40,"melody"],[29.825,26,"snare"],[29.88,27,"snare"],[29.96,29,"snare"],[30.045,27,"snare"],[30.105,18,"kick"],[30.2775,28,"snare"],[30.385,24,"melody"],[30.4325,39,"snare"],[30.5325,100,"meow"],[30.6075,52,"meow"],[30.7475,29,"melody"],[30.8875,19,"melody"],[31.33,100,"snare"],[31.595,100,"melody"],[31.7225,30,"snare"],[31.81,21,"snare"],[31.865,19,"melody"],[31.905,33,"kick"],[31.9775,31,"snare"],[32.025,31,"kick"],[32.1325,54,"melody"],[32.22,36,"snare"],[32.27,29,"snare"],[32.305,32,"snare"],[32.3625,36,"snare"],[32.52,31,"snare"],[32.665,48,"snare"],[32.7525,38,"melody"],[32.915,24,"kick"],[33.0575,22,"kick"],[33.1875,100,"melody"],[33.31,58,"melody"],[33.445,49,"melody"],[33.59,69,"kick"],[33.7675,64,"melody"],[33.8525,36,"snare"],[34.01,29,"snare"],[34.0775,33,"snare"],[34.1275,36,"snare"],[34.21,28,"snare"],[34.275,27,"snare"],[34.355,37,"snare"],[34.5,33,"snare"],[34.6125,25,"snare"],[34.6725,22,"snare"],[34.7825,64,"snare"],[34.9375,50,"melody"],[35.0325,39,"kick"],[35.19,25,"kick"],[35.245,40,"meow"],[35.5775,100,"snare"],[35.85,43,"kick"],[35.8875,33,"kick"],[35.99,25,"snare"],[36.0375,30,"snare"],[36.1325,44,"snare"],[36.2225,31,"snare"],[36.2825,26,"snare"],[36.3375,32,"snare"],[36.4175,25,"snare"],[36.49,28,"snare"],[36.6425,69,"snare"],[36.7225,17,"melody"],[36.9075,61,"melody"],[37,47,"kick"],[37.06,41,"melody"],[37.1575,32,"snare"],[37.32,23,"snare"],[37.69,89,"snare"],[37.865,34,"snare"],[37.975,57,"snare"],[38.1325,19,"snare"],[38.1875,29,"snare"],[38.2625,37,"melody"],[38.32,24,"snare"],[38.37,31,"snare"],[38.4675,36,"snare"],[38.6125,17,"kick"],[38.7525,42,"snare"],[39.0275,100,"snare"],[39.185,31,"kick"],[39.25,43,"kick"],[39.2825,60,"melody"],[39.3175,35,"kick"],[39.38,22,"melody"],[39.5725,22,"melody"],[39.825,100,"snare"],[40.09,100,"melody"],[40.1375,56,"snare"],[40.2175,30,"snare"],[40.32,26,"snare"],[40.38,40,"snare"],[40.445,34,"snare"],[40.53,34,"snare"],[40.6175,32,"melody"],[40.665,35,"snare"],[40.715,34,"melody"],[40.8,38,"kick"],[40.875,25,"snare"],[41.0325,16,"kick"],[41.1525,100,"snare"],[41.28,36,"snare"],[41.3275,28,"snare"],[41.4225,36,"snare"],[41.6825,100,"melody"],[41.78,42,"kick"],[41.84,42,"snare"],[41.9375,43,"snare"],[41.9725,35,"kick"],[42.105,40,"snare"],[42.165,42,"melody"],[42.2475,51,"kick"],[42.3675,47,"snare"],[42.4575,38,"snare"],[42.5275,23,"snare"],[42.5875,31,"snare"],[42.705,29,"melody"],[42.77,29,"kick"],[43.0025,100,"melody"],[43.2775,59,"snare"],[43.38,36,"snare"],[43.445,21,"melody"],[43.49,24,"melody"],[43.565,27,"snare"],[43.67,35,"snare"],[43.7825,37,"melody"],[43.85,39,"melody"],[43.895,23,"melody"],[43.93,34,"melody"],[44.0725,87,"snare"],[44.1775,24,"melody"],[44.2475,28,"snare"],[44.31,20,"snare"],[44.37,49,"melody"],[44.65,38,"melody"],[44.73,25,"snare"],[44.7725,38,"meow"],[44.8175,44,"meow"],[44.8775,26,"snare"],[44.95,24,"melody"],[45,30,"snare"],[45.0575,24,"melody"],[45.2675,22,"snare"],[45.3125,81,"meow"],[45.38,50,"meow"],[45.4375,20,"kick"],[45.4775,17,"kick"],[45.5325,18,"melody"],[45.5875,23,"kick"],[45.665,83,"snare"],[45.91,16,"melody"],[45.97,28,"melody"],[46.065,25,"snare"],[46.1725,18,"snare"],[46.2425,19,"melody"],[46.2775,22,"melody"],[46.33,22,"snare"],[46.5,30,"kick"],[46.6375,29,"snare"],[46.705,22,"snare"],[46.7575,40,"melody"],[46.815,26,"snare"],[46.865,27,"snare"],[46.9625,29,"snare"],[47.1325,18,"kick"],[47.2675,28,"snare"],[47.4275,39,"snare"],[47.525,100,"meow"],[47.6225,30,"kick"],[47.785,29,"melody"],[47.9025,19,"melody"],[48.3225,100,"snare"],[48.585,100,"melody"],[48.6325,53,"melody"],[48.7125,30,"snare"],[48.815,21,"snare"],[48.85,19,"melody"],[48.92,33,"kick"],[49.0025,31,"kick"],[49.125,54,"melody"],[49.2075,36,"snare"],[49.2975,32,"snare"],[49.395,36,"snare"],[49.475,29,"snare"],[49.5475,31,"snare"],[49.65,48,"snare"],[49.77,38,"melody"],[49.93,24,"kick"],[50.025,22,"kick"],[50.18,100,"melody"],[50.2775,58,"melody"],[50.435,49,"melody"],[50.5575,69,"kick"],[50.74,64,"melody"],[50.8575,36,"snare"],[51.0125,29,"snare"],[51.0675,33,"snare"],[51.12,36,"snare"],[51.23,28,"snare"],[51.3825,37,"snare"],[51.5025,33,"snare"],[51.615,25,"snare"],[51.7725,64,"snare"],[51.9275,50,"melody"],[52.025,39,"kick"],[52.16,25,"kick"],[52.2725,40,"meow"],[52.57,100,"snare"],[52.8425,43,"kick"],[52.88,33,"kick"],[52.96,25,"snare"],[53.0425,30,"snare"],[53.135,44,"snare"],[53.2025,31,"snare"],[53.28,26,"snare"],[53.3225,32,"snare"],[53.3975,25,"snare"],[53.53,28,"snare"],[53.6325,69,"snare"],[53.9,61,"melody"],[53.99,47,"kick"],[54.0525,41,"melody"],[54.1475,32,"snare"],[54.275,23,"snare"],[54.68,89,"snare"],[54.87,34,"snare"],[54.965,57,"snare"],[55.085,19,"snare"],[55.1775,29,"snare"],[55.245,37,"melody"],[55.3125,24,"snare"],[55.3725,31,"snare"],[55.4575,36,"snare"],[55.64,17,"kick"],[55.745,42,"snare"],[56.02,100,"snare"],[56.1775,31,"kick"],[56.275,60,"melody"],[56.3075,35,"kick"],[56.3375,22,"melody"],[56.5625,22,"melody"],[56.8175,100,"snare"],[57.0825,100,"melody"],[57.1275,56,"snare"],[57.215,30,"snare"],[57.2975,26,"snare"],[57.3725,40,"snare"],[57.4375,34,"snare"],[57.5225,34,"snare"],[57.6075,35,"snare"],[57.7175,34,"melody"],[57.825,38,"kick"],[57.8725,25,"snare"],[58.1425,100,"snare"],[58.24,36,"snare"],[58.32,28,"snare"],[58.38,36,"snare"],[58.675,100,"melody"],[58.77,42,"kick"],[58.84,42,"snare"],[58.93,43,"snare"],[58.965,35,"kick"],[59.095,40,"snare"],[59.18,42,"melody"],[59.25,51,"kick"],[59.32,47,"snare"],[59.48,38,"snare"],[59.5175,23,"snare"],[59.6275,31,"snare"],[59.6875,29,"melody"],[59.76,29,"kick"],[59.9925,100,"melody"],[60.2675,59,"snare"],[60.3725,36,"snare"],[60.4425,21,"melody"],[60.4825,24,"melody"],[60.555,27,"snare"],[60.7075,35,"snare"],[60.77,37,"melody"],[60.84,39,"melody"],[60.8875,23,"melody"],[60.915,34,"melody"],[61.0625,87,"snare"],[61.17,24,"melody"],[61.2375,28,"snare"],[61.27,20,"snare"],[61.3425,49,"melody"],[61.62,38,"melody"],[61.7225,25,"snare"],[61.77,38,"meow"],[61.81,44,"meow"],[61.87,26,"snare"],[61.94,24,"melody"],[62.0025,30,"snare"],[62.06,24,"melody"],[62.2275,22,"snare"],[62.3,81,"meow"],[62.37,50,"meow"],[62.4275,20,"kick"],[62.51,23,"kick"],[62.6575,83,"snare"],[62.935,16,"melody"],[62.97,28,"melody"],[63.0275,25,"snare"],[63.1775,18,"snare"],[63.2725,22,"melody"],[63.315,22,"snare"],[63.5,30,"kick"],[63.58,27,"snare"],[63.6625,29,"snare"],[63.75,40,"melody"],[63.8075,27,"snare"],[63.9425,29,"snare"],[64.015,27,"snare"],[64.0875,18,"kick"],[64.26,28,"snare"],[64.3675,24,"melody"],[64.415,39,"snare"],[64.515,100,"meow"],[64.59,52,"meow"],[64.73,29,"melody"],[64.8925,19,"melody"],[65.3125,100,"snare"],[65.5775,100,"melody"],[65.6225,53,"melody"],[65.71,30,"snare"],[65.7925,21,"snare"],[65.8475,19,"melody"],[65.8875,33,"kick"],[65.9575,31,"snare"],[66.0075,31,"kick"],[66.115,54,"melody"],[66.2025,36,"snare"],[66.2525,29,"snare"],[66.2875,32,"snare"],[66.345,36,"snare"],[66.49,29,"snare"],[66.575,31,"snare"],[66.6475,48,"snare"],[66.735,38,"melody"],[66.895,24,"kick"],[67.04,22,"kick"],[67.17,100,"melody"],[67.2925,58,"melody"],[67.4275,49,"melody"],[67.5725,69,"kick"],[67.75,64,"melody"],[67.835,36,"snare"],[67.985,29,"snare"],[68.06,33,"snare"],[68.16,36,"snare"],[68.24,27,"snare"],[68.3375,37,"snare"],[68.4825,33,"snare"],[68.595,25,"snare"],[68.6425,22,"snare"],[68.765,64,"snare"],[68.92,50,"melody"],[69.015,39,"kick"],[69.1125,25,"kick"],[69.195,40,"meow"],[69.56,100,"snare"],[69.8325,43,"kick"],[70.02,30,"snare"],[70.115,44,"snare"],[70.205,31,"snare"],[70.265,26,"snare"],[70.3025,32,"snare"],[70.425,25,"snare"],[70.4725,28,"snare"],[70.625,69,"snare"],[70.6675,17,"melody"],[70.89,61,"melody"],[70.9825,47,"kick"],[71.0425,41,"melody"],[71.14,32,"snare"],[71.3025,23,"snare"],[71.6725,89,"snare"],[71.8475,34,"snare"],[71.9225,30,"snare"],[71.955,57,"snare"],[72.115,19,"snare"],[72.17,29,"snare"],[72.2375,37,"melody"],[72.3025,24,"snare"],[72.345,31,"snare"],[72.45,36,"snare"],[72.5825,17,"kick"],[72.735,42,"snare"],[73.01,100,"snare"],[73.1675,31,"kick"],[73.23,43,"kick"],[73.265,60,"melody"],[73.3,35,"kick"],[73.3275,22,"melody"],[73.5525,22,"melody"],[73.8075,100,"snare"],[74.0725,100,"melody"],[74.12,56,"snare"],[74.2,30,"snare"],[74.3025,26,"snare"],[74.3625,40,"snare"],[74.4275,34,"snare"],[74.5175,34,"snare"],[74.6475,35,"snare"],[74.72,34,"melody"],[74.7825,38,"kick"],[74.8575,25,"snare"],[75.135,100,"snare"],[75.2625,36,"snare"],[75.31,28,"snare"],[75.405,36,"snare"],[75.665,100,"melody"],[75.7625,42,"kick"],[75.8325,42,"snare"],[75.92,43,"snare"],[75.955,35,"kick"],[76.0875,40,"snare"],[76.1475,42,"melody"],[76.23,51,"kick"],[76.35,47,"snare"],[76.44,38,"snare"],[76.51,23,"snare"],[76.57,31,"snare"],[76.6875,29,"melody"],[76.7525,29,"kick"],[76.985,100,"melody"],[77.26,59,"snare"],[77.3625,36,"snare"],[77.4275,21,"melody"],[77.4725,24,"melody"],[77.5475,27,"snare"],[77.6525,35,"snare"],[77.765,37,"melody"],[77.8325,39,"melody"],[77.9125,34,"melody"],[78.055,87,"snare"],[78.16,24,"melody"],[78.23,28,"snare"],[78.3525,49,"melody"],[78.6375,38,"melody"],[78.7125,25,"snare"],[78.795,44,"meow"],[78.86,26,"snare"],[78.9325,24,"melody"],[78.9825,30,"snare"],[79.04,24,"melody"],[79.25,22,"snare"],[79.295,81,"meow"],[79.36,50,"meow"],[79.42,20,"kick"],[79.46,17,"kick"],[79.515,18,"melody"],[79.57,23,"kick"],[79.6475,83,"snare"],[79.9525,28,"melody"],[80.0475,25,"snare"],[80.1925,19,"melody"],[80.26,22,"melody"],[80.305,22,"snare"],[80.455,30,"kick"],[80.5925,29,"snare"],[80.6875,22,"snare"],[80.74,40,"melody"],[80.7975,26,"snare"],[80.8475,27,"snare"],[80.945,29,"snare"],[81.115,18,"kick"],[81.2475,28,"snare"],[81.42,39,"snare"],[81.5075,100,"meow"],[81.605,30,"kick"],[81.7675,29,"melody"],[81.885,19,"melody"],[82.305,100,"snare"],[82.5675,100,"melody"],[82.615,53,"melody"],[82.695,30,"snare"],[82.7975,21,"snare"],[82.8325,19,"melody"],[82.9025,33,"kick"],[82.985,31,"kick"],[83.1075,54,"melody"],[83.1925,36,"snare"],[83.28,32,"snare"],[83.37,36,"snare"],[83.445,29,"snare"],[83.5175,31,"snare"],[83.6325,48,"snare"],[83.75,38,"melody"],[83.9125,24,"kick"],[84.0075,22,"kick"],[84.1625,100,"melody"],[84.235,58,"melody"],[84.4175,49,"melody"],[84.5375,69,"kick"]]},"fast":{"src":"music/alley-cat-round-fast.mp3","segments":[[0,16.991156,1],[16.991156,33.982313,1],[33.982313,50.011701,1.06],[50.011701,65.182381,1.12],[65.182381,80.353061,1.12],[80.353061,85,1.12]],"accents":[[0.625,25,"snare"],[0.69,22,"snare"],[0.8,64,"snare"],[0.955,50,"melody"],[1.05,39,"kick"],[1.185,25,"kick"],[1.2625,40,"meow"],[1.595,100,"snare"],[1.8675,43,"kick"],[1.905,33,"kick"],[2.0075,25,"snare"],[2.0825,30,"snare"],[2.15,44,"snare"],[2.24,31,"snare"],[2.3,26,"snare"],[2.35,32,"snare"],[2.435,25,"snare"],[2.5325,28,"snare"],[2.66,69,"snare"],[2.74,17,"melody"],[2.925,61,"melody"],[3.0175,47,"kick"],[3.0775,41,"melody"],[3.19,32,"snare"],[3.315,23,"snare"],[3.575,16,"melody"],[3.7075,89,"snare"],[3.8625,34,"snare"],[3.9575,30,"snare"],[3.9925,57,"snare"],[4.15,19,"snare"],[4.205,29,"snare"],[4.285,37,"melody"],[4.3375,24,"snare"],[4.3875,31,"snare"],[4.485,36,"snare"],[4.63,17,"kick"],[4.77,42,"snare"],[5.0475,100,"snare"],[5.2025,31,"kick"],[5.2675,43,"kick"],[5.3,60,"melody"],[5.335,35,"kick"],[5.3975,22,"melody"],[5.59,22,"melody"],[5.8425,100,"snare"],[6.1075,100,"melody"],[6.155,56,"snare"],[6.235,30,"snare"],[6.3375,26,"snare"],[6.3975,40,"snare"],[6.4625,34,"snare"],[6.55,34,"snare"],[6.635,35,"snare"],[6.7325,34,"melody"],[6.8175,38,"snare"],[6.8525,38,"kick"],[6.8925,25,"snare"],[7.17,100,"snare"],[7.2975,36,"snare"],[7.345,28,"snare"],[7.4425,36,"snare"],[7.7025,100,"melody"],[7.7975,42,"kick"],[7.8575,42,"snare"],[7.955,43,"snare"],[7.99,35,"kick"],[8.1225,40,"snare"],[8.1825,42,"melody"],[8.2675,51,"kick"],[8.385,47,"snare"],[8.475,38,"snare"],[8.505,33,"snare"],[8.545,23,"snare"],[8.605,31,"snare"],[8.64,20,"melody"],[8.675,16,"melody"],[8.7225,29,"melody"],[8.7875,29,"kick"],[9.02,100,"melody"],[9.295,59,"snare"],[9.3975,36,"snare"],[9.47,21,"melody"],[9.515,24,"melody"],[9.5825,27,"snare"],[9.6875,35,"snare"],[9.7975,37,"melody"],[9.8675,39,"melody"],[9.9125,23,"melody"],[9.9475,34,"melody"],[10.09,87,"snare"],[10.195,24,"melody"],[10.265,28,"snare"],[10.31,20,"snare"],[10.3875,49,"melody"],[10.6675,38,"melody"],[10.755,25,"snare"],[10.79,38,"meow"],[10.8375,44,"meow"],[10.895,26,"snare"],[10.9675,24,"melody"],[11.005,30,"snare"],[11.1075,24,"melody"],[11.2675,22,"snare"],[11.33,81,"meow"],[11.3975,50,"meow"],[11.435,20,"kick"],[11.51,17,"kick"],[11.55,18,"melody"],[11.605,23,"kick"],[11.685,83,"snare"],[11.9475,16,"melody"],[11.9875,28,"melody"],[12.0825,25,"snare"],[12.1725,18,"snare"],[12.26,19,"melody"],[12.295,22,"melody"],[12.3425,22,"snare"],[12.5175,30,"kick"],[12.6075,27,"snare"],[12.655,29,"snare"],[12.7225,22,"snare"],[12.7775,40,"melody"],[12.8325,26,"snare"],[12.8825,27,"snare"],[12.98,29,"snare"],[13.0175,27,"snare"],[13.15,18,"kick"],[13.285,28,"snare"],[13.4425,39,"snare"],[13.5425,100,"meow"],[13.5925,52,"meow"],[13.64,30,"kick"],[13.8025,29,"melody"],[13.9175,19,"melody"],[14.34,100,"snare"],[14.6025,100,"melody"],[14.65,53,"melody"],[14.7375,30,"snare"],[14.8325,21,"snare"],[14.8675,19,"melody"],[14.9125,33,"kick"],[14.96,31,"snare"],[15.02,31,"kick"],[15.1425,54,"melody"],[15.225,36,"snare"],[15.2775,29,"snare"],[15.315,32,"snare"],[15.395,36,"snare"],[15.4925,29,"snare"],[15.565,31,"snare"],[15.675,48,"snare"],[15.7875,38,"melody"],[15.9225,24,"kick"],[16.0425,22,"kick"],[16.1975,100,"melody"],[16.295,58,"melody"],[16.455,49,"melody"],[16.575,69,"kick"],[16.7575,64,"melody"],[16.875,36,"snare"],[17.03,29,"snare"],[17.09,33,"snare"],[17.1375,36,"snare"],[17.2475,28,"snare"],[17.4125,37,"snare"],[17.4975,33,"snare"],[17.6325,25,"snare"],[17.665,22,"snare"],[17.79,64,"snare"],[17.945,50,"melody"],[18.0425,39,"kick"],[18.1625,25,"kick"],[18.2175,40,"meow"],[18.5875,100,"snare"],[18.86,43,"kick"],[18.895,33,"kick"],[18.9775,25,"snare"],[19.06,30,"snare"],[19.1525,44,"snare"],[19.2325,31,"snare"],[19.2975,26,"snare"],[19.3775,32,"snare"],[19.415,25,"snare"],[19.56,28,"snare"],[19.65,69,"snare"],[19.9175,61,"melody"],[20.01,47,"kick"],[20.07,41,"melody"],[20.165,32,"snare"],[20.27,23,"snare"],[20.7,89,"snare"],[20.8875,34,"snare"],[20.9825,57,"snare"],[21.175,29,"snare"],[21.2625,37,"melody"],[21.33,24,"snare"],[21.39,31,"snare"],[21.4275,36,"snare"],[21.5975,17,"kick"],[21.7625,42,"snare"],[22.0375,100,"snare"],[22.195,31,"kick"],[22.2925,60,"melody"],[22.325,35,"kick"],[22.355,22,"melody"],[22.58,22,"melody"],[22.835,100,"snare"],[23.1,100,"melody"],[23.145,56,"snare"],[23.2125,30,"snare"],[23.315,26,"snare"],[23.39,40,"snare"],[23.455,34,"snare"],[23.51,34,"snare"],[23.6375,35,"snare"],[23.735,34,"melody"],[23.8425,38,"kick"],[23.89,25,"snare"],[24.16,100,"snare"],[24.2575,36,"snare"],[24.3375,28,"snare"],[24.3975,36,"snare"],[24.6925,100,"melody"],[24.8175,42,"kick"],[24.8575,42,"snare"],[24.9475,43,"snare"],[24.9825,35,"kick"],[25.1125,40,"snare"],[25.1975,42,"melody"],[25.2675,51,"kick"],[25.3375,47,"snare"],[25.4975,38,"snare"],[25.5375,23,"snare"],[25.605,31,"snare"],[25.645,20,"melody"],[25.705,29,"melody"],[25.7775,29,"kick"],[26.01,100,"melody"],[26.285,59,"snare"],[26.3825,36,"snare"],[26.46,21,"melody"],[26.55,27,"snare"],[26.725,35,"snare"],[26.7875,37,"melody"],[26.8575,39,"melody"],[26.905,23,"melody"],[26.9375,34,"melody"],[27.08,87,"snare"],[27.1875,24,"melody"],[27.255,28,"snare"],[27.36,49,"melody"],[27.6375,38,"melody"],[27.74,25,"snare"],[27.7875,38,"meow"],[27.8225,44,"meow"],[27.8875,26,"snare"],[27.9575,24,"melody"],[28.02,30,"snare"],[28.0775,24,"melody"],[28.245,22,"snare"],[28.3225,81,"meow"],[28.3875,50,"meow"],[28.4475,20,"kick"],[28.4875,17,"kick"],[28.5275,18,"melody"],[28.5625,23,"kick"],[28.675,83,"snare"],[28.9525,16,"melody"],[28.9875,28,"melody"],[29.0475,25,"snare"],[29.195,18,"snare"],[29.2925,22,"melody"],[29.3275,22,"snare"],[29.5175,30,"kick"],[29.5975,29,"snare"],[29.7675,40,"melody"],[29.825,26,"snare"],[29.88,27,"snare"],[29.96,29,"snare"],[30.045,27,"snare"],[30.105,18,"kick"],[30.2775,28,"snare"],[30.385,24,"melody"],[30.4325,39,"snare"],[30.5325,100,"meow"],[30.6075,52,"meow"],[30.7475,29,"melody"],[30.8875,19,"melody"],[31.33,100,"snare"],[31.595,100,"melody"],[31.7225,30,"snare"],[31.81,21,"snare"],[31.865,19,"melody"],[31.905,33,"kick"],[31.9775,31,"snare"],[32.025,31,"kick"],[32.1325,54,"melody"],[32.22,36,"snare"],[32.27,29,"snare"],[32.305,32,"snare"],[32.3625,36,"snare"],[32.52,31,"snare"],[32.665,48,"snare"],[32.7525,38,"melody"],[32.915,24,"kick"],[33.0575,22,"kick"],[33.1875,100,"melody"],[33.31,58,"melody"],[33.445,49,"melody"],[33.59,69,"kick"],[33.7675,64,"melody"],[33.8525,36,"snare"],[34.025,29,"snare"],[34.0725,33,"snare"],[34.1275,36,"snare"],[34.2075,28,"snare"],[34.28,27,"snare"],[34.365,37,"snare"],[34.45,33,"snare"],[34.585,25,"snare"],[34.6375,22,"snare"],[34.74,64,"snare"],[34.8925,50,"melody"],[34.985,39,"kick"],[35.0775,25,"kick"],[35.1275,40,"meow"],[35.4975,100,"snare"],[35.7825,43,"kick"],[35.8625,25,"snare"],[35.9175,30,"snare"],[36.01,44,"snare"],[36.1025,31,"snare"],[36.1875,32,"snare"],[36.2475,25,"snare"],[36.3575,28,"snare"],[36.4975,69,"snare"],[36.5775,17,"melody"],[36.7425,61,"melody"],[36.835,47,"kick"],[36.895,41,"melody"],[36.985,32,"snare"],[37.135,23,"snare"],[37.4875,89,"snare"],[37.6275,34,"snare"],[37.75,57,"snare"],[37.8825,19,"snare"],[37.95,29,"snare"],[38.0175,37,"melody"],[38.0825,31,"snare"],[38.2175,36,"snare"],[38.3375,17,"kick"],[38.49,42,"snare"],[38.745,100,"snare"],[38.9,31,"kick"],[38.99,60,"melody"],[39.05,22,"melody"],[39.2675,22,"melody"],[39.49,100,"snare"],[39.745,100,"melody"],[39.7925,56,"snare"],[39.9,30,"snare"],[39.955,26,"snare"],[40.0225,40,"snare"],[40.075,34,"snare"],[40.165,34,"snare"],[40.295,35,"snare"],[40.3325,34,"melody"],[40.4175,38,"kick"],[40.4875,25,"snare"],[40.745,100,"snare"],[40.83,36,"snare"],[40.92,28,"snare"],[40.9675,36,"snare"],[41.255,100,"melody"],[41.35,42,"kick"],[41.42,42,"snare"],[41.5025,43,"snare"],[41.5975,40,"snare"],[41.73,42,"melody"],[41.8,51,"kick"],[41.8575,47,"snare"],[41.96,38,"snare"],[42.01,33,"snare"],[42.055,23,"snare"],[42.1425,31,"snare"],[42.21,29,"melody"],[42.2825,29,"kick"],[42.5025,100,"melody"],[42.7475,59,"snare"],[42.85,36,"snare"],[42.915,21,"melody"],[42.96,24,"melody"],[43.035,27,"snare"],[43.09,35,"snare"],[43.235,37,"melody"],[43.305,39,"melody"],[43.3525,34,"melody"],[43.51,87,"snare"],[43.6125,24,"melody"],[43.6675,28,"snare"],[43.7825,49,"melody"],[44.035,38,"melody"],[44.1225,25,"snare"],[44.165,38,"meow"],[44.21,44,"meow"],[44.27,26,"snare"],[44.3425,30,"snare"],[44.4475,24,"melody"],[44.6375,22,"snare"],[44.6775,81,"meow"],[44.745,50,"meow"],[44.7825,20,"kick"],[44.83,17,"kick"],[44.87,18,"melody"],[44.905,23,"kick"],[45.005,83,"snare"],[45.2925,28,"melody"],[45.3875,25,"snare"],[45.4625,18,"snare"],[45.59,22,"melody"],[45.6325,22,"snare"],[45.8,30,"kick"],[45.8875,29,"snare"],[46.0425,40,"melody"],[46.1375,27,"snare"],[46.235,29,"snare"],[46.3925,18,"kick"],[46.5275,28,"snare"],[46.635,24,"melody"],[46.6725,39,"snare"],[46.76,100,"meow"],[46.8575,30,"kick"],[47.015,29,"melody"],[47.085,19,"melody"],[47.5225,100,"snare"],[47.7575,100,"melody"],[47.805,53,"melody"],[47.885,30,"snare"],[47.9875,21,"snare"],[48.055,33,"kick"],[48.125,31,"snare"],[48.27,54,"melody"],[48.345,36,"snare"],[48.395,29,"snare"],[48.4275,32,"snare"],[48.5225,36,"snare"],[48.585,29,"snare"],[48.6575,31,"snare"],[48.7775,48,"snare"],[48.89,38,"melody"],[49.04,24,"kick"],[49.13,22,"kick"],[49.27,100,"melody"],[49.3675,58,"melody"],[49.515,49,"melody"],[49.61,69,"kick"],[49.82,64,"melody"],[49.9175,36,"snare"],[50.0425,29,"snare"],[50.1,33,"snare"],[50.15,36,"snare"],[50.2175,28,"snare"],[50.3025,27,"snare"],[50.3875,37,"snare"],[50.4825,33,"snare"],[50.56,25,"snare"],[50.62,22,"snare"],[50.725,64,"snare"],[50.88,50,"melody"],[50.98,39,"kick"],[51.0475,25,"kick"],[51.0975,40,"meow"],[51.43,100,"snare"],[51.7175,43,"kick"],[51.8075,25,"snare"],[51.855,30,"snare"],[51.9475,44,"snare"],[52.015,31,"snare"],[52.1,32,"snare"],[52.185,25,"snare"],[52.2575,28,"snare"],[52.385,69,"snare"],[52.625,61,"melody"],[52.7175,47,"kick"],[52.855,32,"snare"],[52.9375,23,"snare"],[53.325,89,"snare"],[53.48,34,"snare"],[53.575,57,"snare"],[53.72,19,"snare"],[53.775,29,"snare"],[53.8275,37,"melody"],[53.98,36,"snare"],[54.1375,17,"kick"],[54.2675,42,"snare"],[54.5225,100,"snare"],[54.6675,31,"kick"],[54.7525,60,"melody"],[55.0125,22,"melody"],[55.2425,100,"snare"],[55.4725,100,"melody"],[55.5975,30,"snare"],[55.6525,26,"snare"],[55.7325,40,"snare"],[55.785,34,"snare"],[55.8625,34,"snare"],[55.945,32,"melody"],[55.98,35,"snare"],[56.1025,38,"snare"],[56.1375,38,"kick"],[56.1725,25,"snare"],[56.42,100,"snare"],[56.5025,36,"snare"],[56.5825,28,"snare"],[56.665,36,"snare"],[56.89,100,"melody"],[57.045,42,"snare"],[57.1,43,"snare"],[57.155,35,"kick"],[57.25,40,"snare"],[57.3225,42,"melody"],[57.3975,51,"kick"],[57.5,47,"snare"],[57.59,38,"snare"],[57.6475,23,"snare"],[57.715,31,"snare"],[57.8025,29,"melody"],[57.86,29,"kick"],[58.0775,100,"melody"],[58.31,59,"snare"],[58.4125,36,"snare"],[58.47,24,"melody"],[58.57,27,"snare"],[58.7075,35,"snare"],[58.77,37,"melody"],[58.8275,39,"melody"],[58.8725,23,"melody"],[58.9075,34,"melody"],[59.0275,87,"snare"],[59.1275,24,"melody"],[59.1825,28,"snare"],[59.2925,49,"melody"],[59.54,38,"melody"],[59.6075,38,"meow"],[59.69,44,"meow"],[59.7425,26,"snare"],[59.8,24,"melody"],[59.8475,30,"snare"],[59.9175,24,"melody"],[60.09,22,"snare"],[60.1325,81,"meow"],[60.1975,50,"meow"],[60.235,20,"kick"],[60.2825,18,"melody"],[60.3775,23,"kick"],[60.445,83,"snare"],[60.68,16,"melody"],[60.725,28,"melody"],[60.785,25,"snare"],[60.905,18,"snare"],[61.0025,22,"melody"],[61.195,30,"kick"],[61.285,29,"snare"],[61.36,22,"snare"],[61.4275,40,"melody"],[61.4775,27,"snare"],[61.595,29,"snare"],[61.655,27,"snare"],[61.7275,18,"kick"],[61.875,28,"snare"],[62.0325,39,"snare"],[62.1075,100,"meow"],[62.1575,52,"meow"],[62.205,30,"kick"],[62.345,29,"melody"],[62.4325,19,"melody"],[62.81,100,"snare"],[63.045,100,"melody"],[63.1725,30,"snare"],[63.26,21,"snare"],[63.3075,19,"melody"],[63.34,33,"kick"],[63.375,31,"snare"],[63.4475,31,"kick"],[63.5325,54,"melody"],[63.6075,36,"snare"],[63.6575,32,"snare"],[63.7375,36,"snare"],[63.8825,31,"snare"],[64.015,48,"snare"],[64.115,38,"melody"],[64.2775,24,"kick"],[64.3725,22,"kick"],[64.485,100,"melody"],[64.57,58,"melody"],[64.7175,49,"melody"],[64.825,69,"kick"],[64.955,64,"melody"],[65.0675,36,"snare"],[65.225,29,"snare"],[65.27,33,"snare"],[65.32,36,"snare"],[65.425,28,"snare"],[65.4975,37,"snare"],[65.6425,33,"snare"],[65.75,25,"snare"],[65.895,64,"snare"],[66.075,50,"melody"],[66.13,39,"kick"],[66.245,25,"kick"],[66.6,100,"snare"],[66.8525,43,"kick"],[66.9575,25,"snare"],[67.04,30,"snare"],[67.1075,44,"snare"],[67.185,31,"snare"],[67.235,26,"snare"],[67.2825,32,"snare"],[67.3675,25,"snare"],[67.465,28,"snare"],[67.5575,69,"snare"],[67.6375,17,"melody"],[67.7975,61,"melody"],[67.8875,47,"kick"],[67.9725,41,"melody"],[68.0375,32,"snare"],[68.14,23,"snare"],[68.495,89,"snare"],[68.61,34,"snare"],[68.745,57,"snare"],[68.865,19,"snare"],[68.945,29,"snare"],[69,37,"melody"],[69.095,31,"snare"],[69.15,36,"snare"],[69.3075,17,"kick"],[69.4475,42,"snare"],[69.6925,100,"snare"],[69.8375,31,"kick"],[69.925,60,"melody"],[69.9575,35,"kick"],[70.1825,22,"melody"],[70.4125,100,"snare"],[70.6425,100,"melody"],[70.6875,56,"snare"],[70.755,30,"snare"],[70.8575,26,"snare"],[70.9025,40,"snare"],[70.9575,34,"snare"],[71.03,34,"snare"],[71.115,35,"snare"],[71.1875,34,"melody"],[71.3075,38,"kick"],[71.355,25,"snare"],[71.59,100,"snare"],[71.705,36,"snare"],[71.7475,28,"snare"],[71.8375,36,"snare"],[72.0625,100,"melody"],[72.1575,42,"kick"],[72.205,42,"snare"],[72.325,43,"snare"],[72.455,40,"snare"],[72.4925,42,"melody"],[72.575,51,"kick"],[72.645,47,"snare"],[72.735,38,"snare"],[72.7725,33,"snare"],[72.8175,23,"snare"],[72.8725,31,"snare"],[72.9725,29,"melody"],[73.0325,29,"kick"],[73.2475,100,"melody"],[73.48,59,"snare"],[73.585,36,"snare"],[73.635,21,"melody"],[73.6675,24,"melody"],[73.74,27,"snare"],[73.87,35,"snare"],[73.945,37,"melody"],[73.9975,39,"melody"],[74.045,34,"melody"],[74.1975,87,"snare"],[74.2625,24,"melody"],[74.3525,28,"snare"],[74.445,49,"melody"],[74.69,38,"melody"],[74.82,38,"meow"],[74.8675,44,"meow"],[74.9125,26,"snare"],[74.9825,30,"snare"],[75.11,24,"melody"],[75.2425,22,"snare"],[75.3025,81,"meow"],[75.3675,50,"meow"],[75.4525,17,"kick"],[75.5075,23,"kick"],[75.615,83,"snare"],[75.8875,28,"melody"],[75.955,25,"snare"],[76.0175,18,"snare"],[76.1,19,"melody"],[76.1675,22,"melody"],[76.375,30,"kick"],[76.4625,29,"snare"],[76.545,22,"snare"],[76.5975,40,"melody"],[76.6975,27,"snare"],[76.7775,29,"snare"],[76.9225,18,"kick"],[77.045,28,"snare"],[77.19,39,"snare"],[77.2775,100,"meow"],[77.3275,52,"meow"],[77.515,29,"melody"],[77.6025,19,"melody"],[77.9825,100,"snare"],[78.215,100,"melody"],[78.2625,53,"melody"],[78.39,30,"snare"],[78.425,21,"snare"],[78.51,33,"kick"],[78.6075,31,"kick"],[78.705,54,"melody"],[78.7775,36,"snare"],[78.8275,29,"snare"],[78.8625,32,"snare"],[78.9125,36,"snare"],[79.005,29,"snare"],[79.0775,31,"snare"],[79.18,48,"snare"],[79.2875,38,"melody"],[79.4475,24,"kick"],[79.5175,22,"kick"],[79.655,100,"melody"],[79.74,58,"melody"],[79.8875,49,"melody"],[79.97,69,"kick"],[80.125,64,"melody"],[80.2375,36,"snare"],[80.395,29,"snare"],[80.4375,33,"snare"],[80.5225,36,"snare"],[80.6,27,"snare"],[80.68,37,"snare"],[80.825,33,"snare"],[80.925,25,"snare"],[80.9775,22,"snare"],[81.0675,64,"snare"],[81.2225,50,"melody"],[81.3,39,"kick"],[81.4525,40,"meow"],[81.7725,100,"snare"],[82.0225,43,"kick"],[82.06,33,"kick"],[82.1275,25,"snare"],[82.21,30,"snare"],[82.2775,44,"snare"],[82.3675,31,"snare"],[82.41,26,"snare"],[82.49,32,"snare"],[82.5425,25,"snare"],[82.575,28,"snare"],[82.7275,69,"snare"],[82.8075,17,"melody"],[82.9675,61,"melody"],[83.06,47,"kick"],[83.195,32,"snare"],[83.2925,23,"snare"],[83.5475,16,"melody"],[83.6675,89,"snare"],[83.835,34,"snare"],[83.8825,30,"snare"],[83.9175,57,"snare"],[84.0225,19,"snare"],[84.095,29,"snare"],[84.1825,37,"melody"],[84.2725,31,"snare"],[84.3575,36,"snare"],[84.5275,17,"kick"]]}}};
 /* END DANCE SOURCES */
 const DANCE={on:false,mine:null,ask:null,said:new Set(),card:null,t:0,s:0,r:'',pat:null,partner:null,partnerNm:'',left:1,sc:0,osc:0,bar:.5,mvT:0,mvK:-1,floor:null,cam:null,me:null,hud:null,arrows:[],ended:0,res:null,lastHit:-1,pats:new Map(),gone:0,tg:null,dt:0,serial:0,beat:false,bot:null,style:null,combo:0,first:0};
 const DN_N=20,DN_LEAD=1.6,DN_WIN=.28,DN_T0=2.0,DN_GAP=1.15,DN_NAMES=['⬅️','⬇️','⬆️','➡️'],DN_COL=['#ff7aa8','#7cc8ff','#7fdcb5','#ffd45c'],DN_ROT=[270,180,0,90];
@@ -209,26 +229,78 @@ function dnHash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(
 function dnClassic(r){const q=seeded(dnHash(String(r))),out=[];for(let i=0;i<DN_N;i++)out.push({t:DN_T0+i*DN_GAP,d:(q()*4)|0,j:0});return out;}
 function dnPattern(r){let p=DANCE.pats.get(r);if(p)return p;p=dnClassic(r);if(DANCE.pats.size>=64)DANCE.pats.delete(DANCE.pats.keys().next().value);DANCE.pats.set(r,p);return p;}
 const DN_BEAT_BUILD=2026112506,DN_BEAT_PREFIX='beat1-',DN_FX_BUILD=2026112507,DN_FX_PREFIX='beat2-';
-const dnOnBeat=r=>typeof r==='string'&&(r.startsWith(DN_BEAT_PREFIX)||r.startsWith(DN_FX_PREFIX));
-function dnRoundId(a){
+const DN_LOOP_BUILD=2026112508,DN_FAST_PREFIX='beat3s-',DN_STEADY_PREFIX='beat3n-';
+const DN_PITCH=typeof HTMLMediaElement!=='undefined'&&
+  ('preservesPitch' in HTMLMediaElement.prototype?'preservesPitch':
+    'webkitPreservesPitch' in HTMLMediaElement.prototype?'webkitPreservesPitch':'');
+function dnProfile(r){
+  if(typeof r!=='string')return null;
+  if(r.startsWith(DN_FAST_PREFIX))return DN_LOOP.profiles.fast;
+  return r.startsWith(DN_STEADY_PREFIX)?DN_LOOP.profiles.steady:null;
+}
+const dnOnBeat=r=>typeof r==='string'&&(r.startsWith(DN_BEAT_PREFIX)||r.startsWith(DN_FX_PREFIX)||!!dnProfile(r));
+function dnRoundId(a,pitch=!!DN_PITCH){
   const base=realMs().toString(36)+'-'+dnHash(MP.me).toString(36)+'-'+(++DANCE.serial);
   if(!(a.v>=DN_BEAT_BUILD))return base;
-  // Older spectators still index their 20-arrow pattern when they see a move.
-  const prefix=a.v>=DN_FX_BUILD?DN_FX_PREFIX:DN_BEAT_PREFIX;
+  // Older spectators can still index the 20-arrow classic chart to read a move.
+  const prefix=a.v>=DN_LOOP_BUILD?(pitch&&a.dp?DN_FAST_PREFIX:DN_STEADY_PREFIX):a.v>=DN_FX_BUILD?DN_FX_PREFIX:DN_BEAT_PREFIX;
   let r=prefix+base,n=0;
   while(new Set(dnClassic(r).map(note=>note.d)).size<4)r=prefix+base+'-'+(++n);
   return r;
 }
+function dnBeatAt(t,profile){
+  if(!profile)return (t-DN_TRACK.firstBeat)/DN_PERIOD;
+  const parts=profile.segments;
+  let i=parts.length-1;
+  while(i>0&&t<parts[i][0])i--;
+  const part=parts[i];
+  return i*DN_LOOP.beats+((t-part[0])*part[2]-DN_LOOP.firstBeat)*DN_LOOP.bpm/60;
+}
+function dnAccents(profile,seed){
+  const random=DanceChart.seeded(seed^0x7b31d),out=[];
+  let previous=-.2,lastDouble=-4,slot=-1,choices=[];
+  function flush(){
+    if(!choices.length)return;
+    choices.sort((a,b)=>b.rank-a.rank);
+    const first=choices[0],run=random()<.37;
+    let second=null,rank=-Infinity;
+    for(const candidate of choices){
+      const gap=Math.abs(candidate.at-first.at);
+      if(gap<.124)continue;
+      const priority=candidate.rank+(run&&gap<.31?30:0);
+      if(priority>rank){second=candidate;rank=priority;}
+    }
+    const selected=second&&second.power>=20?[first,second].sort((a,b)=>a.at-b.at):[first];
+    for(const note of selected){
+      if(note.at-previous<.122)continue;
+      const lane=out.length?(out[out.length-1].lane+1+Math.floor(random()*3))%4:Math.floor(random()*4);
+      out.push({time:note.at,lane,kind:note.kind});previous=note.at;
+      if(note.power>=86&&note.at-lastDouble>3.15&&random()<.16){
+        out.push({time:note.at,lane:(lane+2)%4,kind:note.kind});
+        lastDouble=note.at;
+      }
+    }
+    choices=[];
+  }
+  for(const [at,power,kind] of profile.accents){
+    const bucket=Math.floor(dnBeatAt(at,profile)/2);
+    if(bucket!==slot){flush();slot=bucket;}
+    choices.push({at,power,kind,rank:power+(kind==='meow'?39:kind==='kick'?6:0)+random()*45});
+  }
+  flush();
+  return out;
+}
 function dnChart(r){
   if(!dnOnBeat(r))return dnPattern(r);
-  const classic=dnPattern(r),seed=DanceChart.seedFor(r),style=dnStyle(r);
+  const classic=dnPattern(r),seed=DanceChart.seedFor(r),style=dnStyle(r),profile=dnProfile(r);
   const starts=seed>>>10,seen=[0,0,0,0];
-  return DanceChart.makeChart(DN_TRACK,3,seed).map((note,i)=>{
+  const notes=profile?dnAccents(profile,seed):DanceChart.makeChart(DN_TRACK,3,seed);
+  return notes.map((note,i)=>{
     const d=note.lane;
     let move=i%DN_N;
     for(let n=0;n<DN_N;n++,move=(move+1)%DN_N)if(classic[move].d===d)break;
     const variant=style?style.moves[d][((starts>>>d)+seen[d]++)&1]:d;
-    return {t:note.time,d,move,variant};
+    return {t:note.time,d,move,variant,kind:note.kind};
   });
 }
 /* Only Funky is playable in this slice. The catalogue groups the remaining songs for later rounds. */
@@ -244,19 +316,26 @@ const DN_STYLES={
 };
 const DN_PERIOD=60/DN_TRACK.bpm;
 const DN_REDUCED=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)');
-const dnStyle=r=>typeof r==='string'&&r.startsWith(DN_FX_PREFIX)?DN_STYLES[DN_TYPES[DN_TRACK.id]]:null;
+const dnStyle=r=>typeof r==='string'&&(r.startsWith(DN_FX_PREFIX)||dnProfile(r))?DN_STYLES[DN_TYPES[DN_TRACK.id]]:null;
 function dnMoveKind(variant,combo){return combo===10?13:combo===5?12:variant;}
 function dnMoveTime(k){return k===13?1.03:k===12?.79:.58;}
-function dnRememberMove(wire,note,index,combo,time){
+function dnRememberMove(wire,note,index,combo,time,profile,chart){
   wire.mv=note.move;
-  // Keep the whole combo move on screen, even when another note lands before it finishes.
-  if(combo!==5&&combo!==10&&(wire.c===5||wire.c===10)&&time-wire.at/1000<dnMoveTime(dnMoveKind(4,wire.c)))return;
-  wire.m=index;wire.c=combo;wire.at=Math.round(time*1000);
+  // A busy run still scores every arrow while a dancer finishes the phrase.
+  // A combo milestone can take over immediately on its own musical accent.
+  if(combo!==5&&combo!==10&&Number.isFinite(wire.at)){
+    const start=wire.at/1000;
+    if(profile){
+      const k=dnMoveKind(chart[wire.m].variant,wire.c);
+      if(dnBeatAt(note.t,profile)-dnBeatAt(start,profile)<DN_PHRASE_BEATS[k-4])return;
+    }else if((wire.c===5||wire.c===10)&&time-start<dnMoveTime(dnMoveKind(4,wire.c)))return;
+  }
+  wire.m=index;wire.c=combo;wire.at=Math.round((profile?note.t:time)*1000);
 }
 
 /* Funky moves work on the same limbs the classic dance uses. t is the shared
    playback position; countdown and missed notes leave the dancer step-touching. */
-function dnFunkyPose(p,k,u,t){
+function dnFunkyPoseLegacy(p,k,u,t){
   const b=p.b,l=p.legs[0],r=p.legs[1],a=p.arms[0],z=p.arms[1];
   const beat=(Math.max(0,t)-DN_TRACK.firstBeat)/DN_PERIOD;
   const side=Math.sin(beat*Math.PI),bounce=Math.abs(Math.sin(beat*Math.PI*2));
@@ -311,12 +390,106 @@ function dnFunkyPose(p,k,u,t){
       b.rotation.x=-.11*s;p.head.rotation.z=.17*wave;break;
   }
 }
-/* Only the countdown loads the song. The invitation gesture primes the same
-   media element with silence, and the member's shared clock drives the round. */
-const DN_MEDIA={el:null,primed:false,tried:false,blocked:false,next:0};
+const DN_PHRASE_BEATS=[2,2,1,2,1,2,1,2,2,2];
+function dnEase(value){const x=clamp(value,0,1);return x*x*(3-2*x);}
+function dnPhrasePose(p,k,u,beat){
+  const b=p.b,l=p.legs[0],r=p.legs[1],a=p.arms[0],z=p.arms[1],h=p.head;
+  const bounce=.5-.5*Math.cos(Math.PI*2*Math.max(0,beat)),knee=.12*bounce,drop=.037*bounce;
+  const hip=.62+drop/b.scale.y+.62*(Math.cos(knee)-1)+.03*Math.sin(knee);
+  const foot=.62*Math.sin(knee)+.03*(1-Math.cos(knee));
+  b.position.set(0,-drop,0);b.rotation.set(0,0,0);
+  l.position.set(-.105,hip,foot);r.position.set(.105,hip,foot);
+  l.rotation.set(knee,0,0);r.rotation.set(knee,0,0);
+  a.rotation.set(-.045*bounce,0,-.22-.038*bounce);z.rotation.set(-.045*bounce,0,.22+.038*bounce);
+  h.rotation.set(.027*bounce,0,0);
+  if(k<4)return;
+  const hold=dnEase(u*7)*dnEase((1-u)*3.8),step=hold*Math.sin(Math.PI*2*u);
+  const second=dnEase((u-.37)*6),early=hold*(1-second),late=hold*second;
+  switch(k){
+    case 4: // Saturday Night Fever: point high, then diagonally across the torso.
+      b.position.x=.065*step;b.rotation.set(-.035*hold,.20*hold,-.18*early+.12*late);
+      a.rotation.set(-.22*early-.78*late,.35*late,-.22-2.23*early+.31*late);
+      z.rotation.set(.10*hold,0,.23+.74*hold);h.rotation.set(-.17*early,.20*hold,-.19*early+.11*late);
+      l.rotation.z=-.20*early;r.rotation.set(knee-.22*late,.31*hold,.14*late);break;
+    case 5: // Hustle: back rock, recover and turn across the supporting foot.
+      b.position.z=-.12*early+.10*late;b.position.x=.09*step;b.rotation.set(.10*early,1.13*step,-.15*step);
+      l.rotation.set(knee+.35*early-.25*late,-.21*late,-.14*hold);
+      r.rotation.set(knee-.35*early+.16*late,.49*late,.12*hold);
+      a.rotation.set(-.41*late,0,-.22-.92*early);z.rotation.set(-.58*early,0,.22+1.11*late);
+      h.rotation.set(.08*early,-.47*step,.13*step);break;
+    case 6: // The Bump: sink onto the right foot and push the hip out.
+      b.position.x=.19*hold;b.position.y-=.065*hold;b.rotation.set(-.11*hold,-.10*hold,.27*hold);
+      l.position.y+=.11*hold;r.position.y+=.075*hold;
+      l.rotation.set(knee-.29*early,-.26*hold,-.31*hold);r.rotation.set(knee+.23*hold,.18*hold,-.08*hold);
+      a.rotation.set(-.45*hold,0,-.22-1.22*hold);z.rotation.set(.15*hold,0,.25+.53*hold);
+      h.rotation.set(.06*hold,-.13*hold,-.20*hold);break;
+    case 7: { // Funky Chicken: two shoulder pumps, elbows out, alternating taps.
+      const pump=.5-.5*Math.cos(Math.PI*4*u);
+      b.rotation.set(.17*hold,.14*step,.12*step);b.position.x=.074*step;
+      a.rotation.set(-.72*pump*hold,.38*hold,-.22-(.90+.58*pump)*hold);
+      z.rotation.set(-.72*pump*hold,-.38*hold,.22+(.90+.58*pump)*hold);
+      l.rotation.set(knee-.41*early,-.20*hold,-.19*early);r.rotation.set(knee-.41*late,.20*hold,.19*late);
+      h.rotation.set(-.13*pump*hold,-.14*step,-.12*step);break;
+    }
+    case 8: // Locking point and wrist roll: circular reach, then a firm stop.
+      b.position.x=-.13*hold;b.rotation.set(.09*hold,-.29*hold,.19*hold);
+      a.rotation.set(-.59*early-.87*late,.83*step,-.22-1.2*hold);
+      z.rotation.set(-.50*early,.52*early,.22+.71*late);h.rotation.set(.07*early,-.34*late,.12*hold);
+      l.rotation.set(knee+.16*hold,-.23*hold,-.18*hold);r.rotation.set(knee-.44*early,.24*late,.23*hold);break;
+    case 9: { // Bus Stop: side, cross behind, side, tap in, compressed to two beats.
+      const cross=dnEase((u-.16)*12)*dnEase((.55-u)*10),tap=dnEase((u-.62)*12)*dnEase((1-u)*9);
+      b.position.x=-.23*hold;b.rotation.set(.04*hold,.24*cross,-.19*early+.24*tap);
+      l.position.x-=.14*early;r.position.x-=.29*cross+.09*tap;r.position.z-=.19*cross;
+      l.rotation.set(knee-.23*tap,-.16*hold,-.27*early);
+      r.rotation.set(knee+.35*cross-.33*tap,.18*hold,.37*cross);
+      a.rotation.set(-.63*late,0,-.22-.86*early);z.rotation.set(-.55*early,0,.22+.83*late);
+      h.rotation.set(-.07*tap,-.29*cross,.14*hold);break;
+    }
+    case 10: // Kick-ball-change: flick, ball of foot down, rock onto the other leg.
+      b.position.x=-.13*early+.10*late;b.rotation.set(-.16*early,.25*hold,.18*step);
+      r.rotation.set(knee-1.17*early+.27*late,.24*hold,.26*early);
+      l.rotation.set(knee+.18*early-.37*late,-.15*hold,-.18*late);
+      a.rotation.set(-.80*early,0,-.22-1.07*early);z.rotation.set(-.69*late,0,.22+.88*late);
+      h.rotation.set(.12*early,-.09*step,.12*step);break;
+    case 11: { // Robot arm wave: close one joint at a time from shoulder to shoulder.
+      const from=dnEase(u*8)*dnEase((.66-u)*6),to=dnEase((u-.27)*7)*dnEase((1-u)*9);
+      b.position.x=.088*(to-from);b.rotation.set(.12*hold,.22*step,.27*(from-to));
+      a.rotation.set(-.71*from-.14*to,.38*to,-.22-1.38*from-.43*to);
+      z.rotation.set(-.15*from-.71*to,-.38*from,.22+.43*from+1.38*to);
+      l.rotation.set(knee+.22*from,-.18*from,-.11*hold);r.rotation.set(knee-.25*to,.27*to,.12*hold);
+      h.rotation.set(.10*hold,-.24*step,-.28*(from-to));break;
+    }
+    case 12: // Scoo B Doo: little kick, switch, and a two-arm lock.
+      b.position.x=-.11*step;b.position.y+=.06*early;b.rotation.set(.12*late,.28*step,-.17*step);
+      l.rotation.set(knee-.65*early,-.13*hold,-.19*hold);r.rotation.set(knee-.74*late,.13*hold,.19*hold);
+      a.rotation.set(-.48*early-.82*late,0,-.22-1.24*late);
+      z.rotation.set(-.53*early-.82*late,0,.22+1.24*late);h.rotation.set(-.14*late,.10*step,.16*step);break;
+    case 13: { // Hustle spot turn into a disco point.
+      const turn=dnEase(u*1.55),point=hold*dnEase((u-.57)*8);
+      b.rotation.set(-.08*point,DN_REDUCED&&DN_REDUCED.matches?1.05*step:Math.PI*2*turn,-.17*point);
+      b.position.y+=.13*early;b.position.x=-.10*point;
+      l.rotation.set(knee-.32*early,-.26*hold,-.19*point);r.rotation.set(knee+.34*early,.25*hold,.23*point);
+      a.rotation.set(-.25*early,0,-.22-1.52*early-2.11*point);
+      z.rotation.set(-.67*early,0,.22+1.26*early+.58*point);h.rotation.set(-.22*point,-.31*early,-.15*point);break;
+    }
+  }
+}
+/* The new profile is a continuous stereo file, so a loop boundary never
+   needs a media seek. The shared time disciplines the audible media cursor. */
+const DN_MEDIA={el:null,primed:false,tried:false,blocked:false,next:0,profile:null,start:0,
+  goTimer:0,syncTimer:0,lastRateAt:0,lastSeekAt:-2,countQueued:false,run:0,playing:false,clockAt:0,clockTime:0,clockSource:-1};
 function dnAudio(){
   const A=DN_MEDIA;
-  if(!A.el){A.el=new Audio();A.el.playsInline=true;A.el.preload='auto';}
+  if(!A.el){
+    A.el=new Audio();A.el.playsInline=true;A.el.preload='auto';
+    A.el.addEventListener('seeking',()=>{A.clockAt=0;});
+    A.el.addEventListener('playing',()=>{
+      if(A.profile&&!A.playing){
+        A.playing=true;
+        dnDiscipline(true);
+      }
+    });
+  }
   return A.el;
 }
 function dnPrime(){
@@ -327,32 +500,114 @@ function dnPrime(){
   A.primed=true;
   el.play()?.catch(()=>{A.primed=false;});
 }
-function dnLoadTrack(){
+function dnOutputDelay(){
+  return AC&&AC.state==='running'?Math.max(0,AC.outputLatency||0)+Math.max(0,AC.baseLatency||0):0;
+}
+function dnLatency(){
+  return clamp(Number(SET.danceLatency)||0,-200,200);
+}
+function dnClock(shared){
+  const A=DN_MEDIA,el=A.el;
+  if(shared< -DN_LOOP.preroll||!SET.sound||!A.playing||!el||el.paused||el.seeking||el.readyState<3){
+    A.clockAt=0;return shared;
+  }
+  // Media cursors update in batches. Interpolate between reads from the
+  // audible cursor so tiny output-buffer steps do not jerk the receptors.
+  const now=performance.now(),raw=el.currentTime;
+  if(!A.clockAt||now-A.clockAt>105){
+    A.clockTime=raw;A.clockAt=now;A.clockSource=raw;
+  }else if(raw!==A.clockSource){
+    const elapsed=(now-A.clockAt)/1000*el.playbackRate,predicted=A.clockTime+elapsed;
+    const delta=raw-predicted;
+    A.clockTime=predicted+delta*(Math.abs(delta)>.018?.16:.32);
+    A.clockAt=now;A.clockSource=raw;
+  }
+  const cursor=A.clockTime+(now-A.clockAt)/1000*el.playbackRate;
+  return clamp(cursor,raw-.030,raw+.030)-DN_LOOP.preroll-dnOutputDelay()-dnLatency()/1000;
+}
+function dnLoadTrack(profile,start){
   dnStopTrack();
   if(!SET.sound)return;
-  const el=dnAudio();
-  el.src=DN_TRACK.src;el.load();
+  const A=DN_MEDIA,el=dnAudio();
+  A.profile=profile;A.start=start;
+  if(DN_PITCH)el[DN_PITCH]=true;
+  el.playbackRate=1;
+  el.src=profile?profile.src:DN_TRACK.src;el.load();
+  if(profile){
+    A.goTimer=setTimeout(dnStartMedia,Math.max(0,start-realMs()-(DN_LOOP.preroll+dnOutputDelay())*1000));
+    A.syncTimer=setInterval(dnDiscipline,63);
+  }
 }
 function dnStopTrack(){
   const A=DN_MEDIA,el=A.el;
+  clearTimeout(A.goTimer);clearInterval(A.syncTimer);
+  A.profile=null;A.run++;A.playing=false;A.clockAt=0;A.lastRateAt=-DN_LOOP.preroll;A.lastSeekAt=-DN_LOOP.preroll-1;A.tried=false;A.blocked=false;A.next=0;A.countQueued=false;
   if(el&&el.hasAttribute('src')){el.pause();el.removeAttribute('src');el.load();}
-  A.tried=false;A.blocked=false;A.next=0;
+}
+function dnStartMedia(){
+  const A=DN_MEDIA;
+  if(A.profile&&!A.tried)dnPlayTrack(Math.max(0,(realMs()-A.start)/1000+DN_LOOP.preroll+dnOutputDelay()));
 }
 function dnPlayTrack(t){
   const A=DN_MEDIA,el=A.el;
   if(!SET.sound||!el||!el.hasAttribute('src'))return;
-  if(el.readyState>0&&t<el.duration)el.currentTime=t;
+  if(t<el.duration&&Math.abs(el.currentTime-t)>(A.profile?.045:.005)&&dnCanSeek(el,t))el.currentTime=t;
   A.tried=true;A.blocked=false;
-  el.play()?.catch(e=>{if(e.name==='NotAllowedError')A.blocked=true;});
+  const run=A.run;
+  el.play()?.catch(e=>{if(A.run===run&&e.name==='NotAllowedError')A.blocked=true;});
+}
+function dnCanSeek(el,t){return el.seekable.length>0&&t>=el.seekable.start(0)&&t<=el.seekable.end(el.seekable.length-1);}
+function dnDiscipline(immediate){
+  const A=DN_MEDIA,el=A.el;
+  if(!A.profile||!el||el.paused||el.seeking||el.readyState<2)return;
+  if(!SET.sound){el.pause();return;}
+  const shared=(realMs()-A.start)/1000,latency=dnOutputDelay(),goal=shared+DN_LOOP.preroll+latency;
+  if(goal<0||goal>=DN_LOOP.preroll+DN_LOOP.duration-.12)return;
+  const silent=shared<-.15&&el.currentTime<DN_LOOP.preroll-.13;
+  if((silent&&immediate===true||shared>.6&&shared-A.lastSeekAt>1)&&
+    Math.abs(el.currentTime-goal)>(silent?.022:.19)&&dnCanSeek(el,goal)){
+    A.lastSeekAt=shared;el.currentTime=goal;
+  }else if(DN_PITCH&&shared-A.lastRateAt>=(silent?.10:.17)){
+    // The decoder can catch up during silence. Use gentler pitch-preserving
+    // corrections once the song is audible and leave room for timer jitter.
+    A.lastRateAt=shared;
+    const error=dnClock(shared)+dnLatency()/1000-shared,limit=silent?.13:.035;
+    const rate=Math.abs(error)<.006?1:Math.round(clamp(1-error*(silent?5:2.6),1-limit,1+limit)*200)/200;
+    if(el.playbackRate!==rate)el.playbackRate=rate;
+  }
 }
 function dnTrackTick(t){
   const A=DN_MEDIA,el=A.el;
+  if(A.profile){
+    if(t>=-DN_LOOP.preroll&&!A.tried)dnStartMedia();
+    return;
+  }
   if(t<0||!el)return;
   if(!SET.sound){el.pause();return;}
   if(!A.tried)dnPlayTrack(t);
   if(t<A.next||el.paused||el.seeking||el.readyState<2)return;
   A.next=t+.45;
   if(t<el.duration&&Math.abs(el.currentTime-t)>.08)el.currentTime=t;
+}
+function dnCountSound(){
+  const A=DN_MEDIA,D=DANCE;
+  if(A.countQueued||!SET.sound||!AC||AC.state!=='running')return;
+  A.countQueued=true;
+  const go=(D.s-realMs())/1000-dnOutputDelay(),beat=60/DN_LOOP.bpm;
+  for(let n=3;n>=1;n--){
+    const at=go-n*beat;if(at<0)continue;
+    const f=630+(3-n)*155;
+    tone(f,.07,'triangle',.13,at,f*.84);
+    tone(1690+(3-n)*380,.041,'square',.042,at,930);
+    tone(3400,.034,'triangle',.055,at+.015,1050);
+  }
+  if(go>=0){
+    const lead=Math.max(0,go-.18);
+    if(go>.05)tone(220,.16,'sine',.068,lead,630);
+    tone(138,.16,'triangle',.19,go,65);
+    tone(783,.20,'triangle',.10,go,1047);
+    tone(2430,.071,'square',.041,go+.021,950);
+  }
 }
 function dnHere(){const out=[];if(!MP.grp||!CUR)return out;for(const a of MP.peers.values()){if(!a.av)continue;if(CUR.id==='home'&&a.loc==='visit'&&a.ho===MP.me)out.push(a);else if(CUR.id==='visit'&&VIS.st==='in'&&((a.loc==='home'&&a.peer===VIS.host)||(a.loc==='visit'&&a.ho===VIS.host&&a.peer!==MP.me)))out.push(a);}return out;}
 /* the disco floor of this house (world x,z and its floor), only with a disco ball in the house too */
@@ -372,16 +627,16 @@ function dnCardShow(a){if(DANCE.card)return;DANCE.card={peer:a.peer,r:a.dn.r,nm:
 function dnCardAnswer(ok){const c=DANCE.card;if(!c)return;DANCE.card=null;const el=$('dnCard');if(el)el.hidden=true;DANCE.said.add(c.peer+'|'+c.r);const a=MP.peers.get(c.peer);
   if(ok&&a&&a.dn&&a.dn.r===c.r&&a.dn.st==='ask'){audioInit();if(dnOnBeat(c.r))dnPrime();SFX.yay();DANCE.mine={r:c.r,w:c.peer,st:'go',s:0,sc:0,mv:-1,k:0,ld:0};DANCE.partner=c.peer;DANCE.partnerNm=c.nm;toast('💃 Get ready…',2);}
   else{DANCE.mine={r:c.r,w:c.peer,st:'no',s:0,sc:0,mv:-1,k:0,ld:0};setTimeout(()=>{if(DANCE.mine&&DANCE.mine.st==='no')DANCE.mine=null;},6000);if(ok)toast('💛 Too late, the music stopped. Ask them!',2.6);}}
-function dnBegin(s,a,left){if(DANCE.res)dnLeave();const f=dnFloor();if(!f){dnCancel();return;}DANCE.on=true;DANCE.s=s;if(DANCE.mine)DANCE.mine.s=s;DANCE.r=DANCE.mine.r;DANCE.partner=a.peer;DANCE.partnerNm=a.nm;DANCE.left=left;DANCE.beat=dnOnBeat(DANCE.r);DANCE.style=dnStyle(DANCE.r);
-  DANCE.pat=dnChart(DANCE.r).map(q=>({t:q.t,d:q.d,move:q.move,variant:q.variant,j:0}));
-  DANCE.combo=0;DANCE.first=0;DANCE.popT=0;
-  DANCE.length=DANCE.beat?DN_TRACK.duration:DANCE.pat[DANCE.pat.length-1].t+1.8;
-  if(DANCE.beat)dnLoadTrack();
-  DANCE.t=-(s-realMs())/1000;DANCE.sc=0;DANCE.osc=0;DANCE.bar=.5;DANCE.mvT=0;DANCE.mvK=-1;DANCE.lastHit=-1;DANCE.ended=0;DANCE.gone=0;DANCE.floor=f;DANCE.ask=null;
+function dnBegin(s,a,left){if(DANCE.res)dnLeave();const f=dnFloor();if(!f){dnCancel();return;}DANCE.on=true;DANCE.s=s;if(DANCE.mine)DANCE.mine.s=s;DANCE.r=DANCE.mine.r;DANCE.partner=a.peer;DANCE.partnerNm=a.nm;DANCE.left=left;DANCE.beat=dnOnBeat(DANCE.r);DANCE.style=dnStyle(DANCE.r);DANCE.profile=dnProfile(DANCE.r);
+  DANCE.pat=dnChart(DANCE.r).map(q=>({t:q.t,d:q.d,move:q.move,variant:q.variant,kind:q.kind,j:0}));
+  DANCE.combo=0;DANCE.first=0;DANCE.popT=0;DANCE.didGo=false;
+  DANCE.length=DANCE.profile?DN_LOOP.duration:DANCE.beat?DN_TRACK.duration:DANCE.pat[DANCE.pat.length-1].t+1.8;
+  if(DANCE.beat)dnLoadTrack(DANCE.profile,s);
+  DANCE.t=(realMs()-s)/1000;DANCE.shared=DANCE.t;DANCE.sc=0;DANCE.osc=0;DANCE.bar=.5;DANCE.mvT=0;DANCE.mvK=-1;DANCE.lastHit=-1;DANCE.ended=0;DANCE.gone=0;DANCE.floor=f;DANCE.ask=null;
   const L=f.L,W=L.W||HOMEW,D=L.D||HOMED,cx=L.ox,cz=L.oz+UPZ*f.fl;let dx=cx-f.x,dz=cz-f.z;const dl=Math.hypot(dx,dz);if(dl<1){dx=0;dz=1;}else{dx/=dl;dz/=dl;}
   {const cd=innerWidth>innerHeight?(visH()<=500?3.5:4.4):5.6,sd=(left?-1:1)*.6;   /* (an upright phone sees a narrow slice: from 5.6 m both dancers fit; run 4, stage 3) */DANCE.cam={x:clamp(f.x+dx*cd+dz*sd,cx-W+.7,cx+W-.7),z:clamp(f.z+dz*cd-dx*sd,cz-D+.7,cz+D-.7),dx,dz};}   /* (run 4, stage 3: nearer on a short sideways screen; the two players' views 1.2 m apart, so after the round they never stand inside each other) */
   if(P.sit)standUp();if(DECO.on)decoEnd();closePanel();P.ride={kind:'dance'};P.jy=0;P.vy=0;document.body.classList.add('dancing');
-  const me=makePerson(lookToPerson(packLook()));bakePerson(me);scene.add(me.root);DANCE.me=me;DANCE.watchFloor=null;DANCE.watchCam=null;dnSpots(f,DANCE.style,DANCE.r);dnHud(true);SFX.ding();}
+  const me=makePerson(lookToPerson(packLook()));bakePerson(me);scene.add(me.root);DANCE.me=me;DANCE.watchFloor=null;DANCE.watchCam=null;dnSpots(f,DANCE.style,DANCE.r);dnHud(true);if(DANCE.profile)dnCountSound();else SFX.ding();}
 /* The existing mirror-ball spots use two instanced palettes in a Funky round. */
 function dnSpots(f,style,id){
   dnSpotsOff();
@@ -432,18 +687,18 @@ function dnSpotsOff(){
   }else g.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material)o.material.dispose();});
   D.spots=null;
 }
-function dnPulse(t){
-  if(t<DN_TRACK.firstBeat||DN_REDUCED&&DN_REDUCED.matches)return 0;
-  const beats=(t-DN_TRACK.firstBeat)/DN_PERIOD,phase=beats-Math.floor(beats);
+function dnPulse(t,profile){
+  if(t<0||DN_REDUCED&&DN_REDUCED.matches)return 0;
+  const beats=dnBeatAt(t,profile),phase=beats-Math.floor(beats);
   return (1-phase)*(1-phase)*(1-phase);
 }
-function dnFunkyLights(t){
+function dnFunkyLights(t,profile){
   const g=DANCE.spots,fx=g&&g.userData.funky;if(!fx)return;
   const calm=DN_REDUCED&&DN_REDUCED.matches;
-  const beat=calm?0:Math.max(0,Math.floor((t-DN_TRACK.firstBeat)/DN_PERIOD));
-  const wave=dnPulse(t);
+  const beat=calm?0:Math.max(0,Math.floor(dnBeatAt(t,profile)));
+  const wave=dnPulse(t,profile);
   g.rotation.y=calm?0:Math.max(0,t)*.52;
-  if(fx.ball)fx.ball.rotation.y=g.rotation.y*2.4;
+  if(fx.ball)fx.ball.rotation.y=calm?0:Math.max(0,t)*.33;
   fx.spotM[0].opacity=.38+.44*wave;fx.spotM[1].opacity=.41+.38*wave;
   fx.tileM[0].emissiveIntensity=.26+.59*wave;fx.tileM[1].emissiveIntensity=.25+.57*wave;
   if(beat!==fx.step){
@@ -464,7 +719,8 @@ function dnWatch(){
       if(p&&p.st==='go'&&p.s>0&&dnStyle(p.r)&&dnRoomPeer(a)){dn=p;if(p.ld)break;}
     }
   }
-  if(!dn||(realMs()-dn.s)/1000>DN_TRACK.duration+1){
+  const profile=dn&&dnProfile(dn.r);
+  if(!dn||(realMs()-dn.s)/1000>(profile?DN_LOOP.duration:DN_TRACK.duration)+1){
     if(D.watchFloor){dnSpotsOff();D.watchFloor=null;D.watchCam=null;}
     return;
   }
@@ -476,7 +732,7 @@ function dnWatch(){
     D.watchFloor=f;D.watchCam={dx,dz};
     dnSpots(f,dnStyle(dn.r),dn.r);
   }
-  dnFunkyLights((realMs()-dn.s)/1000);
+  dnFunkyLights((realMs()-dn.s)/1000,profile);
 }
 function dnCancel(msg){if(msg)toast(msg,3);DANCE.ask=null;DANCE.mine=null;dnStopTrack();}
 function dnTick(dt){const D=DANCE;if(!S)return;if(D.spots&&!D.spots.userData.funky)D.spots.rotation.y+=dt*.5;
@@ -492,9 +748,12 @@ function dnTick(dt){const D=DANCE;if(!S)return;if(D.spots&&!D.spots.userData.fun
   if(D.tg){const f=D.on?D.floor:D.watchFloor&&D.watchFloor.L===CUR?D.watchFloor:dnFloor();if(f){D.tg.x=f.x;D.tg.z=f.z;const L=CUR;if(L&&(L.id==='home'||L.id==='visit')&&!L.inter.includes(D.tg))L.inter.push(D.tg);}}
   if(D.res&&((D.shown&&performance.now()-D.ended>1500&&!UI.open)||(performance.now()-D.ended>9000&&!UI.open)||(CUR.id!=='home'&&CUR.id!=='visit')))dnLeave();   /* (run 4, stage 3: only once the result card has been up; on a slow device the card came after the 1.5 s and the view went back first) */   /* the result card went some other way: back to the normal view */
   if(!D.on){if(!D.res&&!DN_TEST)dnWatch();return;}
-  D.t=D.beat?(realMs()-D.s)/1000:D.t+dt;D.dt=dt;
-  if(D.beat)dnTrackTick(D.t);
-  if(D.style)dnFunkyLights(D.t);
+  const shared=D.beat?(realMs()-D.s)/1000:D.t+dt;
+  D.shared=shared;D.dt=dt;
+  if(D.beat)dnTrackTick(shared);
+  D.t=D.profile?dnClock(shared):shared;
+  if(D.profile&&shared<0)dnCountSound();
+  if(D.style)dnFunkyLights(D.t,D.profile);
   const a=DN_TEST?D.bot:MP.peers.get(D.partner);
   if(DN_TEST)dnBotTick(a,D.t);
   if(a&&a.dn&&a.dn.r===D.r){if(Number.isFinite(a.dn.sc))D.osc=a.dn.sc;D.gone=0;}else{D.gone+=dt;}
@@ -503,8 +762,8 @@ function dnTick(dt){const D=DANCE;if(!S)return;if(D.spots&&!D.spots.userData.fun
   const target=(D.sc+1)/(D.sc+D.osc+2);D.bar+=clamp((target-D.bar)*Math.min(1,dt*2.5),-.025,.025);   /* the bar slides: never more than 2.5% a frame, even after a hitch */
   if(D.mvT>0)D.mvT-=dt;
   dnHudTick();
-  if(!a||D.gone>6||(CUR.id!=='home'&&CUR.id!=='visit'))dnEnd('gone');else if(D.t>=D.length)dnEnd();}
-/* A press uses the shared song clock, including between animation frames. */
+  if(!a||D.gone>6||(CUR.id!=='home'&&CUR.id!=='visit'))dnEnd('gone');else if(shared>=D.length)dnEnd();}
+/* A press reads the playback clock directly, including between animation frames. */
 function dnExpire(t){
   const D=DANCE;
   for(;D.first<D.pat.length;D.first++){
@@ -520,9 +779,11 @@ function dnMiss(d,t){
 }
 function dnPress(d){
   const D=DANCE;if(!D.on)return;
-  const t=D.beat?(realMs()-D.s)/1000:D.t;
-  if(t<0||t>=D.length)return;
-  if(D.beat&&DN_MEDIA.blocked)dnPlayTrack(t);
+  const shared=D.beat?(realMs()-D.s)/1000:D.t;
+  if(D.profile&&shared<0){audioInit();dnCountSound();return;}
+  if(shared<0||shared>=D.length)return;
+  if(D.beat&&DN_MEDIA.blocked)dnPlayTrack(shared+(D.profile?DN_LOOP.preroll+dnOutputDelay():0));
+  const t=D.profile?dnClock(shared):shared;
   if(D.style)dnExpire(t);
   let best=-1,bd=DN_WIN;
   for(let i=D.first;i<D.pat.length;i++){
@@ -535,7 +796,7 @@ function dnPress(d){
   note.j=1;D.sc+=pts;D.mine.sc=D.sc;D.mine.k++;D.lastHit=best;
   if(D.style){
     D.combo++;
-    dnRememberMove(D.mine,note,best,D.combo,t);
+    dnRememberMove(D.mine,note,best,D.combo,t,D.profile,D.pat);
     dnLaneFeedback(d,t,pts,D.combo,note.t-t);
   }else{
     D.mine.mv=D.beat?note.move:best;D.mvT=.65;D.mvK=d;dnHudPop(d,pts,pts===15);
@@ -543,7 +804,7 @@ function dnPress(d){
   SFX.pop();
 }
 /* the moves: a lean left or right, a crouch, both arms up (u = how far into the move) */
-function dnPose(p,k,u,t,type){if(type){dnFunkyPose(p,k,u,t);return;}const s=Math.sin(Math.PI*clamp(u,0,1)),b=p.b;b.rotation.z=0;b.position.y=.03*Math.sin(t*7);p.head.rotation.z=0;for(const l of p.legs)l.position.y=.62;
+function dnPose(p,k,u,t,type){if(type){dnFunkyPoseLegacy(p,k,u,t);return;}const s=Math.sin(Math.PI*clamp(u,0,1)),b=p.b;b.rotation.z=0;b.position.y=.03*Math.sin(t*7);p.head.rotation.z=0;for(const l of p.legs)l.position.y=.62;
   if(k===0){b.rotation.z=.35*s;p.arms[0].rotation.z=-2.4*s;p.arms[1].rotation.z=.4*s;p.head.rotation.z=.3*s;}
   else if(k===3){b.rotation.z=-.35*s;p.arms[1].rotation.z=2.4*s;p.arms[0].rotation.z=-.4*s;p.head.rotation.z=-.3*s;}
   else if(k===1){const dy=.2*s;b.position.y=-dy;p.arms[0].rotation.z=-1.3*s;p.arms[1].rotation.z=1.3*s;for(const l of p.legs){l.position.y=.62+dy/(b.scale.y||1);l.rotation.x=.6*s;}}   /* (run 4 finish: the legs slide up into the body as it goes down, so the shoes stay on the floor; they went down with it and sank 13 cm into the dance floor) */
@@ -558,11 +819,20 @@ function dnCam(dt){const D=DANCE;if(!(D.on||D.res)||!D.cam){updateCamera(dt);ret
     const m=D.me,side=(D.left?-1:1)*(D.style ? .83 : .75);
     m.root.position.set(f.x+c.dz*side,0,f.z-c.dx*side);m.root.rotation.y=Math.atan2(c.dx,c.dz);
     animPerson(m,dt,false,1);
-    if(D.style)dnSharedPose(m,D.mine,D.pat,(realMs()-D.s)/1000);
+    if(D.style)dnSharedPose(m,D.mine,D.pat,D.t,D.profile);
     else dnPose(m,D.mvT>0?D.mvK:-1,D.mvT>0?1-D.mvT/.65:0,D.t);
   }}
-function dnSharedPose(person,wire,chart,t){
+function dnSharedPose(person,wire,chart,t,profile){
   const note=wire&&chart[wire.m];
+  if(profile){
+    const beat=dnBeatAt(t,profile);
+    if(note&&Number.isFinite(wire.at)){
+      const k=dnMoveKind(note.variant,wire.c),u=(beat-dnBeatAt(wire.at/1000,profile))/DN_PHRASE_BEATS[k-4];
+      if(u>=0&&u<1){dnPhrasePose(person,k,u,beat);return;}
+    }
+    dnPhrasePose(person,-1,0,beat);
+    return;
+  }
   if(note&&Number.isFinite(wire.at)){
     const k=dnMoveKind(note.variant,wire.c),u=(t-wire.at/1000)/dnMoveTime(k);
     if(u>=0&&u<1){dnPose(person,k,u,t,true);return;}
@@ -580,7 +850,8 @@ function dnPeer(a,dt){
   const funky=(dn||res)&&dnStyle(dn?dn.r:D.r);
   if(!a.av)return;
   if(a.dnPosed&&(!funky||!CUR||!DN_TEST&&!dnRoomPeer(a))){
-    a.av.b.position.x=0;a.av.b.rotation.set(0,0,0);a.av.head.rotation.x=0;a.dnPosed=false;
+    a.av.b.position.x=0;a.av.b.rotation.set(0,0,0);a.av.head.rotation.set(0,0,0);
+    a.av.legs[0].position.set(-.105,.62,0);a.av.legs[1].position.set(.105,.62,0);a.dnPosed=false;
   }
   if(!(dn||res)||!CUR||(CUR.id!=='home'&&CUR.id!=='visit')||funky&&!DN_TEST&&!dnRoomPeer(a))return;
   const f=D.on||res?D.floor:funky?D.watchFloor:dnFloor();if(!f)return;
@@ -592,9 +863,9 @@ function dnPeer(a,dt){
   a.av.root.rotation.y=Math.atan2(c.dx,c.dz);a.av.root.visible=true;
   if(a.pets)for(const q of a.pets)q.g.visible=false;
   if(funky){
-    if(dn&&a.dnR!==dn.r){a.dnR=dn.r;a.dnChart=D.r===dn.r?D.pat:dnChart(dn.r);}
+    if(dn&&a.dnR!==dn.r){a.dnR=dn.r;a.dnChart=D.r===dn.r?D.pat:dnChart(dn.r);a.dnProfile=dnProfile(dn.r);}
     const start=dn&&dn.s>0?dn.s:res?D.s:0;
-    if(start&&a.dnChart){dnSharedPose(a.av,a.dn,a.dnChart,(realMs()-start)/1000);a.dnPosed=true;}
+    if(start&&a.dnChart){dnSharedPose(a.av,a.dn,a.dnChart,D.on&&a.dnR===D.r?D.t:(realMs()-start)/1000,a.dnProfile);a.dnPosed=true;}
     return;
   }
   if(dn&&(dn.r!==a.dnR||dn.k!==a.dnCount||dn.mv!==a.dnMv)){a.dnR=dn.r;a.dnCount=dn.k;a.dnMv=dn.mv;const move=dnPattern(dn.r)[dn.mv];if(move){a.dnT=.65;a.dnK=move.d;}}
@@ -622,9 +893,10 @@ function dnHud(show){let h=$('dnHud');if(!h){
   h.hidden=!show;if(show){const lane=$('dnLane');for(const a of DANCE.arrows)a.remove();
     const funky=DANCE.style&&DANCE.style.arrow==='funky';
     h.classList.toggle('dnFunky',!!funky);
+    h.classList.toggle('dnCount',!!DANCE.profile);
     DANCE.arrows=funky?[]:DANCE.pat.map((q,i)=>{const d=document.createElement('div');d.className='dnArr';d.style.left=(q.d*25)+'%';d.style.top='-60px';d.innerHTML=dnArrow(q.d,52);lane.appendChild(d);return d;});
     if(funky)dnLaneStart();
-    $('dnMeN').textContent='You';$('dnYouN').textContent=dnNm(DANCE.partnerNm);$('dnMeS').textContent='0';$('dnYouS').textContent='0';$('dnFill').style.width='50%';$('dnMsg').textContent='';}}
+    $('dnMeN').textContent='You';$('dnYouN').textContent=dnNm(DANCE.partnerNm);$('dnMeS').textContent='0';$('dnYouS').textContent='0';$('dnFill').style.width='50%';$('dnMsg').textContent='';$('dnMsg').removeAttribute('data-cue');}}
 function dnHudTick(){
   const D=DANCE,lane=$('dnLane');if(!lane)return;
   if(D.style)dnLaneDraw();
@@ -633,11 +905,23 @@ function dnHudTick(){
   D.pat.forEach((q,i)=>{const el=D.arrows[i];if(!el)return;const dtq=q.t-D.t;if(dtq>DN_LEAD||dtq<-.6){el.style.visibility='hidden';return;}el.style.visibility='visible';el.style.top=(line-dtq/DN_LEAD*line)+'px';if(q.j!==1)el.style.opacity=dtq<0?String(Math.max(0,(q.j===-1?.3:1)*(1+dtq/.22))):'';if(q.j===1&&!el.classList.contains('hit'))el.classList.add('hit');if(q.j===-1&&!el.classList.contains('miss'))el.classList.add('miss');});
   $('dnMeS').textContent=D.sc;$('dnYouS').textContent=D.osc;$('dnFill').style.width=(D.bar*100).toFixed(2)+'%';
   }
-  const m=$('dnMsg'),txt=D.t<-.2?DN_COUNT[Math.min(5,Math.ceil(-D.t))]:D.t<.6?'Dance!':
+  const m=$('dnMsg');
+  // The final cue uses the same audible time as the receptors.
+  if(D.profile&&D.t>=0&&D.shared>-.22)D.didGo=true;
+  const cueTime=D.shared<-.22?D.shared:D.didGo?Math.max(0,D.t):Math.min(-.0001,D.t);
+  const txt=D.profile?dnCountCue(cueTime):D.t<-.2?DN_COUNT[Math.min(5,Math.ceil(-D.t))]:D.t<.6?'Dance!':
     !D.style&&D.popT&&performance.now()<D.popT?D.popTxt:'';
-  if(m.textContent!==txt)m.textContent=txt;
+  if(m.textContent!==txt){
+    m.textContent=txt;
+    if(D.profile&&txt)m.dataset.cue=txt;else m.removeAttribute('data-cue');
+  }
 }
 const DN_COUNT=['','1','2','3','4','5'];
+function dnCountCue(t){
+  if(t>=0)return t<.42?'GO!':'';
+  const count=Math.ceil(-t*DN_LOOP.bpm/60);
+  return count<=3?DN_COUNT[count]:'';
+}
 /* The lane stays on the game's HUD. Sprites, trails and bursts share one
    small canvas, with fixed slots and reusable art prepared before play. */
 const DN_BAR_WIDTH=Array.from({length:1001},(_,i)=>i/10+'%');
@@ -741,7 +1025,7 @@ function dnLaneDraw(){
     pg.globalAlpha=.33;pg.fillStyle='#a373b5';pg.fillRect(0,h-44,w,2);
   }
   const w=F.width,h=F.height,lane=w/4,line=h-43,size=Math.min(lane*.99,77),travel=line/DN_LEAD;
-  const pulse=dnPulse(t),calm=DN_REDUCED&&DN_REDUCED.matches;
+  const pulse=dnPulse(t,D.profile),calm=DN_REDUCED&&DN_REDUCED.matches;
   const colors=D.style.spark,notes=D.pat,charges=F.charges;
   g.globalAlpha=1;g.clearRect(0,0,w,h);g.drawImage(F.paper,0,0,w,h);
   charges.fill(0);
@@ -804,15 +1088,16 @@ function dnTestBoot(){
   if(!items.some(it=>it.t==='discoball')){
     const dx=-floor.x,dz=-floor.z,len=Math.hypot(dx,dz);
     const ry=len<1?0:Math.atan2(dx,dz);
-    items.push({u:'dancetest-ball',t:'discoball',x:clamp(floor.x-Math.cos(ry)*.54-Math.sin(ry)*1.65,-5.3,5.3),
-      z:clamp(floor.z+Math.sin(ry)*.54-Math.cos(ry)*1.65,-4.3,4.3),r:ry,f:floor.f|0,on:1});
+    items.push({u:'dancetest-ball',t:'discoball',x:clamp(floor.x-Math.sin(ry)*1.15,-5.3,5.3),
+      z:clamp(floor.z-Math.cos(ry)*1.15,-4.3,4.3),r:ry,f:floor.f|0,on:1});
   }
   applyHouse();rebuildHome();setLoc('home');
   $('title').hidden=true;$('touch').hidden=true;
   PLAYING=true;
   const f=dnFloor();
   P.x=f.x;P.z=f.z;P.yaw=Math.PI;
-  const r=dnRoundId({v:DN_FX_BUILD}),bot={peer:'dancetest-bot',nm:'Dance Buddy',av:null,
+  audioInit();
+  const r=dnRoundId({v:DN_LOOP_BUILD,dp:!!DN_PITCH}),bot={peer:'dancetest-bot',nm:'Dance Buddy',av:null,
     dn:{r,st:'go',sc:0,mv:-1,ld:0,k:0}};
   bot.av=makePerson(lookToPerson({hair:'#704d2d',top:'#7fdcb5',style:'short',eyes:'happy',bottom:'#37a4fc'}));
   bakePerson(bot.av);scene.add(bot.av.root);
@@ -844,7 +1129,7 @@ function dnBotTick(bot,t){
     const note=D.pat[i];
     dn.sc+=DanceJudge.judge(i%5===0?.15:.04,DN_WIN).points;
     dn.k++;bot.combo++;
-    dnRememberMove(dn,note,i,bot.combo,note.t);
+    dnRememberMove(dn,note,i,bot.combo,note.t,D.profile,D.pat);
   }
 }
 /* the Dance! spot on the floor of your house and of a house you visit (its place follows the floor) */
