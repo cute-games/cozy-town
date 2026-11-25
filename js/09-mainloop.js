@@ -48,7 +48,20 @@ body.dancing #joy,body.dancing #moveBtns,body.dancing #actWrap,body.dancing #pad
 @media (orientation:landscape) and (max-height:500px){#panel.bottom .card.dnres{margin-left:auto;margin-right:0;width:min(380px,46vw)}#dnMsg{right:auto;left:3%;top:calc(env(safe-area-inset-top,0px) + 12px);bottom:auto;transform:none;font-size:34px}}body:has(#panel:not([hidden]) #card.dnres) #joy{visibility:hidden}body:has(#panel:not([hidden]) #card.ptres) :is(#joy,#moveBtns){visibility:hidden}   /* (the result card at the side, the two dancers in view: run 4, stage 3) */
 @media (orientation:landscape){#dnLane{left:auto;right:3%;transform:none;width:min(300px,30vw);top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 96px);height:min(62vh,420px)}#dnBtns{left:auto;right:3%;transform:none;width:min(300px,30vw);justify-content:space-between;gap:0}#dnBtns .btn{width:62px;height:62px;min-height:62px}#dnTop{top:calc(env(safe-area-inset-top,0px) + 64px);left:33%}#dnMsg{left:auto;right:calc(3% + min(300px,30vw) + 14px);top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 140px);transform:none;font-size:40px}}@media (orientation:landscape) and (max-height:500px){#dnLane{top:calc(env(safe-area-inset-top,0px) + 6px);height:auto}body.dancing #topbtns,body.dancing #stats{visibility:hidden}#dnTop{top:calc(env(safe-area-inset-top,0px) + 8px)}#dnMsg{left:3%;right:auto;top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);font-size:34px}}   /* (run 4 finish: the pop-up under the dancers, not on them: its ✨ covered the left dancer's face) */   /* wide screens: the lane on the right with its four buttons right under it, the dancers in view (run 4, stage 3) */
 @media (orientation:portrait){body:has(#hpCard:not([hidden])) #mmBtn,body:has(#hpCard:not([hidden])) #pad,body:has(#dnCard:not([hidden])) #mmBtn,body:has(#dnCard:not([hidden])) #pad{visibility:hidden}}   /* (run 4, stage 3: the card sat on the map and the notepad) */
-#hpCard,#dnCard{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 74px);transform:translateX(-50%);z-index:9500;background:var(--paper);border:3px solid var(--line);border-radius:22px;padding:14px 16px 16px;box-shadow:0 6px 0 #3d2c5e;text-align:center;width:min(410px,92vw);color:var(--ink);animation:kcPop .2s ease-out}#hpCard .kc-b,#dnCard .kc-b{display:flex;gap:10px;justify-content:center}#hpCard .kc-t,#dnCard .kc-t{font-size:28px;line-height:1.15}#hpCard[hidden],#dnCard[hidden]{display:none}@media (orientation:portrait){#hpCard,#dnCard{top:calc(env(safe-area-inset-top,0px) + 150px)}}#hpCard .kc-b,#dnCard .kc-b{flex-wrap:wrap}#hpCard .kc-b .btn,#dnCard .kc-b .btn{min-height:48px;font-size:17px;padding:8px 14px;white-space:nowrap}`;document.head.appendChild(st);}   /* the cards' and the dance HUD's looks, in at load time */
+#hpCard,#dnCard{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 74px);transform:translateX(-50%);z-index:9500;background:var(--paper);border:3px solid var(--line);border-radius:22px;padding:14px 16px 16px;box-shadow:0 6px 0 #3d2c5e;text-align:center;width:min(410px,92vw);color:var(--ink);animation:kcPop .2s ease-out}#hpCard .kc-b,#dnCard .kc-b{display:flex;gap:10px;justify-content:center}#hpCard .kc-t,#dnCard .kc-t{font-size:28px;line-height:1.15}#hpCard[hidden],#dnCard[hidden]{display:none}@media (orientation:portrait){#hpCard,#dnCard{top:calc(env(safe-area-inset-top,0px) + 150px)}}#hpCard .kc-b,#dnCard .kc-b{flex-wrap:wrap}#hpCard .kc-b .btn,#dnCard .kc-b .btn{min-height:48px;font-size:17px;padding:8px 14px;white-space:nowrap}
+#dnFunkyHud{display:none}
+#dnHud.dnFunky #dnFunkyHud{display:block;position:absolute;inset:0}
+#dnHud.dnFunky .dnCol,#dnHud.dnFunky #dnLine,#dnHud.dnFunky .dnHit{display:none}
+#dnHud.dnFunky #dnLane{background:rgba(255,250,253,.97)}
+#dnFunkyCaption{position:absolute;inset:0 0 auto;height:35px;display:flex;align-items:center;justify-content:space-between;gap:4px;padding:0 8px;background:#f7e9fa;border-bottom:1px solid #d8bdde;color:#503362;white-space:nowrap;font-weight:900;font-size:14px}
+#dnFunkyGrade{overflow:hidden;text-overflow:ellipsis}
+#dnFunkyGrade[data-grade="perfect"]{color:#86440a}
+#dnFunkyGrade[data-grade="special"]{color:#982b66}
+#dnFunkyGrade[data-grade="good"]{color:#17674f}
+#dnFunkyGrade[data-grade="miss"]{color:#665772}
+#dnFunkyCombo{margin-left:auto;padding:2px 7px;border-radius:13px;background:#fff8ff;color:#654277;font-size:13px}
+#dnFunkyCombo.lit{background:#ffe5aa;color:#713815}
+#dnFunkyCanvas{display:block;position:absolute;top:35px;left:0;width:100%;height:calc(100% - 35px)}`;document.head.appendChild(st);}   /* the cards' and the dance HUD's looks, in at load time */
 const HPT={seen:new Set(),queue:[],cur:null,rem:{},noted:{},ans:null,tiles:null,mats:null,ball:null,lit:false,key:'',t:0,ct:0};
 function hpOn(h){h=h===undefined?S&&S.hp:h;return !!(h&&gameMs()>=h.at&&gameMs()<h.at+HP_LEN);}   /* (a party's time is on the one clock: gameMs, so a night skip brings it closer) */
 function hpSoon(h){h=h===undefined?S&&S.hp:h;return !!(h&&gameMs()<h.at+HP_LEN);}
@@ -81,6 +94,7 @@ function hpNav(a,quiet){const j=LANE.slotOf.get(a.peer),ln=LOC.city.lane;if(j==n
   setNavTo({id:'party',n:a.nm+"'s party",i:'🎉',x:d[0],z:d[1],w:4,d:4,door:[d[0],d[1]],flat:1,nq:1},true);toast('🎉 Follow the arrow to '+a.nm+"'s house!",3.2);return true;}
 /* 🪩 the disco floor flashes and the ball spins at a party, or while a round is on */
 function hpLights(dt){const L=CUR&&(CUR.id==='home'||CUR.id==='visit')?CUR:null;let on=false;
+  if(DANCE.spots&&DANCE.spots.userData.funky&&DANCE.spots.userData.funky.room===L)return;
   if(L){if(CUR.id==='home')on=hpOn()||DANCE.on;else{const a=MP.peers.get(VIS.host);on=DANCE.on||!!(a&&a.py&&hpOn(a.py));}}
   const key=L?L.id+':'+L.items.children.length:'';if(key!==HPT.key){HPT.key=key;HPT.tiles=[];HPT.mats=[];HPT.ball=null;if(L)L.items.traverse(o=>{if(!o.isMesh||!o.userData)return;if(o.userData.tile!==undefined){HPT.tiles.push(o);if(!HPT.mats[o.userData.tile])HPT.mats[o.userData.tile]=o.material;}if(o.userData.ball)HPT.ball=o;});HPT.lit=false;}
   if(!HPT.tiles||!HPT.tiles.length)return;const M=HPT.mats.filter(Boolean);
@@ -186,35 +200,117 @@ function hpTick(dt){if(!S)return;
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.DanceJudge = api;
 }(typeof window === 'object' ? window : globalThis));
-const DN_TRACK={"src":"music/alley-cat-dumpster-divin.mp3","bpm":112.994,"firstBeat":0.27,"duration":16.991};
+const DN_TRACK={"id":"alley-cat","src":"music/alley-cat-dumpster-divin.mp3","bpm":112.994,"firstBeat":0.27,"duration":16.991};
 /* END DANCE SOURCES */
-const DANCE={on:false,mine:null,ask:null,said:new Set(),card:null,t:0,s:0,r:'',pat:null,partner:null,partnerNm:'',left:1,sc:0,osc:0,bar:.5,mvT:0,mvK:-1,floor:null,cam:null,me:null,hud:null,arrows:[],ended:0,res:null,lastHit:-1,pats:new Map(),gone:0,tg:null,dt:0,serial:0,beat:false,bot:null};
+const DANCE={on:false,mine:null,ask:null,said:new Set(),card:null,t:0,s:0,r:'',pat:null,partner:null,partnerNm:'',left:1,sc:0,osc:0,bar:.5,mvT:0,mvK:-1,floor:null,cam:null,me:null,hud:null,arrows:[],ended:0,res:null,lastHit:-1,pats:new Map(),gone:0,tg:null,dt:0,serial:0,beat:false,bot:null,style:null,combo:0,first:0};
 const DN_N=20,DN_LEAD=1.6,DN_WIN=.28,DN_T0=2.0,DN_GAP=1.15,DN_NAMES=['⬅️','⬇️','⬆️','➡️'],DN_COL=['#ff7aa8','#7cc8ff','#7fdcb5','#ffd45c'],DN_ROT=[270,180,0,90];
 function dnArrow(d,sz){return '<svg viewBox="0 0 48 48" width="'+sz+'" height="'+sz+'" aria-hidden="true"><path d="M24 5 L43 26 H32 V43 H16 V26 H5 Z" fill="'+DN_COL[d]+'" stroke="#3d2c5e" stroke-width="3.5" stroke-linejoin="round" transform="rotate('+DN_ROT[d]+' 24 24)"/></svg>';}   /* 🕺 big drawn arrows, one colour per column, the same on every device (run 4, stage 3: the emoji arrows were small grey glyphs without a colour emoji font) */
 function dnHash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
 function dnClassic(r){const q=seeded(dnHash(String(r))),out=[];for(let i=0;i<DN_N;i++)out.push({t:DN_T0+i*DN_GAP,d:(q()*4)|0,j:0});return out;}
 function dnPattern(r){let p=DANCE.pats.get(r);if(p)return p;p=dnClassic(r);if(DANCE.pats.size>=64)DANCE.pats.delete(DANCE.pats.keys().next().value);DANCE.pats.set(r,p);return p;}
-const DN_BEAT_BUILD=2026112506,DN_BEAT_PREFIX='beat1-';
-const dnOnBeat=r=>typeof r==='string'&&r.startsWith(DN_BEAT_PREFIX);
+const DN_BEAT_BUILD=2026112506,DN_BEAT_PREFIX='beat1-',DN_FX_BUILD=2026112507,DN_FX_PREFIX='beat2-';
+const dnOnBeat=r=>typeof r==='string'&&(r.startsWith(DN_BEAT_PREFIX)||r.startsWith(DN_FX_PREFIX));
 function dnRoundId(a){
   const base=realMs().toString(36)+'-'+dnHash(MP.me).toString(36)+'-'+(++DANCE.serial);
   if(!(a.v>=DN_BEAT_BUILD))return base;
-  // Old spectators index their own 20-arrow pattern when they see a move.
-  // Choose an id whose classic pattern can represent all four directions.
-  let r=DN_BEAT_PREFIX+base,n=0;
-  while(new Set(dnClassic(r).map(note=>note.d)).size<4)r=DN_BEAT_PREFIX+base+'-'+(++n);
+  // Older spectators still index their 20-arrow pattern when they see a move.
+  const prefix=a.v>=DN_FX_BUILD?DN_FX_PREFIX:DN_BEAT_PREFIX;
+  let r=prefix+base,n=0;
+  while(new Set(dnClassic(r).map(note=>note.d)).size<4)r=prefix+base+'-'+(++n);
   return r;
 }
 function dnChart(r){
   if(!dnOnBeat(r))return dnPattern(r);
-  const classic=dnPattern(r);
-  return DanceChart.makeChart(DN_TRACK,3,DanceChart.seedFor(r)).map((note,i)=>{
+  const classic=dnPattern(r),seed=DanceChart.seedFor(r),style=dnStyle(r);
+  const starts=seed>>>10,seen=[0,0,0,0];
+  return DanceChart.makeChart(DN_TRACK,3,seed).map((note,i)=>{
+    const d=note.lane;
     let move=i%DN_N;
-    for(let n=0;n<DN_N;n++,move=(move+1)%DN_N)if(classic[move].d===note.lane)break;
-    return {t:note.time,d:note.lane,move};
+    for(let n=0;n<DN_N;n++,move=(move+1)%DN_N)if(classic[move].d===d)break;
+    const variant=style?style.moves[d][((starts>>>d)+seen[d]++)&1]:d;
+    return {t:note.time,d,move,variant};
   });
 }
+/* Only Funky is playable in this slice. The catalogue groups the remaining songs for later rounds. */
+const DN_TYPES={
+  'alley-cat':'Funky','crushing-it':'Funky','hella-bumps':'Funky',
+  'heart-shaped':'Sweet','piecemeal':'Sweet',
+  'talking-cute':'Pixel','dance-field':'Pixel','penguin-town':'Pixel',
+  'cloak-of-darkness':'Mystery','ludum-dare-30-04':'Mystery','never-miss':'Fast'
+};
+const DN_STYLES={
+  Funky:{moves:[[4,5],[6,7],[8,9],[10,11]],arrow:'funky',spark:['#ff7aa8','#7cc8ff','#7fdcb5','#ffd45c'],
+    perfect:'#ffe192',lights:['#ff76ac','#64e7d7']}
+};
+const DN_PERIOD=60/DN_TRACK.bpm;
+const DN_REDUCED=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)');
+const dnStyle=r=>typeof r==='string'&&r.startsWith(DN_FX_PREFIX)?DN_STYLES[DN_TYPES[DN_TRACK.id]]:null;
+function dnMoveKind(variant,combo){return combo===10?13:combo===5?12:variant;}
+function dnMoveTime(k){return k===13?1.03:k===12?.79:.58;}
+function dnRememberMove(wire,note,index,combo,time){
+  wire.mv=note.move;
+  // Keep the whole combo move on screen, even when another note lands before it finishes.
+  if(combo!==5&&combo!==10&&(wire.c===5||wire.c===10)&&time-wire.at/1000<dnMoveTime(dnMoveKind(4,wire.c)))return;
+  wire.m=index;wire.c=combo;wire.at=Math.round(time*1000);
+}
 
+/* Funky moves work on the same limbs the classic dance uses. t is the shared
+   playback position; countdown and missed notes leave the dancer step-touching. */
+function dnFunkyPose(p,k,u,t){
+  const b=p.b,l=p.legs[0],r=p.legs[1],a=p.arms[0],z=p.arms[1];
+  const beat=(Math.max(0,t)-DN_TRACK.firstBeat)/DN_PERIOD;
+  const side=Math.sin(beat*Math.PI),bounce=Math.abs(Math.sin(beat*Math.PI*2));
+  b.position.x=.11*side;b.position.y=.027*bounce;b.rotation.set(.02,.12*side,-.12*side);
+  p.head.rotation.set(0,0,.10*side);
+  a.rotation.set(-.28*side,0,-.51-.26*side);z.rotation.set(.28*side,0,.51-.26*side);
+  l.position.y=.62;r.position.y=.62;
+  l.rotation.set(-.29*Math.max(0,side),-.12,-.16*Math.max(0,-side));
+  r.rotation.set(.29*Math.min(0,side),.12,.16*Math.max(0,side));
+  if(k<4)return;
+  const s=Math.sin(Math.PI*u),wave=Math.sin(Math.PI*2*u),calm=DN_REDUCED&&DN_REDUCED.matches;
+  switch(k){
+    case 4: // Point up and pop the opposite hip.
+      b.position.x-=.18*s;b.rotation.z=.26*s;p.head.rotation.z=.25*s;
+      a.rotation.set(-.28*s,0,-2.67*s-.25);z.rotation.set(-.75*s,0,.70*s+.26);r.rotation.z=.31*s;break;
+    case 5: // Turn on the spot with one foot tucked.
+      b.rotation.y=(calm?1.5:Math.PI*2)*u*u*(3-2*u);b.position.y=.09*s;
+      a.rotation.z=-1.28*s-.4;z.rotation.z=2.04*s+.3;l.rotation.x=-.58*s;r.rotation.y=.36*s;break;
+    case 6: { // Sink into a low groove, keeping the shoes on the floor.
+      const down=.29*s;b.position.y=-down;b.rotation.x=.25*s;
+      l.position.y+=down/(b.scale.y||1);r.position.y+=down/(b.scale.y||1);
+      l.rotation.set(.74*s,-.23*s,-.25*s);r.rotation.set(.74*s,.23*s,.25*s);
+      a.rotation.set(-.86*s,0,-.55);z.rotation.set(-.86*s,0,.55);break;
+    }
+    case 7: { // Alternating shoulders and an angled jazz step.
+      const roll=Math.sin(Math.PI*5*u)*s;
+      b.rotation.set(-.08*s,.52*roll,.18*roll);p.head.rotation.z=-.24*roll;
+      a.rotation.set(-1.18*s-.6*roll,0,-1.42*s);z.rotation.set(-1.18*s+.6*roll,0,1.42*s);
+      l.rotation.z=-.27*s;r.rotation.z=.27*s;break;
+    }
+    case 8: // Clap high, then sweep the hands back down.
+      a.rotation.set(-.3*s,.09*s,-3.12*s-.16);z.rotation.set(-.3*s,-.09*s,3.12*s+.16);
+      b.position.y=.09*s;p.head.rotation.x=-.20*s;b.rotation.y=-.09*s;break;
+    case 9: // Wide star jump.
+      b.position.y=(calm?.16:.38)*s;a.rotation.z=-2.10*s-.32;z.rotation.z=2.10*s+.32;
+      l.rotation.z=-.62*s;r.rotation.z=.62*s;b.rotation.z=-.08*s;break;
+    case 10: // Kick forward and counterbalance with the opposite arm.
+      r.rotation.set(-1.36*s,.36*s,.39*s);l.rotation.x=.17*s;b.rotation.z=-.16*s;
+      b.position.x-=.11*s;a.rotation.set(-.90*s,0,-1.46*s);z.rotation.set(.67*s,0,.46*s+.32);break;
+    case 11: { // Pass the wave across the shoulders and out the second hand.
+      const sweep=Math.sin(Math.PI*clamp(u*1.5,0,1)),echo=Math.sin(Math.PI*clamp(u*1.5-.5,0,1));
+      a.rotation.set(.4*echo,0,-.36-1.84*sweep);z.rotation.set(.4*sweep,0,.36+1.84*echo);
+      b.rotation.z=.32*(sweep-echo);p.head.rotation.z=-.19*(sweep-echo);break;
+    }
+    case 12: // Five combo: two heel-toe steps with alternating high fists.
+      b.position.x=.23*wave;b.rotation.y=.43*wave;b.rotation.z=-.23*wave;
+      a.rotation.z=-.43-2.22*Math.max(0,wave);z.rotation.z=.43-2.22*Math.min(0,wave);
+      l.rotation.x=wave*-.75;r.rotation.x=wave*.75;b.position.y=.13*Math.abs(wave);break;
+    case 13: // Ten combo: a rising full turn, then a wide-legged landing.
+      b.position.y=(calm?.17:.49)*s;b.rotation.y=(calm?1.5:Math.PI*2)*u*u*(3-2*u);
+      a.rotation.z=-.44-1.83*s;z.rotation.z=.44+1.83*s;l.rotation.z=-.52*s;r.rotation.z=.52*s;
+      b.rotation.x=-.11*s;p.head.rotation.z=.17*wave;break;
+  }
+}
 /* Only the countdown loads the song. The invitation gesture primes the same
    media element with silence, and the member's shared clock drives the round. */
 const DN_MEDIA={el:null,primed:false,tried:false,blocked:false,next:0};
@@ -261,8 +357,8 @@ function dnTrackTick(t){
 function dnHere(){const out=[];if(!MP.grp||!CUR)return out;for(const a of MP.peers.values()){if(!a.av)continue;if(CUR.id==='home'&&a.loc==='visit'&&a.ho===MP.me)out.push(a);else if(CUR.id==='visit'&&VIS.st==='in'&&((a.loc==='home'&&a.peer===VIS.host)||(a.loc==='visit'&&a.ho===VIS.host&&a.peer!==MP.me)))out.push(a);}return out;}
 /* the disco floor of this house (world x,z and its floor), only with a disco ball in the house too */
 function dnFloor(){if(!CUR||!S)return null;
-  if(CUR.id==='home'){const f=S.home.items.find(it=>it.t==='discofloor');if(!f||!S.home.items.some(it=>it.t==='discoball'))return null;const L=LOC.home;return{x:L.ox+f.x,z:L.oz+UPZ*(f.f|0)+f.z,fl:f.f|0,L};}
-  if(CUR.id==='visit'&&LOC.visit&&LOC.visit.items){let f=null,b=false;for(const g of LOC.visit.items.children){const r=g.userData.row;if(!r)continue;if(r.t==='discofloor'&&!f)f=g;if(r.t==='discoball')b=true;}if(!f||!b)return null;return{x:f.position.x,z:f.position.z,fl:f.userData.fl|0,L:LOC.visit};}
+  if(CUR.id==='home'){const f=S.home.items.find(it=>it.t==='discofloor');if(!f||!S.home.items.some(it=>it.t==='discoball'))return null;const L=LOC.home;return{x:L.ox+f.x,z:L.oz+UPZ*(f.f|0)+f.z,fl:f.f|0,L,item:HOME_ITEMS.get(f.u)?.g};}
+  if(CUR.id==='visit'&&LOC.visit&&LOC.visit.items){let f=null,b=false;for(const g of LOC.visit.items.children){const r=g.userData.row;if(!r)continue;if(r.t==='discofloor'&&!f)f=g;if(r.t==='discoball')b=true;}if(!f||!b)return null;return{x:f.position.x,z:f.position.z,fl:f.userData.fl|0,L:LOC.visit,item:f};}
   return null;}
 function dnMyFloor(){const L=CUR;return L?Math.round((P.z-L.oz)/UPZ):0;}
 function dnCan(){if(DANCE.on||DANCE.ask||DANCE.mine||!MP.grp||P.ride||CUT)return false;const f=dnFloor();return !!f&&f.fl===dnMyFloor()&&dnHere().length>0;}
@@ -276,20 +372,114 @@ function dnCardShow(a){if(DANCE.card)return;DANCE.card={peer:a.peer,r:a.dn.r,nm:
 function dnCardAnswer(ok){const c=DANCE.card;if(!c)return;DANCE.card=null;const el=$('dnCard');if(el)el.hidden=true;DANCE.said.add(c.peer+'|'+c.r);const a=MP.peers.get(c.peer);
   if(ok&&a&&a.dn&&a.dn.r===c.r&&a.dn.st==='ask'){audioInit();if(dnOnBeat(c.r))dnPrime();SFX.yay();DANCE.mine={r:c.r,w:c.peer,st:'go',s:0,sc:0,mv:-1,k:0,ld:0};DANCE.partner=c.peer;DANCE.partnerNm=c.nm;toast('💃 Get ready…',2);}
   else{DANCE.mine={r:c.r,w:c.peer,st:'no',s:0,sc:0,mv:-1,k:0,ld:0};setTimeout(()=>{if(DANCE.mine&&DANCE.mine.st==='no')DANCE.mine=null;},6000);if(ok)toast('💛 Too late, the music stopped. Ask them!',2.6);}}
-function dnBegin(s,a,left){if(DANCE.res)dnLeave();const f=dnFloor();if(!f){dnCancel();return;}DANCE.on=true;DANCE.s=s;if(DANCE.mine)DANCE.mine.s=s;DANCE.r=DANCE.mine.r;DANCE.partner=a.peer;DANCE.partnerNm=a.nm;DANCE.left=left;DANCE.beat=dnOnBeat(DANCE.r);DANCE.pat=dnChart(DANCE.r).map(q=>({t:q.t,d:q.d,move:q.move,j:0}));
+function dnBegin(s,a,left){if(DANCE.res)dnLeave();const f=dnFloor();if(!f){dnCancel();return;}DANCE.on=true;DANCE.s=s;if(DANCE.mine)DANCE.mine.s=s;DANCE.r=DANCE.mine.r;DANCE.partner=a.peer;DANCE.partnerNm=a.nm;DANCE.left=left;DANCE.beat=dnOnBeat(DANCE.r);DANCE.style=dnStyle(DANCE.r);
+  DANCE.pat=dnChart(DANCE.r).map(q=>({t:q.t,d:q.d,move:q.move,variant:q.variant,j:0}));
+  DANCE.combo=0;DANCE.first=0;DANCE.popT=0;
   DANCE.length=DANCE.beat?DN_TRACK.duration:DANCE.pat[DANCE.pat.length-1].t+1.8;
   if(DANCE.beat)dnLoadTrack();
   DANCE.t=-(s-realMs())/1000;DANCE.sc=0;DANCE.osc=0;DANCE.bar=.5;DANCE.mvT=0;DANCE.mvK=-1;DANCE.lastHit=-1;DANCE.ended=0;DANCE.gone=0;DANCE.floor=f;DANCE.ask=null;
   const L=f.L,W=L.W||HOMEW,D=L.D||HOMED,cx=L.ox,cz=L.oz+UPZ*f.fl;let dx=cx-f.x,dz=cz-f.z;const dl=Math.hypot(dx,dz);if(dl<1){dx=0;dz=1;}else{dx/=dl;dz/=dl;}
   {const cd=innerWidth>innerHeight?(visH()<=500?3.5:4.4):5.6,sd=(left?-1:1)*.6;   /* (an upright phone sees a narrow slice: from 5.6 m both dancers fit; run 4, stage 3) */DANCE.cam={x:clamp(f.x+dx*cd+dz*sd,cx-W+.7,cx+W-.7),z:clamp(f.z+dz*cd-dx*sd,cz-D+.7,cz+D-.7),dx,dz};}   /* (run 4, stage 3: nearer on a short sideways screen; the two players' views 1.2 m apart, so after the round they never stand inside each other) */
   if(P.sit)standUp();if(DECO.on)decoEnd();closePanel();P.ride={kind:'dance'};P.jy=0;P.vy=0;document.body.classList.add('dancing');
-  const me=makePerson(lookToPerson(packLook()));bakePerson(me);scene.add(me.root);DANCE.me=me;dnSpots(f);dnHud(true);SFX.ding();}
-/* 🪩 coloured light spots from the mirror ball sweep round the floor during a dance-off and its result (run 4, stage 3) */
-function dnSpots(f){dnSpotsOff();const g=new THREE.Group(),C=['#ff4d8d','#7cc8ff','#ffd45c','#5fd4b0','#b79cff'];for(let i=0;i<22;i++){const a=i*2.39996,r=1.4+(i*.37)%2.4,m=new THREE.Mesh(new THREE.CircleGeometry(.13+(i%3)*.04,14),new THREE.MeshBasicMaterial({color:C[i%5],transparent:true,opacity:.55,depthWrite:false}));m.rotation.x=-Math.PI/2;m.position.set(Math.cos(a)*r,.012+i*.0004,Math.sin(a)*r);g.add(m);}g.position.set(f.x,0,f.z);scene.add(g);DANCE.spots=g;}
-function dnSpotsOff(){const g=DANCE.spots;if(!g)return;scene.remove(g);g.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material)o.material.dispose();});DANCE.spots=null;}
-function dnSpot(left){const c=DANCE.cam,f=DANCE.floor,rx=c.dz,rz=-c.dx,s=left?-1:1;return [f.x+rx*.75*s,f.z+rz*.75*s];}
+  const me=makePerson(lookToPerson(packLook()));bakePerson(me);scene.add(me.root);DANCE.me=me;DANCE.watchFloor=null;DANCE.watchCam=null;dnSpots(f,DANCE.style,DANCE.r);dnHud(true);SFX.ding();}
+/* The existing mirror-ball spots use two instanced palettes in a Funky round. */
+function dnSpots(f,style,id){
+  dnSpotsOff();
+  const g=new THREE.Group();g.position.set(f.x,0,f.z);
+  if(style){
+    const geo=new THREE.CircleGeometry(1,12),scratch=new THREE.Object3D();
+    const tiles=[],original=[];
+    if(f.item)f.item.traverse(o=>{
+      if(o.isMesh&&o.userData.tile!==undefined){
+        tiles.push(o);original.push(HPT.lit&&HPT.mats[o.userData.tile]||o.material);
+      }
+    });
+    const spotM=style.lights.map(color=>new THREE.MeshBasicMaterial({color,transparent:true,opacity:.42,depthWrite:false}));
+    const tileM=style.lights.map(color=>toon({color,emissive:new THREE.Color(color),emissiveIntensity:.31}));
+    for(let side=0;side<2;side++){
+      const spots=new THREE.InstancedMesh(geo,spotM[side],11);spots.frustumCulled=false;
+      for(let i=0;i<11;i++){
+        const index=i*2+side,a=index*2.39996,r=.63+(index*.37)%2.7;
+        scratch.position.set(Math.cos(a)*r,.046+index*.00015,Math.sin(a)*r);
+        scratch.rotation.x=-Math.PI/2;scratch.scale.setScalar(.11+(index%3)*.045);
+        scratch.updateMatrix();spots.setMatrixAt(i,scratch.matrix);
+      }
+      spots.instanceMatrix.needsUpdate=true;g.add(spots);
+    }
+    let ball=null;
+    f.L.items.traverse(o=>{if(o.userData.ball&&Math.abs(o.getWorldPosition(scratch.position).z-f.z)<UPZ/2)ball=o;});
+    g.userData.funky={id,room:f.L,geo,tiles,original,spotM,tileM,step:-1,ball};
+  }else{
+    const colors=['#ff4d8d','#7cc8ff','#ffd45c','#5fd4b0','#b79cff'];
+    for(let i=0;i<22;i++){
+      const a=i*2.39996,r=1.4+(i*.37)%2.4;
+      const m=new THREE.Mesh(new THREE.CircleGeometry(.13+(i%3)*.04,14),new THREE.MeshBasicMaterial({color:colors[i%5],transparent:true,opacity:.55,depthWrite:false}));
+      m.rotation.x=-Math.PI/2;m.position.set(Math.cos(a)*r,.012+i*.0004,Math.sin(a)*r);g.add(m);
+    }
+  }
+  scene.add(g);DANCE.spots=g;
+}
+function dnSpotsOff(){
+  const D=DANCE,g=D.spots;if(!g)return;
+  scene.remove(g);
+  const fx=g.userData.funky;
+  if(fx){
+    for(let i=0;i<fx.tiles.length;i++)fx.tiles[i].material=fx.original[i];
+    for(const m of fx.spotM)m.dispose();
+    for(const m of fx.tileM)m.dispose();
+    for(const spot of g.children)spot.dispose();
+    fx.geo.dispose();
+  }else g.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material)o.material.dispose();});
+  D.spots=null;
+}
+function dnPulse(t){
+  if(t<DN_TRACK.firstBeat||DN_REDUCED&&DN_REDUCED.matches)return 0;
+  const beats=(t-DN_TRACK.firstBeat)/DN_PERIOD,phase=beats-Math.floor(beats);
+  return (1-phase)*(1-phase)*(1-phase);
+}
+function dnFunkyLights(t){
+  const g=DANCE.spots,fx=g&&g.userData.funky;if(!fx)return;
+  const calm=DN_REDUCED&&DN_REDUCED.matches;
+  const beat=calm?0:Math.max(0,Math.floor((t-DN_TRACK.firstBeat)/DN_PERIOD));
+  const wave=dnPulse(t);
+  g.rotation.y=calm?0:Math.max(0,t)*.52;
+  if(fx.ball)fx.ball.rotation.y=g.rotation.y*2.4;
+  fx.spotM[0].opacity=.38+.44*wave;fx.spotM[1].opacity=.41+.38*wave;
+  fx.tileM[0].emissiveIntensity=.26+.59*wave;fx.tileM[1].emissiveIntensity=.25+.57*wave;
+  if(beat!==fx.step){
+    fx.step=beat;
+    for(let i=0;i<fx.tiles.length;i++){
+      const col=i%6,row=Math.floor(i/6),lane=(row+col+beat)%4;
+      fx.tiles[i].material=lane<2?fx.tileM[lane]:fx.original[i];
+    }
+  }
+}
+/* Watching a round in this house uses the same stage clock as both dancers. */
+function dnWatch(){
+  const D=DANCE;
+  let dn=null;
+  if(MP.grp&&CUR&&(CUR.id==='home'||CUR.id==='visit')){
+    for(const a of MP.peers.values()){
+      const p=a.dn;
+      if(p&&p.st==='go'&&p.s>0&&dnStyle(p.r)&&dnRoomPeer(a)){dn=p;if(p.ld)break;}
+    }
+  }
+  if(!dn||(realMs()-dn.s)/1000>DN_TRACK.duration+1){
+    if(D.watchFloor){dnSpotsOff();D.watchFloor=null;D.watchCam=null;}
+    return;
+  }
+  const fx=D.spots&&D.spots.userData.funky;
+  if(!fx||fx.id!==dn.r||fx.room!==CUR){
+    const f=dnFloor();if(!f){dnSpotsOff();D.watchFloor=D.watchCam=null;return;}
+    let dx=f.L.ox-f.x,dz=f.L.oz+UPZ*f.fl-f.z;
+    const len=Math.hypot(dx,dz);if(len<1){dx=0;dz=1;}else{dx/=len;dz/=len;}
+    D.watchFloor=f;D.watchCam={dx,dz};
+    dnSpots(f,dnStyle(dn.r),dn.r);
+  }
+  dnFunkyLights((realMs()-dn.s)/1000);
+}
 function dnCancel(msg){if(msg)toast(msg,3);DANCE.ask=null;DANCE.mine=null;dnStopTrack();}
-function dnTick(dt){const D=DANCE;if(!S)return;if(D.spots)D.spots.rotation.y+=dt*.5;
+function dnTick(dt){const D=DANCE;if(!S)return;if(D.spots&&!D.spots.userData.funky)D.spots.rotation.y+=dt*.5;
   {const pa=D.partner&&MP.peers.get(D.partner),tg=pa&&pa.av&&pa.av.tag;if((D.on||D.res)&&tg){tg.visible=false;D.hidTag=tg;}else if(D.hidTag&&!(D.on||D.res)){D.hidTag.visible=true;D.hidTag=null;}}   /* (run 4, stage 3: the partner's tag rests during the round and its result: it hid the mirror ball, and the score bar names both) */
   /* the asking: the partner answers through presence */
   if(D.ask){const a=MP.peers.get(D.ask.w);const an=a&&a.dn&&a.dn.r===D.ask.r?a.dn:null;
@@ -299,28 +489,61 @@ function dnTick(dt){const D=DANCE;if(!S)return;if(D.spots)D.spots.rotation.y+=dt
   if(!D.on&&!D.card&&MP.grp&&!D.mine&&PLAYING&&!CUT&&!fading&&dnFloor()){for(const a of MP.peers.values()){if(a.dn&&a.dn.st==='ask'&&a.dn.w===MP.me&&!D.said.has(a.peer+'|'+a.dn.r)&&dnHere().includes(a)){dnCardShow(a);break;}}}
   if(D.card){const a=MP.peers.get(D.card.peer);if(!a||!a.dn||a.dn.r!==D.card.r||a.dn.st!=='ask'){D.card=null;const el=$('dnCard');if(el)el.hidden=true;}}
   /* the dance-off itself */
-  if(D.tg){const f=dnFloor();if(f){D.tg.x=f.x;D.tg.z=f.z;const L=CUR;if(L&&(L.id==='home'||L.id==='visit')&&!L.inter.includes(D.tg))L.inter.push(D.tg);}}
+  if(D.tg){const f=D.on?D.floor:D.watchFloor&&D.watchFloor.L===CUR?D.watchFloor:dnFloor();if(f){D.tg.x=f.x;D.tg.z=f.z;const L=CUR;if(L&&(L.id==='home'||L.id==='visit')&&!L.inter.includes(D.tg))L.inter.push(D.tg);}}
   if(D.res&&((D.shown&&performance.now()-D.ended>1500&&!UI.open)||(performance.now()-D.ended>9000&&!UI.open)||(CUR.id!=='home'&&CUR.id!=='visit')))dnLeave();   /* (run 4, stage 3: only once the result card has been up; on a slow device the card came after the 1.5 s and the view went back first) */   /* the result card went some other way: back to the normal view */
-  if(!D.on)return;
+  if(!D.on){if(!D.res&&!DN_TEST)dnWatch();return;}
   D.t=D.beat?(realMs()-D.s)/1000:D.t+dt;D.dt=dt;
   if(D.beat)dnTrackTick(D.t);
+  if(D.style)dnFunkyLights(D.t);
   const a=DN_TEST?D.bot:MP.peers.get(D.partner);
   if(DN_TEST)dnBotTick(a,D.t);
   if(a&&a.dn&&a.dn.r===D.r){if(Number.isFinite(a.dn.sc))D.osc=a.dn.sc;D.gone=0;}else{D.gone+=dt;}
-  for(const q of D.pat)if(!q.j&&D.t>q.t+DN_WIN)q.j=-1;
+  if(D.style)dnExpire(D.t);
+  else for(const q of D.pat)if(!q.j&&D.t>q.t+DN_WIN)q.j=-1;
   const target=(D.sc+1)/(D.sc+D.osc+2);D.bar+=clamp((target-D.bar)*Math.min(1,dt*2.5),-.025,.025);   /* the bar slides: never more than 2.5% a frame, even after a hitch */
   if(D.mvT>0)D.mvT-=dt;
   dnHudTick();
   if(!a||D.gone>6||(CUR.id!=='home'&&CUR.id!=='visit'))dnEnd('gone');else if(D.t>=D.length)dnEnd();}
-/* ⬅️⬇️⬆️➡️ a press: the arrow of that way inside the window is a hit */
-function dnPress(d){const D=DANCE;if(!D.on)return;const t=D.beat?(realMs()-D.s)/1000:D.t;
+/* A press uses the shared song clock, including between animation frames. */
+function dnExpire(t){
+  const D=DANCE;
+  for(;D.first<D.pat.length;D.first++){
+    const q=D.pat[D.first];
+    if(q.j)continue;
+    if(t<=q.t+DN_WIN)break;
+    q.j=-1;dnMiss(q.d,t);
+  }
+}
+function dnMiss(d,t){
+  DANCE.combo=0;
+  dnLaneFeedback(d,t,0,0,0);
+}
+function dnPress(d){
+  const D=DANCE;if(!D.on)return;
+  const t=D.beat?(realMs()-D.s)/1000:D.t;
   if(t<0||t>=D.length)return;
   if(D.beat&&DN_MEDIA.blocked)dnPlayTrack(t);
-  let best=null,bd=9;for(const q of D.pat){if(q.j||q.d!==d)continue;const e=Math.abs(t-q.t);if(e<DN_WIN&&e<bd){bd=e;best=q;}}
-  if(!best){return;}best.j=1;const pts=D.beat?DanceJudge.judge(bd,DN_WIN).points:bd<.1?15:10;D.sc+=pts;D.mine.sc=D.sc;D.mine.k=(D.mine.k||0)+1;
-  D.lastHit=D.pat.indexOf(best);D.mine.mv=D.beat?best.move:D.lastHit;D.mvT=.65;D.mvK=d;SFX.pop();dnHudPop(d,pts,pts===15);}
+  if(D.style)dnExpire(t);
+  let best=-1,bd=DN_WIN;
+  for(let i=D.first;i<D.pat.length;i++){
+    const q=D.pat[i],delta=t-q.t;
+    if(delta<-DN_WIN)break;
+    if(!q.j&&q.d===d&&Math.abs(delta)<bd){bd=Math.abs(delta);best=i;}
+  }
+  if(best<0){if(D.style)dnMiss(d,t);return;}
+  const note=D.pat[best],pts=D.beat?DanceJudge.judge(bd,DN_WIN).points:bd<.1?15:10;
+  note.j=1;D.sc+=pts;D.mine.sc=D.sc;D.mine.k++;D.lastHit=best;
+  if(D.style){
+    D.combo++;
+    dnRememberMove(D.mine,note,best,D.combo,t);
+    dnLaneFeedback(d,t,pts,D.combo,note.t-t);
+  }else{
+    D.mine.mv=D.beat?note.move:best;D.mvT=.65;D.mvK=d;dnHudPop(d,pts,pts===15);
+  }
+  SFX.pop();
+}
 /* the moves: a lean left or right, a crouch, both arms up (u = how far into the move) */
-function dnPose(p,k,u,t){const s=Math.sin(Math.PI*clamp(u,0,1)),b=p.b;b.rotation.z=0;b.position.y=.03*Math.sin(t*7);p.head.rotation.z=0;for(const l of p.legs)l.position.y=.62;
+function dnPose(p,k,u,t,type){if(type){dnFunkyPose(p,k,u,t);return;}const s=Math.sin(Math.PI*clamp(u,0,1)),b=p.b;b.rotation.z=0;b.position.y=.03*Math.sin(t*7);p.head.rotation.z=0;for(const l of p.legs)l.position.y=.62;
   if(k===0){b.rotation.z=.35*s;p.arms[0].rotation.z=-2.4*s;p.arms[1].rotation.z=.4*s;p.head.rotation.z=.3*s;}
   else if(k===3){b.rotation.z=-.35*s;p.arms[1].rotation.z=2.4*s;p.arms[0].rotation.z=-.4*s;p.head.rotation.z=-.3*s;}
   else if(k===1){const dy=.2*s;b.position.y=-dy;p.arms[0].rotation.z=-1.3*s;p.arms[1].rotation.z=1.3*s;for(const l of p.legs){l.position.y=.62+dy/(b.scale.y||1);l.rotation.x=.6*s;}}   /* (run 4 finish: the legs slide up into the body as it goes down, so the shoes stay on the floor; they went down with it and sank 13 cm into the dance floor) */
@@ -331,12 +554,51 @@ function dnFov(){const D=DANCE;if(!(D.on||D.res)||!D.cam||!D.floor||innerWidth>=
 /* the view: a step back from the floor; my dancer on the left (the one who asked) or the right */
 function dnCam(dt){const D=DANCE;if(!(D.on||D.res)||!D.cam){updateCamera(dt);return;}const c=D.cam,f=D.floor,wide=innerWidth>innerHeight,short=visH()<=500,ty=!wide?.15:short?(D.res?1.2:1.3):(D.res?.55:1.0),lo=wide?(D.res&&short?1.9:.6):0;   /* (run 4, stage 3: with the result card up, the view looks further aside on a short sideways screen and lower on a tablet or computer, so the card covers neither dancer) */psCamTo(c.x,c.z,f.x+c.dz*lo,ty,f.z-c.dx*lo,dt,4);   /* (the dancers above the lane on an upright phone, under the score bar on a short sideways one: run 4, stage 3) */P.cy=0;P.jy=0;updateCamera(dt);
   for(const q of PET_ACTORS)if(q.loc===CUR.id)q.g.visible=false;   /* the pets wait out of the picture during a round (they show again by themselves) */
-  if(D.me){const [x,z]=dnSpot(D.left),m=D.me;m.root.position.set(x,0,z);m.root.rotation.y=Math.atan2(c.dx,c.dz);animPerson(m,dt,false,1);dnPose(m,D.mvT>0?D.mvK:-1,D.mvT>0?1-D.mvT/.65:0,D.t);}}
-/* a friend's dancer: on the floor, facing the view, doing the moves they hit (watchers see both) */
-function dnPeer(a,dt){const dn=a.dn&&a.dn.st==='go'?a.dn:null,res=DANCE.res&&a.peer===DANCE.partner;if(!(dn||res)||!a.av||!CUR||(CUR.id!=='home'&&CUR.id!=='visit'))return;   /* (on the floor from the moment they said yes, through the countdown, and while the result card shows: run 4, stage 3) */
-  let f=DANCE.on||res?DANCE.floor:dnFloor();if(!f)return;let c=DANCE.on||res?DANCE.cam:null;if(!c){const L=f.L,cx=L.ox,cz=L.oz+UPZ*f.fl;let dx=cx-f.x,dz=cz-f.z;const dl=Math.hypot(dx,dz);if(dl<1){dx=0;dz=1;}else{dx/=dl;dz/=dl;}c={dx,dz};}
-  if(dn)a.dnLd=dn.ld;const rx=c.dz,rz=-c.dx,s=a.dnLd?-1:1,x=f.x+rx*.75*s,z=f.z+rz*.75*s;a.av.root.position.set(x,0,z);a.av.root.rotation.y=Math.atan2(c.dx,c.dz);a.av.root.visible=true;if(a.pets)for(const q of a.pets)q.g.visible=false;
-  if(dn&&(dn.r!==a.dnR||dn.k!==a.dnCount||dn.mv!==a.dnMv)){a.dnR=dn.r;a.dnCount=dn.k;a.dnMv=dn.mv;const move=dnPattern(dn.r)[dn.mv];if(move){a.dnT=.65;a.dnK=move.d;}}if(a.dnT>0)a.dnT-=dt;
+  if(D.me){
+    const m=D.me,side=(D.left?-1:1)*(D.style ? .83 : .75);
+    m.root.position.set(f.x+c.dz*side,0,f.z-c.dx*side);m.root.rotation.y=Math.atan2(c.dx,c.dz);
+    animPerson(m,dt,false,1);
+    if(D.style)dnSharedPose(m,D.mine,D.pat,(realMs()-D.s)/1000);
+    else dnPose(m,D.mvT>0?D.mvK:-1,D.mvT>0?1-D.mvT/.65:0,D.t);
+  }}
+function dnSharedPose(person,wire,chart,t){
+  const note=wire&&chart[wire.m];
+  if(note&&Number.isFinite(wire.at)){
+    const k=dnMoveKind(note.variant,wire.c),u=(t-wire.at/1000)/dnMoveTime(k);
+    if(u>=0&&u<1){dnPose(person,k,u,t,true);return;}
+  }
+  dnPose(person,-1,0,t,true);
+}
+function dnRoomPeer(a){
+  return CUR.id==='home'?a.loc==='visit'&&a.ho===MP.me:
+    CUR.id==='visit'&&VIS.st==='in'&&(a.loc==='home'&&a.peer===VIS.host||a.loc==='visit'&&a.ho===VIS.host);
+}
+/* A friend's dancer: legacy packets still carry mv; Funky packets add a chart index
+   and shared move time so a watching friend sees the same variant and combo move. */
+function dnPeer(a,dt){
+  const D=DANCE,dn=a.dn&&a.dn.st==='go'?a.dn:null,res=D.res&&a.peer===D.partner;
+  const funky=(dn||res)&&dnStyle(dn?dn.r:D.r);
+  if(!a.av)return;
+  if(a.dnPosed&&(!funky||!CUR||!DN_TEST&&!dnRoomPeer(a))){
+    a.av.b.position.x=0;a.av.b.rotation.set(0,0,0);a.av.head.rotation.x=0;a.dnPosed=false;
+  }
+  if(!(dn||res)||!CUR||(CUR.id!=='home'&&CUR.id!=='visit')||funky&&!DN_TEST&&!dnRoomPeer(a))return;
+  const f=D.on||res?D.floor:funky?D.watchFloor:dnFloor();if(!f)return;
+  let c=D.on||res?D.cam:funky?D.watchCam:null;
+  if(!c){const L=f.L,cx=L.ox,cz=L.oz+UPZ*f.fl;let dx=cx-f.x,dz=cz-f.z;const dl=Math.hypot(dx,dz);if(dl<1){dx=0;dz=1;}else{dx/=dl;dz/=dl;}c={dx,dz};}
+  if(dn)a.dnLd=dn.ld;
+  const side=(a.dnLd?-1:1)*(funky ? .83 : .75);
+  a.av.root.position.set(f.x+c.dz*side,0,f.z-c.dx*side);
+  a.av.root.rotation.y=Math.atan2(c.dx,c.dz);a.av.root.visible=true;
+  if(a.pets)for(const q of a.pets)q.g.visible=false;
+  if(funky){
+    if(dn&&a.dnR!==dn.r){a.dnR=dn.r;a.dnChart=D.r===dn.r?D.pat:dnChart(dn.r);}
+    const start=dn&&dn.s>0?dn.s:res?D.s:0;
+    if(start&&a.dnChart){dnSharedPose(a.av,a.dn,a.dnChart,(realMs()-start)/1000);a.dnPosed=true;}
+    return;
+  }
+  if(dn&&(dn.r!==a.dnR||dn.k!==a.dnCount||dn.mv!==a.dnMv)){a.dnR=dn.r;a.dnCount=dn.k;a.dnMv=dn.mv;const move=dnPattern(dn.r)[dn.mv];if(move){a.dnT=.65;a.dnK=move.d;}}
+  if(a.dnT>0)a.dnT-=dt;
   a.dnTime=(a.dnTime||0)+dt;dnPose(a.av,a.dnT>0?a.dnK:-1,a.dnT>0?1-a.dnT/.65:0,a.dnTime);}
 function dnEnd(why){const D=DANCE;if(!D.on)return;D.on=false;D.res=true;D.shown=false;D.ended=performance.now();dnStopTrack();const a=DN_TEST?D.bot:MP.peers.get(D.partner),nm=D.partnerNm;if(D.mine){D.mine.st='done';D.mine.sc=D.sc;}
   document.body.classList.remove('dancing');dnHud(false);   /* (the view stays on the two dancers until Done: dnLeave; run 4, stage 3) */
@@ -354,15 +616,173 @@ function dnNm(n){n=String(n||'');return n.length>13?n.slice(0,12)+'…':n;}   /*
 function dnHud(show){let h=$('dnHud');if(!h){
     h=document.createElement('div');h.id='dnHud';h.hidden=true;
     h.innerHTML=`<div id="dnTop"><div class="dnFace me"><span class="em">😄</span><b id="dnMeN">You</b><i id="dnMeS">0</i></div><div id="dnBar"><i id="dnFill"></i><i id="dnMid"></i></div><div class="dnFace"><span class="em">🙂</span><b id="dnYouN"></b><i id="dnYouS">0</i></div></div>
-<div id="dnLane">${[0,1,2,3].map(i=>`<div class="dnCol" style="left:${i*25}%"></div>`).join('')}<div id="dnLine"></div>${DN_NAMES.map((n,i)=>`<div class="dnHit" style="left:${i*25}%">${dnArrow(i,48)}</div>`).join('')}</div><div id="dnMsg"></div>
+<div id="dnLane">${[0,1,2,3].map(i=>`<div class="dnCol" style="left:${i*25}%"></div>`).join('')}<div id="dnLine"></div>${DN_NAMES.map((n,i)=>`<div class="dnHit" style="left:${i*25}%">${dnArrow(i,48)}</div>`).join('')}<div id="dnFunkyHud"><div id="dnFunkyCaption"><span id="dnFunkyGrade"></span><span id="dnFunkyCombo"></span></div><canvas id="dnFunkyCanvas" aria-hidden="true"></canvas></div></div><div id="dnMsg"></div>
 <div id="dnBtns">${DN_NAMES.map((n,i)=>`<button class="btn white" data-a="dnp:${i}" aria-label="${['Left','Down','Up','Right'][i]} arrow">${dnArrow(i,40)}</button>`).join('')}</div>`;document.body.appendChild(h);
     h.addEventListener('pointerdown',e=>{const b=e.target.closest('[data-a^="dnp:"]');if(!b)return;e.preventDefault();e.stopPropagation();audioInit();dnPress(+b.dataset.a.split(':')[1]);b.classList.add('on');setTimeout(()=>b.classList.remove('on'),120);});}
-  h.hidden=!show;if(show){const lane=$('dnLane');for(const a of DANCE.arrows)a.remove();DANCE.arrows=DANCE.pat.map((q,i)=>{const d=document.createElement('div');d.className='dnArr';d.style.left=(q.d*25)+'%';d.style.top='-60px';d.innerHTML=dnArrow(q.d,52);lane.appendChild(d);return d;});
+  h.hidden=!show;if(show){const lane=$('dnLane');for(const a of DANCE.arrows)a.remove();
+    const funky=DANCE.style&&DANCE.style.arrow==='funky';
+    h.classList.toggle('dnFunky',!!funky);
+    DANCE.arrows=funky?[]:DANCE.pat.map((q,i)=>{const d=document.createElement('div');d.className='dnArr';d.style.left=(q.d*25)+'%';d.style.top='-60px';d.innerHTML=dnArrow(q.d,52);lane.appendChild(d);return d;});
+    if(funky)dnLaneStart();
     $('dnMeN').textContent='You';$('dnYouN').textContent=dnNm(DANCE.partnerNm);$('dnMeS').textContent='0';$('dnYouS').textContent='0';$('dnFill').style.width='50%';$('dnMsg').textContent='';}}
-function dnHudTick(){const D=DANCE,lane=$('dnLane');if(!lane)return;const H=lane.clientHeight,line=H-48;
+function dnHudTick(){
+  const D=DANCE,lane=$('dnLane');if(!lane)return;
+  if(D.style)dnLaneDraw();
+  else{
+    const H=lane.clientHeight,line=H-48;
   D.pat.forEach((q,i)=>{const el=D.arrows[i];if(!el)return;const dtq=q.t-D.t;if(dtq>DN_LEAD||dtq<-.6){el.style.visibility='hidden';return;}el.style.visibility='visible';el.style.top=(line-dtq/DN_LEAD*line)+'px';if(q.j!==1)el.style.opacity=dtq<0?String(Math.max(0,(q.j===-1?.3:1)*(1+dtq/.22))):'';if(q.j===1&&!el.classList.contains('hit'))el.classList.add('hit');if(q.j===-1&&!el.classList.contains('miss'))el.classList.add('miss');});
   $('dnMeS').textContent=D.sc;$('dnYouS').textContent=D.osc;$('dnFill').style.width=(D.bar*100).toFixed(2)+'%';
-  const m=$('dnMsg');const txt=D.t<-.2?String(Math.ceil(-D.t)):D.t<.6?'Dance!':(D.popT&&performance.now()<D.popT?D.popTxt:'');if(m.textContent!==txt)m.textContent=txt;}
+  }
+  const m=$('dnMsg'),txt=D.t<-.2?DN_COUNT[Math.min(5,Math.ceil(-D.t))]:D.t<.6?'Dance!':
+    !D.style&&D.popT&&performance.now()<D.popT?D.popTxt:'';
+  if(m.textContent!==txt)m.textContent=txt;
+}
+const DN_COUNT=['','1','2','3','4','5'];
+/* The lane stays on the game's HUD. Sprites, trails and bursts share one
+   small canvas, with fixed slots and reusable art prepared before play. */
+const DN_BAR_WIDTH=Array.from({length:1001},(_,i)=>i/10+'%');
+const DN_COLUMN_PAPER=['#ffdeec','#daf2ff','#dbf8ed','#fff2c7'];
+const DN_BURST_X=[1,.7,0,-.7,-1,-.7,0,.7],DN_BURST_Y=[0,-.7,-1,-.7,0,.7,1,.7];
+function dnGlyph(color,direction){
+  const icon=document.createElement('canvas');icon.width=icon.height=96;
+  const g=icon.getContext('2d');
+  g.translate(48,48);g.rotate(DN_ROT[direction]*Math.PI/180);
+  const ink=g.createLinearGradient(0,-29,0,28);
+  ink.addColorStop(0,'#fff8ff');ink.addColorStop(.33,color);ink.addColorStop(1,color);
+  g.beginPath();g.moveTo(0,-29);g.lineTo(28,-3);g.quadraticCurveTo(31,1,25,1);
+  g.lineTo(13,1);g.lineTo(13,23);g.quadraticCurveTo(13,27,9,27);g.lineTo(-9,27);
+  g.quadraticCurveTo(-13,27,-13,23);g.lineTo(-13,1);g.lineTo(-25,1);
+  g.quadraticCurveTo(-31,1,-28,-3);g.closePath();
+  g.lineJoin='round';g.shadowBlur=17;g.shadowColor=color;
+  g.fillStyle=color;g.fill();g.shadowBlur=0;g.fillStyle=ink;g.fill();
+  g.strokeStyle='#513363';g.lineWidth=4;g.stroke();
+  g.beginPath();g.moveTo(-14,-5);g.lineTo(0,-17);g.lineTo(11,-7);
+  g.strokeStyle='#fff4fadc';g.lineWidth=2.6;g.lineCap='round';g.stroke();
+  return icon;
+}
+function dnLaneStart(){
+  const D=DANCE;
+  if(!D.laneFx){
+    const cv=$('dnFunkyCanvas'),paper=document.createElement('canvas');
+    D.laneFx={cv,g:cv.getContext('2d'),paper,pg:paper.getContext('2d'),grade:$('dnFunkyGrade'),combo:$('dnFunkyCombo'),
+      art:D.style.spark.map(dnGlyph),charges:new Float32Array(4),tints:D.style.spark.map(c=>c+'55'),
+      bursts:Array.from({length:10},()=>({at:-100,d:0,pts:0,bonus:0,delta:0})),
+      width:0,height:0,dirty:true,step:0,hideAt:0,me:$('dnMeS'),you:$('dnYouS'),bar:$('dnFill')};
+  }
+  const F=D.laneFx;F.step=0;F.hideAt=0;F.lastMe=-1;F.lastYou=-1;F.dirty=true;
+  F.grade.textContent='';F.combo.textContent='0 combo';F.combo.classList.remove('lit');
+  for(let i=0;i<F.bursts.length;i++)F.bursts[i].at=-100;
+}
+function dnLaneFeedback(d,t,pts,combo,delta){
+  const F=DANCE.laneFx;if(!F)return;
+  const bonus=pts&&(combo===5||combo===10)?combo:0,b=F.bursts[F.step];
+  b.at=t;b.d=d;b.pts=pts;b.bonus=bonus;b.delta=delta;
+  F.step=(F.step+1)%F.bursts.length;
+  F.grade.textContent=pts===15?'✦ Perfect +15':bonus===10?'Encore!':bonus===5?'Five in a row!':pts?'Good +10':'Miss';
+  F.grade.dataset.grade=bonus?'special':pts===15?'perfect':pts?'good':'miss';
+  F.hideAt=t+(bonus?.79:.52);
+  F.combo.classList.toggle('lit',combo>=5);
+  F.combo.textContent=(combo>=5?'🔥 ':'')+combo+' combo';
+}
+function dnCircle(g,x,y,r){
+  g.beginPath();g.arc(x,y,r,0,TAU);
+}
+function dnSpark(g,x,y,r){
+  g.beginPath();g.moveTo(x,y-r);g.lineTo(x+r*.22,y-r*.22);g.lineTo(x+r,y);
+  g.lineTo(x+r*.22,y+r*.22);g.lineTo(x,y+r);g.lineTo(x-r*.22,y+r*.22);g.lineTo(x-r,y);
+  g.lineTo(x-r*.22,y-r*.22);g.closePath();g.fill();
+}
+function dnLaneBurst(g,F,b,lane,line,size,travel,now,calm){
+  const age=now-b.at,life=b.bonus ? .86 : b.pts ? .65 : .44;
+  if(age<0||age>=life)return;
+  const q=age/life,falloff=b.pts?1-q:(1-q)*(1-q),x=lane*(b.d+.5),d=b.d;
+  const color=b.pts?DANCE.style.spark[d]:'#a9a2be';
+  if(b.pts){
+    g.strokeStyle=color;g.lineWidth=b.pts===15?3.8:2.8;g.globalAlpha=.92*falloff;
+    const extent=Math.min(lane*.48,size*.48)+(calm?0:q*(b.bonus?36:23));
+    dnCircle(g,x,line,extent);g.stroke();
+    if(b.pts===15||b.bonus){
+      g.strokeStyle=DANCE.style.perfect;g.lineWidth=2;
+      dnCircle(g,x,line,extent*.7);g.stroke();
+    }
+    if(age<.22){
+      const pop=1+Math.min(.4,age*3),f=size*pop,cy=line-b.delta*travel;
+      g.globalAlpha=(1-age/.22)*.8;g.drawImage(F.art[d],x-f*.5,cy-f*.5,f,f);
+    }
+  }
+  if(calm){g.globalAlpha=1;return;}
+  const count=b.pts===15||b.bonus?8:b.pts?6:5,reach=b.bonus===10?74:b.bonus?60:b.pts===15?48:b.pts?32:20;
+  for(let i=0;i<count;i++){
+    const radius=reach*(.26+q*.81)*(.69+(i%3)*.16);
+    const dx=DN_BURST_X[i],px=x+dx*radius*((d===0&&dx<0||d===3&&dx>0)?.62:1);
+    const py=line+DN_BURST_Y[i]*radius-q*(b.pts?19:7);
+    g.globalAlpha=falloff*(b.pts?.98:.43);
+    g.fillStyle=b.pts===15&&i%2===0?DANCE.style.perfect:color;
+    if(b.pts){
+      if(i%2===0||b.bonus)dnSpark(g,px,py,(b.pts===15?9.5:5)*(1-q*.62));
+      else{dnCircle(g,px,py,3.5*(1-q*.7));g.fill();}
+    }else{dnCircle(g,px,py,6+q*5);g.fill();}
+  }
+  g.globalAlpha=1;
+}
+function dnLaneDraw(){
+  const D=DANCE,F=D.laneFx,g=F.g,cv=F.cv,t=D.t;
+  if(F.dirty){
+    const w=cv.clientWidth,h=cv.clientHeight,dpr=Math.min(1.5,devicePixelRatio||1);
+    if(!w||!h)return;
+    cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);
+    F.width=w;F.height=h;F.dirty=false;
+    g.setTransform(cv.width/w,0,0,cv.height/h,0,0);
+    const paper=F.paper,pg=F.pg,lane=w/4;
+    paper.width=cv.width;paper.height=cv.height;
+    pg.setTransform(cv.width/w,0,0,cv.height/h,0,0);
+    pg.globalAlpha=.31;
+    for(let d=0;d<4;d++){pg.fillStyle=DN_COLUMN_PAPER[d];pg.fillRect(d*lane+1,0,lane-2,h);}
+    pg.globalAlpha=.33;pg.fillStyle='#a373b5';pg.fillRect(0,h-44,w,2);
+  }
+  const w=F.width,h=F.height,lane=w/4,line=h-43,size=Math.min(lane*.99,77),travel=line/DN_LEAD;
+  const pulse=dnPulse(t),calm=DN_REDUCED&&DN_REDUCED.matches;
+  const colors=D.style.spark,notes=D.pat,charges=F.charges;
+  g.globalAlpha=1;g.clearRect(0,0,w,h);g.drawImage(F.paper,0,0,w,h);
+  charges.fill(0);
+  for(let i=D.first;i<notes.length;i++){
+    const q=notes[i],until=q.t-t;
+    if(until>DN_LEAD+.2)break;
+    if(!q.j)charges[q.d]=Math.max(charges[q.d],1-Math.abs(until)*3);
+  }
+  for(let d=0;d<4;d++){
+    const x=lane*(d+.5),charge=charges[d],r=Math.min(26,lane*.37);
+    if(charge>0){
+      g.globalAlpha=.22+charge*.68;g.fillStyle=F.tints[d];
+      dnCircle(g,x,line,r+5+charge*3);g.fill();
+    }
+    g.globalAlpha=.83;g.fillStyle='#fff9ff';dnCircle(g,x,line,r);g.fill();
+    g.lineWidth=2.5+charge*1.8;g.strokeStyle=colors[d];g.stroke();
+    g.globalAlpha=.44+.43*charge;
+    const f=size*.71;
+    g.drawImage(F.art[d],x-f*.5,line-f*.5,f,f);
+  }
+  g.globalAlpha=1;
+  for(let i=D.first;i<notes.length;i++){
+    const q=notes[i],until=q.t-t;
+    if(until>DN_LEAD+.2)break;
+    if(q.j)continue;
+    const x=lane*(q.d+.5),y=line-until*travel,f=size*(1+pulse*.08),sprite=F.art[q.d];
+    if(!calm){
+      g.globalAlpha=.13;g.drawImage(sprite,x-f*.37,y-f*.37-20,f*.74,f*.74);
+      g.globalAlpha=.22;g.drawImage(sprite,x-f*.44,y-f*.44-10,f*.88,f*.88);
+    }
+    g.globalAlpha=until<0?Math.max(.2,1+until*2.9):1;
+    g.drawImage(sprite,x-f*.5,y-f*.5,f,f);
+  }
+  g.globalAlpha=1;
+  for(let i=0;i<F.bursts.length;i++)dnLaneBurst(g,F,F.bursts[i],lane,line,size,travel,t,calm);
+  if(F.hideAt&&t>=F.hideAt){F.grade.textContent='';F.hideAt=0;}
+  if(F.lastMe!==D.sc){F.lastMe=D.sc;F.me.textContent=D.sc;}
+  if(F.lastYou!==D.osc){F.lastYou=D.osc;F.you.textContent=D.osc;}
+  const width=DN_BAR_WIDTH[Math.floor(D.bar*1000)];
+  if(F.lastBar!==width){F.lastBar=width;F.bar.style.width=width;}
+}
 function dnHudPop(d,pts,perfect){DANCE.popTxt=(perfect?'✨ Perfect +':'+')+pts;DANCE.popT=performance.now()+420;}
 /* #dancetest uses the player's actual home and look from this device. Missing
    dance furniture is supplied in memory, and a bot uses the same avatar path. */
@@ -392,7 +812,7 @@ function dnTestBoot(){
   PLAYING=true;
   const f=dnFloor();
   P.x=f.x;P.z=f.z;P.yaw=Math.PI;
-  const r=dnRoundId({v:DN_BEAT_BUILD}),bot={peer:'dancetest-bot',nm:'Dance Buddy',av:null,
+  const r=dnRoundId({v:DN_FX_BUILD}),bot={peer:'dancetest-bot',nm:'Dance Buddy',av:null,
     dn:{r,st:'go',sc:0,mv:-1,ld:0,k:0}};
   bot.av=makePerson(lookToPerson({hair:'#704d2d',top:'#7fdcb5',style:'short',eyes:'happy',bottom:'#37a4fc'}));
   bakePerson(bot.av);scene.add(bot.av.root);
@@ -401,7 +821,7 @@ function dnTestBoot(){
   DANCE.mine={r,w:bot.peer,st:'go',s,sc:0,mv:-1,ld:1,k:0};
   dnBegin(s,bot,1);
   const random=DanceChart.seeded(DanceChart.seedFor(r+'-bot'));
-  bot.next=0;
+  bot.next=0;bot.combo=0;bot.dn.s=s;
   const count=DANCE.pat.length;
   bot.hits=DANCE.pat.map((_,i)=>i<Math.round(count*.8));
   for(let i=count-1;i>0;i--){
@@ -420,9 +840,11 @@ function dnBotTick(bot,t){
   const D=DANCE,dn=bot.dn;
   while(bot.next<D.pat.length&&D.pat[bot.next].t<=t){
     const i=bot.next++;
-    if(!bot.hits[i])continue;
+    if(!bot.hits[i]){bot.combo=0;continue;}
+    const note=D.pat[i];
     dn.sc+=DanceJudge.judge(i%5===0?.15:.04,DN_WIN).points;
-    dn.mv=D.pat[i].move;dn.k++;
+    dn.k++;bot.combo++;
+    dnRememberMove(dn,note,i,bot.combo,note.t);
   }
 }
 /* the Dance! spot on the floor of your house and of a house you visit (its place follows the floor) */
@@ -1003,7 +1425,7 @@ function applyGfx(){const nice=SET.gfx!=='fast',q=AQ_STEPS[AQ.lv],sh=nice&&q.sh>
   const sm=sh&&AQ.lv>=2;if(AQ.small!==sm){AQ.small=sm;scene.traverse(o=>{if(!o.isMesh)return;   /* from the third step small things (under 1 m across: lamps, cups, pet and people parts) cast no shadow */
     if(sm){if(o.castShadow&&o.geometry){if(!o.geometry.boundingSphere)o.geometry.computeBoundingSphere();if(o.geometry.boundingSphere.radius*o.matrixWorld.getMaxScaleOnAxis()<.5){o.castShadow=false;o.__cs=1;}}}else if(o.__cs){o.castShadow=true;o.__cs=0;}});}
   AQ.farT=0;aqFar();resize();}
-function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;BASEFOV=w<h?80:70;camera.fov=BASEFOV;camera.updateProjectionMatrix();}
+function resize(){if(DANCE.laneFx)DANCE.laneFx.dirty=true;const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;BASEFOV=w<h?80:70;camera.fov=BASEFOV;camera.updateProjectionMatrix();}
 let last=performance.now(),saveT=0,titleT=0,hardT=0,navT=0;
 function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last)/1000);last=now;
   if(PLAYING&&DN_TEST){dnTestTick(dt);}

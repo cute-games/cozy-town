@@ -49,9 +49,13 @@ const core = fs.readFileSync(path.join(repo, 'js/00-core.js'), 'utf8');
 const loop = fs.readFileSync(path.join(repo, 'js/09-mainloop.js'), 'utf8');
 const seeded = core.match(/^function seeded.*$/m)[0];
 const roundSource = loop.slice(loop.indexOf('/* BEGIN DANCE SOURCES'), loop.indexOf('/* Only the countdown'));
-const context = { window: {}, MP: { me: 'ZZTEST' }, realMs: () => 1795580000000 };
-const dance = vm.runInNewContext(seeded + '\n' + roundSource +
-  '\nconst { DanceChart, DanceJudge } = window; ({dnRoundId,dnOnBeat,dnChart,dnClassic,DN_TRACK})', context);
+function danceClient() {
+  const context = { window: {}, MP: { me: 'ZZTEST' }, realMs: () => 1795580000000 };
+  return vm.runInNewContext(seeded + '\n' + roundSource +
+    '\nconst { DanceChart, DanceJudge } = window; ({dnRoundId,dnOnBeat,dnChart,dnClassic,DN_TRACK,dnStyle,dnMoveKind,dnRememberMove,DN_TYPES})',
+  context);
+}
+const dance = danceClient();
 
 test('both clients get the same Alley Cat beat chart from the round id', () => {
   const r = dance.dnRoundId({ v: 2026112506 });
@@ -73,4 +77,29 @@ test('an older partner keeps the classic chart and older spectators can read the
   const newer = dance.dnRoundId({ v: 2026112506 });
   const oldView = dance.dnClassic(newer);
   assert.ok(dance.dnChart(newer).every(note => oldView[note.move]?.d === note.d));
+});
+
+
+test('Funky variants match on separate clients and cover both moves per arrow', () => {
+  const r = dance.dnRoundId({ v: 2026112507 });
+  const chart = dance.dnChart(r);
+  const remote = danceClient().dnChart(r);
+  assert.equal(JSON.stringify(chart), JSON.stringify(remote));
+  assert.ok(dance.dnStyle(r));
+  assert.equal(Object.keys(dance.DN_TYPES).length, 11);
+  assert.equal(new Set(chart.map(note => note.variant)).size, 8);
+  for (const note of chart) assert.equal(Math.floor((note.variant - 4) / 2), note.d);
+  assert.equal(dance.dnStyle(dance.dnRoundId({ v: 2026112506 })), null);
+});
+
+test('5- and 10-combo moves stay shared when another note lands', () => {
+  const r = dance.dnRoundId({ v: 2026112507 });
+  const chart = dance.dnChart(r), wire = {};
+  dance.dnRememberMove(wire, chart[0], 0, 5, 1);
+  dance.dnRememberMove(wire, chart[1], 1, 6, 1.3);
+  assert.equal(wire.m, 0);
+  assert.equal(dance.dnMoveKind(chart[wire.m].variant, wire.c), 12);
+  dance.dnRememberMove(wire, chart[5], 5, 10, 2);
+  assert.equal(wire.at, 2000);
+  assert.equal(dance.dnMoveKind(chart[wire.m].variant, wire.c), 13);
 });
