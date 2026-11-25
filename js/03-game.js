@@ -898,7 +898,8 @@ function wkStat(){const S0=WK.stat;S0.length=0;if(!CUR||CUR.id!=='city')return S
   if(PLAYING)add(P.x,P.z,.5);if(typeof sittersOut==='function'&&S&&sittersOut())for(const s of SITTERS)add(s.x,s.z,.45);
   if(typeof GRAN!=='undefined')for(const q of GRAN.g)if(q.on&&!q.sitting)add(q.x+(q.ox||0),q.z+(q.oz||0),.45);   /* 👵 the walking grandmas */
   for(const f of FRIEND_ACTORS)if(f.loc==='city'&&f.mode!=='away')add(f.x,f.z,.42);for(const p of PET_ACTORS)if(p.loc==='city')add(p.x,p.z,.36);
-  if(typeof MP!=='undefined')for(const a of MP.peers.values())if(a.av&&a.av.root.visible&&a.loc==='city')add(a.x,a.z,.42);return S0;}
+  if(typeof MP!=='undefined')for(const a of MP.peers.values())if(a.av&&a.av.root.visible&&a.loc==='city')add(a.x,a.z,.42);
+  for(const h of FARM.hs)if(h.st==='walk'){const ux=Math.sin(h.ry),uz=Math.cos(h.ry);for(const k of[-.6,.3,1.1])add(h.x+ux*k,h.z+uz*k,.5);}return S0;}   /* 🐴 townspeople step round a horse walking home */
 /* move a walker a little; from the pavement never onto the road (on a zebra crossing it may move along the road) */
 function wkNudge(w,nx,nz){const x=w.x+nx,z=w.z+nz;if(onRoad(x,z)&&!onRoad(w.x,w.z))return false;w.x=x;w.z=z;return true;}
 function wkSide(w,k){const rx=Math.cos(w.face),rz=-Math.sin(w.face);if(!wkNudge(w,rx*k,rz*k))wkNudge(w,-rx*k,-rz*k);}   /* a step to its right (or left if the road is there) */
@@ -1196,7 +1197,7 @@ function updateCars(dt){const inCity=CUR.id==='city',peds=[],h=S?S.time:12;if(in
       const ok=()=>!carSeen(c)&&!(inCity&&Math.hypot(P.x-c.x,P.z-c.z)<10)&&!CARS.some(o=>o!==c&&!o.away&&Math.hypot(o.x-c.x,o.z-c.z)<9),d0=c.d;let k=0;
       for(;k<6;k++){if(k){c.d=d0+c.total*k/6;carPlace(c);}if(ok())break;}if(k>=6){c.d=d0;carPlace(c);continue;}if(k)c.yaw=c.ty;}
     c.away=off;c.v=0;c.g.visible=false;for(const X of XS){const i=X.occ.indexOf(c);if(i>=0)X.occ.splice(i,1);}}
-  for(const w of WALKERS)if(w.state!=='home')peds.push([w.x,w.z,1.4,0]);for(const q of GRAN.g)if(q.on&&!q.sitting)peds.push([q.x,q.z,1.4,0]);for(const f of FRIEND_ACTORS)if(f.loc==='city'&&f.mode!=='away')peds.push([f.x,f.z,1.4,0]);for(const p of PET_ACTORS)if(p.loc==='city')peds.push([p.x,p.z,1.1,0]);for(const a of MP.peers.values())if(a.loc==='city')peds.push([a.x,a.z,1.4,0]);
+  for(const w of WALKERS)if(w.state!=='home')peds.push([w.x,w.z,1.4,0]);for(const q of GRAN.g)if(q.on&&!q.sitting)peds.push([q.x,q.z,1.4,0]);for(const f of FRIEND_ACTORS)if(f.loc==='city'&&f.mode!=='away')peds.push([f.x,f.z,1.4,0]);for(const p of PET_ACTORS)if(p.loc==='city')peds.push([p.x,p.z,1.1,0]);for(const h of FARM.hs)if(h.st==='walk')peds.push([h.x,h.z,1.8,0]);for(const a of MP.peers.values())if(a.loc==='city')peds.push([a.x,a.z,1.4,0]);
   for(const c of CARS){if(c.away)continue;const fx=Math.sin(c.yaw),fz=Math.cos(c.yaw);let block=null;
     for(const [px,pz,w,me] of peds){const dx=px-c.x,dz=pz-c.z,f=dx*fx+dz*fz,l=Math.abs(dx*fz-dz*fx);if(f>0&&f<6.5&&l<w){block=me?'player':'ped';break;}}
     if(!block)for(const o of CARS){if(o===c||o.away)continue;const dx=o.x-c.x,dz=o.z-c.z,f=dx*fx+dz*fz,l=Math.abs(dx*fz-dz*fx);if(f>0&&f<7.5&&l<2.2){block='car';break;}}
@@ -2618,10 +2619,11 @@ function farmRiderAt(h,ms){const [v,g,off]=FR_RIDE[h.rider.who],T=FARM.trailD,le
 /* animal wander: a new spot near home every 9-14 s from the clock (friends see the same); grazing/idle moves while standing */
 function farmWanderSpot(a,ms){const k=Math.floor(ms/11000+farmHash(a.id||a.key)*7),r=a.type==='chicken'?3:a.type==='horse'?2.2:a.baby?2.5:4,u=farmHash(a.id+':'+k),v=farmHash(a.id+';'+k);return [a.hx+Math.cos(u*TAU)*r*v,a.hz+Math.sin(u*TAU)*r*v];}
 const FA_IDLE={cow:['cow.graze','cow.stand'],sheep:['sheep.graze','sheep.look'],pig:['pig.root','pig.root'],chicken:['chicken.peck','chicken.peck'],horse:['horse.idle','horse.idle']};
-function farmTick(dt){if(!FARM.L)return;const inCity=CUR&&CUR.id==='city',near=inCity&&(farmNear(P.x,P.z,40)||!!P.horse);if(FARM.q&&inCity&&farmNear(P.x,P.z,70))FARM.q();
-  if(near!==FARM.on){FARM.on=near;FARM.dyn.visible=near;if(near)FARM.L.g.add(FARM.dyn);else FARM.L.g.remove(FARM.dyn);if(!near&&P.horse)farmOff(true);}   /* (far away the living things leave the scene: no matrix work for them each frame) */
+function farmTick(dt){if(!FARM.L)return;const inCity=CUR&&CUR.id==='city',near=inCity&&farmNear(P.x,P.z,40);if(FARM.q&&inCity&&farmNear(P.x,P.z,70))FARM.q();
+  if(near!==FARM.on){FARM.on=near;FARM.dyn.visible=near;if(near)FARM.L.g.add(FARM.dyn);else FARM.L.g.remove(FARM.dyn);}   /* (far away the living things leave the scene: no matrix work for them each frame) */
+  hnTick(dt);if(P.horse&&inCity)farmRide(dt);   /* 🐴 riding in town and horses walking home: not only near the farm (24 Nov) */
   if(!near){if(LGD.el)LGD.el.hidden=true;if(LGD.g)LGD.g.visible=false;return;}FARM.tick++;const ms=gameMs(),now=ms/1000,cx=camera.position.x,cz=camera.position.z;
-  if(P.horse)farmRide(dt);else if(!P.sit&&!P.ride)for(const q of farmSolids([])){const p=pushOut(P.x,P.z,.3,q);if(p){P.x=p[0];P.z=p[1];}}farmLessonTick(dt);farmGuide(dt);
+  if(!P.horse&&!P.sit&&!P.ride)for(const q of farmSolids([])){const p=pushOut(P.x,P.z,.3,q);if(p){P.x=p[0];P.z=p[1];}}farmLessonTick(dt);farmGuide(dt);
   /* the trail riders */
   for(const h of FARM.riders){const at=farmRiderAt(h,ms);h.m.root.visible=!!at&&Math.hypot(at?at.x-cx:0,at?at.z-cz:0)<55;if(!h.m.root.visible)continue;
     const slow=FARM.said['r'+h.rider.who]>performance.now();h.x=at.x;h.z=at.z;h.m.root.position.set(at.x,0,at.z);h.m.root.rotation.y=at.ry;
@@ -2656,30 +2658,30 @@ function farmPerson(p,now){const R=p.m.root;
   COZY_MOVES.play(p.m,'person.idle',now,{kind:'person'});}
 /* ---- riding ---- */
 /* 🐴 a box round each grown horse and cow near you (like the cars): you cannot walk into one, and one that turns or walks into you pushes you out (picture pass: the camera stood inside a horse) */
-function farmSolids(s){if(!FARM.on)return s;for(const a of [...FARM.hs,...FARM.riders,...FARM.an]){if(a.st==='me'||!/^fa\.(horse|cow)\.adult/.test(a.key||''))continue;const R=a.m.root;if(!R.visible||Math.abs(R.position.x-P.x)>8||Math.abs(R.position.z-P.z)>8)continue;
+function farmSolids(s){for(const h of FARM.hs)if(h.st==='walk'){const ux=Math.sin(h.ry),uz=Math.cos(h.ry);s.push({ob:1,cx:h.x+ux*.21,cz:h.z+uz*.21,ux,uz,hl:1.24,hw:.36});}   /* (🐴 a horse walking home through town, wherever it is) */
+  if(!FARM.on)return s;for(const a of [...FARM.hs,...FARM.riders,...FARM.an]){if(a.st==='me'||a.st==='walk'||!/^fa\.(horse|cow)\.adult/.test(a.key||''))continue;const R=a.m.root;if(!R.visible||Math.abs(R.position.x-P.x)>8||Math.abs(R.position.z-P.z)>8)continue;
   const ux=Math.sin(R.rotation.y),uz=Math.cos(R.rotation.y),cow=a.key[3]==='c',o=cow?.33:.21;s.push({ob:1,cx:R.position.x+ux*o,cz:R.position.z+uz*o,ux,uz,hl:cow?1.22:1.24,hw:cow?.52:.36});   /* (measured at eye height on every move: horse |x| .31, z -.8..1.55; the cow |x| .47, z -.83..1.5 (picture pass 3: its neck is a slim tube now, not a 2.5 m drum)) */}return s;}
 function farmHorseFree(h){return h&&h.st==='home'&&!farmPeerOn(h.i);}
 function farmPeerOn(i){for(const a of MP.peers.values())if(a.rd&&a.rd[0]===i)return a;return null;}
 function farmMount(h,lesson){if(P.horse||!h)return;if(!lesson){if(!S.ride.lesson){SFX.no();toast('🐴 Ask the instructor for a lesson first! Stan is at the jump field.',3.5);return;}
     if(!farmOpen()){SFX.no();toast('🐴 The stable is open 7:00 – 21:00.',3);return;}if(!farmHorseFree(h)){toast('🐴 Someone is riding that horse.',2.5);return;}}
-  SFX.neigh();h.st='me';h.act=null;P.horse={h,sp:0,g:'idle',j:-9,said:false,ry:h.ry,dist:0,lesson:!!lesson};P.x=h.x;P.z=h.z;P.yaw=h.ry+Math.PI;P.pitch=-.12;P.cy=FARM_SEAT-.62;
+  SFX.neigh();hnOut(h,'me');P.horse={h,sp:0,g:'idle',j:-9,said:false,ry:h.ry,dist:0,lesson:!!lesson};P.x=h.x;P.z=h.z;P.yaw=h.ry+Math.PI;P.pitch=-.12;P.cy=FARM_SEAT-.62;
   /* your pets wait at the stable (moves-farm-wait-stable) */
   const S0=FARM.stables[0];let n=0;for(const e of PET_ACTORS){if(e.d.stay||e.loc!=='city'||e.gp)continue;const a=Math.PI*(.3+n*.22);e.fw={f:S0.ry,t0:gameMs()/1000};[e.x,e.z]=collideXZ(S0.x-3+Math.cos(a)*(2+n*.4),S0.z+4+Math.sin(a)*1.2,.4,LOC.city);e.tx=e.x;e.tz=e.z;n++;}
 }   /* (picture pass 4: Ieva says it when you talk to her with pets, never over your ride) */
 function farmOff(quiet,why){const r=P.horse;if(!r)return;const h=r.h;P.horse=null;P.cy=0;const a=h.ry+Math.PI/2;[P.x,P.z]=collideXZ(h.x+Math.sin(a)*1.3,h.z+Math.cos(a)*1.3,.3,LOC.city);
-  h.st=r.lesson?'home':'back';if(r.lesson){h.x=h.hx;h.z=h.hz;h.ry=h.hry0??h.ry;h.m.root.position.set(h.x,0,h.z);}
+  if(r.lesson)hnHome(h);else{h.st='back';hnAdd([h.i,Math.round(h.x*100)/100,Math.round(h.z*100)/100,Math.round(gameMs())],true);}   /* 🐴 it walks home along the pavements (24 Nov) */
   for(const e of PET_ACTORS)if(e.fw){e.fw=null;e.sm='pet.greet';e.sm0=gameMs()/1000;}
-  if(why)toast(why,3.5);else if(!quiet&&r.lesson){FARM.lesson=null;toast('🤠 Stan: “Lesson stopped. Talk to me to start again!”',3.5);}else if(!quiet)if(farmAtStable())farmSay('Ieva','Thank you! She had fun.');else toast('🐴 Your horse trots back to the stable.',3);}
+  if(why)toast(why,3.5);else if(!quiet&&r.lesson){FARM.lesson=null;toast('🤠 Stan: “Lesson stopped. Talk to me to start again!”',3.5);}else if(!quiet)if(farmAtStable())farmSay('Ieva','Thank you! She had fun.');else toast('🐴 Your horse walks home to the farm.',3);}
 function farmAtStable(){return FARM.stables.some(s=>Math.hypot(P.x-s.x,P.z-s.z)<9)||FARM.ppl.some(p=>p.who==='ieva'&&Math.hypot(P.x-p.x,P.z-p.z)<6);}
 function farmRide(dt){const r=P.horse,h=r.h,now=gameMs()/1000;
-  if(!farmZone(P.x,P.z)){farmOff(true);return;}
   if(!r.lesson&&!farmOpen()){farmOff(false,'🕘 The stable is closing. Time to get off: your horse walks back.');return;}
   let f=0,s=0;if(!UI.open&&!CUT){if(IN.joy.id!==null){f=-IN.joy.y;s=IN.joy.x;}const K=IN.keys;f+=(K.KeyW||K.ArrowUp?1:0)-(K.KeyS||K.ArrowDown?1:0);s+=(K.KeyD?1:0)-(K.KeyA?1:0);const turn=(K.ArrowRight?1:0)-(K.ArrowLeft?1:0);if(turn)P.yaw-=turn*1.8*dt;}
   let m=Math.hypot(f,s);if(m>1){f/=m;s/=m;m=1;}const run=!!(IN.keys.ShiftLeft||IN.keys.ShiftRight||IN.run),joy=IN.joy.id!==null;
   const g=m<.06?'idle':run||(joy&&m>.92)?'gallop':(joy&&m<.55)||f<0?'walk':'trot',want=g==='idle'?0:FARM_SPD[g[0]]*(f<0&&!joy?.5:1);
   const jumping=now-r.j<1.6;r.sp=jumping?Math.max(r.sp,3.5):lerp(r.sp,want,Math.min(1,dt*2.5));
   if(r.sp>.05&&m>.06){const sy=Math.sin(P.yaw),cy=Math.cos(P.yaw),dx=(-sy*f+cy*s),dz=(-cy*f-sy*s),dl=Math.hypot(dx,dz)||1,nx=P.x+dx/dl*r.sp*dt,nz=P.z+dz/dl*r.sp*dt;
-    if(!farmZone(nx,nz)){r.sp=0;if(!r.ref||now-r.ref>2.2){r.ref=now;SFX.snort();if(!r.said){r.said=true;toast("🐴 Your horse won't go into town.",3);}}}
+    if(r.lesson?!farmZone(nx,nz):hnDoorStop(nx,nz,r,now)){r.sp=0;if(r.lesson&&(!r.ref||now-r.ref>2.2)){r.ref=now;SFX.snort();if(!r.said){r.said=true;toast("🐴 Lessons stay at the farm. Ride into town after the lesson!",3);}}}   /* (24 Nov, the owner: ride anywhere in town; at a door the horse waits outside) */
     else{const o=[P.x,P.z];[P.x,P.z]=collideXZ(nx,nz,.7,CUR,solids());r.dist+=Math.hypot(P.x-o[0],P.z-o[1]);r.ry=angLerp(r.ry,Math.atan2(dx,dz),Math.min(1,dt*3.5));}}
   else if(r.sp<.3)r.sp=0;
   {const pg=r.g==='jump'||r.g==='idle'?'walk':r.g,up=pg==='walk'?[4,99]:pg==='trot'?[9.5,3.5]:[99,8.5];   /* (24 Nov: horse speeds w 2.4 t 4.8 g 7.6 -> 3 / 6.5 / 13: the gallop was slower than running on foot; riding fix: gaits change with a gap, so the horse doesn't flick between walk and trot at one speed) */
@@ -2689,19 +2691,161 @@ function farmRide(dt){const r=P.horse,h=r.h,now=gameMs()/1000;
   {const lf=Math.max(0,(pl&&pl.lift)||0);r.cy=lerp(r.cy||0,r.g==='jump'?lf:0,Math.min(1,dt*(r.g==='jump'?12:5)));const ga={walk:.006,trot:.013,gallop:.033}[r.g]||0;   /* (24 Nov, horse joints: the strides are quicker now (the real rhythm for this speed), so the rocking is a little smaller: the view moves no faster than before) */r.ba=lerp(r.ba||0,ga,Math.min(1,dt*3));P.jy=r.cy+r.ba*(1+Math.sin(TAU*(r.ph||0)))*.5;P.hr=r.g==='gallop'?r.ba*.5*Math.sin(TAU*(r.ph||0)+.8):0;}   /* (24 Nov: a smooth rocking with each stride, like sitting on a real horse: soft at the walk, a big rocking-chair swing at the gallop) */   /* (riding fix 24 Nov: your eyes follow the saddle softly, not every hoof beat) */h.m.b.updateWorldMatrix(true,false);const e=h.m.b.matrixWorld.elements,fl=Math.hypot(e[8],e[9],e[10])||1;r.hp=lerp(r.hp||0,r.g==='jump'?1.6*Math.asin(Math.max(0,Math.min(1,e[9]/fl))):0,Math.min(1,dt*5));P.hp=r.hp;   /* (riding fix: the view tips up and back down gently, never snaps) */   /* (picture pass 3: as the horse takes off your view tips up with it (a bit more than its body: the neck rises too), so its neck stays at the bottom instead of filling the screen (picture pass 4: 1.7 -> 2.3, the neck still filled the lower half); landing nose down, the neck drops out of view by itself) */
   if(r.g!=='idle'&&r.g!=='jump'){r.clop=(r.clop||0)+r.sp*dt;if(r.clop>3.2){r.clop=0;SFX.clop();}}}
 function farmJump(){const r=P.horse;if(!r)return false;const now=gameMs()/1000;if(now-r.j<1.7||r.sp<1)return true;r.j=now;SFX.jump();return true;}
-function farmStamp(st){const r=P.horse;st.rd=r?[r.h.i,{idle:'i',walk:'w',trot:'t',gallop:'g',jump:'j'}[r.g]||'i',Math.round(r.ry*100)/100]:null;}   /* 🐴 riding: [horse, gait, its heading] (old versions ignore it) */
-function farmExtra(a,pr){const v=pr.rd;a.rd=Array.isArray(v)&&v.length===3&&Number.isInteger(v[0])&&v[0]>=0&&v[0]<10&&typeof v[1]==='string'&&Number.isFinite(v[2])?v:null;
+function farmStamp(st){const r=P.horse;st.rh=HN.mine.length?HN.mine.map(q=>q.slice()):null;st.rd=r?[r.h.i,{idle:'i',walk:'w',trot:'t',gallop:'g',jump:'j'}[r.g]||'i',Math.round(r.ry*100)/100]:null;}   /* 🐴 riding: [horse, gait, its heading] (old versions ignore it) */
+function farmExtra(a,pr){if(Array.isArray(pr.rh))for(const q of pr.rh.slice(0,4))hnAdd(q);   /* 🐴 rh: horses this friend let go, walking home ([horse, x, z, time]; old versions ignore it) */
+  const v=pr.rd;a.rd=Array.isArray(v)&&v.length===3&&Number.isInteger(v[0])&&v[0]>=0&&v[0]<10&&typeof v[1]==='string'&&Number.isFinite(v[2])?v:null;
   if(a.rd&&P.horse&&!P.horse.lesson&&P.horse.h.i===a.rd[0]&&String(a.peer)<String(MP.me))farmOff(true,'🐴 A friend took this horse first. Pick another one!');}
 /* a friend on a horse: their horse under them, their body in the riding pose */
 function farmPeer(a,dt,vis){const on=!!(a.rd&&vis&&CUR&&CUR.id==='city');if(on&&!a.fh){a.fh=farmModel('fa.horse.adult.'+(a.rd[0]%4));scene.add(a.fh.root);}
   if(a.fh)a.fh.root.visible=on;const H=a.rd?FARM.hs[a.rd[0]]:null;
   if(on)farmLiveAll();
-  if(!on){if(a.fhOn){a.fhOn=false;const B=FARM.hs[a.rdi];if(B&&B.st==='peer'){B.st='back';B.x=a.x;B.z=a.z;B.m.root.visible=true;}}return;}a.fhOn=true;a.rdi=a.rd[0];if(H&&H.st!=='me'){H.st='peer';H.m.root.visible=false;if(H.far)H.far.visible=false;}
+  if(!on){if(a.fhOn&&!a.rd){a.fhOn=false;const B=FARM.hs[a.rdi];if(B&&B.st==='peer'){B.x=a.x;B.z=a.z;if(!hnAdd([B.i,Math.round(a.x*100)/100,Math.round(a.z*100)/100,Math.round(gameMs())]))B.st='back';B.m.root.visible=true;}}return;}   /* (a friend on an older version sends no rh: their horse walks home from where they got off) */a.fhOn=true;a.rdi=a.rd[0];if(H&&H.st!=='me'){H.st='peer';H.m.root.visible=false;if(H.far)H.far.visible=false;}
   const now=gameMs()/1000,R=a.av.root,g={i:'idle',w:'walk',t:'trot',g:'gallop',j:'jump'}[a.rd[1]]||'idle';a.fhd=(a.fhd||0)+Math.hypot(a.x-(a.fhx??a.x),a.z-(a.fhz??a.z));a.fhx=a.x;a.fhz=a.z;
   a.fh.root.position.set(a.x,0,a.z);a.fh.root.rotation.y=a.rd[2];if(g==='jump'&&a.fjt==null)a.fjt=now;if(g!=='jump')a.fjt=null;
   const pl=COZY_MOVES.play(a.fh,g==='idle'?'horse.idle':'horse.'+g,g==='jump'?now-a.fjt:now,{dist:a.fhd,fast:true});
   R.position.y+=FARM_SEAT-.62+((pl&&pl.lift)||0);R.rotation.y=a.rd[2];for(const [i,l] of a.av.legs.entries()){const s2=i?1:-1;l.rotation.set(RIDE_POSE_X,0,s2*.2);}}
 const RIDE_POSE_X=-.3;
+/* 🐴 horses in town (24 Nov 2026, the owner: "ride the horse around the town; when we hop off, the horses walk at normal walking speed, on the pavements and
+   zebra crossings, back to the farm; more horses merge into pairs or more, like a gang of horses going home"; it replaces his 30 Oct rule "near town the horse
+   refuses"). One walking map, made once in small slices after the town is built (0.5 m squares over the town and the farm): pavements, zebra crossings, the park's
+   paths, the farm's roads and the trail are the ways; the farm yard, fields and grass cost more; car roads (but for the zebras) and everything solid are shut.
+   Then one "way home" field (for every square: how far to the farm yard by the cheapest way). A horse let go walks down that field, so two horses whose ways
+   meet walk the very same line from there on; then into its own stall or paddock spot. Where a walking horse is comes only from where and when it was let go
+   (the record [horse, x, z, time], sent online with the player's presence): every player works out the same walk, step by step (0.1 s of the one clock), with
+   the same sums (no random, no sin/cos), so friends see the same horses on the same pavements. Horses near each other walk home as a group: side by side (2 at
+   most) on a pavement, one behind the other over a zebra crossing and where the pavement is narrow, at the slowest one's pace */
+const HN={C:.5,x0:-228,z0:-198,W:628,H:568,g:null,cost:null,D:null,it:null,done:false,root:-1,home:{},recs:new Map(),wk:[],ts:0,mine:[],ms:0};
+const HN_COST=[Infinity,1,2.2,1,1.5,6,4];   /* 0 shut, 1 way, 2 a way's edge, 3 zebra, 4 farm yard, 5 grass, 6 the farm's fields and woods */
+const HN_DT=100,HN_GAP=3.8,HN_SIDE=.75,HN_NEAR=25,HN_ROOT=[-112,-103],HN_KEEP=20*60000;
+const hnI=(x,z)=>{const i=Math.floor((x-HN.x0)/HN.C),j=Math.floor((z-HN.z0)/HN.C);return i<0||j<0||i>=HN.W||j>=HN.H?-1:j*HN.W+i;};
+const hnX=k=>HN.x0+(k%HN.W+.5)*HN.C,hnZ=k=>HN.z0+(Math.floor(k/HN.W)+.5)*HN.C;
+const hnCode=(x,z)=>{const k=hnI(x,z);return k<0||!HN.g?0:HN.g[k];};
+function hnZebra(x,z){for(const xc of[-50,0,50])for(const zc of[-50,0,50])for(const s of[-1,1]){if(Math.abs(x-(xc+s*5.5))<=1&&Math.abs(z-zc)<4.6)return true;if(Math.abs(z-(zc+s*5.5))<=1&&Math.abs(x-xc)<4.6)return true;}return false;}
+/* a car road here, not on a zebra crossing? (m: metres past the kerb that still count) */
+function hnRoad(x,z,m){const e=4+m;let on=false;if(Math.abs(x)<84+m&&Math.abs(z)<84+m)for(const c of[-50,0,50])if(Math.abs(z-c)<e||Math.abs(x-c)<e)on=true;
+  if(x<-84+m&&x>laneEnd()-m&&Math.abs(z)<e)on=true;return on&&!hnZebra(x,z)&&!hnMouth(x,z);}
+/* the farm road's mouth: the end of the x -50 road between the farm's walls (no car drives past the last crossing); the only way between town and farm. Crossed like a zebra */
+const hnMouth=(x,z)=>x>-54.5&&x<-45.5&&z<-77.5&&z>-84.6;
+function hnWay(x,z){if(Math.abs(x)<=84&&Math.abs(z)<=84)for(const c of[-50,0,50]){const a=Math.abs(z-c),b=Math.abs(x-c);if(a>=4&&a<=7||b>=4&&b<=7)return true;}
+  if(x<-84&&x>laneEnd()&&Math.abs(z)>=4&&Math.abs(z)<=7)return true;   /* Friends Lane's pavements */
+  if(Math.hypot(x+22,z-22)<10||Math.abs(x+22)<1.5&&Math.abs(z-11.2)<3||Math.abs(x+10.8)<3&&Math.abs(z-22)<1.5)return true;   /* the park's round path and its two ways in */
+  for(const [a,b] of [[22,25],[23,26],[24,26]])if(segDist(x,z,WP[a],WP[b])<.9)return true;return false;}
+/* the map and the field, a slice at a time (a generator: it pauses when the frame's few ms are used) */
+function* hnGen(){const L=LOC.city,W=HN.W,N=W*HN.H,g=new Uint8Array(N),r=.5,[bx1,bz1,bx2,bz2]=FARMD.box,B=L.bounds;HN.g=g;
+  for(let j=0;j<HN.H;j++){for(let i=0;i<W;i++){const k=j*W+i,x=hnX(k),z=hnZ(k);
+      g[k]=x<B.x1+.7||x>B.x2-.7||z<B.z1+.7||z>B.z2-.7||hnRoad(x,z,.45)?0:hnZebra(x,z)||hnMouth(x,z)?3:hnWay(x,z)?1:x>bx1&&x<bx2&&z>bz1&&z<bz2?4:farmZone(x,z)?6:5;}if(j&1)yield;}
+  const box=(x1,z1,x2,z2,h,f)=>{const i1=Math.max(0,Math.floor((x1-h-HN.x0)/HN.C)),i2=Math.min(W-1,Math.floor((x2+h-HN.x0)/HN.C)),j1=Math.max(0,Math.floor((z1-h-HN.z0)/HN.C)),j2=Math.min(HN.H-1,Math.floor((z2+h-HN.z0)/HN.C));
+    for(let j=j1;j<=j2;j++)for(let i=i1;i<=i2;i++)f(j*W+i);};
+  for(const [kd,w,...p] of FARMD.roads){for(let n=2;n<p.length;n+=2){const A=[p[n-2],p[n-1]],Q=[p[n],p[n+1]],h=w/2;   /* the farm's roads and the trail */
+    box(Math.min(A[0],Q[0]),Math.min(A[1],Q[1]),Math.max(A[0],Q[0]),Math.max(A[1],Q[1]),h,k=>{if(g[k]>3&&segDist(hnX(k),hnZ(k),A,Q)<h)g[k]=1;});}yield;}
+  const shut=(c,push)=>{let e=0;if(c.ob)e=c.hl+c.hw;else if(c.rb)e=Math.hypot(c.hw,c.hd);const R=c.cr!==undefined&&!e;
+    const x1=e?c.cx-e:R?c.cx-c.cr:c.x1,x2=e?c.cx+e:R?c.cx+c.cr:c.x2,z1=e?c.cz-e:R?c.cz-c.cr:c.z1,z2=e?c.cz+e:R?c.cz+c.cr:c.z2;
+    box(x1,z1,x2,z2,r,k=>{if(g[k]&&push(hnX(k),hnZ(k),r,c))g[k]=0;});};
+  let n=0;for(const c of L.cols){if(c.fl===undefined)shut(c,pushOut);if(!(++n&15))yield;}
+  if(L.fgrid)for(const q of L.fgrid.values()){for(const c of q)shut(c,farmPush);yield;}
+  /* a way's edge (within 1 m of something that is not a way) costs a little more: horses keep to the middle of the pavement */
+  const e=new Uint8Array(N);for(let k=0;k<N;k++){if(g[k]===1){const i=k%W,j=(k-i)/W;let ed=false;
+    for(let dj=-2;dj<=2&&!ed;dj++)for(let di=-2;di<=2;di++){const ii=i+di,jj=j+dj;if(ii<0||jj<0||ii>=W||jj>=HN.H){ed=true;break;}const c=g[jj*W+ii];if(c!==1&&c!==3){ed=true;break;}}if(ed)e[k]=1;}if(!(k&8191))yield;}
+  for(let k=0;k<N;k++)if(e[k])g[k]=2;HN.cost=new Float32Array(N);for(let k=0;k<N;k++)HN.cost[k]=HN_COST[g[k]];yield;
+  HN.root=hnOpen(HN_ROOT[0],HN_ROOT[1]);const f=hnField(HN.root);HN.D=f.D;while(!f.run(0,1500))yield;}
+/* the nearest square a horse may stand on (a horse let go on a road or by a wall starts from there) */
+function hnOpen(x,z,max){const k0=hnI(x,z);if(k0>=0&&HN.g[k0]&&HN.g[k0]!==3)return k0;const i0=Math.floor((x-HN.x0)/HN.C),j0=Math.floor((z-HN.z0)/HN.C);let best=-1,bd=1e9;
+  for(let rr=1;rr<=(max||30)&&best<0;rr++)for(let dj=-rr;dj<=rr;dj++)for(let di=-rr;di<=rr;di++){if(Math.max(Math.abs(di),Math.abs(dj))!==rr)continue;const i=i0+di,j=j0+dj;if(i<0||j<0||i>=HN.W||j>=HN.H)continue;const k=j*HN.W+i;if(!HN.g[k]||HN.g[k]===3)continue;const d=di*di+dj*dj;if(d<bd){bd=d;best=k;}}
+  return best;}
+/* "how far to the source" for every square (Dijkstra, 8 ways, no corner cutting past a shut square). win keeps it to a box; open: squares opened for it (round a stall) */
+function hnField(src,win,open){const W=HN.W,N=W*HN.H,D=new Float64Array(N).fill(Infinity),H=[],Hk=[],C=HN.cost,ok=k=>C[k]<Infinity||!!open&&open.has(k);
+  const push=(d,k)=>{let i=H.length;H.push(d);Hk.push(k);while(i>0){const p=(i-1)>>1;if(H[p]<=d)break;H[i]=H[p];Hk[i]=Hk[p];i=p;}H[i]=d;Hk[i]=k;};
+  let pd=0;const pop=()=>{const d=H[0],k=Hk[0],ld=H.pop(),lk=Hk.pop();if(H.length){let i=0;const n=H.length;for(;;){const l=2*i+1,r=l+1;if(l>=n)break;const m=r<n&&H[r]<H[l]?r:l;if(H[m]>=ld)break;H[i]=H[m];Hk[i]=Hk[m];i=m;}H[i]=ld;Hk[i]=lk;}pd=d;return k;};
+  const DI=[1,0,-1,0,1,1,-1,-1],DJ=[0,1,0,-1,1,-1,1,-1];if(src>=0){D[src]=0;push(0,src);}
+  const run=(budget,max)=>{const t0=performance.now();let n=0;while(H.length){const k=pop(),d=pd;if(d>D[k])continue;const i=k%W,j=(k-i)/W;
+      for(let q=0;q<8;q++){const ii=i+DI[q],jj=j+DJ[q];if(ii<0||jj<0||ii>=W||jj>=HN.H)continue;if(win&&(ii<win[0]||jj<win[1]||ii>win[2]||jj>win[3]))continue;const kk=jj*W+ii;if(!ok(kk))continue;
+        if(q>3&&(!ok(j*W+ii)||!ok(jj*W+i)))continue;const nd=d+(C[kk]<Infinity?C[kk]:1)*(q>3?1.41421356:1);if(nd<D[kk]){D[kk]=nd;push(nd,kk);}}
+      n++;if(max&&n>=max)return !H.length;if(budget&&!(n&1023)&&performance.now()-t0>budget)return false;}return true;};
+  return {D,run};}
+/* work on the map for up to ms milliseconds (0 = finish it now); true when it is ready */
+function hnStep(ms){if(HN.done)return true;if(!HN.it){if(!FARM.L||!LOC.city)return false;HN.it=hnGen();}const t0=performance.now();
+  for(;;){const r=HN.it.next();if(r.done){HN.done=true;HN.it=null;HN.ms+=performance.now()-t0;return true;}if(ms&&performance.now()-t0>ms){HN.ms+=performance.now()-t0;return false;}}}
+/* the last bit, from the yard to the horse's own spot: a small field round the yard, made once per horse (3 m round its spot is open: stall walls and the paddock fence stand right by it) */
+function hnHomeField(h){if(HN.home[h.i])return HN.home[h.i];const k=hnI(h.hx,h.hz),open=new Set(),i0=k%HN.W,j0=(k-i0)/HN.W;
+  for(let dj=-6;dj<=6;dj++)for(let di=-6;di<=6;di++)open.add((j0+dj)*HN.W+i0+di);
+  const ri=HN.root%HN.W,rj=(HN.root-ri)/HN.W,f=hnField(k,[Math.min(i0,ri)-60,Math.min(j0,rj)-60,Math.max(i0,ri)+60,Math.max(j0,rj)+60],open);f.run(0);
+  return HN.home[h.i]={D:Float32Array.from(f.D),open};}
+/* walk down a field from square k: the squares to its source */
+function hnDown(D,k,open){const W=HN.W,out=[k],DI=[1,0,-1,0,1,1,-1,-1],DJ=[0,1,0,-1,1,-1,1,-1],ok=kk=>HN.cost[kk]<Infinity||!!open&&open.has(kk);
+  for(let n=0;n<20000&&D[k]>0;n++){const i=k%W,j=(k-i)/W;let b=-1,bd=D[k];for(let q=0;q<8;q++){const ii=i+DI[q],jj=j+DJ[q];if(ii<0||jj<0||ii>=W||jj>=HN.H)continue;const kk=jj*W+ii;
+      if(D[kk]<bd&&ok(kk)&&(q<4||ok(j*W+ii)&&ok(jj*W+i))){bd=D[kk];b=kk;}}if(b<0)break;k=b;out.push(k);}return out;}
+/* a horse's whole way home: points about 0.5 m apart, softened where that keeps them on the way; F = metres left to the yard at each point (the same for every horse on
+   that line, because the line from a square on is always the same: horses can be compared along it); zn = a zebra crossing within 8 m ahead or 4 m behind */
+function hnPath(h,x,z){hnStep(0);let s=hnOpen(x,z);if(s<0||!(HN.D[s]<Infinity))s=HN.root;const a=hnDown(HN.D,s),F=hnHomeField(h),b=F.D[HN.root]<Infinity?hnDown(F.D,HN.root,F.open):[HN.root];
+  const raw=[[x,z]].concat(a.map(k=>[hnX(k),hnZ(k)]),b.slice(1).map(k=>[hnX(k),hnZ(k)]),[[h.hx,h.hz]]),n=raw.length,cut=a.length,p=[];
+  for(let i=0;i<n;i++){if(i===0||i===n-1||i>cut){p.push(raw[i]);continue;}let sx=0,sz=0,c=0;for(let j=Math.max(1,i-3);j<=Math.min(cut,i+3);j++){sx+=raw[j][0];sz+=raw[j][1];c++;}
+    const q=[sx/c,sz/c],cq=hnCode(q[0],q[1]),c0=hnCode(raw[i][0],raw[i][1]);p.push(cq&&cq!==5&&(cq!==3||c0===3)?q:raw[i]);}
+  const S=[0];for(let i=1;i<n;i++){const dx=p[i][0]-p[i-1][0],dz=p[i][1]-p[i-1][1];S.push(S[i-1]+Math.sqrt(dx*dx+dz*dz));}
+  const Fv=S.map(v=>S[cut]-v),Z=p.map(q=>hnCode(q[0],q[1])===3);
+  const Zn=p.map((_,i)=>{for(let j=i;j<n&&S[j]-S[i]<8;j++)if(Z[j])return true;for(let j=i;j>=0&&S[i]-S[j]<4;j--)if(Z[j])return true;return false;});
+  const key=new Map();a.forEach((k,i)=>key.set(k,i+1));return {p,S,len:S[n-1],cut,F:Fv,zn:Zn,key,cells:a};}
+/* ---- the walk (the same on every screen) ---- */
+/* where on its path a walker is at arc length s: [x, z, tangent x, tangent z] (w.pi: the point it is at, kept for the next look) */
+function hnAt(w,s){const P=w.path,S=P.S;let i=w.pi||1;while(i<S.length-1&&S[i]<s)i++;while(i>1&&S[i-1]>s)i--;w.pi=i;const a=P.p[i-1],b=P.p[i],l=S[i]-S[i-1]||1,u=Math.max(0,Math.min(1,(s-S[i-1])/l));
+  return [a[0]+(b[0]-a[0])*u,a[1]+(b[1]-a[1])*u,(b[0]-a[0])/l,(b[1]-a[1])/l];}
+function hnF(w){const P=w.path,i=w.pi||1,S=P.S,l=S[i]-S[i-1]||1,u=Math.max(0,Math.min(1,(w.s-S[i-1])/l));return P.F[i-1]+(P.F[i]-P.F[i-1])*u;}
+const hnReset=w=>Object.assign(w,{s:0,lat:0,grp:w.i,x:w.r[1],z:w.r[2],px:w.r[1],pz:w.r[2],v:0,done:false,pi:1,tx:0,tz:1});
+/* a new walker from a record [horse, x, z, time] */
+function hnMake(r){const h=FARM.hs[r[0]];if(!h)return null;const path=hnPath(h,r[1],r[2]);if(!path)return null;
+  return hnReset({r,h,i:r[0],t0:r[3],path,v0:FARM_SPD.w*(.88+.12*farmHash(h.id+'walk'))});}
+/* one 0.1 s step for every horse on its way home */
+function hnSim(){const dt=HN_DT/1000,A=HN.wk.filter(w=>!w.done&&w.t0<=HN.ts);if(!A.length)return;
+  for(const w of A){const q=hnAt(w,w.s);w.f=hnF(w);w.px=w.x;w.pz=w.z;w.bx=q[0];w.bz=q[1];}
+  /* who walks together: horses within 25 m whose ways meet within 40 m of both; a group holds until the farm yard (way-home number under 15) */
+  const byI=new Map(A.map(w=>[w.i,w]));for(const w of A){const o=byI.get(w.grp);if(w.f<15||!o||o.f<15)w.grp=w.i;}
+  const G=w=>{let n=0;while(w.grp!==w.i&&n++<12){const o=byI.get(w.grp);if(!o)break;w=o;}return w.i;};
+  for(let m=0;m<A.length;m++)for(let n=m+1;n<A.length;n++){const a=A[m],b=A[n];if(a.f<15||b.f<15)continue;const ga=G(a),gb=G(b);if(ga===gb)continue;
+    const dx=a.bx-b.bx,dz=a.bz-b.bz;if(dx*dx+dz*dz>HN_NEAR*HN_NEAR)continue;let ok=false;
+    for(let k=a.pi;k<=a.path.cut&&a.path.S[k]-a.s<40;k++){const j=b.path.key.get(a.path.cells[k-1]);if(j!==undefined&&j>=b.pi-1&&b.path.S[j]-b.s<40){ok=true;break;}}
+    if(ok)byI.get(Math.max(ga,gb)).grp=Math.min(ga,gb);}
+  const groups=new Map();for(const w of A){const g=G(w);if(!groups.has(g))groups.set(g,[]);groups.get(g).push(w);}
+  for(const M of groups.values()){M.sort((a,b)=>a.f-b.f||a.i-b.i);const L0=M[0];let vg=Infinity;for(const w of M)vg=Math.min(vg,w.v0);
+    /* side by side only where every one is on the leader's line and no zebra crossing is near */
+    const two=M.length>1&&M.every(w=>!w.path.zn[w.pi]&&w.pi<=w.path.cut&&(w===L0||L0.path.key.has(w.path.cells[w.pi-1])));
+    M.forEach((w,k)=>{w.ft=L0.f+(two?k>>1:k)*HN_GAP;w.lt=two&&!(M.length%2&&k===M.length-1)?(k%2?HN_SIDE:-HN_SIDE):0;});
+    const late=M.some((w,k)=>k&&w.f-w.ft>6);
+    M.forEach((w,k)=>{w.v=k?Math.max(0,Math.min(1.35*vg,vg+.8*(w.f-w.ft))):(late?.6:1)*vg;});}
+  /* move, front ones first; never into a horse ahead (3.3 m nose to tail, 1.1 m side to side); a side step only onto a pavement or path, never a zebra or grass */
+  A.sort((a,b)=>a.f-b.f||a.i-b.i);const moved=[];
+  for(const w of A){const room=(s,l)=>{const q=hnAt(w,s),x=q[0]+q[3]*l,z=q[1]-q[2]*l;if(l)for(const e of[0,1.1,-1.1]){const c=hnCode(x+q[2]*e,z+q[3]*e);if(!c||c===3||c===5)return null;}return [x,z];},
+      clear=p=>{for(const o of moved){const dx=p[0]-o.x,dz=p[1]-o.z,al=dx*o.tx+dz*o.tz,ac=dx*o.tz-dz*o.tx;if(al>-3.3&&al<3.3&&ac>-1.1&&ac<1.1)return false;}return true;},
+      go=(s,l)=>{const p=room(s,l);return !!p&&clear(p);};
+    const s1=Math.min(w.path.len,w.s+w.v*dt),l1=w.lat+Math.max(-.06,Math.min(.06,(w.lt||0)-w.lat)),toward0=l=>Math.abs(l)<=.1?0:l-Math.sign(l)*.1;
+    let l=l1;if(!room(s1,l)){l=w.lat;while(l&&!room(s1,l))l=toward0(l);}   /* (the pavement gets narrow ahead: ease back onto the line) */
+    if(go(s1,l)){w.s=s1;w.lat=l;}else if(go(w.s,l1))w.lat=l1;
+    const q=hnAt(w,w.s);w.x=q[0]+q[3]*w.lat;w.z=q[1]-q[2]*w.lat;w.tx=q[2];w.tz=q[3];moved.push(w);
+    if(w.s>=w.path.len-.01)w.done=true;}}
+/* a record (mine, or a friend's): [horse 0-9, x, z, the clock's ms when it was let go]. A newer record for the same horse wins; the walk is worked out again from the oldest
+   record kept, so a friend's record that comes a moment late still gives the same walk */
+function hnAdd(r,mine){if(!Array.isArray(r)||r.length!==4||!Number.isInteger(r[0])||r[0]<0||r[0]>9||!r.slice(1).every(Number.isFinite))return false;
+  if(!FARM.hs.length)farmLiveAll();const h=FARM.hs[r[0]];if(!h)return false;const o=HN.recs.get(r[0]);if(o&&o[3]>=r[3])return false;
+  if(h.st==='me'&&!mine)return false;HN.recs.set(r[0],r.slice());if(mine)HN.mine=HN.mine.filter(q=>q[0]!==r[0]).concat([r.slice()]).slice(-4);
+  hnReplay();if(HN.wk.some(w=>w.i===r[0]&&w.t0===r[3]))hnOut(h,'walk');else h.st='back';return true;}
+function hnReplay(){hnStep(0);const R=[...HN.recs.values()].sort((a,b)=>a[3]-b[3]||a[0]-b[0]),old=new Map(HN.wk.map(w=>[w.i+':'+w.t0,w]));HN.wk=[];
+  for(const r of R){const w=old.has(r[0]+':'+r[3])?hnReset(old.get(r[0]+':'+r[3])):hnMake(r);if(w)HN.wk.push(w);}
+  HN.ts=R.length?Math.floor(R[0][3]/HN_DT)*HN_DT:0;}
+/* a horse out of the farm stays drawn: its model moves from the farm's group (taken out of the scene far away) into the town; home again, back */
+function hnOut(h,st){h.st=st;h.act=null;if(h.far)h.far.visible=false;h.m.root.visible=true;if(h.m.root.parent!==LOC.city.g)LOC.city.g.add(h.m.root);}
+function hnHome(h){h.st='home';h.x=h.hx;h.z=h.hz;h.ry=h.hry0??h.ry;h.m.root.position.set(h.x,0,h.z);h.m.root.rotation.y=h.ry;if(FARM.dyn&&h.m.root.parent!==FARM.dyn)FARM.dyn.add(h.m.root);}
+/* every frame (in town or not): the map a few ms at a time; the walk caught up to the clock; the walking horses drawn between their last two steps */
+function hnTick(dt){if(!FARM.L)return;if(!HN.done&&CUR&&CUR.id==='city')hnStep(3);if(!HN.recs.size)return;const T=gameMs();
+  for(let n=0;HN.ts+HN_DT<=T&&n<12000;n++){HN.ts+=HN_DT;hnSim();}
+  const u=Math.max(0,Math.min(1,(T-HN.ts)/HN_DT)),now=T/1000,city=CUR&&CUR.id==='city';
+  for(const w of HN.wk){const h=w.h;if(w.t0>T||h.st!=='walk'||HN.recs.get(w.i)!==undefined&&HN.recs.get(w.i)[3]!==w.t0)continue;
+    if(w.done){hnHome(h);HN.mine=HN.mine.filter(q=>q[0]!==w.i);continue;}
+    const x=w.px+(w.x-w.px)*u,z=w.pz+(w.z-w.pz)*u,d=Math.hypot(x-h.x,z-h.z);if(d>.002)h.ry=angLerp(h.ry,Math.atan2(x-h.x,z-h.z),Math.min(1,dt*6));h.x=x;h.z=z;h.dist=(h.dist||0)+Math.min(d,1);
+    const R=h.m.root;R.position.set(x,0,z);R.rotation.y=h.ry;R.visible=city&&Math.hypot(x-camera.position.x,z-camera.position.z)<90;
+    if(R.visible)COZY_MOVES.play(h.m,w.v>3.6?'horse.trot':d<.002?'horse.idle':'horse.walk',now,{dist:h.dist,fast:true});
+    if(city&&!P.horse&&!P.sit&&!P.ride){const ux=Math.sin(h.ry),uz=Math.cos(h.ry),p=pushOut(P.x,P.z,.3,{ob:1,cx:x+ux*.21,cz:z+uz*.21,ux,uz,hl:1.24,hw:.36});if(p){P.x=p[0];P.z=p[1];}}}   /* (a walking horse gently pushes you out of its way) */
+  for(const [i,r] of HN.recs)if(T-r[3]>HN_KEEP){HN.recs.delete(i);HN.wk=HN.wk.filter(w=>w.i!==i||w.t0!==r[3]);}}
+/* 🚪 riding up to a door: horses wait outside (like the big pets). true = stop here */
+function hnDoorStop(x,z,r,now){let at=null;for(const t of CUR.inter){if(typeof t.label!=='string'||!/^(Go into|Climb into|Go inside)/.test(t.label))continue;if(Math.hypot(x-t.x,z-t.z)<(t.r||2)+.4){at=t;break;}}
+  if(!at){r.door=null;return false;}if(r.door!==at){r.door=at;r.ref=now;SFX.snort();toast('🐴 Horses wait outside. Get off to go in: your horse walks home by itself.',3.5);}return true;}
 /* ---- the lesson with Stan (story-ieva-stan: 5 steps) ---- */
 const LESSON_SAY=['Tap the horse to get on.','Walk to the blue flag.','Now trot to the red flag!','Now jump that one!','Stop by me. Easy does it.'];
 function farmLessonStart(){if(S.ride.lesson){farmSay('Stan','Practise jumps here any time!');return;}
@@ -2765,7 +2909,7 @@ function farmPet(a){const now=gameMs()/1000,M={cow:'cow.patLean',sheep:'sheep.pa
 function farmHandFeed(h){const now=gameMs()/1000;h.act={mv:'horse.handEat',t0:now,t1:now+6,f:Math.atan2(P.x-h.x,P.z-h.z),o:{h:1.35}};SFX.eat();toast('🥕 Crunch! The horse eats from your hand.',2.4);}
 const FA_NAME={cow:'cow',sheep:'sheep',pig:'pig',chicken:'hen',horse:'horse'};
 /* the buttons out there (findTarget): only while you are near the farm */
-function farmTargets(out){if(!FARM.on)return;const T=FARM.tg||(FARM.tg=[]);T.length=0;const now=gameMs()/1000,r=P.horse;
+function farmTargets(out){if(!FARM.on){if(P.horse){const r=P.horse;out.push({x:P.x,z:P.z,r:9,icon:'🧍',label:'Get off',act:()=>{r.sp=0;farmOff(false);},pri:()=>true});}return;}const T=FARM.tg||(FARM.tg=[]);T.length=0;const now=gameMs()/1000,r=P.horse;
   if(r){T.push({x:P.x,z:P.z,r:9,icon:'🧍',label:'Get off',act:()=>{r.sp=0;farmOff(false);},pri:()=>true});}   /* (24 Nov, owner: get off anywhere; away from the stable the horse walks back by itself) */
   else{for(const p of FARM.ppl)T.push({x:p.x,z:p.z,r:2.6,icon:'💬',label:'Talk to '+(p.who==='ieva'?'Ieva':'Stan'),act:()=>{SFX.talk();if(p.who==='ieva')farmIeva();else if(FARM.lesson)farmSay('Stan',LESSON_SAY[FARM.lesson.step]);else farmLessonStart();},obj:p.m.root});
     for(const h of FARM.hs){if(h.st!=='home')continue;const d=Math.hypot(P.x-h.x,P.z-h.z);if(d>2.8)continue;
