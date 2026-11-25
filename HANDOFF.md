@@ -17,7 +17,7 @@
 - **Still open for the owner**: P19/P25 on the real iPad; `tools/PFU-TRY-IT.md` (try it for real: Karolis and Izabele); Sonnet viewers on the 12 retakes of picture pass 4
   (the foreman's scratchpad `pics-fix4/` + `list.txt`); the cows are the book's picked blocky model (grade 1, models frozen).
 
-- **Friends, texts, voice calls, global chat** (branch `claude/social`, stamp 2026112501): code at the end of `js/08-hud.js` (`SOC`, `soc*`, `gc*`, `call*`);
+- **Friends, texts, voice calls, global chat** (branch `claude/social`, stamp 2026112502): code at the end of `js/08-hud.js` (`SOC`, `soc*`, `gc*`, `call*`);
   small hooks in `js/03-game.js` (presence `pi`, `socTargets`, badge, openChat) and `js/05-map.js` (Friends app). Firebase paths `worlds/cozy-town/social/...`;
   rules to publish: `tools/social/firebase-rules.json` (one whole block: players, ideas board, move, social; until published it all rests, the Friends app says it needs a one-time
   online setup, and the old list shows). Tests: `tools/social/so_flow.py` (2-3 players, voice with Chromium's fake mic) and `so_shots.py` (phone pictures). No TURN server: some networks can't call.
