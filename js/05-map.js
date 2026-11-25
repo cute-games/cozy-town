@@ -40,7 +40,7 @@ function mapPaint(x,ox,oz,k,w,h,o){const P=o.dark?MAP_PAL.dark:MAP_PAL.light,u=o
     R=(x1,z1,x2,z2,r)=>rr(x,X(x1),Z(z1),(x2-x1)*k,(z2-z1)*k,Math.max(r*k,u)),
     C=(cx,cz,r)=>{x.beginPath();x.arc(X(cx),Z(cz),Math.max(.5,r*k),0,TAU);},
     pl=(pts)=>{pts.forEach(([a,b],i)=>i?x.lineTo(X(a),Z(b)):x.moveTo(X(a),Z(b)));},
-    bc=c=>o.dark?mixC(c,'#241b42',.38):c,stroke=(c,lw)=>{x.strokeStyle=c;x.lineWidth=lw;x.stroke();};
+    bc=c=>o.dark?mixC(c,'#241b42',o.bm!=null?o.bm:.38):c,stroke=(c,lw)=>{x.strokeStyle=c;x.lineWidth=lw;x.stroke();};
   x.save();x.setTransform(1,0,0,1,0,0);x.lineJoin='round';x.lineCap='round';x.setLineDash([]);
   x.fillStyle=P.out;x.fillRect(0,0,w,h);
   if(!mini){x.beginPath();for(const [tx,tz,tr] of mapTrees())if(vis(tx-tr,tz-tr,tx+tr,tz+tr)){x.moveTo(X(tx)+tr*k,Z(tz));x.arc(X(tx),Z(tz),tr*k,0,TAU);}
