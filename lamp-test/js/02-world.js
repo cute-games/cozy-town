@@ -1245,14 +1245,15 @@ function shaftAt(g,w,h,d,x,y,z,wallM,capC,top){const b=new THREE.BoxGeometry(w,h
   for(let i=0;i<ps.count;i++){const t=ps.getY(i)/h+.5,k=top?1-.2*t:.55+.45*t;C[i*3]=C[i*3+1]=C[i*3+2]=k;}b.setAttribute('color',new THREE.BufferAttribute(C,3));
   const sm=toon({side:THREE.BackSide,vertexColors:true});sm.color=wallM.color;const m=new THREE.Mesh(b,sm);m.position.set(x,y,z);m.userData.keep=1;g.add(m);
   const c=new THREE.Mesh(new THREE.PlaneGeometry(w,d),new THREE.MeshBasicMaterial({color:capC}));c.rotation.x=top?Math.PI/2:-Math.PI/2;c.position.set(x,y+(top?h/2:-h/2),z);c.userData.keep=1;g.add(c);return m;}
+const CEILS=[],HOMEISH=id=>/^(home|apt\d|client|visit)$/.test(id);
 function shell(L,g,W,D,H,wallMat,floorMat,ceil,into,gap){const T=into||L.g;
   const fl=new THREE.Mesh(new THREE.PlaneGeometry(W,D),floorMat);fl.rotation.x=-Math.PI/2;fl.receiveShadow=true;fl.userData.keep=1;T.add(fl);
-  const ce=new THREE.Mesh(new THREE.PlaneGeometry(W+.4,D+.4),new THREE.MeshBasicMaterial({color:ceil}));ce.rotation.x=Math.PI/2;ce.position.y=H;ce.userData.keep=1;T.add(ce);   /* (20 cm into the walls all round: edge to edge with the walls' faces, the seam showed a dotted line of gaps; run 4, stage 3) */
+  const ce=new THREE.Mesh(new THREE.PlaneGeometry(W+.4,D+.4),new THREE.MeshBasicMaterial({color:ceil}));ce.rotation.x=Math.PI/2;ce.position.y=H;ce.userData.keep=1;T.add(ce);ce.userData.c0=ce.material.color.clone();CEILS.push(ce);   /* 💡 (26 Nov) CEILS: lampTick darkens ceilings at night in homes */   /* (20 cm into the walls all round: edge to edge with the walls' faces, the seam showed a dotted line of gaps; run 4, stage 3) */
   /* gap: a doorway (half its width) in the middle of the west wall, to the big house's stairs */
   const t=.3,ws=gap?D/2-gap:D,wz=gap?[-(gap+ws/2),gap+ws/2]:[0];box(g,W+2*t,H,t,null,0,0,-D/2-t/2,{mat:wallMat,ol:false});box(g,W+2*t,H,t,null,0,0,D/2+t/2,{mat:wallMat,ol:false});
   for(const z of wz)box(g,t,H,ws,null,-W/2-t/2,0,z,{mat:wallMat,ol:false});if(gap)box(g,t,H-2.6,2*gap,null,-W/2-t/2,2.6,0,{mat:wallMat,ol:false});box(g,t,H,D,null,W/2+t/2,0,0,{mat:wallMat,ol:false});
   const bb='#ffffff';box(g,W,.14,.06,bb,0,0,-D/2+.03,{ol:.02});box(g,W,.14,.06,bb,0,0,D/2-.03,{ol:.02});for(const z of wz)box(g,.06,.14,ws,bb,-W/2+.03,0,z,{ol:.02});box(g,.06,.14,D,bb,W/2-.03,0,0,{ol:.02});
-  cyl(g,.035,.035,.2,'#b9a6cf',0,H-.2,0,{seg:6,ol:false});cyl(g,.2,.42,.2,'#ffc6d9',0,H-.4,0,{seg:16,ol:false});cyl(g,.44,.44,.04,'#e48aab',0,H-.42,0,{seg:16,ol:false});sph(g,.16,null,0,H-.42,0,{mat:GLOW,ol:false,ws:12,hs:8});   /* a pink lamp shade with a darker rim on a short stem (no dark outline: from below, near the door, it showed as black wedges; run 4, stage 3: white on the cream ceiling it read as a faint smudge) */
+  if(!HOMEISH(L.id)){cyl(g,.035,.035,.2,'#b9a6cf',0,H-.2,0,{seg:6,ol:false});cyl(g,.2,.42,.2,'#ffc6d9',0,H-.4,0,{seg:16,ol:false});cyl(g,.44,.44,.04,'#e48aab',0,H-.42,0,{seg:16,ol:false});sph(g,.16,null,0,H-.42,0,{mat:GLOW,ol:false,ws:12,hs:8});}   /* 💡 (26 Nov, owner: "delete the default ceiling lamp, it should be an option to buy") homes get none: the Ceiling lamp is in the furniture shop */   /* a pink lamp shade with a darker rim on a short stem (no dark outline: from below, near the door, it showed as black wedges; run 4, stage 3: white on the cream ceiling it read as a faint smudge) */
   col(L,-W/2-1,-D/2-1,W/2+1,-D/2);col(L,-W/2-1,D/2,W/2+1,D/2+1);col(L,-W/2-1,-D/2,-W/2,D/2);col(L,W/2,-D/2,W/2+1,D/2);
 }
 function drawScore(){const L=LOC.city;if(!L||!L.score)return;const m=fbBoard()?{l:FB.sc[0],r:FB.sc[1]}:(typeof S!=='undefined'&&S&&S.match)||{l:0,r:0},{c,t}=L.score,x=c.getContext('2d'),W=c.width,H=c.height;
@@ -1291,7 +1292,7 @@ function stairsIn(g,up,W,H,wm,both){const n=12,sd=4.2/n,sr=H/n,x0=-W/2,t=.3,a=Ma
 /* every floor of a house (yours or a friend's): its own group, baked on its own, with its doors (floor 0), windows and stairs; flag = the inter tag ('hdoor' / 'vdoor') */
 function houseFloors(L,n,W,D,H,wm,fm,wide,flag){const hw=W/2,hd=D/2,gx=wide?6.6:4.4,fls=[];
   for(let k=0;k<n;k++){const g=new THREE.Group(),sh=new THREE.Group();g.add(sh);g.position.set(0,0,UPZ*k);const F={k,g,sh,grid:null};fls.push(F);PANE_LV=k;
-    shell({ox:L.ox,oz:L.oz+UPZ*k,cols:L.cols},sh,W,D,H,wm,fm,'#f7eef2',g,n>1?UPG:0);
+    shell({ox:L.ox,oz:L.oz+UPZ*k,cols:L.cols,id:L.id},sh,W,D,H,wm,fm,'#f7eef2',g,n>1?UPG:0);
     if(k===0){doorAt(sh,0,hd-.02,Math.PI,'#5fd4b0',false,true);doorAt(sh,gx,-hd+.02,0,'#5fd4b0',false,true);
       for(const x of wide?[-6.5,-3,1.5]:[-3,1.5])windowIn(sh,x,1.0,-hd+.02,0);
       for(const z of wide?[-3.2,2.6]:[0])windowIn(sh,hw-.02,1.0,z,-Math.PI/2,'#7fdcb5');for(const z of wide?[-3.2,2.6]:(n>1?[-3,3]:[0]))windowIn(sh,-hw+.02,1.0,z,Math.PI/2,'#7fdcb5');   /* 🪟 with stairs no west window at z 0 (run 4, item 25) */
