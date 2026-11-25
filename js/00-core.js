@@ -22,7 +22,7 @@ let GRAD=null,OL=null,OLP=null,WIN,LAMP,WATER,PANE,GLOW,CLOUD,OLC,SWIN,WINM;
    One canvas of 4 x 4 pictures and one material (one draw per room, like the plain glass before): across = the wall the window is in (its turn), down = the floor (0 to 3).
    The windows of one wall share one wide picture, each a little further along it, like one landscape seen through several windows. paneLook paints the pictures of the place you
    step into (flats, a friend's house and the houses you decorate are one room for many buildings, so it cannot be done once at the start): sky, clouds, mountains, hills, then
-   the real roads, park, field, water, trees and buildings that stand that way (the game's own lists), near ones big, far ones small, seen from higher on upper floors; soft brush
+   the real roads, park, field, water, trees and buildings that stand that way (the game's own lists; the park, the yards on the lane and the Tree Park piece by piece), near ones big, far ones small, seen from higher on upper floors; soft brush
    dabs over every shape and a glass gleam. Nothing per frame; updSky tints the material for the time of day */
 let PANE_LV=0;   /* the floor being built, where floors stand side by side (houses, the vet, the flats) */
 const PV={x:null,t:null};
@@ -30,7 +30,9 @@ function paneAtlas(){const c=document.createElement('canvas');c.width=2048;c.hei
 const paneFor=(m,x,y,z,ry,w=1.4)=>{const di=(Math.round(ry/(Math.PI/2))%4+4)%4,lv=clamp(PANE_LV+Math.round((y-1)/3.2),0,3),uw=.5*w/1.4,u0=.5+clamp((x*Math.cos(ry)-z*Math.sin(ry))*.027,-.24,.24)-uw/2,u=m.geometry.attributes.uv;
   for(let i=0;i<u.count;i++)u.setXY(i,(di+u0+u.getX(i)*uw)/4,(3-lv+.002+u.getY(i)*.996)/4);return m;};   /* this window's part of its wall's picture */
 /* what really stands in town, on the lane and at the farm: buildings [x,z,w,d,h,wall,accent,kind: 0 block, 1 shop with an awning, 2 house with a roof, 3 block with a sign], trees, ground shapes [corners, colour, white lines, grass] */
-function paneWorld(){const B=[],T=[],G=[],M=[],FN=[[-38,8.4,-24.2,8.4],[-19.8,8.4,-8.3,8.4],[-8.3,8.4,-8.3,19.4],[-8.3,24.6,-8.3,37.8],[-40.4,10,-40.4,38.6],[-38.6,40.6,-9.4,40.6]],C=LOC.city,R=(x1,z1,x2,z2)=>[[x1,z1],[x2,z1],[x2,z2],[x1,z2]],D=(cx,cz,rad)=>{const p=[];for(let i=0;i<14;i++)p.push([cx+Math.cos(i/14*TAU)*rad,cz+Math.sin(i/14*TAU)*rad]);return p;};
+function paneWorld(){const B=[],T=[],G=[],M=[],Q=[],FN=[[-38,8.4,-24.2,8.4],[-19.8,8.4,-8.3,8.4],[-8.3,8.4,-8.3,19.4],[-8.3,24.6,-8.3,37.8],[-40.4,10,-40.4,38.6],[-38.6,40.6,-9.4,40.6]],C=LOC.city,
+    bx=(x,z,w,d,h,c,y=0)=>Q.push([0,x,z,w,d,h,c,y]),rf=(x,z,w,d,h,c,y)=>Q.push([3,x,z,w,d,h,c,y]),ln=(x1,y1,z1,x2,y2,z2,wd,c)=>Q.push([1,x1,y1,z1,x2,y2,z2,wd,c]),bl=(x,y,z,r,c)=>Q.push([2,x,y,z,r,c]),   /* props: a box, a pointed roof, a pole or bar, a ball */
+    R=(x1,z1,x2,z2)=>[[x1,z1],[x2,z1],[x2,z2],[x1,z2]],D=(cx,cz,rad)=>{const p=[];for(let i=0;i<14;i++)p.push([cx+Math.cos(i/14*TAU)*rad,cz+Math.sin(i/14*TAU)*rad]);return p;};
   const PX={market:[4.6,'#ff7aa8',1],cafe:[4.2,'#5fd4b0',1],pets:[9.6,'#ffd45c',1],flowers:[4.2,'#b79cff',1],school:[7.2,'#ff7aa8',3],toys:[4.6,'#7cc8ff',1],bakery:[4.4,'#ffd45c',1],library:[6.6,'#5fa8ff',3],icecream:[4.2,'#ff9ec4',1],
     fire:[5.2,'#ffffff',3],clothes:[4.4,'#b79cff',1],salon:[4.4,'#ff9ec4',1],pizza:[4.4,'#ff6b6b',1],vet:[6.6,'#8a5fd6',1]};
   const BX=[[3.6,'#6aa9ff',2],[9.6,0,0],[12.6,0,0],[9.6,0,0],[3.6,'#ff7aa8',2],[3.6,'#5fa8ff',2],[3.6,'#ff8a6b',2],[3.6,'#9b7cf0',2],[3.6,'#ff9ec4',2],[3.6,'#5fd4b0',2],[9.6,0,0]];
@@ -45,7 +47,42 @@ function paneWorld(){const B=[],T=[],G=[],M=[],FN=[[-38,8.4,-24.2,8.4],[-19.8,8.
   G.push([R(-40.4,8.4,-8.3,40.6),'#7fd070',0,1],[D(-22,22,10),'#f6e2b8'],[R(-23.5,8.2,-20.5,14.2),'#f6e2b8'],[R(-13.8,20.5,-7.8,23.5),'#f6e2b8'],[R(-40,59,-10,78),'#79cf68',1,1],[D(69,69,8),'#b9a98f'],[D(69,69,7.5),'#8fd3f0'],[D(36.2,-36.2,2.1),'#8fd3f0']);   /* the park, its fountain square and gate paths, the football field, the lake, the duck pond (FN: the park's iron fence) */
   for(let i=1;i<MAP_FROAD.length;i++){const [ax,az]=MAP_FROAD[i-1],[bx,bz]=MAP_FROAD[i],l=Math.hypot(bx-ax,bz-az)/2.2,nx=(bz-az)/l,nz=(ax-bx)/l;G.push([[[ax+nx,az+nz],[bx+nx,bz+nz],[bx-nx,bz-nz],[ax-nx,az-nz]],'#e6d2a8']);}   /* the farm road */
   for(const c of[-50,0,50])G.push([R(c?-84:laneEnd(),c-4,84,c+4),'#8c90b4'],[R(c-4,c<0?-93:-84,c+4,84),'#8c90b4']);   /* the roads (the middle one goes on as Friends Lane) */
-  return{B,T,G,M,FN};}
+  /* 🌳 OUR park (25 Nov, the owner): every piece where buildCity, buildFountain, foodTruck, buildBoard and the Pet Show area put it, in its own colours */
+  {const S1='#ece4f6',W1='#d6f2ff';G.push([D(-22,22,4.85),S1]);bx(-22,22,9.4,9.4,.66,S1);Q.push([4,D(-22,22,4.4),'#8fd3f0',.62]);bx(-22,22,4.3,4.3,1.12,W1,.6);bx(-22,22,3.6,3.6,.45,S1,1.3);bx(-22,22,2.1,2.1,1.45,W1,1.72);bx(-22,22,1.9,1.9,.3,S1,2.9);bl(-22,3.7,22,.24,'#ff9ec4');}   /* the fountain: basin, water, two bowls with their water curtains, the pink ball */
+  for(const [x,z] of[[-24.2,8.4],[-19.8,8.4],[-8.3,19.4],[-8.3,24.6]]){bx(x,z,.5,.5,1.6,'#e9e0f7');bl(x,1.8,z,.22,'#ff9ec4');}   /* the gate posts */
+  for(const [a,b] of[[22,25],[23,26],[24,26]]){const [ax,az]=WP[a],[ex,ez]=WP[b],l=Math.hypot(ex-ax,ez-az)/.9,nx=(ez-az)/l,nz=(ax-ex)/l;G.push([[[ax+nx,az+nz],[ex+nx,ez+nz],[ex-nx,ez-nz],[ax-nx,az-nz]],'#f6e2b8']);}   /* its three sand paths */
+  T.push([-14.2,10.4,1.45,0]);bx(-17.3,10.6,2.3,.4,1.25,'#b77a4c',.8);rf(-17.3,10.6,2.7,.6,.66,'#ff8a6b',2.41);for(const s of[-1,1])ln(-17.3+s,0,10.6,-17.3+s,2.3,10.6,.15,'#9b6b4a');   /* the old oak and the ideas board */
+  {const x=TRUCK.x,z=TRUCK.z;bx(x-.5,z,5,2.2,1.9,'#ff8a6b',.5);bx(x-.5,z,5.1,2.3,.12,'#ffffff',2.4);bx(x+.35,z+1.05,2.3,.1,.95,'#7cc8ff',1.15);bx(x+.35,z+1.62,2.5,1,.1,'#ff6b6b',2.2);bx(x+.35,z+1,2.6,.1,.96,'#ff6b6b',2.5);for(const a of[-1.75,1.45])bl(x+a,.38,z+1.1,.38,'#3d2c5e');}   /* the food truck: body, roof, window, awning, sign, wheels */
+  bx(-39,31.9,1.2,1.2,1.8,'#ffd45c');ln(-39,1.8,32.5,-39,.05,35.2,.9,'#ff7aa8');   /* the slide */
+  for(const a of[-30.8,-27.2])ln(a,0,37.4,a,2.5,37.4,.12,'#7cc8ff');ln(-30.9,2.5,37.4,-27.1,2.5,37.4,.14,'#7cc8ff');for(const a of[-29.8,-28.2]){ln(a,2.45,37.4,a,.55,37.4,.05,'#3d2c5e');bx(a,37.4,.6,.3,.08,'#ff8a6b',.5);}   /* the swings */
+  {const e=[];for(let i=0;i<16;i++)e.push([-35+Math.cos(i/16*TAU)*5.46,22+Math.sin(i/16*TAU)*7.8]);G.push([e,'#f2dcae']);const sh=(C&&C.show)||{},bb=(k,c,y,h)=>{const b=sh[k];if(b)bx((b[0]+b[1])/2,(b[2]+b[3])/2,b[1]-b[0],b[3]-b[2],h||b[4]-(y||0),c,y);};
+    bb('show.stage','#b77a4c',0,.55);bb('show.stage','#2a3a8c',.55);if(sh['show.stage']){const b=sh['show.stage'];bx(b[1]+.05,22,.1,2.5,.55,'#ffd45c',2.35);for(const a of[-.8,.8])bl(b[1]+.06,1.45,22+a,.3,'#1d2866');}bb('show.podium','#2f47b0');bb('show.judges','#2f47b0');   /* the Pet Show: sand lawn, stage with its yellow banner and paws, podium, judges' table */
+    for(let i=0;i<=8;i++){const a=-Math.PI*.3+i/8*Math.PI*.6,x=-36.2+Math.cos(a)*5.2,z=22+Math.sin(a)*5.2;if(Math.abs(z-22)>=1.2){ln(x,0,z,x,.75,z,.11,'#ffd45c');if(i<8){const a2=a+Math.PI*.075,z2=22+Math.sin(a2)*5.2;if(Math.abs(z2-22)>=1.2)ln(x,.6,z,-36.2+Math.cos(a2)*5.2,.6,z2,.04,'#ff7aa8');}}}}   /* its gold posts and pink rope */
+  bx(-16.2,8.15,3.7,.14,2.2,'#fff6e8');bx(-16.2,7.6,4.1,1.7,.3,'#ffc4a3',2.2);for(const s of[-1,1])ln(-16.2+s*1.8,0,7,-16.2+s*1.8,2.25,7,.14,'#8fe3c4');   /* the bus stop by the north gate */
+  for(const b of BENCHES)if(b.loc==='city'){const t=Math.abs(Math.sin(b.ry))>.7;bx(b.x,b.z,t?.5:1.6,t?1.6:.5,.52,'#e0905e',.42);}   /* every bench in town */
+  for(const [x,z] of LAMPXZ){ln(x,0,z,x,3,z,.14,'#5a5f8c');bl(x,3.21,z,.19,'#fff1b8');}   /* every street lamp */
+  for(const b of(C&&C.beds)||[])if(!b.yard){bx(b.x,b.z,1.8,1,.22,'#9b6b4a');for(const [a,c] of[[-.55,'#ff7aa8'],[0,'#ffd45c'],[.55,'#ffffff']])bl(b.x+a,.46,b.z,.13,c);}   /* the park's flower beds */
+  /* 🌲 the Tree Park: its log fence, the platforms on their tall trees, the tower tree, the checkpoint flags */
+  if(typeof TP!=='undefined'&&TP.pl.length){for(const [a,b,c,d] of[[80,-42,92,-42],[92,-42,92,-60],[92,-60,144,-60],[144,-60,144,-31],[144,-31,80.4,-31]])FN.push([a,b,c,d,'#b98a5e']);G.push([R(92,-56.5,98.4,-34.7),'#d9b98a']);T.push([TP_TOWER[0],TP_TOWER[1],3.2,0,2.8]);
+    for(const p of TP.pl){if(p.i>=0&&!p.posts.length)T.push([p.x,p.z,(p.h+4.6)/3.1,0,2.1]);bx(p.x,p.z,p.w,p.d,.3,'#c99a66',Math.max(0,p.h-.3));if(p.cp){ln(p.x,p.h,p.z,p.x,p.h+1.75,p.z,.08,'#8f6244');bx(p.x+.3,p.z,.7,.1,.5,'#ffd45c',p.h+1.2);}}}
+  /* 🚜 the farm's windmill and its FARM arch (the barn and stables are in the buildings) */
+  for(const [k,x,z] of FARMD.p){if(k==='farm.windmill'){bx(x,z,2.6,2.6,5.2,'#c98f5e');rf(x,z,3,3,1.6,'#b8473f',5.2);for(const [a,b] of[[1,1],[1,-1]])ln(x-2.6*a,5.2-2.6*b,z,x+2.6*a,5.2+2.6*b,z,.35,'#f7efe2');}
+    else if(k==='farm.arch'){for(const s of[-1,1])ln(x,0,z+s*3.05,x,4.2,z+s*3.05,.4,'#9a6a43');bx(x,z,.3,6.6,.9,'#c98f5e',3.6);}}
+  /* 🏡 the yards on Friends Lane: fences, garden beds with what grows, the shed, the big pets' homes, training gear, from the save (yours) or the friend's presence (theirs) */
+  for(const lp of(C&&C.lane)||[]){const o=LANE.own[lp.j];if(!o)continue;const me=o.k===laneMe(),yd=me?null:/^[1-3][1-3][a-o]{0,15}[TPD]{0,3}$/.test(o.yd||'')?o.yd:'11',gl=me?yLv('garden'):+yd[0],pl=me?yLv('pet'):+yd[1],
+      homes=me?(S.yard&&S.yard.home)||[]:[...yd.replace(/[^TPD]/g,'')].map(c=>BHOME_IDS[BHOME_L.indexOf(c)]),ng=me?((S.yard&&S.yard.gear)||[]).length:yd.slice(2).replace(/[TPD]/g,'').length,grow={};
+    if(me)(S.garden||[]).forEach((p,i)=>{if(p&&p.seed)grow[i]=1;});else for(const row of(o.gd||'').split(';'))if(row)grow[+row.split(',')[0]]=1;
+    const P=(x,z)=>lotPt(lp.j,x,z),back=yardBack(gl,pl),GC=['#ffffff','#ffd6e0','#fff1b8'][gl-1],PC=['#ffffff','#c9f2e3','#c9f2e3'][pl-1],fn=(a,b,c,d,col)=>FN.push([...P(a,b),...P(c,d),col]),gq=(x1,z1,x2,z2,c)=>G.push([[P(x1,z1),P(x2,z1),P(x2,z2),P(x1,z2)],c,0,1]);
+    gq(-22.9,Math.min(back,-24.55),-10.6,-18.55,'#a2e48a');for(const [a,b,c,d] of[[-21.6,-8.2,-17.9,-8.2],[-16.1,-8.2,-12.4,-8.2],[-21.6,-8.2,-21.6,-11.3],[-12.4,-8.2,-12.4,-11.3],[-23,-18.5,-21.6,-18.5]])fn(a,b,c,d,'#ffffff');
+    if(pl>=3){fn(-23,-18.5,-23,-29,GC);fn(-23,-29,-13.3,-29,GC);fn(-11.5,-29,-10.5,-29,PC);fn(-10.5,-29,-10.5,-18.5,PC);fn(-23,-29,-23,-35);fn(-23,-35,-10.5,-35);fn(-10.5,-35,-10.5,-29);gq(-22.95,-34.95,-10.55,-29.05,'#9fd98a');}
+    else{fn(-23,-18.5,-23,back,GC);fn(-23,back,-17.2,back,GC);fn(-17.2,back,-10.5,back,PC);fn(-10.5,back,-10.5,-18.5,PC);}
+    for(const [i,x,z] of YARD_PLOTS.concat(YARD_BEDS2)){if(i>=36&&gl<(i<39?2:3))continue;const [a,b]=P(x,z),h=BED_TOP[gl-1];bx(a,b,1.8,1.2,h,['#b07a52','#e0905e','#d9645a'][gl-1]);Q.push([4,[[a-.8,b-.5],[a+.8,b-.5],[a+.8,b+.5],[a-.8,b+.5]],'#8a5a3c',h]);if(grow[i])for(const k of[-.55,0,.55])bl(a+k,h+.14,b,.14,'#5fbf74');}
+    {const [a,b]=P(-13.4,-23.3);bx(a,b,1.6,1.4,2,'#ffd6e0');rf(a,b,1.9,1.8,.75,'#ff7aa8',2);const [c,d]=P(-13.75,-22.56);bx(c,d,.7,.06,1.6,'#5fd4b0');}   /* the seed shed and its door */
+    for(const [x,z] of[[-19.8,-10.6],[-14.2,-10.6]]){const [a,b]=P(x,z);bx(a,b,3,.9,.22,'#9b6b4a');for(const [k,c] of[[-1,'#ff7aa8'],[0,'#ffd45c'],[1,'#ffffff']])bl(a+k,.46,b,.13,c);}   /* the two flower beds by the door */
+    for(const id of homes){const H=BHOME[id];if(!H)continue;const [a,b]=P(H.x,H.z);if(id==='tree'){ln(a,0,b,a,6.6,b,1.1,'#7a4a32');for(const [dx,dy,r] of[[0,7.6,2.7],[-2,6.8,1.7],[2.1,6.9,1.8]])bl(a+dx,dy,b,r,'#2e8b3d');}
+      else if(id==='pond'){G.push([D(a,b,2),'#b8b4c4'],[D(a,b,1.6),'#8fd3f0']);}else{bx(a,b,2.6,2.2,1,'#a7a3b5');bl(a,1,b,1.3,'#a7a3b5');bl(a,.5,b+(lp.s<0?1:-1)*1.1,.5,'#3d3550');}}   /* the climbing tree, the pond, the cave den */
+    for(let k=0;k<Math.min(ng,3);k++){const sl=GEAR_SLOTS[k],[a,b]=P(sl.x,sl.z);for(const s of[-1,1])ln(a+s*sl.w*.35,0,b,a+s*sl.w*.35,.9,b,.1,'#7cc8ff');ln(a-sl.w*.35,.7,b,a+sl.w*.35,.7,b,.1,'#ffd45c');}}   /* training gear: one small frame per piece (not each piece's own shape) */
+  return{B,T,G,M,FN,Q};}
 /* one wall's picture: seen from (vx,vz), looking along (ox,oz) with (rx,rz) to the right, from floor lv */
 function paneView(x,ci,lv,vx,vz,ox,oz,rx,rz,W,own){const N=256,F=183,e=1.6+3.2*lv,hy=150+14*lv,r=seeded(41+ci*17+Math.round(vx)*7+Math.round(vz)*13),sn=WX.cover||0,gc=c=>sn?mixC(c,'#eef4f8',sn*.85):c;x.save();   /* (gc: the ground under snow) */
   x.translate(ci*512,lv*N);x.beginPath();x.rect(0,0,512,N);x.clip();
@@ -62,14 +99,18 @@ function paneView(x,ci,lv,vx,vz,ox,oz,rx,rz,W,own){const N=256,F=183,e=1.6+3.2*l
   for(const [pts,col,line,grass] of W.G){const q=pts.map(p=>pr(p[0],p[1])),o=[];for(let i=0;i<q.length;i++){const a=q[i],b=q[(i+1)%q.length];if(a[1]>=1.5)o.push(a);if((a[1]>=1.5)!==(b[1]>=1.5)){const t=(1.5-a[1])/(b[1]-a[1]);o.push([a[0]+(b[0]-a[0])*t,1.5]);}}
     if(o.length<3)continue;x.fillStyle=grass?gc(col):col;x.beginPath();for(const [l,d] of o)x.lineTo(256+F*l/d,Y(0,d));x.closePath();x.fill();if(line){x.strokeStyle='#ffffff';x.lineWidth=1.5;x.stroke();}}
   const th=[];let ti=0;   /* trees (in the season's colours) and buildings, the far ones first */
-  for(const [tx,tz,ts,pine] of W.T){const tc=pine?PINE_COLS[ti++%PINE_COLS.length]:TREE_COLS[ti++%TREE_COLS.length],[l,d]=pr(tx,tz);if(d<7||d>150)continue;const s=F/d,cx=256+l*s;if(cx<-40||cx>552)continue;th.push([d,()=>{const yb=Y(0,d),h=ts*s;x.fillStyle='#8a5a3c';x.fillRect(cx-.18*h,yb-2.4*h,.36*h,2.4*h);
+  for(const [tx,tz,ts,pine,cr] of W.T){const tc=pine?PINE_COLS[ti++%PINE_COLS.length]:TREE_COLS[ti++%TREE_COLS.length],[l,d]=pr(tx,tz);if(d<7||d>150)continue;const s=F/d,cx=256+l*s;if(cx<-40||cx>552)continue;th.push([d,()=>{const yb=Y(0,d),h=ts*s;x.fillStyle='#8a5a3c';x.fillRect(cx-(cr?.45*s:.18*h),yb-2.4*h,cr?.9*s:.36*h,2.4*h);
       if(pine){x.fillStyle=tc;for(const [w,a,b] of[[1.5,.8,2.7],[1.15,1.8,3.6],[.8,2.7,4.4]]){x.beginPath();x.moveTo(cx-w*h,yb-a*h);x.lineTo(cx,yb-b*h);x.lineTo(cx+w*h,yb-a*h);x.fill();}dab(cx,yb-2.6*h,.5*h,h,mixC(tc,'#ffffff',.25),clamp(h/2|0,1,6),.4,.4*h);}
-      else blob(cx,yb-3.1*h,1.45*h,tc,mixC(tc,'#ffffff',.3),mixC(tc,'#3d2c5e',.22));}]);}
-  for(const [x1,z1,x2,z2] of W.FN){let a=pr(x1,z1),b=pr(x2,z2);if(a[1]<b[1])[a,b]=[b,a];if(a[1]<3||b[1]>150)continue;if(b[1]<3)b=[b[0]+(a[0]-b[0])*(3-b[1])/(a[1]-b[1]),3];
-    th.push([b[1],()=>{x.strokeStyle='#3c6b58';const n=Math.ceil(Math.hypot(a[0]-b[0],a[1]-b[1])/1.4);for(let i=0;i<=n;i++){const l=b[0]+(a[0]-b[0])*i/n,d=b[1]+(a[1]-b[1])*i/n,X=256+F*l/d;x.lineWidth=clamp(F/d*.07,.5,3);x.beginPath();x.moveTo(X,Y(0,d));x.lineTo(X,Y(1.2,d));x.stroke();}
+      else blob(cx,yb-3.1*h,cr?cr*s:1.45*h,tc,mixC(tc,'#ffffff',.3),mixC(tc,'#3d2c5e',.22));}]);}
+  for(const [x1,z1,x2,z2,fc] of W.FN){let a=pr(x1,z1),b=pr(x2,z2);if(a[1]<b[1])[a,b]=[b,a];if(a[1]<3||b[1]>150)continue;if(b[1]<3)b=[b[0]+(a[0]-b[0])*(3-b[1])/(a[1]-b[1]),3];
+    th.push([b[1],()=>{x.strokeStyle=fc||'#3c6b58';const n=Math.ceil(Math.hypot(a[0]-b[0],a[1]-b[1])/1.4);for(let i=0;i<=n;i++){const l=b[0]+(a[0]-b[0])*i/n,d=b[1]+(a[1]-b[1])*i/n,X=256+F*l/d;x.lineWidth=clamp(F/d*.07,.5,3);x.beginPath();x.moveTo(X,Y(0,d));x.lineTo(X,Y(1.2,d));x.stroke();}
       for(const h of[.2,1.05]){x.lineWidth=clamp(F/b[1]*.06,.5,2.5);x.beginPath();x.moveTo(256+F*b[0]/b[1],Y(h,b[1]));x.lineTo(256+F*a[0]/a[1],Y(h,a[1]));x.stroke();}}]);}
-  {const [l,d]=pr(-22,22);if(d>4&&d<120){const s=F/d,cx=256+l*s;th.push([d,()=>{x.fillStyle='#e9e0f7';x.fillRect(cx-2.6*s,Y(.7,d),5.2*s,.7*s);x.fillStyle='#8fd3f0';x.fillRect(cx-2.3*s,Y(.75,d),4.6*s,.2*s);x.fillStyle='#e9e0f7';x.fillRect(cx-.3*s,Y(1.9,d),.6*s,1.2*s);
-      blob(cx,Y(2.5,d),.8*s,'#dff3ff','#ffffff','#bfe6f5');}]);}}   /* the park's fountain */
+  for(const q of W.Q){const k=q[0];
+    if(k===1){const a=pr(q[1],q[3]),b=pr(q[4],q[6]),d=Math.min(a[1],b[1]);if(d<1.2||d>110)continue;th.push([d,()=>{x.strokeStyle=q[8];x.lineWidth=Math.max(.7,q[7]*F/d);x.beginPath();x.moveTo(256+F*a[0]/a[1],Y(q[2],a[1]));x.lineTo(256+F*b[0]/b[1],Y(q[5],b[1]));x.stroke();}]);}
+    else if(k===2){const [l,d]=pr(q[1],q[3]);if(d<1.2||d>110)continue;th.push([d-.02,()=>{x.fillStyle=q[5];x.beginPath();x.arc(256+F*l/d,Y(q[2],d),Math.max(.8,q[4]*F/d),0,TAU);x.fill();}]);}
+    else if(k===4){const p=q[1].map(v=>pr(v[0],v[1]));if(p.some(v=>v[1]<1.5))continue;th.push([p.reduce((s,v)=>s+v[1],0)/p.length,()=>{x.fillStyle=q[2];x.beginPath();for(const [l,d] of p)x.lineTo(256+F*l/d,Y(q[3],d));x.fill();}]);}
+    else{const [l,dc]=pr(q[1],q[2]),d=dc-(Math.abs(ox)*q[3]+Math.abs(oz)*q[4])/2,er=(Math.abs(rx)*q[3]+Math.abs(rz)*q[4])/2;if(d<1.2||d>150)continue;const s=F/d,x0=256+(l-er)*s,w=2*er*s;if(x0>530||x0+w<-18||w<.7)continue;
+      th.push([d,()=>{const yb=Y(q[7],d),yt=Y(q[7]+q[5],d);x.fillStyle=q[6];x.strokeStyle='rgba(61,44,94,.3)';x.lineWidth=.8;x.beginPath();if(k===3){x.moveTo(x0,yb);x.lineTo(x0+w/2,yt);x.lineTo(x0+w,yb);}else x.rect(x0,yt,w,yb-yt);x.closePath();x.fill();if(w>5)x.stroke();if(w>12)dab(x0+w/2,(yt+yb)/2,w/2,(yb-yt)/2,'#ffffff',3,.2,clamp(w/9,2,10));}]);}}
   for(const b of W.B){if(b===own)continue;const [l,dc]=pr(b[0],b[1]),eo=(Math.abs(ox)*b[2]+Math.abs(oz)*b[3])/2,er=(Math.abs(rx)*b[2]+Math.abs(rz)*b[3])/2;if(dc<1.5||dc-eo>150)continue;const d=Math.max(dc-eo,1.5),s=F/d,x0=256+(l-er)*s,w=2*er*s;if(x0>542||x0+w<-30)continue;
     th.push([d,()=>{const [,,,,h,c,a,k]=b,yb=Y(0,d),yt=Y(h,d),H=m=>Y(m,d),mid=x0+w/2,wm=2*er,ink='rgba(61,44,94,.3)';
       const win=(cx,h0,ww,hh)=>{x.fillStyle='#ffffff';x.fillRect(cx-ww*s/2-1,H(h0+hh)-1,ww*s+2,hh*s+2);x.fillStyle='#9fd4f2';x.fillRect(cx-ww*s/2,H(h0+hh),ww*s,hh*s);};

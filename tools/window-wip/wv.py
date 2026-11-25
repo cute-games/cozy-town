@@ -25,7 +25,14 @@ HOOK = r"""()=>{window.__pv=[];if(typeof paneLook!=='function')return 'old';cons
     const r={};for(const k in n)r[k]=n[k].size;return r;};
   window.__case=(id,pre)=>{__pv.length=0;if(pre)pre();setLoc('city');__pv.length=0;setLoc(id);const cnt=__cells(),A=mapMe();
     return {id,door:[Math.round(A.x*10)/10,Math.round(A.z*10)/10],ms:Math.round(__pvms*10)/10,own:__pv[0]&&__pv[0].own?__names(__pv[0].W)[__pv[0].W.B.indexOf(__pv[0].own)]:null,
-      cells:__pv.map(c=>({ci:c.ci,lv:c.lv,n:cnt[c.ci+4*c.lv]||0,v:[Math.round(c.vx*10)/10,Math.round(c.vz*10)/10],dir:c.oz<0?'north':c.oz>0?'south':c.ox>0?'east':'west',d:__desc(c)}))};};
+      cells:__pv.map(c=>({farm:__farm(c),ci:c.ci,lv:c.lv,n:cnt[c.ci+4*c.lv]||0,v:[Math.round(c.vx*10)/10,Math.round(c.vz*10)/10],dir:c.oz<0?'north':c.oz>0?'south':c.ox>0?'east':'west',d:__desc(c)}))};};
+  window.__farm=(c)=>{const {vx,vz,ox,oz,W,own,lv}=c,rx=-oz,rz=ox,e=1.6+3.2*lv,pr=(x,z)=>[(x-vx)*rx+(z-vz)*rz,(x-vx)*ox+(z-vz)*oz],out=[];
+    const rects=W.B.filter(b=>b!==own).map(b=>{const [l,dc]=pr(b[0],b[1]),eo=(Math.abs(ox)*b[2]+Math.abs(oz)*b[3])/2,er=(Math.abs(rx)*b[2]+Math.abs(rz)*b[3])/2;if(dc<1.5)return null;const d=Math.max(dc-eo,1.5),s=183/d;return{b,d,x0:256+(l-er)*s,x1:256+(l+er)*s,yt:183*(e-b[4])/d,yb:183*e/d};}).filter(Boolean);
+    const P=[];for(const b of W.B)if(b[5]==='#e0675d')P.push(['barn',b[0],b[1],6,7.9,b]);else if(b[5]==='#c98f5e'&&b[4]===3.4)P.push(['stables',b[0],b[1],3.4,9,b]);
+    for(const [k,x,z] of FARMD.p){if(k==='farm.windmill')P.push(['windmill',x,z,7.8,2.6]);if(k==='farm.arch')P.push(['FARM arch',x,z,4.5,6.6]);}
+    for(const [n,x,z,h,w,b] of P){const [l,d]=pr(x,z);if(d<5||d>150)continue;const cx=256+183*l/d,ty=183*(e-h)/d+183*.5/d;if(cx<0||cx>512)continue;const hid=rects.find(r=>r.b!==b&&r.d<d&&cx>=r.x0&&cx<=r.x1&&ty>=r.yt&&ty<=r.yb);
+      out.push(n+' '+Math.round(d)+' m, '+(w*183/d).toFixed(0)+' px wide'+(hid?' HIDDEN behind a building':''));}
+    return out;};
   return 'ok';}"""
 CASES = [('salon', 'Hair Salon', None), ('home', 'My House (Friends Lane, your lot)', None), ('market', 'Market', None), ('flowers', 'Flower Shop', None), ('cafe', 'Café', None), ('clothes', 'Clothes Shop', None),
          ('pets', 'Pet Shop', None), ('vet', 'Vet Station', None)]
@@ -38,7 +45,7 @@ for h, nm in (('n1', 'Pink house'), ('n2', 'Green house'), ('n3', 'Yellow house'
 async def list_mode(g):
     hk = await g.ev(HOOK); print('hook', hk)
     subj = await g.ev("()=>Object.keys(SUBJ)")
-    lines = []; total = 0; views = 0; mss = []; rows = []
+    lines = []; total = 0; views = 0; mss = []; rows = []; farm = []
     cases = []
     for c in CASES:
         if c[0] == 'cl_@SUBJ': cases += [('cl_' + s, 'School classroom (%s)' % s, None) for s in subj]
@@ -51,12 +58,16 @@ async def list_mode(g):
         for c in sorted(r['cells'], key=lambda c: (c['lv'], c['ci'])):
             total += c['n']; views += 1; d = c['d']
             what = '; '.join(d['b']) + (f" (+{d['more']} more behind)" if d['more'] else '')
+            if c['farm']: farm.append(f"{name}, floor {c['lv']}, faces {c['dir']}: " + '; '.join(c['farm']))
             lines.append(f"   floor {c['lv']}  faces {c['dir']:5}  {c['n']} window(s)  seen from x {c['v'][0]} z {c['v'][1]}:  buildings: {what or 'none'} | ground: {', '.join(d['g']) or 'grass'} | trees {d['trees']}, mountains {d['mtn']}")
     covered = set(c[0] for c in cases)
     other = []
     for k in allin:
         if k in covered: continue
         n = await g.ev("(id)=>{setLoc(id);const c=__cells();let n=0;for(const k in c)n+=c[k];return n;}", k); other.append((k, n))
+    lines.append('')
+    lines.append('FARM in view (distance, size on the 512 px wide picture; trees in the way are not counted):')
+    lines += ['   ' + f for f in farm]
     lines.append('')
     lines.append('Other inside places and their painted windows (0 = the room has none): ' + ', '.join(f'{k} {n}' for k, n in other))
     lines.append(f'TOTAL: {total} windows in {views} wall views over {len(cases)} cases; paint time per place: min {min(mss)} ms, max {max(mss)} ms, mean {sum(mss)/len(mss):.1f} ms (headless Chromium, this machine)')
