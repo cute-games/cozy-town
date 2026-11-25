@@ -1967,22 +1967,27 @@ function setLamp(rec){rec.g.traverse(o=>{if(o.userData.shade)o.material.emissive
    (one shared picture, almost free to draw), and the 4 lamps nearest you also get a real light that lights you, pets and furniture.
    The 4 real lights always exist indoors and are only moved and dimmed, so switching a lamp never makes the game rebuild its shaders.
    Brighter in the evening and at night; a room that has lamps gets a little darker at night (on or off), so switching them on lights it up. Nothing is saved: on/off was saved before. */
-let LPOOL_T=null;const LITS=[],LAMPS_N=4,_lv=new THREE.Vector3();
+let LPOOL_T=null;const LITS=[],LAMPS_N=4,_lv=new THREE.Vector3();   /* (a sprite halo glows round every lit shade too) */
 function lampPool(g,on){let m=g.userData.pool;
   if(!m){if(!LPOOL_T){const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d'),gr=x.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.45,'rgba(255,255,255,.45)');gr.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gr;x.fillRect(0,0,64,64);LPOOL_T=new THREE.CanvasTexture(c);}
     let sh=null;g.traverse(o=>{if(!sh&&o.userData.shade)sh=o;});if(!sh)return;
     const col=new THREE.Color(sh.material.map?'#d9e0ff':sh.material.color.getHex());
     m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({map:LPOOL_T,color:col,transparent:true,depthWrite:false,opacity:.3}));
-    m.rotation.x=-Math.PI/2;m.position.y=.025;m.scale.setScalar(3.4);m.renderOrder=2;m.raycast=()=>{};g.add(m);g.userData.pool=m;g.userData.shadeM=sh;g.userData.lcol=col;}
-  m.visible=on;g.userData.lampOn=on;}
+    m.rotation.x=-Math.PI/2;m.position.y=.025;m.scale.setScalar(3.4);m.renderOrder=2;m.raycast=()=>{};g.add(m);g.userData.pool=m;g.userData.shadeM=sh;g.userData.lcol=col;
+    const h=new THREE.Sprite(new THREE.SpriteMaterial({map:LPOOL_T,color:col,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,opacity:.5}));h.raycast=()=>{};sh.getWorldPosition(_lv);g.worldToLocal(_lv);h.position.copy(_lv);h.scale.setScalar(1.1);g.add(h);g.userData.halo=h;}
+  m.visible=on;g.userData.halo.visible=on;g.userData.lampOn=on;}
 function lampTick(){
   if(!LITS.length)for(let i=0;i<LAMPS_N;i++){const l=new THREE.PointLight('#ffffff',0,4.5,2);l.visible=false;scene.add(l);LITS.push(l);}
   const inn=!!CUR&&CUR.type!=='out'&&!!CUR.items;for(const l of LITS)l.visible=inn;if(!inn)return;
   const nf=nightF(S?S.time:clockNow().time),k=.45+.55*nf,fl=CUR.fls&&CUR.fls.length>1?flOf(CUR,P.z):0,on=[];let any=0;
-  for(const g of CUR.items.children)if(g.userData.pool&&++any&&g.userData.lampOn&&(g.userData.fl|0)===fl){g.userData.pool.material.opacity=.14+.3*nf;g.userData.shadeM.getWorldPosition(_lv);g.userData.ld=(_lv.x-P.x)**2+(_lv.z-P.z)**2;g.userData.lp=_lv.clone();on.push(g);}
+  for(const g of CUR.items.children)if(g.userData.pool&&++any&&g.userData.lampOn&&(g.userData.fl|0)===fl){g.userData.pool.material.opacity=.14+.3*nf;g.userData.pool.scale.setScalar(3.4+1.4*nf);g.userData.halo.material.opacity=.2+.6*nf;g.userData.shadeM.getWorldPosition(_lv);g.userData.ld=(_lv.x-P.x)**2+(_lv.z-P.z)**2;g.userData.lp=_lv.clone();on.push(g);}
   on.sort((a,b)=>a.userData.ld-b.userData.ld);
-  for(let i=0;i<LAMPS_N;i++){const l=LITS[i],g=on[i];if(!g){l.intensity=0;continue;}l.position.copy(g.userData.lp);l.color.copy(g.userData.lcol);l.intensity=.8*k;}
-  if(any&&nf>0){hemi.intensity*=1-.3*nf;sun.intensity*=1-.35*nf;}}
+  for(let i=0;i<LAMPS_N;i++){const l=LITS[i],g=on[i];if(!g){l.intensity=0;continue;}l.position.copy(g.userData.lp);l.color.copy(g.userData.lcol);l.intensity=1.1*k;}
+  if(any&&nf>0){hemi.intensity*=1-.55*nf;sun.intensity*=1-.35*nf;}
+  /* 🌗 lamp shadows for free: at night the room's one shadow light (the sun's, already there) comes from the nearest lamp, in its colour,
+     so chairs, pets and you throw shadows away from the lamp. No extra shadow pictures are drawn. */
+  const g0=on[0];if(g0&&nf>0){_lv.set(g0.userData.lp.x-P.x,0,g0.userData.lp.z-P.z);const d=_lv.length();if(d>.05)_lv.multiplyScalar(1/d);_lv.y=Math.max(.6,1.4-d*.12);_lv.normalize();
+    SUND.lerp(_lv,nf).normalize();sun.color.lerp(g0.userData.lcol,.55*nf);sun.intensity=lerp(sun.intensity,.55,nf);}}
 function rebuildHome(){for(const u of [...HOME_ITEMS.keys()])removeHomeItem(u);for(const it of S.home.items)addHomeItem(it);WALL_M.color.set(S.home.wall);setFloor(S.home.floor);}
 /* ---- the big house: Decorating level 10 + BIG_PRICE coins (a big dream: about a week of work) ---- */
 const BIG_PRICE=2500;
