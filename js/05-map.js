@@ -24,7 +24,7 @@ const MAP_AT={park:[-33.4,14.6],beach:[91,0]};   /* where a place's badge sits w
 const MAP_MQ=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
 function mapDark(){const t=document.documentElement.getAttribute('data-theme');return t==='dark'||(t!=='light'&&!!(MAP_MQ&&MAP_MQ.matches));}
 function mixC(a,b,t){const p=s=>[1,3,5].map(i=>parseInt(s.slice(i,i+2),16)),A=p(a),B=p(b);return'#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('');}
-const mapB=()=>({x1:Math.min(laneEnd()-8,-214),x2:110,z1:-168,z2:92});   /* (🐴 stage 6: the farm, the trail and the jump field are on the map) */   /* how far the map moves: the town, all of Friends Lane, the beach sign */
+const mapB=()=>({x1:Math.min(laneEnd()-8,-214),x2:146,z1:-168,z2:92});   /* (🌲 x2 110 -> 146, 25 Nov 2026: the Tree Park is in town, its clearing reaches x 144) */   /* (🐴 stage 6: the farm, the trail and the jump field are on the map) */   /* how far the map moves: the town, all of Friends Lane, the beach sign */
 /* 🐴 the farm's places on the map (24 Nov): a badge and a name each, tap one (or pick it in the list) for the way there; x,z = the badge, door = where you walk to */
 const MAP_FARM=[{id:'farm',n:'Farm',i:'🚜',x:-108,z:-103,door:[-92,-102.6]},{id:'stables',n:'Stables',i:'🐴',x:-118,z:-124.5,door:[-117,-116.4]},
   {id:'jumps',n:'Jump field',i:'🏇',x:-185,z:-100,door:[-169.5,-97.5]},{id:'trail',n:'Horse trail',i:'🐎',x:-101,z:-152.4,door:[-101,-152.4]}];
