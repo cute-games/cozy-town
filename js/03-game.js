@@ -1122,7 +1122,7 @@ let NGLOW=null,CARGLOW=null;const LAMPXZ=[];
 function glowMat(){if(NGLOW)return NGLOW;const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d'),gr=x.createRadialGradient(32,32,0,32,32,32);
   gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.3,'rgba(255,255,255,.45)');gr.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gr;x.fillRect(0,0,64,64);
   NGLOW=new THREE.ShaderMaterial({uniforms:{map:{value:new THREE.CanvasTexture(c)},op:{value:0}},transparent:true,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,
-    vertexShader:'attribute vec2 cor;attribute vec3 tint;varying vec2 vU;varying vec3 vC;void main(){vU=uv;vC=tint;vec4 p=modelViewMatrix*vec4(position,1.);p.xy+=cor;p.z+=length(cor)*.7;gl_Position=projectionMatrix*p;}',
+    vertexShader:'attribute vec2 cor;attribute vec3 tint;varying vec2 vU;varying vec3 vC;void main(){vU=uv;vC=tint;vec4 p=modelViewMatrix*vec4(position,1.);p.xyz-=normalize(p.xyz)*min(length(cor)*.7,length(p.xyz)*.5);p.xy+=cor;gl_Position=projectionMatrix*p;}',   /* 💡 street lamp glows sat beside their lamps, more so near the screen edges (owner, 25 Nov): the glow now moves toward you along the line to your eye, so it stays on the lamp */
     fragmentShader:'uniform sampler2D map;uniform float op;varying vec2 vU;varying vec3 vC;void main(){gl_FragColor=vec4(vC*texture2D(map,vU).a*op,1.);}'});
   NGLOW.visible=false;return NGLOW;}
 /* list of glows: [x,y,z,size,tint] always turns to the camera, [x,y,z,w,d,tint] lies flat on the ground */
