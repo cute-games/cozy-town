@@ -139,7 +139,7 @@ function updSky(){
   if(NGLOW){NGLOW.uniforms.op.value=nf;NGLOW.visible=out&&nf>.01;}
   skyArc(sunAng(h),SKYP.pk,SUN_T);skyArc(sunAng(h)-Math.PI,SKYP.mpk,MOON_T);const es=SUN_T.y,em=MOON_T.y,ov=out?WX.ov:0;
   {const so=sstep(-.04,-.2,es)*(1-(out?WX.sky:0));stars.material.opacity=so;stars.visible=out&&so>.01;}   /* (run 4 finish: no stars through a grey rainy sky; sky update: they come out as the sun goes 2° to 12° below the horizon) */
-  PANE.color.copy(skyU.bot.value).lerp(_c2.set('#ffffff'),.25);
+  PANE.color.set('#ffffff').lerp(skyU.bot.value,.25+.55*nf).lerp(_c2.set('#b9bfcc'),.5*(WX.sky||0)).lerp(_c3.set('#2a3463'),.6*nf);   /* 🖼️ the painted window views: warm at sunset, dark blue at night (the night sky's own colour was still too bright behind the glass), greyer in grey weather */
   if(out){const hal=HOL.cur==='halloween'?nf:0;if(hal>0){skyU.top.value.lerp(_c2.set('#3b1d5e'),hal*.55);skyU.bot.value.lerp(_c2.set('#5b2a7a'),hal*.5);FOG.color.copy(skyU.bot.value);}FOG.near=lerp(60,34,hal);FOG.far=lerp(340,230,hal);
     const gk=WX.sky;if(gk>0){skyU.top.value.lerp(wxCol(WX_SKY,0,_c2).lerp(_c1.set('#181b28'),nf),gk);skyU.bot.value.lerp(wxCol(WX_SKY,1,_c2).lerp(_c1.set('#2b2f42'),nf),gk);FOG.color.copy(skyU.bot.value);FOG.near*=1-.35*gk;FOG.far*=1-.3*gk;}}   /* 🎃 Halloween nights: a purple sky and closer fog; 🌧️ grey weather: a proper grey sky, never blue under rain (run 4, item 2) */
   {const gk=out?WX.sky:0,U=CLOUD.uniforms,warm=sstep(-.04,.04,es)*(1-sstep(.1,.4,es))*(1-gk);U.top.value.set('#ffffff').lerp(wxCol(WX_CLD,0,_c2),gk).lerp(_c2.set('#ffe2c8'),.5*warm).lerp(_c1.set('#9aa1c8').lerp(_c3.set('#3c4152'),gk),nf);

@@ -1864,7 +1864,7 @@ function buildAptFloor(f){const W=19,D=4.4,H=3,hx=W/2,hz=D/2,C=FLOOR_C[f],L=make
     box(sh,4.92,.07,.08,'#ffffff',7.55,.95+1.5,-.78,{rz:Math.atan2(3,3.9),center:true,ol:.01});
     plate(sh,`⬆️ Floor ${f+1}`,'#ffffff','#3d2c5e',1.0,.38,5.25,2.25,-1.475,-Math.PI/2,true);   /* low enough to show under the ceiling sign from the door */
     inter(L,{x:5.0,z:-1.4,r:1.5,icon:'⬆️',label:'Go up to floor '+(f+1),act:()=>climb(f,1)});}
-  else{windowAt(sh,hx-.02,1.0,-1.475,-Math.PI/2);const pl=buildFurn('plant');pl.position.set(8.8,0,-1.6);sh.add(pl);const bn=buildFurn('sofa','#b79cff');bn.position.set(7.2,0,-1.75);bn.scale.setScalar(.8);sh.add(bn);}
+  else{windowAt(sh,hx-.02,1.0,-1.475,-Math.PI/2,'#ffffff',1,1.25,{view:1});const pl=buildFurn('plant');pl.position.set(8.8,0,-1.6);sh.add(pl);const bn=buildFurn('sofa','#b79cff');bn.position.set(7.2,0,-1.75);bn.scale.setScalar(.8);sh.add(bn);}
   /* stairs going down (south side) */
   if(f>1){shaftAt(sh,3.9,3.2,1.45,7.55,-1.6,1.475,swm,'#8f6b4c',0);
     for(let i=0;i<12;i++)box(sh,.325,3-(i+1)*.25,1.45,wood,5.6+i*.325+.1625,-3,1.475,{ol:.012});
@@ -1876,7 +1876,7 @@ function buildAptFloor(f){const W=19,D=4.4,H=3,hx=W/2,hz=D/2,C=FLOOR_C[f],L=make
   col(L,5.6,-hz,hx,-.75);col(L,5.6,.75,hx,hz);
   /* way out (ground floor) or a window (upper floors) */
   if(f===1){doorAt(sh,-hx,0,Math.PI/2,null,true,true);inter(L,{x:-8.6,z:0,r:1.7,icon:'🚪',label:'Go outside',act:()=>exitApt()});}
-  else{windowAt(sh,-hx+.02,1.0,0,Math.PI/2);const pl=buildFurn('plant');pl.position.set(-8.9,0,1.6);sh.add(pl);}
+  else{windowAt(sh,-hx+.02,1.0,0,Math.PI/2,'#ffffff',1,1.25,{view:1});const pl=buildFurn('plant');pl.position.set(-8.9,0,1.6);sh.add(pl);}
 }
 function buildApts(){for(let f=1;f<=3;f++)buildAptFloor(f);}
 function buildPizzeria(){const {L,sh,pr}=room('pizza',1600,'#fff0e0','pizza');
@@ -1916,12 +1916,16 @@ function psSupport(x,z,c){let h=-1;const inM=Math.abs(x)<PSH.VX&&z>PSH.VZ0&&z<PS
   return h<c-.45?null:h;}
 const psFl=c=>c>PSH.F[2]-.6?2:c>PSH.F[1]-.6?1:0;   /* the floor a height is on */
 function buildPetShop(){
-  const L=makeLoc('pets','in',500,0,[-6.8,-4.8,6.88,4.94]);const W=14,D=10,H=9.82,F=PSH.F;L.W=W/2;L.D=D/2;L.items=new THREE.Group();scene.add(L.items);L.psh=1;
+  const L=makeLoc('pets','in',500,0,[-6.8,-4.8,6.88,4.94]);const W=14,D=10,H=11.3,F=PSH.F;L.W=W/2;L.D=D/2;L.items=new THREE.Group();scene.add(L.items);L.psh=1;
   const g=new THREE.Group(),pr=new THREE.Group();g.position.y=-.08;L.g.add(g,pr);const room=packBuild('shop.room').root;g.add(room);
+  /* (24 Nov, owner: "the monkey goes inside the ceiling") the top floor is 1.48 m taller: the book's back and left walls stretched up to the new ceiling at H.
+     Its flat window panes, their sills and its 'Big pets' board come out: the game's windows with the painted view and one board go in their place */
+  {const R=PACKM.o['shop.room'].n[2],kill=[];R.forEach((nd,i)=>{const o=room.children[i];if(nd[0]===0&&[447,448,449,450].includes(nd[1])){o.scale.y=(H+.08)/9.9;o.position.y=(H+.08)/2;}
+    else if((nd[0]===0&&[452,453,454].includes(nd[1]))||(nd[0]===2&&nd[2][0]==='Big pets'))kill.push(o);});for(const o of kill)room.remove(o);}
   /* the right and front walls, the door, the ceiling (the book's room is a cut-away with low walls there) */
   const wm=mat('#e6f8f0');box(pr,.3,H,D+.6,null,W/2+.15,0,0,{mat:wm,ol:false});box(pr,W+.6,H,.3,null,0,0,D/2+.15,{mat:wm,ol:false});
   {const ce=new THREE.Mesh(new THREE.PlaneGeometry(W+.4,D+.4),new THREE.MeshBasicMaterial({color:'#e2f1eb'}));ce.rotation.x=Math.PI/2;ce.position.y=H;ce.userData.keep=1;L.g.add(ce);}
-  doorAt(pr,0,D/2-.02,Math.PI,null,true,true);for(const f of[1,2])for(const x of[-3.5,3.5])windowIn(pr,x,F[f]+1.2,D/2-.02,Math.PI,'#ffd45c');windowIn(pr,W/2-.02,1.2,-1.4,-Math.PI/2,'#ffd45c');
+  doorAt(pr,0,D/2-.02,Math.PI,null,true,true);for(const f of[1,2])for(const x of[-3.5,3.5])windowIn(pr,x,F[f]+1.2,D/2-.02,Math.PI,'#ffd45c');windowIn(pr,W/2-.02,1.2,-1.4,-Math.PI/2,'#ffd45c');for(const [f,x] of[[0,-4.5],[0,0],[1,-4.5],[1,0],[1,4.5],[2,-3.3],[2,0],[2,4.5]])windowIn(pr,x,F[f]+1.2,-D/2+.22,0,'#ffd45c');   /* (none behind the cat tree; upstairs one clear of the cat show board) */box(pr,3.3,.78,.1,'#ffd45c',0,F[2]+3.35-.39,-D/2+.27,{ol:.02});
   /* floor 1: snacks and toys on the right wall, the pet clothes rack by the door */
   shelfUnit(pr,6.45,-1.5,-Math.PI/2,2.6,['petfood','catfood','bunnyfood'],'#ffffff',.5);petClothesRack(pr,3.4,4.45,Math.PI,2.4,['bow','hat','collar','scarf','pcrown','bowtie','cape','wings']);
   const c1=(x1,z1,x2,z2,fl)=>{col(L,x1,z1,x2,z2);L.cols[L.cols.length-1].fl=fl;},cc=(x,z,r,fl)=>{colC(L,x,z,r);L.cols[L.cols.length-1].fl=fl;};
@@ -1939,7 +1943,7 @@ function buildPetShop(){
     {type:'owl',kinds:['owl'],x0:Math.cos(.3)*.83,x1:Math.cos(.3)*.83,z0:.3+Math.sin(.3)*.83,z1:.3+Math.sin(.3)*.83,y:4.16,fl:1,face:Math.atan2(-Math.cos(.3),-Math.sin(.3))+Math.PI/2},
     {type:'bear',kinds:['bear'],x0:-5.35,x1:-5.35,z0:-2.4,z1:-2.4,y:F[2]+.42,fl:2,mv:'bear.tv',face:Math.PI},{type:'seal',kinds:['seal'],x0:.95,x1:.95,z0:-3.2,z1:-3.2,y:F[2]+.24,fl:2,mv:'seal.swim',face:.8,swim:1},
     {type:'monkey',kinds:['monkey'],x0:-5.85,x1:-5.85,z0:3.4,z1:3.4,y:F[2]+2.62,fl:2,mv:'monkey.happy',face:Math.PI/2}];
-  {const s=signPlane('🐒 🦭 🐻 🐍 Big pets',2.2,.45,'#ffd45c','#2f8f78');s.position.set(4.2,F[2]+2.3,-4.76);L.g.add(s);}
+  {const s=signPlane('🐒 🦭 🐻 🐍 Big pets',3.0,.6,'#ffd45c','#2f8f78');s.position.set(0,F[2]+3.35,-D/2+.34);L.g.add(s);}   /* one 'Big pets' board over the big pets' wall (its board is in the room's bake, with the windows) */
   inter(L,{x:4.2,z:-3.6,r:1.8,icon:'🔒',label:'Big pets',when:()=>psFl(P.cy||0)===2,act:openBig});   /* 🔒 what the big-needs pets still need (Ms. Paws says it), and adopting them */
   inter(L,{x:0,z:4.3,r:1.9,icon:'🚪',label:'Go outside',when:()=>psFl(P.cy||0)===0,act:()=>exitTo('pets')});
   inter(L,{x:4.4,z:2.4,r:2,icon:'🛒',label:'Buy pet food, toys & clothes',when:()=>psFl(P.cy||0)===0,act:()=>openShop('pets')});

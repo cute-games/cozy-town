@@ -833,7 +833,7 @@ function mailbox(g,x,z,ry){const p=new THREE.Group();p.position.set(x,0,z);p.rot
 
 /* ---- building parts ---- */
 function windowAt(g,x,y,z,ry,fc='#ffffff',w=1,h=1.25,dc){const p=new THREE.Group();p.position.set(x,y,z);p.rotation.y=ry;g.add(p);
-  box(p,w+.18,h+.18,.14,fc,0,-.09,0);box(p,w,h,.04,null,0,0,.085,{mat:WINM,ol:false});
+  box(p,w+.18,h+.18,.14,fc,0,-.09,0);{const pm=box(p,w,h,.04,null,0,0,.085,{mat:dc&&dc.view?PANE:WINM,ol:false});if(dc&&dc.view)paneFor(pm,x,y,z);}   /* (dc.view: a window seen from inside shows the painted view) */
   box(p,.06,h,.03,fc,0,0,.11,{ol:false});box(p,w,.06,.03,fc,0,h/2-.03,.11,{ol:false});box(p,w+.34,.09,.22,fc,0,-.18,.09,{ol:.02});
   /* 🏡 cozy extras (town buildings): shutters, a little lintel on top, a flower box under the sill */
   if(dc){if(dc.sh)for(const s of[-1,1])if(s!==dc.ns)box(p,.32,h+.12,.06,dc.sh,s*(w/2+.27),-.06,.04,{ol:.015});
@@ -890,7 +890,7 @@ function buildingIn(g,o){
     const sm=signPlane(o.sign,bw-.3,.8,o.signBg||'#ffffff',o.signFg||'#3d2c5e');sm.position.set(0,3.75,.2);p.add(sm);}   /* 2 cm in front of its board (run 4, job 5) */
 }
 function windowIn(g,x,y,z,ry,cur='#ff9ec4'){const p=new THREE.Group();p.position.set(x,y,z);p.rotation.y=ry;g.add(p);
-  box(p,1.6,1.5,.08,'#ffffff',0,-.09,0);box(p,1.4,1.3,.1,null,0,0,0,{mat:PANE,ol:false});
+  box(p,1.6,1.5,.08,'#ffffff',0,-.09,0);paneFor(box(p,1.4,1.3,.1,null,0,0,0,{mat:PANE,ol:false}),x,y,z);
   box(p,.06,1.3,.12,'#ffffff',0,0,0,{ol:false});box(p,1.4,.06,.12,'#ffffff',0,.62,0,{ol:false});
   box(p,1.8,.1,.24,'#ffffff',0,-.16,.1,{ol:.02});
   for(const s of[-1,1])box(p,.34,1.75,.06,cur,s*.98,-.2,.13,{ol:.015});

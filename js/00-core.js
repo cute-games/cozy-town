@@ -18,6 +18,30 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 let renderer,scene,camera,hemi,sun,lamp,skyMesh,skyU,stars,sunSprite,moonSprite,FOG,outside,clouds=[];
 const TREES=[];   /* 🌳 every round tree in town (x, z, size, its group): the autumn leaves fall from the crowns near you (run 4, item 18) */
 let GRAD=null,OL=null,OLP=null,WIN,LAMP,WATER,PANE,GLOW,CLOUD,OLC,SWIN,WINM;
+/* 🖼️ the painted view in a window seen from inside (24 Nov, the owner: "fake, but painterly"): sky, clouds, hills, then 0 town roofs, 1 park trees and a pond,
+   2 a meadow with a fence and a barn; soft brush dabs over every shape and a glass gleam. Painted once, side by side on one small canvas, so every window is one material
+   (one draw per room, like the plain glass before); updSky tints it for the time of day */
+function paneView(x,k){const N=256,r=seeded(41+k*17);x.save();x.translate(k*N,0);x.beginPath();x.rect(0,0,N,N);x.clip();
+  const dab=(cx,cy,rw,rh,col,n,a,sz)=>{x.fillStyle=col;for(let i=0;i<n;i++){x.globalAlpha=a*(.5+r()*.5);x.beginPath();x.ellipse(cx+(r()-.5)*rw*2,cy+(r()-.5)*rh*2,sz*(.6+r()*.8),sz*(.35+r()*.4),r()*Math.PI,0,Math.PI*2);x.fill();}x.globalAlpha=1;};
+  const blob=(cx,cy,rad,col,hi,lo)=>{x.fillStyle=col;x.beginPath();x.arc(cx,cy,rad,0,Math.PI*2);x.fill();dab(cx-rad*.25,cy-rad*.3,rad*.45,rad*.35,hi,10,.5,rad*.28);dab(cx+rad*.2,cy+rad*.35,rad*.5,rad*.25,lo,10,.45,rad*.26);};
+  const hill=(y0,amp,f,ph,col,hi)=>{x.fillStyle=col;x.beginPath();x.moveTo(0,N);for(let i=0;i<=N;i+=8)x.lineTo(i,y0-amp*Math.sin(i/N*Math.PI*f+ph)-amp*.4*Math.sin(i/N*Math.PI*f*2.3+ph*2));x.lineTo(N,N);x.fill();for(let i=0;i<26;i++){const px=r()*N;dab(px,y0-amp*Math.sin(px/N*Math.PI*f+ph)+10+r()*30,6,6,hi,2,.4,7);}};
+  let g=x.createLinearGradient(0,0,0,N*.62);g.addColorStop(0,'#8fcdf3');g.addColorStop(1,'#e9f7ff');x.fillStyle=g;x.fillRect(0,0,N,N);
+  for(let i=0;i<3;i++){const cx=30+r()*200,cy=24+r()*50;for(let j=0;j<6;j++)blob(cx+(j-2.5)*13+r()*6,cy+(r()-.5)*8,11+r()*9,'#ffffff','#ffffff','#e4eef9');}
+  hill(150,14,1.3,r()*3,'#b8dfb0','#cdeac4');hill(176,12,1.8,r()*3,'#94cf8e','#a9dc9f');
+  const tree=(tx,ty,s)=>{x.fillStyle='#8a5a3c';x.fillRect(tx-2*s,ty,4*s,14*s);blob(tx,ty-4*s,13*s,'#6cbf6a','#8fd884','#4f9e58');};
+  if(k===0){const H=['#ffd6e0','#fff1b8','#dff2ea','#e6dbff','#ffe3c2'],R=['#ff8a8a','#b79cff','#5fd4b0','#ff9ec4','#ffb36b'];
+    for(let i=0;i<5;i++){const hx=14+i*50+r()*10,hw=34+r()*8,hh=30+r()*14,hy=188;x.fillStyle=H[i];x.fillRect(hx,hy-hh,hw,hh);x.fillStyle=R[i];x.beginPath();x.moveTo(hx-5,hy-hh);x.lineTo(hx+hw/2,hy-hh-18);x.lineTo(hx+hw+5,hy-hh);x.fill();
+      dab(hx+hw/2,hy-hh-6,hw*.3,5,'#ffffff',4,.25,5);x.fillStyle='#ffe9a8';x.fillRect(hx+hw*.25,hy-hh*.6,7,8);x.fillRect(hx+hw*.6,hy-hh*.6,7,8);}
+    tree(232,170,.9);tree(8,176,.8);}
+  else if(k===1){tree(40,150,1.5);tree(120,160,1.1);tree(210,146,1.6);x.fillStyle='#8fd3f0';x.beginPath();x.ellipse(150,214,62,14,0,0,Math.PI*2);x.fill();dab(150,210,40,4,'#ffffff',8,.35,6);}
+  else{x.strokeStyle='#ffffff';x.lineWidth=4;x.beginPath();x.moveTo(0,206);x.lineTo(N,200);x.moveTo(0,222);x.lineTo(N,216);x.stroke();x.fillStyle='#ffffff';for(let i=6;i<N;i+=24)x.fillRect(i,194,5,36);
+    x.fillStyle='#e0645a';x.fillRect(150,140,56,42);x.fillStyle='#b8473f';x.beginPath();x.moveTo(144,140);x.lineTo(178,114);x.lineTo(212,140);x.fill();x.fillStyle='#ffffff';x.fillRect(170,156,16,26);tree(40,160,1.1);}
+  x.fillStyle='#7cc679';x.fillRect(0,232,N,N-232);dab(128,244,128,10,'#94d68a',60,.5,6);for(let i=0;i<22;i++)dab(r()*N,236+r()*16,1,1,['#ffffff','#ffd45c','#ff9ec4'][i%3],1,.9,2.4);
+  dab(128,128,128,128,'#ffffff',90,.05,10);   /* the painter's soft brush over all of it */
+  x.globalAlpha=.22;x.fillStyle='#ffffff';for(const [a,w] of[[40,26],[84,9]]){x.beginPath();x.moveTo(a,0);x.lineTo(a+w,0);x.lineTo(a+w-90,N);x.lineTo(a-90,N);x.fill();}x.globalAlpha=1;   /* the glass gleam */
+  x.restore();}
+function paneAtlas(){const c=document.createElement('canvas');c.width=1024;c.height=256;const x=c.getContext('2d');for(let k=0;k<3;k++)paneView(x,k);const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t;}
+const paneFor=(m,x,y,z)=>{const k=Math.abs(Math.round(x*3.1+y*1.7+z*2.3))%3,u=m.geometry.attributes.uv;for(let i=0;i<u.count;i++)u.setX(i,(k+u.getX(i))/4);return m;};   /* this window's view: its quarter of the canvas */
 const MATS=new Map();
 /* 🧱 a wall almost edge-on to the sun (run 4, item 17): the shadow map cannot tell lit from shadowed there and drew pale diagonal streaks on it (the "white smear"), while the toon shade
    would light it at the middle tone; so within 7° of edge-on the side facing the sun counts as lit and the side facing away as shadowed, blending into the real shadow test beyond that */
@@ -38,7 +62,7 @@ function initMaterials(gl2){
   WIN=toon({color:'#9fd4f2',emissive:new THREE.Color('#ffc66b'),emissiveIntensity:0});SWIN=toon({color:'#9fd4f2',emissive:new THREE.Color('#ffc66b'),emissiveIntensity:0});WINM=WIN;   /* SWIN: shop glass, dim at night while closed */
   LAMP=toon({color:'#fff6d6',emissive:new THREE.Color('#ffd27a'),emissiveIntensity:0});
   WATER=toon({color:'#7fd8ff',emissive:new THREE.Color('#3aa6e0'),emissiveIntensity:.3,transparent:true,opacity:.9});
-  PANE=new THREE.MeshBasicMaterial({color:'#bfe6ff'});
+  PANE=new THREE.MeshBasicMaterial({color:'#ffffff',map:paneAtlas()});PANE.userData.uv=1;   /* 🖼️ windows inside show a painted storybook view of outside (24 Nov, owner) */
   GLOW=new THREE.MeshBasicMaterial({color:'#fff3c4'});
   CLOUD=new THREE.ShaderMaterial({uniforms:{top:{value:new THREE.Color('#ffffff')},bot:{value:new THREE.Color('#dde4f0')}},   /* ☁️ soft puffs (run 4, item 18): a gentle top-to-bottom shade set by updSky, no outline, no hard dark faces */
     vertexShader:'varying float vy;void main(){vy=normalize(mat3(modelMatrix)*normal).y;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
@@ -75,7 +99,7 @@ function bake(root,shadow=true,chunk=0,frame=null){const _v=new THREE.Vector3();
     const g=new THREE.BufferGeometry();
     g.setAttribute('position',src.attributes.position.clone());
     g.setAttribute('normal',src.attributes.normal.clone());
-    g.applyMatrix4(new THREE.Matrix4().multiplyMatrices(inv,o.matrixWorld));
+    g.applyMatrix4(new THREE.Matrix4().multiplyMatrices(inv,o.matrixWorld));if(o.material.userData.uv)g.setAttribute('uv',src.attributes.uv.clone());   /* (the painted window views keep their picture when baked) */
     const vc=!!o.material.userData.plain;
     if(vc){const n=g.attributes.position.count,C=new Float32Array(n*3),c=o.material.color;for(let i=0;i<n;i++){C[i*3]=c.r;C[i*3+1]=c.g;C[i*3+2]=c.b;}g.setAttribute('color',new THREE.BufferAttribute(C,3));}
     let k=vc?'vc':o.material.uuid;if(chunk){o.getWorldPosition(_v);k+=':'+Math.floor(_v.x/chunk)+','+Math.floor(_v.z/chunk);}
@@ -86,9 +110,9 @@ function bake(root,shadow=true,chunk=0,frame=null){const _v=new THREE.Vector3();
   const out=[];
   for(const {m,l,vc} of buckets.values()){
     let n=0;for(const g of l)n+=g.attributes.position.count;
-    const P=new Float32Array(n*3),N=new Float32Array(n*3),Cc=vc?new Float32Array(n*3):null;let off=0;
-    for(const g of l){P.set(g.attributes.position.array,off*3);N.set(g.attributes.normal.array,off*3);if(Cc)Cc.set(g.attributes.color.array,off*3);off+=g.attributes.position.count;g.dispose();}
-    const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(P,3));geo.setAttribute('normal',new THREE.BufferAttribute(N,3));if(Cc)geo.setAttribute('color',new THREE.BufferAttribute(Cc,3));geo.computeBoundingSphere();
+    const P=new Float32Array(n*3),N=new Float32Array(n*3),Cc=vc?new Float32Array(n*3):null,U=m.userData.uv?new Float32Array(n*2):null;let off=0;
+    for(const g of l){P.set(g.attributes.position.array,off*3);N.set(g.attributes.normal.array,off*3);if(Cc)Cc.set(g.attributes.color.array,off*3);if(U)U.set(g.attributes.uv.array,off*2);off+=g.attributes.position.count;g.dispose();}
+    const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(P,3));geo.setAttribute('normal',new THREE.BufferAttribute(N,3));if(Cc)geo.setAttribute('color',new THREE.BufferAttribute(Cc,3));if(U)geo.setAttribute('uv',new THREE.BufferAttribute(U,2));geo.computeBoundingSphere();
     const mesh=new THREE.Mesh(geo,m);const isOL=m.side===THREE.BackSide;if(rel)rel.decompose(mesh.position,mesh.quaternion,mesh.scale);
     mesh.castShadow=shadow&&!isOL&&!m.transparent;mesh.receiveShadow=!isOL;root.add(mesh);out.push(mesh);
   }
