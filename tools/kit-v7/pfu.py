@@ -1228,9 +1228,10 @@ P32_JS = r"""()=>{const bad=[],o={},now=()=>gameMs()/1000,msg=()=>(TQ.q.length?S
   P.x=-120;P.z=-100;P.yaw=Math.PI/2;sp({KeyW:true});o.trot=sp({KeyW:true});o.gallop=sp({KeyW:true,ShiftLeft:true});o.gaits=[o.trot,o.gallop];if(!(o.trot>3.5&&o.gallop>o.trot+1.5))bad.push('gaits '+o.gaits);
   /* the town (24 Nov, the owner: ride anywhere in town; it replaces "near town the horse refuses"): from the farm road the horse rides on into town, no refusal, and
      stays drawn while the farm's animals are taken out of the scene; at a shop door it stops: horses wait outside */
-  P.horse.said=false;P.x=-50;P.z=-88;P.yaw=Math.PI;for(let i=0;i<90;i++){IN.keys.KeyW=true;farmRide(1/30);}IN.keys.KeyW=false;o.edge=[+P.z.toFixed(2),!!P.horse,msg().slice(0,40)];if(P.z<-76||!P.horse||/won't go into town/.test(msg()))bad.push('town edge '+o.edge);
+  P.horse.said=false;P.x=-50;P.z=-88;P.yaw=Math.PI;for(let i=0;i<90;i++){IN.keys.KeyW=true;farmRide(1/30);}IN.keys.KeyW=false;o.edge=[+P.z.toFixed(2),!!P.horse,msg().slice(0,40)];const said=re=>[$('toast').textContent||'',...TQ.q.map(m=>String(m.m))].some(t=>re.test(t));   /* (shown now or waiting in the message queue: msg() reads only the queue's last one) */
+  if(P.z<-76||!P.horse||said(/won't go into town/))bad.push('town edge '+o.edge);
   {const hz=P.horse.h;P.x=18;P.z=-5.5;P.yaw=0;FARM.on=false;FARM.L.g.remove(FARM.dyn);for(let i=0;i<60;i++){IN.keys.KeyW=true;CLK.sk+=33;farmTick(1/30);}IN.keys.KeyW=false;let r=hz.m.root;while(r.parent)r=r.parent;
-   o.door=[+P.z.toFixed(2),!!P.horse,r===scene,msg().slice(0,40)];if(!P.horse||P.z<-8.2||r!==scene||!/Horses wait outside/.test(msg()))bad.push('market door '+o.door);}
+   o.door=[+P.z.toFixed(2),!!P.horse,r===scene,msg().slice(0,40)];if(!P.horse||P.z<-8.2||r!==scene||!said(/Horses wait outside/))bad.push('market door '+o.door);}
   /* pets wait at the stable */
   o.wait=PET_ACTORS.filter(e=>e.fw).length;const fol=PET_ACTORS.filter(e=>!e.d.stay&&e.loc==='city').length;if(o.wait!==fol)bad.push('pets waiting '+o.wait+' of '+fol);
   /* get off: anywhere (24 Nov, the owner), in town too; the horse walks home by itself along the pavements (hnTick, the one clock) */
