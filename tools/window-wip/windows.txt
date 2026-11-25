@@ -1,0 +1,90 @@
+== Hair Salon  [room 'salon', real door at x -58.4 z 40.5, real building: Hair Salon; painted in 9.9 ms]
+   floor 0  faces south  1 window(s)  seen from x -63.5 z 44.5:  buildings: none | ground: road 6 m | trees 100, mountains 0
+   floor 0  faces north  1 window(s)  seen from x -63.5 z 36.5:  buildings: Apartments by the park 2 m; Clothes Shop 45 m; House by the flowers 48 m (right); Fire Station 55 m; Big apartments by the flowers 64 m (right); Tall building behind the Market 64 m (right) (+7 more behind) | ground: road 37 m | trees 162, mountains 5
+== My House (Friends Lane, your lot)  [room 'home', real door at x -97 z 9.6, real building: My House; painted in 9.6 ms]
+   floor 0  faces south  2 window(s)  seen from x -97 z 18.5:  buildings: none | ground: grass | trees 164, mountains 0
+   floor 0  faces east   1 window(s)  seen from x -92.5 z 15:  buildings: Apartments by the park 22 m; Clothes Shop 26 m (left); Hair Salon 26 m (right); Cozy Town School 54 m (left); House by the flowers 58 m; Big apartments by the flowers 62 m (left) (+13 more behind) | ground: Cozy Park 69 m, Football field 68 m, road 43 m | trees 237, mountains 2
+   floor 0  faces west   1 window(s)  seen from x -101.5 z 15:  buildings: none | ground: grass | trees 117, mountains 0
+== Market  [room 'market', real door at x 18 z -9.6, real building: Market; painted in 2.7 ms]
+   floor 0  faces west   1 window(s)  seen from x 12 z -15:  buildings: Big apartments by the flowers 25 m (right); House by the flowers 40 m; Fire Station 72 m; Clothes Shop 72 m; Hair Salon 72 m (left); Apartments by the park 73 m (+4 more behind) | ground: Cozy Park 36 m, road 12 m | trees 160, mountains 0
+== Flower Shop  [room 'flowers', real door at x 31.5 z 9.6, real building: Flower Shop; painted in 4.8 ms]
+   floor 0  faces east   1 window(s)  seen from x 35 z 14:  buildings: Ice Cream Shop 24 m (right); Bakery 25 m (left); Library 25 m; Pizzeria 25 m | ground: road 15 m | trees 104, mountains 0
+   floor 0  faces west   1 window(s)  seen from x 28 z 14:  buildings: Pet Shop 5 m; Big apartments by the flowers 41 m (right); House by the flowers 56 m; Fire Station 88 m; Clothes Shop 88 m; Hair Salon 88 m (+5 more behind) | ground: Cozy Park 52 m, Football field 53 m, road 28 m | trees 172, mountains 0
+== Café  [room 'cafe', real door at x 32 z -9.6, real building: Café; painted in 5.7 ms]
+   floor 0  faces west   1 window(s)  seen from x 28.5 z -14:  buildings: Market 5 m; Cozy Town School 40 m (right); Big apartments by the flowers 42 m; House by the flowers 56 m; Fire Station 89 m; Clothes Shop 89 m (+6 more behind) | ground: Cozy Park 53 m, road 29 m | trees 183, mountains 0
+   floor 0  faces east   1 window(s)  seen from x 35.5 z -14:  buildings: Toy Store 24 m; Bakery 24 m; Library 25 m (right); Pizzeria 25 m (right) | ground: road 15 m | trees 106, mountains 0
+== Clothes Shop  [room 'clothes', real door at x -58.4 z -12.5, real building: Clothes Shop; painted in 5.5 ms]
+   floor 0  faces south  1 window(s)  seen from x -63.5 z -8.5:  buildings: Apartments by the park 24 m; Hair Salon 45 m; Purple house 67 m (left); Blue house 67 m (left) | ground: Football field 77 m, road 9 m | trees 241, mountains 0
+== Pet Shop  [room 'pets', real door at x 18 z 9.6, real building: Pet Shop; painted in 17.5 ms]
+   floor 0  faces south  2 window(s)  seen from x 18 z 19:  buildings: Apartments behind the Pet Shop 8 m; Purple house 39 m; Blue house 39 m; Peach house 39 m | ground: Football field 50 m, Lake 50 m, road 31 m | trees 151, mountains 0
+   floor 0  faces west   1 window(s)  seen from x 12.5 z 15:  buildings: House by the flowers 40 m (right); Fire Station 73 m; Clothes Shop 73 m; Hair Salon 73 m; Apartments by the park 74 m; My House 105 m (+3 more behind) | ground: Cozy Park 37 m, road 13 m | trees 169, mountains 0
+   floor 1  faces south  3 window(s)  seen from x 18 z 19:  buildings: Apartments behind the Pet Shop 8 m; Purple house 39 m; Blue house 39 m; Peach house 39 m | ground: Football field 50 m, Lake 50 m, road 31 m | trees 151, mountains 0
+   floor 1  faces north  2 window(s)  seen from x 18 z 11:  buildings: Market 22 m; Café 22 m (right); Toy Store 36 m (right); Big apartments by the flowers 38 m (left); Tall building behind the Market 38 m; Pink house 69 m (+7 more behind) | ground: Duck pond 47 m, road 11 m | trees 259, mountains 5
+   floor 2  faces south  3 window(s)  seen from x 18 z 19:  buildings: Apartments behind the Pet Shop 8 m; Purple house 39 m; Blue house 39 m; Peach house 39 m | ground: Football field 50 m, Lake 50 m, road 31 m | trees 151, mountains 0
+   floor 2  faces north  2 window(s)  seen from x 18 z 11:  buildings: Market 22 m; Café 22 m (right); Toy Store 36 m (right); Big apartments by the flowers 38 m (left); Tall building behind the Market 38 m; Pink house 69 m (+7 more behind) | ground: Duck pond 47 m, road 11 m | trees 259, mountains 5
+== Vet Station  [room 'vet', real door at x 8.8 z -77.2, real building: Vet Station; painted in 10.5 ms]
+   floor 0  faces west   2 window(s)  seen from x 9.7 z -77.2:  buildings: Cozy Town School 21 m; Fire Station 70 m (left); Clothes Shop 70 m (left); Apartments by the park 71 m (left); My House 102 m (left); Farm barn 110 m (+2 more behind) | ground: road 10 m | trees 169, mountains 0
+   floor 0  faces south  1 window(s)  seen from x 14.2 z -71.2:  buildings: Pink house 6 m; Green house 6 m (left); Toy Store 34 m (left); Big apartments by the flowers 36 m (right); Tall building behind the Market 36 m; Market 52 m (+16 more behind) | ground: Duck pond 35 m, road 21 m | trees 192, mountains 0
+   floor 1  faces east   2 window(s)  seen from x 18.7 z -77.2:  buildings: Yellow house 14 m (right); Toy Store 41 m (right) | ground: road 31 m | trees 160, mountains 1
+   floor 1  faces south  1 window(s)  seen from x 14.2 z -71.2:  buildings: Pink house 6 m; Green house 6 m (left); Toy Store 34 m (left); Big apartments by the flowers 36 m (right); Tall building behind the Market 36 m; Market 52 m (+16 more behind) | ground: Duck pond 35 m, road 21 m | trees 192, mountains 0
+== School classroom (math)  [room 'cl_math', real door at x -25 z -57.5, real building: Cozy Town School; painted in 2.8 ms]
+   floor 0  faces east   2 window(s)  seen from x -11 z -64.5:  buildings: Pink house 20 m; Vet Station 21 m; Tall building behind the Market 24 m (right); Green house 32 m; Café 40 m (right); Yellow house 44 m (+5 more behind) | ground: Duck pond 47 m, road 11 m | trees 253, mountains 2
+== School classroom (english)  [room 'cl_english', real door at x -25 z -57.5, real building: Cozy Town School; painted in 5.1 ms]
+   floor 0  faces east   2 window(s)  seen from x -11 z -64.5:  buildings: Pink house 20 m; Vet Station 21 m; Tall building behind the Market 24 m (right); Green house 32 m; Café 40 m (right); Yellow house 44 m (+5 more behind) | ground: Duck pond 47 m, road 11 m | trees 253, mountains 2
+== School classroom (history)  [room 'cl_history', real door at x -25 z -57.5, real building: Cozy Town School; painted in 2.6 ms]
+   floor 0  faces east   2 window(s)  seen from x -11 z -64.5:  buildings: Pink house 20 m; Vet Station 21 m; Tall building behind the Market 24 m (right); Green house 32 m; Café 40 m (right); Yellow house 44 m (+5 more behind) | ground: Duck pond 47 m, road 11 m | trees 253, mountains 2
+== Big apartments by the flowers, floor 1  [room 'apt1', real door at x -22 z -25.7, real building: None; painted in 0 ms]
+== Big apartments by the flowers, floor 2  [room 'apt2', real door at x -22 z -25.7, real building: Big apartments by the flowers; painted in 3 ms]
+   floor 1  faces south  1 window(s)  seen from x -22 z -27:  buildings: House by the flowers 9 m (right); Pet Shop 38 m (left); Flower Shop 38 m (left); Apartments by the park 42 m (right); Apartments behind the Pet Shop 54 m (left); Ice Cream Shop 60 m (left) (+4 more behind) | ground: Cozy Park 51 m, Lake 96 m, road 27 m | trees 275, mountains 0
+== Big apartments by the flowers, floor 3  [room 'apt3', real door at x -22 z -25.7, real building: Big apartments by the flowers; painted in 5.9 ms]
+   floor 2  faces south  1 window(s)  seen from x -22 z -27:  buildings: House by the flowers 9 m (right); Pet Shop 38 m (left); Flower Shop 38 m (left); Apartments by the park 42 m (right); Apartments behind the Pet Shop 54 m (left); Ice Cream Shop 60 m (left) (+4 more behind) | ground: Cozy Park 51 m, Lake 96 m, road 27 m | trees 275, mountains 0
+   floor 2  faces north  1 window(s)  seen from x -22 z -35:  buildings: Pink house 23 m (right); Cozy Town School 24 m; Vet Station 36 m (right); Farm barn 73 m (left); Farm stables 73 m (left); Farm stables 83 m (left) | ground: road 15 m | trees 358, mountains 5
+== Tall building behind the Market, floor 1  [room 'apt1', real door at x 23 z -25.7, real building: None; painted in 0.1 ms]
+== Tall building behind the Market, floor 2  [room 'apt2', real door at x 23 z -25.7, real building: Tall building behind the Market; painted in 3.1 ms]
+   floor 1  faces south  1 window(s)  seen from x 23 z -27:  buildings: Market 8 m; Café 10 m (left); Pizzeria 32 m (left); Pet Shop 38 m; Flower Shop 38 m; Library 40 m (left) (+6 more behind) | ground: Cozy Park 51 m, Lake 96 m, road 27 m | trees 248, mountains 0
+== Tall building behind the Market, floor 3  [room 'apt3', real door at x 23 z -25.7, real building: Tall building behind the Market; painted in 6.3 ms]
+   floor 2  faces south  1 window(s)  seen from x 23 z -27:  buildings: Market 8 m; Café 10 m (left); Pizzeria 32 m (left); Pet Shop 38 m; Flower Shop 38 m; Library 40 m (left) (+6 more behind) | ground: Cozy Park 51 m, Lake 96 m, road 27 m | trees 248, mountains 0
+   floor 2  faces north  1 window(s)  seen from x 23 z -35:  buildings: Pink house 23 m; Green house 23 m; Yellow house 23 m; Vet Station 36 m | ground: road 15 m | trees 368, mountains 5
+== Apartments behind the Pet Shop, floor 1  [room 'apt1', real door at x 24 z 25.7, real building: None; painted in 0 ms]
+== Apartments behind the Pet Shop, floor 2  [room 'apt2', real door at x 24 z 25.7, real building: Apartments behind the Pet Shop; painted in 2.6 ms]
+   floor 1  faces north  1 window(s)  seen from x 24 z 27:  buildings: Pet Shop 8 m; Flower Shop 10 m; Bakery 37 m (right); Market 38 m; Café 38 m; House by the flowers 39 m (left) (+11 more behind) | ground: road 27 m | trees 203, mountains 5
+== Apartments behind the Pet Shop, floor 3  [room 'apt3', real door at x 24 z 25.7, real building: Apartments behind the Pet Shop; painted in 4.5 ms]
+   floor 2  faces north  1 window(s)  seen from x 24 z 27:  buildings: Pet Shop 8 m; Flower Shop 10 m; Bakery 37 m (right); Market 38 m; Café 38 m; House by the flowers 39 m (left) (+11 more behind) | ground: road 27 m | trees 203, mountains 5
+   floor 2  faces south  1 window(s)  seen from x 24 z 35:  buildings: Purple house 23 m; Blue house 23 m; Peach house 23 m | ground: road 15 m | trees 117, mountains 0
+== Apartments by the park, floor 1  [room 'apt1', real door at x -59.7 z 25, real building: None; painted in 0.1 ms]
+== Apartments by the park, floor 2  [room 'apt2', real door at x -59.7 z 25, real building: Apartments by the park; painted in 2.8 ms]
+   floor 1  faces east   1 window(s)  seen from x -61 z 25:  buildings: House by the flowers 27 m (left); Pink house 70 m (left); Purple house 70 m (right); Vet Station 71 m (left); Market 73 m (left); Pet Shop 74 m (+13 more behind) | ground: Cozy Park 37 m, road 11 m | trees 242, mountains 2
+== Apartments by the park, floor 3  [room 'apt3', real door at x -59.7 z 25, real building: Apartments by the park; painted in 4.5 ms]
+   floor 2  faces east   1 window(s)  seen from x -61 z 25:  buildings: House by the flowers 27 m (left); Pink house 70 m (left); Purple house 70 m (right); Vet Station 71 m (left); Market 73 m (left); Pet Shop 74 m (+13 more behind) | ground: Cozy Park 37 m, road 11 m | trees 242, mountains 2
+   floor 2  faces west   1 window(s)  seen from x -71 z 25:  buildings: My House 22 m | ground: grass | trees 104, mountains 0
+== Decorating job room in the Pink house  [room 'client', real door at x 13 z -56.7, real building: Pink house; painted in 7 ms]
+   floor 0  faces north  2 window(s)  seen from x 13 z -65:  buildings: Vet Station 6 m | ground: grass | trees 346, mountains 5
+   floor 0  faces west   1 window(s)  seen from x 9 z -61.5:  buildings: Cozy Town School 20 m; Big apartments by the flowers 22 m (left); House by the flowers 37 m (left); Fire Station 69 m; Clothes Shop 69 m (left); Apartments by the park 70 m (left) (+4 more behind) | ground: road 9 m | trees 163, mountains 0
+   floor 0  faces east   1 window(s)  seen from x 17 z -61.5:  buildings: Green house 4 m; Yellow house 16 m; Toy Store 43 m (right); Bakery 43 m (right) | ground: road 33 m | trees 155, mountains 1
+== Decorating job room in the Green house  [room 'client', real door at x 25 z -56.7, real building: Green house; painted in 7.4 ms]
+   floor 0  faces north  2 window(s)  seen from x 25 z -65:  buildings: Vet Station 6 m (left) | ground: grass | trees 348, mountains 5
+   floor 0  faces west   1 window(s)  seen from x 21 z -61.5:  buildings: Pink house 4 m; Cozy Town School 32 m; Big apartments by the flowers 34 m (left); House by the flowers 49 m (left); Fire Station 81 m; Clothes Shop 81 m (left) (+6 more behind) | ground: road 21 m | trees 201, mountains 0
+   floor 0  faces east   1 window(s)  seen from x 29 z -61.5:  buildings: Yellow house 4 m; Toy Store 31 m (right) | ground: road 21 m | trees 120, mountains 0
+== Decorating job room in the Yellow house  [room 'client', real door at x 37 z -56.7, real building: Yellow house; painted in 6.8 ms]
+   floor 0  faces north  2 window(s)  seen from x 37 z -65:  buildings: none | ground: grass | trees 346, mountains 5
+   floor 0  faces west   1 window(s)  seen from x 33 z -61.5:  buildings: Green house 4 m; Vet Station 14 m (right); Pink house 16 m; Cozy Town School 44 m; Big apartments by the flowers 46 m (left); House by the flowers 61 m (left) (+7 more behind) | ground: road 33 m | trees 226, mountains 1
+   floor 0  faces east   1 window(s)  seen from x 41 z -61.5:  buildings: Toy Store 19 m (right) | ground: road 9 m | trees 86, mountains 0
+== Decorating job room in the Purple house  [room 'client', real door at x 13 z 56.7, real building: Purple house; painted in 5.9 ms]
+   floor 0  faces south  2 window(s)  seen from x 13 z 65:  buildings: none | ground: grass | trees 49, mountains 0
+   floor 0  faces east   1 window(s)  seen from x 17 z 61.5:  buildings: Blue house 4 m; Peach house 16 m; Ice Cream Shop 42 m (left); Library 43 m (left); Pizzeria 43 m (left) | ground: Lake 52 m, road 33 m | trees 126, mountains 0
+   floor 0  faces west   1 window(s)  seen from x 9 z 61.5:  buildings: Fire Station 69 m (right); Clothes Shop 69 m (right); Hair Salon 69 m; Apartments by the park 70 m; My House 102 m; Farm stables 129 m (right) | ground: Cozy Park 33 m, Football field 34 m, road 9 m | trees 161, mountains 0
+== Decorating job room in the Blue house  [room 'client', real door at x 25 z 56.7, real building: Blue house; painted in 6 ms]
+   floor 0  faces south  2 window(s)  seen from x 25 z 65:  buildings: none | ground: grass | trees 51, mountains 0
+   floor 0  faces east   1 window(s)  seen from x 29 z 61.5:  buildings: Peach house 4 m; Ice Cream Shop 30 m (left); Library 31 m (left) | ground: Lake 40 m, road 21 m | trees 102, mountains 0
+   floor 0  faces west   1 window(s)  seen from x 21 z 61.5:  buildings: Purple house 4 m; Fire Station 81 m (right); Clothes Shop 81 m (right); Hair Salon 81 m; Apartments by the park 82 m; My House 114 m (+3 more behind) | ground: Cozy Park 45 m, Football field 46 m, road 21 m | trees 172, mountains 0
+== Decorating job room in the Peach house  [room 'client', real door at x 37 z 56.7, real building: Peach house; painted in 7.7 ms]
+   floor 0  faces south  2 window(s)  seen from x 37 z 65:  buildings: none | ground: grass | trees 58, mountains 0
+   floor 0  faces east   1 window(s)  seen from x 41 z 61.5:  buildings: Ice Cream Shop 18 m (left) | ground: Lake 28 m, road 9 m | trees 82, mountains 0
+   floor 0  faces west   1 window(s)  seen from x 33 z 61.5:  buildings: Blue house 4 m; Purple house 16 m; House by the flowers 61 m (right); Fire Station 93 m (right); Clothes Shop 93 m (right); Hair Salon 93 m (+4 more behind) | ground: Cozy Park 57 m, Football field 58 m, road 33 m | trees 165, mountains 0
+== Decorating job room in the House by the flowers  [room 'client', real door at x -31 z -10.2, real building: House by the flowers; painted in 9.2 ms]
+   floor 0  faces north  2 window(s)  seen from x -31 z -18.5:  buildings: Big apartments by the flowers 9 m; Pink house 40 m (right); Green house 40 m (right); Cozy Town School 41 m; Vet Station 53 m (right); Farm barn 90 m (left) (+2 more behind) | ground: road 32 m | trees 318, mountains 5
+   floor 0  faces west   1 window(s)  seen from x -34.5 z -15:  buildings: Fire Station 26 m; Clothes Shop 26 m; Apartments by the park 27 m (left); My House 58 m; Farm stables 78 m (right); Farm stables 85 m (right) | ground: road 16 m | trees 128, mountains 0
+   floor 0  faces east   1 window(s)  seen from x -27.5 z -15:  buildings: Pink house 37 m (left); Market 40 m; Pet Shop 40 m (right); Tall building behind the Market 41 m; Apartments behind the Pet Shop 43 m (right); Green house 49 m (left) (+9 more behind) | ground: Lake 97 m, road 28 m | trees 267, mountains 2
+
+Other inside places and their painted windows (0 = the room has none): toys 0, bakery 0, icecream 0, library 0, school 0, fire 0, pizza 0, visit 4, studio 0
+TOTAL: 77 windows in 57 wall views over 30 cases; paint time per place: min 0 ms, max 17.5 ms, mean 5.3 ms (headless Chromium, this machine)
