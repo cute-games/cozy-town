@@ -1,0 +1,118 @@
+Paint + calm birds, 25 Nov 2026: targeted tests on the final build (stamp 2026112513, joined 2,390,294 bytes), live = main c974534.
+
+=== lock got Wed Nov 25 00:10:34 UTC 2026
+start [['duck', 'city', 44.1, 4.6], ['owl', 'city', 44.1, 8.6], ['dog', 'city', 45.3, 5.1]]
+you walked 22.7 m west in 5 s, z 6.6 -> 6.6
+before the slow walk: {'ui': False, 'cut': False, 'tut': False, 'dtut': False, 'freeze': None, 'sit': False, 'ride': False, 'note': False, 'playing': True}
+slow walk: 0 m in 5 s
+errors: []
+{"what": "following you at walking speed", "pet": "duck", "seconds": 5.0, "speed m/s mean": 4.56, "speed max": 4.62, "moving share": 1.0, "moving flips": 0, "leg swings a second": 20.4, "leg change a frame (rad) mean/max": [0.445, 0.885], "body roll change a frame (rad) mean/max": [0.1668, 0.2632], "body roll max": 0.15, "body height change a frame (m) mean/max": [0.0087, 0.0187], "tail change a frame (rad) max": 0.042, "head turn a frame (rad) max": 0, "facing turn a frame (rad) max": 0.012}
+{"what": "following you at walking speed", "pet": "owl", "seconds": 5.0, "speed m/s mean": 4.51, "speed max": 4.56, "moving share": 1.0, "moving flips": 0, "leg swings a second": 8.6, "leg change a frame (rad) mean/max": [0.099, 0.286], "body roll change a frame (rad) mean/max": [0.0, 0], "body roll max": 0, "body height change a frame (m) mean/max": [0.0284, 0.0848], "tail change a frame (rad) max": 0, "head turn a frame (rad) max": 0, "facing turn a frame (rad) max": 0.028}
+{"what": "following you at walking speed", "pet": "dog", "seconds": 5.0, "speed m/s mean": 4.5, "speed max": 4.56, "moving share": 1.0, "moving flips": 0, "leg swings a second": 13.0, "leg change a frame (rad) mean/max": [0.368, 0.78], "body roll change a frame (rad) mean/max": [0.0325, 0.0516], "body roll max": 0.04, "body height change a frame (m) mean/max": [0.0041, 0.0076], "tail change a frame (rad) max": 0.138, "head turn a frame (rad) max": 0, "facing turn a frame (rad) max": 0.031}
+{"what": "standing still (2 s after you stopped)", "pet": "duck", "seconds": 2.0, "speed m/s mean": 0.0, "speed max": 0.0, "moving share": 0.0, "moving flips": 0, "leg swings a second": 0.0, "leg change a frame (rad) mean/max": [0.0, 0.0], "body roll change a frame (rad) mean/max": [0.0, 0], "body roll max": 0, "body height change a frame (m) mean/max": [0.0, 0.0], "tail change a frame (rad) max": 0.01, "head turn a frame (rad) max": 0.005, "facing turn a frame (rad) max": 0.0}
+{"what": "standing still (2 s after you stopped)", "pet": "owl", "seconds": 2.0, "speed m/s mean": 0.0, "speed max": 0.0, "moving share": 0.0, "moving flips": 0, "leg swings a second": 0.0, "leg change a frame (rad) mean/max": [0.0, 0.0], "body roll change a frame (rad) mean/max": [0.0, 0], "body roll max": 0, "body height change a frame (m) mean/max": [0.0, 0.0002], "tail change a frame (rad) max": 0, "head turn a frame (rad) max": 0.246, "facing turn a frame (rad) max": 0.0}
+{"what": "standing still (2 s after you stopped)", "pet": "dog", "seconds": 2.0, "speed m/s mean": 0.0, "speed max": 0.0, "moving share": 0.0, "moving flips": 0, "leg swings a second": 0.0, "leg change a frame (rad) mean/max": [0.0, 0.0], "body roll change a frame (rad) mean/max": [0.0, 0], "body roll max": 0, "body height change a frame (m) mean/max": [0.0, 0.0002], "tail change a frame (rad) max": 0.3, "head turn a frame (rad) max": 0.242, "facing turn a frame (rad) max": 0.0}
+{"what": "following you at a slow walk", "pet": "duck", "seconds": 4.0, "speed m/s mean": 0.09, "speed max": 2.27, "moving share": 0.06, "moving flips": 1, "leg swings a second": 0.5, "leg change a frame (rad) mean/max": [0.013, 0.472], "body roll change a frame (rad) mean/max": [0.0045, 0.1465], "body roll max": 0.147, "body height change a frame (m) mean/max": [0.0006, 0.0347], "tail change a frame (rad) max": 0.092, "head turn a frame (rad) max": 0.273, "facing turn a frame (rad) max": 0.017}
+{"what": "following you at a slow walk", "pet": "owl", "seconds": 4.0, "speed m/s mean": 0.09, "speed max": 2.27, "moving share": 0.06, "moving flips": 1, "leg swings a second": 0.8, "leg change a frame (rad) mean/max": [0.011, 0.331], "body roll change a frame (rad) mean/max": [0.0, 0], "body roll max": 0, "body height change a frame (m) mean/max": [0.0032, 0.0958], "tail change a frame (rad) max": 0, "head turn a frame (rad) max": 0.273, "facing turn a frame (rad) max": 0.017}
+{"what": "following you at a slow walk", "pet": "dog", "seconds": 4.0, "speed m/s mean": 0.05, "speed max": 2.27, "moving share": 0.03, "moving flips": 1, "leg swings a second": 0.2, "leg change a frame (rad) mean/max": [0.005, 0.31], "body roll change a frame (rad) mean/max": [0.0005, 0.0272], "body roll max": 0.039, "body height change a frame (m) mean/max": [0.0001, 0.0096], "tail change a frame (rad) max": 0.37, "head turn a frame (rad) max": 0.286, "facing turn a frame (rad) max": 0.031}
+=== after Wed Nov 25 00:11:09 UTC 2026
+start [['duck', 'city', 44.1, 4.6], ['owl', 'city', 44.1, 8.6], ['dog', 'city', 45.3, 5.1]]
+you walked 22.7 m west in 5 s, z 6.6 -> 6.6
+before the slow walk: {'ui': False, 'cut': False, 'tut': False, 'dtut': False, 'freeze': None, 'sit': False, 'ride': False, 'note': False, 'playing': True}
+slow walk: 0 m in 5 s
+errors: []
+{"what": "following you at walking speed", "pet": "duck", "seconds": 5.0, "speed m/s mean": 4.56, "speed max": 4.62, "moving share": 1.0, "moving flips": 0, "leg swings a second": 1.6, "leg change a frame (rad) mean/max": [0.048, 0.095], "body roll change a frame (rad) mean/max": [0.0106, 0.0167], "body roll max": 0.1, "body height change a frame (m) mean/max": [0.0026, 0.0078], "tail change a frame (rad) max": 0.021, "head turn a frame (rad) max": 0, "facing turn a frame (rad) max": 0.012}
+{"what": "following you at walking speed", "pet": "owl", "seconds": 5.0, "speed m/s mean": 4.51, "speed max": 4.56, "moving share": 1.0, "moving flips": 0, "leg swings a second": 1.4, "leg change a frame (rad) mean/max": [0.018, 0.039], "body roll change a frame (rad) mean/max": [0.0, 0], "body roll max": 0, "body height change a frame (m) mean/max": [0.005, 0.013], "tail change a frame (rad) max": 0, "head turn a frame (rad) max": 0, "facing turn a frame (rad) max": 0.028}
+{"what": "following you at walking speed", "pet": "dog", "seconds": 5.0, "speed m/s mean": 4.5, "speed max": 4.56, "moving share": 1.0, "moving flips": 0, "leg swings a second": 13.0, "leg change a frame (rad) mean/max": [0.368, 0.78], "body roll change a frame (rad) mean/max": [0.0325, 0.0516], "body roll max": 0.04, "body height change a frame (m) mean/max": [0.0041, 0.0076], "tail change a frame (rad) max": 0.138, "head turn a frame (rad) max": 0, "facing turn a frame (rad) max": 0.031}
+{"what": "standing still (2 s after you stopped)", "pet": "duck", "seconds": 2.0, "speed m/s mean": 0.0, "speed max": 0.0, "moving share": 0.0, "moving flips": 0, "leg swings a second": 0.5, "leg change a frame (rad) mean/max": [0.003, 0.019], "body roll change a frame (rad) mean/max": [0.0, 0], "body roll max": 0, "body height change a frame (m) mean/max": [0.0003, 0.0022], "tail change a frame (rad) max": 0.097, "head turn a frame (rad) max": 0.298, "facing turn a frame (rad) max": 0.0}
+{"what": "standing still (2 s after you stopped)", "pet": "owl", "seconds": 2.0, "speed m/s mean": 0.0, "speed max": 0.0, "moving share": 0.0, "moving flips": 0, "leg swings a second": 0.0, "leg change a frame (rad) mean/max": [0.0, 0.0], "body roll change a frame (rad) mean/max": [0.0, 0], "body roll max": 0, "body height change a frame (m) mean/max": [0.0, 0.0], "tail change a frame (rad) max": 0, "head turn a frame (rad) max": 0.005, "facing turn a frame (rad) max": 0.0}
+{"what": "standing still (2 s after you stopped)", "pet": "dog", "seconds": 2.0, "speed m/s mean": 0.0, "speed max": 0.0, "moving share": 0.0, "moving flips": 0, "leg swings a second": 0.0, "leg change a frame (rad) mean/max": [0.0, 0.0], "body roll change a frame (rad) mean/max": [0.0, 0], "body roll max": 0, "body height change a frame (m) mean/max": [0.0, 0.0], "tail change a frame (rad) max": 0.035, "head turn a frame (rad) max": 0.005, "facing turn a frame (rad) max": 0.0}
+{"what": "following you at a slow walk", "pet": "duck", "seconds": 4.0, "speed m/s mean": 0.09, "speed max": 2.27, "moving share": 0.06, "moving flips": 1, "leg swings a second": 0.2, "leg change a frame (rad) mean/max": [0.003, 0.039], "body roll change a frame (rad) mean/max": [0.001, 0.0957], "body roll max": 0.1, "body height change a frame (m) mean/max": [0.0003, 0.0121], "tail change a frame (rad) max": 0.097, "head turn a frame (rad) max": 0.298, "facing turn a frame (rad) max": 0.017}
+{"what": "following you at a slow walk", "pet": "owl", "seconds": 4.0, "speed m/s mean": 0.09, "speed max": 2.27, "moving share": 0.06, "moving flips": 1, "leg swings a second": 0.0, "leg change a frame (rad) mean/max": [0.002, 0.165], "body roll change a frame (rad) mean/max": [0.0, 0], "body roll max": 0, "body height change a frame (m) mean/max": [0.0004, 0.0521], "tail change a frame (rad) max": 0, "head turn a frame (rad) max": 0.273, "facing turn a frame (rad) max": 0.017}
+{"what": "following you at a slow walk", "pet": "dog", "seconds": 4.0, "speed m/s mean": 0.05, "speed max": 2.27, "moving share": 0.03, "moving flips": 1, "leg swings a second": 0.2, "leg change a frame (rad) mean/max": [0.005, 0.31], "body roll change a frame (rad) mean/max": [0.0005, 0.0272], "body roll max": 0.039, "body height change a frame (m) mean/max": [0.0001, 0.0096], "tail change a frame (rad) max": 0.369, "head turn a frame (rad) max": 0.286, "facing turn a frame (rad) max": 0.031}
+=== slow before Wed Nov 25 00:11:45 UTC 2026
+at home: [['duck', 'city', True, -91.6, 8.4], ['owl', 'city', True, -95.6, 8.5], ['dog', 'city', True, -97, 8.9]]
+{"what": "wandering in your yard (30 s)", "pet": "duck", "walking seconds": 1.8, "speed m/s mean": 1.1, "leg swings a second": 4.9, "leg change a frame (rad) mean/max": [0.142, 0.286], "body roll change a frame (rad) max": 0.0761, "body height change a frame (m) max": 0.0135}
+{"what": "wandering in your yard (30 s)", "pet": "owl", "walking seconds": 2.4, "speed m/s mean": 0.77, "leg swings a second": 8.3, "leg change a frame (rad) mean/max": [0.099, 0.281], "body roll change a frame (rad) max": 0, "body height change a frame (m) max": 0.0832}
+{"what": "wandering in your yard (30 s)", "pet": "dog", "walking seconds": 3.7, "speed m/s mean": 1.1, "leg swings a second": 2.7, "leg change a frame (rad) mean/max": [0.106, 0.211], "body roll change a frame (rad) max": 0.0135, "body height change a frame (m) max": 0.0042}
+you walked 15.1 m in short steps
+{"what": "you walk in short steps (start and stop)", "pet": "duck", "walking seconds": 3.0, "speed m/s mean": 4.93, "leg swings a second": 18.9, "leg change a frame (rad) mean/max": [0.406, 0.873], "body roll change a frame (rad) max": 0.2978, "body height change a frame (m) max": 0.0189}
+{"what": "you walk in short steps (start and stop)", "pet": "owl", "walking seconds": 3.2, "speed m/s mean": 4.84, "leg swings a second": 15.2, "leg change a frame (rad) mean/max": [0.156, 0.35], "body roll change a frame (rad) max": 0, "body height change a frame (m) max": 0.1001}
+{"what": "you walk in short steps (start and stop)", "pet": "dog", "walking seconds": 3.0, "speed m/s mean": 5.29, "leg swings a second": 14.7, "leg change a frame (rad) mean/max": [0.394, 0.947], "body roll change a frame (rad) max": 0.0787, "body height change a frame (m) max": 0.0071}
+walk/stand switches in 10 s: {'duck': 12, 'owl': 16, 'dog': 14} | errors: []
+=== slow after Wed Nov 25 00:11:55 UTC 2026
+at home: [['duck', 'city', True, -91.6, 8.4], ['owl', 'city', True, -95.6, 8.5], ['dog', 'city', True, -97, 8.9]]
+{"what": "wandering in your yard (30 s)", "pet": "duck", "walking seconds": 1.6, "speed m/s mean": 1.1, "leg swings a second": 0.6, "leg change a frame (rad) mean/max": [0.04, 0.081], "body roll change a frame (rad) max": 0.0144, "body height change a frame (m) max": 0.0069}
+{"what": "wandering in your yard (30 s)", "pet": "owl", "walking seconds": 1.7, "speed m/s mean": 0.86, "leg swings a second": 1.2, "leg change a frame (rad) mean/max": [0.014, 0.039], "body roll change a frame (rad) max": 0, "body height change a frame (m) max": 0.0129}
+{"what": "wandering in your yard (30 s)", "pet": "dog", "walking seconds": 1.9, "speed m/s mean": 1.1, "leg swings a second": 3.7, "leg change a frame (rad) mean/max": [0.105, 0.211], "body roll change a frame (rad) max": 0.0135, "body height change a frame (m) max": 0.0042}
+you walked 15.1 m in short steps
+{"what": "you walk in short steps (start and stop)", "pet": "duck", "walking seconds": 3.0, "speed m/s mean": 4.93, "leg swings a second": 1.7, "leg change a frame (rad) mean/max": [0.048, 0.095], "body roll change a frame (rad) max": 0.0167, "body height change a frame (m) max": 0.0078}
+{"what": "you walk in short steps (start and stop)", "pet": "owl", "walking seconds": 3.2, "speed m/s mean": 4.84, "leg swings a second": 1.6, "leg change a frame (rad) mean/max": [0.017, 0.039], "body roll change a frame (rad) max": 0, "body height change a frame (m) max": 0.0129}
+{"what": "you walk in short steps (start and stop)", "pet": "dog", "walking seconds": 3.0, "speed m/s mean": 5.29, "leg swings a second": 14.7, "leg change a frame (rad) mean/max": [0.395, 0.926], "body roll change a frame (rad) max": 0.079, "body height change a frame (m) max": 0.0076}
+walk/stand switches in 10 s: {'duck': 12, 'owl': 16, 'dog': 14} | errors: []
+=== paint Wed Nov 25 00:12:06 UTC 2026
+PASS BEFORE (live game): tapping Coral on the colour card changes nothing (the bug) | tap ok; ACT.hcol is undefined; colour None; coins 120 -> 120
+PASS three players online together (A, B new; C the live version) | ['ZZTEST-PAINTB', 'ZZTEST-PAINTC']
+PASS the card opens from the 🎨 House colour button and shows the price before paying | tap ok; note: 'Everyone on Friends Lane sees your house! A new colour costs 50\xa0🪙.'
+PASS nothing picked yet: the button is off and says the house has this colour | {'off': True, 'txt': '✅ Your house has this colour'}
+PASS tap Coral: only picked, nothing paid, the house not painted yet, the button shows the price | tap ok; coins 120; colour None; button {'off': False, 'txt': '🎨 Paint it! 50\xa0🪙'}; marked ['hcol:#ffb3a7']
+PASS tap Paint it!: 50 coins taken once, the house is Coral, saved | tap ok; coins 120 -> 70; colour #ffb3a7; in the save #ffb3a7; Coral on the house walls True; message '🎨 Your house is painted! Everyone on Friends Lane sees it 🏡'
+PASS after painting the button is off again (this colour costs nothing) | {'off': True, 'txt': '✅ Your house has this colour'}
+PASS picking the colour the house already has costs nothing | taps ok, ok; coins 70; button {'off': True, 'txt': '✅ Your house has this colour'}
+PASS B (new version, online) sees A's house in Coral | before '', after '#ffb3a7'; Coral on the walls of A's house in B's game: True
+PASS C (the live version, online) goes on as before: it never read a friend's house colour, so it shows A's house in the lane's colour; no error | C shows ''; A sent None; errors []
+PASS the "any colour" slider only picks too | picked #b0dcf2; coins 70; house #ffb3a7
+PASS paying for the slider colour: 50 more coins, painted | coins 20; colour #b0dcf2
+PASS 20 coins, Blue picked, Paint it!: a friendly message, no paint, no coins taken | tap ok; coins 20; colour #b0dcf2; message 'Not enough coins yet! 🪙 Get a job from Rosie to earn coins! 💼'
+PASS back to the lane's own colour is a paint job too (50), and the saved colour is gone | coins 60 -> 10; colour None; marked ['hcol:#e6dbff', 'hcol:']
+PASS after a reload the house is still Coral and no coins were taken again | colour #ffb3a7; coins 5; on the walls True
+PASS no errors in the three games | {}
+PASS an old save with a painted house keeps its colour and its coins | colour #bfe6ff; coins 33
+PASS iphone-landscape: the Paint it! button can be tapped and paints | tap ok; coins 70; layout marks on the card: []
+PASS iphone-portrait: the Paint it! button can be tapped and paints | tap ok; coins 70; layout marks on the card: [('small-target', 'button.dotb[hcol:#b79cff] "Purple"'), ('small-target', 'button.dotb[hcol:#ffd6e0] "Pink"'), ('small-target', 'button.dotb[hcol:#bfe6ff] "Blue"'), ('small-target', 'button.dotb[hcol:#b5e3a1] "Green"'), ('small-target', 'button.dotb[hcol:#fff1b8] "Yellow"'), ('small-target', 'button.dotb[hcol:#ffe0c4] "Peach"')]
+RESULT 19 of 19 PASS
+=== split Wed Nov 25 00:13:59 UTC 2026
+===== COZY TOWN SPLIT CHECK =====
+    PASS | S1 the site joins back, byte for byte, into the one file the kit tested | 2390294 bytes, identical
+    PASS | S2 every file in index.html exists and matches its ?v= hash; none left unnamed | 13 files, all hashes match
+    PASS | S3 the site starts: same stamp as the tested file, no reload loop, title, no page errors | stamp 2026112513 (tested file 2026112513), update id 2026112513:agm2f0.7w = its own index.html 2026112513:agm2f0.7w: True, title shows, page errors 0
+    PASS | S4 the live game on players' devices sees this index.html as a newer update | live stamp 2026112497 sees 2026112513 -> update
+RESULT: PASS
+=== kit Wed Nov 25 00:14:38 UTC 2026
+=== done Wed Nov 25 00:38:27 UTC 2026
+
+Quick kit (--only files,counts,saves,night3,run4): 90 PASS, 1 FAIL:
+    FAIL | A1 newest live GitHub version read right before the check | claude-live.html read on 2026-11-24, github-live.html read on 2026-11-24
+(A1: the live copy was joined on 24 Nov UTC and the check ran after midnight; main also moved to ffeb0b3 during the run.)
+
+Picture viewer (one helper, 29 pictures, second take):
+after-house-0-lane-colour-ipad-landscape-dark.png | 0 | Unpainted house keeps the lane's grey-lilac walls. Roof, door, windows, sign and fence are intact. Dark HUD pills and buttons are readable. | whole scene
+after-house-0-lane-colour-ipad-landscape-light.png | 0 | Same unpainted house, nothing broken. HUD is light and readable. | whole scene
+after-house-1-coral-ipad-landscape-dark.png | 1 | Walls are painted, but the shaded front reads as dusty rose-brown, not soft coral #ffb3a7. Roof, trim, door and sign are intact. Coins show 70. | house front wall
+after-house-1-coral-ipad-landscape-light.png | 1 | Same dull salmon-brown wall in shade, only mildly coral. Nothing broken. Coins show 70. | house front wall
+after-paint-card-0-open-ipad-landscape-dark.png | 1 | The note shows the 50-coin price and the switched-off "Your house has this colour" button. That button's text is dim on dim teal, so contrast is low. Lilac is marked as the current colour. | bottom button
+after-paint-card-0-open-ipad-landscape-light.png | 1 | Price is shown. The switched-off button's pale text on pale mint has very weak contrast. It is still legible and the layout is clean. | bottom button
+after-paint-card-1-picked-ipad-landscape-dark.png | 0 | Coral is marked and the "Paint it! 50" button has a coral dot, with good contrast. The slider thumb sits at the left end, slightly overhanging the track. | button row, slider
+after-paint-card-1-picked-ipad-landscape-light.png | 0 | Coral is marked and "Paint it! 50" has a coral dot. Everything is readable and nothing overlaps. | whole card
+after-paint-card-2-painted-ipad-landscape-dark.png | 0 | Coins show 70. The swatch is coral and the button is off again. The "Your house is painted!" toast is inside the screen with good contrast. | toast at right
+after-paint-card-2-painted-ipad-landscape-light.png | 0 | Coins show 70, the button is off and the toast is readable. The disabled button's text is pale but acceptable. | bottom button
+after-paint-card-3-not-enough-ipad-landscape-light.png | 0 | Coins show 20 with Blue marked. A friendly "Not enough coins yet!" toast sits inside the screen. The "Paint it!" button still looks active, which is fine. | toast at right
+after-paint-card-picked-iphone-landscape-dark.png | 1 | Two-column card fits the screen and is not cut off. "Your house now" row is left out as intended. Chip text is small (~11px) and the chips are about 42px tall, a bit under a comfortable touch size. | colour chips
+after-paint-card-picked-iphone-landscape-light.png | 1 | Card fits and nothing overlaps. Chip labels are small and the chips are about 42px tall. A faint name tag shows through the backdrop behind the card. | colour chips
+after-paint-card-picked-iphone-portrait-dark.png | 0 | Card fits within the screen width. Chips and the Paint it! button are readable with good contrast, and nothing overlaps or is cut off. | whole card
+after-paint-card-picked-iphone-portrait-light.png | 0 | Card fits and all text is readable. The "Done" button peeks out under the card, which is harmless. | whole card
+after-stand-duck-owl.png | 1 | Both birds are upright on the ground and nearly identical in every frame, so calm. The duck's head dips with the eyes hidden in frame 2, a small difference. | duck head, frame 2
+after-walk-duck-owl-dark.png | 1 | Owl is calm and steady, with only small head turns across frames. The duck is almost entirely hidden behind the player's leg, so its motion can't be judged. | duck at right edge
+after-walk-duck-owl.png | 1 | Owl calm: same height and tilt, only gaze shifts. The duck is hidden behind the player's legs, so its motion can't be judged. A bus toast covers frame 1's lower left. | duck at right; toast in frame 1
+after-walk-duck.png | 1 | Mostly calm: body height and tilt are steady and nothing is broken, with the duck on the ground. The legs still swing between wide and narrow stance every 1-2 frames, but only slightly. | legs, frames 2-4 and 6-8
+after-walk-owl.png | 1 | Calm: same height and tilt in all 8 frames, on the ground, nothing broken. The feet barely move under the body, so it reads more like gliding than walking. | feet at bottom
+before-house-coral-set-by-test-ipad-landscape-dark.png | 0 | Walls are a bright soft coral with matching roof and shutters. Door, windows, sign and fence are intact. | whole house
+before-house-coral-set-by-test-ipad-landscape-light.png | 0 | Same coral house, nothing broken, HUD readable. | whole house
+before-paint-card-ipad-landscape-dark.png | 0 | Old card with no price and no Paint button. Layout and contrast are fine. Yellow is marked. | whole card
+before-paint-card-ipad-landscape-light.png | 0 | Old card is clean and readable. It has no price or Paint button, as expected. | whole card
+before-stand-duck-owl.png | 2 | The owl bobs: frames 2 and 3 show it raised off the ground with head and ears tilting, so jumpy. The duck is stable. | owl, frames 2-4
+before-walk-duck-owl-dark.png | 2 | Jumpy: the duck's tilt and legs change between frames (frame 3 leans back with legs apart). The owl's ears and eyes flip between frames. | duck frames 3-4; owl
+before-walk-duck-owl.png | 2 | Jumpy: the duck's beak angle and lean flip between frames, and the owl's height and head tilt shift. Duck legs change abruptly. | duck and owl, all frames
+before-walk-duck.png | 2 | Jumpy: body height and tilt jump between frames (frame 3 low and flat, frame 6 higher). The legs flip between wide and together stances. | duck body and legs
+before-walk-owl.png | 2 | Jumpy: the owl's body height and tilt change frame to frame (frames 1 and 4 tilt forward and sit low, 2 and 6 are higher). The head rotates erratically. | owl body, frames 1-4
+CALM: duck before jumpy, after calm; owl before jumpy, after calm
