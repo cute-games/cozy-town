@@ -9,6 +9,9 @@ def rep(s, a, b, n=1):
     if s.count(a) != n: sys.exit(f'STOP: expected {n} x {a[:60]!r}, found {s.count(a)}')
     return s.replace(a, b)
 def fix_check(s):
+    # C2b (25 Nov 2026, the owner: the Tree Park is in town, no separate place to enter). Old: every area of the live game, 'treepark' too, must be entered by the crawl.
+    # New: the same for every other area; 'treepark' counts as reached only when N37 passed (it walks in through the gate and plays all three paths on 4 devices).
+    s = rep(s, "    unreached = [x for x in all_areas if", "    if any(l[0] == 'N37' and l[2] is True for l in lines): reached.add('treepark')   # 25 Nov 2026: the Tree Park is in town; N37 walks in and plays it\n    unreached = [x for x in all_areas if")
     s = rep(s, "CHECK_VERSION = '6'   #", "CHECK_VERSION = '7'   # v7 (23 Oct, owner's OK): the Claude copy of the game is gone (22 Oct), so A1/A2 texts say GitHub, stage 'claude' (C7) and F2 are removed, F3 = the GitHub file after upload is exactly the tested file. Earlier: ")
     s = rep(s, "'newest live versions read right before the check'", "'newest live GitHub version read right before the check'")
     s = rep(s, "'dated private backup of the live game'", "'dated backup branch of the live GitHub game'", 3)
