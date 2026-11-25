@@ -641,7 +641,7 @@ async def p16(run, new_wb, FIX):
 # ---------------- P17 the vet station: the building, inside, the four staff, the visit ----------------
 TREES_JS = r"""()=>{const out=(x,z)=>!(x>6&&x<21.5&&z>-86&&z<-68.5),r=v=>Math.round(v*100)/100,C=LOC.city;
   const F=typeof FARMD==='object'?FARMD:{del:[],mv:[]};
-  return {groups:(C.treeGroups||[]).map(g=>g.map(r)),map:mapTrees().filter(([x,z])=>out(x,z)).map(t=>t.map(r)),farm:F.del.concat(F.mv.map(q=>[q[0],q[1]]),F.mv.map(q=>[q[2],q[3]])).map(q=>q.map(r)),farmWalls:C.cols.filter(c=>c.fw&&out((c.x1+c.x2)/2,(c.z1+c.z2)/2)).length,cols:C.cols.filter(c=>c.cr!==undefined?out(c.cx,c.cz):out((c.x1+c.x2)/2,(c.z1+c.z2)/2)).length,
+  return {groups:(C.treeGroups||[]).map(g=>g.map(r)),map:mapTrees().filter(([x,z])=>out(x,z)).map(t=>t.map(r)),farm:F.del.concat(F.mv.map(q=>[q[0],q[1]]),F.mv.map(q=>[q[2],q[3]])).map(q=>q.map(r)),farmWalls:C.cols.filter(c=>c.fw&&out((c.x1+c.x2)/2,(c.z1+c.z2)/2)).length,tpWalls:C.cols.filter(c=>(c.cr!==undefined?c.cx:(c.x1+c.x2)/2)>81&&typeof tpIn==='function').length,cols:C.cols.filter(c=>c.cr!==undefined?out(c.cx,c.cz):out((c.x1+c.x2)/2,(c.z1+c.z2)/2)).length,
   park:C.cols.filter(c=>{const x=c.cr!==undefined?c.cx:(c.x1+c.x2)/2,z=c.cr!==undefined?c.cz:(c.z1+c.z2)/2;return x>-41&&x<-29&&z>8&&z<41;}).length};}"""
 P17_JS = r"""()=>{const o={},bad=[],V=LOC.vet,C=LOC.city;if(!V)return {bad:['no vet station in the game']};
   const lab=t=>typeof t.label==='function'?t.label():t.label,door=C.inter.find(t=>/Vet Station/.test(lab(t)));o.door=door?[r2(door.x),r2(door.z)]:null;
@@ -714,7 +714,10 @@ async def p17(run, live_w, new_wb, FIX):
     # own walls. Groups, every other map tree (position and size) and every other wall are compared exactly as before)
     near = lambda t: any(abs(t[0] - q[0]) < .6 and abs(t[1] - q[1]) < .6 for q in trees_new.get('farm', []))
     map_new = [t for t in trees_new['map'] if not near(t)]; map_live = [t for t in trees_live['map'] if not near(t)]
-    same = trees_new['groups'] == trees_live['groups'] and map_new == map_live and trees_new['cols'] - trees_new['park'] - trees_new.get('farmWalls', 0) == trees_live['cols'] - trees_live['park']
+    # (25 Nov 2026, the Tree Park in town: the town's walkable area reaches east of x 80 there, with 28 edge walls, tree trunks and posts; the old tree by the gate at x 80.6 still counts.
+    # Old: every wall outside the clinic, the Pet Show part of the park and the farm as in the stage-3 build; new: the same, without the walls whose middle is east of x 81 in a build
+    # that has the park in town (N37 checks the park))
+    same = trees_new['groups'] == trees_live['groups'] and map_new == map_live and trees_new['cols'] - trees_new['park'] - trees_new.get('farmWalls', 0) - trees_new.get('tpWalls', 0) == trees_live['cols'] - trees_live['park']
     if not same: bad.append(f"the town's trees and bushes outside the clinic moved: groups {trees_live['groups'][:2]} -> {trees_new['groups'][:2]}, map trees {len(trees_live['map'])} -> {len(trees_new['map'])}, walls outside the Pet Show area {trees_live['cols'] - trees_live['park']} -> {trees_new['cols'] - trees_new['park']}")
     if errs: bad.append(f'browser errors {errs[:2]}')
     o, v = a.get('o', {}), b['o']
