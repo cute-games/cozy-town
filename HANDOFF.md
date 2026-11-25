@@ -1,6 +1,21 @@
-# HANDOFF — read this first (one page; updated 2 Nov 2026: Pets and Farm Update ready for its pull request)
+# HANDOFF — read this first (one page; updated 25 Nov 2026: the night of 24-25 Nov is live; the Foreman file is `FOREMAN.md` on branch `claude/foreman-handoff`)
 
-## Where things stand
+## Where things stand (25 Nov 2026)
+- **Live: `main` = the merge of pull request #34, stamp 2026112504, joined game 2,463,690 bytes.** Backups: `backup-2026-11-25` (c974534), `backup-2026-11-25c` (ad8827f, main before #34).
+- Merged in the night of 24-25 Nov: #29 Pet Shop taller top floor + painted windows in all interiors; #30 house paint works and costs 150 coins, friends see the colour, calm duck and owl;
+  #31 Tree Park parkour obby in town; #32 horses ride anywhere and walk home in groups; #34 friends (accept, remove, block), texts, voice calls, world chat.
+- **#34 rests until the owner pastes the new Firebase rules** (`tools/social/FIREBASE-STEPS.md`, rules `tools/social/firebase-rules.json`): until then the Friends app says "Coming soon".
+  Its tests: `tools/social/` (rules_test.js 138, logic_test.js 34, sdk_shapes.js 13, test_social.py 109). **Pull request #33 (another version of the same) must NOT be merged**: with its rules
+  a stranger can become a child's friend and read texts (the comment on #33 has the list).
+- First full check of main after #30-#32 (655069d, 25 Nov): nothing new broken. Open and older than that night: P8, P9, P29, P36 FAIL the same on ffeb0b3 (cause not found; P9/P29/P36 compare
+  with an "older version"); C4: the mini-map button overlaps its zoom buttons on iPad landscape (a player can see it); the pfu stage's lines P11-P24 fail as a "Page.goto timeout" cascade
+  inside the stage and PASS alone (`PFU_ONLY=`); P25 breaks at page `p25-A-new-0` on this kind of machine (kit problem); P19 needs a GPU.
+- Kit commit ad8827f (C2b and P17 rewritten for the park in town) went straight to main by mistake (kit files only). Push with `git push origin HEAD:refs/heads/<branch>`, never a plain `git push`
+  from a branch made from `origin/main`.
+- Not verified on real devices: everything from that night (iPad Safari microphone and sound for calls, real Firebase rules, speed with the obby in town, how the horses and the waddle feel).
+- Music: the pick page "Pick the Music" has play buttons for all 49 songs; only Yes picks go into the game later, as separate files (see FOREMAN.md).
+
+## Older (2 Nov 2026 and before)
 - **Horses in town** (24 Nov, branch `claude/horse-town`, stamp 2026112497+): ride anywhere in town (door = "horses wait outside"; the lesson stays at the farm);
   a horse let go walks home on pavements/zebras/park paths/farm roads (`HN` block in `js/03-game.js` after `RIDE_POSE_X`: 0.5 m walk map + one way-home field,
   built a few ms a frame in town; walk = fixed 0.1 s steps from the record [horse,x,z,time], sent online as presence `rh`), groups of near horses (2 wide, single
