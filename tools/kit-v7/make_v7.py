@@ -166,6 +166,8 @@ def fix_n28(s):
     if s.count('async def n28(run, new_wb, FIX):') != 1: sys.exit('STOP: N28 not found exactly once')
     return s[:i] + open('tools/kit-v7/n28_new.py', encoding='utf-8').read()
 def fix_n28_title(s):
+    s = rep(s, "('N37', 'Tree park: each of the three paths can be finished; zip lines work; signs readable; free; a fall puts you back on the last platform; on every device'",
+               "('N37', 'Tree park (rewritten 24 Nov: in town, a Roblox-style obby): walked into through the gate with no place change; each of the three paths played start to finish by real jumps; timer and best time saved; checkpoint flags light; zip lines work; signs readable; free; a fall puts you back on the last checkpoint; a save made in the old park starts at the gate; on every device'")
     return rep(s, "('N28', 'Pet shop: two floors; each kind in its own area upstairs, no kind in another\\'s area; clothes and snacks on shelves downstairs; adopting and buying still work'",
                "('N28', 'Pet shop (rewritten 1 Nov, stage 4b: the new shop): 3 open floors in one room; each kind at its own cozy spot, no kind at another\\'s spot, nobody leaves its spot; a shelf of snacks and the clothes rack on floor 1; the stairs walked up and down; adopting and buying still work'")
 def fix_n9(s):
@@ -222,6 +224,11 @@ for info in src.infolist():
                                                              b"@font-face{font-family:'Roboto Slab';font-style:normal;font-weight:800;font-display:swap;src:url(https://fonts.gstatic.com/__cozytest/robotoslab-800.woff2) format('woff2')}\n")
     if info.filename == 'cozycheck/map4.py': data = fix_map4(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
     if info.filename == 'cozycheck/pets4.py': data = fix_n28(data.decode('utf-8')).encode('utf-8'); compile(data, info.filename, 'exec')
+    # N37 (24 Nov 2026, the owner: the Tree Park moves into town as a Roblox-style obby, no teleport). Old: tree4.py tested the separate park (LOC.treepark).
+    # New: tools/kit-v7/tree4_new.py: the same checks in town (every path finished, zip lines, signs readable, free, a fall puts you back, the jump control,
+    # the park no heavier than the beach, on 4 devices) played by real jumps, plus the walk in with no place change, the timer and best time, the checkpoint
+    # flags, and a save made inside the old park starting at the gate.
+    if info.filename == 'cozycheck/tree4.py': data = open('tools/kit-v7/tree4_new.py', 'rb').read(); compile(data, info.filename, 'exec')
     dst.writestr(info, data)
 # fixtures that were only in tools/check-fixtures (31 Oct 2026): N8's save-prepet1-designer2.json, the save made by main before the
 # Pets and Farm Update, and the saves made by each of its stages; and the stage 'pfu' module
