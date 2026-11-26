@@ -551,8 +551,19 @@ const FURN={
   picnictable:{n:'Picnic table',i:'🧺',p:180,w:1.6,d:1.4,r4:1,use:'sit',b(g){box(g,1.6,.06,.7,WOOD,0,.72,0);for(const z of[-.6,.6])box(g,1.6,.05,.3,WOOD,0,.44,z);for(const x of[-.6,.6]){box(g,.06,.72,.06,WOOD2,x,0,.3,{rz:0,ol:.01});box(g,.06,.72,.06,WOOD2,x,0,-.3,{ol:.01});box(g,.06,.44,.06,WOOD2,x,0,.65,{ol:.01});box(g,.06,.44,.06,WOOD2,x,0,-.65,{ol:.01});}box(g,1.2,.02,.5,'#ff6b6b',0,.78,0,{ol:false});for(let i=0;i<3;i++)box(g,.2,.02,.2,'#ffffff',-.4+i*.4,.8,.0,{ol:false});}},
   /* 🪩 the disco pieces (job 17's dance game uses them) */
   discofloor:{n:'Disco floor',i:'🪩',p:350,w:2.4,d:2.4,r4:1,flat:1,b(g){const C=['#ff4d8d','#7cc8ff','#ffd45c','#5fd4b0','#b79cff','#ff8a6b'],M=C.map(c=>toon({color:c,emissive:new THREE.Color(c),emissiveIntensity:.3}));for(let i=0;i<6;i++)for(let j=0;j<6;j++){const m=box(g,.38,.03,.38,null,-1.0+i*.4,0,-1.0+j*.4,{mat:M[(i+j)%6],ol:false});m.userData.tile=(i+j)%6;}box(g,2.4,.02,2.4,'#2e2347',0,0,0,{ol:.015});}},
-  discoball:{n:'Disco ball',i:'🪩',p:300,w:.9,d:.5,r4:1,use:'lamp',b(g){cyl(g,.2,.24,.05,'#2e2347',0,0,0,{seg:14});cyl(g,.025,.025,2.65,'#c8c8d8',0,.05,0,{seg:8,ol:.01});box(g,.6,.05,.05,'#c8c8d8',.28,2.65,0,{ol:.012});cyl(g,.016,.016,.18,'#6f6a88',.54,2.48,0,{seg:6,ol:.008});   /* (run 4 finish: a thicker arm with an outline and a dark string: the ball seemed to float) */
-    const M=toon({map:discoTex(),emissive:new THREE.Color('#b9c6ff'),emissiveIntensity:.25});const b=sph(g,.36,null,.54,2.15,0,{mat:M,ws:18,hs:14,ol:.014});b.userData.shade=1;b.userData.ball=1;for(let i=0;i<14;i++){const a=i*2.4,y=2.15+Math.sin(i*1.7)*.22,r=Math.sqrt(Math.max(0,.1225-(y-2.15)*(y-2.15)));sph(g,.04,['#ff4d8d','#7cc8ff','#ffd45c','#5fd4b0'][i%4],.54+Math.cos(a)*r,y,Math.sin(a)*r,{ws:5,hs:4,ol:false});}   /* (run 4, stage 3: bigger and higher, above the dancers' heads) */}},
+  discoball:{n:'Disco ball',i:'🪩',p:300,w:.72,d:.72,r4:1,flat:1,use:'lamp',b(g,c,ceiling=3.2){
+    const pivot=new THREE.Group(),y=ceiling-.82,r=.38;g.add(pivot);
+    pivot.position.y=y;pivot.userData.keep=1;pivot.userData.ball=1;
+    cyl(g,.053,.058,.03,'#9d8bb4',0,ceiling-.03,0,{seg:10,ol:false});
+    cyl(g,.009,.009,ceiling-y-r-.025,'#77688f',0,y+r,0,{seg:6,ol:false});
+    g.userData.mount=ceiling;
+    const M=toon({map:discoTex(),emissive:new THREE.Color('#b9c6ff'),emissiveIntensity:.25});
+    sph(pivot,r,null,0,0,0,{mat:M,ws:18,hs:14,ol:.014}).userData.shade=1;
+    const colors=['#ff7aa8','#7cc8ff','#ffd45c','#7fdcb5'];
+    for(let i=0;i<11;i++){
+      const a=i*2.4,h=Math.sin(i*1.7)*.27,ring=Math.sqrt(r*r-h*h);
+      sph(pivot,.025,colors[i%4],Math.cos(a)*ring,h,Math.sin(a)*ring,{ws:5,hs:4,ol:false});
+    }}},
   xmastree:{n:'Holiday tree',i:'🎄',p:300,w:1.0,d:1.0,b(g){cyl(g,.06,.06,.3,'#8c6137',0,0,0,{seg:6});for(const [y,r,h] of [[.25,.5,.7],[.65,.4,.6],[1.0,.28,.5]])cone(g,r,h,'#4fae64',0,y,0,{seg:10});starOn(g,0,1.6,0,.12);for(let i=0;i<10;i++){const a=i*2.4,y=.35+i*.1,r=xmasProf(y)+.035;sph(g,.045,['#ff6b6b','#ffd45c','#7cc8ff','#ff9ec4'][i%4],Math.cos(a)*r,y,Math.sin(a)*r,{ws:6,hs:5,ol:false});}}},
   beanbag:{n:'Beanbag',i:'💺',p:100,w:.9,d:.9,cols:['#ff9ec4','#b79cff','#7cc8ff','#ffd45c','#5fd4b0'],use:'sit',b(g,c){sph(g,.45,c,0,.25,0,{s:[1,.6,1],ws:14,hs:10});sph(g,.3,c,0,.42,-.18,{s:[1.2,.8,.7],ws:12,hs:8});}},
   bunkbed:{n:'Bunk bed',i:'🛏️',p:450,w:1.2,d:2.1,cols:['#ff9ec4','#8fd3ff','#b79cff','#7fdcb5'],use:'sleep',b(g,c){for(const [x,z] of [[-.55,-1],[.55,-1],[-.55,1],[.55,1]])box(g,.08,1.8,.08,'#c98f5e',x,0,z,{ol:.012});for(const y of[.25,1.15]){box(g,1.1,.12,2.0,'#c98f5e',0,y,0);box(g,1.0,.15,1.9,'#ffffff',0,y+.12,0,{ol:.01});box(g,1.02,.08,1.3,c,0,y+.27,.3,{ol:.01});box(g,.5,.1,.3,'#ffffff',0,y+.27,-.75,{ol:.01});}for(let i=0;i<4;i++)box(g,.3,.04,.04,'#c98f5e',.42,.45+i*.25,1.05,{ol:false});}},
@@ -732,7 +743,7 @@ function drawCatTV(x,t,on){const W=216,H=120,k=x.canvas.width/W;x.setTransform(k
   x.save();x.translate(108,113);x.scale(pop,pop);x.font='800 14px "CozyCoin","Baloo 2","Trebuchet MS",sans-serif';x.textAlign='center';x.lineJoin='round';
   x.lineWidth=3.2;x.strokeStyle='#1d1430';x.strokeText(cap,0,0);x.fillStyle='#fff';x.fillText(cap,0,0);x.restore();
 }
-function buildFurn(t,c){const g=new THREE.Group();const F=FURN[t];F.b(g,c||(F.cols?F.cols[0]:null));return g;}
+function buildFurn(t,c,ceiling){const g=new THREE.Group();const F=FURN[t];F.b(g,c||(F.cols?F.cols[0]:null),ceiling);return g;}
 
 /* ---- food ---- */
 const FOODS={

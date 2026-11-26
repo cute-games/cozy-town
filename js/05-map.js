@@ -416,6 +416,13 @@ function openSettings(){const fromTitle=!PLAYING;
   openPanel(`<div class="hd"><h2>⚙️ Settings</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
     <div class="opt"><span>Look speed</span><span class="row" style="margin:0">${[['Slow',.6],['Normal',1],['Fast',1.6]].map(([n,v])=>`<button class="btn ${SET.look===v?'butter':'white'}" data-a="slook:${v}">${n}</button>`).join('')}</span></div>
     <div class="opt"><span>Sound</span><button class="btn ${SET.sound?'mint':'white'}" data-a="ssound">${SET.sound?'🔊 On':'🔇 Off'}</button></div>
+    <div class="opt"><label for="danceLatency">Dance audio delay</label>
+      <span class="row" style="margin:0;align-items:center;justify-content:flex-end"><input id="danceLatency" type="range" aria-description="Positive values help when speakers play the beat late" min="-200" max="200" step="5" value="${dnLatency()}" style="width:min(160px,37vw);height:44px;accent-color:#9b53bc">
+      <output id="danceLatencyValue" for="danceLatency" style="min-width:65px;text-align:right;color:#3d2c5e">${dnLatency()} ms</output></span>
+    </div>
+    <div class="opt"><span>Dance arrow travel</span><span class="row" style="margin:0"><button class="btn ${!SET.danceUp?'butter':'white'}" data-a="dnopt:down" aria-pressed="${!SET.danceUp}">Down ↓</button><button class="btn ${SET.danceUp?'butter':'white'}" data-a="dnopt:up" aria-pressed="${!!SET.danceUp}">Up ↑</button></span></div>
+    <div class="opt"><span>Dance arrow size</span><span class="row" style="margin:0"><button class="btn ${SET.danceSmall?'butter':'white'}" data-a="dnopt:standard" aria-pressed="${!!SET.danceSmall}">Standard</button><button class="btn ${!SET.danceSmall?'butter':'white'}" data-a="dnopt:large" aria-pressed="${!SET.danceSmall}">Large</button></span></div>
+    <div class="opt"><span>Dance motion</span><span class="row" style="margin:0"><button class="btn ${!SET.danceCalm?'butter':'white'}" data-a="dnopt:regular" aria-pressed="${!SET.danceCalm}">Regular</button><button class="btn ${SET.danceCalm?'butter':'white'}" data-a="dnopt:calm" aria-pressed="${!!SET.danceCalm}">Calm</button></span></div>
     <div class="opt"><span>Graphics</span><span class="row" style="margin:0"><button class="btn ${SET.gfx==='nice'?'butter':'white'}" data-a="sgfx:nice">Pretty</button><button class="btn ${SET.gfx==='fast'?'butter':'white'}" data-a="sgfx:fast">Fast</button></span></div>
     <div class="opt"><span>🍕 Pizza job</span><button class="btn white" data-a="tutgo">📖 Show me the tips</button></div>
     <div class="opt"><span>🎨 Designer job</span><button class="btn white" data-a="dtutgo">📖 Show me the tips</button></div>
@@ -428,7 +435,11 @@ function openSettings(){const fromTitle=!PLAYING;
     ${MV.on?'<div class="opt"><span>📱 Another iPad or phone</span><button class="btn sky" data-a="mvopen">📦 Move my game</button></div>':''}
     ${mvBefore()?'<div class="opt"><span>↩️ Your old game</span><button class="btn white" data-a="mvundo">↩️ Bring it back</button></div>':''}
     <p class="note">${TOUCHY?'Walk: drag on the left side. Look: drag on the right side. Jump: ⬆️. Run: 🏃. Tap things to use them.':'Walk: WASD. Look: drag with the mouse. Jump: Space. Run: hold Shift. Use things: E or click. Bag: B.'}<br>✏️ Notepad: draw on it! Tap it 2× for a new page, 3× to go back, 4× to delete.</p>
-    <div class="row"><button class="btn coral" data-a="wipe">🗑️ Start a new game</button></div>`,{cls:'setcard',onClose:()=>{WIPE=false;}});}
+    <div class="row"><button class="btn coral" data-a="wipe">🗑️ Start a new game</button></div>`,{cls:'setcard',onClose:()=>{WIPE=false;}});
+  const delay=$('danceLatency'),value=$('danceLatencyValue');
+  delay.oninput=()=>{value.textContent=delay.value+' ms';};
+  delay.onchange=()=>{SET.danceLatency=Number(delay.value);saveSet();};
+}
 ACT.fetchpets=()=>{if(!S||!S.pets.length){toast('You don\'t have any pets yet! Adopt one at the Pet Shop. 🐾',3);return;}
   /* 🐾 up to 3 come (pet update 1): the ones following you first, then pets waiting somewhere, then pets at home; a pet left waiting somewhere else goes home */
   const go=[...PET_ACTORS.filter(p=>!p.d.stay),...PET_ACTORS.filter(p=>p.d.stay&&!petAtHome(p.d)),...PET_ACTORS.filter(p=>petAtHome(p.d))].slice(0,PET_FOLLOW);
@@ -440,6 +451,14 @@ ACT.gohome=()=>{if(CUR.id==='beach'&&!CR){closePanel();if(DECO.on)decoEnd();fade
   closePanel();if(DECO.on)decoEnd();fade(()=>{if(CR){if(CR.av)scene.remove(CR.av.root);CR=null;camera.clearViewOffset();}setLoc('home');const L=LOC.home;P.x=L.ox;P.z=L.oz+DOORS.home.inside[1];P.yaw=0;P.pitch=0;P.sit=null;P.ride=null;
   $('hud').hidden=false;resize();bringFollowers();saveLocal();toast('Home sweet home! 🏡',2.6);});};
 let WIPE=false;
+ACT.dnopt=v=>{
+  if(v==='up'||v==='down')SET.danceUp=v==='up';
+  if(v==='standard'||v==='large')SET.danceSmall=v==='standard';
+  if(v==='calm'||v==='regular')SET.danceCalm=v==='calm';
+  if(DANCE.laneFx)DANCE.laneFx.dirty=true;
+  $('dnHud')?.classList.toggle('dnCalm',dnCalm());
+  saveSet();openSettings();
+};
 ACT.slook=v=>{SET.look=+v;saveSet();openSettings();};
 ACT.ssound=()=>{SET.sound=!SET.sound;saveSet();audioInit();openSettings();};
 ACT.spad=()=>{SET.pad=SET.pad===false;saveSet();dcardUpd(true);leftFit();openSettings();};   /* ✏️ the Notepad switch (run 4, item 24): off hides the notepad, on brings it back; the notes stay in their own storage */
@@ -603,7 +622,7 @@ ACT.mvyes=async()=>{const g=MV.got;if(!g||MV.go)return;MV.go=true;
     m.textContent=n!==null?'📦 Your game is here'+(n?', '+n:'')+'! Tap Play 💗':'🌱 A brand-new game! Your old one is safe in ⚙️ Settings → ↩️ Bring it back.';
     T.classList.add('mvd');T.insertBefore(m,T.querySelector('.menu'));
     $('tPlay').addEventListener('click',()=>{if($('tMsg')===m&&!document.body.classList.contains('away')){m.remove();T.classList.remove('mvd');}});}}
-setTimeout(mvInit,600);
+if(!DN_TEST)setTimeout(mvInit,600);
 
 /* character maker (from the drawing: name on top, avatar on the left, choices on the right) */
 let CR=null;
