@@ -766,29 +766,34 @@ function dnDiscoMaterial(base,disco){
     base.onBeforeCompile(shader);
     Object.assign(shader.uniforms,disco.project);
     shader.vertexShader=`
-      varying vec3 mirrorCell[3];
+      varying vec3 mirrorCell0,mirrorCell1,mirrorCell2;
       uniform vec3 mirrorOrigin,mirrorAim[3],mirrorRight[3],mirrorUp[3];
     `+shader.vertexShader.replace('#include <project_vertex>',`
       vec3 mirrorRay=(modelMatrix*vec4(transformed,1.)).xyz-mirrorOrigin;
-      for(int i=0;i<3;i++)mirrorCell[i]=vec3(dot(mirrorRay,mirrorRight[i]),dot(mirrorRay,mirrorUp[i]),dot(mirrorRay,mirrorAim[i]));
+      mirrorCell0=vec3(dot(mirrorRay,mirrorRight[0]),dot(mirrorRay,mirrorUp[0]),dot(mirrorRay,mirrorAim[0]));
+      mirrorCell1=vec3(dot(mirrorRay,mirrorRight[1]),dot(mirrorRay,mirrorUp[1]),dot(mirrorRay,mirrorAim[1]));
+      mirrorCell2=vec3(dot(mirrorRay,mirrorRight[2]),dot(mirrorRay,mirrorUp[2]),dot(mirrorRay,mirrorAim[2]));
       #include <project_vertex>
     `);
     shader.fragmentShader=`
-      varying vec3 mirrorCell[3];
+      varying vec3 mirrorCell0,mirrorCell1,mirrorCell2;
       uniform vec3 mirrorInk[3];
       uniform float mirrorPower;
       uniform sampler2D mirrorFlecks;
-    `+shader.fragmentShader.replace('gl_FragColor = vec4( outgoingLight, diffuseColor.a );',`
-      for(int i=0;i<3;i++){
-        float reach=mirrorCell[i].z;
+      vec3 mirrorSpot(vec3 lit,vec3 mc,vec3 ink){
+        float reach=mc.z;
         float width=max(.15,.32*reach);
-        if(reach<=.18||any(greaterThan(abs(mirrorCell[i].xy),vec2(width))))continue;
-        vec2 cell=mirrorCell[i].xy/width;
+        if(reach<=.18||abs(mc.x)>width||abs(mc.y)>width)return lit;
+        vec2 cell=mc.xy/width;
         float fleck=texture2D(mirrorFlecks,cell*.5+.5).a;
         float spot=.32*(1.-smoothstep(.07,.66,length(cell)))+fleck*.86;
         float alpha=spot*smoothstep(.18,.82,reach)*mirrorPower;
-        outgoingLight=mix(outgoingLight,outgoingLight*.49+mirrorInk[i]*.88,clamp(alpha,0.,.74));
+        return mix(lit,lit*.49+ink*.88,clamp(alpha,0.,.74));
       }
+    `+shader.fragmentShader.replace('gl_FragColor = vec4( outgoingLight, diffuseColor.a );',`
+      outgoingLight=mirrorSpot(outgoingLight,mirrorCell0,mirrorInk[0]);
+      outgoingLight=mirrorSpot(outgoingLight,mirrorCell1,mirrorInk[1]);
+      outgoingLight=mirrorSpot(outgoingLight,mirrorCell2,mirrorInk[2]);
       gl_FragColor=vec4(outgoingLight,diffuseColor.a);
     `);
   };

@@ -24,6 +24,7 @@ A three.js toon game for kids: `index.html` + `css/` + `js/` since Plan 1 (29 Oc
 - Nothing shared between players comes from `Math.random`: only the one clock, data sent online, or a seeded hash. The real calendar only through `realDate()`.
 - Old saves keep everything; old and new versions still see each other. Test data is named ZZTEST.
 - The check kit (`cozy-check-v7.zip` from 23 Oct, read its `README-KIT.md`; v4 to v6 are history). If `cozy-check-v7.zip` is not in the repo yet, build it from v6 with `python3 tools/kit-v7/make_v7.py` (repo root) and commit it in your first pull request. In the kit every line starts as FAIL, no line is ever made weaker; a rewritten line is listed old → new in the report.
+- Use literal array indices for varyings and samplers in every shader. Windows ANGLE/D3D rejects dynamic indexing of varying arrays.
 - Bump `COZY_BUILD` once at the end of each stage (date + counter, always bigger than the live stamp).
 - Never push to `main`: changes go in through pull requests the owner merges, or a merge the owner asked for after the full check passed.
 - Run nothing heavy next to a check: on a busy machine N13 and N15 fail on timing alone.
