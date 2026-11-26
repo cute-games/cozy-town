@@ -985,12 +985,12 @@ function dnFov(){
   const D=DANCE;
   if(!(D.on||D.res)||!D.cam||!D.floor)return 0;
   const d=Math.max(1,Math.hypot(D.cam.x-D.floor.x,D.cam.z-D.floor.z)),a=innerWidth/innerHeight;
-  if(D.style)return a<1?90:D.res&&visH()>500?95:92;
+  if(D.style)return a<1?(D.res?90:96):D.res&&visH()>500?95:92;
   return a<1?Math.min(95,2*Math.atan(1.6/(d*a))*180/Math.PI):0;
 }
 const DN_KNEE=.50;
 function dnDesktop(w=innerWidth,h=innerHeight){return w>=1360&&h>=680;}
-function dnCameraAim(){return innerWidth<innerHeight?.67:visH()<=500?.86:dnDesktop()?1.05:.96;}
+function dnCameraAim(){return innerWidth<innerHeight?.82:visH()<=500?.72:.89;}
 function dnCameraPosition(c,f,dist,strafe=0){
   const L=f.L,ox=L.ox,oz=L.oz+UPZ*f.fl,w=(L.W||HOMEW)-.32,d=(L.D||HOMED)-.32;
   c.x=clamp(f.x+c.dx*dist+c.dz*strafe,ox-w,ox+w);
@@ -998,13 +998,14 @@ function dnCameraPosition(c,f,dist,strafe=0){
 }
 function dnDancerSide(side){
   const D=DANCE,sign=(side?!D.left:!!D.left)?-1:1;
-  const base=D.on&&D.style?camera.aspect<1?.64:dnDesktop()?.72:.78:.83;
+  const narrow=camera.aspect<.60;
+  const base=D.on&&D.style?narrow?.42:camera.aspect<1?.64:dnDesktop()?.86:.77:.83;
   if(!D.on||dnCalm())return sign*base;
   const amount=Math.max(0,side?D.push:-D.push);if(!amount)return sign*base;
   const c=D.cam,f=D.floor,dist=Math.hypot(c.x-f.x,c.z-f.z);
   const half=dist*Math.tan(Math.max(BASEFOV,dnFov())*Math.PI/360)*camera.aspect;
   const L=f.L,dx=c.dz*sign,dz=-c.dx*sign,fx=f.x-L.ox,fz=f.z-(L.oz+UPZ*f.fl);
-  let max=half*(dnDesktop()?.55:.53)-(dnDesktop()?.57:.45);
+  let max=half*(narrow?.74:dnDesktop()?.64:.60)-(dnDesktop()?.51:.44);
   if(Math.abs(dx)>.001)max=Math.min(max,((L.W||HOMEW)-.59-Math.sign(dx)*fx)/Math.abs(dx));
   if(Math.abs(dz)>.001)max=Math.min(max,((L.D||HOMED)-.59-Math.sign(dz)*fz)/Math.abs(dz));
   return sign*lerp(base,Math.max(base,max),amount);
@@ -1035,7 +1036,7 @@ function dnCam(dt){
   const c=D.cam,f=D.floor,wide=innerWidth>innerHeight,short=visH()<=500;
   if(D.style){
     const a=innerWidth/innerHeight;
-    const roundDist=wide?(short?2.25:dnDesktop()?3.02:2.78):Math.max(2.35,1.82/a);
+    const roundDist=wide?(short?1.73:dnDesktop()?2.13:1.94):clamp(1.18/a,1.85,2.62);
     const resultDist=short?2.35:wide?3.58:Math.max(3.12,1.50/a);
     const strafe=D.res?(short?1.16:dnDesktop()?2.53:0):0;
     dnCameraPosition(c,f,D.res?resultDist:roundDist,strafe);
@@ -1241,7 +1242,7 @@ function dnHud(show){
       const fx=DANCE.stageFx;
       for(const tile of fx.tiles)if(tile)tile.mesh.visible=false;
       for(const ring of fx.rings)ring.mesh.visible=false;
-      fx.sparks.visible=fx.confetti.visible=false;
+      fx.sparks.visible=fx.confetti.visible=false;dnStageNeutral(fx);
     }else dnStageOff();
     return;
   }
@@ -1308,16 +1309,27 @@ function dnGlyph(color,direction){
   g.strokeStyle='#fff6efa8';g.lineWidth=3;g.stroke();
   return icon;
 }
-function dnReceptorArt(color,arrow){
+function dnReceptorArt(color,arrow,quiet=false){
   const art=document.createElement('canvas');art.width=art.height=128;
   const g=art.getContext('2d'),halo=g.createRadialGradient(64,64,15,64,64,64);
   halo.addColorStop(0,'#fffbe9');halo.addColorStop(.61,color+'c9');halo.addColorStop(1,color+'00');
-  g.fillStyle=halo;g.fillRect(0,0,128,128);
+  if(!quiet){g.fillStyle=halo;g.fillRect(0,0,128,128);}
   dnCircle(g,64,65,44);g.strokeStyle='#452d57';g.lineWidth=6;g.stroke();
-  g.fillStyle=color;g.fill();
-  dnCircle(g,64,65,40);g.strokeStyle='#fff8ee';g.lineWidth=3;g.stroke();
+  g.fillStyle=quiet?'#fff4e0':color;g.fill();
+  if(!quiet){dnCircle(g,64,65,40);g.strokeStyle='#fff8ee';g.lineWidth=3;g.stroke();}
   g.drawImage(arrow,17,17,94,94);
   return art;
+}
+function dnNoteTrail(color,up){
+  const art=document.createElement('canvas');art.width=72;art.height=96;
+  const g=art.getContext('2d'),fade=g.createLinearGradient(0,0,0,96);
+  if(up){g.translate(0,96);g.scale(1,-1);}
+  fade.addColorStop(0,color+'00');fade.addColorStop(.38,color+'3d');
+  fade.addColorStop(.80,color+'b2');fade.addColorStop(1,'#fff9e8');
+  g.fillStyle=fade;g.beginPath();g.moveTo(36,0);
+  g.bezierCurveTo(38,33,55,64,58,82);g.quadraticCurveTo(58,95,45,96);
+  g.lineTo(27,96);g.quadraticCurveTo(14,95,14,82);g.bezierCurveTo(17,64,34,33,36,0);
+  g.fill();return art;
 }
 function dnSparkSprite(color){
   const art=document.createElement('canvas');art.width=art.height=32;
@@ -1341,6 +1353,19 @@ function dnLetterArt(word,ink,edge){
   fill.addColorStop(0,'#fffdf4');fill.addColorStop(.37,ink);fill.addColorStop(1,ink);
   g.fillStyle=fill;g.fillText(word,x,49);
   return canvas;
+}
+function dnDudeArt(){
+  const art=document.createElement('canvas');art.width=294;art.height=110;
+  const g=art.getContext('2d');
+  g.beginPath();g.moveTo(26,15);g.bezierCurveTo(92,5,113,16,142,19);g.bezierCurveTo(183,21,223,31,269,34);
+  g.quadraticCurveTo(291,47,273,72);g.quadraticCurveTo(251,94,221,86);g.lineTo(205,104);g.lineTo(191,89);
+  g.quadraticCurveTo(77,73,24,72);g.quadraticCurveTo(1,68,10,34);g.quadraticCurveTo(14,20,26,15);g.closePath();
+  g.lineJoin='round';g.lineWidth=8;g.strokeStyle='#373341';g.stroke();g.fillStyle='#d5d2dc';g.fill();
+  g.font='900 57px "Baloo 2","Trebuchet MS",sans-serif';
+  g.textAlign='center';g.textBaseline='middle';g.translate(145,48);g.rotate(.13);
+  g.lineWidth=5;g.strokeStyle='#f4edf7';g.strokeText('Dude…',0,0);
+  g.fillStyle='#4f4858';g.fillText('Dude…',0,0);
+  return art;
 }
 function dnImpactArt(color){
   const art=document.createElement('canvas');art.width=art.height=192;
@@ -1368,10 +1393,12 @@ function dnLaneStart(){
   if(!D.laneFx){
     const cv=$('dnFunkyCanvas'),art=D.style.spark.map(dnGlyph);
     D.laneFx={cv,g:cv.getContext('2d'),art,
-      receptors:D.style.spark.map((c,i)=>dnReceptorArt(c,art[i])),stars:DN_RATINGS.map(r=>dnSparkSprite(r.ink)),
+      receptors:D.style.spark.map((c,i)=>dnReceptorArt(c,art[i])),quiet:D.style.spark.map((c,i)=>dnReceptorArt(c,art[i],true)),
+      trails:[D.style.spark.map(c=>dnNoteTrail(c,false)),D.style.spark.map(c=>dnNoteTrail(c,true))],
+      stars:DN_RATINGS.map(r=>dnSparkSprite(r.ink)),
       colors:D.style.spark.map(dnSparkSprite),glow:D.style.spark.map(dnGlowSprite),impacts:D.style.spark.map(dnImpactArt),
-      words:DN_RATINGS.map((r,i)=>dnLetterArt(i===DN_PERFECT?'PERFECT!':r.label,
-        i===DN_WHAT?'#d4c7d3':i===DN_DUDE?'#e2ddea':r.ink,i===DN_WHAT?'#564453':r.dark)),
+      words:DN_RATINGS.map((r,i)=>i===DN_DUDE?dnDudeArt():dnLetterArt(i===DN_PERFECT?'PERFECT!':r.label,
+        i===DN_WHAT?'#d4c7d3':r.ink,i===DN_WHAT?'#564453':r.dark)),
       gold:dnSparkSprite(D.style.perfect),edges:[$('dnEdgeL'),$('dnEdgeR')],
       crown:dnCrownArt(),parts:new WeakMap(),projector:new THREE.Matrix4(),keys:$('dnBtns'),
       buttons:$('dnBtns').querySelectorAll('button'),top:$('dnTop'),
@@ -1450,7 +1477,7 @@ function dnLaneLayout(F){
   F.cv.width=w;F.cv.height=h;F.damageUsed=0;F.width=w;F.height=h;
   const D=DANCE,portrait=w<h,up=!!SET.danceUp,short=!portrait&&h<=500,big=dnDesktop(w,h);
   const compact=portrait&&w<620,touch=$('dnHud').classList.contains('dnTouch');
-  F.up=up;
+  F.up=up;F.touch=touch;
   const insets=getComputedStyle(F.keys),safe=Math.max(9,parseFloat(insets.paddingLeft)||0,parseFloat(insets.paddingRight)||0);
   const inset=safe+w*(portrait?.009:big?.016:.015),span=w*(big?.224:short?.24:portrait?.232:.219);
   const gap=Math.max(15,(span-safe)/4),score=F.top.getBoundingClientRect();
@@ -1458,15 +1485,15 @@ function dnLaneLayout(F){
     const L=F.sides[side],left=side?!D.left:!!D.left;
     const step=!side&&touch?Math.max(gap,44):gap;
     const start=left?inset:w-inset-step*4;
-    L.size=Math.min(step*(big?1.35:1.34),h*(big?.152:.147))*(side?.85:1);
-    L.noteSize=L.size*(SET.danceSmall?.79:1);
-    L.outer=left?start-step*.05:start+step*4+step*.05;
-    L.inner=left?start+step*4+step*.08:start-step*.08;
+    L.size=Math.min(step*1.04,h*.112)*(side?.90:1);
+    L.noteSize=Math.min(step*1.53,h*.17)*(side?.89:1)*(SET.danceSmall?.79:1);
+    L.outer=left?Math.max(0,start-step*.18):Math.min(w,start+step*4+step*.18);
+    L.inner=left?start+step*4+step*.23:start-step*.23;
     L.key=Math.min(78,step);
     L.left=left;L.edge=F.edges[left?0:1];
     for(let d=0;d<4;d++)L.x[d]=start+(d+.5)*step;
   }
-  const half=F.sides[0].size*.51,safeBottom=Math.max(12,parseFloat(insets.paddingBottom)||0);
+  const half=Math.max(F.sides[0].size*.5,F.sides[0].key*.5),safeBottom=Math.max(12,parseFloat(insets.paddingBottom)||0);
   F.wordHeight=clamp(Math.min(h*.106,w*.205),36,112);
   F.bandBottom=h-safeBottom;
   const f=D.floor,c=D.cam,dist=Math.max(1.15,Math.hypot(c.x-f.x,c.z-f.z));
@@ -1474,17 +1501,17 @@ function dnLaneLayout(F){
   const cos=Math.cos(pitch),sin=Math.sin(pitch);
   const y=(-DN_KNEE*cos-dist*sin)/(dist*cos-DN_KNEE*sin);
   const foot=(.5-.5*y/Math.tan(dnFov()*Math.PI/360))*h;
-  F.bandTop=compact?Math.max(score.bottom+7,foot+h*.055):score.bottom+9;
+  F.bandTop=compact?Math.max(score.bottom+7,foot+h*.045):score.bottom+9;
   if(up){
     F.line=F.bandTop+half+3;
-    F.spawn=F.bandBottom-half;
   }else{
-    F.line=Math.min(F.bandBottom-half*.80,Math.max(foot+half*.82,h*.875));
-    F.spawn=F.bandTop+half;
+    F.line=Math.min(F.bandBottom-half-2,Math.max(foot+half*.96,h*(short?.894:.927)));
   }
-  const runway=Math.abs(F.line-F.spawn);
+  const arrow=F.sides[0].noteSize,runway=Math.abs(F.line-(up?F.bandBottom:F.bandTop));
   F.lead=clamp(runway/340,short?.94:1.15,DN_LEAD);
   F.scoreBottom=score.bottom;
+  F.scoreLeft=score.left;F.scoreRight=score.right;
+  F.spawn=up?F.bandBottom-arrow*.66:F.bandTop+arrow*.66;
   F.travel=(F.line-F.spawn)/F.lead;
   F.keys.style.setProperty('--dn-key',F.sides[0].key+'px');
   for(let d=0;d<4;d++){
@@ -1519,41 +1546,44 @@ function dnShatter(g,F,size,x,y,d,q,alpha){
 }
 function dnLaneBurst(g,F,L,b,t,calm,side){
   const grade=b.grade,perfect=grade===DN_PERFECT,good=grade===DN_GOOD;
-  const life=perfect?.72:good?.37:grade===DN_DUDE?.25:.29,q=(t-b.at+(perfect?.055:0))/life;
+  const life=perfect?.43:good?.32:grade===DN_DUDE?.25:.29,q=(t-b.at)/life;
   if(q<0||q>=1)return;
-  const x=L.x[b.d],y=F.line,size=Math.min(L.size,F.height*.137),fade=1-q,rating=DN_RATINGS[grade],strength=side?.87:1;
-  dnLaneDamage(F,x,y,size*(perfect?3.4:1.25)+18);
+  const x=L.x[b.d],y=F.line,size=Math.min(L.noteSize,F.height*.152),rating=DN_RATINGS[grade],strength=side?.94:1;
+  const fade=1-dnEase((q-.61)/.39),flare=1-dnEase(q/.44),wave=Math.sqrt(q);
+  dnLaneDamage(F,x,y,size*(perfect?2.36:1.38)+20);
   if(perfect){
-    const glow=size*(2.6+q*.90);
-    g.globalAlpha=strength*fade*.93;g.drawImage(F.glow[b.d],x-glow*.75,y-glow*.63,glow*1.5,glow*1.26);
-    const impact=size*(1.32+Math.min(.23,q)*2.6);
-    g.globalAlpha=strength*Math.max(0,1-q*2.3);
+    const glow=size*(1.75+wave*.52),impact=size*(.86+q*.57);
+    g.globalAlpha=strength*fade*.83;g.drawImage(F.glow[b.d],x-glow*.5,y-glow*.5,glow,glow);
+    g.globalAlpha=strength*(.72*flare+.28*fade);
     g.drawImage(F.impacts[b.d],x-impact*.5,y-impact*.5,impact,impact);
-    const radius=size*(.59+q*(calm?.35:1.52));
-    g.globalAlpha=strength*fade*.93;g.strokeStyle='#563557';g.lineWidth=4+6*fade;
-    dnCircle(g,x,y,radius);g.stroke();
-    g.strokeStyle='#fffdf5';g.lineWidth=2+5*fade;
-    dnCircle(g,x,y,radius);g.stroke();
-    g.strokeStyle=DN_COL[b.d];g.lineWidth=1+2.8*fade;
-    dnCircle(g,x,y,radius+8);g.stroke();
-    if(!calm)dnShatter(g,F,size,x,y,b.d,q,strength);
+    const radius=size*(.50+wave*(calm?.35:1.04));
+    const rise=calm?0:wave*size*.24;
+    g.beginPath();g.ellipse(x,y-rise,radius,Math.min(radius*.73,F.height*.071),0,0,TAU);
+    g.globalAlpha=strength*fade*.97;g.strokeStyle='#38264b';g.lineWidth=Math.max(5,size*.082);
+    g.stroke();
+    g.strokeStyle='#fffcef';g.lineWidth=Math.max(3,size*.052);
+    g.stroke();
+    g.strokeStyle=DN_COL[b.d];g.lineWidth=Math.max(2,size*.036);
+    g.beginPath();g.ellipse(x,y-rise,radius+size*.076,Math.min(radius*.73+size*.03,F.height*.075),0,0,TAU);g.stroke();
+    if(!calm)dnShatter(g,F,size*.74,x,y,b.d,q,strength);
   }
-  const radius=size*(.23+(calm?0:q*(perfect?.48:good?.33:.22)));
+  // The small ring stays on the socket while the bright shockwave opens out.
+  const radius=L.size*(.36+(calm?0:wave*(perfect?.24:good?.18:.075)));
   g.globalAlpha=fade*strength*(grade>=DN_WHAT&&grade!==DN_HIT?.40:.92);
   g.strokeStyle=rating.dark;g.lineWidth=perfect?4:2.7;
   dnCircle(g,x,y,radius);g.stroke();
-  g.strokeStyle=rating.ink;g.lineWidth=perfect?2.7:1.6;
+  g.strokeStyle=perfect?'#fffcef':rating.ink;g.lineWidth=perfect?4.3:good?2.9:1.6;
   dnCircle(g,x,y,radius);g.stroke();
   if(!perfect&&(good||grade===DN_OK||grade===DN_HIT)){
-    const f=size*(.83+q*.26);
-    g.globalAlpha=.53*fade*strength;g.drawImage(F.art[b.d],x-f/2,y-f/2,f,f);
+    const f=L.size*(1.05+wave*.38);
+    g.globalAlpha=.58*fade*strength;g.drawImage(good?F.glow[b.d]:F.art[b.d],x-f/2,y-f/2,f,f);
   }
   if((calm&&!perfect)||grade===DN_DUDE||grade===DN_WHAT)return;
   const n=perfect?(calm?12:24):good?7:grade===DN_OK?3:2;
   for(let i=0;i<n;i++){
     const a=i+b.d*3,ix=(perfect?a:a*3)%24,dx=DN_RAY_X[ix],dy=DN_RAY_Y[ix];
-    const r=size*(.61+Math.sqrt(q)*(perfect?(calm?.33:1.34):.48))*(.72+(i%5)*.085);
-    const px=x+dx*r,py=y+dy*r-q*size*.29,s=size*(perfect?(i%3?.29:.38):good?.24:.16)*fade;
+    const r=size*(.53+wave*(perfect?(calm?.42:1.42):.43))*(.79+(i%5)*.082);
+    const px=x+dx*r,py=y+dy*r*.78-wave*size*.29,s=size*(perfect?(i%3?.235:.31):good?.19:.13)*fade;
     const star=perfect?(i%3?F.colors[a%4]:F.gold):F.stars[grade];
     if(perfect&&!calm){
       const drag=size*(.29+q*.28);
@@ -1565,7 +1595,6 @@ function dnLaneBurst(g,F,L,b,t,calm,side){
   }
 }
 function dnGradeScale(grade,age){
-  if(grade>=DN_WHAT)return 1;
   const weight=grade===DN_PERFECT?1:grade===DN_GOOD?.59:.29;
   if(age<.078)return 1+weight*(-.56+.98*Math.min(1,age/.078));
   const tail=Math.max(0,1-(age-.085)/.52);
@@ -1591,7 +1620,7 @@ function dnBodyParts(actor){
 }
 function dnProjectBody(F,L,actor){
   L.bodyUsed=0;
-  L.headTop=F.height*.4;L.headX=L.left?F.width*.38:F.width*.62;
+  L.headTop=F.height*.4;L.headX=L.left?F.width*.38:F.width*.62;L.headLeft=L.headRight=L.headX;
   if(!actor)return;
   let parts=F.parts.get(actor);
   if(!parts){parts=dnBodyParts(actor);F.parts.set(actor,parts);}
@@ -1600,7 +1629,7 @@ function dnProjectBody(F,L,actor){
   const p=F.pt,w=F.width,h=F.height;
   actor.head.getWorldPosition(p).applyMatrix4(F.projector);
   L.headX=(.5+.5*p.x)*w;
-  L.headTop=h;
+  L.headTop=h;L.headLeft=L.headRight=L.headX;
   for(const {group,bounds,head} of parts){
     if(!group.visible)continue;
     const lo=bounds.min,hi=bounds.max;
@@ -1610,7 +1639,10 @@ function dnProjectBody(F,L,actor){
       const x=(.5+.5*p.x)*w,y=(.5-.5*p.y)*h;
       x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);
     }
-    if(head)L.headTop=Math.min(L.headTop,y0);
+    if(head){
+      L.headTop=Math.min(L.headTop,y0);
+      L.headLeft=Math.min(L.headLeft,x0);L.headRight=Math.max(L.headRight,x1);
+    }
     const n=L.bodyUsed;
     L.body[n]=x0-4;L.body[n+1]=x1+4;L.body[n+2]=y0-4;L.body[n+3]=y1+4;L.bodyUsed=n+4;
   }
@@ -1627,8 +1659,10 @@ function dnNoteLimit(F,L,y,half){
   return limit;
 }
 function dnLaneSide(g,F,L,side,t,now,calm){
-  const D=DANCE,notes=D.pat,size=L.size,line=F.line,travel=F.travel,near=L.near;
+  const D=DANCE,notes=D.pat,size=L.size,line=F.line,near=L.near;
   const start=side?D.peerRead.first:D.first;
+  const trailing=Math.max(0,side?D.push:-D.push),quiet=F.touch;
+  const dim=1-.24*trailing;
   near.fill(0);
   let i=start;
   for(;i<notes.length;i++){
@@ -1638,23 +1672,27 @@ function dnLaneSide(g,F,L,side,t,now,calm){
   }
   for(let d=0;d<4;d++){
     const x=L.x[d],pulse=near[d],miss=now-L.dim[d]<.25;
-    const age=now-L.hitAt[d],pop=calm||age<0||age>.29?0:(1-age/.29)*(L.hitGrade[d]===DN_PERFECT?.25:L.hitGrade[d]===DN_GOOD?.13:.06);
-    const f=size*(.91+pop);
+    const age=now-L.hitAt[d],pop=calm||age<0||age>.43?0:(1-age/.43)*(L.hitGrade[d]===DN_PERFECT?.22:L.hitGrade[d]===DN_GOOD?.12:.06);
+    const f=size*(.91+pop*(quiet?.52:1));
     dnLaneDamage(F,x,line,f*.61+2);
-    g.globalAlpha=(miss?.25:side?.63:.79)+pulse*(miss?0:.19);
-    g.drawImage(F.receptors[d],x-f/2,line-f/2,f,f);
+    g.globalAlpha=((miss?.34:side?.71:.87)+pulse*(miss?0:.11))*dim;
+    g.drawImage(quiet?F.quiet[d]:F.receptors[d],x-f/2,line-f/2,f,f);
     if(pulse>0&&!miss&&age>.16){
       g.globalAlpha=pulse*.68;g.strokeStyle='#fff9ee';g.lineWidth=Math.max(2,size*.031);
       dnCircle(g,x,line,f*.29);g.stroke();
     }
   }
   const note=L.noteSize*(calm?1:1+.045*dnPulse(t,D.profile));
+  // The arrow's nose reaches the outside rim on the beat. The socket stays
+  // readable until judgment, when the burst takes over at its centre.
+  const dock=size*.461+note*.419+5,dir=F.up?-1:1;
+  const approach=Math.max(0,Math.abs(F.travel)*F.lead-dock)/F.lead;
   for(let j=start;j<i;j++){
     const n=notes[j];if(side?D.otherNotes[j]:n.j)continue;
     const until=n.t-t;
     if(until<-.15)continue;
-    const y=line-Math.max(F.up?0:-.075,until)*travel;
-    const limit=dnNoteLimit(F,L,y,note*.425+11);
+    const y=line-dir*(dock+Math.max(0,until)*approach);
+    const limit=dnNoteLimit(F,L,y,note*.77);
     const left=L.left?L.outer:limit,right=L.left?limit:L.outer;
     if(right-left<16)continue;
     // Compress from the outside edge only near a leaning silhouette. Keep the
@@ -1666,57 +1704,76 @@ function dnLaneSide(g,F,L,side,t,now,calm){
     if(trim){
       g.save();g.beginPath();g.rect(left,F.bandTop,right-left,F.bandBottom-F.bandTop);g.clip();
     }
-    dnLaneDamage(F,x,y,f*.5+10);
+    dnLaneDamage(F,x,y,f*.51+4,f*.82+3);
     if(!calm&&until>.045){
-      g.globalAlpha=side?.09:.13;
-      g.drawImage(F.art[n.d],x-f*.41,y-f*.41-Math.sign(travel)*8,f*.82,f*.82);
+      const tail=f*.65,ty=F.up?y+f*.09:y-f*.73;
+      g.globalAlpha=(side?.53:.70)*dim;
+      g.drawImage(F.trails[F.up?1:0][n.d],x-f*.26,ty,f*.52,tail);
     }
     const alpha=until<0?Math.max(.38,1+until*3.4):1-.47*clamp(until/F.lead,0,1);
-    g.globalAlpha=alpha*(side?.74:1);
+    g.globalAlpha=alpha*(side?.86:1)*dim;
     g.drawImage(F.art[n.d],x-f/2,y-f/2,f,f);
     if(trim)g.restore();
   }
 }
 function dnLaneLabel(g,F,L,side,now,calm){
-  const D=DANCE,age=now-L.shownAt,visible=age>=0&&age<.96,leading=(side?D.osc-D.sc:D.sc-D.osc)>=25;
+  const D=DANCE,age=now-L.shownAt,visible=age>=0&&age<1.03,leading=(side?D.osc-D.sc:D.sc-D.osc)>=25;
   if(!visible&&!L.combo&&!leading)return;
   const w=F.width,h=F.height,left=L.left,sign=left?-1:1,short=w>h&&h<=500;
   const lo=left?12:Math.max(w*.515,F.ballRight+6);
   const hi=left?Math.min(w*.485,F.ballLeft-6):w-12;
   const head=L.headTop,start=F.scoreBottom+5,room=head-start;
-  let comboEdge=left?hi:lo;
-  if(leading&&head>start+17){
-    const crown=Math.min(F.wordHeight*.46,Math.max(19,room*.44)),x=L.headX,y=head-crown*.39;
+  const grade=L.grade,word=F.words[grade],ratio=word.width/word.height;
+  const edge=left?Math.min(hi,L.headLeft-9):Math.max(lo,L.headRight+9);
+  const space=left?edge-lo:hi-edge,sideFit=(space-13)/ratio;
+  const stack=visible&&sideFit<23&&room>43;
+
+  let badgeX=L.headX,badgeY=head,badgeTop=head,halfBadge=0;
+  if(L.combo){
+    const growth=Math.min(.48,Math.sqrt(Math.max(0,L.combo-1))*.067),hit=now-L.comboAt;
+    const pop=calm?0:Math.max(0,1-hit/.32)*.36;
+    const desired=F.wordHeight*.68*(1+growth)*(1+pop);
+    const tugMargin=Math.min(46,w*.025)+8;
+    const outerMin=left?lo:Math.max(edge,F.scoreRight+tugMargin);
+    const outerMax=left?Math.min(edge,F.scoreLeft-tugMargin):hi;
+    // On a jump the dancer can reach the scoreboard. Move the badge out
+    // beside their head for that beat, clear of both the score and the face.
+    const beside=!stack&&room<desired*.85&&outerMax-outerMin>58;
+    const height=beside?Math.min(desired,(outerMax-outerMin-5)/1.58):
+      Math.min(desired,room-(stack?33:2),(hi-lo-10)/1.58);
+    if(height>=13){
+      const width=height*1.58;
+      const x=beside?(left?outerMax-width*.5:outerMin+width*.5):clamp(L.headX,lo+width*.5,hi-width*.5);
+      const y=beside?Math.max(height*.56+5,head-height*.62):head-3-height*.51;
+      dnLaneDamage(F,x,y,width*.56,height*.57);
+      g.globalAlpha=1;g.drawImage(L.comboArt,x-width*.5,y-height*.5,width,height);
+      badgeX=x;badgeY=y;badgeTop=y-height*.5;halfBadge=width*.42;
+    }
+  }
+  if(leading&&room>17){
+    const crown=Math.min(F.wordHeight*.38,Math.max(17,room*.40));
+    const x=clamp(badgeX+sign*(halfBadge+crown*.62),lo+crown*.75,hi-crown*.75);
+    const y=halfBadge?badgeY:head-crown*.52;
     dnLaneDamage(F,x,y,crown*.77,crown*.61);
     g.globalAlpha=1;g.drawImage(F.crown,x-crown*.70,y-crown*.5,crown*1.40,crown);
   }
-  if(L.combo&&room>19){
-    const growth=Math.min(.50,L.combo*.016),hit=now-L.comboAt;
-    const pop=calm?0:Math.max(0,1-hit/.32)*.36;
-    const crownSpace=leading?Math.min(room*.28,F.wordHeight*.30):0,yEnd=head-crownSpace-4;
-    const roomForCombo=Math.max(14,yEnd-start);
-    const height=Math.min(Math.min(F.wordHeight*(.95+growth),roomForCombo*.80)*(1+pop),roomForCombo,Math.max(22,(hi-lo-10)/1.58));
-    const width=height*1.58,x=clamp(L.headX,lo+width*.5,hi-width*.5),y=yEnd-height*.51;
-    dnLaneDamage(F,x,y,width*.56,height*.57);
-    g.globalAlpha=1;g.drawImage(L.comboArt,x-width*.5,y-height*.5,width,height);
-    comboEdge=left?x-width*.5-10:x+width*.5+10;
-  }
   if(!visible||hi-lo<54)return;
-  // Keep ratings in the upper outer corner, leaving the head column to the combo and crown.
-  const word=F.words[L.grade],perfect=L.grade===DN_PERFECT;
-  const weight=perfect?1:L.grade===DN_GOOD?.83:L.grade===DN_OK?.77:.95;
-  const scale=calm?1:dnGradeScale(L.grade,age+.036);
-  const inner=left?Math.min(comboEdge,L.headX-F.wordHeight*.72):Math.max(comboEdge,L.headX+F.wordHeight*.72);
-  const low=left?lo:inner,high=left?inner:hi;
-  const ratio=word.width/word.height;
-  const height=Math.min(F.wordHeight*.76*weight*scale,(high-low-14)/ratio,short?31:82);
+  // Follow the moving head. When a narrow view runs out of side space,
+  // share the headroom with the combo instead of squeezing away the word.
+  const perfect=grade===DN_PERFECT,dude=grade===DN_DUDE;
+  const weight=perfect?1:grade===DN_GOOD?.86:grade===DN_OK?.77:1;
+  const scale=calm?1:dude?1.21-.21*dnEase(age/.2):dnGradeScale(grade,age+.047);
+  const fit=stack?Math.min((hi-lo-14)/ratio,(badgeTop-start)*.73):sideFit;
+  const height=Math.min(F.wordHeight*.93*weight*scale,fit,short?36:91);
   if(height<13)return;
-  const width=height*ratio,x=left?high-width*.5-5:low+width*.5+5;
-  const y=Math.max(start+height*.53,Math.min(head-height*.57-5,start+F.wordHeight*.61));
-  dnLaneDamage(F,x,y,width*.66+8,height*.69+width*.08+5);
-  g.save();g.translate(x,y);g.rotate(sign*.065);
-  g.globalAlpha=1-clamp((age-.60)/.36,0,1);
-  if(perfect)g.drawImage(F.glow[L.perfectDir],-width*.66,-height*.64,width*1.32,height*1.28);
+  const width=height*ratio;
+  const x=stack?clamp(L.headX+sign*8,lo+width*.5+4,hi-width*.5-4):edge+sign*(width*.5+4);
+  const droop=dude&&!calm?Math.min(9,age*18):0;
+  const y=stack?badgeTop-height*.67-4+droop*.35:clamp(head+height*(short?.63:.32)+droop,start+height*.57,F.height-height*.58);
+  dnLaneDamage(F,x,y,width*.68+9,height*.69+width*.11+8);
+  g.save();g.translate(x,y);g.rotate(dude?(left?.10:-.07):sign*.10);
+  g.globalAlpha=1-dnEase((age-.70)/.33);
+  if(perfect)g.drawImage(F.glow[L.perfectDir],-width*.64,-height*.62,width*1.28,height*1.24);
   g.drawImage(word,-width*.5,-height*.5,width,height);
   g.restore();
 }
@@ -1760,15 +1817,16 @@ function dnLaneDraw(now=performance.now()/1000){
     }
     // A hit renews only its dancer's feathered edge pulse. Close hits share
     // a continuous glow, and there is no white full-screen flash.
-    const age=now-L.pulseAt,light=calm||age>.52?0:.85*(1-age/.52)**1.35;
+    const age=now-L.pulseAt,light=calm||age>.43?0:.86*(1-dnEase(age/.43));
     if(light!==L.pulseLight){L.pulseLight=light;L.edge.style.opacity=light;}
   }
   if(!calm){
     const hit=now-F.sides[0].pulseAt,buddy=now-F.sides[1].pulseAt,age=Math.min(hit,buddy);
-    if(age>=0&&age<.29){
-      const c=D.cam,shake=(hit<=buddy?.026:.016)*(1-age/.29)*Math.cos(age*39);
+    if(age>=0&&age<.28){
+      const c=D.cam,punch=1-age/.28,shake=(hit<=buddy?.032:.024)*punch*Math.cos(age*41);
       camera.position.x+=c.dz*shake;camera.position.z-=c.dx*shake;
       camera.rotation.z+=shake*.36;
+      camera.zoom*=1+.018*punch*punch;camera.updateProjectionMatrix();
     }
   }
   camera.updateMatrixWorld();
@@ -1812,6 +1870,15 @@ function dnStageStart(){
   group.position.set(f.x,0,f.z);scene.add(group);
   const stage=D.stageFx={group,ceiling:f.L.ceiling||3.2,celebrate:-100,sweepAt:-100,
     tier:0,tint:-1,slot:0,tiles:[],rings:[],scratch:new THREE.Object3D()};
+  // A feathered pool on the floor with local actor tints, so the spotlight
+  // never draws a translucent wall across the moving dancers.
+  const light=new THREE.Mesh(new THREE.PlaneGeometry(2.9,2.9),new THREE.ShaderMaterial({
+    uniforms:{strength:{value:0}},
+    vertexShader:'varying vec2 coord; void main(){coord=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+    fragmentShader:'uniform float strength; varying vec2 coord; void main(){float v=1.-smoothstep(.12,.50,length(coord-.5));gl_FragColor=vec4(1.,.88,.61,v*v*strength);}',
+    transparent:true,depthWrite:false}));
+  light.rotation.x=-Math.PI/2;light.visible=false;group.add(light);
+  stage.light=light;stage.actorTints=[null,null];
   const tileGeo=new THREE.PlaneGeometry(.369,.369),tileCenter=new THREE.Vector3(),chosen=new Set();
   const tiles=D.spots?.userData.funky?.tiles||[];
   for(let i=0;i<8;i++){
@@ -1865,11 +1932,55 @@ function dnStageStart(){
 }
 function dnStageOff(){
   const D=DANCE,fx=D.stageFx;if(!fx)return;
-  scene.remove(fx.group);
+  dnStageNeutral(fx);scene.remove(fx.group);
   const geometries=new Set();
   for(const item of fx.group.children){geometries.add(item.geometry);item.material.dispose();}
   for(const geometry of geometries)geometry.dispose();
   fx.confetti.dispose();fx.sparkTex.dispose();D.stageFx=null;
+}
+function dnRestoreTint(state){
+  if(!state)return;
+  for(const {mesh,original} of state.meshes)mesh.material=original;
+  for(const [,mat] of state.materials)mat.dispose();
+}
+function dnStageNeutral(fx){
+  fx.light.visible=false;
+  for(let side=0;side<2;side++){dnRestoreTint(fx.actorTints[side]);fx.actorTints[side]=null;}
+}
+function dnPressureLights(fx){
+  const D=DANCE,p=D.push,other=(DN_TEST?D.bot:MP.peers.get(D.partner))?.av;
+  const leader=p>=0?0:1,strength=Math.abs(p);
+  const light=fx.light,c=D.cam;
+  light.visible=strength>.014;
+  if(light.visible){
+    const stance=dnDancerSide(leader);
+    light.position.set(c.dz*stance,.075,-c.dx*stance);
+    light.material.uniforms.strength.value=strength*.68;
+  }
+  for(let side=0;side<2;side++){
+    const actor=side?other:D.me;
+    let state=fx.actorTints[side];
+    if(state&&state.actor!==actor){dnRestoreTint(state);state=fx.actorTints[side]=null;}
+    if(!actor)continue;
+    if(!state){
+      if(!light.visible)continue;
+      const meshes=[],materials=new Map();
+      actor.root.traverse(mesh=>{
+        const original=mesh.material;
+        if(!mesh.isMesh||!original?.color||original.side===THREE.BackSide)return;
+        if(!materials.has(original)){
+          const mat=original.clone();mat.onBeforeCompile=original.onBeforeCompile;
+          materials.set(original,mat);
+        }
+        meshes.push({mesh,original});mesh.material=materials.get(original);
+      });
+      state=fx.actorTints[side]={actor,meshes,materials:[...materials]};
+    }
+    const shade=side===leader?1+.14*strength:1-.24*strength;
+    for(let i=0;i<state.materials.length;i++){
+      const pair=state.materials[i];pair[1].color.copy(pair[0].color).multiplyScalar(shade);
+    }
+  }
 }
 function dnStageHit(side,d,t,perfect,combo){
   const D=DANCE,fx=D.stageFx;if(!fx)return;
@@ -1890,15 +2001,16 @@ function dnStageHit(side,d,t,perfect,combo){
 function dnStageTick(t){
   const D=DANCE,fx=D.stageFx;if(!fx)return;
   const calm=dnCalm();
+  dnPressureLights(fx);
   for(const tile of fx.tiles){
-    const a=(t-tile.at)/(tile.perfect?.53:.30);
+    const a=(t-tile.at)/(tile.perfect?.45:.29);
     tile.mesh.visible=a>=0&&a<1;
     if(tile.mesh.visible)tile.mesh.material.uniforms.light.value=(1-a)*(tile.perfect?1:.61);
   }
   const positions=fx.sparkPos;
   let offset=0;
   for(const ring of fx.rings){
-    const a=(t-ring.at)/.68;
+    const a=(t-ring.at)/.45;
     ring.mesh.visible=!calm&&a>=0&&a<1;
     if(!ring.mesh.visible)continue;
     const c=D.cam,stance=dnDancerSide(ring.side),cx=c.dz*stance,cz=-c.dx*stance;
