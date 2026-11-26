@@ -1,6 +1,8 @@
 
 'use strict';
 /* ================= core ================= */
+const LAMP_TEST=location.hash==='#lamptest';   /* 💡 lamp test door (test copy only): evening clock, 4 demo lamps at home, nothing saved, offline */
+if(LAMP_TEST&&window.WEBNET)window.WEBNET.on=false;
 const $=id=>document.getElementById(id);
 const clamp=(v,a,b)=>v<a?a:v>b?b:v;
 const lerp=(a,b,t)=>a+(b-a)*t;
