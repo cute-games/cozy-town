@@ -35,12 +35,12 @@ function mapTrees(){if(MAP_TR)return MAP_TR;const r=seeded(66),T=[];   /* soft r
   for(let i=0;i<4000&&T.length<560;i++){const x=-330+r()*450,z=-125+r()*250,R=1.8+r()*2.6;if(x>-92&&x<93&&z>-92&&z<92)continue;if(x<-78&&Math.abs(z)<42)continue;if(x>78&&Math.abs(z)<11)continue;T.push([x,z,R]);}
   return MAP_TR=T;}
 /* paint the map: world (ox,oz) is the canvas corner, k = canvas px per metre, u = canvas px per CSS px. o.mini: the little job map (no names) */
-function mapPaint(x,ox,oz,k,w,h,o){const P=o.dark?MAP_PAL.dark:MAP_PAL.light,u=o.u||1,mini=!!o.mini,le=laneEnd(),X=v=>(v-ox)*k,Z=v=>(v-oz)*k,
+function mapPaint(x,ox,oz,k,w,h,o){const P=o.pal||(o.dark?MAP_PAL.dark:MAP_PAL.light),u=o.u||1,mini=!!o.mini,le=laneEnd(),X=v=>(v-ox)*k,Z=v=>(v-oz)*k,
     vis=(x1,z1,x2,z2)=>X(x2)>-40&&X(x1)<w+40&&Z(z2)>-40&&Z(z1)<h+40,
     R=(x1,z1,x2,z2,r)=>rr(x,X(x1),Z(z1),(x2-x1)*k,(z2-z1)*k,Math.max(r*k,u)),
     C=(cx,cz,r)=>{x.beginPath();x.arc(X(cx),Z(cz),Math.max(.5,r*k),0,TAU);},
     pl=(pts)=>{pts.forEach(([a,b],i)=>i?x.lineTo(X(a),Z(b)):x.moveTo(X(a),Z(b)));},
-    bc=c=>o.dark?mixC(c,'#241b42',.38):c,stroke=(c,lw)=>{x.strokeStyle=c;x.lineWidth=lw;x.stroke();};
+    bc=c=>o.dark?mixC(c,'#241b42',o.bm!=null?o.bm:.38):c,stroke=(c,lw)=>{x.strokeStyle=c;x.lineWidth=lw;x.stroke();};
   x.save();x.setTransform(1,0,0,1,0,0);x.lineJoin='round';x.lineCap='round';x.setLineDash([]);
   x.fillStyle=P.out;x.fillRect(0,0,w,h);
   if(!mini){x.beginPath();for(const [tx,tz,tr] of mapTrees())if(vis(tx-tr,tz-tr,tx+tr,tz+tr)){x.moveTo(X(tx)+tr*k,Z(tz));x.arc(X(tx),Z(tz),tr*k,0,TAU);}
@@ -82,12 +82,12 @@ function mapPaint(x,ox,oz,k,w,h,o){const P=o.dark?MAP_PAL.dark:MAP_PAL.light,u=o
   /* 🏖️ the big road ends at the old beach gate; the sandy path goes on (the Beach Bus goes this way) */
   x.fillStyle=P.sand;R(79.4,-3.6,100,3.6,1.6);x.fill();x.beginPath();pl([[79.4,-3.3],[79.4,3.3]]);stroke(P.ink,Math.max(2*u,.5*k)+2*u);stroke('#2b8fc4',Math.max(2*u,.5*k));
   /* 🏠 buildings: rounded blocks in their colours, the game's ink outline and a soft shadow */
-  const blds=[...PLACES.filter(p=>!p.flat&&p.id!=='home'&&mapShown(p)).map(p=>[p.x,p.z,p.w||p.r*2,p.d||p.r*2,p.c,p.r]),...BLDS];
+  const blds=[...PLACES.filter(p=>!p.flat&&p.id!=='home'&&mapShown(p)).map(p=>[p.x,p.z,p.w||p.r*2,p.d||p.r*2,p.c,p.r]),...(o.big?BLDS.filter(b=>b[2]*b[3]>=o.big):BLDS)];   /* (o.big: the corner map's widest picture leaves out the small houses) */
   const bus=PLACES.find(p=>p.id==='bus');if(bus)blds.push([bus.x,bus.z,bus.w,bus.d,bus.c]);
-  for(const [bx,bz,bw,bd,c,round] of blds){if(!vis(bx-bw/2,bz-bd/2,bx+bw/2,bz+bd/2))continue;const r=Math.min(1.4,bw/4,bd/4),sh=Math.max(1.5*u,.5*k);
+  for(const [bx,bz,bw,bd,c,round] of blds){if(!vis(bx-bw/2,bz-bd/2,bx+bw/2,bz+bd/2))continue;if(o.big)x.globalAlpha=bw*bd<o.big?.4:1;   /* (o.big: small shops faint, so roads and the park read first) */const r=Math.min(1.4,bw/4,bd/4),sh=Math.max(1.5*u,.5*k);
     x.fillStyle=P.shade;if(round){x.beginPath();x.arc(X(bx)+sh,Z(bz)+sh,bw/2*k,0,TAU);}else rr(x,X(bx-bw/2)+sh,Z(bz-bd/2)+sh,bw*k,bd*k,r*k);x.fill();
     if(round)C(bx,bz,bw/2);else R(bx-bw/2,bz-bd/2,bx+bw/2,bz+bd/2,r);x.fillStyle=bc(c||'#d8cfe6');x.fill();stroke(P.ink,(mini?1.3:1.6)*u);
-    if(!mini&&!round&&k>2.5*u&&bw>2.5&&bd>2.5){R(bx-bw/2+.7,bz-bd/2+.7,bx+bw/2-.7,bz+bd/2-.7,Math.max(.4,r-.5));x.fillStyle=o.dark?'rgba(255,255,255,.08)':'rgba(255,255,255,.4)';x.fill();}}   /* a soft roof */
+    if(!mini&&!round&&k>2.5*u&&bw>2.5&&bd>2.5){R(bx-bw/2+.7,bz-bd/2+.7,bx+bw/2-.7,bz+bd/2-.7,Math.max(.4,r-.5));x.fillStyle=o.dark?'rgba(255,255,255,.08)':'rgba(255,255,255,.4)';x.fill();}}x.globalAlpha=1;   /* a soft roof */
   /* 🏡 Friends Lane: the gate, hedges, every lot (a house when a friend lives there), your garden, the end of the lane */
   x.beginPath();pl([[-84.6,-4.5],[-84.6,4.5]]);stroke(P.ink,Math.max(2*u,.55*k)+2*u);stroke('#ff7aa8',Math.max(2*u,.55*k));
   if(!mini){x.beginPath();for(const s of[-1,1])pl([[-80.3,s*37.5],[le-.9,s*37.5]]);pl([[le-1.35,-38],[le-1.35,38]]);stroke(P.hedge,Math.max(2*u,1*k));
@@ -416,6 +416,13 @@ function openSettings(){const fromTitle=!PLAYING;
   openPanel(`<div class="hd"><h2>⚙️ Settings</h2><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
     <div class="opt"><span>Look speed</span><span class="row" style="margin:0">${[['Slow',.6],['Normal',1],['Fast',1.6]].map(([n,v])=>`<button class="btn ${SET.look===v?'butter':'white'}" data-a="slook:${v}">${n}</button>`).join('')}</span></div>
     <div class="opt"><span>Sound</span><button class="btn ${SET.sound?'mint':'white'}" data-a="ssound">${SET.sound?'🔊 On':'🔇 Off'}</button></div>
+    <div class="opt"><label for="danceLatency">Dance audio delay</label>
+      <span class="row" style="margin:0;align-items:center;justify-content:flex-end"><input id="danceLatency" type="range" aria-description="Positive values help when speakers play the beat late" min="-200" max="200" step="5" value="${dnLatency()}" style="width:min(160px,37vw);height:44px;accent-color:#9b53bc">
+      <output id="danceLatencyValue" for="danceLatency" style="min-width:65px;text-align:right;color:#3d2c5e">${dnLatency()} ms</output></span>
+    </div>
+    <div class="opt"><span>Dance arrow travel</span><span class="row" style="margin:0"><button class="btn ${!SET.danceUp?'butter':'white'}" data-a="dnopt:down" aria-pressed="${!SET.danceUp}">Down ↓</button><button class="btn ${SET.danceUp?'butter':'white'}" data-a="dnopt:up" aria-pressed="${!!SET.danceUp}">Up ↑</button></span></div>
+    <div class="opt"><span>Dance arrow size</span><span class="row" style="margin:0"><button class="btn ${SET.danceSmall?'butter':'white'}" data-a="dnopt:standard" aria-pressed="${!!SET.danceSmall}">Standard</button><button class="btn ${!SET.danceSmall?'butter':'white'}" data-a="dnopt:large" aria-pressed="${!SET.danceSmall}">Large</button></span></div>
+    <div class="opt"><span>Dance motion</span><span class="row" style="margin:0"><button class="btn ${!SET.danceCalm?'butter':'white'}" data-a="dnopt:regular" aria-pressed="${!SET.danceCalm}">Regular</button><button class="btn ${SET.danceCalm?'butter':'white'}" data-a="dnopt:calm" aria-pressed="${!!SET.danceCalm}">Calm</button></span></div>
     <div class="opt"><span>Graphics</span><span class="row" style="margin:0"><button class="btn ${SET.gfx==='nice'?'butter':'white'}" data-a="sgfx:nice">Pretty</button><button class="btn ${SET.gfx==='fast'?'butter':'white'}" data-a="sgfx:fast">Fast</button></span></div>
     <div class="opt"><span>🍕 Pizza job</span><button class="btn white" data-a="tutgo">📖 Show me the tips</button></div>
     <div class="opt"><span>🎨 Designer job</span><button class="btn white" data-a="dtutgo">📖 Show me the tips</button></div>
@@ -428,7 +435,11 @@ function openSettings(){const fromTitle=!PLAYING;
     ${MV.on?'<div class="opt"><span>📱 Another iPad or phone</span><button class="btn sky" data-a="mvopen">📦 Move my game</button></div>':''}
     ${mvBefore()?'<div class="opt"><span>↩️ Your old game</span><button class="btn white" data-a="mvundo">↩️ Bring it back</button></div>':''}
     <p class="note">${TOUCHY?'Walk: drag on the left side. Look: drag on the right side. Jump: ⬆️. Run: 🏃. Tap things to use them.':'Walk: WASD. Look: drag with the mouse. Jump: Space. Run: hold Shift. Use things: E or click. Bag: B.'}<br>✏️ Notepad: draw on it! Tap it 2× for a new page, 3× to go back, 4× to delete.</p>
-    <div class="row"><button class="btn coral" data-a="wipe">🗑️ Start a new game</button></div>`,{cls:'setcard',onClose:()=>{WIPE=false;}});}
+    <div class="row"><button class="btn coral" data-a="wipe">🗑️ Start a new game</button></div>`,{cls:'setcard',onClose:()=>{WIPE=false;}});
+  const delay=$('danceLatency'),value=$('danceLatencyValue');
+  delay.oninput=()=>{value.textContent=delay.value+' ms';};
+  delay.onchange=()=>{SET.danceLatency=Number(delay.value);saveSet();};
+}
 ACT.fetchpets=()=>{if(!S||!S.pets.length){toast('You don\'t have any pets yet! Adopt one at the Pet Shop. 🐾',3);return;}
   /* 🐾 up to 3 come (pet update 1): the ones following you first, then pets waiting somewhere, then pets at home; a pet left waiting somewhere else goes home */
   const go=[...PET_ACTORS.filter(p=>!p.d.stay),...PET_ACTORS.filter(p=>p.d.stay&&!petAtHome(p.d)),...PET_ACTORS.filter(p=>petAtHome(p.d))].slice(0,PET_FOLLOW);
@@ -440,6 +451,14 @@ ACT.gohome=()=>{if(CUR.id==='beach'&&!CR){closePanel();if(DECO.on)decoEnd();fade
   closePanel();if(DECO.on)decoEnd();fade(()=>{if(CR){if(CR.av)scene.remove(CR.av.root);CR=null;camera.clearViewOffset();}setLoc('home');const L=LOC.home;P.x=L.ox;P.z=L.oz+DOORS.home.inside[1];P.yaw=0;P.pitch=0;P.sit=null;P.ride=null;
   $('hud').hidden=false;resize();bringFollowers();saveLocal();toast('Home sweet home! 🏡',2.6);});};
 let WIPE=false;
+ACT.dnopt=v=>{
+  if(v==='up'||v==='down')SET.danceUp=v==='up';
+  if(v==='standard'||v==='large')SET.danceSmall=v==='standard';
+  if(v==='calm'||v==='regular')SET.danceCalm=v==='calm';
+  if(DANCE.laneFx)DANCE.laneFx.dirty=true;
+  $('dnHud')?.classList.toggle('dnCalm',dnCalm());
+  saveSet();openSettings();
+};
 ACT.slook=v=>{SET.look=+v;saveSet();openSettings();};
 ACT.ssound=()=>{SET.sound=!SET.sound;saveSet();audioInit();openSettings();};
 ACT.spad=()=>{SET.pad=SET.pad===false;saveSet();dcardUpd(true);leftFit();openSettings();};   /* ✏️ the Notepad switch (run 4, item 24): off hides the notepad, on brings it back; the notes stay in their own storage */
@@ -603,7 +622,7 @@ ACT.mvyes=async()=>{const g=MV.got;if(!g||MV.go)return;MV.go=true;
     m.textContent=n!==null?'📦 Your game is here'+(n?', '+n:'')+'! Tap Play 💗':'🌱 A brand-new game! Your old one is safe in ⚙️ Settings → ↩️ Bring it back.';
     T.classList.add('mvd');T.insertBefore(m,T.querySelector('.menu'));
     $('tPlay').addEventListener('click',()=>{if($('tMsg')===m&&!document.body.classList.contains('away')){m.remove();T.classList.remove('mvd');}});}}
-setTimeout(mvInit,600);
+if(!DN_TEST)setTimeout(mvInit,600);
 
 /* character maker (from the drawing: name on top, avatar on the left, choices on the right) */
 let CR=null;
