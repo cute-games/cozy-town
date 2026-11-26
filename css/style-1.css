@@ -502,3 +502,13 @@ body.shoot #moveBtns,body.shoot #tasks,body.shoot #pad,body.shoot #job,body.shoo
 .recol{display:flex;flex-direction:column;align-items:center;gap:12px;padding:8px}.recol .mth{width:120px;height:120px}.recolp{font-weight:900;font-size:18px}
 /* 26 Nov: sell chip stays on one line; card names keep two lines of room so cards line up */.mcard .sellb{white-space:nowrap}.mcard .mn{min-height:2.5em;display:flex;align-items:center;justify-content:center;text-align:center}
 /* 27 Nov (owner): the notepad is gone from the screen; its saved pages stay in the save */#pad{display:none!important}
+/* 📱 27 Nov 2026 (owner): phones on their side get a compact top row (same colours and shapes, less empty space); the 🗺️ chip folds the map column away */#bFold{display:none}
+@media (max-height:500px){#left{top:calc(env(safe-area-inset-top,0px) + 6px);gap:6px}#stats{gap:5px}.chip{height:30px;font-size:14px;gap:4px;padding:0 9px 0 6px;border-width:2px;box-shadow:0 3px 0 var(--soft)}.chip .e{font-size:15px}.chip .day{font-size:11px}.bar{width:38px}
+  #bFold{display:inline-flex;justify-content:center;pointer-events:auto;min-width:44px;padding:0;font-size:15px;cursor:pointer;font-family:inherit}#bFold[aria-pressed=true]{background:#ffd45c}
+  body.hudfold :is(#job,#tasks,#busTip){display:none!important}
+  #topbtns{top:calc(env(safe-area-inset-top,0px) + 6px);gap:6px}.ib{width:44px;height:44px;font-size:20px;border-width:2px}
+  #toast{font-size:14px;padding:6px 12px;max-width:min(440px,54vw);border-width:2px;bottom:auto;top:calc(env(safe-area-inset-top,0px) + 54px)}
+  #busTip{font-size:12px}
+  #stats{gap:0;background:var(--paper);border:2px solid var(--line);border-radius:999px;box-shadow:0 3px 0 var(--soft);padding:0 2px;pointer-events:auto}#stats .chip{border:0;box-shadow:none;background:none;padding:0 7px}#stats .chip+.chip{border-left:2px solid var(--soft);border-radius:0}#stats #bFold{border-radius:0 999px 999px 0}
+  #topbtns{gap:0;background:var(--paper);border:2px solid var(--line);border-radius:999px;box-shadow:0 3px 0 var(--soft);padding:0 4px}#topbtns .ib{border:0;box-shadow:none;background:none;width:42px;height:38px;border-radius:0}#topbtns .ib.butter{background:#ffd45c;border-radius:12px}
+  #joy{left:calc(env(safe-area-inset-left,0px) + 26px)!important}}
