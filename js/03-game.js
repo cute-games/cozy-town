@@ -1971,7 +1971,7 @@ let LPOOL_T=null;const LITS=[],LAMPS_N=4,_lv=new THREE.Vector3(),_cool=new THREE
 function lampPool(g,on){let m=g.userData.pool;
   if(!m){if(!LPOOL_T){const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d'),gr=x.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.3,'rgba(255,255,255,.7)');gr.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gr;x.fillRect(0,0,64,64);LPOOL_T=new THREE.CanvasTexture(c);}
     let sh=null;g.traverse(o=>{if(!sh&&o.userData.shade)sh=o;});if(!sh)return;
-    const col=new THREE.Color(sh.material.map?'#d9e0ff':sh.material.color.getHex()).lerp(new THREE.Color('#ffb060'),.25);
+    const col=new THREE.Color(sh.material.map?'#d9e0ff':sh.material.color.getHex());   /* (26 Nov, owner: red shade = red light) the light is the shade's own colour, no warm mix */
     m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({map:LPOOL_T,color:col,transparent:true,depthWrite:false,opacity:.3}));
     m.rotation.x=-Math.PI/2;m.position.y=.025;m.scale.setScalar(3.4);m.renderOrder=2;m.raycast=()=>{};g.add(m);g.userData.pool=m;g.userData.shadeM=sh;g.userData.lcol=col;
     const h=new THREE.Sprite(new THREE.SpriteMaterial({map:LPOOL_T,color:col,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,opacity:.5}));h.raycast=()=>{};sh.getWorldPosition(_lv);g.worldToLocal(_lv);h.position.copy(_lv);h.scale.setScalar(.75);g.add(h);g.userData.halo=h;}
@@ -2562,7 +2562,7 @@ function decoEnd(){if(DECO.placing)decoCancel();DECO.on=false;DX().L().grid.visi
 function renderBar(){const b=$('bar');b.hidden=!DECO.on;if(!DECO.on)return;
   if(DECO.placing)b.innerHTML=`<button class="btn sky" data-d="turn">🔄 Turn</button><button class="btn mint" data-d="place" ${DECO.valid?'':'disabled'}>✅ Put it here</button><button class="btn white" data-d="cancel">✖ Cancel</button>`;
   else if(DX()===CLX)b.innerHTML=`<button class="btn butter${dsItems().length?'':' dsPulse'}" data-d="furn">🛋️ Furniture</button>${DECO.sel?`<div class="brow"><button class="btn sky" data-d="move">✋ Move</button><button class="btn lilac" data-d="away">🗑️ Remove</button></div>`:''}<button class="btn mint" data-d="finish">🎉 Finished!</button><button class="btn white sm" data-d="leave">🚪 Leave</button>`;
-  else b.innerHTML=`<button class="btn butter" data-d="shop">🛍️ Shop</button>${DECO.sel?`<button class="btn sky" data-d="move">✋ Move it</button><button class="btn lilac" data-d="away">📦 Put away</button>`:'<button class="btn lilac" data-d="paint">🎨 House colour</button>'}<button class="btn mint" data-d="done">✅ Done</button>`;}   /* 🎨 run 4, item 23 */
+  else b.innerHTML=`<button class="btn butter" data-d="shop">🛍️ Shop</button><button class="btn white" data-d="mine">📦 My stuff${S.home.store.length?` <span class="cnt">${S.home.store.length}</span>`:''}</button>${DECO.sel?`<button class="btn sky" data-d="move">✋ Move it</button><button class="btn lilac" data-d="away">📦 Put away</button>${sellBtn(DECO.sel,'sellsel','data-d')}`:'<button class="btn lilac" data-d="paint">🎨 House colour</button>'}<button class="btn mint" data-d="done">✅ Done</button>`;}   /* 🎨 run 4, item 23 */
 function startPlacing(it){DECO.placing=it;DECO.r=it.r||0;selMark(null);
   const g=buildFurn(furnOf(it),it.c);g.traverse(o=>{if(!o.isMesh)return;if(o.material===OL||o.material.side===THREE.BackSide){o.visible=false;return;}const m=o.material.clone();m.transparent=true;m.opacity=.72;if(m.emissive)m.emissive.set('#000000');o.material=m;});
   const F=FURN[it.t];const fp=new THREE.Mesh(new THREE.PlaneGeometry(F.w,F.d),new THREE.MeshBasicMaterial({color:'#5fd4b0',transparent:true,opacity:.45,depthWrite:false}));fp.rotation.x=-Math.PI/2;fp.position.y=.03;g.add(fp);g.userData.fp=fp;
@@ -2578,6 +2578,7 @@ function decoUpdate(){
     DECO.ghost.position.set(L.ox+x,0,L.oz+z);DECO.ghost.rotation.y=DECO.r*Math.PI/2;
     const R=fpRect(it.t,x,z,DECO.r);let ok=true;
     if(F.hang&&!kitOnWall(it.t,x,z,DECO.r,W,D))ok=false;   /* a wall cupboard hangs on a wall */
+    if(F.ceil)for(const o of X.list()){if(FURN[o.t].flat||FURN[o.t].ceil||(X.on&&!X.on(o))||furnH(furnOf(o))<furnLo(it.t)-.05)continue;const Q=fpRect(o.t,o.x,o.z,o.r);if(R.x1<Q.x2-.01&&R.x2>Q.x1+.01&&R.z1<Q.z2-.01&&R.z2>Q.z1+.01){ok=false;break;}}   /* 💡 a ceiling lamp hangs over beds, sofas and tables, not into anything that reaches up to it */
     if(!F.flat&&!F.hang){for(const o of X.list()){if(FURN[o.t].flat||FURN[o.t].hang||(X.on&&!X.on(o)))continue;const Q=fpRect(o.t,o.x,o.z,o.r);if(R.x1<Q.x2-.01&&R.x2>Q.x1+.01&&R.z1<Q.z2-.01&&R.z2>Q.z1+.01){ok=false;break;}}
       const px=P.x-L.ox,pz=P.z-L.oz;if(px>R.x1-.32&&px<R.x2+.32&&pz>R.z1-.32&&pz<R.z2+.32)ok=false;
       if(X.blocked(R))ok=false;}
@@ -2587,6 +2588,18 @@ function decoUpdate(){
 }
 function decoTap(cx,cy){if(DECO.placing)return;const X=DX();NDC.set(cx/innerWidth*2-1,-(cy/innerHeight)*2+1);RAY.setFromCamera(NDC,camera);const hits=RAY.intersectObjects(X.L().items.children,true);
   if(hits.length&&hits[0].distance<8){let o=hits[0].object;while(o&&!o.userData.u)o=o.parent;if(o){const rec=X.map().get(o.userData.u);if(rec){selMark(rec.it);renderBar();}}}}
+/* 🪙 selling back (26 Nov, owner): anything sells for half its shop price, from 📦 My stuff (bar or shop) or straight from the room.
+   No sentences: the button shows the coins and a red −50% tag. Safety: the first tap arms it (it turns into ✓ 🪙N for 3 s), the second tap sells. */
+const SELL={u:null,t:0};
+const sellPrice=it=>{const F=FURN[furnOf(it)];return F&&F.p?Math.floor(F.p/2):0;};
+function sellBtn(it,act,attr='data-a',arg=''){const n=sellPrice(it);if(!n)return'';const on=SELL.u===it.u&&performance.now()-SELL.t<3000;
+  return`<button class="btn ${on?'coral':'white'} sellb" ${attr}="${act}${arg}">${on?'✓ ':''}🪙 ${n}<span class="off50">−50%</span></button>`;}
+function sellTap(it,from){if(!it)return;const n=sellPrice(it);if(!n)return;
+  if(!(SELL.u===it.u&&performance.now()-SELL.t<3000)){SELL.u=it.u;SELL.t=performance.now();SFX.tap();setTimeout(()=>{if(SELL.u===it.u&&performance.now()-SELL.t>=3000){SELL.u=null;from==='room'?renderBar():(UI.open&&renderCatalog());}},3100);from==='room'?renderBar():renderCatalog();return;}
+  SELL.u=null;if(from==='room'){const X=DX();if(X!==HOMEX)return;const L=X.list();const i=L.indexOf(it);if(i<0)return;L.splice(i,1);X.rm(it.u);selMark(null);}
+  else{const i=S.home.store.indexOf(it);if(i<0)return;S.home.store.splice(i,1);}
+  S.coins+=n;SFX.coin();floatText('+'+n+' 🪙',P.x-Math.sin(P.yaw)*1.5,1.6,P.z-Math.cos(P.yaw)*1.5,{h:.6});change();from==='room'?renderBar():renderCatalog();}
+const FURN_H={},FURN_L={};function furnBox(t){if(FURN_H[t]==null){const b=new THREE.Box3().setFromObject(buildFurn(t));FURN_H[t]=b.max.y;FURN_L[t]=b.min.y;}}function furnH(t){furnBox(t);return FURN_H[t];}function furnLo(t){furnBox(t);return FURN_L[t];}   /* how tall a thing stands (for ceiling lamps) */
 function selMark(it){DECO.sel=it;if(DECO.mark){scene.remove(DECO.mark);DECO.mark=null;}
   if(it){const L=DX().L(),R=fpRect(it.t,it.x,it.z,it.r);const m=new THREE.Mesh(new THREE.PlaneGeometry(R.x2-R.x1+.3,R.z2-R.z1+.3),new THREE.MeshBasicMaterial({color:'#ffd45c',transparent:true,opacity:.55,depthWrite:false}));
     m.rotation.x=-Math.PI/2;m.position.set(L.ox+it.x,.035,L.oz+it.z);scene.add(m);DECO.mark=m;}}
@@ -2602,7 +2615,7 @@ function decoMove(){const X=DX(),it=DECO.sel;if(!it)return;const L=X.list();L.sp
 function decoAway(){const X=DX(),it=DECO.sel;if(!it)return;const L=X.list();L.splice(L.indexOf(it),1);X.rm(it.u);selMark(null);SFX.pop();
   if(X===HOMEX){delete it.f;S.home.store.push(it);toast('Put away. Find it in 🛍️ Shop → My stuff.');}else{dcardUpd();jobHud(true);}change();renderBar();}
 $('bar').addEventListener('click',e=>{const b=e.target.closest('[data-d]');if(!b||b.disabled)return;SFX.tap();
-  ({turn:decoTurn,place:decoPlace,cancel:decoCancel,shop:()=>openCatalog('buy'),move:decoMove,away:decoAway,done:decoEnd,paint:openHousePaint,furn:()=>openPhone('furn'),finish:dsFinishAsk,leave:()=>exitClient()})[b.dataset.d]();});
+  ({turn:decoTurn,place:decoPlace,cancel:decoCancel,shop:()=>openCatalog('buy'),mine:()=>openCatalog('mine'),sellsel:()=>sellTap(DECO.sel,'room'),move:decoMove,away:decoAway,done:decoEnd,paint:openHousePaint,furn:()=>openPhone('furn'),finish:dsFinishAsk,leave:()=>exitClient()})[b.dataset.d]();});
 /* 🐴 the farm's life (pets and farm update, stage 6; rules-riding, rules-farm-chores, story-ieva-stan, story-riders, screens-riding, screens-market-sell,
    moves-farm-*, moves-horse-*). Ten farm horses nobody owns (4 in the paddock, 5 in the two stables' stalls, 1 lesson horse by Stan), the farm animals (baby or
    adult, wandering round their spots in their own groups; where they stand comes from the one clock, so friends see the same), Ieva grooming by the stable,

@@ -480,3 +480,6 @@ body.shoot #moveBtns,body.shoot #tasks,body.shoot #pad,body.shoot #job,body.shoo
 #socCall .sc-b{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
 #socCall .btn{font-size:17px;min-height:46px;padding:8px 14px}
 #socCall.on{left:auto;right:calc(env(safe-area-inset-right,0px) + 10px);transform:none;width:auto;max-width:min(300px,72vw);padding:8px 12px 10px}#socCall.on .sc-m{font-size:16px;margin-bottom:6px}   /* talking: a small card under the top buttons, so the town stays in view */
+
+/* 🪙 sell back (26 Nov): coins + a red −50% tag, armed state turns coral */
+.itw{display:flex;flex-direction:column;gap:4px}.sellb{position:relative;font-size:14px;padding:6px 10px;min-height:44px}.sellb .off50{position:absolute;top:-8px;right:-6px;background:#ff4d6d;color:#fff;font-size:11px;font-weight:900;border-radius:8px;padding:1px 5px;transform:rotate(8deg)}#bar .cnt{background:#ff4d8d;color:#fff;border-radius:9px;padding:0 6px;font-size:12px;margin-left:2px}
