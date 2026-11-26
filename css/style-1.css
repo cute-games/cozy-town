@@ -501,3 +501,4 @@ body.shoot #moveBtns,body.shoot #tasks,body.shoot #pad,body.shoot #job,body.shoo
 .mbtm{display:flex;gap:8px;justify-content:center;align-items:center;margin:auto 8px 10px}.mbtm .sellb{margin:0!important}.recb{min-width:44px;min-height:44px;padding:4px 8px;font-size:20px;border-width:2px;border-radius:14px;box-shadow:none}
 .recol{display:flex;flex-direction:column;align-items:center;gap:12px;padding:8px}.recol .mth{width:120px;height:120px}.recolp{font-weight:900;font-size:18px}
 /* 26 Nov: sell chip stays on one line; card names keep two lines of room so cards line up */.mcard .sellb{white-space:nowrap}.mcard .mn{min-height:2.5em;display:flex;align-items:center;justify-content:center;text-align:center}
+/* 27 Nov (owner): the notepad is gone from the screen; its saved pages stay in the save */#pad{display:none!important}

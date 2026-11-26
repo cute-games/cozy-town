@@ -1016,16 +1016,18 @@ function busTick(dt,p){const R=BUS.ride,t=S.time;
     f.scale.set(1+Math.sin(tt*9)*.08,1+Math.sin(tt*13+1)*.16,1+Math.cos(tt*11)*.08);f.rotation.y=Math.sin(tt*2)*.4;
     if(SET.sound&&AC&&Math.hypot(P.x-LOC.beach.ox-CAMP.fx,P.z-LOC.beach.oz-CAMP.fz)<7&&(BUS.ck-=dt)<=0){BUS.ck=rand(.12,.7);tone(rand(1400,3200),.022,'square',.012);}}}   /* crackle */
   if(BUS.tent&&!zzIn()){BUS.tent=0;if(CUR.id==='beach'&&t>=7&&t<7.5)setTimeout(()=>{if(!PLAYING||CUR.id!=='beach')return;const n=busNext('beach','town');
-    toast(n&&n.d===S.day?'🚌 The bus to town comes today! It leaves at '+busHM(n.s.l)+' 🏘️':'🚌 No bus today. The bus home leaves '+busWhen(n,1)+'. Enjoy the beach! 🏖️',4.6,1);},4300);}
+    rosieBus(n&&n.d===S.day?'🚌 The bus to town comes today! It leaves at '+busHM(n.s.l)+' 🏘️':'🚌 No bus today. The bus home leaves '+busWhen(n,1)+'. Enjoy the beach! 🏖️');},4300);}
   if(p==='beach'&&HOST.cur){const q=HOST.cur;hostAnswer(false,true);toast('🔔 '+q.nm+' knocked at your door, but you are at the beach! 🏖️',3.6);}
   const calm=S.intro&&!UI.open&&!fading&&!CUT&&!TUT&&!DTUT,busy=$('toast').classList.contains('show');
   if(!(S.beach&&S.beach.bus)&&p==='park'&&calm&&!busy&&!(NAV&&NAV.id==='home')){BUS.nt+=dt;if(BUS.nt>5){bch().bus=1;change();SFX.pop();   /* (your house first: while the pink arrow shows the way home, the bus waits) */
-    toast(busWB(S.day)&&t<S.wb[2]-.5?'🎉 Good news! A free Welcome Bus waits at the park until '+busHM(S.wb[2])+'. Hop on and visit the beach! 🏖️':'🚌 New! A cozy Beach Bus stops at the park 3 days a week.'+(busR1()?'':' Your first ride is free! 🎟️')+' Find the 🚌 bus stop on your 🗺️ map!',5.5,1);}}else BUS.nt=0;
+    rosieBus(busWB(S.day)&&t<S.wb[2]-.5?'🎉 Good news! A free Welcome Bus waits at the park until '+busHM(S.wb[2])+'. Hop on and visit the beach! 🏖️':'🚌 New! A cozy Beach Bus stops at the park 3 days a week.'+(busR1()?'':' Your first ride is free! 🎟️')+' Find the 🚌 bus stop on your 🗺️ map!');}}else BUS.nt=0;
   if(p==='park'&&!busR1()&&S.beach&&S.beach.bus&&calm&&!busy&&!BUS.ride&&!BUS.told[S.day+':r1']&&busNearStop('park')){const c=busCur('park');   /* 🎟️ at the bus stop: your first ride is free (the Welcome Bus has its own words) */
-    if(!(c&&c.s.wb)){BUS.told[S.day+':r1']=1;toast('🎟️ Your first ride to the beach is free! '+(busReady('park')?'Hop on! 🚌':'The bus comes '+busWhen(busNext('park','beach'))+' 🚌'),4.6,1);}}
+    if(!(c&&c.s.wb)){BUS.told[S.day+':r1']=1;rosieBus('🎟️ Your first ride to the beach is free! '+(busReady('park')?'Hop on! 🚌':'The bus comes '+busWhen(busNext('park','beach'))+' 🚌'));}}
   if(p&&!BUS.ride&&calm)busNews(p,t,busy);
   BUS.tipT-=dt;if(BUS.tipT<=0){BUS.tipT=.25;busTipUpd(p);}}
-function busNews(p,t,busy){const d=S.day,say=(k,txt,w,snd)=>{const key=d+':'+k;if(BUS.told[key]||(busy&&t<w))return;BUS.told[key]=1;if(snd)snd();toast(txt,4.6,1);};
+/* 📱 bus news comes as a text from Rosie (27 Nov, owner): no big banner over the view, the phone button shows a new message */
+function rosieBus(t){addMsg('ro','ro',t);}
+function busNews(p,t,busy){const d=S.day,say=(k,txt,w,snd)=>{const key=d+':'+k;if(BUS.told[key]||(busy&&t<w))return;BUS.told[key]=1;if(snd)snd();rosieBus(txt);};
   for(const s of busSess(d))if(s.go&&t>=s.a&&t<s.a+.2&&BUSP[s.p].loc===CUR.id&&!(BUS.arr&&BUS.arr.d===d&&Math.abs(BUS.arr.t-t)<.3)&&!(s.wb&&NAV&&NAV.id==='home'))   /* the bus is here (not the one you just came on; a new player finds the house first) */
     say('a'+s.p+s.a,s.p==='park'?(s.wb?'🎉 The Welcome Bus is at the park! Hop on for a free ride to the beach 🏖️':'🚌 Beep beep! The Beach Bus is at the park! It leaves at '+busHM(s.l)+' 🏖️'):'🚌 Beep beep! The bus to town is here! It leaves at '+busHM(s.l)+' 🏘️',s.wb?s.l:s.a+.1,()=>{SFX.honk();if(s.wb)bch().bus=1;});   /* (the Welcome Bus message is the news too) */
   if(p!=='beach'||busArr(d)===undefined)return;
@@ -1038,7 +1040,7 @@ function busTipUpd(p){let el=$('busTip'),t='',hot=false;const R=BUS.ride;
   if(R&&!R.go){t=R.s.wb?'🚌 Off we go!':(R.to==='beach'?'🚌 Off to the beach in ':'🚌 Off home in ')+busMMSS(R.s);hot=!R.s.wb&&busSecs(R.s)<12;}
   else if(p&&!R&&!zzIn()&&S.intro){const c=busCur(p),near=busNearStop(p);
     if(c&&c.s.go&&c.u===0&&(near||p==='beach')){t=c.s.wb?(p==='park'?'🎉 Free bus! Hop on!':'🚌 Free bus to town until '+busHM(c.s.l)):c.s.dd?'💛 Free bus home: '+busMMSS(c.s):(p==='park'?'🚌 Bus to the beach: ':'🚌 Bus to town: ')+busMMSS(c.s);hot=!c.s.wb&&busSecs(c.s)<15;}   /* (at the beach you just came on the Welcome Bus: not "hop on!" but until when it goes back, like Driver Dot says) */
-    else if(near){if(c&&c.u<0&&c.s.go)t='🚌 The bus is coming!';else{const n=p==='park'?busNext('park','beach'):busNext('beach','town');t=(p==='park'?'🚌 Next bus: ':'🚌 Bus home: ')+(n?(n.d===S.day?'':WDAYS[wdIdx(n.d)].slice(0,3)+' ')+busHM(p==='park'?n.s.a:n.s.l):'soon');}}}
+    else if(near){if(c&&c.u<0&&c.s.go)t='🚌 The bus is coming!';/* (27 Nov, owner: no "Next bus" text on screen; the times come as texts from Rosie) */}}
   if(!el){if(!t)return;el=document.createElement('div');el.id='busTip';el.setAttribute('role','status');el.hidden=true;$('stats').after(el);}
   if(el.textContent!==t)el.textContent=t;el.classList.toggle('hot',hot);if(el.hidden!==!t)el.hidden=!t;}
 

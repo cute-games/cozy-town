@@ -1378,7 +1378,7 @@ ACT.dnbye=()=>{dnLeave();if(!DN_TEST)toast('🪩 Another round? Tap Dance! on th
 function dnLeave(){const D=DANCE;D.res=false;D.resultCamera=null;D.resultHtml='';dnStageOff();dnSpotsOff();
   if($('card').classList.contains('dnres'))closePanel();
   if(DN_TEST&&D.bot){dnDropPerson(D.bot.av);D.bot=null;D.mine=null;}
-  if(P.ride&&P.ride.kind==='dance')P.ride=null;if(D.me){if(DN_TEST)dnDropPerson(D.me);else scene.remove(D.me.root);D.me=null;}}   /* back from the dance view */
+  if(P.ride&&P.ride.kind==='dance')P.ride=null;if(D.me){if(DN_TEST)dnDropPerson(D.me);else scene.remove(D.me.root);D.me=null;}camera.zoom=1;resize();}   /* (27 Nov: the dance's wide lens and zoom went back to normal only on the next screen resize: the view stayed stretched) */   /* back from the dance view */
 function dnDropPerson(person){scene.remove(person.root);person.root.traverse(o=>{if(o.isMesh)o.geometry.dispose();});}
 function dnNm(n){n=String(n||'');return n.length>13?n.slice(0,12)+'…':n;}   /* a long name ends in … in the score bar */
 /* the HUD: the faces and the score bar on top, the falling arrows, four big buttons */
@@ -3071,7 +3071,7 @@ async function boot(){
     try{await Promise.race([document.fonts.load('800 40px "CozyCoin","Baloo 2"'),new Promise(r=>setTimeout(r,2000))]);}catch(e){}
     seasonSet();buildSky();buildCity();buildHome();buildMarket();buildPetShop();buildVet();buildFlowerShop();buildCafe();buildSalon();buildClothesShop();buildToyStore();buildBakery();buildIceCream();buildLibrary();buildSchool();buildClassrooms();buildFireStation();buildPizzeria();buildApts();buildClientRoom();buildVisit();buildBeach();buildTreePark();buildStudio();buildActors();buildTownfolk();buildPetShow();buildCars();buildBall();buildShoppers();
     S=freshState();setLoc('city');S=null;holCheck();   /* 🎃 decorations for today's real date */
-    setupInput();applyGfx();addEventListener('resize',resize);
+    setupInput();applyGfx();addEventListener('resize',resize);addEventListener('orientationchange',()=>setTimeout(resize,350));
     requestAnimationFrame(t=>{last=t;frame(t);});
     if(DN_TEST){dnTestBoot();return;}
     cloudInit();
