@@ -74,7 +74,7 @@ body.dancing #joy,body.dancing #moveBtns,body.dancing #actWrap,body.dancing #pad
 }
 #dnHud.dnFunky #dnMsg[data-cue]{left:50%;top:36%;z-index:1}
 .dnFunky .dnFace.me b{color:#174b3b}
-#dnHud.dnFunky #dnBtns{display:none;position:absolute;inset:0;width:auto;transform:none;padding:0 env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
+#dnHud.dnFunky #dnBtns{display:none;position:absolute;inset:0;width:auto;transform:none;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
 #dnHud.dnFunky.dnTouch #dnBtns{display:block}
 #dnHud.dnFunky #dnBtns .btn{position:absolute;width:var(--dn-key,44px);height:var(--dn-key,44px);min-height:44px;transform:translate(-50%,-50%);border:0;padding:0;background:transparent;box-shadow:none;border-radius:50%}
 #dnHud.dnFunky #dnBtns .btn svg{display:none}
@@ -709,7 +709,7 @@ function dnAsk(){const here=dnHere();if(!here.length){toast('🕺 Nobody to danc
 ACT.dnask=p=>{const a=MP.peers.get(p);closePanel();if(a)dnAskPeer(a);};
 function dnAskPeer(a){if(DANCE.mine||DANCE.on)return;audioInit();SFX.tap();const r=dnRoundId(a);if(dnOnBeat(r))dnPrime();DANCE.ask={r,w:a.peer,t0:performance.now(),nm:a.nm};DANCE.mine={r,w:a.peer,st:'ask',s:0,sc:0,mv:-1,k:0,ld:1};toast('🕺 Asking '+a.nm+' to dance…',3);}
 function dnCardShow(a){if(DANCE.card)return;DANCE.card={peer:a.peer,r:a.dn.r,nm:a.nm};SFX.ding();let el=$('dnCard');if(!el){el=document.createElement('div');el.id='dnCard';document.body.appendChild(el);}
-  el.innerHTML=`<div class="kc-t">🕺 Dance-off!</div><div class="kc-m"><b>${esc(a.nm)}</b> wants to dance with you!<br>Press the arrows as they fall!</div><div class="kc-b"><button class="btn mint" id="dnYes">💃 Let's dance!</button><button class="btn" id="dnNo">🙅 Not now</button></div>`;
+  el.innerHTML=`<div class="kc-t">🕺 Dance-off!</div><div class="kc-m"><b>${esc(a.nm)}</b> wants to dance with you!<br>Press each arrow as it reaches its target!</div><div class="kc-b"><button class="btn mint" id="dnYes">💃 Let's dance!</button><button class="btn" id="dnNo">🙅 Not now</button></div>`;
   el.hidden=false;$('dnYes').onclick=()=>dnCardAnswer(true);$('dnNo').onclick=()=>dnCardAnswer(false);}
 function dnCardAnswer(ok){const c=DANCE.card;if(!c)return;DANCE.card=null;const el=$('dnCard');if(el)el.hidden=true;DANCE.said.add(c.peer+'|'+c.r);const a=MP.peers.get(c.peer);
   if(ok&&a&&a.dn&&a.dn.r===c.r&&a.dn.st==='ask'){audioInit();if(dnOnBeat(c.r))dnPrime();SFX.yay();DANCE.mine={r:c.r,w:c.peer,st:'go',s:0,sc:0,mv:-1,k:0,ld:0};DANCE.partner=c.peer;DANCE.partnerNm=c.nm;toast('💃 Get ready…',2);}
@@ -730,6 +730,138 @@ function dnBegin(s,a,left){if(DANCE.res)dnLeave();const f=dnFloor();if(!f){dnCan
   {const overlay=!!DANCE.style,cd=innerWidth>innerHeight?(visH()<=500?(overlay?4.1:3.5):(overlay?5:4.4)):5.6,sd=overlay?0:(left?-1:1)*.6;   /* (an upright phone sees a narrow slice: from 5.6 m both dancers fit; run 4, stage 3) */DANCE.cam={x:clamp(f.x+dx*cd+dz*sd,cx-W+.7,cx+W-.7),z:clamp(f.z+dz*cd-dx*sd,cz-D+.7,cz+D-.7),dx,dz};}   /* (run 4, stage 3: nearer on a short sideways screen; the two players' views 1.2 m apart, so after the round they never stand inside each other) */
   if(P.sit)standUp();if(DECO.on)decoEnd();closePanel();P.ride={kind:'dance'};P.jy=0;P.vy=0;document.body.classList.add('dancing');
   const me=makePerson(lookToPerson(packLook()));bakePerson(me);scene.add(me.root);DANCE.me=me;DANCE.watchFloor=null;DANCE.watchCam=null;dnSpots(f,DANCE.style,DANCE.r);dnHud(true);if(DANCE.profile)dnCountSound();else SFX.ding();}
+/* A small shared projector paints the same soft mirror flecks onto the
+   local walls, floor and character materials. The cones never cast shadows. */
+function dnDiscoTexture(){
+  const cv=document.createElement('canvas');cv.width=cv.height=64;
+  const g=cv.getContext('2d');
+  for(const [x,y,r] of [[32,32,9],[17,23,5],[46,22,6],[22,46,6],[44,43,5],[36,14,4],[14,36,3],[50,36,4]]){
+    const halo=g.createRadialGradient(x,y,0,x,y,r);
+    halo.addColorStop(0,'#fff');halo.addColorStop(.38,'#fffaeecc');halo.addColorStop(1,'#fff0');
+    g.fillStyle=halo;g.fillRect(x-r,y-r,r*2,r*2);
+    g.fillStyle='#fff0dfb5';g.beginPath();g.moveTo(x,y-r*.58);g.lineTo(x+1,y-1);
+    g.lineTo(x+r*.46,y);g.lineTo(x+1,y+1);g.lineTo(x,y+r*.58);
+    g.lineTo(x-1,y+1);g.lineTo(x-r*.46,y);g.lineTo(x-1,y-1);g.fill();
+  }
+  return new THREE.CanvasTexture(cv);
+}
+function dnDiscoMaterial(base,disco){
+  const mat=base.clone(),key=base.customProgramCacheKey();
+  mat.customProgramCacheKey=()=>key+':dance-mirror';
+  mat.onBeforeCompile=shader=>{
+    base.onBeforeCompile(shader);
+    Object.assign(shader.uniforms,disco.project);
+    shader.vertexShader=`
+      varying vec3 mirrorCell[3];
+      uniform vec3 mirrorOrigin,mirrorAim[3],mirrorRight[3],mirrorUp[3];
+    `+shader.vertexShader.replace('#include <project_vertex>',`
+      vec3 mirrorRay=(modelMatrix*vec4(transformed,1.)).xyz-mirrorOrigin;
+      for(int i=0;i<3;i++)mirrorCell[i]=vec3(dot(mirrorRay,mirrorRight[i]),dot(mirrorRay,mirrorUp[i]),dot(mirrorRay,mirrorAim[i]));
+      #include <project_vertex>
+    `);
+    shader.fragmentShader=`
+      varying vec3 mirrorCell[3];
+      uniform vec3 mirrorInk[3];
+      uniform float mirrorPower;
+      uniform sampler2D mirrorFlecks;
+    `+shader.fragmentShader.replace('gl_FragColor = vec4( outgoingLight, diffuseColor.a );',`
+      for(int i=0;i<3;i++){
+        float reach=mirrorCell[i].z;
+        float width=max(.15,.32*reach);
+        if(reach<=.18||any(greaterThan(abs(mirrorCell[i].xy),vec2(width))))continue;
+        vec2 cell=mirrorCell[i].xy/width;
+        float fleck=texture2D(mirrorFlecks,cell*.5+.5).a;
+        float spot=.32*(1.-smoothstep(.07,.66,length(cell)))+fleck*.86;
+        float alpha=spot*smoothstep(.18,.82,reach)*mirrorPower;
+        outgoingLight=mix(outgoingLight,outgoingLight*.49+mirrorInk[i]*.88,clamp(alpha,0.,.74));
+      }
+      gl_FragColor=vec4(outgoingLight,diffuseColor.a);
+    `);
+  };
+  return mat;
+}
+function dnDiscoStart(f,ball,style){
+  if(!ball)return null;
+  const group=new THREE.Group(),geo=new THREE.CylinderGeometry(.025,1,1,20,1,true);
+  geo.translate(0,-.5,0);
+  const warm=new THREE.Color('#ffe2b8');
+  const ink=style.lights.map(c=>new THREE.Color(c).lerp(warm,.25));ink.push(warm);
+  const vectorSet=()=>Array.from({length:3},()=>new THREE.Vector3());
+  const flecks=dnDiscoTexture(),origin=new THREE.Vector3();
+  const disco={group,geo,flecks,room:[],materials:new Map(),rays:[],up:new THREE.Vector3(0,1,0),
+    down:new THREE.Vector3(0,-1,0),origin,strike:-100,
+    project:{mirrorOrigin:{value:origin},mirrorAim:{value:vectorSet()},mirrorRight:{value:vectorSet()},
+      mirrorUp:{value:vectorSet()},mirrorInk:{value:ink},mirrorPower:{value:0},mirrorFlecks:{value:flecks}}};
+  const vertexShader=`
+    varying vec3 rayPoint,raySide;
+    varying float rayLength;
+    void main(){
+      rayPoint=(modelMatrix*vec4(position,1.)).xyz;
+      raySide=normalize(mat3(modelMatrix)*vec3(position.x,0.,position.z));
+      rayLength=-position.y;
+      gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);
+    }`;
+  const fragmentShader=`
+    uniform vec3 ink;
+    uniform float power;
+    varying vec3 rayPoint,raySide;
+    varying float rayLength;
+    void main(){
+      float axial=smoothstep(.012,.105,rayLength)*(1.-smoothstep(.75,1.,rayLength));
+      float across=pow(abs(dot(normalize(raySide),normalize(cameraPosition-rayPoint))),2.1);
+      gl_FragColor=vec4(mix(ink,vec3(1.,.94,.83),.26*across),axial*across*power);
+    }`;
+  for(const color of ink){
+    const material=new THREE.ShaderMaterial({vertexShader,fragmentShader,transparent:true,depthWrite:false,
+      uniforms:{ink:{value:color},power:{value:0}}});
+    const mesh=new THREE.Mesh(geo,material);mesh.frustumCulled=false;group.add(mesh);disco.rays.push(mesh);
+  }
+  const room=f.L,wall=room.wallM||WALL_M,floor=room.floorM||FLOOR_M;
+  room.fls?.[f.fl]?.g.traverse(o=>{
+    const base=o.material;
+    if(!o.isMesh||(base!==wall&&base!==floor))return;
+    let mat=disco.materials.get(base);
+    if(!mat){mat=dnDiscoMaterial(base,disco);disco.materials.set(base,mat);}
+    disco.room.push({o,base,mat});o.material=mat;
+  });
+  scene.add(group);
+  return disco;
+}
+function dnDiscoOff(disco){
+  if(!disco)return;
+  for(const {o,base,mat} of disco.room)if(o.material===mat)o.material=base;
+  for(const material of disco.materials.values())material.dispose();
+  for(const ray of disco.rays)ray.material.dispose();
+  scene.remove(disco.group);disco.flecks.dispose();disco.geo.dispose();
+}
+function dnDiscoTick(fx,t,calm,wave){
+  const D=DANCE,disco=fx.disco,c=D.on||D.res?D.cam:D.watchCam;
+  if(!disco||!c)return;
+  const p=disco.project,room=fx.room,pos=disco.origin;
+  fx.ball.getWorldPosition(pos);
+  const fl=fx.ball.parent.userData.fl|0,oz=room.oz+UPZ*fl,W=room.W||HOMEW,H=room.D||HOMED;
+  const when=Math.max(0,t)*(calm?.23:.92);
+  const hit=clamp(1-(t-disco.strike)/.75,0,1);
+  const combo=clamp(1-(t-(D.stageFx?.celebrate??-100))/1.5,0,1);
+  const energy=calm?.26+hit*.07:.64+wave*.08+hit*.23+combo*.18;
+  p.mirrorPower.value=energy;
+  for(let i=0;i<3;i++){
+    const a=when*(i===1?.86:1)+i*2.04;
+    const x=i===0?-.86+.27*Math.sin(a):i===1?.87+.30*Math.sin(a):.66*Math.sin(a*.91);
+    const z=i===2?.51+.26*Math.cos(a):-.71-.23*Math.sin(a*.83);
+    const y=i===2?-.88:-.28-.16*Math.cos(a);
+    const dir=p.mirrorAim.value[i].set(c.dz*x+c.dx*z,y,c.dz*z-c.dx*x).normalize();
+    const right=p.mirrorRight.value[i].crossVectors(dir,disco.up).normalize();
+    p.mirrorUp.value[i].crossVectors(right,dir);
+    const dx=(room.ox+(dir.x<0?-W:W)-pos.x)/dir.x;
+    const dz=(oz+(dir.z<0?-H:H)-pos.z)/dir.z;
+    const length=Math.min(dx,dz,(.06-pos.y)/dir.y);
+    const ray=disco.rays[i],width=length*(i===2?.143:.11);
+    ray.position.copy(pos);ray.quaternion.setFromUnitVectors(disco.down,dir);
+    ray.scale.set(width,length,width);
+    ray.material.uniforms.power.value=energy*(i===2?.36:.60);
+  }
+}
 /* The existing mirror-ball spots use two instanced palettes in a Funky round. */
 function dnSpots(f,style,id){
   dnSpotsOff();
@@ -770,7 +902,7 @@ function dnSpots(f,style,id){
       fixture.position.z=clamp(f.z-c.dz*back,oz-(room.D||HOMED)+.42,oz+(room.D||HOMED)-.42);
       fixture.userData.fl=f.fl;room.vf=-1;
     }
-    g.userData.funky={id,room:f.L,geo,tiles,original,spotM,tileM,step:-1,ball,mount};
+    g.userData.funky={id,room:f.L,geo,tiles,original,spotM,tileM,step:-1,ball,mount,disco:dnDiscoStart(f,ball,style)};
   }else{
     const colors=['#ff4d8d','#7cc8ff','#ffd45c','#5fd4b0','#b79cff'];
     for(let i=0;i<22;i++){
@@ -786,6 +918,7 @@ function dnSpotsOff(){
   scene.remove(g);
   const fx=g.userData.funky;
   if(fx){
+    dnDiscoOff(fx.disco);
     if(fx.mount){
       const m=fx.mount;m.fixture.position.x=m.x;m.fixture.position.z=m.z;
       m.fixture.userData.fl=m.floor;fx.room.vf=-1;
@@ -810,6 +943,7 @@ function dnFunkyLights(t,profile){
   const wave=dnPulse(t,profile);
   g.rotation.y=calm?0:Math.max(0,t)*.52;
   if(fx.ball)fx.ball.rotation.y=calm?0:Math.max(0,t)*.33;
+  dnDiscoTick(fx,t,dnCalm(),wave);
   const streak=DANCE.on&&!dnCalm()?Math.max(DANCE.combo,DANCE.tallies[1].combo):0;
   const boost=streak>=50?.33:streak>=25?.24:streak>=10?.15:0;
   fx.spotM[0].opacity=.38+(.44+boost*.3)*wave;fx.spotM[1].opacity=.41+(.38+boost*.3)*wave;
@@ -854,6 +988,7 @@ function dnTick(dt){const D=DANCE;if(!S)return;if(D.spots&&!D.spots.userData.fun
     if(CUR!==D.floor.L)dnLeave();
     else{
       dnKeepResults();
+      if(D.style)dnFunkyLights(D.t+(performance.now()-D.ended)*.001,D.profile);
       if(D.stageFx)dnConfettiTick(D.stageFx,D.result===1&&!dnCalm()?(performance.now()-D.resultAt)*.001:-1,2.25);
     }
     return;
@@ -986,7 +1121,7 @@ function dnFov(){
   const D=DANCE;
   if(!(D.on||D.res)||!D.cam||!D.floor)return 0;
   const d=Math.max(1,Math.hypot(D.cam.x-D.floor.x,D.cam.z-D.floor.z)),a=innerWidth/innerHeight;
-  if(D.style)return a<1?(D.res?90:96):D.res&&visH()>500?95:92;
+  if(D.style)return a<1?96:92;
   return a<1?Math.min(95,2*Math.atan(1.6/(d*a))*180/Math.PI):0;
 }
 const DN_KNEE=.50;
@@ -1001,7 +1136,7 @@ function dnCameraPosition(c,f,dist,strafe=0){
 function dnDancerSide(side){
   const D=DANCE,sign=(side?!D.left:!!D.left)?-1:1;
   const narrow=camera.aspect<.60;
-  const base=D.on&&D.style?narrow?.42:camera.aspect<1?.64:dnDesktop()?.86:.77:D.style&&narrow?.55:D.style&&dnDesktop()?.69:.83;
+  const base=D.style?narrow?.42:camera.aspect<1?.64:dnDesktop()?.86:.77:.83;
   if(!D.on||dnCalm())return sign*base;
   const amount=Math.max(0,side?D.push:-D.push);if(!amount)return sign*base;
   const c=D.cam,f=D.floor,dist=Math.hypot(c.x-f.x,c.z-f.z);
@@ -1038,12 +1173,9 @@ function dnCam(dt){
   const c=D.cam,f=D.floor,wide=innerWidth>innerHeight,short=visH()<=500;
   if(D.style){
     const a=innerWidth/innerHeight;
-    const roundDist=wide?(short?1.73:dnDesktop()?2.01:1.94):clamp(1.18/a,1.85,2.62);
-    const resultDist=short?2.28:dnDesktop()?2.42:wide?3.24:Math.max(2.82,1.49/a);
-    const strafe=D.res?(short?1.13:dnDesktop()?1.98:0):0;
-    dnCameraPosition(c,f,D.res?resultDist:roundDist,strafe);
-    const aimX=f.x+c.dz*strafe,aimZ=f.z-c.dx*strafe;
-    const targetY=D.res?(short?1.19:dnDesktop()?.84:wide?-.60:a<.60?-.65:-.53):dnCameraAim();
+    const dist=wide?(short?1.73:dnDesktop()?2.01:1.94):clamp(1.18/a,1.85,2.62);
+    dnCameraPosition(c,f,dist);
+    const aimX=f.x,aimZ=f.z,targetY=dnCameraAim();
     const ease=1-Math.exp(-dt*8);
     P.x=lerp(P.x,c.x,ease);P.z=lerp(P.z,c.z,ease);
     const dx=aimX-P.x,dz=aimZ-P.z;
@@ -1055,8 +1187,11 @@ function dnCam(dt){
     psCamTo(c.x,c.z,f.x+c.dz*lo,ty,f.z-c.dx*lo,dt,4);
   }
   P.cy=0;P.jy=0;updateCamera(dt);
-  if(D.style)camera.position.y=dnCameraHeight();
-  const zoom=D.on&&D.style&&!dnCalm()?1+.02*dnPulse(D.t,D.profile):1;
+  if(D.style){
+    const eye=dnCameraHeight(),rise=D.res?dnEase((performance.now()-D.ended)/570):0;
+    camera.position.y=lerp(eye,.87,rise);
+  }
+  const zoom=(D.on||D.res)&&D.style&&!dnCalm()?1+.02*dnPulse(D.t,D.profile):1;
   if(camera.zoom!==zoom){camera.zoom=zoom;camera.updateProjectionMatrix();}
   for(const q of PET_ACTORS)if(q.loc===CUR.id)q.g.visible=false;   /* the pets wait out of the picture during a round (they show again by themselves) */
   if(D.me){
@@ -1434,7 +1569,7 @@ function dnLaneStart(){
       gold:dnSparkSprite(D.style.perfect),edges:[$('dnEdgeL'),$('dnEdgeR')],
       crown:dnCrownArt(),parts:new WeakMap(),projector:new THREE.Matrix4(),keys:$('dnBtns'),
       buttons:$('dnBtns').querySelectorAll('button'),top:$('dnTop'),
-      captions:new Float32Array(20),notes:new Float32Array(128),captionUsed:0,noteUsed:0,
+      captions:new Float32Array(24),notes:new Float32Array(128),captionUsed:0,noteUsed:0,
       sides:Array.from({length:2},()=>({x:new Float32Array(4),near:new Float32Array(4),dim:new Float32Array(4),
         bursts:Array.from({length:12},()=>({at:-100,d:0,grade:0})),step:0,at:-100,shownAt:-100,grade:0,missAt:-100,
         combo:0,comboArt:null,perfectAt:-100,pulseAt:-100,pulseLight:0,
@@ -1513,42 +1648,51 @@ function dnLaneLayout(F){
   const compact=portrait&&w<620,touch=$('dnHud').classList.contains('dnTouch');
   F.up=up;F.touch=touch;F.compact=compact;
   const insets=getComputedStyle(F.keys),safe=Math.max(9,parseFloat(insets.paddingLeft)||0,parseFloat(insets.paddingRight)||0);
-  const inset=safe+w*(portrait?.009:big?.082:.019),span=w*(big?.194:short?.218:portrait?.223:.203);
-  const gap=Math.max(15,(span-safe)/4),score=F.top.getBoundingClientRect();
+  const safeTop=Math.max(8,parseFloat(insets.paddingTop)||0);
+  const safeBottom=Math.max(12,parseFloat(insets.paddingBottom)||0);
+  const score=F.top.getBoundingClientRect(),halfWidth=w*.5;
+  const inset=up?Math.max(safe+2,w*.032):safe+w*(portrait?.009:big?.082:.019);
+  const span=w*(big?.194:short?.218:portrait?.223:.203);
+  const step=Math.max(15,up?Math.min(w*.062,(halfWidth-inset-8)/4):(span-safe)/4);
+  const besideScore=up&&Math.min(score.left,w-score.right)>inset+step*4+Math.min(46,w*.025)+8;
   for(let side=0;side<2;side++){
     const L=F.sides[side],left=side?!D.left:!!D.left;
-    const step=!side&&touch?Math.max(gap,44):gap;
-    const start=left?inset:w-inset-step*4;
-    L.size=Math.min(step*1.39,h*.144);
-    L.noteSize=Math.min(step*1.91,h*.183)*(SET.danceSmall?.79:1);
+    const pitch=touch&&(up||!side)?Math.max(step,44):step;
+    const start=left?inset:w-inset-pitch*4;
+    const originalPitch=Math.max(15,(span-safe)/4,touch&&(up||!side)?44:0);
+    L.size=Math.min(originalPitch*1.39,h*.144);
+    L.noteSize=Math.min(originalPitch*1.91,h*.183)*(SET.danceSmall?.79:1);
     L.outer=left?safe*.65:w-safe*.65;
-    L.mid=start+2*step;L.stepWidth=step*3;
+    L.mid=start+pitch*2;L.stepWidth=pitch*3;
     const extent=(L.stepWidth+L.noteSize+8)*.5;
     L.inner=L.mid+(left?extent:-extent);
-    L.key=Math.min(78,step);
+    L.key=Math.min(76,pitch);
     L.left=left;L.edge=F.edges[left?0:1];
-    for(let d=0;d<4;d++)L.x[d]=start+(d+.5)*step;
+    for(let d=0;d<4;d++)L.x[d]=start+(d+.5)*pitch;
   }
-  const half=Math.max(F.sides[0].size*.5,F.sides[0].key*.5),safeBottom=Math.max(12,parseFloat(insets.paddingBottom)||0);
+  const half=Math.max(F.sides[0].size*.5,F.sides[0].key*.5);
   F.wordHeight=clamp(Math.min(h*.090,w*.090),23,big?69:62);
   F.comboHeight=clamp(Math.min(h*.093,w*.107),25,84);
   F.safe=safe;
-  F.bandBottom=h-safeBottom;
+  F.bandBottom=up?h:h-safeBottom;
+  F.scoreLeft=score.left;F.scoreRight=score.right;F.scoreTop=score.top;F.scoreBottom=score.bottom;
   const f=D.floor,c=D.cam,dist=Math.max(1.15,Math.hypot(c.x-f.x,c.z-f.z));
   const eye=dnCameraHeight(),pitch=Math.atan2(dnCameraAim()-eye,dist);
   const cos=Math.cos(pitch),sin=Math.sin(pitch);
   const y=(-eye*cos-dist*sin)/(dist*cos-eye*sin);
   const foot=(.5-.5*y/Math.tan(dnFov()*Math.PI/360))*h;
-  F.bandTop=compact?Math.max(score.bottom+7,foot+h*.045):score.bottom+9;
+  F.bandTop=up?0:compact?Math.max(score.bottom+7,foot+h*.045):score.bottom+9;
   if(up){
-    F.line=F.bandTop+half+3;
+    // At narrow widths the original scoreboard spans the screen. Use a
+    // second, still upper row for the targets and their 44 px touch areas.
+    F.line=Math.max(h*.182,safeTop+half+3,besideScore?0:score.bottom+half+8);
   }else{
     F.line=Math.min(F.bandBottom-half-2,Math.max(foot+half*.96,h*(short?.894:.927)));
   }
-  const arrow=F.sides[0].noteSize,runway=Math.abs(F.line-(up?F.bandBottom:F.bandTop));
-  F.lead=clamp(runway/340,short?.94:1.15,DN_LEAD);
-  F.scoreBottom=score.bottom;
-  F.spawn=up?F.bandBottom-arrow*.66:F.bandTop+arrow*.66;
+  const arrow=F.sides[0].noteSize;
+  F.spawn=up?h+arrow*.53:F.bandTop+arrow*.66;
+  const runway=up?Math.abs(F.line-F.spawn):Math.abs(F.line-F.bandTop);
+  F.lead=clamp(runway/(up?355:340),short?.94:1.15,DN_LEAD);
   F.travel=(F.line-F.spawn)/F.lead;
   F.keys.style.setProperty('--dn-key',F.sides[0].key+'px');
   for(let d=0;d<4;d++){
@@ -1741,12 +1885,7 @@ function dnLaneSide(g,F,L,side,t,now,calm){
     if(until>F.lead)break;
     if(!(side?D.otherNotes[i]:n.j))near[n.d]=Math.max(near[n.d],1-Math.abs(until)*(until>=0?2.2:4));
   }
-  const r=size*.46+3,pad=F.touch?1:7;
-  const x0=L.x[0]-pad,x1=L.x[3]+pad;
-  dnLaneDamage(F,(x0+x1)*.5,line,(x1-x0)*.5+r+2,r+2);
-  g.globalAlpha=.84;g.fillStyle='#36243f';g.strokeStyle='#fff2dfb0';g.lineWidth=1.5;
-  g.beginPath();g.arc(x0,line,r,Math.PI*.5,Math.PI*1.5);
-  g.arc(x1,line,r,-Math.PI*.5,Math.PI*.5);g.closePath();g.fill();g.stroke();
+  const r=size*.44+4;
   for(let d=0;d<4;d++){
     const x=L.x[d],pulse=near[d],miss=now-L.dim[d]<.25;
     const age=now-L.hitAt[d],pop=calm||age<0||age>.43?0:(1-age/.43)*(L.hitGrade[d]===DN_PERFECT?.22:L.hitGrade[d]===DN_GOOD?.12:.06);
@@ -1778,13 +1917,24 @@ function dnLaneSide(g,F,L,side,t,now,calm){
     const until=n.t-t;
     if(until<-.15)continue;
     const y=line-dir*(dock+Math.max(0,until)*approach);
+    let f=note,x=L.x[n.d],clear=false;
+    if(F.up){
+      // Keep each note on the target's exact vertical line. A sleeve can
+      // hide it briefly, but it never jumps sideways or draws over a face.
+      for(let attempt=0;attempt<3&&f>=19;attempt++,f*=.79){
+        const r=f*.5+2;
+        if(dnNoteClear(F,x,y,r,r)&&!dnBoxIntersects(x-r,x+r,y-r,y+r,F.notes,F.noteUsed)){
+          F.noteUsed=dnStoreBox(F.notes,F.noteUsed,x,y,r,r);clear=true;break;
+        }
+      }
+    }else{
     const limit=dnNoteLimit(F,L,y,note*.50+3);
     const left=L.left?L.outer:limit,right=L.left?limit:L.outer;
     if(right-left<26)continue;
     // The whole sprite, including its transparent border, has to fit outside
     // the projected rig and captions. Keep rapid notes from stacking as well.
     const paired=notes[j-1]?.t===n.t||notes[j+1]?.t===n.t;
-    let f=Math.min(note,(right-left-6)*(paired?.37:.71)),x=0,clear=false;
+    f=Math.min(note,(right-left-6)*(paired?.37:.71));
     for(let attempt=0;attempt<3&&f>=19;attempt++,f*=.79){
       const radius=f*.5+2,spread=Math.min(1,(right-left-radius*2)/L.stepWidth);
       const half=L.stepWidth*spread*.5+radius;
@@ -1792,6 +1942,7 @@ function dnLaneSide(g,F,L,side,t,now,calm){
       if(dnNoteClear(F,x,y,radius,radius)&&!dnBoxIntersects(x-radius,x+radius,y-radius,y+radius,F.notes,F.noteUsed)){
         F.noteUsed=dnStoreBox(F.notes,F.noteUsed,x,y,radius,radius);clear=true;break;
       }
+    }
     }
     if(!clear)continue;
     dnLaneDamage(F,x,y,f*.51+4,f*.82+3);
@@ -1897,7 +2048,9 @@ function dnLaneDraw(now=performance.now()/1000){
   if(F.dirty&&!dnLaneLayout(F))return;
   const damage=F.damage,calm=dnCalm();
   for(let k=0;k<F.damageUsed;k+=4)g.clearRect(damage[k],damage[k+1],damage[k+2],damage[k+3]);
-  F.damageUsed=F.captionUsed=F.noteUsed=0;
+  F.damageUsed=F.noteUsed=0;
+  const x=(F.scoreLeft+F.scoreRight)*.5,y=(F.scoreTop+F.scoreBottom)*.5;
+  F.captionUsed=dnStoreBox(F.captions,0,x,y,(F.scoreRight-F.scoreLeft)*.5+4,(F.scoreBottom-F.scoreTop)*.5+4);
   while(D.peerRead.first<D.pat.length&&D.pat[D.peerRead.first].t<t-.31)D.peerRead.first++;
   if(!calm)dnComboBurst(g,F,t);
   const celebration=D.stageFx.celebrate;
@@ -2058,13 +2211,15 @@ function dnPressureLights(fx,t,calm){
     if(state&&state.actor!==actor){dnRestoreTint(state);state=fx.actorTints[side]=null;}
     if(!actor)continue;
     if(!state){
-      if(!light.visible&&!glow)continue;
+      const disco=D.spots?.userData.funky?.disco;
+      if(!light.visible&&!glow&&!disco)continue;
       const meshes=[],materials=new Map();
       actor.root.traverse(mesh=>{
         const original=mesh.material;
         if(!mesh.isMesh||!original?.color||original.side===THREE.BackSide)return;
         if(!materials.has(original)){
-          const mat=original.clone();mat.onBeforeCompile=original.onBeforeCompile;
+          const mat=disco?dnDiscoMaterial(original,disco):original.clone();
+          if(!disco)mat.onBeforeCompile=original.onBeforeCompile;
           materials.set(original,mat);
         }
         meshes.push({mesh,original});mesh.material=materials.get(original);
@@ -2084,6 +2239,8 @@ function dnStageHit(side,d,t,perfect,combo){
   const D=DANCE,fx=D.stageFx;if(!fx)return;
   const tile=fx.tiles[side*4+d];if(tile){tile.at=t;tile.perfect=perfect;}
   if(perfect){
+    const disco=D.spots?.userData.funky?.disco;
+    if(disco)disco.strike=t;
     const ring=fx.rings[fx.slot];ring.at=t;ring.side=side;
     ring.mesh.material.color.set(D.style.spark[d]);fx.slot=(fx.slot+1)%fx.rings.length;
     for(let i=0;i<4;i++){
