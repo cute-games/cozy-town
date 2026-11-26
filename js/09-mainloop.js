@@ -61,8 +61,14 @@ body.dancing #joy,body.dancing #moveBtns,body.dancing #actWrap,body.dancing #pad
 #dnHud.dnFunky #dnLane{display:none}
 #dnHud.dnFunky #dnFunkyHud,#dnFunkyCanvas{display:block;position:absolute;inset:0;width:100%;height:100%}
 #dnFunkyHud{background:radial-gradient(ellipse at 50% 49%,transparent 54%,#4d204120 84%,#361b3e54)}
-#dnEdgeHit{position:absolute;inset:0;opacity:0;background:radial-gradient(ellipse,transparent 47%,#fff9d332 73%,#fffdf2 100%);pointer-events:none}
+#dnFunkyHud .dnEdgeHit{position:absolute;bottom:0;width:48%;height:68%;opacity:0;pointer-events:none;background:radial-gradient(ellipse at 0 100%,#fff5c5e8, #ffdbae7a 33%,#ffdbae00 71%)}
+#dnEdgeR{right:0;transform:scaleX(-1)}#dnEdgeL{left:0}
 #dnHud.dnFunky #dnTop{top:calc(env(safe-area-inset-top,0px) + 14px);left:50%;width:min(440px,calc(100% - 24px))}
+@media (min-width:1360px) and (min-height:680px){
+  #dnHud.dnFunky #dnTop{width:min(710px,39vw);gap:16px;padding:10px 18px}
+  .dnFunky .dnFace{min-width:106px;font-size:clamp(18px,1.32vw,27px)}.dnFunky .dnFace .em{font-size:36px}
+  .dnFunky .dnFace i{font-size:clamp(24px,1.66vw,32px)}.dnFunky #dnBar{height:31px;border-width:4px}
+}
 #dnHud.dnFunky #dnMsg[data-cue]{left:50%;top:36%;z-index:1}
 .dnFunky .dnFace.me b{color:#174b3b}
 #dnHud.dnFunky #dnBtns{display:none;position:absolute;left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));width:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);justify-content:space-between;transform:none}
@@ -696,7 +702,7 @@ function dnBegin(s,a,left){if(DANCE.res)dnLeave();const f=dnFloor();if(!f){dnCan
   DANCE.tallies=[dnTally(),dnTally()];DANCE.otherNotes=new Uint8Array(DANCE.pat.length);
   DANCE.peerRead={hits:0,score:0,note:-1,first:0};
   DANCE.newPoints=DN_TEST||a.v>=DN_RATINGS_BUILD;
-  DANCE.push=0;DANCE.result=0;
+  DANCE.push=0;DANCE.result=0;DANCE.pushAt=-4;
   const last=DANCE.pat[DANCE.pat.length-1].t;
   DANCE.length=DANCE.profile?(dnChartRows(DANCE.r)?Math.max(DN_LOOP.duration,last+DN_WIN+.01):DN_LOOP.duration):
     DANCE.beat?DN_TRACK.duration:last+1.8;
@@ -826,6 +832,11 @@ function dnWatch(){
 function dnCancel(msg){if(msg)toast(msg,3);DANCE.ask=null;DANCE.mine=null;dnStopTrack();}
 function dnTick(dt){const D=DANCE;if(!S)return;if(D.spots&&!D.spots.userData.funky)D.spots.rotation.y+=dt*.5;
   {const pa=D.partner&&MP.peers.get(D.partner),tg=pa&&pa.av&&pa.av.tag;if((D.on||D.res)&&tg){tg.visible=false;D.hidTag=tg;}else if(D.hidTag&&!(D.on||D.res)){D.hidTag.visible=true;D.hidTag=null;}}   /* (run 4, stage 3: the partner's tag rests during the round and its result: it hid the mirror ball, and the score bar names both) */
+  if(D.res){
+    if(CUR!==D.floor.L)dnLeave();
+    else dnKeepResults();
+    return;
+  }
   /* the asking: the partner answers through presence */
   if(D.ask){const a=MP.peers.get(D.ask.w);const an=a&&a.dn&&a.dn.r===D.ask.r?a.dn:null;
     if(!a)dnCancel('💛 '+D.ask.nm+' left.');else if(an&&an.st==='go'&&!D.on){const s=realMs()+4000;D.mine.st='go';D.mine.s=s;dnBegin(s,a,1);}
@@ -835,7 +846,6 @@ function dnTick(dt){const D=DANCE;if(!S)return;if(D.spots&&!D.spots.userData.fun
   if(D.card){const a=MP.peers.get(D.card.peer);if(!a||!a.dn||a.dn.r!==D.card.r||a.dn.st!=='ask'){D.card=null;const el=$('dnCard');if(el)el.hidden=true;}}
   /* the dance-off itself */
   if(D.tg){const f=D.on?D.floor:D.watchFloor&&D.watchFloor.L===CUR?D.watchFloor:dnFloor();if(f){D.tg.x=f.x;D.tg.z=f.z;const L=CUR;if(L&&(L.id==='home'||L.id==='visit')&&!L.inter.includes(D.tg))L.inter.push(D.tg);}}
-  if(D.res&&((D.shown&&performance.now()-D.ended>1500&&!UI.open)||(performance.now()-D.ended>9000&&!UI.open)||(CUR.id!=='home'&&CUR.id!=='visit')))dnLeave();   /* (run 4, stage 3: only once the result card has been up; on a slow device the card came after the 1.5 s and the view went back first) */   /* the result card went some other way: back to the normal view */
   if(!D.on){if(!D.res&&!DN_TEST)dnWatch();return;}
   const shared=D.beat?(realMs()-D.s)/1000:D.t+dt;
   D.shared=shared;D.dt=dt;
@@ -843,7 +853,7 @@ function dnTick(dt){const D=DANCE;if(!S)return;if(D.spots&&!D.spots.userData.fun
   D.t=D.profile?dnClock(shared):shared;
   if(D.profile&&shared<0)dnCountSound();
   const a=DN_TEST?D.bot:MP.peers.get(D.partner);
-  if(DN_TEST&&a)dnBotTick(a,D.t);
+  if(DN_TEST&&a)dnBotTick(a,shared>=D.length?Math.max(D.t,D.length):D.t);
   if(a&&a.dn&&a.dn.r===D.r){
     if(Number.isFinite(a.dn.sc))D.osc=a.dn.sc;
     if(D.style&&!DN_TEST)dnPeerFeedback(a.dn,D.t);
@@ -851,14 +861,25 @@ function dnTick(dt){const D=DANCE;if(!S)return;if(D.spots&&!D.spots.userData.fun
   }else D.gone+=dt;
   if(D.style){
     dnExpire(D.t);
-    D.push+=(dnLeadTarget(D.sc,D.osc)-D.push)*(1-Math.exp(-dt*1.05));
+    const elapsed=clamp(shared-D.pushAt,0,.35);D.pushAt=shared;
+    D.push+=(dnLeadTarget(D.sc,D.osc)-D.push)*(1-Math.exp(-elapsed*1.65));
     dnFunkyLights(D.t,D.profile);dnStageTick(D.t);
   }
   else for(const q of D.pat)if(!q.j&&D.t>q.t+DN_WIN)q.j=-1;
   const target=(D.sc+1)/(D.sc+D.osc+2);D.bar+=clamp((target-D.bar)*Math.min(1,dt*2.5),-.025,.025);   /* the bar slides: never more than 2.5% a frame, even after a hitch */
   if(D.mvT>0)D.mvT-=dt;
   dnHudTick();
-  if(!a||D.gone>6||(CUR.id!=='home'&&CUR.id!=='visit'))dnEnd('gone');else if(shared>=D.length)dnEnd();}
+  if(!a||D.gone>6||(CUR.id!=='home'&&CUR.id!=='visit'))dnEnd('gone');
+  else if(shared>=D.length){
+    // Let a last registered Perfect reach the screen before hiding the lane.
+    if(D.style&&shared<D.length+.45&&D.laneFx.sides.some(dnPerfectPending))return;
+    dnEnd();
+  }
+}
+function dnPerfectPending(L){
+  for(const b of L.bursts)if(b.at===-1&&b.grade===DN_PERFECT)return true;
+  return false;
+}
 /* A press reads the playback clock directly, including between animation frames. */
 function dnExpire(t){
   const D=DANCE;
@@ -946,7 +967,8 @@ function dnFov(){
   return a<1?Math.min(95,2*Math.atan(1.6/(d*a))*180/Math.PI):0;
 }
 const DN_KNEE=.50;
-function dnCameraAim(){return innerWidth<innerHeight?.99:visH()<=500?.77:1.02;}
+function dnDesktop(w=innerWidth,h=innerHeight){return w>=1360&&h>=680;}
+function dnCameraAim(){return innerWidth<innerHeight?.80:visH()<=500?.72:dnDesktop()?.91:.94;}
 function dnCameraPosition(c,f,dist,strafe=0){
   const L=f.L,ox=L.ox,oz=L.oz+UPZ*f.fl,w=(L.W||HOMEW)-.32,d=(L.D||HOMED)-.32;
   c.x=clamp(f.x+c.dx*dist+c.dz*strafe,ox-w,ox+w);
@@ -954,13 +976,13 @@ function dnCameraPosition(c,f,dist,strafe=0){
 }
 function dnDancerSide(side){
   const D=DANCE,sign=(side?!D.left:!!D.left)?-1:1;
-  const base=D.on&&D.style?camera.aspect<1?.69:Math.min(1.05,.69+camera.aspect*.17):.83;
+  const base=D.on&&D.style?camera.aspect<1?.66:dnDesktop()?1.12:Math.min(1.05,.69+camera.aspect*.17):.83;
   if(!D.on||dnCalm())return sign*base;
   const amount=Math.max(0,side?D.push:-D.push);if(!amount)return sign*base;
   const c=D.cam,f=D.floor,dist=Math.hypot(c.x-f.x,c.z-f.z);
   const half=dist*Math.tan(Math.max(BASEFOV,dnFov())*Math.PI/360)*camera.aspect;
   const L=f.L,dx=c.dz*sign,dz=-c.dx*sign,fx=f.x-L.ox,fz=f.z-(L.oz+UPZ*f.fl);
-  let max=half*.53-.10;
+  let max=half*(dnDesktop()?.51:.60)-.12;
   if(Math.abs(dx)>.001)max=Math.min(max,((L.W||HOMEW)-.59-Math.sign(dx)*fx)/Math.abs(dx));
   if(Math.abs(dz)>.001)max=Math.min(max,((L.D||HOMED)-.59-Math.sign(dz)*fz)/Math.abs(dz));
   return sign*lerp(base,Math.max(base,max),amount);
@@ -976,11 +998,10 @@ function dnPoseFeedback(person,t,side){
     person.b.rotation.z+=sign*punch*.18;person.b.position.y+=punch*.14;
     person.head.rotation.x-=punch*.14;
   }
-  if(dnCalm()){
-    const D=DANCE,pressure=Math.max(0,side?D.push:-D.push);
-    const which=(side?!D.left:!!D.left)?1:-1;
-    person.b.rotation.z+=which*.085*pressure;
-  }
+  const D=DANCE,pressure=Math.max(0,side?D.push:-D.push);
+  const which=(side?!D.left:!!D.left)?1:-1;
+  person.b.rotation.z+=which*(dnCalm()?.085:.25)*pressure;
+  person.head.rotation.z-=which*.06*pressure;
 }
 /* Frame the routines and give the results card room below the dancers. */
 function dnCam(dt){
@@ -989,7 +1010,7 @@ function dnCam(dt){
   const c=D.cam,f=D.floor,wide=innerWidth>innerHeight,short=visH()<=500;
   if(D.style){
     const a=innerWidth/innerHeight;
-    const roundDist=wide?(short?1.73:1.86):Math.max(2.05,1.66/a);
+    const roundDist=wide?(short?1.84:dnDesktop()?2.41:2.04):Math.max(2.11,1.72/a);
     const resultDist=short?2.35:wide?3.58:Math.max(3.12,1.50/a);
     const strafe=D.res&&short?1.16:0;
     dnCameraPosition(c,f,D.res?resultDist:roundDist,strafe);
@@ -1105,6 +1126,11 @@ function dnResultTable(a,why){
     <tbody><tr class="dnScore"><th scope="row">Score</th><td>${D.sc}</td><td>${D.osc}</td></tr>${rows}
     <tr><th scope="row">Best combo</th><td>${ours.best}</td><td>${combo}</td></tr></tbody></table>`;
 }
+function dnKeepResults(){
+  if(!UI.open||!UI.lock||$('panel').hidden||!$('card').classList.contains('dnres')){
+    openPanel(DANCE.resultHtml,{bottom:true,lock:true,cls:'dnres'});
+  }
+}
 function dnEnd(why){
   const D=DANCE;if(!D.on)return;
   const id=D.r,a=DN_TEST?D.bot:MP.peers.get(D.partner),nm=D.partnerNm;
@@ -1112,7 +1138,7 @@ function dnEnd(why){
     if(!why&&DN_TEST&&a){dnBotTick(a,D.length);D.osc=a.dn.sc;}
     dnExpire(why?D.t:Math.max(D.t,D.length));
   }
-  D.on=false;D.res=true;D.shown=false;D.ended=performance.now();dnStopTrack();
+  D.on=false;D.res=true;D.ended=performance.now();dnStopTrack();
   D.result=Math.sign(D.sc-D.osc);
   if(D.mine){D.mine.st='done';D.mine.sc=D.sc;}
   document.body.classList.remove('dancing');dnHud(false);
@@ -1135,26 +1161,31 @@ function dnEnd(why){
     const details=D.style?dnResultTable(a,why):`<p class="line">You <b>${D.sc}</b> · ${esc(nm)} <b>${D.osc}</b></p>`;
     const limits=!DN_TEST&&D.style?'<p class="dnResultNote">≥ counts the hits your game saw. A dash means the detail wasn’t shared.</p>':'';
     SFX.yay();
-    openPanel(`<div class="who" style="--c:#ff9ec4">${title}</div>${details}${limits}
+    D.resultHtml=`<div class="who" style="--c:#ff9ec4">${title}</div>${details}${limits}
       <p class="dnResultNote">${why==='gone'?esc(nm)+' had to go. ':''}${note}</p>
-      <div class="row dnResultActions"><button class="btn mint" data-a="dnagain">↻ Again</button><button class="btn white" data-a="dnbye">👋 Done</button></div>`,
-    {bottom:true,lock:true,cls:'dnres'});
-    D.shown=true;
+      <div class="row dnResultActions"><button class="btn mint" data-a="dnagain">↻ Again</button><button class="btn white" data-a="dnbye">👋 Done</button></div>`;
+    openPanel(D.resultHtml,{bottom:true,lock:true,cls:'dnres'});
     setTimeout(()=>{if(D.mine?.r===id&&D.mine.st==='done')D.mine=null;},5000);
   };
-  setTimeout(fin,1200);
+  if(DN_TEST)fin();
+  else{
+    D.resultHtml='<div class="who">🪩 Dance results</div><p class="line">Finishing the round…</p>';
+    openPanel(D.resultHtml,{bottom:true,lock:true,cls:'dnres'});
+    setTimeout(fin,1200);
+  }
 }
 ACT.dnagain=()=>{
   const D=DANCE;if(!D.res)return;
   const a=DN_TEST?null:MP.peers.get(D.partner);
-  closePanel();dnLeave();
+  dnLeave();
   if(DN_TEST){const f=dnFloor();if(f)dnTestRound(f);return;}
   if(D.mine?.st==='done')D.mine=null;
   if(a&&dnRoomPeer(a)&&dnFloor())dnAskPeer(a);
   else toast('💛 Your dance partner has left.',2.6);
 };
-ACT.dnbye=()=>{closePanel();dnLeave();if(!DN_TEST)toast('🪩 Another round? Tap Dance! on the floor.',2.6);};
-function dnLeave(){const D=DANCE;D.res=false;dnSpotsOff();
+ACT.dnbye=()=>{dnLeave();if(!DN_TEST)toast('🪩 Another round? Tap Dance! on the floor.',2.6);};
+function dnLeave(){const D=DANCE;D.res=false;D.resultHtml='';dnSpotsOff();
+  if($('card').classList.contains('dnres'))closePanel();
   if(DN_TEST&&D.bot){dnDropPerson(D.bot.av);D.bot=null;D.mine=null;}
   if(P.ride&&P.ride.kind==='dance')P.ride=null;if(D.me){if(DN_TEST)dnDropPerson(D.me);else scene.remove(D.me.root);D.me=null;}}   /* back from the dance view */
 function dnDropPerson(person){scene.remove(person.root);person.root.traverse(o=>{if(o.isMesh)o.geometry.dispose();});}
@@ -1173,7 +1204,7 @@ function dnHud(show){
   let h=$('dnHud');
   if(!h){
     h=document.createElement('div');h.id='dnHud';h.hidden=true;
-    h.innerHTML=`<div id="dnFunkyHud"><div id="dnEdgeHit" aria-hidden="true"></div><canvas id="dnFunkyCanvas" aria-hidden="true"></canvas></div>
+    h.innerHTML=`<div id="dnFunkyHud"><div id="dnEdgeL" class="dnEdgeHit" aria-hidden="true"></div><div id="dnEdgeR" class="dnEdgeHit" aria-hidden="true"></div><canvas id="dnFunkyCanvas" aria-hidden="true"></canvas></div>
 <div id="dnTop"><div class="dnFace me"><span class="em">😄</span><b id="dnMeN">You</b><i id="dnMeS">0</i></div><div id="dnBar"><i id="dnFill"></i><i id="dnMid"></i></div><div class="dnFace"><span class="em">🙂</span><b id="dnYouN"></b><i id="dnYouS">0</i></div></div>
 <div id="dnLane">${DN_NAMES.map((n,i)=>`<div class="dnCol" style="left:${i*25}%"></div>`).join('')}<div id="dnLine"></div>${DN_NAMES.map((n,i)=>`<div class="dnHit" style="left:${i*25}%">${dnArrow(i,48)}</div>`).join('')}</div><div id="dnMsg"></div>
 <div id="dnBtns"><div class="dnKeys">${dnTouchButton(0)}${dnTouchButton(1)}</div><div class="dnKeys">${dnTouchButton(2)}${dnTouchButton(3)}</div></div>`;
@@ -1233,7 +1264,7 @@ function dnCountCue(t){
 }
 /* One transparent canvas. Only the strips touched by sprites need clearing. */
 const DN_BAR_WIDTH=Array.from({length:1001},(_,i)=>i/10+'%');
-function dnGlyph(color,direction,outline){
+function dnGlyph(color,direction){
   const icon=document.createElement('canvas');icon.width=icon.height=96;
   const g=icon.getContext('2d');
   g.translate(48,48);g.rotate(DN_ROT[direction]*Math.PI/180);
@@ -1242,18 +1273,24 @@ function dnGlyph(color,direction,outline){
   g.quadraticCurveTo(-15,32,-15,28);g.lineTo(-15,1);g.lineTo(-31,1);
   g.quadraticCurveTo(-37,0,-34,-4);g.closePath();
   g.lineJoin='round';g.lineCap='round';
-  if(outline){
-    g.strokeStyle='#382746';g.lineWidth=8;g.stroke();
-    g.strokeStyle='#fffaef';g.lineWidth=2.7;g.stroke();
-  }else{
-    const ink=g.createLinearGradient(0,-34,0,30);
-    ink.addColorStop(0,'#fff8f2');ink.addColorStop(.34,color);ink.addColorStop(1,color);
-    g.fillStyle=ink;g.fill();
-    g.strokeStyle='#39274a';g.lineWidth=6;g.stroke();
-    g.beginPath();g.moveTo(-16,-6);g.lineTo(0,-21);g.lineTo(12,-10);
-    g.strokeStyle='#fff6efa8';g.lineWidth=3;g.stroke();
-  }
+  const ink=g.createLinearGradient(0,-34,0,30);
+  ink.addColorStop(0,'#fff8f2');ink.addColorStop(.34,color);ink.addColorStop(1,color);
+  g.fillStyle=ink;g.fill();
+  g.strokeStyle='#39274a';g.lineWidth=6;g.stroke();
+  g.beginPath();g.moveTo(-16,-6);g.lineTo(0,-21);g.lineTo(12,-10);
+  g.strokeStyle='#fff6efa8';g.lineWidth=3;g.stroke();
   return icon;
+}
+function dnReceptorArt(color,arrow){
+  const art=document.createElement('canvas');art.width=art.height=128;
+  const g=art.getContext('2d'),halo=g.createRadialGradient(64,64,15,64,64,64);
+  halo.addColorStop(0,'#fffbe9');halo.addColorStop(.61,color+'c9');halo.addColorStop(1,color+'00');
+  g.fillStyle=halo;g.fillRect(0,0,128,128);
+  dnCircle(g,64,65,44);g.strokeStyle='#452d57';g.lineWidth=6;g.stroke();
+  g.fillStyle=color;g.fill();
+  dnCircle(g,64,65,40);g.strokeStyle='#fff8ee';g.lineWidth=3;g.stroke();
+  g.drawImage(arrow,17,17,94,94);
+  return art;
 }
 function dnSparkSprite(color){
   const art=document.createElement('canvas');art.width=art.height=32;
@@ -1270,9 +1307,9 @@ function dnLetterArt(word,ink,edge){
   canvas.width=Math.ceil(g.measureText(word).width)+46;canvas.height=102;
   g.font=font;g.textAlign='center';g.textBaseline='middle';g.lineJoin='round';
   const x=canvas.width*.5;
-  g.lineWidth=19;g.strokeStyle='#41214e';g.strokeText(word,x,58);
-  g.lineWidth=15;g.strokeStyle='#fff7ef';g.strokeText(word,x,49);
-  g.lineWidth=9;g.strokeStyle=edge;g.strokeText(word,x,49);
+  g.lineWidth=24;g.strokeStyle='#342042';g.strokeText(word,x,56);
+  g.lineWidth=17;g.strokeStyle='#fff7ef';g.strokeText(word,x,48);
+  g.lineWidth=10;g.strokeStyle=edge;g.strokeText(word,x,48);
   const fill=g.createLinearGradient(0,21,0,78);
   fill.addColorStop(0,'#fffdf4');fill.addColorStop(.37,ink);fill.addColorStop(1,ink);
   g.fillStyle=fill;g.fillText(word,x,49);
@@ -1295,56 +1332,66 @@ function dnImpactArt(color){
   return art;
 }
 const DN_COMBO_EFFECTS=[
-  {ink:'#ffe060',alt:'#ff77b6',dark:'#9b2462',number:'10'},
-  {ink:'#71fff1',alt:'#b18cff',dark:'#34418c',number:'25'},
-  {ink:'#ffadee',alt:'#89f6ff',dark:'#722786',number:'50'}
+  {ink:'#ffe060',alt:'#ff77b6'},
+  {ink:'#71fff1',alt:'#b18cff'},
+  {ink:'#ffadee',alt:'#89f6ff'}
 ];
 function dnLaneStart(){
   const D=DANCE;
   if(!D.laneFx){
-    const cv=$('dnFunkyCanvas');
-    D.laneFx={cv,g:cv.getContext('2d'),art:D.style.spark.map((c,i)=>dnGlyph(c,i,false)),
-      outline:D.style.spark.map((c,i)=>dnGlyph(c,i,true)),stars:DN_RATINGS.map(r=>dnSparkSprite(r.ink)),
+    const cv=$('dnFunkyCanvas'),art=D.style.spark.map(dnGlyph);
+    D.laneFx={cv,g:cv.getContext('2d'),art,
+      receptors:D.style.spark.map((c,i)=>dnReceptorArt(c,art[i])),stars:DN_RATINGS.map(r=>dnSparkSprite(r.ink)),
       colors:D.style.spark.map(dnSparkSprite),glow:D.style.spark.map(dnGlowSprite),impacts:D.style.spark.map(dnImpactArt),
       words:DN_RATINGS.map((r,i)=>dnLetterArt(i===DN_PERFECT?'PERFECT!':r.label,
         i===DN_WHAT?'#d4c7d3':i===DN_DUDE?'#e2ddea':r.ink,i===DN_WHAT?'#564453':r.dark)),
-      gold:dnSparkSprite(D.style.perfect),edge:$('dnEdgeHit'),
-      milestones:DN_COMBO_EFFECTS.map(r=>dnLetterArt(r.number+' COMBO!',r.ink,r.dark)),
+      gold:dnSparkSprite(D.style.perfect),edges:[$('dnEdgeL'),$('dnEdgeR')],
+      leading:dnLetterArt('Leading!','#c1f5d8','#275949'),
       sides:Array.from({length:2},()=>({x:new Float32Array(4),near:new Float32Array(4),dim:new Float32Array(4),
-        bursts:Array.from({length:8},()=>({at:-100,d:0,grade:0})),step:0,at:-100,grade:0,missAt:-100,combo:0,comboAt:-100,comboArt:null,perfectAt:-100,
+        bursts:Array.from({length:12},()=>({at:-100,d:0,grade:0})),step:0,at:-100,shownAt:-100,grade:0,missAt:-100,
+        combo:0,comboAt:-100,comboArt:null,perfectAt:-100,pulseAt:-100,pulseLight:0,
         hitAt:new Float32Array(4),hitGrade:new Uint8Array(4)})),
       pt:new THREE.Vector3(),width:0,height:0,dirty:true,me:$('dnMeS'),you:$('dnYouS'),bar:$('dnFill')};
   }
   const F=D.laneFx;
   const damageSize=(D.pat.length*2+96)*4;
   if(!F.damage||F.damage.length<damageSize)F.damage=new Int32Array(damageSize);
-  F.damageUsed=0;F.lastMe=-1;F.lastYou=-1;F.lastBar='';F.dirty=true;F.edgeAt=-100;F.edgeLight=0;F.edge.style.opacity='0';
+  F.damageUsed=0;F.lastMe=-1;F.lastYou=-1;F.lastBar='';F.dirty=true;
+  for(const edge of F.edges)edge.style.opacity='0';
   for(const L of F.sides){
-    L.step=0;L.at=-100;L.missAt=-100;L.combo=0;L.comboAt=L.perfectAt=-100;L.dim.fill(-100);L.hitAt.fill(-100);
+    L.step=0;L.at=L.shownAt=L.missAt=-100;L.combo=0;L.comboAt=L.perfectAt=L.pulseAt=-100;L.pulseLight=0;
+    L.dim.fill(-100);L.hitAt.fill(-100);
     for(const b of L.bursts)b.at=-100;
   }
 }
-function dnComboArt(L,combo,t){
+function dnComboArt(L,combo){
   if(L.combo===combo)return;
-  L.combo=combo;L.comboAt=t;
+  L.combo=combo;L.comboAt=-1;
   if(!combo)return;
-  if(!L.comboArt){L.comboArt=document.createElement('canvas');L.comboArt.width=134;L.comboArt.height=45;}
-  const g=L.comboArt.getContext('2d'),text=combo>=50?'✨ '+combo:combo>=5?'🔥 '+combo:String(combo);
-  g.clearRect(0,0,134,45);g.font='900 32px "Baloo 2","Trebuchet MS",sans-serif';
-  g.lineJoin='round';g.textAlign='center';g.textBaseline='middle';g.lineWidth=5;
-  g.strokeStyle='#49345f';g.strokeText(text,67,25);g.fillStyle=combo>=50?'#f6bfff':combo>=25?'#9df4d6':combo>=10?'#ffd468':'#ffe5a9';g.fillText(text,67,25);
+  if(!L.comboArt){L.comboArt=document.createElement('canvas');L.comboArt.width=142;L.comboArt.height=90;}
+  const g=L.comboArt.getContext('2d'),text=String(combo),center=combo>=5?83:71;
+  const label=combo>=5?(combo>=50?'✨':'🔥'):'';
+  g.clearRect(0,0,142,90);g.font='900 64px "Baloo 2","Trebuchet MS",sans-serif';
+  g.lineJoin='round';g.textAlign='center';g.textBaseline='middle';g.lineWidth=11;
+  g.strokeStyle='#39264e';g.strokeText(text,center,34);
+  g.lineWidth=5;g.strokeStyle='#fff4de';g.strokeText(text,center,34);
+  g.fillStyle=combo>=50?'#f6bfff':combo>=25?'#9df4d6':combo>=10?'#ffb650':'#ffe5a9';g.fillText(text,center,34);
+  g.font='900 19px "Baloo 2","Trebuchet MS",sans-serif';g.lineWidth=6;g.strokeStyle='#39264e';g.strokeText('COMBO',71,76);
+  g.fillStyle='#fff6e9';g.fillText('COMBO',71,76);
+  if(label){g.font='26px sans-serif';g.fillText(label,25,33);}
 }
 function dnLaneFeedback(side,grade,d,t,combo){
   const L=DANCE.laneFx?.sides[side];if(!L)return;
   const b=L.bursts[L.step];
-  b.at=t;b.d=d;b.grade=grade;
-  L.step=(L.step+1)%L.bursts.length;L.at=t;L.grade=grade;
-  if(grade===DN_DUDE||grade===DN_WHAT){L.dim[d]=t;L.missAt=t;L.missDir=d;}
+  // The effect starts when a frame can show it, even after a slow audio or GPU frame.
+  b.at=-1;b.d=d;b.grade=grade;
+  L.step=(L.step+1)%L.bursts.length;
+  if(L.shownAt!==-1||L.grade!==DN_PERFECT||grade===DN_PERFECT){L.at=t;L.grade=grade;L.shownAt=-1;}
+  if(grade===DN_DUDE||grade===DN_WHAT){L.missAt=t;L.missDir=d;}
   if(grade<=DN_OK){
-    L.hitAt[d]=t;L.hitGrade[d]=grade;
     if(grade===DN_PERFECT){L.perfectAt=t;L.perfectDir=d;}
   }
-  dnComboArt(L,combo||0,t);
+  dnComboArt(L,combo||0);
   if(grade<=DN_OK)dnStageHit(side,d,t,grade===DN_PERFECT,combo);
 }
 function dnStumble(m,t,side){
@@ -1359,21 +1406,22 @@ function dnLaneLayout(F){
   const w=F.cv.clientWidth,h=F.cv.clientHeight;
   if(!w||!h)return false;
   F.cv.width=w;F.cv.height=h;F.damageUsed=0;F.width=w;F.height=h;
-  const D=DANCE,portrait=w<h,up=!!SET.danceUp,short=!portrait&&h<=500;
+  const D=DANCE,portrait=w<h,up=!!SET.danceUp,short=!portrait&&h<=500,big=dnDesktop(w,h);
   F.up=up;
-  const outer=portrait?.218:.24,keys=$('dnBtns'),insets=getComputedStyle(keys);
+  const keys=$('dnBtns'),insets=getComputedStyle(keys);
   const leftSafe=parseFloat(insets.left)||0,rightSafe=parseFloat(insets.right)||0;
-  const safe=Math.max(8,leftSafe,rightSafe);
-  const gap=(w*outer-safe)/4;
-  const size=Math.min(gap*1.13,h*.112)*(SET.danceSmall?.79:1);
+  const safe=Math.max(8,leftSafe,rightSafe),inset=safe+w*(portrait?.014:big?.017:.028);
+  const gap=(w*(big?.324:portrait?.232:.256)-safe)/4;
+  const size=Math.min(gap*(big?1.42:1.29),h*(big?.204:.146))*(SET.danceSmall?.79:1);
   for(let side=0;side<2;side++){
     const L=F.sides[side],left=side?!D.left:!!D.left;
-    const start=left?safe:w-safe-gap*4;
-    L.size=size*(side?.86:1);
+    const start=left?inset:w-inset-gap*4;
+    L.size=size*(side?.87:1);
+    L.left=left;L.edge=F.edges[left?0:1];
     for(let d=0;d<4;d++)L.x[d]=start+(d+.5)*gap;
   }
   const half=size*.52;
-  const top=$('dnTop').getBoundingClientRect().bottom;
+  const score=$('dnTop').getBoundingClientRect();
   const safeBottom=parseFloat(insets.bottom)||12;
   const button=keys.offsetHeight;
   F.wordHeight=clamp(Math.min(h*.105,w*.205),38,110);
@@ -1385,15 +1433,15 @@ function dnLaneLayout(F){
   const y=(-DN_KNEE*cos-dist*sin)/(dist*cos-DN_KNEE*sin);
   const foot=(.5-.5*y/Math.tan(dnFov()*Math.PI/360))*h;
   if(up){
-    F.line=Math.max(F.bandTop+half+4,short?top+half:top*.77);
+    F.line=Math.max(F.bandTop+half+4,short?score.bottom+half*.5:score.bottom*.78);
     F.spawn=F.bandBottom-half;
   }else{
-    F.line=Math.min(F.bandBottom-half-2,foot);
+    F.line=Math.min(F.bandBottom-half*.82-4,foot+Math.max(half*.91,h*(big?.12:.075)));
     F.spawn=F.bandTop+half;
   }
   const runway=Math.abs(F.line-F.spawn);
   F.lead=clamp(runway/340,short?.94:1.15,DN_LEAD);
-  F.scoreBottom=top;
+  F.scoreBottom=score.bottom;F.scoreLeft=score.left;F.scoreRight=score.right;
   F.travel=(F.line-F.spawn)/F.lead;
   F.dirty=false;return true;
 }
@@ -1410,8 +1458,8 @@ function dnGlowSprite(color){
   fade.addColorStop(0,color+'b8');fade.addColorStop(.39,color+'64');fade.addColorStop(1,color+'00');
   g.fillStyle=fade;g.fillRect(0,0,64,64);return art;
 }
-function dnShatter(g,F,L,x,y,d,q,alpha){
-  const size=L.size,art=F.art[d];
+function dnShatter(g,F,size,x,y,d,q,alpha){
+  const art=F.art[d];
   g.globalAlpha=alpha*(1-q)*.97;
   for(let i=0;i<9;i++){
     if(i===0||i===2||i===6||i===8)continue;
@@ -1423,9 +1471,9 @@ function dnShatter(g,F,L,x,y,d,q,alpha){
 }
 function dnLaneBurst(g,F,L,b,t,calm,side){
   const grade=b.grade,perfect=grade===DN_PERFECT,good=grade===DN_GOOD;
-  const life=perfect?.67:good?.37:grade===DN_DUDE?.25:.29,q=(t-b.at)/life;
+  const life=perfect?.72:good?.37:grade===DN_DUDE?.25:.29,q=(t-b.at+(perfect?.055:0))/life;
   if(q<0||q>=1)return;
-  const x=L.x[b.d],y=F.line,size=L.size,fade=1-q,rating=DN_RATINGS[grade],strength=side?.75:1;
+  const x=L.x[b.d],y=F.line,size=Math.min(L.size,F.height*.137),fade=1-q,rating=DN_RATINGS[grade],strength=side?.87:1;
   dnLaneDamage(F,x,y,size*(perfect?3.4:1.25)+18);
   if(perfect){
     const glow=size*(2.6+q*.90);
@@ -1433,14 +1481,14 @@ function dnLaneBurst(g,F,L,b,t,calm,side){
     const impact=size*(1.32+Math.min(.23,q)*2.6);
     g.globalAlpha=strength*Math.max(0,1-q*2.3);
     g.drawImage(F.impacts[b.d],x-impact*.5,y-impact*.5,impact,impact);
-    if(!calm){
-      const radius=size*(.47+q*2.30);
-      g.globalAlpha=strength*fade*.85;g.strokeStyle='#fffdf5';g.lineWidth=1+5.2*fade;
-      dnCircle(g,x,y,radius);g.stroke();
-      g.strokeStyle=DN_COL[b.d];g.lineWidth=1+2.8*fade;
-      dnCircle(g,x,y,radius+6);g.stroke();
-    }
-    if(!calm)dnShatter(g,F,L,x,y,b.d,q,strength);
+    const radius=size*(.59+q*(calm?.35:1.52));
+    g.globalAlpha=strength*fade*.93;g.strokeStyle='#563557';g.lineWidth=4+6*fade;
+    dnCircle(g,x,y,radius);g.stroke();
+    g.strokeStyle='#fffdf5';g.lineWidth=2+5*fade;
+    dnCircle(g,x,y,radius);g.stroke();
+    g.strokeStyle=DN_COL[b.d];g.lineWidth=1+2.8*fade;
+    dnCircle(g,x,y,radius+8);g.stroke();
+    if(!calm)dnShatter(g,F,size,x,y,b.d,q,strength);
   }
   const radius=size*(.23+(calm?0:q*(perfect?.48:good?.33:.22)));
   g.globalAlpha=fade*strength*(grade>=DN_WHAT&&grade!==DN_HIT?.40:.92);
@@ -1452,14 +1500,14 @@ function dnLaneBurst(g,F,L,b,t,calm,side){
     const f=size*(.83+q*.26);
     g.globalAlpha=.53*fade*strength;g.drawImage(F.art[b.d],x-f/2,y-f/2,f,f);
   }
-  if(calm||grade===DN_DUDE||grade===DN_WHAT)return;
-  const n=perfect?24:good?7:grade===DN_OK?3:2;
+  if((calm&&!perfect)||grade===DN_DUDE||grade===DN_WHAT)return;
+  const n=perfect?(calm?12:24):good?7:grade===DN_OK?3:2;
   for(let i=0;i<n;i++){
     const a=i+b.d*3,ix=(perfect?a:a*3)%24,dx=DN_RAY_X[ix],dy=DN_RAY_Y[ix];
-    const r=size*(.40+Math.sqrt(q)*(perfect?1.85:.48))*(.72+(i%5)*.085);
-    const px=x+dx*r,py=y+dy*r-q*size*.34,s=size*(perfect?(i%3?.35:.48):good?.24:.16)*fade;
+    const r=size*(.61+Math.sqrt(q)*(perfect?(calm?.33:1.34):.48))*(.72+(i%5)*.085);
+    const px=x+dx*r,py=y+dy*r-q*size*.29,s=size*(perfect?(i%3?.29:.38):good?.24:.16)*fade;
     const star=perfect?(i%3?F.colors[a%4]:F.gold):F.stars[grade];
-    if(perfect){
+    if(perfect&&!calm){
       const drag=size*(.29+q*.28);
       g.globalAlpha=fade*.65*strength;g.strokeStyle=i%2?'#fffdf2':DN_COL[a%4];
       g.lineWidth=1.5+3*fade;g.beginPath();g.moveTo(px-dx*drag,py-dy*drag);g.lineTo(px,py);g.stroke();
@@ -1475,7 +1523,7 @@ function dnGradeScale(grade,age){
   const tail=Math.max(0,1-(age-.085)/.52);
   return 1+weight*.36*tail*Math.cos((age-.085)*20);
 }
-function dnLaneSide(g,F,L,side,t,calm){
+function dnLaneSide(g,F,L,side,t,now,calm){
   const D=DANCE,notes=D.pat,size=L.size,line=F.line,travel=F.travel,near=L.near;
   const start=side?D.peerRead.first:D.first;
   near.fill(0);
@@ -1486,15 +1534,15 @@ function dnLaneSide(g,F,L,side,t,calm){
     if(!(side?D.otherNotes[i]:n.j))near[n.d]=Math.max(near[n.d],1-Math.abs(until)*3.4);
   }
   for(let d=0;d<4;d++){
-    const x=L.x[d],pulse=near[d],miss=t-L.dim[d]<.25;
-    const age=t-L.hitAt[d],pop=calm||age<0||age>.25?0:(1-age/.25)*(L.hitGrade[d]===DN_PERFECT?.82:L.hitGrade[d]===DN_GOOD?.26:.10);
-    const f=size*(.89+pop);
-    dnLaneDamage(F,x,line,f*.5+2);
-    g.globalAlpha=miss?.32:side?.72:.92;
-    g.drawImage(F.outline[d],x-f/2,line-f/2,f,f);
-    if(pulse>0&&!miss){
-      g.globalAlpha=pulse*(side?.45:.67);
-      g.drawImage(F.art[d],x-f/2,line-f/2,f,f);
+    const x=L.x[d],pulse=near[d],miss=now-L.dim[d]<.25;
+    const age=now-L.hitAt[d],pop=calm||age<0||age>.29?0:(1-age/.29)*(L.hitGrade[d]===DN_PERFECT?.25:L.hitGrade[d]===DN_GOOD?.13:.06);
+    const f=size*(.91+pop);
+    dnLaneDamage(F,x,line,f*.61+2);
+    g.globalAlpha=(miss?.25:side?.63:.79)+pulse*(miss?0:.19);
+    g.drawImage(F.receptors[d],x-f/2,line-f/2,f,f);
+    if(pulse>0&&!miss&&age>.16){
+      g.globalAlpha=pulse*.68;g.strokeStyle='#fff9ee';g.lineWidth=Math.max(2,size*.031);
+      dnCircle(g,x,line,f*.29);g.stroke();
     }
   }
   const f=size*(calm?1:1+.045*dnPulse(t,D.profile));
@@ -1513,75 +1561,80 @@ function dnLaneSide(g,F,L,side,t,calm){
     g.drawImage(F.art[n.d],x-f/2,y-f/2,f,f);
   }
 }
-function dnLaneLabel(g,F,L,side,t,calm){
-  const age=t-L.at;
-  const life=L.grade===DN_PERFECT?.89:L.grade>=DN_WHAT?.76:.61;
-  if(age<0||age>life&&!L.combo)return;
-  const D=DANCE,c=D.cam,f=D.floor,stance=dnDancerSide(side),pt=F.pt;
-  pt.set(f.x+c.dz*stance,1.82,f.z-c.dx*stance).project(camera);
-  const left=side?!D.left:!!D.left,sign=left?-1:1,short=F.height<=500;
-  const center=(.5+pt.x*.5)*F.width+sign*F.width*.047,mid=F.width*.5;
-  const wide=F.width>F.height,outer=F.width*(wide?.235:.12);
-  const lo=left?outer:mid+11,hi=left?mid-11:F.width-outer;
-  const top=clamp((.5-pt.y*.5)*F.height-F.wordHeight*(short?.27:.48),F.scoreBottom+F.wordHeight*.57,F.height*.44);
-  if(age<life){
-    const grade=L.grade,perfect=grade===DN_PERFECT,word=F.words[grade],q=age/life;
-    const weight=perfect?1:grade===DN_GOOD?.68:grade===DN_OK?.53:.86;
-    let h=F.wordHeight*weight*(calm?1:dnGradeScale(grade,age)),w=h*word.width/word.height;
-    const cap=Math.min(hi-lo-14,F.width*(F.width<F.height?.43:.30));
-    if(w>cap){h*=cap/w;w=cap;}
-    const shake=perfect&&!calm&&age<.19?Math.sin(age*99)*(1-age/.19)*5:0;
-    const x=clamp(center,lo+w/2,hi-w/2)+shake,y=top-(calm?0:q*14);
-    dnLaneDamage(F,x,y,w*.71+12,h*.73+w*.12+8);
-    g.save();g.translate(x,y);g.rotate(sign*(perfect?.18:grade>=DN_WHAT?.14:.10));
-    g.globalAlpha=(1-clamp((q-.56)/.44,0,1))*(side?.96:1);
-    if(perfect){
-      g.drawImage(F.glow[L.perfectDir],-w*.68,-h*.67,w*1.36,h*1.34);
-      if(!calm&&age<.43){
-        g.drawImage(F.gold,-w*.55,-h*.52,h*.45,h*.45);
-        g.drawImage(F.gold,w*.38,h*.10,h*.42,h*.42);
-      }
-    }
-    g.drawImage(word,-w/2,-h/2,w,h);g.restore();
+function dnLaneLabel(g,F,L,side,now,calm){
+  const D=DANCE,age=now-L.shownAt,visible=age>=0&&age<.96;
+  const leading=(side?D.osc-D.sc:D.sc-D.osc)>=25;
+  if(!visible&&!L.combo&&!leading)return;
+  const actor=side?(DN_TEST?D.bot:MP.peers.get(D.partner))?.av:D.me;
+  if(!actor)return;
+  actor.head.updateWorldMatrix(true,false);
+  const pt=actor.head.localToWorld(F.pt.set(0,.73,.23)).project(camera);
+  const w=F.width,h=F.height,short=w>h&&h<=500,left=L.left,sign=left?-1:1;
+  const lo=left?12:Math.max(w*.557,F.ballRight+7,short?F.scoreRight+8:0);
+  const hi=left?Math.min(w*.443,F.ballLeft-7,short?F.scoreLeft-8:w):w-12;
+  const center=(.5+pt.x*.5)*w+sign*w*(short?.115:.076);
+  const start=short?10:F.scoreBottom+5;
+  const end=Math.min(h*.34,(.5-pt.y*.5)*h-13);
+  const room=Math.max(0,end-start);
+  if(hi-lo<54)return;
+  const row=L.combo||leading?Math.min(room*(visible?.58:.91),F.wordHeight*.97):0;
+  if(visible&&room-row>12){
+    const word=F.words[L.grade],perfect=L.grade===DN_PERFECT;
+    const weight=perfect?1:L.grade===DN_GOOD?.77:L.grade===DN_OK?.67:.93;
+    const scale=calm?1:dnGradeScale(L.grade,age+.036);
+    const cap=Math.max(1,hi-lo-16),ratio=word.width/word.height;
+    const height=Math.min(F.wordHeight*weight*scale,(room-row)*.91,cap/ratio);
+    const width=height*ratio;
+    // A low tilt and protected gutters keep the hat, face and mirror ball clear.
+    const shake=perfect&&!calm&&age<.18?Math.sin(age*86)*(1-age/.18)*3:0;
+    const x=clamp(center,lo+width*.5+6,hi-width*.5-6)+shake;
+    const y=start+(room-row)*.45;
+    dnLaneDamage(F,x,y,width*.68+14,height*.72+width*.08+10);
+    g.save();g.translate(x,y);g.rotate(sign*.065);
+    g.globalAlpha=1-clamp((age-.60)/.36,0,1);
+    if(perfect)g.drawImage(F.glow[L.perfectDir],-width*.655,-height*.64,width*1.31,height*1.28);
+    g.drawImage(word,-width*.5,-height*.5,width,height);
+    g.restore();
   }
-  if(L.combo){
-    const rise=calm?0:Math.max(0,1-(t-L.comboAt)/.21)*.27;
-    const tier=L.combo>=50?.34:L.combo>=25?.22:L.combo>=10?.12:0;
-    const h=F.wordHeight*.35*(1+tier+rise),w=h*2.98,y=top+F.wordHeight*.56;
-    const x=clamp(center+sign*F.width*.055,(left?12:mid+11)+w/2,(left?mid-11:F.width-12)-w/2);
-    dnLaneDamage(F,x,y,w*.5+1,h*.5+1);
-    g.globalAlpha=side?.86:1;g.drawImage(L.comboArt,x-w/2,y-h/2,w,h);
+  if(row<=13)return;
+  const tier=Math.min(.57,(L.combo-1)*.021),pop=calm?0:Math.max(0,1-(now-L.comboAt)/.26)*.18;
+  const comboH=L.combo?Math.min(row*.99,F.wordHeight*(.67+tier+pop)):0;
+  const comboW=comboH*1.58,tagH=leading?Math.min(36,row*.58,(hi-lo-comboW-10)/3):0;
+  const tagW=tagH>8?tagH*F.leading.width/F.leading.height:0;
+  const width=comboW+tagW+(tagW&&comboW?6:0),x=clamp(center,lo+width*.5,hi-width*.5);
+  const y=end-row*.51;
+  g.globalAlpha=1;
+  if(comboW){
+    const startX=x-width*.5+(left?tagW+(tagW?6:0):0);
+    dnLaneDamage(F,startX+comboW*.5,y,comboW*.55,comboH*.57);
+    g.drawImage(L.comboArt,startX,y-comboH*.5,comboW,comboH);
+  }
+  if(tagW){
+    const startX=left?x-width*.5:x+width*.5-tagW;
+    dnLaneDamage(F,startX+tagW*.5,y,tagW*.52,tagH*.55);
+    g.drawImage(F.leading,startX,y-tagH*.5,tagW,tagH);
   }
 }
-function dnComboBurst(g,F,t,calm){
+function dnComboBurst(g,F,t){
   const fx=DANCE.stageFx,age=t-fx.celebrate,life=1.05;
   if(age<0||age>=life)return;
   const q=age/life,alpha=1-dnEase((q-.43)/.57),y=F.height*.59,x=F.width*.5;
-  const palette=DN_COMBO_EFFECTS[fx.tier],art=F.milestones[fx.tier];
-  if(!calm){
-    // The rays start outside the camera's centre, leaving faces and arrows clear.
-    const radius=Math.hypot(x,y),inner=radius*(.48+q*.45),outer=radius*1.15;
-    dnLaneDamage(F,x,y,x,y+F.height*.43);
-    for(let i=0;i<24;i++){
-      const dx=DN_RAY_X[i],dy=DN_RAY_Y[i],wx=DN_RAY_Y[i]*13,wy=-dx*13;
-      g.globalAlpha=alpha*(i%2?.43:.67);g.fillStyle=i%2?palette.ink:palette.alt;
-      g.beginPath();g.moveTo(x+dx*inner,y+dy*inner);
-      g.lineTo(x+dx*outer+wx,y+dy*outer+wy);g.lineTo(x+dx*outer-wx,y+dy*outer-wy);
-      g.closePath();g.fill();
-      const reach=radius*(.38+q*.66)*(i%3?.89:1.11),s=(i%2?26:42)*(1-q*.47);
-      g.globalAlpha=alpha*.86;
-      g.drawImage(i%2?F.gold:F.colors[i%4],x+dx*reach-s/2,y+dy*reach-s/2,s,s);
-    }
+  const palette=DN_COMBO_EFFECTS[fx.tier];
+  // The rays start outside the camera's centre, leaving faces and arrows clear.
+  const radius=Math.hypot(x,y),inner=radius*(.48+q*.45),outer=radius*1.15;
+  dnLaneDamage(F,x,y,x,y+F.height*.43);
+  for(let i=0;i<24;i++){
+    const dx=DN_RAY_X[i],dy=DN_RAY_Y[i],wx=DN_RAY_Y[i]*13,wy=-dx*13;
+    g.globalAlpha=alpha*(i%2?.43:.67);g.fillStyle=i%2?palette.ink:palette.alt;
+    g.beginPath();g.moveTo(x+dx*inner,y+dy*inner);
+    g.lineTo(x+dx*outer+wx,y+dy*outer+wy);g.lineTo(x+dx*outer-wx,y+dy*outer-wy);
+    g.closePath();g.fill();
+    const reach=radius*(.38+q*.66)*(i%3?.89:1.11),s=(i%2?26:42)*(1-q*.47);
+    g.globalAlpha=alpha*.86;
+    g.drawImage(i%2?F.gold:F.colors[i%4],x+dx*reach-s/2,y+dy*reach-s/2,s,s);
   }
-  let h=Math.min(F.height*.17,115)*(calm?1:dnGradeScale(DN_PERFECT,age)),w=h*art.width/art.height;
-  if(w>F.width*.61){h*=F.width*.61/w;w=F.width*.61;}
-  const titleY=Math.min(F.height*.84,F.bandBottom-h*.43);
-  dnLaneDamage(F,x,titleY,w*.68,h*.75+w*.04+10);
-  g.save();g.translate(x,titleY);g.rotate(-.075);g.globalAlpha=alpha;
-  g.drawImage(F.glow[fx.tier],-w*.66,-h*.72,w*1.32,h*1.44);
-  g.drawImage(art,-w/2,-h/2,w,h);g.restore();
 }
-function dnLaneDraw(){
+function dnLaneDraw(now=performance.now()/1000){
   const D=DANCE,F=D.laneFx,g=F.g,t=D.t;
   if(F.dirty&&!dnLaneLayout(F))return;
   const damage=F.damage,calm=dnCalm();
@@ -1589,14 +1642,41 @@ function dnLaneDraw(){
   F.damageUsed=0;
   while(D.peerRead.first<D.pat.length&&D.pat[D.peerRead.first].t<t-.31)D.peerRead.first++;
   camera.updateMatrixWorld();
-  const flash=t-F.edgeAt,light=calm||flash<0||flash>.22?0:.83*(1-flash/.22)**2;
-  if(light!==F.edgeLight){F.edgeLight=light;F.edge.style.opacity=light;}
-  for(let side=0;side<2;side++)for(const b of F.sides[side].bursts)dnLaneBurst(g,F,F.sides[side],b,t,calm,side);
+  const mirror=D.spots?.userData.funky?.ball;
+  F.ballLeft=F.ballRight=F.width*.5;
+  if(mirror){
+    const view=mirror.getWorldPosition(F.pt).applyMatrix4(camera.matrixWorldInverse);
+    if(view.z<-.5){
+      const radius=.43*F.height*.5*camera.projectionMatrix.elements[5]/-view.z;
+      const x=(.5+.5*view.applyMatrix4(camera.projectionMatrix).x)*F.width;
+      F.ballLeft=x-radius;F.ballRight=x+radius;
+    }
+  }
+  if(!calm)dnComboBurst(g,F,t);
+  for(let side=0;side<2;side++){
+    const L=F.sides[side];
+    if(L.shownAt===-1)L.shownAt=now;
+    if(L.comboAt===-1)L.comboAt=now;
+    for(const b of L.bursts){
+      if(b.at!==-1)continue;
+      b.at=now;
+      if(b.grade===DN_PERFECT)L.pulseAt=now;
+      if(b.grade<=DN_OK){L.hitAt[b.d]=now;L.hitGrade[b.d]=b.grade;}
+      else if(b.grade===DN_DUDE||b.grade===DN_WHAT)L.dim[b.d]=now;
+    }
+    // A hit renews only its dancer's feathered edge pulse. Close hits share
+    // a continuous glow, and there is no white full-screen flash.
+    const age=now-L.pulseAt,light=calm||age>.52?0:.85*(1-age/.52)**1.35;
+    if(light!==L.pulseLight){L.pulseLight=light;L.edge.style.opacity=light;}
+  }
   g.save();g.beginPath();g.rect(0,F.bandTop,F.width,Math.max(1,F.bandBottom-F.bandTop));g.clip();
-  dnLaneSide(g,F,F.sides[1],1,t,calm);dnLaneSide(g,F,F.sides[0],0,t,calm);
+  dnLaneSide(g,F,F.sides[1],1,t,now,calm);dnLaneSide(g,F,F.sides[0],0,t,now,calm);
   g.restore();
-  dnComboBurst(g,F,t,calm);
-  dnLaneLabel(g,F,F.sides[1],1,t,calm);dnLaneLabel(g,F,F.sides[0],0,t,calm);
+  for(let side=1;side>=0;side--){
+    const L=F.sides[side];
+    for(const b of L.bursts)dnLaneBurst(g,F,L,b,now,calm,side);
+    dnLaneLabel(g,F,L,side,now,calm);
+  }
   g.globalAlpha=1;
   if(F.lastMe!==D.sc){F.lastMe=D.sc;F.me.textContent=D.sc;}
   if(F.lastYou!==D.osc){F.lastYou=D.osc;F.you.textContent=D.osc;}
@@ -1608,11 +1688,8 @@ function dnStageStart(){
   dnStageOff();
   const D=DANCE,f=D.floor,c=D.cam,group=new THREE.Group();
   group.position.set(f.x,0,f.z);scene.add(group);
-  const stage=D.stageFx={group,ceiling:f.L.ceiling||3.2,celebrate:-100,sweepAt:-100,perfectAt:-100,
-    tier:0,tint:-1,beamTint:-1,perfectSide:0,slot:0,
-    tiles:[],rings:[],beams:[],scratch:new THREE.Object3D(),aim:new THREE.Vector3(),up:new THREE.Vector3(0,1,0)};
-  const ball=D.spots?.userData.funky?.ball;
-  stage.beamOrigin=ball?ball.getWorldPosition(stage.aim).clone().sub(group.position):new THREE.Vector3(0,stage.ceiling-.82,0);
+  const stage=D.stageFx={group,ceiling:f.L.ceiling||3.2,celebrate:-100,sweepAt:-100,
+    tier:0,tint:-1,slot:0,tiles:[],rings:[],scratch:new THREE.Object3D()};
   const tileGeo=new THREE.PlaneGeometry(.369,.369),tileCenter=new THREE.Vector3(),chosen=new Set();
   const tiles=D.spots?.userData.funky?.tiles||[];
   for(let i=0;i<8;i++){
@@ -1651,14 +1728,6 @@ function dnStageStart(){
     transparent:true,alphaTest:.13,depthWrite:false}));
   sparks.frustumCulled=false;sparks.visible=false;group.add(sparks);
   stage.sparks=sparks;stage.sparkPos=sparkPos;stage.sparkTex=sparkTex;
-  const beamGeo=new THREE.ConeGeometry(1,1,16,1,true);
-  for(const color of D.style.lights){
-    const mat=new THREE.ShaderMaterial({uniforms:{color:{value:new THREE.Color(color)},strength:{value:0}},
-      vertexShader:'varying vec2 ray; void main(){ray=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
-      fragmentShader:'uniform vec3 color; uniform float strength; varying vec2 ray; void main(){float fade=smoothstep(0.,.24,ray.y)*(1.-smoothstep(.79,1.,ray.y));gl_FragColor=vec4(color,fade*strength);}',
-      transparent:true,depthWrite:false,side:THREE.DoubleSide});
-    const beam=new THREE.Mesh(beamGeo,mat);beam.visible=false;group.add(beam);stage.beams.push(beam);
-  }
   const confetti=new THREE.InstancedMesh(new THREE.PlaneGeometry(.108,.164),
     new THREE.MeshBasicMaterial({transparent:true,depthWrite:false,side:THREE.DoubleSide}),40);
   confetti.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
@@ -1686,9 +1755,6 @@ function dnStageHit(side,d,t,perfect,combo){
   if(perfect){
     const ring=fx.rings[fx.slot];ring.at=t;ring.side=side;
     ring.mesh.material.color.set(D.style.spark[d]);fx.slot=(fx.slot+1)%fx.rings.length;
-    fx.perfectAt=t;fx.perfectSide=side;
-    const art=D.laneFx;
-    if(t-art.edgeAt>=.42&&!dnCalm())art.edgeAt=t;
     for(let i=0;i<4;i++){
       const neighbour=fx.tiles[side*4+i];
       if(neighbour){neighbour.at=t+(i===d?0:.029+i*.016);neighbour.perfect=true;}
@@ -1738,28 +1804,6 @@ function dnStageTick(t){
       const ink=theme?(i?theme.alt:theme.ink):D.style.lights[i];
       lit.spotM[i].color.set(ink);lit.tileM[i].emissive.set(ink);lit.tileM[i].color.set(ink);
     }
-  }
-  const burst=t-fx.perfectAt,sweep=alive&&age<1.03;
-  const fire=!calm&&burst>=0&&burst<.50;
-  if(tint!==fx.beamTint){
-    fx.beamTint=tint;
-    const theme=DN_COMBO_EFFECTS[tint];
-    for(let i=0;i<2;i++)fx.beams[i].material.uniforms.color.value.set(theme?(i?theme.alt:theme.ink):D.style.lights[i]);
-  }
-  for(let i=0;i<2;i++){
-    const beam=fx.beams[i];beam.visible=sweep||fire;
-    if(!beam.visible)continue;
-    const c=D.cam,origin=fx.beamOrigin,sign=i?1:-1,p=sweep?age/1.03:burst/.50;
-    const ax=origin.x+sign*c.dz*.10,az=origin.z-sign*c.dx*.10,ay=origin.y-.19;
-    const lane=sweep?sign*(2.16-4.12*p):dnDancerSide(fx.perfectSide)+sign*(.52+p*1.15);
-    const forward=.44+sign*.79;
-    const x=c.dz*lane+c.dx*forward,z=-c.dx*lane+c.dz*forward,y=.075;
-    fx.aim.set(ax-x,ay-y,az-z);
-    const length=fx.aim.length();
-    beam.position.set((ax+x)*.5,(ay+y)*.5,(az+z)*.5);
-    beam.quaternion.setFromUnitVectors(fx.up,fx.aim.multiplyScalar(1/length));
-    beam.scale.set(sweep?1.08:.60,length,sweep?1.08:.60);
-    beam.material.uniforms.strength.value=sweep?.68*Math.sin(Math.PI*Math.min(1,p+.15)):.45*(1-p);
   }
   const confetti=fx.confetti;confetti.visible=alive;
   if(!alive)return;
