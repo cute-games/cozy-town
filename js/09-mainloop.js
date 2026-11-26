@@ -99,13 +99,13 @@ body.dnOverlay #hud{visibility:hidden}
 @keyframes dnCrownPop{0%{transform:translateY(12px) scale(.2) rotate(-32deg)}58%{transform:translateY(-7px) scale(1.46) rotate(11deg)}100%{transform:none}}
 @media (prefers-reduced-motion:reduce){.dnResultsWin .dnWinCrown{animation:none}}
 @media (min-width:1360px) and (min-height:680px){
-  #panel.bottom #card.dnres{width:min(780px,42vw);margin-left:auto;align-self:center;padding:18px 24px 20px;max-height:calc(100% - 16px);overflow-y:auto}
-  .dnres .who{font-size:37px;margin-bottom:12px}
-  .dnResults{font-size:24px;border-spacing:0 3px}
-  .dnResults th,.dnResults td{padding:3px 12px}
-  .dnResults td{font-size:36px}.dnResults tr.dnScore td{font-size:44px}
-  .dnResultChip{font-size:22px;min-width:94px;padding:4px 9px}.dnResultNote{font-size:18px;margin:7px 0}
-  .dnResultActions .btn{font-size:22px;min-height:54px}
+  #panel.bottom #card.dnres{width:min(1092px,57vw);margin-left:auto;align-self:center;padding:clamp(16px,2vh,26px) clamp(22px,1.7vw,34px);max-height:calc(100% - 16px);overflow-y:auto}
+  .dnres .who{font-size:clamp(36px,4.8vh,52px);margin-bottom:12px}
+  .dnResults{font-size:clamp(23px,3.05vh,34px);border-spacing:0 4px}
+  .dnResults th,.dnResults td{padding:clamp(2px,.46vh,5px) 14px}
+  .dnResults td{font-size:clamp(32px,4.5vh,49px)}.dnResults tr.dnScore td{font-size:clamp(39px,5.5vh,60px)}
+  .dnResultChip{font-size:clamp(20px,2.8vh,31px);min-width:112px;padding:4px 11px}.dnResultNote{font-size:clamp(17px,2.2vh,25px);margin:8px 0}
+  .dnResultActions .btn{font-size:clamp(20px,2.6vh,29px);min-height:clamp(50px,6vh,66px)}
 }
 @media (orientation:landscape) and (max-height:500px){
   #panel.bottom .card.dnres{max-height:calc(100% - 8px);overflow-y:auto;padding:8px 12px}
@@ -1001,7 +1001,7 @@ function dnCameraPosition(c,f,dist,strafe=0){
 function dnDancerSide(side){
   const D=DANCE,sign=(side?!D.left:!!D.left)?-1:1;
   const narrow=camera.aspect<.60;
-  const base=D.on&&D.style?narrow?.42:camera.aspect<1?.64:dnDesktop()?.86:.77:D.style&&narrow?.55:.83;
+  const base=D.on&&D.style?narrow?.42:camera.aspect<1?.64:dnDesktop()?.86:.77:D.style&&narrow?.55:D.style&&dnDesktop()?.69:.83;
   if(!D.on||dnCalm())return sign*base;
   const amount=Math.max(0,side?D.push:-D.push);if(!amount)return sign*base;
   const c=D.cam,f=D.floor,dist=Math.hypot(c.x-f.x,c.z-f.z);
@@ -1039,11 +1039,11 @@ function dnCam(dt){
   if(D.style){
     const a=innerWidth/innerHeight;
     const roundDist=wide?(short?1.73:dnDesktop()?2.01:1.94):clamp(1.18/a,1.85,2.62);
-    const resultDist=short?2.28:dnDesktop()?2.42:wide?3.06:Math.max(2.82,1.37/a);
-    const strafe=D.res?(short?1.13:dnDesktop()?1.74:0):0;
+    const resultDist=short?2.28:dnDesktop()?2.42:wide?3.24:Math.max(2.82,1.49/a);
+    const strafe=D.res?(short?1.13:dnDesktop()?1.98:0):0;
     dnCameraPosition(c,f,D.res?resultDist:roundDist,strafe);
     const aimX=f.x+c.dz*strafe,aimZ=f.z-c.dx*strafe;
-    const targetY=D.res?(short?1.19:dnDesktop()?.84:wide?-.42:-.50):dnCameraAim();
+    const targetY=D.res?(short?1.19:dnDesktop()?.84:wide?-.60:a<.60?-.65:-.53):dnCameraAim();
     const ease=1-Math.exp(-dt*8);
     P.x=lerp(P.x,c.x,ease);P.z=lerp(P.z,c.z,ease);
     const dx=aimX-P.x,dz=aimZ-P.z;
@@ -1316,10 +1316,10 @@ function dnReceptorArt(color,arrow,quiet=false){
   const g=art.getContext('2d'),halo=g.createRadialGradient(64,64,15,64,64,64);
   halo.addColorStop(0,'#fffbe9');halo.addColorStop(.61,color+'c9');halo.addColorStop(1,color+'00');
   if(!quiet){g.fillStyle=halo;g.fillRect(0,0,128,128);}
-  dnCircle(g,64,64,50);g.fillStyle=quiet?'#fff4e0':color;g.fill();
+  dnCircle(g,64,64,55);g.fillStyle=quiet?'#fff4e0':color;g.fill();
   g.strokeStyle='#fff4e6';g.lineWidth=4.5;g.stroke();
   dnCircle(g,64,64,43);g.strokeStyle='#4d325e99';g.lineWidth=2;g.stroke();
-  g.drawImage(arrow,17,17,94,94);
+  g.drawImage(arrow,12,12,104,104);
   return art;
 }
 function dnNoteTrail(color,up){
@@ -1369,6 +1369,18 @@ function dnDudeArt(){
   g.fillStyle='#4f4858';g.fillText('Dude…',0,0);
   return art;
 }
+function dnGoodArt(){
+  const art=document.createElement('canvas');art.width=238;art.height=110;
+  const g=art.getContext('2d');
+  g.beginPath();g.moveTo(51,11);g.lineTo(192,11);
+  g.bezierCurveTo(242,11,244,86,190,86);g.lineTo(156,86);g.lineTo(135,101);
+  g.lineTo(121,86);g.lineTo(49,86);g.bezierCurveTo(0,86,0,11,51,11);g.closePath();
+  g.lineJoin='round';g.lineWidth=7;g.strokeStyle='#215544';g.stroke();g.fillStyle='#b7f4ae';g.fill();
+  g.font='italic 900 61px "Baloo 2","Trebuchet MS",sans-serif';
+  g.textAlign='center';g.textBaseline='middle';g.lineWidth=5;
+  g.strokeStyle='#f5ffdf';g.strokeText('Good!',119,48);
+  g.fillStyle='#255841';g.fillText('Good!',119,48);return art;
+}
 function dnImpactArt(color){
   const art=document.createElement('canvas');art.width=art.height=192;
   const g=art.getContext('2d'),fade=g.createRadialGradient(96,96,8,96,96,94);
@@ -1405,6 +1417,7 @@ const DN_COMBO_EFFECTS=[
   {ink:'#71fff1',alt:'#b18cff'},
   {ink:'#ffadee',alt:'#89f6ff'}
 ];
+const DN_MILESTONES=[10,25,50],DN_PERFECT_LIFE=.84,DN_RATING_HOLD=.66;
 function dnLaneStart(){
   const D=DANCE;
   if(!D.laneFx){
@@ -1415,14 +1428,16 @@ function dnLaneStart(){
       stars:DN_RATINGS.map(r=>dnSparkSprite(r.ink)),
       colors:D.style.spark.map(dnSparkSprite),glow:D.style.spark.map(dnGlowSprite),impacts:D.style.spark.map(dnImpactArt),
       rays:DN_NOTE_INK.map(dnPerfectRays),comboPulse:$('dnComboPulse'),
-      words:DN_RATINGS.map((r,i)=>i===DN_DUDE?dnDudeArt():dnLetterArt(i===DN_PERFECT?'PERFECT!':r.label,
+      words:DN_RATINGS.map((r,i)=>i===DN_DUDE?dnDudeArt():i===DN_GOOD?dnGoodArt():dnLetterArt(i===DN_PERFECT?'PERFECT!':r.label,
         i===DN_WHAT?'#d4c7d3':r.ink,i===DN_WHAT?'#564453':r.dark)),
+      milestones:DN_MILESTONES.map((n,i)=>dnLetterArt('COMBO '+n+'!',DN_COMBO_EFFECTS[i].ink,'#633658')),
       gold:dnSparkSprite(D.style.perfect),edges:[$('dnEdgeL'),$('dnEdgeR')],
       crown:dnCrownArt(),parts:new WeakMap(),projector:new THREE.Matrix4(),keys:$('dnBtns'),
       buttons:$('dnBtns').querySelectorAll('button'),top:$('dnTop'),
+      captions:new Float32Array(20),notes:new Float32Array(128),captionUsed:0,noteUsed:0,
       sides:Array.from({length:2},()=>({x:new Float32Array(4),near:new Float32Array(4),dim:new Float32Array(4),
         bursts:Array.from({length:12},()=>({at:-100,d:0,grade:0})),step:0,at:-100,shownAt:-100,grade:0,missAt:-100,
-        combo:0,comboAt:-100,comboArt:null,perfectAt:-100,pulseAt:-100,pulseLight:0,
+        combo:0,comboArt:null,perfectAt:-100,pulseAt:-100,pulseLight:0,
         hitAt:new Float32Array(4),hitGrade:new Uint8Array(4)})),
       pt:new THREE.Vector3(),width:0,height:0,dirty:true,me:$('dnMeS'),you:$('dnYouS'),bar:$('dnFill')};
   }
@@ -1433,7 +1448,7 @@ function dnLaneStart(){
   F.comboSeen=F.comboShown=-100;F.comboOpacity=0;F.comboPulse.style.opacity='0';
   for(const edge of F.edges)edge.style.opacity='0';
   for(const L of F.sides){
-    L.step=0;L.at=L.shownAt=L.missAt=-100;L.combo=0;L.comboAt=L.perfectAt=L.pulseAt=-100;L.pulseLight=0;
+    L.step=0;L.at=L.shownAt=L.missAt=-100;L.combo=0;L.perfectAt=L.pulseAt=-100;L.pulseLight=0;
     L.dim.fill(-100);L.hitAt.fill(-100);
     for(const b of L.bursts)b.at=-100;
   }
@@ -1451,7 +1466,7 @@ function dnCrownArt(){
 }
 function dnComboArt(L,combo){
   if(L.combo===combo)return;
-  L.combo=combo;L.comboAt=-1;
+  L.combo=combo;
   if(!combo)return;
   if(!L.comboArt){
     L.comboArt=document.createElement('canvas');L.comboArt.width=284;L.comboArt.height=180;
@@ -1496,26 +1511,28 @@ function dnLaneLayout(F){
   F.cv.width=w;F.cv.height=h;F.damageUsed=0;F.width=w;F.height=h;
   const D=DANCE,portrait=w<h,up=!!SET.danceUp,short=!portrait&&h<=500,big=dnDesktop(w,h);
   const compact=portrait&&w<620,touch=$('dnHud').classList.contains('dnTouch');
-  F.up=up;F.touch=touch;F.compact=compact;F.big=big;
+  F.up=up;F.touch=touch;F.compact=compact;
   const insets=getComputedStyle(F.keys),safe=Math.max(9,parseFloat(insets.paddingLeft)||0,parseFloat(insets.paddingRight)||0);
-  const inset=safe+w*(portrait?.009:big?.072:.015),span=w*(big?.222:short?.24:portrait?.232:.219);
+  const inset=safe+w*(portrait?.009:big?.082:.019),span=w*(big?.194:short?.218:portrait?.223:.203);
   const gap=Math.max(15,(span-safe)/4),score=F.top.getBoundingClientRect();
   for(let side=0;side<2;side++){
     const L=F.sides[side],left=side?!D.left:!!D.left;
     const step=!side&&touch?Math.max(gap,44):gap;
     const start=left?inset:w-inset-step*4;
-    L.size=Math.min(step*1.09,h*.114)*(side?.94:1);
-    L.noteSize=Math.min(step*2.23,h*.244)*(side?.92:1)*(SET.danceSmall?.79:1);
+    L.size=Math.min(step*1.39,h*.144);
+    L.noteSize=Math.min(step*1.91,h*.183)*(SET.danceSmall?.79:1);
     L.outer=left?safe*.65:w-safe*.65;
     L.mid=start+2*step;L.stepWidth=step*3;
-    const extent=(L.stepWidth+L.noteSize*.97)*.5;
+    const extent=(L.stepWidth+L.noteSize+8)*.5;
     L.inner=L.mid+(left?extent:-extent);
     L.key=Math.min(78,step);
     L.left=left;L.edge=F.edges[left?0:1];
     for(let d=0;d<4;d++)L.x[d]=start+(d+.5)*step;
   }
   const half=Math.max(F.sides[0].size*.5,F.sides[0].key*.5),safeBottom=Math.max(12,parseFloat(insets.paddingBottom)||0);
-  F.wordHeight=clamp(Math.min(h*.106,w*.205),36,112);
+  F.wordHeight=clamp(Math.min(h*.090,w*.090),23,big?69:62);
+  F.comboHeight=clamp(Math.min(h*.093,w*.107),25,84);
+  F.safe=safe;
   F.bandBottom=h-safeBottom;
   const f=D.floor,c=D.cam,dist=Math.max(1.15,Math.hypot(c.x-f.x,c.z-f.z));
   const eye=dnCameraHeight(),pitch=Math.atan2(dnCameraAim()-eye,dist);
@@ -1531,7 +1548,6 @@ function dnLaneLayout(F){
   const arrow=F.sides[0].noteSize,runway=Math.abs(F.line-(up?F.bandBottom:F.bandTop));
   F.lead=clamp(runway/340,short?.94:1.15,DN_LEAD);
   F.scoreBottom=score.bottom;
-  F.scoreLeft=score.left;F.scoreRight=score.right;
   F.spawn=up?F.bandBottom-arrow*.66:F.bandTop+arrow*.66;
   F.travel=(F.line-F.spawn)/F.lead;
   F.keys.style.setProperty('--dn-key',F.sides[0].key+'px');
@@ -1567,10 +1583,10 @@ function dnShatter(g,F,size,x,y,d,q,alpha){
 }
 function dnLaneBurst(g,F,L,b,t,calm,side){
   const grade=b.grade,perfect=grade===DN_PERFECT,good=grade===DN_GOOD;
-  const life=perfect?.43:good?.32:grade===DN_DUDE?.25:.29,q=(t-b.at)/life;
+  const life=perfect?DN_PERFECT_LIFE:good?.32:grade===DN_DUDE?.25:.29,q=(t-b.at)/life;
   if(q<0||q>=1)return;
   const x=L.x[b.d],y=F.line,size=Math.min(L.noteSize,F.height*.168,L.size*1.48),rating=DN_RATINGS[grade],strength=side?.97:1;
-  const fade=1-dnEase((q-.61)/.39),flare=1-dnEase(q/.44),wave=Math.sqrt(q);
+  const fade=1-dnEase((q-.58)/.42),flare=1-dnEase(q/.28),wave=Math.sqrt(q);
   dnLaneDamage(F,x,y,size*(perfect?2.44:1.38)+20);
   if(perfect){
     const glow=size*(1.75+wave*.52),impact=size*(.86+q*.57);
@@ -1586,7 +1602,7 @@ function dnLaneBurst(g,F,L,b,t,calm,side){
     g.stroke();
     g.strokeStyle=DN_COL[b.d];g.lineWidth=Math.max(2,size*.036);
     g.beginPath();g.ellipse(x,y-rise,radius+size*.076,Math.min(radius*.73+size*.03,F.height*.075),0,0,TAU);g.stroke();
-    if(!calm)dnShatter(g,F,size*.74,x,y,b.d,q,strength);
+    if(!calm&&q<.44)dnShatter(g,F,size*.70,x,y,b.d,q/.44,strength);
   }
   // The small ring stays on the socket while the bright shockwave opens out.
   const radius=L.size*(.36+(calm?0:wave*(perfect?.24:good?.18:.075)));
@@ -1616,7 +1632,7 @@ function dnLaneBurst(g,F,L,b,t,calm,side){
   }
 }
 function dnLaneRays(g,F,L,b,now){
-  const q=(now-b.at)/.43;
+  const q=(now-b.at)/DN_PERFECT_LIFE;
   if(b.grade!==DN_PERFECT||q<0||q>=1)return;
   const w=Math.min(F.height*.48,L.noteSize*2.7)*(1+q*.22),h=w*.60;
   const x=L.x[b.d],y=F.line-h*.90+(F.up?h*.45:0);
@@ -1650,7 +1666,7 @@ function dnBodyParts(actor){
 }
 function dnProjectBody(F,L,actor){
   L.bodyUsed=0;
-  L.headTop=F.height*.4;L.headX=L.left?F.width*.38:F.width*.62;L.headLeft=L.headRight=L.headX;
+  L.headTop=F.height*.33;L.headBottom=F.height*.49;L.headX=L.left?F.width*.38:F.width*.62;L.headLeft=L.headRight=L.headX;
   if(!actor)return;
   let parts=F.parts.get(actor);
   if(!parts){parts=dnBodyParts(actor);F.parts.set(actor,parts);}
@@ -1659,7 +1675,7 @@ function dnProjectBody(F,L,actor){
   const p=F.pt,w=F.width,h=F.height;
   actor.head.getWorldPosition(p).applyMatrix4(F.projector);
   L.headX=(.5+.5*p.x)*w;
-  L.headTop=h;L.headLeft=L.headRight=L.headX;
+  L.headTop=h;L.headBottom=0;L.headLeft=L.headRight=L.headX;
   for(const {group,bounds,head} of parts){
     if(!group.visible)continue;
     const lo=bounds.min,hi=bounds.max;
@@ -1670,12 +1686,23 @@ function dnProjectBody(F,L,actor){
       x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);
     }
     if(head){
-      L.headTop=Math.min(L.headTop,y0);
+      L.headTop=Math.min(L.headTop,y0);L.headBottom=Math.max(L.headBottom,y1);
       L.headLeft=Math.min(L.headLeft,x0);L.headRight=Math.max(L.headRight,x1);
     }
     const n=L.bodyUsed;
-    L.body[n]=x0-4;L.body[n+1]=x1+4;L.body[n+2]=y0-4;L.body[n+3]=y1+4;L.bodyUsed=n+4;
+    const pad=head?12:7;
+    L.body[n]=x0-pad;L.body[n+1]=x1+pad;L.body[n+2]=y0-pad;L.body[n+3]=y1+pad;L.bodyUsed=n+4;
   }
+}
+function dnBoxIntersects(x0,x1,y0,y1,boxes,used){
+  for(let i=0;i<used;i+=4){
+    if(x0<boxes[i+1]&&x1>boxes[i]&&y0<boxes[i+3]&&y1>boxes[i+2])return true;
+  }
+  return false;
+}
+function dnStoreBox(boxes,i,x,y,hw,hh){
+  boxes[i]=x-hw;boxes[i+1]=x+hw;boxes[i+2]=y-hh;boxes[i+3]=y+hh;
+  return i+4;
 }
 function dnNoteLimit(F,L,y,half){
   let limit=L.inner;
@@ -1686,7 +1713,21 @@ function dnNoteLimit(F,L,y,half){
       limit=L.left?Math.min(limit,body[i]):Math.max(limit,body[i+1]);
     }
   }
+  const labels=F.captions;
+  for(let i=0;i<F.captionUsed;i+=4){
+    if(y+half<=labels[i+2]||y-half>=labels[i+3])continue;
+    // Only reserve a caption that is within this dancer's possible note lane.
+    if(L.left?labels[i+1]<=L.outer+18:labels[i]>=L.outer-18)continue;
+    limit=L.left?Math.min(limit,labels[i]):Math.max(limit,labels[i+1]);
+  }
   return limit;
+}
+function dnNoteClear(F,x,y,hw,hh){
+  const x0=x-hw,x1=x+hw,y0=y-hh,y1=y+hh;
+  for(const a of F.sides){
+    if(dnBoxIntersects(x0,x1,y0,y1,a.body,a.bodyUsed))return false;
+  }
+  return !dnBoxIntersects(x0,x1,y0,y1,F.captions,F.captionUsed);
 }
 function dnLaneSide(g,F,L,side,t,now,calm){
   const D=DANCE,notes=D.pat,size=L.size,line=F.line,near=L.near;
@@ -1698,7 +1739,7 @@ function dnLaneSide(g,F,L,side,t,now,calm){
   for(;i<notes.length;i++){
     const n=notes[i],until=n.t-t;
     if(until>F.lead)break;
-    if(!(side?D.otherNotes[i]:n.j))near[n.d]=Math.max(near[n.d],1-Math.abs(until)*3.4);
+    if(!(side?D.otherNotes[i]:n.j))near[n.d]=Math.max(near[n.d],1-Math.abs(until)*(until>=0?2.2:4));
   }
   const r=size*.46+3,pad=F.touch?1:7;
   const x0=L.x[0]-pad,x1=L.x[3]+pad;
@@ -1710,7 +1751,7 @@ function dnLaneSide(g,F,L,side,t,now,calm){
     const x=L.x[d],pulse=near[d],miss=now-L.dim[d]<.25;
     const age=now-L.hitAt[d],pop=calm||age<0||age>.43?0:(1-age/.43)*(L.hitGrade[d]===DN_PERFECT?.22:L.hitGrade[d]===DN_GOOD?.12:.06);
     const f=size*(.96+pop*(quiet?.52:1));
-    dnLaneDamage(F,x,line,f*.61+2);
+    dnLaneDamage(F,x,line,f*.73+2);
     g.globalAlpha=(miss?.55:.96+pulse*.04)*dim;
     g.drawImage(quiet?F.quiet[d]:F.receptors[d],x-f/2,line-f/2,f,f);
     if(age>=0&&age<.24){
@@ -1720,35 +1761,43 @@ function dnLaneSide(g,F,L,side,t,now,calm){
       g.drawImage(F.art[d],x-f*.29,line-f*.29,f*.58,f*.58);
     }
     if(pulse>0&&!miss&&age>.16){
-      g.globalAlpha=pulse*.68;g.strokeStyle='#fff9ee';g.lineWidth=Math.max(2,size*.031);
-      dnCircle(g,x,line,f*.29);g.stroke();
+      g.globalAlpha=pulse*.72;
+      g.drawImage(F.glow[d],x-f*.70,line-f*.70,f*1.40,f*1.40);
+      g.strokeStyle=DN_NOTE_INK[d];g.lineWidth=Math.max(4,size*.070);
+      dnCircle(g,x,line,f*.415);g.stroke();
+      g.strokeStyle='#fffce7';g.lineWidth=Math.max(2,size*.034);g.stroke();
     }
   }
   const note=L.noteSize*(calm?1:1+.045*dnPulse(t,D.profile));
   // The arrow's nose reaches the outside rim on the beat. The socket stays
   // readable until judgment, when the burst takes over at its centre.
-  const dock=r+note*.445+6,dir=F.up?-1:1;
+  const dock=r+note*.50+6,dir=F.up?-1:1;
   const approach=Math.max(0,Math.abs(F.travel)*F.lead-dock)/F.lead;
   for(let j=start;j<i;j++){
     const n=notes[j];if(side?D.otherNotes[j]:n.j)continue;
     const until=n.t-t;
     if(until<-.15)continue;
     const y=line-dir*(dock+Math.max(0,until)*approach);
-    const limit=dnNoteLimit(F,L,y,note*.445+2);
+    const limit=dnNoteLimit(F,L,y,note*.50+3);
     const left=L.left?L.outer:limit,right=L.left?limit:L.outer;
-    if(right-left<16)continue;
-    // Slide the whole row clear of a reaching arm. Only narrow the pattern
-    // when there is no room to keep all four full sprites outside the rig.
+    if(right-left<26)continue;
+    // The whole sprite, including its transparent border, has to fit outside
+    // the projected rig and captions. Keep rapid notes from stacking as well.
     const paired=notes[j-1]?.t===n.t||notes[j+1]?.t===n.t;
-    const f=Math.min(note,(right-left)*(paired?.43:.66));
-    const spread=Math.min(1,(right-left-f*.97)/L.stepWidth);
-    const half=(L.stepWidth*spread+f*.97)*.5;
-    const x=clamp(L.mid,left+half,right-half)+(L.x[n.d]-L.mid)*spread;
+    let f=Math.min(note,(right-left-6)*(paired?.37:.71)),x=0,clear=false;
+    for(let attempt=0;attempt<3&&f>=19;attempt++,f*=.79){
+      const radius=f*.5+2,spread=Math.min(1,(right-left-radius*2)/L.stepWidth);
+      const half=L.stepWidth*spread*.5+radius;
+      x=clamp(L.mid,left+half,right-half)+(L.x[n.d]-L.mid)*spread;
+      if(dnNoteClear(F,x,y,radius,radius)&&!dnBoxIntersects(x-radius,x+radius,y-radius,y+radius,F.notes,F.noteUsed)){
+        F.noteUsed=dnStoreBox(F.notes,F.noteUsed,x,y,radius,radius);clear=true;break;
+      }
+    }
+    if(!clear)continue;
     dnLaneDamage(F,x,y,f*.51+4,f*.82+3);
     if(!calm&&until>.045){
       const tail=f*.61,ty=F.up?y+f*.09:y-f*.69;
-      const edge=dnNoteLimit(F,L,ty+tail*.5,tail*.5);
-      if(L.left?x+f*.19<edge:x-f*.19>edge){
+      if(dnNoteClear(F,x,ty+tail*.5,f*.19,tail*.5)){
         g.globalAlpha=(side?.63:.76)*dim;
         g.drawImage(F.trails[F.up?1:0][n.d],x-f*.19,ty,f*.38,tail);
       }
@@ -1758,69 +1807,71 @@ function dnLaneSide(g,F,L,side,t,now,calm){
     g.drawImage(F.art[n.d],x-f/2,y-f/2,f,f);
   }
 }
+function dnCaptionSpot(F,x,y,hw,hh){
+  if(x-hw<F.safe||x+hw>F.width-F.safe)return false;
+  for(const a of F.sides){
+    if(x-hw<a.headRight+7&&x+hw>a.headLeft-7&&y-hh<a.headBottom+5&&y+hh>a.headTop-5)return false;
+  }
+  return !dnBoxIntersects(x-hw,x+hw,y-hh,y+hh,F.captions,F.captionUsed);
+}
 function dnLaneLabel(g,F,L,side,now,calm){
-  const D=DANCE,age=now-L.shownAt,visible=age>=0&&age<1.03;
+  const D=DANCE,age=now-L.shownAt,show=age>=0&&age<DN_RATING_HOLD+.23;
   const leading=(side?D.osc-D.sc:D.sc-D.osc)>=25;
-  if(!visible&&!L.combo&&!leading)return;
-  const w=F.width,h=F.height,left=L.left,short=w>h&&h<=500;
-  // The normal rail sits between the mirrors and the farthest inboard
-  // point of either arrow lane. Compact portrait keeps the arrows at the floor.
-  let lo=left?(F.compact?10:L.inner+8):F.ballRight+8;
-  let hi=left?F.ballLeft-8:(F.compact?w-10:L.inner-8);
-  const head=L.headTop,grade=L.grade,word=F.words[grade],ratio=word.width/word.height;
-  const perfect=grade===DN_PERFECT,dude=grade===DN_DUDE;
-  const weight=perfect?1:grade===DN_GOOD?.85:grade===DN_OK?.76:.92;
-  const rise=calm?0:Math.min(F.wordHeight*.24,24)*dnEase(age/.60);
-  const scale=calm?1:dude?1.16-.16*dnEase(age/.24):dnGradeScale(grade,age+.05);
-  const wantedWord=visible?Math.min(F.wordHeight*.92*weight*scale,short?35:86):0;
-  const growth=L.combo>=10?.25+Math.min(.55,Math.sqrt(L.combo-1)*.065):L.combo*.020;
-  const hit=now-L.comboAt,pop=calm?0:Math.max(0,1-hit/.31)*.28;
-  const wantedCombo=L.combo?F.wordHeight*(F.big?.77:.73)*(1+growth)*(1+pop):0;
-  let top=F.scoreBottom+6,bottom=head-8;
-  const margin=Math.min(46,w*.025)+8;
-  const edge=left?F.scoreLeft-margin:F.scoreRight+margin;
-  const outboard=left?edge-10:w-10-edge;
-  // Raised arms and jumps can leave almost no space under the scoreboard.
-  // Beside the score and above the arrow spawn there is a second clear shelf.
-  if(bottom-top<Math.min(98,wantedWord*.72+wantedCombo*.70)&&outboard>80){
-    lo=left?10:edge;hi=left?edge:w-10;
-    top=5;bottom=Math.min(F.scoreBottom+1,head-5);
+  if(!show&&!L.combo&&!leading)return;
+  const grade=L.grade,word=F.words[grade],dude=grade===DN_DUDE,good=grade===DN_GOOD;
+  const bounce=calm||!show||dude?1:
+    1+(dnGradeScale(grade,age+.018)-1)*.48*(1-dnEase(age/.31));
+  const drift=calm||!show?0:dnEase(age/.18);
+  const wordH=show?F.wordHeight*(good?.86:1)*bounce:0,wordW=wordH*word.width/word.height;
+  const comboH=L.combo?F.comboHeight:0,comboW=comboH*1.58;
+  const hw=Math.max(wordW,comboW)*.5+5;
+  const hh=(wordH+comboH+(show&&comboH?4:0))*.5+3;
+  const temple=lerp(L.headTop,L.headBottom,.34);
+  const sideY=clamp(temple+hh*.31,F.scoreBottom+7+hh,(F.up?F.bandBottom:F.line)-hh-14);
+  const outer=L.left?L.headLeft-hw-10:L.headRight+hw+10;
+  const inner=L.left?L.headRight+hw+10:L.headLeft-hw-10;
+  let x=outer,y=sideY;
+  if(F.compact||!dnCaptionSpot(F,x,y,hw,hh)){
+    x=inner;
+    if(F.compact||!dnCaptionSpot(F,x,y,hw,hh)){
+      const mid=F.width*.5;
+      x=clamp(L.headX,L.left?F.safe+hw:mid+hw,L.left?mid-hw:F.width-F.safe-hw);
+      y=Math.max(F.scoreBottom+7+hh,L.headTop-9-hh);
+    }
   }
-  const room=bottom-top,avail=hi-lo-6;
-  if(room<12||avail<32)return;
-  const adjacent=visible&&L.combo&&room<wantedWord+wantedCombo+8&&avail>=155;
-  const wordFit=(avail-(adjacent?Math.min(avail*.36,96)+8:0))/ratio;
-  const wordH=Math.min(wantedWord,wordFit,visible&&L.combo&&!adjacent?room*.55:room);
-  const wordW=wordH*ratio,wordPresent=wordH>=12;
-  const badgeH=Math.min(wantedCombo,(avail-(adjacent?wordW+8:0))/1.58,
-    wordPresent&&!adjacent?room-wordH-5:room);
-  const badgeW=badgeH*1.58,badgePresent=badgeH>=13;
-  const grouped=adjacent&&wordPresent&&badgePresent;
-  const packWidth=wordW+badgeW+8;
-  const middle=grouped?clamp(L.headX,lo+packWidth*.5+3,hi-packWidth*.5-3):L.headX;
-  if(wordPresent){
-    const x=grouped?middle+(left?-1:1)*(badgeW+8)*.5:clamp(middle,lo+wordW*.5+3,hi-wordW*.5-3);
-    const headroom=badgePresent&&!grouped?badgeH+5:0;
-    const y=clamp(bottom-wordH-rise,top+headroom,bottom-wordH);
-    dnLaneDamage(F,x,y+wordH*.5,wordW*.63+5,wordH*.66+4);
-    g.globalAlpha=1-dnEase((age-.70)/.33);
-    if(perfect)g.drawImage(F.glow[L.perfectDir],x-wordW*.62,y-wordH*.12,wordW*1.24,wordH*1.24);
-    g.drawImage(word,x-wordW*.5,y,wordW,wordH);
-    if(badgePresent&&!grouped)bottom=y-5;
+  let top=y-hh+3;
+  if(comboH){
+    F.captionUsed=dnStoreBox(F.captions,F.captionUsed,x,top+comboH*.5,comboW*.5+2,comboH*.5+2);
+    dnLaneDamage(F,x,top+comboH*.5,comboW*.53,comboH*.55);
+    g.globalAlpha=1;g.drawImage(L.comboArt,x-comboW*.5,top,comboW,comboH);
+    top+=comboH+4;
   }
-  if(badgePresent){
-    const x=grouped?middle+(left?1:-1)*(wordW+8)*.5:clamp(middle,lo+badgeW*.5+3,hi-badgeW*.5-3);
-    const y=bottom-badgeH;
-    dnLaneDamage(F,x,y+badgeH*.5,badgeW*.56,badgeH*.55);
-    g.globalAlpha=1;g.drawImage(L.comboArt,x-badgeW*.5,y,badgeW,badgeH);
+  if(show){
+    const shake=dude&&!calm?Math.sin(age*72)*4*(1-dnEase(age/.26)):0;
+    const rx=x+shake,ry=top-F.wordHeight*.14*drift;
+    F.captionUsed=dnStoreBox(F.captions,F.captionUsed,rx,ry+wordH*.5,wordW*.5+4,wordH*.5+4);
+    dnLaneDamage(F,rx,ry+wordH*.5,wordW*.57+4,wordH*.63+4);
+    g.globalAlpha=1-dnEase((age-DN_RATING_HOLD)/.23);
+    g.drawImage(word,rx-wordW*.5,ry,wordW,wordH);
   }
-  if(leading&&head-F.scoreBottom>24){
-    const crown=Math.min(F.wordHeight*.31,Math.max(16,room*.25));
-    const x=clamp(L.headX+(left?1:-1)*crown*1.05,lo+crown*.71,hi-crown*.71);
-    const y=head+crown*.20;
-    dnLaneDamage(F,x,y,crown*.76,crown*.56);
-    g.globalAlpha=1;g.drawImage(F.crown,x-crown*.70,y-crown*.5,crown*1.40,crown);
+  if(leading){
+    const s=F.comboHeight*.37,cx=L.headX,cy=L.headTop-s*.36;
+    if(cy-s*.5>F.scoreBottom+5){
+      dnLaneDamage(F,cx,cy,s*.75,s*.55);
+      g.globalAlpha=1;g.drawImage(F.crown,cx-s*.7,cy-s*.5,s*1.4,s);
+    }
   }
+}
+function dnMilestoneBanner(g,F,fx,now,calm){
+  const age=now-F.comboShown;
+  if(age<0||age>=1.65)return;
+  const art=F.milestones[fx.tier],q=age/1.65;
+  const pop=calm?1:1+.13*(1-dnEase(age/.36))*Math.sin(age*25);
+  const w=Math.min(F.width*.51,F.height*.58,610)*pop,h=w*art.height/art.width;
+  const x=F.width*.5,y=Math.min(F.height*.80,F.bandBottom-h*.68);
+  F.captionUsed=dnStoreBox(F.captions,F.captionUsed,x,y,w*.5+4,h*.5+4);
+  dnLaneDamage(F,x,y,w*.52,h*.57);
+  g.globalAlpha=1-dnEase((q-.70)/.30);g.drawImage(art,x-w*.5,y-h*.5,w,h);
 }
 function dnComboBurst(g,F,t){
   const fx=DANCE.stageFx,age=t-fx.celebrate,life=1.05;
@@ -1846,7 +1897,7 @@ function dnLaneDraw(now=performance.now()/1000){
   if(F.dirty&&!dnLaneLayout(F))return;
   const damage=F.damage,calm=dnCalm();
   for(let k=0;k<F.damageUsed;k+=4)g.clearRect(damage[k],damage[k+1],damage[k+2],damage[k+3]);
-  F.damageUsed=0;
+  F.damageUsed=F.captionUsed=F.noteUsed=0;
   while(D.peerRead.first<D.pat.length&&D.pat[D.peerRead.first].t<t-.31)D.peerRead.first++;
   if(!calm)dnComboBurst(g,F,t);
   const celebration=D.stageFx.celebrate;
@@ -1857,7 +1908,6 @@ function dnLaneDraw(now=performance.now()/1000){
   for(let side=0;side<2;side++){
     const L=F.sides[side];
     if(L.shownAt===-1)L.shownAt=now;
-    if(L.comboAt===-1)L.comboAt=now;
     for(const b of L.bursts){
       if(b.at!==-1)continue;
       b.at=now;
@@ -1868,7 +1918,7 @@ function dnLaneDraw(now=performance.now()/1000){
     if(!calm)for(const b of L.bursts)dnLaneRays(g,F,L,b,now);
     // A hit renews only its dancer's feathered edge pulse. Close hits share
     // a continuous glow, and there is no white full-screen flash.
-    const age=now-L.pulseAt,light=calm||age>.43?0:.86*(1-dnEase(age/.43));
+    const age=now-L.pulseAt,light=calm||age>.34?0:.51*(1-dnEase(age/.34));
     if(light!==L.pulseLight){L.pulseLight=light;L.edge.style.opacity=light;}
   }
   if(!calm){
@@ -1881,26 +1931,17 @@ function dnLaneDraw(now=performance.now()/1000){
     }
   }
   camera.updateMatrixWorld();
-  const mirror=D.spots?.userData.funky?.ball;
-  F.ballLeft=F.ballRight=F.width*.5;
-  if(mirror){
-    const view=mirror.getWorldPosition(F.pt).applyMatrix4(camera.matrixWorldInverse);
-    if(view.z<-.5){
-      const radius=.43*F.height*.5*camera.projectionMatrix.elements[5]/-view.z;
-      const x=(.5+.5*view.applyMatrix4(camera.projectionMatrix).x)*F.width;
-      F.ballLeft=x-radius;F.ballRight=x+radius;
-    }
-  }
   F.projector.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);
   dnProjectBody(F,F.sides[0],D.me);
   dnProjectBody(F,F.sides[1],(DN_TEST?D.bot:MP.peers.get(D.partner))?.av);
+  if(celebration>-100)dnMilestoneBanner(g,F,D.stageFx,now,calm);
+  for(let side=1;side>=0;side--)dnLaneLabel(g,F,F.sides[side],side,now,calm);
   g.save();g.beginPath();g.rect(0,F.bandTop,F.width,Math.max(1,F.bandBottom-F.bandTop));g.clip();
   dnLaneSide(g,F,F.sides[1],1,t,now,calm);dnLaneSide(g,F,F.sides[0],0,t,now,calm);
   g.restore();
   for(let side=1;side>=0;side--){
     const L=F.sides[side];
     for(const b of L.bursts)dnLaneBurst(g,F,L,b,now,calm,side);
-    dnLaneLabel(g,F,L,side,now,calm);
   }
   g.globalAlpha=1;
   if(F.lastMe!==D.sc){F.lastMe=D.sc;F.me.textContent=D.sc;}
@@ -1921,6 +1962,8 @@ function dnStageStart(){
   group.position.set(f.x,0,f.z);scene.add(group);
   const stage=D.stageFx={group,ceiling:f.L.ceiling||3.2,celebrate:-100,sweepAt:-100,
     tier:0,tint:-1,slot:0,tiles:[],rings:[],scratch:new THREE.Object3D()};
+  stage.comboAt=[-100,-100];stage.comboTier=[0,0];
+  stage.comboInk=DN_COMBO_EFFECTS.map(p=>new THREE.Color(p.ink));
   // A feathered pool on the floor with local actor tints, so the spotlight
   // never draws a translucent wall across the moving dancers.
   const light=new THREE.Mesh(new THREE.PlaneGeometry(2.9,2.9),new THREE.ShaderMaterial({
@@ -1998,7 +2041,7 @@ function dnStageNeutral(fx){
   fx.light.visible=false;
   for(let side=0;side<2;side++){dnRestoreTint(fx.actorTints[side]);fx.actorTints[side]=null;}
 }
-function dnPressureLights(fx){
+function dnPressureLights(fx,t,calm){
   const D=DANCE,p=D.push,other=(DN_TEST?D.bot:MP.peers.get(D.partner))?.av;
   const leader=p>=0?0:1,strength=Math.abs(p);
   const light=fx.light,c=D.cam;
@@ -2010,11 +2053,12 @@ function dnPressureLights(fx){
   }
   for(let side=0;side<2;side++){
     const actor=side?other:D.me;
+    const age=t-fx.comboAt[side],glow=calm||age<0||age>=1.66?0:1-dnEase(age/1.66);
     let state=fx.actorTints[side];
     if(state&&state.actor!==actor){dnRestoreTint(state);state=fx.actorTints[side]=null;}
     if(!actor)continue;
     if(!state){
-      if(!light.visible)continue;
+      if(!light.visible&&!glow)continue;
       const meshes=[],materials=new Map();
       actor.root.traverse(mesh=>{
         const original=mesh.material;
@@ -2027,9 +2071,12 @@ function dnPressureLights(fx){
       });
       state=fx.actorTints[side]={actor,meshes,materials:[...materials]};
     }
-    const shade=side===leader?1+.14*strength:1-.24*strength;
+    const shade=(side===leader?1+.14*strength:1-.24*strength)+glow*.24;
+    const ink=fx.comboInk[fx.comboTier[side]];
     for(let i=0;i<state.materials.length;i++){
-      const pair=state.materials[i];pair[1].color.copy(pair[0].color).multiplyScalar(shade);
+      const pair=state.materials[i],base=pair[0],mat=pair[1];
+      mat.color.copy(base.color).multiplyScalar(shade);
+      if(mat.emissive)mat.emissive.copy(base.emissive).lerp(ink,glow*.21);
     }
   }
 }
@@ -2044,24 +2091,25 @@ function dnStageHit(side,d,t,perfect,combo){
       if(neighbour){neighbour.at=t+(i===d?0:.029+i*.016);neighbour.perfect=true;}
     }
   }
-  if(combo===10||combo===25||combo===50){
-    fx.tier=combo===50?2:combo===25?1:0;fx.celebrate=t;
+  const tier=DN_MILESTONES.indexOf(combo);
+  if(tier>=0){
+    fx.tier=tier;fx.celebrate=fx.sweepAt=fx.comboAt[side]=t;fx.comboTier[side]=tier;
   }
   if(combo>=10&&(combo%10===0||combo===25)&&t-fx.sweepAt>.42)fx.sweepAt=t;
 }
 function dnStageTick(t){
   const D=DANCE,fx=D.stageFx;if(!fx)return;
   const calm=dnCalm();
-  dnPressureLights(fx);
+  dnPressureLights(fx,t,calm);
   for(const tile of fx.tiles){
-    const a=(t-tile.at)/(tile.perfect?.45:.29);
+    const a=(t-tile.at)/(tile.perfect?.74:.29);
     tile.mesh.visible=a>=0&&a<1;
     if(tile.mesh.visible)tile.mesh.material.uniforms.light.value=(1-a)*(tile.perfect?1:.61);
   }
   const positions=fx.sparkPos;
   let offset=0;
   for(const ring of fx.rings){
-    const a=(t-ring.at)/.45;
+    const a=(t-ring.at)/.74;
     ring.mesh.visible=!calm&&a>=0&&a<1;
     if(!ring.mesh.visible)continue;
     const c=D.cam,stance=dnDancerSide(ring.side),cx=c.dz*stance,cz=-c.dx*stance;
@@ -2090,7 +2138,7 @@ function dnStageTick(t){
       lit.spotM[i].color.set(ink);lit.tileM[i].emissive.set(ink);lit.tileM[i].color.set(ink);
     }
   }
-  dnConfettiTick(fx,calm?-1:t-fx.sweepAt,1.25);
+  dnConfettiTick(fx,calm?-1:t-fx.sweepAt,1.62);
 }
 function dnConfettiTick(fx,age,length){
   const confetti=fx.confetti;confetti.visible=age>=0&&age<length;
