@@ -2562,7 +2562,7 @@ function decoEnd(){if(DECO.placing)decoCancel();DECO.on=false;DX().L().grid.visi
 function renderBar(){const b=$('bar');b.hidden=!DECO.on;if(!DECO.on)return;
   if(DECO.placing)b.innerHTML=`<button class="btn sky" data-d="turn">🔄 Turn</button><button class="btn mint" data-d="place" ${DECO.valid?'':'disabled'}>✅ Put it here</button><button class="btn white" data-d="cancel">✖ Cancel</button>`;
   else if(DX()===CLX)b.innerHTML=`<button class="btn butter${dsItems().length?'':' dsPulse'}" data-d="furn">🛋️ Furniture</button>${DECO.sel?`<div class="brow"><button class="btn sky" data-d="move">✋ Move</button><button class="btn lilac" data-d="away">🗑️ Remove</button></div>`:''}<button class="btn mint" data-d="finish">🎉 Finished!</button><button class="btn white sm" data-d="leave">🚪 Leave</button>`;
-  else b.innerHTML=`<button class="btn butter" data-d="shop">🛍️ Shop</button><button class="btn white" data-d="mine">📦 My stuff${S.home.store.length?` <span class="cnt">${S.home.store.length}</span>`:''}</button>${DECO.sel?`<button class="btn sky" data-d="move">✋ Move it</button><button class="btn lilac" data-d="away">📦 Put away</button>${sellBtn(DECO.sel,'sellsel','data-d')}`:'<button class="btn lilac" data-d="paint">🎨 House colour</button>'}<button class="btn mint" data-d="done">✅ Done</button>`;}   /* 🎨 run 4, item 23 */
+  else b.innerHTML=`<button class="btn butter" data-d="shop">🛍️ Shop</button><button class="btn white" data-d="mine">📦 My stuff${S.home.store.length?` <span class="cnt">${S.home.store.length}</span>`:''}</button>${DECO.sel?`<button class="btn sky" data-d="move">✋ Move it</button><button class="btn lilac" data-d="away">📦 Put away</button>${canRecol(DECO.sel)?'<button class="btn white" data-d="recolsel">🎨 🪙10</button>':''}${sellBtn(DECO.sel,'sellsel','data-d')}`:'<button class="btn lilac" data-d="paint">🎨 House colour</button>'}<button class="btn mint" data-d="done">✅ Done</button>`;}   /* 🎨 run 4, item 23 */
 function startPlacing(it){DECO.placing=it;DECO.r=it.r||0;selMark(null);
   const g=buildFurn(furnOf(it),it.c);g.traverse(o=>{if(!o.isMesh)return;if(o.material===OL||o.material.side===THREE.BackSide){o.visible=false;return;}const m=o.material.clone();m.transparent=true;m.opacity=.72;if(m.emissive)m.emissive.set('#000000');o.material=m;});
   const F=FURN[it.t];const fp=new THREE.Mesh(new THREE.PlaneGeometry(F.w,F.d),new THREE.MeshBasicMaterial({color:'#5fd4b0',transparent:true,opacity:.45,depthWrite:false}));fp.rotation.x=-Math.PI/2;fp.position.y=.03;g.add(fp);g.userData.fp=fp;
@@ -2600,6 +2600,14 @@ function sellTap(it,from){if(!it)return;const n=sellPrice(it);if(!n)return;
   SELL.u=null;if(from==='room'){const X=DX();if(X!==HOMEX)return;const L=X.list();const i=L.indexOf(it);if(i<0)return;L.splice(i,1);X.rm(it.u);selMark(null);}
   else{const i=S.home.store.indexOf(it);if(i<0)return;S.home.store.splice(i,1);}
   S.coins+=n;SFX.coin();floatText('+'+n+' 🪙',P.x-Math.sin(P.yaw)*1.5,1.6,P.z-Math.cos(P.yaw)*1.5,{h:.6});change();from==='room'?renderBar():renderCatalog();}
+/* 🎨 recolour (26 Nov, owner): you pick a colour when buying; later any thing with colours can get a new one for 10 coins, from 📦 My stuff or straight from the room */
+const RECOL_P=10;const canRecol=it=>{const F=FURN[furnOf(it)];return!!(F&&F.cols&&F.cols.length>1&&!it.sh);};
+function recolOpen(it,from){if(!canRecol(it))return;const F=FURN[furnOf(it)];RECOL.it=it;RECOL.from=from;
+  openPanel(`<div class="hd"><h2>🎨 ${F.n}</h2><div class="chip">🪙 <b>${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
+    <div class="recol"><img class="mth" src="${thumb(furnOf(it),it.c)}" alt=""><div class="swrow">${F.cols.map(c=>`<button class="sw ${c===it.c?'on':''}" style="background:${c}" data-a="recol:${c}" aria-label="Colour" ${c===it.c||S.coins<RECOL_P?'disabled':''}></button>`).join('')}</div>
+    <div class="recolp">🪙 ${RECOL_P}</div></div>`);}
+const RECOL={it:null,from:null};
+
 const FURN_H={},FURN_L={};function furnBox(t){if(FURN_H[t]==null){const b=new THREE.Box3().setFromObject(buildFurn(t));FURN_H[t]=b.max.y;FURN_L[t]=b.min.y;}}function furnH(t){furnBox(t);return FURN_H[t];}function furnLo(t){furnBox(t);return FURN_L[t];}   /* how tall a thing stands (for ceiling lamps) */
 function selMark(it){DECO.sel=it;if(DECO.mark){scene.remove(DECO.mark);DECO.mark=null;}
   if(it){const L=DX().L(),R=fpRect(it.t,it.x,it.z,it.r);const m=new THREE.Mesh(new THREE.PlaneGeometry(R.x2-R.x1+.3,R.z2-R.z1+.3),new THREE.MeshBasicMaterial({color:'#ffd45c',transparent:true,opacity:.55,depthWrite:false}));
@@ -2616,7 +2624,7 @@ function decoMove(){const X=DX(),it=DECO.sel;if(!it)return;const L=X.list();L.sp
 function decoAway(){const X=DX(),it=DECO.sel;if(!it)return;const L=X.list();L.splice(L.indexOf(it),1);X.rm(it.u);selMark(null);SFX.pop();
   if(X===HOMEX){delete it.f;S.home.store.push(it);toast('Put away. Find it in 🛍️ Shop → My stuff.');}else{dcardUpd();jobHud(true);}change();renderBar();}
 $('bar').addEventListener('click',e=>{const b=e.target.closest('[data-d]');if(!b||b.disabled)return;SFX.tap();
-  ({turn:decoTurn,place:decoPlace,cancel:decoCancel,shop:()=>openCatalog('buy'),mine:()=>openCatalog('mine'),sellsel:()=>sellTap(DECO.sel,'room'),move:decoMove,away:decoAway,done:decoEnd,paint:openHousePaint,furn:()=>openPhone('furn'),finish:dsFinishAsk,leave:()=>exitClient()})[b.dataset.d]();});
+  ({turn:decoTurn,place:decoPlace,cancel:decoCancel,shop:()=>openCatalog('buy'),mine:()=>openCatalog('mine'),sellsel:()=>sellTap(DECO.sel,'room'),recolsel:()=>recolOpen(DECO.sel,'room'),move:decoMove,away:decoAway,done:decoEnd,paint:openHousePaint,furn:()=>openPhone('furn'),finish:dsFinishAsk,leave:()=>exitClient()})[b.dataset.d]();});
 /* 🐴 the farm's life (pets and farm update, stage 6; rules-riding, rules-farm-chores, story-ieva-stan, story-riders, screens-riding, screens-market-sell,
    moves-farm-*, moves-horse-*). Ten farm horses nobody owns (4 in the paddock, 5 in the two stables' stalls, 1 lesson horse by Stan), the farm animals (baby or
    adult, wandering round their spots in their own groups; where they stand comes from the one clock, so friends see the same), Ieva grooming by the stable,

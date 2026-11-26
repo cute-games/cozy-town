@@ -486,11 +486,10 @@ const FURN={
     const sm=sph(g,.32,null,0,2.62,0,{mat:toon({color:c,emissive:new THREE.Color(c).lerp(new THREE.Color('#fff2cc'),.3),emissiveIntensity:.4}),ws:18,hs:14});sm.userData.shade=1;
     cyl(g,.09,.09,.05,'#c98a4a',0,2.91,0,{seg:12});cyl(g,.09,.09,.05,'#c98a4a',0,2.28,0,{seg:12});cyl(g,.015,.015,.08,'#c98a4a',0,2.2,0,{seg:5,ol:false});cyl(g,.02,.045,.1,'#e2564d',0,2.11,0,{seg:8});
     for(let k=0;k<8;k++){const r=new THREE.Mesh(new THREE.TorusGeometry(.322,.014,4,24),mat('#c98a4a'));r.position.y=2.62;r.rotation.y=k/8*Math.PI;g.add(r);}}},   /* round paper lantern, warm ribs and caps */
-  mushpendant:{n:'Mushroom pendant',i:'🍄',p:150,w:.7,d:.7,r4:1,flat:1,ceil:1,nu:1,cols:['#ff5a5a','#ffb84d','#7fd8a8','#b48cff'],use:'lamp',b(g,c){cyl(g,.018,.018,.55,'#e8dcc4',0,2.8,0,{seg:6,ol:false});
-    const cap=place(g,new THREE.Mesh(new THREE.SphereGeometry(.38,20,10,0,Math.PI*2,0,Math.PI/2),mat(new THREE.Color(c).multiplyScalar(.85).getStyle())),{},0,2.6,0);cyl(g,.3,.3,.04,'#f2dcc0',0,2.57,0,{seg:20,ol:false});cap.scale.y=.62;hull(g,new THREE.SphereGeometry(.38+OT,20,10,0,Math.PI*2,0,Math.PI/2),cap,{});
-    const gl=cyl(g,.35,.35,.03,null,0,2.585,0,{mat:toon({color:'#fff1d6',emissive:new THREE.Color(c).lerp(new THREE.Color('#fff1d6'),.5),emissiveIntensity:.55}),seg:20,ol:false});gl.userData.shade=1;
-    for(const [a,t] of [[0,.0],[0,.55],[1.26,.55],[2.51,.55],[3.77,.55],[5.03,.55],[.63,.9],[1.89,.9],[3.14,.9],[4.4,.9],[5.65,.9]]){const ph=t*1.05,x=Math.cos(a)*Math.sin(ph)*.39,z=Math.sin(a)*Math.sin(ph)*.39,y=2.6+Math.cos(ph)*.39*.62;sph(g,t?.055:.07,'#fff6e8',x,y,z,{ws:10,hs:6,ol:false}).scale.y=.55;}
-    cyl(g,.12,.14,.12,'#ffe6b8',0,2.46,0,{seg:12});}},   /* a spotty mushroom cap with a short stalk, glowing underneath */
+  mushpendant:{n:'Mushroom pendant',i:'🍄',p:150,w:.7,d:.7,r4:1,flat:1,ceil:1,nu:1,cols:['#ff5a5a','#ffb84d','#7fd8a8','#b48cff'],use:'lamp',b(g,c){for(let k=0;k<3;k++){const a=k/3*Math.PI*2;cyl(g,.008,.008,.62,'#e8dcc4',Math.cos(a)*.22,2.68,Math.sin(a)*.22,{seg:4,ol:false}).rotation.set(Math.sin(a)*.32,0,-Math.cos(a)*.32);}sph(g,.04,'#e8dcc4',0,3.24,0,{ws:8,hs:6});
+    const geo=new THREE.SphereGeometry(.4,22,10,0,Math.PI*2,Math.PI/2,Math.PI/2),cap=place(g,new THREE.Mesh(geo,mat(new THREE.Color(c).multiplyScalar(.85).getStyle())),{},0,2.7,0);cap.scale.y=.6;hull(g,new THREE.SphereGeometry(.4+OT,22,10,0,Math.PI*2,Math.PI/2,Math.PI/2),cap,{});
+    const gl=cyl(g,.38,.38,.03,null,0,2.69,0,{mat:toon({color:'#fff1d6',emissive:new THREE.Color(c).lerp(new THREE.Color('#fff1d6'),.5),emissiveIntensity:.6}),seg:22,ol:false});gl.userData.shade=1;
+    for(let k=0;k<14;k++){const a=k*2.4,t=.35+.5*((k*37)%10)/10,x=Math.cos(a)*Math.sin(t)*.4,z=Math.sin(a)*Math.sin(t)*.4,y=2.7-Math.cos(t)*.4*.6;sph(g,k%3?.05:.065,'#fff6e8',x,y,z,{ws:10,hs:6,ol:false}).scale.y=.55;}}},   /* 🍄 (26 Nov, owner: upside down, no stalk) the cap hangs like a bowl on three cords, spots underneath, light glowing up out of it */
   rughearts:{n:'Heart rug',i:'💗',p:90,w:1.8,d:1.6,r4:1,flat:1,cols:['#ff9ec4','#ffd6e0','#ffffff','#b79cff'],b(g,c){cyl(g,.9,.9,.025,c,0,0,0,{seg:32,ol:.02});for(const [x,z,s] of [[-.35,-.2,.22],[.35,-.2,.22],[0,.25,.16]]){cyl(g,s,s,.03,'#ff4d8d',x-s*.45,0,z,{seg:16,ol:false});cyl(g,s,s,.03,'#ff4d8d',x+s*.45,0,z,{seg:16,ol:false});box(g,s*1.4,.03,s*1.4,'#ff4d8d',x,0,z+s*.5,{ry:Math.PI/4,ol:false});}}},
   rugstripe:{n:'Striped rug',i:'🟦',p:85,w:2.2,d:1.4,r4:1,flat:1,cols:['#7cc8ff','#ffd45c','#5fd4b0','#ff9ec4'],b(g,c){box(g,2.2,.025,1.4,'#ffffff',0,0,0,{ol:.02});for(let i=0;i<6;i++)box(g,2.0,.03,.11,i%2?c:shade(c,.3),0,0,-.55+i*.22,{ol:false});}},
   rugstar:{n:'Star rug',i:'⭐',p:95,w:2.0,d:2.0,r4:1,flat:1,cols:['#b79cff','#2e2347','#7cc8ff'],b(g,c){cyl(g,1.0,1.0,.025,c,0,0,0,{seg:32,ol:.02});for(let i=0;i<5;i++){const a=i/5*TAU;box(g,.5,.03,.16,'#ffd45c',Math.cos(a)*.3,0,Math.sin(a)*.3,{ry:-a,ol:false});}cyl(g,.2,.2,.03,'#ffd45c',0,0,0,{seg:16,ol:false});for(let i=0;i<8;i++){const a=i/8*TAU+.3;cyl(g,.05,.05,.03,'#ffffff',Math.cos(a)*.75,0,Math.sin(a)*.75,{seg:8,ol:false});}}},
@@ -722,15 +721,15 @@ function drawCatTV(x,t,on){const W=216,H=120,k=x.canvas.width/W;x.setTransform(k
     x.lineWidth=.9;x.beginPath();for(const sd of[-1,1]){x.moveTo(sd*12,3.5);x.lineTo(sd*24,1.5);x.moveTo(sd*12,5.8);x.lineTo(sd*24,7.5);}x.stroke();}
   x.restore();x.restore();x.restore();
   // floating music notes
-  x.font='700 12px "Baloo 2","Trebuchet MS",sans-serif';x.textAlign='center';
+  x.font='700 12px "CozyCoin","Baloo 2","Trebuchet MS",sans-serif';x.textAlign='center';
   for(let i=0;i<4;i++){const p=(t*.45+i*.25)%1,nx=cx+(i%2?40:-40)+Math.sin(p*6+i)*5,ny=82-p*62;x.fillStyle='rgba(255,255,255,'+(1-p).toFixed(2)+')';x.fillText(i%2?'\u266b':'\u266a',nx,ny);}
   // LIVE badge
   x.fillStyle='rgba(0,0,0,.45)';x.beginPath();if(x.roundRect)x.roundRect(176,4,34,12,3);else x.rect(176,4,34,12);x.fill();
   if(ph<.6){x.fillStyle='#ff3b5c';x.beginPath();x.arc(183,10,2.8,0,7);x.fill();}
-  x.fillStyle='#fff';x.font='800 8px "Baloo 2","Trebuchet MS",sans-serif';x.textAlign='left';x.fillText('LIVE',188,13.2);
+  x.fillStyle='#fff';x.font='800 8px "CozyCoin","Baloo 2","Trebuchet MS",sans-serif';x.textAlign='left';x.fillText('LIVE',188,13.2);
   // meme caption
   const cap=['HANDS UP!','VIBE CHECK','THE FLOSS!','SPIN!','JUMP JUMP!'][mv],pop=1+.35*Math.max(0,1-mp*8);
-  x.save();x.translate(108,113);x.scale(pop,pop);x.font='800 14px "Baloo 2","Trebuchet MS",sans-serif';x.textAlign='center';x.lineJoin='round';
+  x.save();x.translate(108,113);x.scale(pop,pop);x.font='800 14px "CozyCoin","Baloo 2","Trebuchet MS",sans-serif';x.textAlign='center';x.lineJoin='round';
   x.lineWidth=3.2;x.strokeStyle='#1d1430';x.strokeText(cap,0,0);x.fillStyle='#fff';x.fillText(cap,0,0);x.restore();
 }
 function buildFurn(t,c){const g=new THREE.Group();const F=FURN[t];F.b(g,c||(F.cols?F.cols[0]:null));return g;}

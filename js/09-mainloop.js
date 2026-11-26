@@ -833,7 +833,7 @@ async function boot(){
     hemi=new THREE.HemisphereLight('#ffffff','#a8c69a',.75);scene.add(hemi);
     sun=new THREE.DirectionalLight('#fff4e0',.9);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);const sc=sun.shadow.camera;sc.left=-30;sc.right=30;sc.top=30;sc.bottom=-30;sc.near=1;sc.far=150;sun.shadow.bias=-.0006;sun.shadow.normalBias=.09;scene.add(sun);scene.add(sun.target);
     lamp=new THREE.PointLight('#ffe2b8',0,20,1.4);scene.add(lamp);
-    try{await Promise.race([document.fonts.load('800 40px "Baloo 2"'),new Promise(r=>setTimeout(r,2000))]);}catch(e){}
+    try{await Promise.race([document.fonts.load('800 40px "CozyCoin","Baloo 2"'),new Promise(r=>setTimeout(r,2000))]);}catch(e){}
     seasonSet();buildSky();buildCity();buildHome();buildMarket();buildPetShop();buildVet();buildFlowerShop();buildCafe();buildSalon();buildClothesShop();buildToyStore();buildBakery();buildIceCream();buildLibrary();buildSchool();buildClassrooms();buildFireStation();buildPizzeria();buildApts();buildClientRoom();buildVisit();buildBeach();buildTreePark();buildStudio();buildActors();buildTownfolk();buildPetShow();buildCars();buildBall();buildShoppers();
     S=freshState();setLoc('city');S=null;holCheck();   /* 🎃 decorations for today's real date */
     setupInput();applyGfx();addEventListener('resize',resize);
