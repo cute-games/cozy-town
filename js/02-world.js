@@ -1254,6 +1254,7 @@ function shell(L,g,W,D,H,wallMat,floorMat,ceil,into,gap){const T=into||L.g;
   const bb='#ffffff';box(g,W,.14,.06,bb,0,0,-D/2+.03,{ol:.02});box(g,W,.14,.06,bb,0,0,D/2-.03,{ol:.02});for(const z of wz)box(g,.06,.14,ws,bb,-W/2+.03,0,z,{ol:.02});box(g,.06,.14,D,bb,W/2-.03,0,0,{ol:.02});
   cyl(g,.035,.035,.2,'#b9a6cf',0,H-.2,0,{seg:6,ol:false});cyl(g,.2,.42,.2,'#ffc6d9',0,H-.4,0,{seg:16,ol:false});cyl(g,.44,.44,.04,'#e48aab',0,H-.42,0,{seg:16,ol:false});sph(g,.16,null,0,H-.42,0,{mat:GLOW,ol:false,ws:12,hs:8});   /* a pink lamp shade with a darker rim on a short stem (no dark outline: from below, near the door, it showed as black wedges; run 4, stage 3: white on the cream ceiling it read as a faint smudge) */
   col(L,-W/2-1,-D/2-1,W/2+1,-D/2);col(L,-W/2-1,D/2,W/2+1,D/2+1);col(L,-W/2-1,-D/2,-W/2,D/2);col(L,W/2,-D/2,W/2+1,D/2);
+  return ce;
 }
 function drawScore(){const L=LOC.city;if(!L||!L.score)return;const m=fbBoard()?{l:FB.sc[0],r:FB.sc[1]}:(typeof S!=='undefined'&&S&&S.match)||{l:0,r:0},{c,t}=L.score,x=c.getContext('2d'),W=c.width,H=c.height;
   x.fillStyle='#1f1638';x.fillRect(0,0,W,H);x.textAlign='center';x.textBaseline='middle';
@@ -1291,7 +1292,7 @@ function stairsIn(g,up,W,H,wm,both){const n=12,sd=4.2/n,sr=H/n,x0=-W/2,t=.3,a=Ma
 /* every floor of a house (yours or a friend's): its own group, baked on its own, with its doors (floor 0), windows and stairs; flag = the inter tag ('hdoor' / 'vdoor') */
 function houseFloors(L,n,W,D,H,wm,fm,wide,flag){const hw=W/2,hd=D/2,gx=wide?6.6:4.4,fls=[];L.ceiling=H;
   for(let k=0;k<n;k++){const g=new THREE.Group(),sh=new THREE.Group();g.add(sh);g.position.set(0,0,UPZ*k);const F={k,g,sh,grid:null};fls.push(F);
-    shell({ox:L.ox,oz:L.oz+UPZ*k,cols:L.cols},sh,W,D,H,wm,fm,'#f7eef2',g,n>1?UPG:0);
+    F.ceiling=shell({ox:L.ox,oz:L.oz+UPZ*k,cols:L.cols},sh,W,D,H,wm,fm,'#f7eef2',g,n>1?UPG:0);
     if(k===0){doorAt(sh,0,hd-.02,Math.PI,'#5fd4b0',false,true);doorAt(sh,gx,-hd+.02,0,'#5fd4b0',false,true);
       for(const x of wide?[-6.5,-3,1.5]:[-3,1.5])windowIn(sh,x,1.0,-hd+.02,0);
       for(const z of wide?[-3.2,2.6]:[0])windowIn(sh,hw-.02,1.0,z,-Math.PI/2,'#7fdcb5');for(const z of wide?[-3.2,2.6]:(n>1?[-3,3]:[0]))windowIn(sh,-hw+.02,1.0,z,Math.PI/2,'#7fdcb5');   /* 🪟 with stairs no west window at z 0 (run 4, item 25) */
