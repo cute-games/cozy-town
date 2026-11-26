@@ -13,7 +13,7 @@ function realMs(){return Date.now()+CLK.off;}
 const gameMs=()=>realMs()+CLK.sk;   /* 🌙 the one clock's own time: the real time plus every night skipped so far (pets and farm update, stage 1) */
 function clockAt(ms){const k=Math.floor((ms-CLK.EP)/CLK.DAY),r=(ms-CLK.EP-k*CLK.DAY)/1000;return{day:k+1,time:r<210?r/30:r<810?7+(r-210)*14/600:21+(r-810)/30};}
 function msAt(day,time){const r=time<7?time*30:time<21?210+(time-7)*600/14:810+(time-21)*30;return CLK.EP+(day-1)*CLK.DAY+r*1000;}
-const clockNow=()=>clockAt(gameMs());
+const clockNow=()=>LAMP_TEST?Object.assign(clockAt(gameMs()),{time:20}):clockAt(gameMs());   /* lamp test: always 20:00 */
 function clockSync(){if(!S)return false;const c=clockNow();HOUR=hourLen(c.time);if(c.day===S.day){if(Math.abs(c.time-S.time)>.1)hudT=1;S.time=c.time;return false;}   /* (run 4 finish: after a jump of the clock, a phone waking up, the chip is right at once, not half a second later) */const d0=S.day;S.day=c.day;S.time=c.time;dayJump(d0);return true;}   /* true = a new day began */
 function dayJump(d0){if(!S.garden)return;for(const st of S.garden)if(st&&st.seed&&st.g<1&&st.w>0&&st.w<S.day)st.g=1;}   /* 🌱 a plant watered on a day that has passed finished growing */
 function clockLoad(){for(const k in BUS_DAY)delete BUS_DAY[k];if(!S.intro){const c=clockNow();S.day=c.day;S.time=c.time;busWelcome();}else clockSync();}   /* a new player starts at the real time; an old save jumps once to the shared day */
@@ -73,7 +73,7 @@ function saveMigrate(){if((S.sv|0)>=SAVE_V)return;const o=(k,v)=>{if(!S[k]||type
 
 /* ---- saving: this device + your claude.ai account ---- */
 const LS='cozytown-save-1';
-let SAVEOFF=false;   /* 📦 true = this page writes no more saves: a moved-in game (or a new start) is on its way, the reload must not write the old game back */
+let SAVEOFF=LAMP_TEST;   /* 📦 true = this page writes no more saves: a moved-in game (or a new start) is on its way, the reload must not write the old game back */
 function readLocal(){try{return JSON.parse(localStorage.getItem(LS));}catch(e){return null;}}
 function snap(){let loc=CUR?CUR.id:'city',x=P.x,z=P.z,yaw=P.yaw;
   if(P.sit&&P.sit.bk)[x,z,yaw]=P.sit.bk;   /* in bed: save the spot beside the bed, not the pillow */
@@ -1978,6 +1978,8 @@ function lampPool(g,on){let m=g.userData.pool;
   m.visible=on;g.userData.halo.visible=on;g.userData.lampOn=on;}
 function lampTick(){
   if(!LITS.length)for(let i=0;i<LAMPS_N;i++){const l=new THREE.PointLight('#ffffff',0,4.3,2);l.visible=false;scene.add(l);LITS.push(l);}
+  if(LAMP_TEST&&!lampTick.went&&PLAYING&&CUR&&CUR.id!=='home'){lampTick.went=1;enter('home');}
+  if(LAMP_TEST&&!lampTick.demo&&CUR&&CUR.id==='home'&&typeof addHomeItem==='function'){lampTick.demo=1;let n=0;for(const [t,c,x,z] of [['floorlamp','#ff9ec4',3.2,-4.1],['starlamp','#8fd3ff',-4.6,1.5],['tablelamp','#7fdcb5',4.4,2.2],['ceillamp','#ffd45c',-1.5,-1.5]])addHomeItem({u:'zzlamptest'+(n++),t,c,x,z,r:0,on:1});for(const r of HOME_ITEMS.values())if(r.g.userData.pool!==undefined||(FURN[r.it.t]&&FURN[r.it.t].use==='lamp'))setLamp(r);toast('💡 Lamp test: 20:00, 4 test lamps added. Nothing here is saved.',5);}
   const inn=!!CUR&&CUR.type!=='out';for(const l of LITS)l.visible=inn;if(!inn)return;
   const nf=nightF(S?S.time:clockNow().time),k=.45+.55*nf,fl=CUR.fls&&CUR.fls.length>1?flOf(CUR,P.z):0,on=[];let any=0;
   for(const g of CUR.items?CUR.items.children:[])if(g.userData.pool&&++any&&g.userData.lampOn&&(g.userData.fl|0)===fl){g.userData.pool.material.opacity=.14+.38*nf;g.userData.pool.scale.setScalar(3.2);g.userData.halo.material.opacity=.12+.33*nf;g.userData.shadeM.material.emissiveIntensity=.6-.4*nf;g.userData.shadeM.getWorldPosition(_lv);g.userData.ld=(_lv.x-P.x)**2+(_lv.z-P.z)**2;g.userData.lp=_lv.clone();on.push(g);}
