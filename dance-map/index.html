@@ -27,10 +27,11 @@ canvas{display:block;width:100%}
  <label>Tap delay <input id="off" type="range" min="-200" max="200" value="0" step="5"><span id="offv">0 ms</span></label>
  <button id="undo">↶ Undo</button>
  <button id="clear">Clear</button>
+ <button id="draft">✨ Rough first map</button>
  <button id="save">💾 Download map</button>
 </header>
 <div id="info"><span>Time <b id="tm">0.00</b> s</span><span>Beat <b id="bt">0</b></span><span>Arrows <b id="cnt">0</b></span><span>Saved in this browser: <b id="sv">yes</b></span></div>
-<div id="wrap"><canvas id="cv" height="360"></canvas></div>
+<div id="wrap"><canvas id="cv" height="370"></canvas></div>
 <div id="help">
  <div><kbd>Space</kbd> play / pause · <kbd>R</kbd> record on/off</div>
  <div>While recording: tap <kbd>←</kbd> <kbd>↓</kbd> <kbd>↑</kbd> <kbd>→</kbd> in time (two keys together = double)</div>
@@ -39,6 +40,7 @@ canvas{display:block;width:100%}
  <div><kbd>,</kbd> <kbd>.</kbd> nudge selected 10 ms · <kbd>Q</kbd> snap selected (or all) to the grid</div>
  <div>Mouse wheel = scroll · <kbd>Ctrl</kbd>+wheel or <kbd>+</kbd>/<kbd>-</kbd> = zoom · <kbd>Ctrl</kbd>+<kbd>Z</kbd> undo</div>
  <div>Every change is saved in this browser by itself. Claude picks the map up from here.</div>
+ <div>✨ Rough first map: a computer guess from the hits and the melody. Melody up = ↑, down = ↓.</div>
  <div>Tap delay: if your taps land late, move it left until they sit on the beats.</div>
 </div>
 <div id="toast"></div>
@@ -50,7 +52,7 @@ const SONGS=[
  {id:'alley-cat-dumpster',n:"Alley Cat · Dumpster Divin'",src:'../dance-test/music/alley-cat-dumpster-divin.mp3',bpm:112.994,first:.27}];
 const LANES=['←','↓','↑','→'],LC=['--L','--D','--U','--R'].map(v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim());
 const $=id=>document.getElementById(id),cv=$('cv'),g=cv.getContext('2d');
-let AC=null,buf=null,peaks=null,flux=null,src=null,song=SONGS[0],notes=[],sel=new Set(),hist=[];
+let AC=null,buf=null,peaks=null,flux=null,AN=null,src=null,song=SONGS[0],notes=[],sel=new Set(),hist=[];
 let playing=false,startAt=0,startPos=0,pos=0,rate=1,recOn=false,view={t0:0,pps:160},drag=null;
 const KEY='cozy-dance-map:';
 function toast(t){const e=$('toast');e.textContent=t;e.style.opacity=1;clearTimeout(toast.h);toast.h=setTimeout(()=>e.style.opacity=0,1400);}
@@ -65,7 +67,8 @@ function mapOut(){return {song:song.id,src:song.src.replace('../dance-test/','')
 async function loadSong(s){
   stop();song=s;notes=[];sel.clear();hist=[];view.t0=0;
   try{const m=JSON.parse(localStorage.getItem(KEY+s.id)||'null');if(m&&m.notes)notes=m.notes.map(([t,l])=>({t,l}));}catch(e){}
-  changed();buf=null;draw();
+  changed();buf=null;AN=null;
+  fetch('analysis/'+s.id+'.json').then(r=>r.ok?r.json():null).then(j=>{if(song===s)AN=j;}).catch(()=>{});
   AC=AC||new (window.AudioContext||window.webkitAudioContext)();
   const ab=await (await fetch(s.src)).arrayBuffer();buf=await AC.decodeAudioData(ab);
   /* waveform peaks + a simple "loudness rise" line (spectral flux stand-in) to help spot hits */
@@ -79,21 +82,31 @@ function play(){if(!buf)return;if(AC.state==='suspended')AC.resume();src=AC.crea
 function stop(){if(src){try{src.onended=null;src.stop();}catch(e){}src=null;}if(playing)pos=Math.min(now(),buf?buf.duration:0);playing=false;$('play').textContent='▶ Play';}
 function seek(t){const was=playing;stop();pos=Math.max(0,Math.min(t,buf?buf.duration:0));if(was)play();}
 /* layout */
-const TOPH=110,LANEH=56;
+const TOPH=150,LANEH=50;
 function x2t(x){return view.t0+x/view.pps;}function t2x(t){return (t-view.t0)*view.pps;}
 function laneY(l){return TOPH+10+l*LANEH;}
 function draw(){
-  const W=cv.width=cv.clientWidth*devicePixelRatio,H=cv.height=360*devicePixelRatio;g.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  const W=cv.width=cv.clientWidth*devicePixelRatio,H=cv.height=370*devicePixelRatio;g.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
   const w=W/devicePixelRatio,t=now();
   if(playing){if(t2x(t)>w*.75)view.t0=t-w*.25/view.pps;}
-  g.clearRect(0,0,w,360);
+  g.clearRect(0,0,w,370);
   /* beat grid */
   const bl=beatLen(),b0=Math.floor((view.t0-song.first)/bl),b1=Math.ceil((x2t(w)-song.first)/bl);
-  for(let b=b0;b<=b1;b++){const x=t2x(song.first+b*bl),bar=((b%4)+4)%4===0;g.fillStyle=bar?'#6a5a94':'#3d3358';g.fillRect(x,0,bar?2:1,360);
+  for(let b=b0;b<=b1;b++){const x=t2x(song.first+b*bl),bar=((b%4)+4)%4===0;g.fillStyle=bar?'#6a5a94':'#3d3358';g.fillRect(x,0,bar?2:1,370);
     if(bar){g.fillStyle='#b9a9d6';g.font='11px system-ui';g.fillText('bar '+(b/4+1),x+4,12);}
-    const d=+$('snap').value;if(d>1&&view.pps*bl/d>14)for(let k=1;k<d;k++){g.fillStyle='#2f2848';g.fillRect(t2x(song.first+(b+k/d)*bl),TOPH,1,360-TOPH);}}
+    const d=+$('snap').value;if(d>1&&view.pps*bl/d>14)for(let k=1;k<d;k++){g.fillStyle='#2f2848';g.fillRect(t2x(song.first+(b+k/d)*bl),TOPH,1,370-TOPH);}}
   /* waveform */
-  if(peaks){const mid=TOPH/2+6;g.fillStyle='#8f7fc0';for(let x=0;x<w;x++){const i=Math.floor(x2t(x)*200);if(i<0||i>=peaks.length)continue;const a=peaks[i]*TOPH*.42;g.fillRect(x,mid-a,1,a*2);}
+  if(AN){/* three sound layers: bass (red), middle (yellow), high (blue); dots = sharp hits; white line = melody */
+    const rows=[['high','#7cc8ff',18],['mid','#ffd45c',58],['low','#ff7a8a',98]],rh=36;
+    for(const [k,c,y0] of rows){const e=AN.env[k];g.fillStyle=c+'55';for(let x=0;x<w;x++){const i=Math.floor(x2t(x)*AN.fps);if(i<0||i>=e.length)continue;const a=e[i]/99*rh;g.fillRect(x,y0+rh-a,1,a);}}
+    const bc=['#ff7a8a','#ffd45c','#7cc8ff'],by=[134,94,54];
+    for(const [t,b,st] of AN.onsets){const x=t2x(t);if(x<0||x>w)continue;g.beginPath();g.arc(x,by[b]-st*14,2+st*4,0,7);g.fillStyle=bc[b];g.fill();}
+    const m=AN.melody,mf=AN.melodyFps;let ps=[];for(const v of m)if(v!=null)ps.push(v);const lo=Math.min(...ps),hi=Math.max(...ps);
+    g.strokeStyle='#ffffff';g.lineWidth=2;g.beginPath();let pen=false;
+    for(let x=0;x<w;x+=2){const i=Math.floor(x2t(x)*mf),v=m[i];if(v==null||i<0){pen=false;continue;}const y=140-(v-lo)/Math.max(1,hi-lo)*125;pen?g.lineTo(x,y):g.moveTo(x,y);pen=true;}
+    g.stroke();
+    g.font='11px system-ui';g.fillStyle='#7cc8ff';g.fillText('high',w-34,30);g.fillStyle='#ffd45c';g.fillText('middle',w-46,70);g.fillStyle='#ff7a8a';g.fillText('bass',w-34,110);g.fillStyle='#fff';g.fillText('— melody',w-62,146);}
+  else if(peaks){const mid=TOPH/2+6;g.fillStyle='#8f7fc0';for(let x=0;x<w;x++){const i=Math.floor(x2t(x)*200);if(i<0||i>=peaks.length)continue;const a=peaks[i]*TOPH*.42;g.fillRect(x,mid-a,1,a*2);}
     g.fillStyle='#ffd45c';for(let x=0;x<w;x++){const i=Math.floor(x2t(x)*200);if(i<0||i>=flux.length)continue;const a=flux[i]*30;if(a>3)g.fillRect(x,TOPH-a,1,a);}}
   else{g.fillStyle='#b9a9d6';g.font='15px system-ui';g.fillText('Loading song…',14,60);}
   /* lanes */
@@ -103,7 +116,7 @@ function draw(){
     g.beginPath();g.arc(x,y,15,0,7);g.fillStyle=LC[n.l];g.fill();g.lineWidth=sel.has(n)?4:2;g.strokeStyle=sel.has(n)?'#fff':'#2b2340';g.stroke();
     g.fillStyle='#2b2340';g.font='bold 17px system-ui';g.textAlign='center';g.fillText(LANES[n.l],x,y+6);g.textAlign='left';}
   /* playhead */
-  const px=t2x(t);g.fillStyle=recOn?'#ff4d6d':'#fff';g.fillRect(px-1,0,2,360);
+  const px=t2x(t);g.fillStyle=recOn?'#ff4d6d':'#fff';g.fillRect(px-1,0,2,370);
   $('tm').textContent=t.toFixed(2);$('bt').textContent=((t-song.first)/bl+1).toFixed(2);
   requestAnimationFrame(draw);
 }
@@ -149,6 +162,7 @@ $('speed').onchange=e=>{const was=playing;stop();rate=+e.target.value;if(was)pla
 $('off').oninput=e=>$('offv').textContent=e.target.value+' ms';
 $('undo').onclick=undo;
 $('clear').onclick=()=>{if(!notes.length)return;push();notes=[];sel.clear();changed();toast('Cleared (Ctrl+Z brings it back)');};
+$('draft').onclick=()=>{if(!AN){toast('Still loading the analysis');return;}if(notes.length&&!confirm('Replace your arrows with a rough first map? (Ctrl+Z brings yours back)'))return;push();notes=AN.draft.map(([t,l])=>({t,l}));sel.clear();changed();toast('Rough map: '+notes.length+' arrows. Fix what feels wrong.');};
 $('save').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(mapOut(),null,1)],{type:'application/json'}));a.download=song.id+'.json';a.click();};
 for(const s of SONGS){const o=document.createElement('option');o.value=s.id;o.textContent=s.n;$('song').appendChild(o);}
 $('song').onchange=e=>loadSong(SONGS.find(s=>s.id===e.target.value));
