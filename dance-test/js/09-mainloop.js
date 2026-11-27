@@ -742,7 +742,7 @@ function dnBegin(s,a,left){if(DANCE.res)dnLeave();const f=dnFloor();if(!f){dnCan
   if(DANCE.beat)dnLoadTrack(DANCE.profile,s);
   DANCE.t=(realMs()-s)/1000;DANCE.shared=DANCE.t;DANCE.sc=0;DANCE.osc=0;DANCE.bar=.5;DANCE.mvT=0;DANCE.mvK=-1;DANCE.lastHit=-1;DANCE.ended=0;DANCE.gone=0;DANCE.floor=f;DANCE.ask=null;
   const L=f.L,W=L.W||HOMEW,D=L.D||HOMED,cx=L.ox,cz=L.oz+UPZ*f.fl;let dx=cx-f.x,dz=cz-f.z;const dl=Math.hypot(dx,dz);if(dl<1){dx=0;dz=1;}else{dx/=dl;dz/=dl;}
-  {const overlay=!!DANCE.style,cd=innerWidth>innerHeight?(visH()<=500?(overlay?4.1:3.5):(overlay?5:4.4)):5.6,sd=overlay?0:(left?-1:1)*.6;   /* (an upright phone sees a narrow slice: from 5.6 m both dancers fit; run 4, stage 3) */DANCE.cam={x:clamp(f.x+dx*cd+dz*sd,cx-W+.7,cx+W-.7),z:clamp(f.z+dz*cd-dx*sd,cz-D+.7,cz+D-.7),dx,dz};}   /* (run 4, stage 3: nearer on a short sideways screen; the two players' views 1.2 m apart, so after the round they never stand inside each other) */
+  {const overlay=!!DANCE.style,cd=innerWidth>innerHeight?(visH()<=500?(overlay?3.4:3.5):(overlay?(innerWidth/innerHeight>1.6?3.3:3.7):4.4)):5.6,sd=overlay?0:(left?-1:1)*.6;   /* (an upright phone sees a narrow slice: from 5.6 m both dancers fit; run 4, stage 3) */DANCE.cam={x:clamp(f.x+dx*cd+dz*sd,cx-W+.7,cx+W-.7),z:clamp(f.z+dz*cd-dx*sd,cz-D+.7,cz+D-.7),dx,dz};}   /* (run 4, stage 3: nearer on a short sideways screen; the two players' views 1.2 m apart, so after the round they never stand inside each other) */
   if(P.sit)standUp();if(DECO.on)decoEnd();closePanel();P.ride={kind:'dance'};P.jy=0;P.vy=0;document.body.classList.add('dancing');
   const me=makePerson(lookToPerson(packLook()));bakePerson(me);scene.add(me.root);DANCE.me=me;DANCE.watchFloor=null;DANCE.watchCam=null;dnSpots(f,DANCE.style,DANCE.r);dnHud(true);if(DANCE.profile)dnCountSound();else SFX.ding();}
 /* A small shared projector paints the same soft mirror flecks onto the
@@ -1984,7 +1984,7 @@ function dnLaneSide(g,F,L,side,t,now,calm){
     }
     const edgeGap=F.up?y-F.bandTop:F.bandBottom-y;
     const fade=until< -DN_WIN?(1-dnEase((f*.5-edgeGap)/f)*.78):1;
-    const alpha=fade*(1-.11*clamp(until/F.lead,0,1));
+    const alpha=fade*(1-.11*clamp(until/F.lead,0,1))*(until>0?.62+.38*clamp(1-until/.4,0,1):1);   /* (27 Nov, owner) a falling arrow is see-through until it reaches its target */
     g.globalAlpha=alpha*(side?.95:1)*dim;
     g.drawImage(F.art[n.d],x-f/2,y-f/2,f,f);
   }
