@@ -480,3 +480,4 @@ body.shoot #moveBtns,body.shoot #tasks,body.shoot #pad,body.shoot #job,body.shoo
 #socCall .sc-b{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
 #socCall .btn{font-size:17px;min-height:46px;padding:8px 14px}
 #socCall.on{left:auto;right:calc(env(safe-area-inset-right,0px) + 10px);transform:none;width:auto;max-width:min(300px,72vw);padding:8px 12px 10px}#socCall.on .sc-m{font-size:16px;margin-bottom:6px}   /* talking: a small card under the top buttons, so the town stays in view */
+/* 💃 27 Nov (owner): no white card behind the dance score: only the tug bar and the two scores, floating on the scene */#dnTop{background:none!important;border-color:transparent!important;box-shadow:none!important}#dnTop .em,#dnTop b{display:none!important}#dnTop i[id$="S"]{color:#fff;font-size:24px;font-style:normal;font-weight:900;text-shadow:0 2px 0 #3d2c5e,0 0 6px #3d2c5e,0 0 2px #3d2c5e}
