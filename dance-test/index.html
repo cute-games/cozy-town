@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Cozy Town</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Cozy Town">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#ffd6e6">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Baloo+2:wght@500;700;800&family=Roboto+Slab:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style-1.css?v=86ea96fe33" data-cozy="css/style-1.css">
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="touch"></div>
+<div id="hud" hidden>
+  <div id="left">
+    <div id="stats">
+      <div class="chip" title="Coins"><span class="e">🪙</span><b id="coins">0</b></div>
+      <div class="chip" title="Tummy"><span class="e">🍎</span><span class="bar"><i id="food"></i></span></div>
+      <div class="chip" title="Time"><span class="e" id="sunIc">☀️</span><b id="clock">8:00</b><span class="day" id="dayN">Mon</span></div>
+    </div>
+    <div id="tasks" hidden></div>
+    <div id="nav" hidden><span id="navArrow">⬆️</span><b id="navTxt"></b><button class="btn x" id="navX" aria-label="Stop showing the way">✕</button></div>
+    <div id="job" hidden><span id="mmWrap"><button id="mmBtn" aria-label="Your map. Tap to open the big map"><canvas id="mm" width="264" height="264"></canvas></button><span id="mmZoom"><button id="mmOut" aria-label="Show more of the map">−</button><button id="mmIn" aria-label="Show less of the map">+</button></span></span><div id="jobTxt" role="button" tabindex="0"></div></div>
+    <div id="pad" aria-label="Notepad"><canvas id="padC"></canvas><span id="padH">✏️ Write here!</span><span id="padN">1/1</span></div>
+    <div id="dcard" hidden role="button" tabindex="0" aria-label="What your client wants"></div>
+  </div>
+  <div id="topbtns">
+    <button class="btn ib white" id="bChat" aria-label="Talk to your friends" hidden>💬</button>
+    <button class="btn ib white" id="bPhone" aria-label="Phone">📱<span class="badge" id="phBadge" hidden>1</span></button>
+    <button class="btn ib white" id="bBag" aria-label="Bag">🎒</button>
+    <button class="btn ib butter" id="bDeco" aria-label="Decorate" hidden>🛋️</button>
+    <button class="btn ib white" id="bMenu" aria-label="Settings">⚙️</button>
+  </div>
+  <div id="cross"></div>
+  <div id="mlHint" hidden>🖱️ Click to look around · Esc gives the mouse back</div>
+  <div id="joy"><div id="knob"></div></div>
+  <div id="moveBtns"><div id="swMeter" hidden aria-hidden="true"><i id="swFill"></i></div><button class="btn rnd" id="bRun" aria-label="Run" aria-pressed="false">🏃</button><button class="btn mint rnd" id="bJump" aria-label="Jump">⬆️</button></div>
+  <div id="actWrap" hidden><div id="actLbl"></div><button class="btn rnd" id="act" aria-label="Use"></button></div>
+  <div id="bar" hidden></div>
+  <div id="ptbar" hidden></div><div id="ptvf" hidden aria-hidden="true"></div>
+  <div id="rvStars" hidden aria-hidden="true"><b><span class="bg">★</span><span class="fg">★</span></b><b><span class="bg">★</span><span class="fg">★</span></b><b><span class="bg">★</span><span class="fg">★</span></b></div>
+  <div id="dtut" hidden role="dialog" aria-label="How the designer job works"><div id="dtCard"><div id="dtPic"></div><div id="dtCap"></div><div id="dtDots"></div><div class="row"><button class="btn white" id="dtSkip">Skip</button><button class="btn mint" id="dtNext">Next ▶</button></div></div></div>
+  
+  <div id="note" hidden role="alert"><span class="ni">🍕</span><div><b id="noteT"></b><span id="noteX"></span><small>Tap to close</small></div></div>
+</div>
+<div id="tut" hidden><div id="tutHole"></div><div id="tutCard" role="dialog" aria-label="Job tips"><div class="tutHd"><span class="tutAv">👨‍🍳</span><b id="tutT"></b></div><img id="tutPic" alt="" hidden><p id="tutX"></p><div class="tutRow"><button class="btn white" id="tutSkip">Skip</button><button class="btn mint" id="tutNext">Next ›</button></div><div id="tutDots"></div></div></div>
+<div id="panel" hidden><div class="card" id="card"></div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="title">
+  <h1 class="logo" aria-label="Cozy Town"><span style="--c:#ff7aa8;--r:-6deg;--i:0">C</span><span style="--c:#ffd45c;--r:4deg;--i:1">o</span><span style="--c:#5fd4b0;--r:-3deg;--i:2">z</span><span style="--c:#7cc8ff;--r:5deg;--i:3">y</span><span class="sp" style="--i:4;--r:0deg"></span><span style="--c:#b79cff;--r:-4deg;--i:5">T</span><span style="--c:#ff8a6b;--r:3deg;--i:6">o</span><span style="--c:#ff7aa8;--r:-5deg;--i:7">w</span><span style="--c:#ffd45c;--r:4deg;--i:8">n</span></h1>
+  <p class="tag">Your own little life in the city</p>
+  <div class="menu">
+    <button class="btn mint big" id="tPlay" disabled>Loading…</button>
+    <div id="tRow"><button class="btn white" id="tNew" type="button">What's new</button><button class="btn white" id="tSet">Settings</button></div>
+  </div><p id="tCred">Designed by <b>Izabele</b> 💗</p>
+</div>
+<div id="fade"></div><div id="book" role="dialog" aria-modal="true" aria-label="What's new in Cozy Town"><div class="bk-card"><div class="bk-head"><span class="bk-lbl">📖 What's new</span><span class="bk-num" id="bkNum"></span><button class="btn x" id="bkX" type="button" aria-label="Close">✕</button></div><div class="bk-page" id="bkPage"></div><div class="bk-foot"><button class="btn white bk-nav" id="bkPrev" type="button" aria-label="Back">◀<span class="bk-w">&nbsp;Back</span></button><div class="bk-dots" id="bkDots" aria-hidden="true"></div><button class="btn mint bk-nav" id="bkNext" type="button" aria-label="Next"><span class="bk-w" id="bkNextW">Next&nbsp;</span>▶</button></div></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/lib-1.js?v=24a1fd90a9" data-cozy="js/lib-1.js"></script>
+<script src="js/lib-2.js?v=274e3b01a7" data-cozy="js/lib-2.js"></script>
+<script>/* 🌐 Cozy Town on the open web: play together through Firebase (never used inside Claude) */
+(function(){
+  const CFG={"databaseURL": "https://cozy-town-264d2-default-rtdb.europe-west1.firebasedatabase.app"},CODE='cozy-town';
+  function rid(){const a=new Uint8Array(10);crypto.getRandomValues(a);return'p'+Array.from(a,b=>(b%36).toString(36)).join('');}
+  function clean(o){return JSON.parse(JSON.stringify(o,(k,v)=>typeof v==='number'&&!isFinite(v)?null:v));}
+  let dbP=null;
+  function getDb(){if(!dbP)dbP=new Promise((ok,no)=>{try{const fb=window.firebase;if(!fb||!fb.database)throw new Error('no firebase');const app=fb.apps&&fb.apps.length?fb.app():fb.initializeApp(CFG);ok(fb.database(app));}catch(e){dbP=null;no(e);}});return dbP;}
+  const inClaude=!!(window.claude&&typeof window.claude.use==='function');
+  window.WEBNET={on:!!CFG&&!inClaude};
+  window.WEBROOM=(CFG&&!inClaude)?async()=>{const db=await getDb();return{join:async w=>group(db,w)};}:null;
+  function group(db,world){
+    const fb=window.firebase,TS=fb.database.ServerValue.TIMESTAMP,me=rid();
+    const base=db.ref('worlds/'+CODE+'/'+String(world).replace(/[.#$\[\]\/]/g,'_')+'/peers'),mine=base.child(me);
+    let pres={},cb=null,lost=null,prev=new Set(),off=0,vals={},dead=false;
+    const offRef=db.ref('.info/serverTimeOffset'),conRef=db.ref('.info/connected');
+    const onOff=s=>{off=+s.val()||0;};offRef.on('value',onOff);
+    let sent=null;
+    /* first time (and after a reconnect) send everything; after that only what changed, so a big house layout isn't re-sent on every step */
+    const full=()=>{if(!Object.keys(pres).length)return Promise.resolve();const c=clean(pres);sent=JSON.parse(JSON.stringify(c));return mine.set(Object.assign(c,{t:TS}));};
+    const put=()=>{if(!sent)return full();const c=clean(pres),d={};let n=0;
+      for(const k in c){if(JSON.stringify(c[k])!==JSON.stringify(sent[k])){d[k]=c[k];n++;}}
+      for(const k in sent)if(!(k in c)){d[k]=null;n++;}
+      if(!n)return Promise.resolve();sent=JSON.parse(JSON.stringify(c));d.t=TS;return mine.update(d);};
+    const onCon=s=>{if(s.val()===true&&!dead){mine.onDisconnect().remove();full().catch(()=>{});}};conRef.on('value',onCon);
+    const emit=()=>{if(!cb||dead)return;const now=Date.now()+off,peers=[],ids=new Set();
+      for(const id in vals){const v=vals[id];if(!v||typeof v!=='object')continue;if(id!==me&&Number.isFinite(v.t)&&now-v.t>75000)continue;ids.add(id);peers.push({peer:id,presence:v,isMe:id===me,sameTab:id===me});}
+      const left=[];for(const id of prev)if(!ids.has(id))left.push({peer:id});prev=ids;try{cb({peers,left});}catch(e){console.warn(e);}};
+    const onVal=s=>{vals=s.val()||{};emit();};
+    base.on('value',onVal,()=>{if(!dead&&lost){dead=true;lost();}});
+    const hb=setInterval(()=>{if(dead)return;if(Object.keys(pres).length)mine.update({t:TS}).catch(()=>{});emit();},20000);
+    const bye=()=>{try{mine.remove();}catch(e){}};addEventListener('pagehide',bye);
+    return{onPeers(f,l){cb=f;lost=l;setTimeout(emit,0);return()=>{dead=true;cb=null;clearInterval(hb);base.off('value',onVal);conRef.off('value',onCon);offRef.off('value',onOff);removeEventListener('pagehide',bye);bye();};},
+      presence(st){Object.assign(pres,st);return put();}};}
+})();
+</script>
+<script>
+'use strict';
+const COZY_BUILD=2026112720;   /* ✨ version stamp: make this number BIGGER on every update (date + a counter: 2026100901, 2026100902…). The Home Screen app compares it with the file online and updates itself */
+/* files: ce854f6184 (written by tools/split/split.py) */
+</script>
+<script src="js/00-core.js?v=f641c42303" data-cozy="js/00-core.js"></script>
+<script src="js/01-models.js?v=7ebf89daaf" data-cozy="js/01-models.js"></script>
+<script src="js/02-world.js?v=656268573e" data-cozy="js/02-world.js"></script>
+<script src="js/03-game.js?v=8eadf29b9e" data-cozy="js/03-game.js"></script>
+<script src="js/04-panels.js?v=6b0ccbe0aa" data-cozy="js/04-panels.js"></script>
+<script src="js/05-map.js?v=6e81a56009" data-cozy="js/05-map.js"></script>
+<script src="js/06-jobs.js?v=a844822963" data-cozy="js/06-jobs.js"></script>
+<script src="js/07-designer.js?v=2b90381367" data-cozy="js/07-designer.js"></script>
+<script src="js/08-hud.js?v=fa7bbacca2" data-cozy="js/08-hud.js"></script>
+<script src="js/09-mainloop.js?v=4a3ca6c0a2" data-cozy="js/09-mainloop.js"></script>
+</body>
+</html>

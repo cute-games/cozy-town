@@ -1016,16 +1016,18 @@ function busTick(dt,p){const R=BUS.ride,t=S.time;
     f.scale.set(1+Math.sin(tt*9)*.08,1+Math.sin(tt*13+1)*.16,1+Math.cos(tt*11)*.08);f.rotation.y=Math.sin(tt*2)*.4;
     if(SET.sound&&AC&&Math.hypot(P.x-LOC.beach.ox-CAMP.fx,P.z-LOC.beach.oz-CAMP.fz)<7&&(BUS.ck-=dt)<=0){BUS.ck=rand(.12,.7);tone(rand(1400,3200),.022,'square',.012);}}}   /* crackle */
   if(BUS.tent&&!zzIn()){BUS.tent=0;if(CUR.id==='beach'&&t>=7&&t<7.5)setTimeout(()=>{if(!PLAYING||CUR.id!=='beach')return;const n=busNext('beach','town');
-    toast(n&&n.d===S.day?'🚌 The bus to town comes today! It leaves at '+busHM(n.s.l)+' 🏘️':'🚌 No bus today. The bus home leaves '+busWhen(n,1)+'. Enjoy the beach! 🏖️',4.6,1);},4300);}
+    rosieBus(n&&n.d===S.day?'🚌 The bus to town comes today! It leaves at '+busHM(n.s.l)+' 🏘️':'🚌 No bus today. The bus home leaves '+busWhen(n,1)+'. Enjoy the beach! 🏖️');},4300);}
   if(p==='beach'&&HOST.cur){const q=HOST.cur;hostAnswer(false,true);toast('🔔 '+q.nm+' knocked at your door, but you are at the beach! 🏖️',3.6);}
   const calm=S.intro&&!UI.open&&!fading&&!CUT&&!TUT&&!DTUT,busy=$('toast').classList.contains('show');
   if(!(S.beach&&S.beach.bus)&&p==='park'&&calm&&!busy&&!(NAV&&NAV.id==='home')){BUS.nt+=dt;if(BUS.nt>5){bch().bus=1;change();SFX.pop();   /* (your house first: while the pink arrow shows the way home, the bus waits) */
-    toast(busWB(S.day)&&t<S.wb[2]-.5?'🎉 Good news! A free Welcome Bus waits at the park until '+busHM(S.wb[2])+'. Hop on and visit the beach! 🏖️':'🚌 New! A cozy Beach Bus stops at the park 3 days a week.'+(busR1()?'':' Your first ride is free! 🎟️')+' Find the 🚌 bus stop on your 🗺️ map!',5.5,1);}}else BUS.nt=0;
+    rosieBus(busWB(S.day)&&t<S.wb[2]-.5?'🎉 Good news! A free Welcome Bus waits at the park until '+busHM(S.wb[2])+'. Hop on and visit the beach! 🏖️':'🚌 New! A cozy Beach Bus stops at the park 3 days a week.'+(busR1()?'':' Your first ride is free! 🎟️')+' Find the 🚌 bus stop on your 🗺️ map!');}}else BUS.nt=0;
   if(p==='park'&&!busR1()&&S.beach&&S.beach.bus&&calm&&!busy&&!BUS.ride&&!BUS.told[S.day+':r1']&&busNearStop('park')){const c=busCur('park');   /* 🎟️ at the bus stop: your first ride is free (the Welcome Bus has its own words) */
-    if(!(c&&c.s.wb)){BUS.told[S.day+':r1']=1;toast('🎟️ Your first ride to the beach is free! '+(busReady('park')?'Hop on! 🚌':'The bus comes '+busWhen(busNext('park','beach'))+' 🚌'),4.6,1);}}
+    if(!(c&&c.s.wb)){BUS.told[S.day+':r1']=1;rosieBus('🎟️ Your first ride to the beach is free! '+(busReady('park')?'Hop on! 🚌':'The bus comes '+busWhen(busNext('park','beach'))+' 🚌'));}}
   if(p&&!BUS.ride&&calm)busNews(p,t,busy);
   BUS.tipT-=dt;if(BUS.tipT<=0){BUS.tipT=.25;busTipUpd(p);}}
-function busNews(p,t,busy){const d=S.day,say=(k,txt,w,snd)=>{const key=d+':'+k;if(BUS.told[key]||(busy&&t<w))return;BUS.told[key]=1;if(snd)snd();toast(txt,4.6,1);};
+/* 📱 bus news comes as a text from Rosie (27 Nov, owner): no big banner over the view, the phone button shows a new message */
+function rosieBus(t){addMsg('ro','ro',t);}
+function busNews(p,t,busy){const d=S.day,say=(k,txt,w,snd)=>{const key=d+':'+k;if(BUS.told[key]||(busy&&t<w))return;BUS.told[key]=1;if(snd)snd();rosieBus(txt);};
   for(const s of busSess(d))if(s.go&&t>=s.a&&t<s.a+.2&&BUSP[s.p].loc===CUR.id&&!(BUS.arr&&BUS.arr.d===d&&Math.abs(BUS.arr.t-t)<.3)&&!(s.wb&&NAV&&NAV.id==='home'))   /* the bus is here (not the one you just came on; a new player finds the house first) */
     say('a'+s.p+s.a,s.p==='park'?(s.wb?'🎉 The Welcome Bus is at the park! Hop on for a free ride to the beach 🏖️':'🚌 Beep beep! The Beach Bus is at the park! It leaves at '+busHM(s.l)+' 🏖️'):'🚌 Beep beep! The bus to town is here! It leaves at '+busHM(s.l)+' 🏘️',s.wb?s.l:s.a+.1,()=>{SFX.honk();if(s.wb)bch().bus=1;});   /* (the Welcome Bus message is the news too) */
   if(p!=='beach'||busArr(d)===undefined)return;
@@ -1036,9 +1038,10 @@ function busNews(p,t,busy){const d=S.day,say=(k,txt,w,snd)=>{const key=d+':'+k;i
 function busNearStop(p){if(p==='park')return Math.hypot(P.x+14.3,P.z-4.5)<16;const L=LOC.beach;return P.x-L.ox<-21&&Math.abs(P.z-L.oz)<9;}
 function busTipUpd(p){let el=$('busTip'),t='',hot=false;const R=BUS.ride;
   if(R&&!R.go){t=R.s.wb?'🚌 Off we go!':(R.to==='beach'?'🚌 Off to the beach in ':'🚌 Off home in ')+busMMSS(R.s);hot=!R.s.wb&&busSecs(R.s)<12;}
-  else if(p&&!R&&!zzIn()&&S.intro){const c=busCur(p),near=busNearStop(p);
+  else if(p&&!R&&!zzIn()&&S.intro){const c=busCur(p),near=busNearStop(p);if(!near)BUS.far=1;   /* (Rosie's next-bus text only once you walked to the stop, not when a game loads there) */
     if(c&&c.s.go&&c.u===0&&(near||p==='beach')){t=c.s.wb?(p==='park'?'🎉 Free bus! Hop on!':'🚌 Free bus to town until '+busHM(c.s.l)):c.s.dd?'💛 Free bus home: '+busMMSS(c.s):(p==='park'?'🚌 Bus to the beach: ':'🚌 Bus to town: ')+busMMSS(c.s);hot=!c.s.wb&&busSecs(c.s)<15;}   /* (at the beach you just came on the Welcome Bus: not "hop on!" but until when it goes back, like Driver Dot says) */
-    else if(near){if(c&&c.u<0&&c.s.go)t='🚌 The bus is coming!';else{const n=p==='park'?busNext('park','beach'):busNext('beach','town');t=(p==='park'?'🚌 Next bus: ':'🚌 Bus home: ')+(n?(n.d===S.day?'':WDAYS[wdIdx(n.d)].slice(0,3)+' ')+busHM(p==='park'?n.s.a:n.s.l):'soon');}}}
+    else if(near){if(c&&c.u<0&&c.s.go)t='🚌 The bus is coming!';else if(BUS.far&&!BUS.told[S.day+':nx'+p]){BUS.told[S.day+':nx'+p]=1;const n=p==='park'?busNext('park','beach'):busNext('beach','town');   /* (27 Nov, owner: no "Next bus" text on screen; at the stop Rosie texts it once a day) */
+      rosieBus((p==='park'?'🚌 Next bus to the beach: ':'🚌 Next bus home: ')+(n?(n.d===S.day?'today ':WDAYS[wdIdx(n.d)]+' ')+busHM(p==='park'?n.s.a:n.s.l):'soon')+' 💛');}}}
   if(!el){if(!t)return;el=document.createElement('div');el.id='busTip';el.setAttribute('role','status');el.hidden=true;$('stats').after(el);}
   if(el.textContent!==t)el.textContent=t;el.classList.toggle('hot',hot);if(el.hidden!==!t)el.hidden=!t;}
 
@@ -1245,14 +1248,15 @@ function shaftAt(g,w,h,d,x,y,z,wallM,capC,top){const b=new THREE.BoxGeometry(w,h
   for(let i=0;i<ps.count;i++){const t=ps.getY(i)/h+.5,k=top?1-.2*t:.55+.45*t;C[i*3]=C[i*3+1]=C[i*3+2]=k;}b.setAttribute('color',new THREE.BufferAttribute(C,3));
   const sm=toon({side:THREE.BackSide,vertexColors:true});sm.color=wallM.color;const m=new THREE.Mesh(b,sm);m.position.set(x,y,z);m.userData.keep=1;g.add(m);
   const c=new THREE.Mesh(new THREE.PlaneGeometry(w,d),new THREE.MeshBasicMaterial({color:capC}));c.rotation.x=top?Math.PI/2:-Math.PI/2;c.position.set(x,y+(top?h/2:-h/2),z);c.userData.keep=1;g.add(c);return m;}
+const CEILS=[],HOMEISH=id=>/^(home|apt\d|client|visit)$/.test(id);
 function shell(L,g,W,D,H,wallMat,floorMat,ceil,into,gap){const T=into||L.g;
   const fl=new THREE.Mesh(new THREE.PlaneGeometry(W,D),floorMat);fl.rotation.x=-Math.PI/2;fl.receiveShadow=true;fl.userData.keep=1;T.add(fl);
-  const ce=new THREE.Mesh(new THREE.PlaneGeometry(W+.4,D+.4),new THREE.MeshBasicMaterial({color:ceil}));ce.rotation.x=Math.PI/2;ce.position.y=H;ce.userData.keep=1;T.add(ce);   /* (20 cm into the walls all round: edge to edge with the walls' faces, the seam showed a dotted line of gaps; run 4, stage 3) */
+  const ce=new THREE.Mesh(new THREE.PlaneGeometry(W+.4,D+.4),new THREE.MeshBasicMaterial({color:ceil}));ce.rotation.x=Math.PI/2;ce.position.y=H;ce.userData.keep=1;T.add(ce);ce.userData.c0=ce.material.color.clone();CEILS.push(ce);   /* 💡 (26 Nov) CEILS: lampTick darkens ceilings at night in homes */   /* (20 cm into the walls all round: edge to edge with the walls' faces, the seam showed a dotted line of gaps; run 4, stage 3) */
   /* gap: a doorway (half its width) in the middle of the west wall, to the big house's stairs */
   const t=.3,ws=gap?D/2-gap:D,wz=gap?[-(gap+ws/2),gap+ws/2]:[0];box(g,W+2*t,H,t,null,0,0,-D/2-t/2,{mat:wallMat,ol:false});box(g,W+2*t,H,t,null,0,0,D/2+t/2,{mat:wallMat,ol:false});
   for(const z of wz)box(g,t,H,ws,null,-W/2-t/2,0,z,{mat:wallMat,ol:false});if(gap)box(g,t,H-2.6,2*gap,null,-W/2-t/2,2.6,0,{mat:wallMat,ol:false});box(g,t,H,D,null,W/2+t/2,0,0,{mat:wallMat,ol:false});
   const bb='#ffffff';box(g,W,.14,.06,bb,0,0,-D/2+.03,{ol:.02});box(g,W,.14,.06,bb,0,0,D/2-.03,{ol:.02});for(const z of wz)box(g,.06,.14,ws,bb,-W/2+.03,0,z,{ol:.02});box(g,.06,.14,D,bb,W/2-.03,0,0,{ol:.02});
-  cyl(g,.035,.035,.2,'#b9a6cf',0,H-.2,0,{seg:6,ol:false});cyl(g,.2,.42,.2,'#ffc6d9',0,H-.4,0,{seg:16,ol:false});cyl(g,.44,.44,.04,'#e48aab',0,H-.42,0,{seg:16,ol:false});sph(g,.16,null,0,H-.42,0,{mat:GLOW,ol:false,ws:12,hs:8});   /* a pink lamp shade with a darker rim on a short stem (no dark outline: from below, near the door, it showed as black wedges; run 4, stage 3: white on the cream ceiling it read as a faint smudge) */
+  if(!HOMEISH(L.id)){cyl(g,.035,.035,.2,'#b9a6cf',0,H-.2,0,{seg:6,ol:false});cyl(g,.2,.42,.2,'#ffc6d9',0,H-.4,0,{seg:16,ol:false});cyl(g,.44,.44,.04,'#e48aab',0,H-.42,0,{seg:16,ol:false});sph(g,.16,null,0,H-.42,0,{mat:GLOW,ol:false,ws:12,hs:8});}   /* 💡 (26 Nov, owner: "delete the default ceiling lamp, it should be an option to buy") homes get none: the Ceiling lamp is in the furniture shop */   /* a pink lamp shade with a darker rim on a short stem (no dark outline: from below, near the door, it showed as black wedges; run 4, stage 3: white on the cream ceiling it read as a faint smudge) */
   col(L,-W/2-1,-D/2-1,W/2+1,-D/2);col(L,-W/2-1,D/2,W/2+1,D/2+1);col(L,-W/2-1,-D/2,-W/2,D/2);col(L,W/2,-D/2,W/2+1,D/2);
   return ce;
 }
@@ -1291,8 +1295,8 @@ function stairsIn(g,up,W,H,wm,both){const n=12,sd=4.2/n,sr=H/n,x0=-W/2,t=.3,a=Ma
   {const y=up?H:-H,dw=both?.74:1.3;box(g,.07,2.1,dw,'#5fd4b0',x0-4.2+.04,y,zc,{ol:.015});box(g,.09,.5,both?.36:.5,'#bde9ff',x0-4.2+.05,y+1.35,zc,{ol:.012});sph(g,.045,'#ffd45c',x0-4.2+.1,y+1.0,zc+(both?.25:.42),{ws:6,hs:5,ol:false});plate(pg,up?'⬆️ Upstairs':'⬇️ Downstairs','#ffffff','#3d2c5e',both?.7:1.22,both?.24:.3,x0-4.2+.1,y+.72,zc,Math.PI/2,false,'⬇️ Downstairs');}}   /* 🚪 the stairs end at a door with a window and a knob (run 4, stage 3: they ran into a flat wall) */
 /* every floor of a house (yours or a friend's): its own group, baked on its own, with its doors (floor 0), windows and stairs; flag = the inter tag ('hdoor' / 'vdoor') */
 function houseFloors(L,n,W,D,H,wm,fm,wide,flag){const hw=W/2,hd=D/2,gx=wide?6.6:4.4,fls=[];L.ceiling=H;
-  for(let k=0;k<n;k++){const g=new THREE.Group(),sh=new THREE.Group();g.add(sh);g.position.set(0,0,UPZ*k);const F={k,g,sh,grid:null};fls.push(F);
-    F.ceiling=shell({ox:L.ox,oz:L.oz+UPZ*k,cols:L.cols},sh,W,D,H,wm,fm,'#f7eef2',g,n>1?UPG:0);
+  for(let k=0;k<n;k++){const g=new THREE.Group(),sh=new THREE.Group();g.add(sh);g.position.set(0,0,UPZ*k);const F={k,g,sh,grid:null};fls.push(F);PANE_LV=k;
+    F.ceiling=shell({ox:L.ox,oz:L.oz+UPZ*k,cols:L.cols,id:L.id},sh,W,D,H,wm,fm,'#f7eef2',g,n>1?UPG:0);
     if(k===0){doorAt(sh,0,hd-.02,Math.PI,'#5fd4b0',false,true);doorAt(sh,gx,-hd+.02,0,'#5fd4b0',false,true);
       for(const x of wide?[-6.5,-3,1.5]:[-3,1.5])windowIn(sh,x,1.0,-hd+.02,0);
       for(const z of wide?[-3.2,2.6]:[0])windowIn(sh,hw-.02,1.0,z,-Math.PI/2,'#7fdcb5');for(const z of wide?[-3.2,2.6]:(n>1?[-3,3]:[0]))windowIn(sh,-hw+.02,1.0,z,Math.PI/2,'#7fdcb5');   /* 🪟 with stairs no west window at z 0 (run 4, item 25) */
@@ -1305,8 +1309,8 @@ function houseFloors(L,n,W,D,H,wm,fm,wide,flag){const hw=W/2,hd=D/2,gx=wide?6.6:
     const gh=new THREE.GridHelper(W,W*2,0xb79cff,0xd9c8ff);gh.scale.z=D/W;gh.position.set(0,.012,UPZ*k);gh.visible=false;L.g.add(gh);F.grid=gh;
     if(k<n-1)inter(L,{x:-hw+.9,z:UPZ*k-.6,r:1.6,icon:'⬆️',label:'Go upstairs',act:()=>hclimb(1),[flag]:1});
     if(k>0)inter(L,{x:-hw+.9,z:UPZ*k+.6,r:1.6,icon:'⬇️',label:'Go downstairs',act:()=>hclimb(-1),[flag]:1});}
-  L.fls=fls;L.g.add(fls[0].g);L.vf=-1;L.grid=fls[0].grid;
-  L.bounds={x1:L.ox-hw,z1:L.oz-hd,x2:L.ox+hw,z2:L.oz+UPZ*(n-1)+hd};return fls;}
+  PANE_LV=0;L.fls=fls;L.g.add(fls[0].g);L.vf=-1;L.grid=fls[0].grid;
+  L.bounds={x1:L.ox-hw,z1:L.oz-hd,x2:L.ox+hw,z2:L.oz+UPZ*(n-1)+hd};if(CUR===L)paneLook();return fls;}   /* (🖼️ a house rebuilt while you are in it: its window views painted again) */
 function homeShell(L,n){n=clamp(n|0,1,6);if(L.nfl===n&&L.fls)return;L.nfl=n;L.big=n>1;
   if(L.fls)for(const F of L.fls){if(F.g.parent)F.g.parent.remove(F.g);F.g.traverse(o=>{if(o.geometry&&!o.userData.keep)o.geometry.dispose();});if(F.grid.parent)F.grid.parent.remove(F.grid);}
   const W=12,D=10,H=3.2;HOMEW=W/2;HOMED=D/2;HOMEGX=4.4;L.cols.length=0;L.inter=L.inter.filter(i=>!i.hdoor);
@@ -1523,7 +1527,7 @@ function yardPlace(){const j=LANE.mine,C=LOC.city;if(j==null||!YARD.g||j===YARD.
   YARD.g.position.set(cx,0,cz);YARD.g.rotation.y=p.s<0?0:Math.PI;YARD.g.visible=true;
   yardColsSet(j);
   YARD.j=j;YARD.on=true;for(const t of YARD.ints)yardT(t,j);benchYard(j);
-  const yw=v=>p.s<0?v:v+Math.PI,d=lotPt(j,-17,-9.6),bk=lotPt(j,-14,-19.7);DOORS.home.city=[d[0],d[1],yw(Math.PI)];DOORS.homeback.city=[bk[0],bk[1],yw(0)];
+  const yw=v=>p.s<0?v:v+Math.PI,d=lotPt(j,-17,-9.6),bk=lotPt(j,-14,-19.7);DOORS.home.city=[d[0],d[1],yw(Math.PI)];DOORS.homeback.city=[bk[0],bk[1],yw(0)];paneLook();   /* (🖼️ at home when your lot is set or moves: the window views painted for the new spot) */
   for(const [id,x,z,dx,dz] of[['home',-17,-15,-17,-6.9],['garden',-16.75,-21.5,-11.45,-6.9]]){const pl=PLACES.find(q=>q.id===id);[pl.x,pl.z]=lotPt(j,x,z);pl.door=lotPt(j,dx,dz);   /* the arrow aims at the pavement in front of your gate / garden path */
     if(NAV&&NAV.id===id&&!NAV.actor)setNavTo(pl,true);}
   if(a!=null)yardHop(a,j);}
@@ -1879,7 +1883,7 @@ function buildAptFloor(f){const W=19,D=4.4,H=3,hx=W/2,hz=D/2,C=FLOOR_C[f],L=make
   if(f===1){doorAt(sh,-hx,0,Math.PI/2,null,true,true);inter(L,{x:-8.6,z:0,r:1.7,icon:'🚪',label:'Go outside',act:()=>exitApt()});}
   else{windowAt(sh,-hx+.02,1.0,0,Math.PI/2,'#ffffff',1,1.25,{view:1});const pl=buildFurn('plant');pl.position.set(-8.9,0,1.6);sh.add(pl);}
 }
-function buildApts(){for(let f=1;f<=3;f++)buildAptFloor(f);}
+function buildApts(){for(let f=1;f<=3;f++){PANE_LV=f-1;buildAptFloor(f);}PANE_LV=0;}
 function buildPizzeria(){const {L,sh,pr}=room('pizza',1600,'#fff0e0','pizza');
   // the counter where you pick up pizzas
   box(pr,5.2,1.0,.9,'#ff6b6b',0,0,-3.0);box(pr,5.4,.1,1.04,'#ffffff',0,1.0,-3.0,{ol:.02});for(let i=0;i<5;i++)box(pr,.5,.6,.02,'#ffffff',-2+i,.2,-2.54,{ol:false});col(L,-2.75,-3.55,2.75,-2.45);
@@ -2008,7 +2012,7 @@ function vetClinic(g){const t=VT,W=12,D=9,H=6.6;
 function buildVet(){const t=VT,W=11,D=8,H=3.2,L=makeLoc('vet','in',4500,0,[-W/2,-D/2,W/2,D/2]),wm=mat(t.wall),fm=toon({color:t.floor});L.W=W/2;L.D=D/2;L.items=new THREE.Group();scene.add(L.items);
   const fls=[];for(let k=0;k<2;k++){const g=new THREE.Group(),sh=new THREE.Group(),pr=new THREE.Group();g.add(sh,pr);g.position.set(0,0,UPZ*k);fls.push({k,g,sh,pr});
     shell({ox:L.ox,oz:L.oz+UPZ*k,cols:L.cols},sh,W,D,H,wm,fm,'#f7f2ff',g,UPG);if(!k)doorAt(sh,0,D/2-.02,Math.PI,t.acc,true,true);
-    for(const x of[-2.5,2.5])windowIn(sh,x,1.0,k?-D/2+.02:D/2-.02,k?0:Math.PI,t.sun);windowIn(sh,W/2-.02,1.0,0,-Math.PI/2,t.sun);stairsIn(sh,1-k,W,H,wm);}
+    PANE_LV=k;for(const x of[-2.5,2.5])windowIn(sh,x,1.0,k?-D/2+.02:D/2-.02,k?0:Math.PI,t.sun);windowIn(sh,W/2-.02,1.0,0,-Math.PI/2,t.sun);PANE_LV=0;stairsIn(sh,1-k,W,H,wm);}
   L.fls=fls;L.g.add(fls[0].g);L.vf=-1;L.bounds={x1:L.ox-W/2,z1:L.oz-D/2,x2:L.ox+W/2,z2:L.oz+UPZ+D/2};
   const put=(g,f,x,z,ry,y)=>{const p=new THREE.Group();p.position.set(x,y||0,z);p.rotation.y=ry||0;g.add(p);f(p,t);return p;},a=fls[0].pr,b=fls[1].pr,Z=UPZ;
   /* the lobby */

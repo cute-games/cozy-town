@@ -1457,7 +1457,7 @@ ACT.dnbye=()=>{dnLeave();if(!DN_TEST)toast('🪩 Another round? Tap Dance! on th
 function dnLeave(){const D=DANCE;D.res=false;D.resultCamera=null;D.resultHtml='';dnStageOff();dnSpotsOff();
   if($('card').classList.contains('dnres'))closePanel();
   if(DN_TEST&&D.bot){dnDropPerson(D.bot.av);D.bot=null;D.mine=null;}
-  if(P.ride&&P.ride.kind==='dance')P.ride=null;if(D.me){if(DN_TEST)dnDropPerson(D.me);else scene.remove(D.me.root);D.me=null;}}   /* back from the dance view */
+  if(P.ride&&P.ride.kind==='dance')P.ride=null;if(D.me){if(DN_TEST)dnDropPerson(D.me);else scene.remove(D.me.root);D.me=null;}camera.zoom=1;resize();}   /* (27 Nov: the dance's wide lens and zoom went back to normal only on the next screen resize: the view stayed stretched) */   /* back from the dance view */
 function dnDropPerson(person){scene.remove(person.root);person.root.traverse(o=>{if(o.isMesh)o.geometry.dispose();});}
 function dnNm(n){n=String(n||'');return n.length>13?n.slice(0,12)+'…':n;}   /* a long name ends in … in the score bar */
 /* the HUD: the faces and the score bar on top, the falling arrows, four big buttons */
@@ -3120,7 +3120,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last
   updTVs(dt);updFloats(dt);updBeach(dt);popFades();
   const tx=Math.round(camera.position.x),tz=Math.round(camera.position.z);sun.target.position.set(tx,0,tz);sun.position.set(tx+SUND.x*70,SUND.y*70,tz+SUND.z*70);
   skyMesh.position.copy(camera.position);stars.position.copy(camera.position);
-  updSky();dnRoomLight();if(AQ_STEPS[AQ.lv].far&&CUR&&CUR.type==='out'){const f=AQ_STEPS[AQ.lv].far;FOG.far=Math.min(FOG.far,f);FOG.near=Math.min(FOG.near,f*.45);}
+  updSky();lampTick();dnRoomLight();if(AQ_STEPS[AQ.lv].far&&CUR&&CUR.type==='out'){const f=AQ_STEPS[AQ.lv].far;FOG.far=Math.min(FOG.far,f);FOG.near=Math.min(FOG.near,f*.45);}
   aqTick();AQ.farT+=dt;if(AQ.farT>.5||AQ.farL!==(AQ_STEPS[AQ.lv].far&&CUR&&CUR.type==='out'?CUR:null)){AQ.farT=0;aqFar();}
   if(DANCE.on&&DANCE.style)dnLaneDraw();
   renderer.render(scene,camera);
@@ -3140,10 +3140,10 @@ async function boot(){
     hemi=new THREE.HemisphereLight('#ffffff','#a8c69a',.75);scene.add(hemi);
     sun=new THREE.DirectionalLight('#fff4e0',.9);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);const sc=sun.shadow.camera;sc.left=-30;sc.right=30;sc.top=30;sc.bottom=-30;sc.near=1;sc.far=150;sun.shadow.bias=-.0006;sun.shadow.normalBias=.09;scene.add(sun);scene.add(sun.target);
     lamp=new THREE.PointLight('#ffe2b8',0,20,1.4);scene.add(lamp);
-    try{await Promise.race([document.fonts.load('800 40px "Baloo 2"'),new Promise(r=>setTimeout(r,2000))]);}catch(e){}
+    try{await Promise.race([document.fonts.load('800 40px "CozyCoin","Baloo 2"'),new Promise(r=>setTimeout(r,2000))]);}catch(e){}
     seasonSet();buildSky();buildCity();buildHome();buildMarket();buildPetShop();buildVet();buildFlowerShop();buildCafe();buildSalon();buildClothesShop();buildToyStore();buildBakery();buildIceCream();buildLibrary();buildSchool();buildClassrooms();buildFireStation();buildPizzeria();buildApts();buildClientRoom();buildVisit();buildBeach();buildTreePark();buildStudio();buildActors();buildTownfolk();buildPetShow();buildCars();buildBall();buildShoppers();
     S=freshState();setLoc('city');S=null;holCheck();   /* 🎃 decorations for today's real date */
-    setupInput();applyGfx();addEventListener('resize',resize);
+    setupInput();applyGfx();addEventListener('resize',resize);addEventListener('orientationchange',()=>setTimeout(resize,350));
     requestAnimationFrame(t=>{last=t;frame(t);});
     if(DN_TEST){dnTestBoot();return;}
     cloudInit();

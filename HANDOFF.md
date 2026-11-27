@@ -1,4 +1,4 @@
-# HANDOFF — read this first (one page; updated 25 Nov 2026: the night of 24-25 Nov is live; the Foreman file is `FOREMAN.md` on branch `claude/foreman-handoff`)
+# HANDOFF — read this first (one page; updated 27 Nov 2026)
 
 ## Dance branch `claude/dance-pass` (27 Nov 2026, stamp 2026112720) — test copy only, NOT live
 - Live main is PR #64 (2026112702). PR #77 `claude/phone-map` (no corner map on phones, 🗺️ chip opens the big map, kit N26 rewritten) waits for the owner's "merge #77".
@@ -21,6 +21,20 @@
   from a branch made from `origin/main`.
 - Not verified on real devices: everything from that night (iPad Safari microphone and sound for calls, real Firebase rules, speed with the obby in town, how the horses and the waddle feel).
 - Music: the pick page "Pick the Music" has play buttons for all 49 songs; only Yes picks go into the game later, as separate files (see FOREMAN.md).
+## Where things stand (27 Nov 2026)
+- **Live: `main` = b6c97f8 (PR #63, stamp 2026112620, 26 Nov 22:2x)**: lamps (colour light, night dimming, 4 ceiling lamps), My stuff tab, sell 50%, recolour 10 coins, CozyCoin font,
+  mini-map tidy, dance-off to slice 12b + Windows shader fix. Owner skipped the full check. Backup: `backup-2026-11-26` (= main before #63).
+- **Branch `claude/fix-mm-cards` = PR #64 (not merged, stamp 2026112701)**: − + font fix, sell chip/card names; bus news as texts from Rosie (`rosieBus` in 02-world), no "Next bus" pill;
+  notepad hidden (`#pad{display:none}`, data kept); `dnLeave` resets camera zoom/fov (the "wide glitch"); phones sideways only (`ROT` shim at the top of 00-core: turns body,
+  innerWidth/Height, clientX/Y, getBoundingClientRect, elementFromPoint, matchMedia and @media/vw-vh rules); compact sideways-phone bars + 🗺️ fold chip (`#bFold`, 08-hud) + joystick left.
+  Kit harness `center()` maps taps for ROT (in /home/claude/w/gh4 and rel2 copies; put it into the kit zip and list it old → new). Full check running in /home/claude/w/rel2.
+- Dance: ChatGPT (Codex chat, local) builds slice 13 on `chatgpt/dance-game` (arrows pass through, judgements by the dancer, dude..., disco + night, beat bounce). Check it in the owner's Edge.
+- Dance Map maker live at `dance-map/` (+ `tools/dance-map/analyse.py`, librosa): the game does not load maps yet. Owner maps the cat song to show the style.
+- Shop icons: mock (3D thumbs on round pads) shown; owner wants "simplified drawing of a 3D picture" - waiting a/b/c. Shop look: tabs by kind (picked a).
+- Emoji set same on every device: asked, no answer. Pet shadows thrown far from pets (floating snake): not fixed. Nibbles tag over the run button on iPad: not fixed.
+- **Next job: the easel (owner 27 Nov, "go")**. Plan: buyable item `easel`; tap → drawing card (8 colours, 3 brushes, eraser, undo, clear, done); a drawing = small JPEG
+  (256x192, ~10 KB) kept in the save (cap 12, oldest asked before delete); a "Framed drawing" wall item showing it (canvas texture); send to an online friend through the
+  texts (#34: only after the owner pastes the Firebase rules; size cap; arrives in My stuff). Effort max (saves + online). Red-team the plan first.
 
 ## Older (2 Nov 2026 and before)
 - **Horses in town** (24 Nov, branch `claude/horse-town`, stamp 2026112497+): ride anywhere in town (door = "horses wait outside"; the lesson stays at the farm);
@@ -54,6 +68,8 @@ pet brain, yard/gear, vet, big pets/`PACKM`/`packBuild`, Pet Show, farm). 3. The
      --live-web ... --backup <live> --backup-title backup-YYYY-MM-DD --only files,counts,saves,night3,run4,pfu` (quick kit, ~75 min) or `--full` (~140 min).
   3. `python3 tools/split/split.py split <bundle> .` 4. `tools/split/check_split.py --site . --tested ... --live ... --three <kit>/cozycheck/three-r128.min.js`.
 - PFU kit lines: `tools/kit-v7/pfu.py` (stage `pfu`; `PFU_ONLY=P36` runs some with `--only pfu`). Fixtures: `tools/check-fixtures/save-pfu*.json`.
+- P2, P9, P29, P35, P36 need PFU_OLD_WEB=<join of a47bb1a>; B1 accepts a new friends key for a save that had none (25 Nov, owner's OK). New line B3 (`tools/kit-v7/sockey.py`): the friends key
+  is made once and kept. Fixture `save-soc1-friends.json` (key, 2 friends, 1 blocked) comes with `save-soc1-friends.online` (its friends' threads for the test database).
   Pictures: `tools/pfu-wip/shots_pfu.py <kit>/cozycheck <joined> <out>` (`ONLY='farm,...'` for some scenes). Playwright 1.63.0.
 - **Kit timing**: the teacher stages (T1-T4) play on the real one clock (a game day = 15 real minutes); classes come only at game 8:00-20:00. A stage that starts late
   in the game day fails with 'no message from the school came'. Rerun it alone just after game 8:00 (game time = clockAt(Date.now()): 8:00 is 252.9 s into each
@@ -63,3 +79,7 @@ pet brain, yard/gear, vet, big pets/`PACKM`/`packBuild`, Pet Show, farm). 3. The
 ## Open / not verified (all in `tools/PFU-REPORT.md` 6, 11, 12)
 - Real iPad: P19 (30+ fps, 2 players) and P25 (first load); C1-WK, F3 (after upload), G (real devices, sounds, friends together).
 - Older items stay open: G4-205/222, G4-279, G4-285, run 4's 15 grade-1 marks (`tools/RUN-4-REPORT.md`).
+- Kit v7 changes 27 Nov (in `cozy-check-v7.zip`, old → new): N35 "Notepad switch: off hides it, on brings it back" → "Notepad gone (owner 27 Nov): never shown, no Settings switch, pages kept";
+  N41 "the pill shows the next bus with its weekday" → "Rosie texts the next bus with its weekday at the stop"; P3 "the pill" → "Rosie's text at the stop"; N36 ceiling lamps built for a 3.2 m room
+  (same 3.2 m limit); harness `center()`, `book_swipe` and C3's joystick drag map their touch points for an upright phone (ROT); harness can serve `music/` from `COZY_REPO` (off by default: the dance
+  clock then waits on real audio and N39 hangs).

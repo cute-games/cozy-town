@@ -18,7 +18,7 @@ function leftFit(){const L=$('left'),pad=$('pad'),dc=$('dcard'),mm=$('mmBtn');if
   for(const st of steps){if(!bad())break;st();}updPlace();}
 new MutationObserver(()=>leftFit()).observe($('left'),{childList:true,subtree:true,attributes:true,attributeFilter:['hidden']});   /* a pill or box comes or goes */
 addEventListener('resize',()=>setTimeout(leftFit,60));
-{const st=document.createElement('style');st.textContent='#left.lfPad #pad,#left.lfDcS #dcard{position:absolute;margin:0}#left.lfDc #dcard .dci{display:none}#left.lfNoPad #pad,#left.lfNoMap #mmBtn,#left.lfTasks #tasks ul,.cut #left.lfCut #nav,.cut #left.lfCut #job{display:none}'
+{const st=document.createElement('style');st.textContent='#left.lfPad #pad,#left.lfDcS #dcard{position:absolute;margin:0}#left.lfDc #dcard .dci{display:none}#left.lfNoPad #pad,#left.lfNoMap #mmBtn,#left.lfNoMap #mmZoom,#left.lfTasks #tasks ul,.cut #left.lfCut #nav,.cut #left.lfCut #job{display:none}'
   /* 🧹 glitch fixes, pass 2: on a phone held upright the column is narrow (it shares the top row with the round buttons), so the pink arrow bar
      became a tall column of single words and the score pill ran out of its box. The bars below the clock may now be as wide as their words */
   +'@media (max-width:600px){#left>#nav,#left>#busTip,#left>#fbHud,#left>#tnHud{width:max-content;max-width:calc(100vw - 24px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px))}}#navX{flex:0 0 auto}#card.bustab.more::after{margin:-44px auto 0}';document.head.appendChild(st);}
@@ -454,4 +454,7 @@ ACT.ssend=()=>{socSendUI();};ACT.gsend=()=>{socSendUI();};
 ACT.gline=id=>{PH.gsel=PH.gsel===id?'':id;socFill();};
 ACT.ghide=id=>{const m=SOC.g.find(x=>x.id===id);PH.gsel='';if(m&&socOn()&&m.s!==SOC.me.sid){socBlock(m.s,m.n);toast('🚫 '+m.n+' is blocked. You can undo it in 📱 Friends.',3.6);}socFill();};
 ACT.swchat=()=>{SET.wchat=SET.wchat===false;saveSet();socWorld(SET.wchat!==false);openSettings();};   /* 🌍 the grown-ups' switch for the world chat */
-
+/* 📱 a phone on its side: the 🗺️ chip folds the map, the job line and the bus tip away and back (27 Nov 2026, owner); remembered on this device only, nothing in the save */
+(()=>{const b=$('bFold');if(!b)return;let f=false;try{f=localStorage.getItem('cozy.hudFold')==='1';}catch(e){}
+  const set=v=>{f=v;document.body.classList.toggle('hudfold',v);b.setAttribute('aria-pressed',v?'true':'false');try{localStorage.setItem('cozy.hudFold',v?'1':'0');}catch(e){}setTimeout(leftFit,30);};
+  set(f);b.addEventListener('click',()=>{SFX.pop&&SFX.pop();set(!f);});})();

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Cozy Town · Dance Map maker</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{--bg:#2b2340;--pan:#3a2f57;--ink:#fff6fb;--mut:#b9a9d6;--L:#ff7aa8;--D:#7cc8ff;--U:#5fd4b0;--R:#ffd45c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.35 system-ui,sans-serif;user-select:none}
+header{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 14px;background:var(--pan)}
+h1{font-size:17px;margin:0 12px 0 0}
+button,select{font:inherit;color:var(--ink);background:#4c3e70;border:2px solid #6a5a94;border-radius:10px;padding:5px 11px;cursor:pointer}
+button.on{background:#ff7aa8;border-color:#ffb3cc;color:#2b2340}
+label{color:var(--mut);display:flex;gap:6px;align-items:center}
+#wrap{position:relative;margin:10px 14px;border-radius:12px;overflow:hidden;background:#1f1930}
+canvas{display:block;width:100%}
+#info{display:flex;gap:18px;padding:4px 14px;color:var(--mut);flex-wrap:wrap}
+#info b{color:var(--ink)}
+#help{margin:8px 14px 20px;color:var(--mut);font-size:13.5px;columns:2;column-gap:30px}
+#help kbd{background:#4c3e70;border-radius:5px;padding:0 6px;color:var(--ink);font:inherit}
+#toast{position:fixed;right:16px;bottom:16px;background:#5fd4b0;color:#2b2340;padding:8px 14px;border-radius:10px;font-weight:600;opacity:0;transition:opacity .3s}
+</style></head><body>
+<header>
+ <h1>💃 Dance Map maker</h1>
+ <select id="song"></select>
+ <button id="play">▶ Play</button>
+ <button id="rec">● Record taps</button>
+ <label>Speed <select id="speed"><option>1</option><option>0.75</option><option>0.5</option></select></label>
+ <label>Snap <select id="snap"><option value="0">off</option><option value="1">1 beat</option><option value="2" selected>½ beat</option><option value="4">¼ beat</option></select></label>
+ <label>Tap delay <input id="off" type="range" min="-200" max="200" value="0" step="5"><span id="offv">0 ms</span></label>
+ <button id="undo">↶ Undo</button>
+ <button id="clear">Clear</button>
+ <button id="draft">✨ Rough first map</button>
+ <button id="save">💾 Download map</button>
+</header>
+<div id="info"><span>Time <b id="tm">0.00</b> s</span><span>Beat <b id="bt">0</b></span><span>Arrows <b id="cnt">0</b></span><span>Saved in this browser: <b id="sv">yes</b></span></div>
+<div id="wrap"><canvas id="cv" height="370"></canvas></div>
+<div id="help">
+ <div><kbd>Space</kbd> play / pause · <kbd>R</kbd> record on/off</div>
+ <div>While recording: tap <kbd>←</kbd> <kbd>↓</kbd> <kbd>↑</kbd> <kbd>→</kbd> in time (two keys together = double)</div>
+ <div>Click an arrow to select (<kbd>Shift</kbd>+click adds), drag to move, <kbd>Del</kbd> removes</div>
+ <div>Click empty lane = add arrow there · click the waveform = jump there</div>
+ <div><kbd>,</kbd> <kbd>.</kbd> nudge selected 10 ms · <kbd>Q</kbd> snap selected (or all) to the grid</div>
+ <div>Mouse wheel = scroll · <kbd>Ctrl</kbd>+wheel or <kbd>+</kbd>/<kbd>-</kbd> = zoom · <kbd>Ctrl</kbd>+<kbd>Z</kbd> undo</div>
+ <div>Every change is saved in this browser by itself. Claude picks the map up from here.</div>
+ <div>✨ Rough first map: a computer guess from the hits and the melody. Melody up = ↑, down = ↓.</div>
+ <div>Tap delay: if your taps land late, move it left until they sit on the beats.</div>
+</div>
+<div id="toast"></div>
+<script>
+/* Songs: the same files the dance test plays. Times in a map are seconds from the start of the mp3. */
+const SONGS=[
+ {id:'alley-cat-steady',n:'Alley Cat · round (steady)',src:'../dance-test/music/alley-cat-round-steady.mp3',bpm:112.99996,first:0},
+ {id:'alley-cat-fast',n:'Alley Cat · round (fast)',src:'../dance-test/music/alley-cat-round-fast.mp3',bpm:112.99996,first:0},
+ {id:'alley-cat-dumpster',n:"Alley Cat · Dumpster Divin'",src:'../dance-test/music/alley-cat-dumpster-divin.mp3',bpm:112.994,first:.27}];
+const LANES=['←','↓','↑','→'],LC=['--L','--D','--U','--R'].map(v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim());
+const $=id=>document.getElementById(id),cv=$('cv'),g=cv.getContext('2d');
+let AC=null,buf=null,peaks=null,flux=null,AN=null,src=null,song=SONGS[0],notes=[],sel=new Set(),hist=[];
+let playing=false,startAt=0,startPos=0,pos=0,rate=1,recOn=false,view={t0:0,pps:160},drag=null;
+const KEY='cozy-dance-map:';
+function toast(t){const e=$('toast');e.textContent=t;e.style.opacity=1;clearTimeout(toast.h);toast.h=setTimeout(()=>e.style.opacity=0,1400);}
+function now(){return playing?startPos+(AC.currentTime-startAt)*rate:pos;}
+function beatLen(){return 60/song.bpm;}
+function snapT(t){const d=+$('snap').value;if(!d)return t;const s=beatLen()/d;return Math.round((t-song.first)/s)*s+song.first;}
+function store(){try{localStorage.setItem(KEY+song.id,JSON.stringify(mapOut()));$('sv').textContent='yes';}catch(e){$('sv').textContent='NO ('+e.name+')';}}
+function push(){hist.push(JSON.stringify(notes));if(hist.length>200)hist.shift();}
+function changed(){notes.sort((a,b)=>a.t-b.t||a.l-b.l);$('cnt').textContent=notes.length;store();}
+function mapOut(){return {song:song.id,src:song.src.replace('../dance-test/',''),bpm:song.bpm,firstBeat:song.first,timeBase:'mp3 seconds',made:new Date().toISOString(),
+  notes:notes.map(n=>[+n.t.toFixed(3),n.l])};}
+async function loadSong(s){
+  stop();song=s;notes=[];sel.clear();hist=[];view.t0=0;
+  try{const m=JSON.parse(localStorage.getItem(KEY+s.id)||'null');if(m&&m.notes)notes=m.notes.map(([t,l])=>({t,l}));}catch(e){}
+  changed();buf=null;AN=null;
+  fetch('analysis/'+s.id+'.json').then(r=>r.ok?r.json():null).then(j=>{if(song===s)AN=j;}).catch(()=>{});
+  AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+  const ab=await (await fetch(s.src)).arrayBuffer();buf=await AC.decodeAudioData(ab);
+  /* waveform peaks + a simple "loudness rise" line (spectral flux stand-in) to help spot hits */
+  const d=buf.getChannelData(0),step=Math.floor(buf.sampleRate/200);peaks=new Float32Array(Math.ceil(d.length/step));flux=new Float32Array(peaks.length);
+  let prev=0;for(let i=0;i<peaks.length;i++){let m=0,e=0;for(let j=i*step;j<Math.min(d.length,(i+1)*step);j++){const v=Math.abs(d[j]);if(v>m)m=v;e+=v*v;}e=Math.sqrt(e/step);peaks[i]=m;flux[i]=Math.max(0,e-prev);prev=e;}
+  const fm=Math.max(...flux)||1;for(let i=0;i<flux.length;i++)flux[i]/=fm;
+  draw();
+}
+function play(){if(!buf)return;if(AC.state==='suspended')AC.resume();src=AC.createBufferSource();src.buffer=buf;src.playbackRate.value=rate;src.connect(AC.destination);
+  startPos=pos;startAt=AC.currentTime;src.start(0,pos);playing=true;src.onended=()=>{if(playing&&now()>=buf.duration-.05){pos=buf.duration;stop();}};$('play').textContent='⏸ Pause';}
+function stop(){if(src){try{src.onended=null;src.stop();}catch(e){}src=null;}if(playing)pos=Math.min(now(),buf?buf.duration:0);playing=false;$('play').textContent='▶ Play';}
+function seek(t){const was=playing;stop();pos=Math.max(0,Math.min(t,buf?buf.duration:0));if(was)play();}
+/* layout */
+const TOPH=150,LANEH=50;
+function x2t(x){return view.t0+x/view.pps;}function t2x(t){return (t-view.t0)*view.pps;}
+function laneY(l){return TOPH+10+l*LANEH;}
+function draw(){
+  const W=cv.width=cv.clientWidth*devicePixelRatio,H=cv.height=370*devicePixelRatio;g.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  const w=W/devicePixelRatio,t=now();
+  if(playing){if(t2x(t)>w*.75)view.t0=t-w*.25/view.pps;}
+  g.clearRect(0,0,w,370);
+  /* beat grid */
+  const bl=beatLen(),b0=Math.floor((view.t0-song.first)/bl),b1=Math.ceil((x2t(w)-song.first)/bl);
+  for(let b=b0;b<=b1;b++){const x=t2x(song.first+b*bl),bar=((b%4)+4)%4===0;g.fillStyle=bar?'#6a5a94':'#3d3358';g.fillRect(x,0,bar?2:1,370);
+    if(bar){g.fillStyle='#b9a9d6';g.font='11px system-ui';g.fillText('bar '+(b/4+1),x+4,12);}
+    const d=+$('snap').value;if(d>1&&view.pps*bl/d>14)for(let k=1;k<d;k++){g.fillStyle='#2f2848';g.fillRect(t2x(song.first+(b+k/d)*bl),TOPH,1,370-TOPH);}}
+  /* waveform */
+  if(AN){/* three sound layers: bass (red), middle (yellow), high (blue); dots = sharp hits; white line = melody */
+    const rows=[['high','#7cc8ff',18],['mid','#ffd45c',58],['low','#ff7a8a',98]],rh=36;
+    for(const [k,c,y0] of rows){const e=AN.env[k];g.fillStyle=c+'55';for(let x=0;x<w;x++){const i=Math.floor(x2t(x)*AN.fps);if(i<0||i>=e.length)continue;const a=e[i]/99*rh;g.fillRect(x,y0+rh-a,1,a);}}
+    const bc=['#ff7a8a','#ffd45c','#7cc8ff'],by=[134,94,54];
+    for(const [t,b,st] of AN.onsets){const x=t2x(t);if(x<0||x>w)continue;g.beginPath();g.arc(x,by[b]-st*14,2+st*4,0,7);g.fillStyle=bc[b];g.fill();}
+    const m=AN.melody,mf=AN.melodyFps;let ps=[];for(const v of m)if(v!=null)ps.push(v);const lo=Math.min(...ps),hi=Math.max(...ps);
+    g.strokeStyle='#ffffff';g.lineWidth=2;g.beginPath();let pen=false;
+    for(let x=0;x<w;x+=2){const i=Math.floor(x2t(x)*mf),v=m[i];if(v==null||i<0){pen=false;continue;}const y=140-(v-lo)/Math.max(1,hi-lo)*125;pen?g.lineTo(x,y):g.moveTo(x,y);pen=true;}
+    g.stroke();
+    g.font='11px system-ui';g.fillStyle='#7cc8ff';g.fillText('high',w-34,30);g.fillStyle='#ffd45c';g.fillText('middle',w-46,70);g.fillStyle='#ff7a8a';g.fillText('bass',w-34,110);g.fillStyle='#fff';g.fillText('— melody',w-62,146);}
+  else if(peaks){const mid=TOPH/2+6;g.fillStyle='#8f7fc0';for(let x=0;x<w;x++){const i=Math.floor(x2t(x)*200);if(i<0||i>=peaks.length)continue;const a=peaks[i]*TOPH*.42;g.fillRect(x,mid-a,1,a*2);}
+    g.fillStyle='#ffd45c';for(let x=0;x<w;x++){const i=Math.floor(x2t(x)*200);if(i<0||i>=flux.length)continue;const a=flux[i]*30;if(a>3)g.fillRect(x,TOPH-a,1,a);}}
+  else{g.fillStyle='#b9a9d6';g.font='15px system-ui';g.fillText('Loading song…',14,60);}
+  /* lanes */
+  for(let l=0;l<4;l++){const y=laneY(l);g.fillStyle=l%2?'#241d38':'#2a2242';g.fillRect(0,y,w,LANEH-4);g.fillStyle=LC[l];g.font='bold 20px system-ui';g.fillText(LANES[l],6,y+34);}
+  /* notes */
+  for(const n of notes){const x=t2x(n.t);if(x<-30||x>w+30)continue;const y=laneY(n.l)+(LANEH-4)/2;
+    g.beginPath();g.arc(x,y,15,0,7);g.fillStyle=LC[n.l];g.fill();g.lineWidth=sel.has(n)?4:2;g.strokeStyle=sel.has(n)?'#fff':'#2b2340';g.stroke();
+    g.fillStyle='#2b2340';g.font='bold 17px system-ui';g.textAlign='center';g.fillText(LANES[n.l],x,y+6);g.textAlign='left';}
+  /* playhead */
+  const px=t2x(t);g.fillStyle=recOn?'#ff4d6d':'#fff';g.fillRect(px-1,0,2,370);
+  $('tm').textContent=t.toFixed(2);$('bt').textContent=((t-song.first)/bl+1).toFixed(2);
+  requestAnimationFrame(draw);
+}
+/* input */
+const held=new Map();
+addEventListener('keydown',e=>{
+  if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT')e.target.blur();
+  const k=e.key;
+  if(k===' '){e.preventDefault();playing?stop():play();return;}
+  if(k==='r'||k==='R'){recOn=!recOn;$('rec').classList.toggle('on',recOn);return;}
+  const li=['ArrowLeft','ArrowDown','ArrowUp','ArrowRight'].indexOf(k);
+  if(li>=0){e.preventDefault();if(e.repeat)return;
+    if(recOn&&playing){push();const t=Math.max(0,now()-(+$('off').value)/1000);const n={t:snapT(t),l:li};
+      if(!notes.some(m=>m.l===li&&Math.abs(m.t-n.t)<.03)){notes.push(n);changed();}}
+    else if(sel.size){push();for(const n of sel)n.l=li;changed();}
+    return;}
+  if((k==='Delete'||k==='Backspace')&&sel.size){push();notes=notes.filter(n=>!sel.has(n));sel.clear();changed();return;}
+  if(k===','||k==='.'){if(!sel.size)return;push();const d=k===','?-.01:.01;for(const n of sel)n.t=Math.max(0,n.t+d);changed();return;}
+  if(k==='q'||k==='Q'){push();for(const n of (sel.size?sel:notes))n.t=snapT(n.t);changed();toast('Snapped to grid');return;}
+  if((e.ctrlKey||e.metaKey)&&(k==='z'||k==='Z')){e.preventDefault();undo();return;}
+  if(k==='+'||k==='=')zoom(1.25,cv.clientWidth/2);if(k==='-')zoom(.8,cv.clientWidth/2);
+  if(k==='Home')seek(0);
+});
+function undo(){if(!hist.length)return;notes=JSON.parse(hist.pop()).map(o=>({t:o.t,l:o.l}));sel.clear();changed();}
+function zoom(f,x){const t=x2t(x);view.pps=Math.max(30,Math.min(1600,view.pps*f));view.t0=t-x/view.pps;}
+cv.addEventListener('wheel',e=>{e.preventDefault();if(e.ctrlKey)zoom(e.deltaY<0?1.2:.83,e.offsetX);else view.t0=Math.max(-1,view.t0+(e.deltaY+e.deltaX)/view.pps);},{passive:false});
+function hit(x,y){let best=null,bd=18;for(const n of notes){const dx=t2x(n.t)-x,dy=laneY(n.l)+(LANEH-4)/2-y,d=Math.hypot(dx,dy);if(d<bd){bd=d;best=n;}}return best;}
+cv.addEventListener('mousedown',e=>{
+  const x=e.offsetX,y=e.offsetY;
+  if(y<TOPH){seek(x2t(x));return;}
+  const n=hit(x,y);
+  if(n){if(e.shiftKey){sel.has(n)?sel.delete(n):sel.add(n);}else if(!sel.has(n)){sel.clear();sel.add(n);}
+    push();drag={x0:x,orig:[...sel].map(m=>[m,m.t])};return;}
+  const l=Math.floor((y-TOPH-10)/LANEH);if(l<0||l>3){sel.clear();return;}
+  push();const m={t:Math.max(0,snapT(x2t(x))),l};notes.push(m);sel.clear();sel.add(m);changed();
+});
+addEventListener('mousemove',e=>{if(!drag)return;const dt=(e.clientX-cv.getBoundingClientRect().left-drag.x0)/view.pps;
+  for(const [m,t0] of drag.orig)m.t=Math.max(0,snapT(t0+dt));});
+addEventListener('mouseup',()=>{if(drag){drag=null;changed();}});
+$('play').onclick=()=>playing?stop():play();
+$('rec').onclick=()=>{recOn=!recOn;$('rec').classList.toggle('on',recOn);};
+$('speed').onchange=e=>{const was=playing;stop();rate=+e.target.value;if(was)play();};
+$('off').oninput=e=>$('offv').textContent=e.target.value+' ms';
+$('undo').onclick=undo;
+$('clear').onclick=()=>{if(!notes.length)return;push();notes=[];sel.clear();changed();toast('Cleared (Ctrl+Z brings it back)');};
+$('draft').onclick=()=>{if(!AN){toast('Still loading the analysis');return;}if(notes.length&&!confirm('Replace your arrows with a rough first map? (Ctrl+Z brings yours back)'))return;push();notes=AN.draft.map(([t,l])=>({t,l}));sel.clear();changed();toast('Rough map: '+notes.length+' arrows. Fix what feels wrong.');};
+$('save').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(mapOut(),null,1)],{type:'application/json'}));a.download=song.id+'.json';a.click();};
+for(const s of SONGS){const o=document.createElement('option');o.value=s.id;o.textContent=s.n;$('song').appendChild(o);}
+$('song').onchange=e=>loadSong(SONGS.find(s=>s.id===e.target.value));
+window.DANCE_MAP={get:()=>mapOut(),all:()=>SONGS.map(s=>JSON.parse(localStorage.getItem(KEY+s.id)||'null'))};
+loadSong(SONGS[0]);
+</script></body></html>
