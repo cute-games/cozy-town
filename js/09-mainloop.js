@@ -1974,21 +1974,13 @@ function dnLaneSide(g,F,L,side,t,now,calm){
     const until=n.t-t;
     const y=line-until*F.travel,x=L.x[n.d];
     if(y+note*.5<F.bandTop||y-note*.5>F.bandBottom)continue;
-    let f=note,clear=false;
-    for(let attempt=0;attempt<3&&f>=19;attempt++,f*=.79){
-      const r=f*.5+2;
-      if(dnNoteClear(F,x,y,r,r)&&!dnBoxIntersects(x-r,x+r,y-r,y+r,F.notes,F.noteUsed)){
-        F.noteUsed=dnStoreBox(F.notes,F.noteUsed,x,y,r,r);clear=true;break;
-      }
-    }
-    if(!clear)continue;
+    /* (27 Nov, owner: arrows vanished just before the targets and never passed through) every arrow is drawn the whole way, the same size as its target, and keeps going past it; nothing hides it */
+    const f=L.size;F.noteUsed=dnStoreBox(F.notes,F.noteUsed,x,y,f*.5+2,f*.5+2);
     dnLaneDamage(F,x,y,f*.51+4,f*.82+3);
     if(!calm&&until>.045){
       const tail=f*.61,ty=F.up?y+f*.09:y-f*.69;
-      if(dnNoteClear(F,x,ty+tail*.5,f*.19,tail*.5)){
-        g.globalAlpha=(side?.63:.76)*dim;
-        g.drawImage(F.trails[F.up?1:0][n.d],x-f*.19,ty,f*.38,tail);
-      }
+      g.globalAlpha=(side?.63:.76)*dim;
+      g.drawImage(F.trails[F.up?1:0][n.d],x-f*.19,ty,f*.38,tail);
     }
     const edgeGap=F.up?y-F.bandTop:F.bandBottom-y;
     const fade=until< -DN_WIN?(1-dnEase((f*.5-edgeGap)/f)*.78):1;
