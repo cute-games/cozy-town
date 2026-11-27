@@ -1,5 +1,12 @@
 # HANDOFF — read this first (one page; updated 25 Nov 2026: the night of 24-25 Nov is live; the Foreman file is `FOREMAN.md` on branch `claude/foreman-handoff`)
 
+## Dance branch `claude/dance-pass` (27 Nov 2026, stamp 2026112720) — test copy only, NOT live
+- Live main is PR #64 (2026112702). PR #77 `claude/phone-map` (no corner map on phones, 🗺️ chip opens the big map, kit N26 rewritten) waits for the owner's "merge #77".
+- This branch (worktree was /tmp/dfx) = Codex dance work + owner picks: arrows fall down, see-through, pass through; flashy floor/rays; score screen = banner + one card per dancer (`dnResultCards`, CSS at the end of css/style-1.css, "🏆" comments); camera = soft push on each bar (`fx.push`), no tilt.
+- Charts: `tools/dance-map/chart3.py <loop.json> <steady|fast> <easy|hard> <mp3>` → `DN_CHARTS6` (rows [t,lane,double,hold s]). Round ids `beat6{n|s}{e|h}-` when the partner's version ≥ DN_HOLD_BUILD (2026112720), else beat5 as before. Starter picks via SET.danceEasy (Settings › Dance level). Holds: `dnRelease`/`dnHoldDone`, 10 pts/s, early let-go = What?, wire field `hb` keeps hold points apart from hit points.
+- Checked: autoplay holds complete, early release = What? + combo 0, touch lift releases, Easy/Hard/old prefixes (photo tools in /home/claude/w/dance-photos: dp5 score screen, dp7 holds, dp8 prefixes). NOT run: the kit on this branch, two real players.
+- To go live later: rebase on main, stamp above live, full check, owner's merge.
+
 ## Where things stand (25 Nov 2026)
 - **Live: `main` = the merge of pull request #34, stamp 2026112504, joined game 2,463,690 bytes.** Backups: `backup-2026-11-25` (c974534), `backup-2026-11-25c` (ad8827f, main before #34).
 - Merged in the night of 24-25 Nov: #29 Pet Shop taller top floor + painted windows in all interiors; #30 house paint works and costs 150 coins, friends see the colour, calm duck and owl;
