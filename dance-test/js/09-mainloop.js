@@ -1722,13 +1722,13 @@ function dnLaneLayout(F){
   const score=F.top.getBoundingClientRect(),halfWidth=w*.5;
   const inset=up?Math.max(safe+2,w*.032):safe+w*(portrait?.009:big?.082:.019);
   const span=w*(big?.194:short?.218:portrait?.223:.203);
-  const step=Math.max(15,up?Math.min(w*.062,(halfWidth-inset-8)/4):(span-safe)/4);
+  const step=Math.max(15,up?Math.min(w*.062,(halfWidth-inset-8)/4):Math.min(w*.072,(halfWidth-safe*2)/4.4));   /* (27 Nov, owner's sketch: falling arrows, one row low in the middle of each half) */
   const besideScore=up&&Math.min(score.left,w-score.right)>inset+step*4+Math.min(46,w*.025)+8;
   for(let side=0;side<2;side++){
     const L=F.sides[side],left=side?!D.left:!!D.left;
     const pitch=touch&&(up||!side)?Math.max(step,44):step;
-    const start=left?inset:w-inset-pitch*4;
-    const originalPitch=Math.max(15,(span-safe)/4,touch&&(up||!side)?44:0);
+    const start=up?(left?inset:w-inset-pitch*4):clamp((left?w*.27:w*.73)-pitch*2,safe,w-safe-pitch*4);
+    const originalPitch=up?Math.max(15,(span-safe)/4,touch&&(up||!side)?44:0):Math.max(15,step*.8,touch&&!side?44:0);
     L.size=Math.min(originalPitch*1.39,h*.144);
     L.noteSize=Math.min(originalPitch*1.91,h*.183)*(SET.danceSmall?.79:1);
     L.laneEdge=start+(left?pitch*4:0);
@@ -1753,7 +1753,7 @@ function dnLaneLayout(F){
     // second, still upper row for the targets and their 44 px touch areas.
     F.line=Math.max(h*.182,safeTop+half+3,besideScore?0:score.bottom+half+8);
   }else{
-    F.line=Math.min(F.bandBottom-half-2,Math.max(foot+half*.96,h*(short?.894:.927)));
+    F.line=Math.min(F.bandBottom-half-2,h*(short?.84:.82));
   }
   const arrow=F.sides[0].noteSize;
   F.spawn=up?h+arrow*.53:F.bandTop+arrow*.66;
