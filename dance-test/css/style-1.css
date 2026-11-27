@@ -491,3 +491,90 @@ body.shoot #moveBtns,body.shoot #tasks,body.shoot #pad,body.shoot #job,body.shoo
 #dnTop #dnFill{background:linear-gradient(#8ff0d0,#2fb98d)!important;box-shadow:0 0 12px 3px rgba(143,240,208,.9)}
 #dnTop #dnMid{width:6px!important;background:#fff!important;box-shadow:0 0 10px 4px #fff}
 @media (max-height:500px){#dnTop i[id$="S"]{min-width:56px;height:42px;font-size:24px;padding:0 10px}#dnTop #dnBar{height:22px!important}}
+/* 🏆 27 Nov 2026 (owner): the dance score screen. The card is a see-through frame over the whole view: the banner and buttons sit above the dancers' heads, one score card each at the sides of the room */
+#panel #card.dnres{position:fixed!important;inset:0!important;width:auto!important;max-width:none!important;max-height:none!important;margin:0!important;padding:0!important;background:none!important;border:0!important;box-shadow:none!important;overflow:visible!important;display:block!important;pointer-events:none}
+#card.dnres>*{pointer-events:auto}
+#card.dnres .dnRB{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 10px);transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;background:none;margin:0}
+#card.dnres .dnRB .who{font-size:clamp(30px,4.2vw,60px)!important;font-weight:900;padding:6px 26px!important;border-radius:999px;background:linear-gradient(#fff3b8,#ffc94d);color:#3d2c5e;border:4px solid #fff;box-shadow:0 0 24px 6px rgba(255,214,90,.8),0 6px 0 #b9852a;transform:rotate(-2deg);animation:dnBannerPop .5s cubic-bezier(.2,1.6,.4,1) both;white-space:nowrap}
+#card.dnres .dnRB.lose .who{background:linear-gradient(#ffd6ea,#ff8fbf);box-shadow:0 0 20px 4px rgba(255,140,190,.7),0 6px 0 #a64a78}
+#card.dnres .dnRB.tie .who{background:linear-gradient(#d9f7ff,#8fd3ff);box-shadow:0 0 20px 4px rgba(143,211,255,.7),0 6px 0 #3f7fa8}
+#card.dnres .dnRB .dnResultNote{color:#fff!important;font-weight:800;font-size:15px!important;text-shadow:0 2px 0 #3d2c5e,0 0 6px #3d2c5e;text-align:center;margin:0!important}
+#card.dnres .dnRB>div:first-child{display:flex;flex-direction:column;align-items:center;gap:4px}
+#card.dnres .dnResultActions{display:flex;gap:10px;margin:2px 0 0}
+#card.dnres .dnResultActions .btn{font-size:20px;min-height:48px;padding:6px 20px}
+@keyframes dnBannerPop{from{transform:rotate(-2deg) scale(.3);opacity:0}to{transform:rotate(-2deg) scale(1);opacity:1}}
+#card.dnres .dnRC{position:absolute;top:50%;transform:translateY(-42%);width:clamp(170px,19vw,300px);background:rgba(36,24,64,.82);color:#fff;border:3px solid #fff;border-radius:24px;padding:14px 14px 12px;text-align:center;box-shadow:0 0 22px 4px var(--g),0 6px 0 rgba(30,20,50,.6);animation:dnCardIn .45s .15s cubic-bezier(.2,1.4,.4,1) both}
+#card.dnres .dnRC.me{left:calc(env(safe-area-inset-left,0px) + 2.2vw);--g:rgba(95,212,176,.75)}
+#card.dnres .dnRC.you{right:calc(env(safe-area-inset-right,0px) + 2.2vw);--g:rgba(255,110,160,.75)}
+#card.dnres .dnRC.win{border-color:#ffd45c;box-shadow:0 0 30px 8px rgba(255,212,92,.85),0 6px 0 rgba(30,20,50,.6)}
+#card.dnres .dnRC .crown{position:absolute;top:-30px;left:50%;transform:translateX(-50%) rotate(-8deg);font-size:40px}
+#card.dnres .dnRC .nm{font-weight:900;font-size:clamp(15px,1.4vw,22px);opacity:.95;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#card.dnres .dnRC .sc{font-weight:900;font-size:clamp(40px,4.6vw,72px);line-height:1.05;text-shadow:0 3px 0 rgba(0,0,0,.35),0 0 14px var(--g)}
+#card.dnres .dnRC.me .sc{color:#8ff0d0}#card.dnres .dnRC.you .sc{color:#ffb3cf}
+#card.dnres .dnRC .st{font-size:clamp(20px,2vw,30px);letter-spacing:2px;color:#ffd45c;text-shadow:0 0 8px rgba(255,212,92,.8)}#card.dnres .dnRC .st i{font-style:normal;color:rgba(255,255,255,.22);text-shadow:none}
+#card.dnres .dnRC .cb{font-size:clamp(13px,1.1vw,17px);font-weight:800;margin:2px 0 8px}#card.dnres .dnRC .cb b{color:#ffd45c;font-size:1.2em}
+#card.dnres .dnRC .chips{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+#card.dnres .dnRC .dnc{display:flex;align-items:center;justify-content:space-between;gap:4px;background:var(--i);color:var(--d);border-radius:999px;padding:2px 9px;font-size:clamp(11px,.9vw,14px);font-weight:900;flex-direction:row-reverse}
+#card.dnres .dnRC .dnc b{font-size:1.15em}
+#card.dnres .dnRC .dnc:last-child{grid-column:1/-1}
+@keyframes dnCardIn{from{opacity:0;transform:translateY(-30%) scale(.6)}to{opacity:1;transform:translateY(-42%) scale(1)}}
+@media (max-height:500px){#card.dnres .dnRC{width:clamp(130px,21vw,190px);padding:8px 8px 7px;top:54%}#card.dnres .dnRC .sc{font-size:30px}#card.dnres .dnRC .st{font-size:16px}#card.dnres .dnRC .cb{font-size:11px;margin:0 0 4px}#card.dnres .dnRC .dnc{font-size:10px;padding:1px 6px}#card.dnres .dnRC .crown{font-size:26px;top:-20px}#card.dnres .dnRB .who{font-size:26px!important;padding:3px 16px!important}#card.dnres .dnResultActions .btn{font-size:15px;min-height:44px;padding:4px 14px}#card.dnres .dnRB .dnResultNote{font-size:12px!important}}
+
+/* 🏆 27 Nov 2026 round 2: the frame fills the view; buttons at the bottom; the winner's card bigger, the other one a bit smaller */
+#panel.bottom #card.dnres{top:0!important;bottom:0!important;left:0!important;right:0!important;height:100vh!important;height:100dvh!important;transform:none!important;animation:none!important}
+#card.dnres .dnResultActions{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);margin:0}
+#card.dnres .dnResultActions .btn{font-size:24px;min-height:58px;padding:8px 28px;box-shadow:0 0 18px 3px rgba(255,255,255,.55),0 5px 0 rgba(30,20,50,.5)}
+#card.dnres .dnRB .dnResultNote{font-size:20px!important}
+#card.dnres .dnRC{top:calc(env(safe-area-inset-top,0px) + 22vh);transform:none;animation:dnCardIn2 .45s .15s cubic-bezier(.2,1.4,.4,1) both}
+#card.dnres .dnRC.win{transform:scale(1.08);animation:dnCardIn2 .45s .15s cubic-bezier(.2,1.4,.4,1) both,dnWinGlow 1.2s 1s ease-in-out infinite alternate}
+#card.dnres .dnRB.win~.dnRC:not(.win),#card.dnres .dnRB.lose~.dnRC:not(.win){opacity:.88;filter:saturate(.75)}
+#card.dnres .dnRC .dnc{font-size:clamp(12px,1vw,15px)}
+#card.dnres .dnRC .ribbon{display:block;margin:-4px auto 4px;width:max-content;background:#ffd45c;color:#3d2c5e;font-weight:900;font-size:13px;letter-spacing:2px;padding:1px 12px;border-radius:999px}
+@keyframes dnCardIn2{from{opacity:0;scale:.6}to{opacity:1;scale:1}}
+@keyframes dnWinGlow{from{box-shadow:0 0 22px 6px rgba(255,212,92,.7),0 6px 0 rgba(30,20,50,.6)}to{box-shadow:0 0 44px 14px rgba(255,212,92,.95),0 6px 0 rgba(30,20,50,.6)}}
+@media (max-height:500px){#card.dnres .dnRC{top:calc(env(safe-area-inset-top,0px) + 74px)}#card.dnres .dnResultActions{bottom:calc(env(safe-area-inset-bottom,0px) + 8px)}#card.dnres .dnResultActions .btn{font-size:17px;min-height:44px;padding:4px 18px}#card.dnres .dnRB .dnResultNote{font-size:13px!important}#card.dnres .dnRC .dnc{font-size:11px}#card.dnres .dnRC .ribbon{font-size:10px}}
+#card.dnres .dnRB{left:0;right:0;transform:none;pointer-events:none}#card.dnres .dnRB>*{pointer-events:auto}
+/* 🏆 round 3: paper cards like the rest of the game; the note sits in its own pill; the winner's card bigger, the other one smaller */
+#card.dnres .dnRB .who{font-size:clamp(38px,5.4vw,78px)!important;border-color:#ffd23f;box-shadow:0 0 0 4px #fff,0 0 34px 10px rgba(255,210,63,.85),0 7px 0 #b9852a}
+#card.dnres .dnRB .dnResultNote{background:rgba(61,44,94,.88);border:2px solid #fff;border-radius:999px;padding:3px 16px;text-shadow:none;margin-top:2px!important}
+#card.dnres .dnRC{background:#fff8ee;color:#3d2c5e;border:4px solid #3d2c5e;box-shadow:0 0 22px 4px var(--g),0 6px 0 rgba(61,44,94,.45)}
+#card.dnres .dnRC.win{border-color:#e0a91b;transform:scale(1.15);transform-origin:top center}
+#card.dnres .dnRC:not(.win){transform:scale(.9);transform-origin:top center;opacity:.85;filter:saturate(.7)}
+#card.dnres .dnRC.me .sc{color:#1f9c78}#card.dnres .dnRC.you .sc{color:#e0457f}#card.dnres .dnRC .sc{text-shadow:0 3px 0 rgba(61,44,94,.18)}
+#card.dnres .dnRC .st{text-shadow:0 0 2px #b9852a}#card.dnres .dnRC .st i{color:rgba(61,44,94,.18)}#card.dnres .dnRC .cb b{color:#e0457f}
+#card.dnres .dnRC .dnc{border:2px solid var(--d)}
+#card.dnres .dnResultActions{gap:24px}
+@media (max-height:500px){#card.dnres .dnRB .who{font-size:30px!important}#card.dnres .dnRB .dnResultNote{font-size:12px!important;padding:1px 10px}#card.dnres .dnRC .dnc{font-size:12px}#card.dnres .dnRC .cb{font-size:12px}#card.dnres .dnRC{width:clamp(140px,21vw,190px)}#card.dnres .dnResultActions{gap:16px}}
+@media (min-width:1000px) and (max-width:1300px){#card.dnres .dnRC{width:210px}}
+/* 🏆 round 4: both cards the same size (the winner shows by glow, crown and ribbon); a spinning star burst behind the banner and confetti */
+#card.dnres .dnRC:not(.win){transform:none;opacity:.92;filter:none}
+#card.dnres .dnRC.win{transform:scale(1.05)}#card.dnres .dnRC.me{transform-origin:top left}#card.dnres .dnRC.you{transform-origin:top right}
+#card.dnres .dnRC .dnc.zero{opacity:.55}
+#card.dnres .dnRB>div:first-child{position:relative}
+#card.dnres .dnRB>div:first-child::before{content:'';position:absolute;left:50%;top:50%;width:min(70vw,900px);aspect-ratio:1;translate:-50% -55%;z-index:-1;pointer-events:none;background:repeating-conic-gradient(rgba(255,220,110,.55) 0 8deg,transparent 8deg 22deg);-webkit-mask:radial-gradient(closest-side,#000 18%,transparent 70%);mask:radial-gradient(closest-side,#000 18%,transparent 70%);animation:dnBurst 9s linear infinite}
+@keyframes dnBurst{to{rotate:360deg}}
+#card.dnres .dnConf{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+#card.dnres .dnConf i{position:absolute;top:-4vh;width:12px;height:18px;border-radius:3px;animation:dnConfFall 3.2s linear infinite}
+#card.dnres .dnConf i:nth-child(5n+1){background:#ff6fa6}#card.dnres .dnConf i:nth-child(5n+2){background:#5fd4b0}#card.dnres .dnConf i:nth-child(5n+3){background:#ffd45c}#card.dnres .dnConf i:nth-child(5n+4){background:#8fd3ff}#card.dnres .dnConf i:nth-child(5n){background:#b79cff}
+#card.dnres .dnConf i:nth-child(1){left:11%;animation-delay:-0.00s;rotate:0deg}#card.dnres .dnConf i:nth-child(2){left:48%;animation-delay:-0.41s;rotate:53deg}#card.dnres .dnConf i:nth-child(3){left:85%;animation-delay:-0.82s;rotate:106deg}#card.dnres .dnConf i:nth-child(4){left:22%;animation-delay:-1.23s;rotate:159deg}#card.dnres .dnConf i:nth-child(5){left:59%;animation-delay:-1.64s;rotate:212deg}#card.dnres .dnConf i:nth-child(6){left:96%;animation-delay:-2.05s;rotate:265deg}#card.dnres .dnConf i:nth-child(7){left:33%;animation-delay:-2.46s;rotate:318deg}#card.dnres .dnConf i:nth-child(8){left:70%;animation-delay:-2.87s;rotate:11deg}#card.dnres .dnConf i:nth-child(9){left:7%;animation-delay:-0.08s;rotate:64deg}#card.dnres .dnConf i:nth-child(10){left:44%;animation-delay:-0.49s;rotate:117deg}#card.dnres .dnConf i:nth-child(11){left:81%;animation-delay:-0.90s;rotate:170deg}#card.dnres .dnConf i:nth-child(12){left:18%;animation-delay:-1.31s;rotate:223deg}#card.dnres .dnConf i:nth-child(13){left:55%;animation-delay:-1.72s;rotate:276deg}#card.dnres .dnConf i:nth-child(14){left:92%;animation-delay:-2.13s;rotate:329deg}#card.dnres .dnConf i:nth-child(15){left:29%;animation-delay:-2.54s;rotate:22deg}#card.dnres .dnConf i:nth-child(16){left:66%;animation-delay:-2.95s;rotate:75deg}#card.dnres .dnConf i:nth-child(17){left:3%;animation-delay:-0.16s;rotate:128deg}#card.dnres .dnConf i:nth-child(18){left:40%;animation-delay:-0.57s;rotate:181deg}@keyframes dnConfFall{to{transform:translateY(112vh) rotate(720deg)}}@media (min-width:1400px){#card.dnres .dnResultActions .btn{font-size:30px;min-height:72px;padding:10px 38px}}#card.dnres .dnResultActions .btn.white{border:3px solid #3d2c5e}@media (min-width:1000px) and (max-width:1300px){#card.dnres .dnRC{width:19vw}#card.dnres .dnRC.me{left:1vw}#card.dnres .dnRC.you{right:1vw}}
+/* 🏆 round 5: confetti behind the banner; no dim wash over the room; bigger stars and buttons */
+#card.dnres .dnRB .who{position:relative;z-index:2}#card.dnres .dnRB .dnResultNote{position:relative;z-index:2}
+#panel:has(#card.dnres){background:none!important;backdrop-filter:none!important}
+#card.dnres .dnRC .dnc.zero{opacity:.7}
+#card.dnres .dnRC .st{font-size:clamp(24px,2.4vw,38px);-webkit-text-stroke:1.5px #b9852a}
+#card.dnres .dnResultActions .btn.mint{transform:scale(1.12)}
+@media (max-height:500px){#card.dnres .dnRB .who{font-size:34px!important}#card.dnres .dnRC .dnc{font-size:13px}#card.dnres .dnRC{width:clamp(140px,20vw,180px)}#card.dnres .dnRB .dnResultNote{font-size:14px!important;background:rgba(40,28,64,.95)}#card.dnres .dnResultActions .btn{font-size:18px;min-height:46px}#card.dnres .dnRC .st{font-size:18px;-webkit-text-stroke:1px #b9852a}}
+/* 🏆 round 6: the note is a small second line inside the banner; the banner sits lower so nothing is cut; a soft bar behind the buttons */
+#card.dnres .dnRB{top:calc(env(safe-area-inset-top,0px) + 24px)}
+#card.dnres .dnRB .who{display:flex;flex-direction:column;align-items:center;line-height:1.05}
+#card.dnres .dnRB .dnSub{display:block;font-size:.3em;font-weight:800;opacity:.85;margin-top:2px}
+#card.dnres .dnResultActions{background:rgba(40,30,70,.5);padding:10px 18px;border-radius:999px;box-shadow:0 0 0 3px rgba(255,255,255,.5)}
+#card.dnres .dnResultActions .btn.mint{animation:dnAgainGlow 1.1s ease-in-out infinite alternate}
+@keyframes dnAgainGlow{from{box-shadow:0 0 10px 2px rgba(95,212,176,.6),0 5px 0 rgba(30,20,50,.5)}to{box-shadow:0 0 26px 8px rgba(95,212,176,.95),0 5px 0 rgba(30,20,50,.5)}}
+@media (max-height:500px){#card.dnres .dnRB{top:calc(env(safe-area-inset-top,0px) + 12px)}#card.dnres .dnRB .dnSub{font-size:.4em}#card.dnres .dnResultActions{padding:5px 12px}}
+/* 🏆 last touch after critic round 6: bigger cards nearer the dancers on a big screen; a bit narrower on the iPad; the star burst centred on the banner */
+@media (min-width:1400px){#card.dnres .dnRC{width:340px}#card.dnres .dnRC.me{left:5vw}#card.dnres .dnRC.you{right:5vw}}
+@media (min-width:1000px) and (max-width:1300px){#card.dnres .dnRC{width:18vw}}
+#card.dnres .dnRB>div:first-child::before{translate:-50% -50%}
+#card.dnres .dnRB{display:flex!important;flex-direction:column!important;align-items:center!important}#card.dnres .dnRB>div:first-child{display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;align-items:center!important}
+#card.dnres .dnRB .who{top:0!important;margin:0!important}

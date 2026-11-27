@@ -869,8 +869,9 @@ function dnDiscoTick(fx,t,calm,wave,down){
   const hit=clamp(1-(t-disco.strike)/.75,0,1);
   const combo=clamp(1-(t-(D.stageFx?.celebrate??-100))/1.5,0,1);
   const night=fx.night;
-  p.mirrorPower.value=(calm?.39+.17*wave:.86+.48*wave+.36*down+hit*.22+combo*.18)*(1+.66*night);
-  const beam=(calm?.28+.14*wave:1.15+.55*wave+.5*down+hit*.25+combo*.2)*(1+.65*night);   /* (27 Nov, owner: the rays show in daylight too) */
+  const after=D.res&&!D.on?.4:1;   /* (27 Nov: on the score screen the rays go soft so they don't wash out the dancers) */
+  p.mirrorPower.value=(calm?.39+.17*wave:.86+.48*wave+.36*down+hit*.22+combo*.18)*(1+.66*night)*after;
+  const beam=(calm?.28+.14*wave:1.15+.55*wave+.5*down+hit*.25+combo*.2)*(1+.65*night)*after;   /* (27 Nov, owner: the rays show in daylight too) */
   if(disco.ceiling&&night!==disco.lastNight){
     disco.ceiling.material.color.copy(disco.ceilingDay).lerp(disco.ceilingNight,night);
     disco.lastNight=night;
@@ -1353,6 +1354,21 @@ function dnResultTable(a,why){
   return `<table class="dnResults" aria-label="Dance results"><thead><tr><th scope="col">Dancer</th>${header}</tr></thead>
     <tbody>${row('You',1)}${row(nm,2)}</tbody></table>`;
 }
+/* 🏆 (27 Nov 2026, owner: the score screen) a banner over the dancers' heads and one card each at the sides of the room, never over a face or a body */
+function dnResultCards(a,why){
+  const D=DANCE,ours=D.tallies[0],other=D.tallies[1],nm=esc(dnNm(D.partnerNm));
+  const wire=a?.dn,finished=!why&&wire?.r===D.r&&wire.st==='done'&&Number.isInteger(wire.k)&&wire.k>=0&&wire.k<=D.pat.length;
+  const theirs=i=>{if(DN_TEST)return other.counts[i];if(i===DN_DUDE&&finished&&D.profile)return D.pat.length-wire.k;if(i<DN_WHAT&&other.counts[i])return '≥'+other.counts[i];return '—';};
+  const stars=c=>{const n=c.slice(0,5).reduce((x,y)=>x+(+y||0),0);if(!n)return 0;const q=((+c[0]||0)+.7*(+c[1]||0)+.4*(+c[2]||0))/n;return q>=.9?5:q>=.75?4:q>=.55?3:q>=.35?2:1;};
+  const card=(who,score,counts,best,win,side)=>{
+    const st=stars(counts.map(v=>typeof v==='number'?v:parseInt(String(v).replace('≥',''))||0));
+    const chips=DN_RATINGS.slice(0,5).map((r,i)=>`<span class="dnc${counts[i]===0?' zero':''}" style="--i:${r.ink};--d:${r.dark}"><b>${counts[i]}</b>${r.label}</span>`).join('');
+    return `<div class="dnRC ${side}${win?' win':''}">${win?'<span class="ribbon">WINNER</span>':''}<div class="nm">${who}</div><div class="sc">${score}</div>
+      <div class="st" aria-label="${st} of 5 stars">${'★'.repeat(st)}<i>${'★'.repeat(5-st)}</i></div><div class="cb">🔥 Best combo <b>${best}</b></div><div class="chips">${chips}</div></div>`;};
+  const mine=ours.counts.slice(0,5),yours=[0,1,2,3,4].map(theirs);
+  const ob=DN_TEST?other.best:other.best?'≥'+other.best:'—';
+  return card('You',D.sc,mine,ours.best,D.result>0,'me')+card(nm,D.osc,yours,ob,D.result<0,'you');
+}
 function dnKeepResults(){
   if(!UI.open||!UI.lock||$('panel').hidden||!$('card').classList.contains('dnres')){
     openPanel(DANCE.resultHtml,{bottom:true,lock:true,cls:'dnres'});
@@ -1387,14 +1403,13 @@ function dnEnd(why){
       addXP('sport',3);hardEvent('dance',1);qEvent('dance');change();
     }
     D.resultAt=performance.now();
-    const title=D.result>0?'<span class="dnWinCrown" aria-hidden="true">👑</span> You win!':D.result<0?'💛 Nice try!':'🤝 A tie!';
+    const title=D.result>0?'<span class="dnWinCrown" aria-hidden="true">👑</span> You win!':D.result<0?'🏆 '+esc(dnNm(nm))+' wins!':'🤝 A tie!';
     const note=DN_TEST?'Practice round.':coins?`You got ${coins} 🪙!`:'Great dancing!';
-    const details=D.style?dnResultTable(a,why):`<p class="line">You <b>${D.sc}</b> · ${esc(nm)} <b>${D.osc}</b></p>`;
+    const details=D.style?dnResultCards(a,why):`<p class="line">You <b>${D.sc}</b> · ${esc(nm)} <b>${D.osc}</b></p>`;
     const limits=!DN_TEST&&D.style?'<p class="dnResultNote">≥ counts the hits your game saw. A dash means the detail wasn’t shared.</p>':'';
     SFX.yay();
-    D.resultHtml=`<div class="dnResultHeader"><div><div class="who${D.result>0&&!dnCalm()?' dnResultsWin':''}" style="--c:${D.result>0?'#ffe08a':'#ffb7d6'}">${title}</div>
-      <p class="dnResultNote">${why==='gone'?esc(nm)+' had to go. ':D.result<0?esc(dnNm(nm))+' wins this round. ':''}${note}</p></div>
-      <div class="row dnResultActions"><button class="btn mint" data-a="dnagain">↻ Again</button><button class="btn white" data-a="dnbye">👋 Done</button></div></div>${details}${limits}`;
+    D.resultHtml=`<div class="dnResultHeader dnRB ${D.result>0?'win':D.result<0?'lose':'tie'}"><div><div class="who${D.result>0&&!dnCalm()?' dnResultsWin':''}" style="--c:${D.result>0?'#ffe08a':'#ffb7d6'}">${title}<small class="dnSub">${why==='gone'?esc(nm)+' had to go. ':D.result<0?'💛 Nice try! ':''}${note}</small></div></div>
+      ${dnCalm()?'':'<i class="dnConf" aria-hidden="true">'+'<i></i>'.repeat(18)+'</i>'}<div class="row dnResultActions"><button class="btn mint" data-a="dnagain">↻ Again</button><button class="btn white" data-a="dnbye">👋 Done</button></div></div>${details}${limits}`;
     openPanel(D.resultHtml,{bottom:true,lock:true,cls:'dnres'});
     setTimeout(()=>{if(D.mine?.r===id&&D.mine.st==='done')D.mine=null;},5000);
   };
