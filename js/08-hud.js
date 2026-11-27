@@ -455,6 +455,6 @@ ACT.gline=id=>{PH.gsel=PH.gsel===id?'':id;socFill();};
 ACT.ghide=id=>{const m=SOC.g.find(x=>x.id===id);PH.gsel='';if(m&&socOn()&&m.s!==SOC.me.sid){socBlock(m.s,m.n);toast('🚫 '+m.n+' is blocked. You can undo it in 📱 Friends.',3.6);}socFill();};
 ACT.swchat=()=>{SET.wchat=SET.wchat===false;saveSet();socWorld(SET.wchat!==false);openSettings();};   /* 🌍 the grown-ups' switch for the world chat */
 /* 📱 a phone on its side: the 🗺️ chip folds the map, the job line and the bus tip away and back (27 Nov 2026, owner); remembered on this device only, nothing in the save */
-(()=>{const b=$('bFold');if(!b)return;let f=false;try{f=localStorage.getItem('cozy.hudFold')==='1';}catch(e){}
-  const set=v=>{f=v;document.body.classList.toggle('hudfold',v);b.setAttribute('aria-pressed',v?'true':'false');try{localStorage.setItem('cozy.hudFold',v?'1':'0');}catch(e){}setTimeout(leftFit,30);};
-  set(f);b.addEventListener('click',()=>{SFX.pop&&SFX.pop();set(!f);});})();
+/* 🗺️ 27 Nov 2026 (owner: "mini map on phone is not needed at all ... pressing the map icon should be easier and show the expanded map"): on a phone the corner map is gone and the 🗺️ chip opens the big map (it used to fold the map column away) */
+(()=>{const b=$('bFold');if(!b)return;document.body.classList.remove('hudfold');try{localStorage.removeItem('cozy.hudFold');}catch(e){}
+  b.addEventListener('click',()=>{audioInit();SFX.tap();openPhone('map');});})();
