@@ -867,8 +867,8 @@ function dnDiscoTick(fx,t,calm,wave,down){
   const hit=clamp(1-(t-disco.strike)/.75,0,1);
   const combo=clamp(1-(t-(D.stageFx?.celebrate??-100))/1.5,0,1);
   const night=fx.night;
-  p.mirrorPower.value=(calm?.39+.17*wave:.57+.41*wave+.27*down+hit*.18+combo*.15)*(1+.66*night);
-  const beam=(calm?.28+.14*wave:.44+.34*wave+.31*down+hit*.15+combo*.12)*(1+.65*night);
+  p.mirrorPower.value=(calm?.39+.17*wave:.86+.48*wave+.36*down+hit*.22+combo*.18)*(1+.66*night);
+  const beam=(calm?.28+.14*wave:1.15+.55*wave+.5*down+hit*.25+combo*.2)*(1+.65*night);   /* (27 Nov, owner: the rays show in daylight too) */
   if(disco.ceiling&&night!==disco.lastNight){
     disco.ceiling.material.color.copy(disco.ceilingDay).lerp(disco.ceilingNight,night);
     disco.lastNight=night;
@@ -979,7 +979,7 @@ function dnFunkyLights(t,profile){
   const boost=streak>=50?.33:streak>=25?.24:streak>=10?.15:0;
   const flash=calm?.24*wave:(.78+boost)*wave+.56*down;
   fx.spotM[0].opacity=Math.min(.96,.31+flash*.46);fx.spotM[1].opacity=Math.min(.96,.35+flash*.42);
-  fx.tileM[0].emissiveIntensity=.24+flash;fx.tileM[1].emissiveIntensity=.22+flash;
+  fx.tileM[0].emissiveIntensity=.5+flash*1.5;fx.tileM[1].emissiveIntensity=.46+flash*1.5;   /* (27 Nov, owner: the floor gives off more light) */
   const step=calm?0:Math.max(0,beat);
   if(step!==fx.step){
     fx.step=step;
@@ -991,10 +991,11 @@ function dnFunkyLights(t,profile){
 }
 function dnRoomLight(){
   const fx=DANCE.spots?.userData.funky;
-  if(!fx?.night||fx.room!==CUR)return;
-  hemi.intensity*=1-.54*fx.night;
-  sun.intensity*=1-.70*fx.night;
-  lamp.intensity*=1-.43*fx.night;
+  if(!fx||fx.room!==CUR)return;
+  const n=fx.night||0,party=DANCE.on&&!dnCalm()?.32:0;   /* (27 Nov: a dance-off dims the room a little even by day, so the disco light shows) */
+  hemi.intensity*=1-Math.max(.54*n,party);
+  sun.intensity*=1-Math.max(.70*n,party*1.2);
+  lamp.intensity*=1-Math.max(.43*n,party);
 }
 /* Watching a round in this house uses the same stage clock as both dancers. */
 function dnWatch(){
@@ -1722,14 +1723,14 @@ function dnLaneLayout(F){
   const score=F.top.getBoundingClientRect(),halfWidth=w*.5;
   const inset=up?Math.max(safe+2,w*.032):safe+w*(portrait?.009:big?.082:.019);
   const span=w*(big?.194:short?.218:portrait?.223:.203);
-  const step=Math.max(15,up?Math.min(w*.062,(halfWidth-inset-8)/4):Math.min(w*.072,(halfWidth-safe*2)/4.4));   /* (27 Nov, owner's sketch: falling arrows, one row low in the middle of each half) */
+  const step=Math.max(15,up?Math.min(w*.062,(halfWidth-inset-8)/4):Math.min(w*.088,(halfWidth-safe*2)/4.3));   /* (27 Nov, owner's sketch: falling arrows, one row low in the middle of each half) */
   const besideScore=up&&Math.min(score.left,w-score.right)>inset+step*4+Math.min(46,w*.025)+8;
   for(let side=0;side<2;side++){
     const L=F.sides[side],left=side?!D.left:!!D.left;
     const pitch=touch&&(up||!side)?Math.max(step,44):step;
     const start=up?(left?inset:w-inset-pitch*4):clamp((left?w*.27:w*.73)-pitch*2,safe,w-safe-pitch*4);
-    const originalPitch=up?Math.max(15,(span-safe)/4,touch&&(up||!side)?44:0):Math.max(15,step*.8,touch&&!side?44:0);
-    L.size=Math.min(originalPitch*1.39,h*.144);
+    const originalPitch=up?Math.max(15,(span-safe)/4,touch&&(up||!side)?44:0):Math.max(15,step*.68,touch&&!side?44:0);
+    L.size=Math.min(originalPitch*1.39,h*(up?.144:.17));
     L.noteSize=Math.min(originalPitch*1.91,h*.183)*(SET.danceSmall?.79:1);
     L.laneEdge=start+(left?pitch*4:0);
     L.key=Math.min(76,pitch);
@@ -1738,7 +1739,7 @@ function dnLaneLayout(F){
   }
   const half=Math.max(F.sides[0].size*.5,F.sides[0].key*.5);
   F.wordHeight=clamp(Math.min(h*.090,w*.090),23,big?69:62);
-  F.comboHeight=clamp(Math.min(h*.093,w*.107),25,84);
+  F.comboHeight=clamp(Math.min(h*.14,w*.15),34,120);   /* (27 Nov: the combo count reads from across the room) */
   F.safe=safe;
   F.bandBottom=up?h:h-safeBottom;
   F.scoreBottom=score.bottom;
@@ -1947,11 +1948,20 @@ function dnLaneSide(g,F,L,side,t,now,calm){
     if(until>=-DN_WIN&&(side?D.otherNotes[i]!==1:n.j!==1))
       near[n.d]=Math.max(near[n.d],1-Math.abs(until)*(until>=0?2.2:4));
   }
+  if(!F.up){   /* 🎸 (27 Nov, owner: more Guitar Hero) a see-through dark runway behind this row's four lanes, lane lines and a glowing hit line */
+    const x0=L.x[0]-size*.62,x1=L.x[3]+size*.62,y0=F.bandTop,y1=line+size*.62,cx=(x0+x1)/2,cy=(y0+y1)/2;
+    dnLaneDamage(F,cx,cy,(x1-x0)/2+3,(y1-y0)/2+3);
+    const beatGlow=calm?0:Math.max(0,1-((t*(DN_LOOP.bpm||113)/60)%1)*3),lw=(L.x[1]-L.x[0])*.86;
+    for(let d=0;d<4;d++){const gr=g.createLinearGradient(0,y0+(y1-y0)*.35,0,line);gr.addColorStop(0,'rgba(255,255,255,0)');gr.addColorStop(1,DN_NOTE_INK[d]);
+      g.globalAlpha=(.55+.35*beatGlow)*dim;g.fillStyle=gr;g.fillRect(L.x[d]-1.5,y0+(y1-y0)*.35,3,line-(y0+(y1-y0)*.35)-size*.5);}   /* a thin glowing guide line down each lane */
+    g.globalAlpha=(.45+.5*beatGlow)*dim;g.fillStyle='#fffbe8';g.fillRect(x0+size*.1,line-2.5,x1-x0-size*.2,5);
+  }
   for(let d=0;d<4;d++){
     const x=L.x[d],pulse=near[d],miss=now-L.dim[d]<.25;
     const age=now-L.hitAt[d],pop=calm||age<0||age>.43?0:(1-age/.43)*(L.hitGrade[d]===DN_PERFECT?.22:L.hitGrade[d]===DN_GOOD?.12:.06);
     const f=size*(.96+pop*(quiet?.52:1));
     dnLaneDamage(F,x,line,f*.73+2);
+    if(!F.up&&!calm){const bg=Math.max(0,1-((t*(DN_LOOP.bpm||113)/60)%1)*3);g.globalAlpha=(.38+.32*bg)*dim;g.drawImage(F.glow[d],x-f*.68,line-f*.68,f*1.36,f*1.36);}   /* (27 Nov) each target glows in its colour, brighter on the beat */
     g.globalAlpha=(miss?.55:.96+pulse*.04)*dim;
     g.drawImage(quiet?F.quiet[d]:F.receptors[d],x-f/2,line-f/2,f,f);
     if(age>=0&&age<.24){
@@ -2019,7 +2029,7 @@ function dnLaneLabel(g,F,L,side,now,calm){
     // this dancer's shoulder. Reserve that footprint before drawing notes.
     const shoulder=space<Math.min(200,w*.17);
     const cap=shoulder?Math.min(w*.37,Math.max(L.headRight-L.headLeft+14,w*.14)):space;
-    const scale=Math.min(1,Math.max(.12,(cap-9)/desired));
+    const scale=Math.min(1,Math.max(.62,(cap-9)/desired));   /* (27 Nov: the combo count and the word stay a readable size) */
     const wordW=naturalW*scale*entry,wordH=naturalH*scale*entry*(1-.19*sag);
     const pop=calm?1:1+.12*(1-dnEase((milestone?milestoneAge:age)/.25));
     const cw=comboW*scale*pop,ch=comboH*scale*pop;
