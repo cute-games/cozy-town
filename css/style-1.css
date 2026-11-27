@@ -502,10 +502,9 @@ body.shoot #moveBtns,body.shoot #tasks,body.shoot #pad,body.shoot #job,body.shoo
 .recol{display:flex;flex-direction:column;align-items:center;gap:12px;padding:8px}.recol .mth{width:120px;height:120px}.recolp{font-weight:900;font-size:18px}
 /* 26 Nov: sell chip stays on one line; card names keep two lines of room so cards line up */.mcard .sellb{white-space:nowrap}.mcard .mn{min-height:2.5em;display:flex;align-items:center;justify-content:center;text-align:center}
 /* 27 Nov (owner): the notepad is gone from the screen; its saved pages stay in the save */#pad{display:none!important}
-/* 📱 27 Nov 2026 (owner): phones on their side get a compact top row (same colours and shapes, less empty space); the 🗺️ chip folds the map column away */#bFold{display:none}
+/* 📱 27 Nov 2026 (owner): phones on their side get a compact top row (same colours and shapes, less empty space); the 🗺️ chip opens the big map */#bFold{display:none}
 @media (max-height:500px){#left{top:calc(env(safe-area-inset-top,0px) + 6px);gap:6px}#stats{gap:5px}.chip{height:30px;font-size:14px;gap:4px;padding:0 9px 0 6px;border-width:2px;box-shadow:0 3px 0 var(--soft)}.chip .e{font-size:15px}.chip .day{font-size:11px}.bar{width:38px}
-  #bFold{display:inline-flex;justify-content:center;pointer-events:auto;min-width:44px;height:44px;margin:-7px 0;padding:0;font-size:15px;cursor:pointer;font-family:inherit}#stats #bFold{background:none}#bFold[aria-pressed=true]{filter:grayscale(1);opacity:.6}
-  body.hudfold :is(#job,#tasks,#busTip){display:none!important}
+  #bFold{display:inline-flex;justify-content:center;pointer-events:auto;min-width:44px;height:44px;margin:-7px 0;padding:0;font-size:15px;cursor:pointer;font-family:inherit}#stats #bFold{background:none}
   #topbtns{top:calc(env(safe-area-inset-top,0px) + 6px);gap:5px}.ib{width:44px;height:44px;font-size:20px}
   #toast{font-size:14px;padding:6px 12px;max-width:min(440px,54vw);border-width:2px;bottom:auto;top:calc(env(safe-area-inset-top,0px) + 54px)}
   #busTip{font-size:12px}
@@ -513,3 +512,6 @@ body.shoot #moveBtns,body.shoot #tasks,body.shoot #pad,body.shoot #job,body.shoo
   
   #joy{left:calc(env(safe-area-inset-left,0px) + 20px)!important;bottom:calc(env(safe-area-inset-bottom,0px) + 8px)!important;width:112px;height:112px}#jobTxt{font-size:12px;padding:4px 8px}}
 /* 27 Nov (owner: "texts like these are not needed"): the way-finding pill shows only its turning arrow and ✕, no place name or metres */#navTxt{display:none}#nav{padding:3px 4px 3px 10px}
+
+/* 🗺️ 27 Nov 2026 (owner): no corner map on phones; the 🗺️ chip in the top row opens the big map and is a big easy target (it reaches past the capsule's edge) */
+@media (max-height:500px){#mmWrap{display:none!important}#bFold{min-width:64px;height:52px;margin:-11px -2px -11px 0;font-size:22px}#bFold:active{transform:scale(.92)}}
