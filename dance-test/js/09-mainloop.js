@@ -974,6 +974,7 @@ function dnFunkyLights(t,profile){
   const calm=dnCalm(),position=dnBeatAt(t,profile),beat=Math.floor(position);
   const wave=dnBeatPulse(position),down=beat%4===0?wave:0;
   fx.down=down;
+  { const ph=position-4*Math.round(position/4);fx.push=position<-1?0:Math.exp(-ph*ph/.36); }   /* (27 Nov, owner: the camera move read as a bug) a soft push in that rises before each bar's first beat and settles after it, like a real camera move */
   const now=performance.now();
   if(now>=fx.clockSample){fx.clockSample=now+750;fx.night=nightF(clockNow().time);}
   g.rotation.y=Math.max(0,t)*(calm?.12:.52);
@@ -1255,7 +1256,7 @@ function dnCam(dt){
     }
     P.cy=0;P.jy=0;updateCamera(dt);
     if(D.style)camera.position.y=dnCameraHeight();
-    const zoom=D.style&&!dnCalm()?1+.026*(D.spots?.userData.funky?.down||0):1;
+    const zoom=D.style&&!dnCalm()?1+.022*(D.spots?.userData.funky?.push||0):1;
     if(camera.zoom!==zoom){camera.zoom=zoom;camera.updateProjectionMatrix();}
   }
   for(const q of PET_ACTORS)if(q.loc===CUR.id)q.g.visible=false;   /* the pets wait out of the picture during a round (they show again by themselves) */
@@ -2149,10 +2150,9 @@ function dnLaneDraw(now=performance.now()/1000){
   if(!calm){
     const hit=now-F.sides[0].pulseAt,buddy=now-F.sides[1].pulseAt,age=Math.min(hit,buddy);
     if(age>=0&&age<.28){
-      const c=D.cam,punch=1-age/.28,shake=(hit<=buddy?.032:.024)*punch*Math.cos(age*41);
+      const c=D.cam,punch=Math.sin(Math.PI*age/.28),shake=(hit<=buddy?.012:.009)*punch;   /* (27 Nov) a smooth nudge on a perfect hit: no snap, no tilt */
       camera.position.x+=c.dz*shake;camera.position.z-=c.dx*shake;
-      camera.rotation.z+=shake*.36;
-      camera.zoom*=1+.018*punch*punch;camera.updateProjectionMatrix();
+      camera.zoom*=1+.01*punch;camera.updateProjectionMatrix();
     }
   }
   camera.updateMatrixWorld();
