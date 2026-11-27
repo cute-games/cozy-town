@@ -58,3 +58,7 @@ pet brain, yard/gear, vet, big pets/`PACKM`/`packBuild`, Pet Show, farm). 3. The
 ## Open / not verified (all in `tools/PFU-REPORT.md` 6, 11, 12)
 - Real iPad: P19 (30+ fps, 2 players) and P25 (first load); C1-WK, F3 (after upload), G (real devices, sounds, friends together).
 - Older items stay open: G4-205/222, G4-279, G4-285, run 4's 15 grade-1 marks (`tools/RUN-4-REPORT.md`).
+- Kit v7 changes 27 Nov (in `cozy-check-v7.zip`, old → new): N35 "Notepad switch: off hides it, on brings it back" → "Notepad gone (owner 27 Nov): never shown, no Settings switch, pages kept";
+  N41 "the pill shows the next bus with its weekday" → "Rosie texts the next bus with its weekday at the stop"; P3 "the pill" → "Rosie's text at the stop"; N36 ceiling lamps built for a 3.2 m room
+  (same 3.2 m limit); harness `center()`, `book_swipe` and C3's joystick drag map their touch points for an upright phone (ROT); harness can serve `music/` from `COZY_REPO` (off by default: the dance
+  clock then waits on real audio and N39 hangs).
