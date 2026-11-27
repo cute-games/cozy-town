@@ -428,7 +428,7 @@ function openSettings(){const fromTitle=!PLAYING;
     <div class="opt"><span>🎨 Designer job</span><button class="btn white" data-a="dtutgo">📖 Show me the tips</button></div>
     <div class="opt"><span>✂️ Hairstylist job</span><button class="btn white" data-a="hstutgo">📖 Show me the tips</button></div>
     <div class="opt"><span>📸 Photographer job</span><button class="btn white" data-a="pttutgo">📖 Show me the tips</button></div>
-    <div class="opt"><span>✏️ Notepad</span><span class="row" style="margin:0"><button class="btn ${SET.pad!==false?'mint':'white'}" data-a="spad" aria-pressed="${SET.pad!==false}">${SET.pad!==false?'✏️ On':'Off'}</button><button class="btn ${PAD.del?'butter':'white'}" data-a="padrest"${PAD.del?'':' disabled'}>↩️ Last page</button></span></div>
+    <!-- (27 Nov 2026, owner: the notepad is gone, so its switch is too; the pages stay in the save) -->
     ${PLAYING&&S&&S.pets.length?`<div class="opt"><span>🐾 Pets</span><span class="row" style="margin:0"><button class="btn mint" data-a="fetchpets">🐾 Bring my pets to me</button>${S.pets.length>1?'<button class="btn sky" data-a="mypets">🐾 My pets</button>':''}</span></div>`:''}
     ${PLAYING?'<div class="opt"><span>Stuck somewhere?</span><button class="btn mint" data-a="gohome">🏠 Take me home</button></div>':''}
     ${socOn()?`<div class="opt"><span>🌍 World chat</span><button class="btn ${SET.wchat!==false?'mint':'white'}" data-a="swchat" aria-pressed="${SET.wchat!==false}">${SET.wchat!==false?'💬 On':'Off'}</button></div>`:''}
