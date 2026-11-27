@@ -828,7 +828,7 @@ function dnDiscoStart(f,ball,style){
     void main(){
       float axial=smoothstep(.012,.105,rayLength)*(1.-smoothstep(.75,1.,rayLength));
       float across=pow(abs(dot(normalize(raySide),normalize(cameraPosition-rayPoint))),2.4);
-      gl_FragColor=vec4(ink,min(.72,axial*across*power*.6));
+      gl_FragColor=vec4(ink,min(.9,axial*across*power*.75));
     }`;
   for(const color of ink){
     const material=new THREE.ShaderMaterial({vertexShader,fragmentShader,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,
@@ -884,7 +884,7 @@ function dnDiscoTick(fx,t,calm,wave,down){
     const dx=(room.ox+(dir.x<0?-W:W)-pos.x)/dir.x;
     const dz=(oz+(dir.z<0?-H:H)-pos.z)/dir.z;
     const length=Math.min(dx,dz,(.06-pos.y)/dir.y);
-    const ray=disco.rays[i],width=length*(i===2?.24:.2);   /* (27 Nov: wider, brighter rays that read by day) */
+    const ray=disco.rays[i],width=length*(i===2?.28:.24);   /* (27 Nov: wider, brighter rays that read by day) */
     ray.position.copy(pos);ray.quaternion.setFromUnitVectors(disco.down,dir);
     ray.scale.set(width,length,width);
     ray.material.uniforms.power.value=beam*(i===2?.72:1);
@@ -1964,7 +1964,7 @@ function dnLaneSide(g,F,L,side,t,now,calm){
     dnLaneDamage(F,x,line,f*.73+2);
     if(!F.up&&!calm){const bg=Math.max(0,1-((t*(DN_LOOP.bpm||113)/60)%1)*3);g.globalAlpha=(.38+.32*bg)*dim;g.drawImage(F.glow[d],x-f*.68,line-f*.68,f*1.36,f*1.36);}   /* (27 Nov) each target glows in its colour, brighter on the beat */
     g.globalAlpha=(miss?.55:.96+pulse*.04)*dim;
-    g.drawImage(quiet?F.quiet[d]:F.receptors[d],x-f/2,line-f/2,f,f);
+    g.drawImage(quiet&&F.up?F.quiet[d]:F.receptors[d],x-f/2,line-f/2,f,f);   /* (27 Nov: the coloured targets on every device) */
     if(age>=0&&age<.24){
       const hot=1-dnEase(age/.24);
       g.globalAlpha=hot*(L.hitGrade[d]===DN_PERFECT?.86:.56);
