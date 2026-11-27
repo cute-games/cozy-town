@@ -512,3 +512,4 @@ body.shoot #moveBtns,body.shoot #tasks,body.shoot #pad,body.shoot #job,body.shoo
   #stats{gap:0;background:var(--paper);border:2px solid var(--line);border-radius:999px;box-shadow:0 3px 0 var(--soft);padding:0 2px;pointer-events:auto}#stats .chip{border:0;box-shadow:none;background:none;padding:0 7px}#stats .chip+.chip{border-left:2px solid var(--soft);border-radius:0}#stats #bFold{border-radius:0 999px 999px 0}
   
   #joy{left:calc(env(safe-area-inset-left,0px) + 20px)!important;bottom:calc(env(safe-area-inset-bottom,0px) + 8px)!important;width:112px;height:112px}#jobTxt{font-size:12px;padding:4px 8px}}
+/* 27 Nov (owner: "texts like these are not needed"): the way-finding pill shows only its turning arrow and ✕, no place name or metres */#navTxt{display:none}#nav{padding:3px 4px 3px 10px}

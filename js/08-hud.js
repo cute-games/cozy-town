@@ -18,7 +18,7 @@ function leftFit(){const L=$('left'),pad=$('pad'),dc=$('dcard'),mm=$('mmBtn');if
   for(const st of steps){if(!bad())break;st();}updPlace();}
 new MutationObserver(()=>leftFit()).observe($('left'),{childList:true,subtree:true,attributes:true,attributeFilter:['hidden']});   /* a pill or box comes or goes */
 addEventListener('resize',()=>setTimeout(leftFit,60));
-{const st=document.createElement('style');st.textContent='#left.lfPad #pad,#left.lfDcS #dcard{position:absolute;margin:0}#left.lfDc #dcard .dci{display:none}#left.lfNoPad #pad,#left.lfNoMap #mmBtn,#left.lfTasks #tasks ul,.cut #left.lfCut #nav,.cut #left.lfCut #job{display:none}'
+{const st=document.createElement('style');st.textContent='#left.lfPad #pad,#left.lfDcS #dcard{position:absolute;margin:0}#left.lfDc #dcard .dci{display:none}#left.lfNoPad #pad,#left.lfNoMap #mmBtn,#left.lfNoMap #mmZoom,#left.lfTasks #tasks ul,.cut #left.lfCut #nav,.cut #left.lfCut #job{display:none}'
   /* 🧹 glitch fixes, pass 2: on a phone held upright the column is narrow (it shares the top row with the round buttons), so the pink arrow bar
      became a tall column of single words and the score pill ran out of its box. The bars below the clock may now be as wide as their words */
   +'@media (max-width:600px){#left>#nav,#left>#busTip,#left>#fbHud,#left>#tnHud{width:max-content;max-width:calc(100vw - 24px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px))}}#navX{flex:0 0 auto}#card.bustab.more::after{margin:-44px auto 0}';document.head.appendChild(st);}
