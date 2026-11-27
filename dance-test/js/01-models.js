@@ -397,7 +397,7 @@ const FURN={
     const scr=box(g,1.08,.6,.02,null,0,.61,0,{mat:new THREE.MeshBasicMaterial({map:tex,color:'#ffffff'}),ol:false});scr.userData.screen=1;scr.userData.cnv=cnv;scr.userData.ctx=ctx;scr.userData.tex=tex;drawCatTV(ctx,0,false);tex.needsUpdate=true;}},
   lamp:{n:'Lamp',i:'💡',p:70,w:.5,d:.5,cols:['#ffd45c','#ff9ec4','#7fdcb5','#8fd3ff'],use:'lamp',b(g,c){
     cyl(g,.2,.22,.05,'#3d2c5e',0,0,0);cyl(g,.025,.025,1.35,'#3d2c5e',0,.05,0,{seg:6,ol:.015});
-    const sm=cyl(g,.16,.27,.32,null,0,1.28,0,{mat:toon({color:c,emissive:new THREE.Color('#ffcf73'),emissiveIntensity:.55})});sm.userData.shade=1;}},
+    const sm=cyl(g,.16,.27,.32,null,0,1.28,0,{mat:toon({color:new THREE.Color(c).multiplyScalar(.6).getStyle(),emissive:new THREE.Color(c),emissiveIntensity:.5})});sm.userData.shade=1;}},
   plant:{n:'Plant',i:'🪴',p:40,w:.6,d:.6,b(g){
     cyl(g,.2,.15,.36,'#e88f6a',0,0,0,{seg:12});cyl(g,.21,.21,.05,'#c96f4f',0,.34,0,{seg:12});
     for(const [x,y,z,r] of [[0,.62,0,.24],[.14,.5,.06,.16],[-.13,.52,-.05,.17],[.02,.84,.03,.14]])sph(g,r,'#6fcf7a',x,y,z,{ws:10,hs:8});}},
@@ -467,15 +467,29 @@ const FURN={
   vanity:{n:'Vanity table',i:'💄',p:220,w:1.1,d:.5,r4:1,cols:['#ffffff','#ffd6e0','#e6dbff'],use:'dress',b(g,c){box(g,1.1,.72,.5,c,0,0,0);box(g,.8,1.0,.06,c,0,.72,-.2,{ol:.012});box(g,.64,.84,.02,'#bfe6ff',0,.8,-.165,{ol:false});for(const x of[-.3,.3])box(g,.2,.1,.02,shade(c,.08),x,.3,.25,{ol:false});
     cyl(g,.03,.03,.1,'#ff4d8d',.3,.72,.1,{seg:8,ol:.008});cyl(g,.05,.05,.06,'#b79cff',-.3,.72,.1,{seg:10,ol:.008});for(const x of[-.28,.28])for(const y of[.9,1.3])sph(g,.02,'#fff1b8',x,y,-.15,{ws:6,hs:5,ol:false});}},
   /* lamps */
-  floorlamp:{n:'Floor lamp',i:'💡',p:110,w:.5,d:.5,r4:1,cols:['#ffd45c','#ff9ec4','#7fdcb5','#8fd3ff'],use:'lamp',b(g,c){cyl(g,.2,.22,.04,'#3d2c5e',0,0,0);cyl(g,.02,.02,1.5,'#3d2c5e',0,.04,0,{seg:6,ol:.012});const sm=cyl(g,.18,.26,.34,null,0,1.5,0,{mat:toon({color:c,emissive:new THREE.Color('#ffcf73'),emissiveIntensity:.55})});sm.userData.shade=1;}},
-  tablelamp:{n:'Table lamp',i:'🛋️',p:60,w:.4,d:.4,r4:1,cols:['#ffd45c','#ff9ec4','#7fdcb5','#8fd3ff'],use:'lamp',b(g,c){box(g,.4,.5,.4,WOOD,0,0,0);cyl(g,.08,.1,.04,'#3d2c5e',0,.5,0);cyl(g,.015,.015,.22,'#3d2c5e',0,.54,0,{seg:6,ol:false});const sm=cyl(g,.1,.15,.16,null,0,.76,0,{mat:toon({color:c,emissive:new THREE.Color('#ffcf73'),emissiveIntensity:.55})});sm.userData.shade=1;}},
-  starlamp:{n:'Star lamp',i:'🌟',p:90,w:.5,d:.5,r4:1,cols:['#ffd45c','#ffffff','#ff9ec4'],use:'lamp',b(g,c){cyl(g,.16,.18,.04,'#3d2c5e',0,0,0);cyl(g,.02,.02,1.1,'#3d2c5e',0,.04,0,{seg:6,ol:.012});const M=toon({color:c,emissive:new THREE.Color('#ffe08a'),emissiveIntensity:.6});
+  floorlamp:{n:'Floor lamp',i:'💡',p:110,w:.5,d:.5,r4:1,cols:['#ffd45c','#ff9ec4','#7fdcb5','#8fd3ff'],use:'lamp',b(g,c){cyl(g,.2,.22,.04,'#3d2c5e',0,0,0);cyl(g,.02,.02,1.5,'#3d2c5e',0,.04,0,{seg:6,ol:.012});const sm=cyl(g,.18,.26,.34,null,0,1.5,0,{mat:toon({color:new THREE.Color(c).multiplyScalar(.6).getStyle(),emissive:new THREE.Color(c),emissiveIntensity:.5})});sm.userData.shade=1;}},
+  tablelamp:{n:'Table lamp',i:'🛋️',p:60,w:.4,d:.4,r4:1,cols:['#ffd45c','#ff9ec4','#7fdcb5','#8fd3ff'],use:'lamp',b(g,c){box(g,.4,.5,.4,WOOD,0,0,0);cyl(g,.08,.1,.04,'#3d2c5e',0,.5,0);cyl(g,.015,.015,.22,'#3d2c5e',0,.54,0,{seg:6,ol:false});const sm=cyl(g,.1,.15,.16,null,0,.76,0,{mat:toon({color:new THREE.Color(c).multiplyScalar(.6).getStyle(),emissive:new THREE.Color(c),emissiveIntensity:.5})});sm.userData.shade=1;}},
+  starlamp:{n:'Star lamp',i:'🌟',p:90,w:.5,d:.5,r4:1,cols:['#ffd45c','#ffffff','#ff9ec4'],use:'lamp',b(g,c){cyl(g,.16,.18,.04,'#3d2c5e',0,0,0);cyl(g,.02,.02,1.1,'#3d2c5e',0,.04,0,{seg:6,ol:.012});const M=toon({color:new THREE.Color(c).multiplyScalar(.6).getStyle(),emissive:new THREE.Color(c),emissiveIntensity:.5});
     for(let i=0;i<5;i++){const a=i/5*TAU;const s=cone(g,.07,.26,null,Math.cos(a)*.12,1.2,Math.sin(a)*.12,{mat:M,seg:4,rz:Math.cos(a)*1.2,rx:-Math.sin(a)*1.2,center:true});s.userData.shade=1;}const sm=sph(g,.1,null,0,1.2,0,{mat:M,ws:8,hs:6});sm.userData.shade=1;}},
   neon:{n:'Neon sign',i:'🌈',p:150,w:1.0,d:.1,r4:1,hang:1,cols:['#ff4d8d','#7cc8ff','#5fd4b0','#ffd45c'],use:'lamp',b(g,c){box(g,1.0,.5,.06,'#2e2347',0,1.4,0);const M=toon({color:c,emissive:new THREE.Color(c),emissiveIntensity:.8});
     for(const [x,y,w,h] of [[-.3,1.52,.08,.3],[-.1,1.52,.08,.3],[-.2,1.52,.26,.08],[.15,1.64,.08,.18],[.3,1.5,.26,.08],[.3,1.66,.26,.08]]){const b=box(g,w,h,.04,null,x,y,.05,{mat:M,ol:false});b.userData.shade=1;}}},
-  lantern:{n:'Paper lantern',i:'🏮',p:70,w:.5,d:.5,r4:1,cols:['#ff6b6b','#ffd45c','#ffffff','#ff9ec4'],use:'lamp',b(g,c){cyl(g,.14,.16,.04,'#3d2c5e',0,0,0);cyl(g,.02,.02,1.3,'#3d2c5e',0,.04,0,{seg:6,ol:.012});box(g,.3,.02,.02,'#3d2c5e',.14,1.34,0,{ol:false});const M=toon({color:c,emissive:new THREE.Color('#ffcf73'),emissiveIntensity:.5});
+  lantern:{n:'Paper lantern',i:'🏮',p:70,w:.5,d:.5,r4:1,cols:['#ff6b6b','#ffd45c','#ffffff','#ff9ec4'],use:'lamp',b(g,c){cyl(g,.14,.16,.04,'#3d2c5e',0,0,0);cyl(g,.02,.02,1.3,'#3d2c5e',0,.04,0,{seg:6,ol:.012});box(g,.3,.02,.02,'#3d2c5e',.14,1.34,0,{ol:false});const M=toon({color:new THREE.Color(c).multiplyScalar(.6).getStyle(),emissive:new THREE.Color(c),emissiveIntensity:.45});
     const sm=sph(g,.2,null,.28,1.1,0,{mat:M,s:[1,1.25,1],ws:12,hs:10});sm.userData.shade=1;for(const y of[.88,1.32])cyl(g,.06,.06,.03,'#ffd45c',.28,y,0,{seg:10,ol:false});}},
   /* rugs */
+  ceillamp:{n:'Ceiling lamp',i:'💡',p:120,w:.6,d:.6,r4:1,flat:1,ceil:1,nu:1,cols:['#ffc6d9','#ffd45c','#7fdcb5','#8fd3ff'],use:'lamp',b(g,c){cyl(g,.04,.04,.18,'#8d7aa6',0,3.12,0,{seg:8});const d=place(g,new THREE.Mesh(new THREE.SphereGeometry(.42,20,10,0,Math.PI*2,0,Math.PI/2),mat(new THREE.Color(c).multiplyScalar(.88).getStyle())),{},0,2.88,0);d.scale.y=.6;hull(g,new THREE.SphereGeometry(.42+OT,20,10,0,Math.PI*2,0,Math.PI/2),d,{});cyl(g,.47,.47,.09,'#fff1d2',0,2.82,0,{seg:24});sph(g,.06,'#fff3dc',0,3.18,0,{ws:10,hs:8});const sm=cyl(g,.34,.34,.03,null,0,2.83,0,{mat:toon({color:new THREE.Color(c).multiplyScalar(.6).getStyle(),emissive:new THREE.Color(c),emissiveIntensity:.55}),seg:22,ol:false});sm.userData.shade=1;}},   /* 💡 (26 Nov critic: bolder) a pastel dome, thick rim, glowing disc underneath */
+  chandelier:{n:'Gold chandelier',i:'🕯️',p:260,w:1.1,d:1.1,r4:1,flat:1,ceil:1,nu:1,cols:['#ffd27a','#ff9fb8','#b79bff','#8fcfff'],use:'lamp',b(g,c){const G='#c9952e';for(let k=0;k<6;k++){const l=new THREE.Mesh(new THREE.TorusGeometry(.055,.016,6,12),mat(G));l.position.set(0,3.24-k*.09,0);l.rotation.y=k*Math.PI/2;g.add(l);}
+    sph(g,.12,G,0,2.7,0,{ws:12,hs:8});cyl(g,.03,.03,.2,G,0,2.5,0,{seg:8});sph(g,.07,'#ff8fb0',0,2.44,0,{ws:10,hs:8});
+    const ring=new THREE.Mesh(new THREE.TorusGeometry(.52,.055,8,36),mat(G));ring.rotation.x=Math.PI/2;ring.position.y=2.56;g.add(ring);const rO=new THREE.Mesh(new THREE.TorusGeometry(.52,.055+OT,8,36),OL);rO.rotation.x=Math.PI/2;rO.position.y=2.56;g.add(rO);for(let k=0;k<6;k++){const a=(k+.5)/6*Math.PI*2;cyl(g,.01,.01,.14,G,Math.cos(a)*.52,2.4,Math.sin(a)*.52,{seg:4,ol:false});sph(g,.045,'#dff3ff',Math.cos(a)*.52,2.34,Math.sin(a)*.52,{ws:8,hs:6,ol:false}).scale.y=1.7;}
+    const fl=toon({color:'#fff4c2',emissive:new THREE.Color(c).lerp(new THREE.Color('#ffd27a'),.4),emissiveIntensity:.6});
+    for(let k=0;k<6;k++){const a=k/6*Math.PI*2,x=Math.cos(a)*.52,z=Math.sin(a)*.52;cyl(g,.08,.06,.07,G,x,2.6,z,{seg:10});cyl(g,.065,.065,.24,c,x,2.67,z,{seg:10});const f=sph(g,.075,null,x,2.99,z,{mat:fl,ws:8,hs:6,ol:false});f.scale.y=1.7;if(!k)f.userData.shade=1;}}},   /* 💡 (26 Nov critic: fewer, bigger parts) chain, thick gold ring, six candles in the lamp's colour with glowing flames */
+  paperglobe:{n:'Paper globe',i:'🏮',p:90,w:.6,d:.6,r4:1,flat:1,ceil:1,nu:1,cols:['#ffcf8a','#ff9fb8','#8fe0bd','#a8bfff'],use:'lamp',b(g,c){cyl(g,.012,.012,.5,'#6b5a7a',0,2.92,0,{seg:5,ol:false});
+    const sm=sph(g,.32,null,0,2.62,0,{mat:toon({color:new THREE.Color(c).multiplyScalar(.6).getStyle(),emissive:new THREE.Color(c),emissiveIntensity:.45}),ws:18,hs:14});sm.userData.shade=1;
+    cyl(g,.09,.09,.05,'#c98a4a',0,2.91,0,{seg:12});cyl(g,.09,.09,.05,'#c98a4a',0,2.28,0,{seg:12});cyl(g,.015,.015,.08,'#c98a4a',0,2.2,0,{seg:5,ol:false});cyl(g,.02,.045,.1,'#e2564d',0,2.11,0,{seg:8});
+    for(let k=0;k<8;k++){const r=new THREE.Mesh(new THREE.TorusGeometry(.322,.014,4,24),mat('#c98a4a'));r.position.y=2.62;r.rotation.y=k/8*Math.PI;g.add(r);}}},   /* round paper lantern, warm ribs and caps */
+  mushpendant:{n:'Mushroom pendant',i:'🍄',p:150,w:.7,d:.7,r4:1,flat:1,ceil:1,nu:1,cols:['#ff5a5a','#ffb84d','#7fd8a8','#b48cff'],use:'lamp',b(g,c){for(let k=0;k<3;k++){const a=k/3*Math.PI*2;cyl(g,.008,.008,.62,'#e8dcc4',Math.cos(a)*.22,2.68,Math.sin(a)*.22,{seg:4,ol:false}).rotation.set(Math.sin(a)*.32,0,-Math.cos(a)*.32);}sph(g,.04,'#e8dcc4',0,3.24,0,{ws:8,hs:6});
+    const geo=new THREE.SphereGeometry(.4,22,10,0,Math.PI*2,Math.PI/2,Math.PI/2),cap=place(g,new THREE.Mesh(geo,mat(new THREE.Color(c).multiplyScalar(.85).getStyle())),{},0,2.7,0);cap.scale.y=.6;hull(g,new THREE.SphereGeometry(.4+OT,22,10,0,Math.PI*2,Math.PI/2,Math.PI/2),cap,{});
+    const gl=cyl(g,.38,.38,.03,null,0,2.69,0,{mat:toon({color:new THREE.Color(c).multiplyScalar(.6).getStyle(),emissive:new THREE.Color(c),emissiveIntensity:.55}),seg:22,ol:false});gl.userData.shade=1;
+    for(let k=0;k<14;k++){const a=k*2.4,t=.35+.5*((k*37)%10)/10,x=Math.cos(a)*Math.sin(t)*.4,z=Math.sin(a)*Math.sin(t)*.4,y=2.7-Math.cos(t)*.4*.6;sph(g,k%3?.05:.065,'#fff6e8',x,y,z,{ws:10,hs:6,ol:false}).scale.y=.55;}}},   /* 🍄 (26 Nov, owner: upside down, no stalk) the cap hangs like a bowl on three cords, spots underneath, light glowing up out of it */
   rughearts:{n:'Heart rug',i:'💗',p:90,w:1.8,d:1.6,r4:1,flat:1,cols:['#ff9ec4','#ffd6e0','#ffffff','#b79cff'],b(g,c){cyl(g,.9,.9,.025,c,0,0,0,{seg:32,ol:.02});for(const [x,z,s] of [[-.35,-.2,.22],[.35,-.2,.22],[0,.25,.16]]){cyl(g,s,s,.03,'#ff4d8d',x-s*.45,0,z,{seg:16,ol:false});cyl(g,s,s,.03,'#ff4d8d',x+s*.45,0,z,{seg:16,ol:false});box(g,s*1.4,.03,s*1.4,'#ff4d8d',x,0,z+s*.5,{ry:Math.PI/4,ol:false});}}},
   rugstripe:{n:'Striped rug',i:'🟦',p:85,w:2.2,d:1.4,r4:1,flat:1,cols:['#7cc8ff','#ffd45c','#5fd4b0','#ff9ec4'],b(g,c){box(g,2.2,.025,1.4,'#ffffff',0,0,0,{ol:.02});for(let i=0;i<6;i++)box(g,2.0,.03,.11,i%2?c:shade(c,.3),0,0,-.55+i*.22,{ol:false});}},
   rugstar:{n:'Star rug',i:'⭐',p:95,w:2.0,d:2.0,r4:1,flat:1,cols:['#b79cff','#2e2347','#7cc8ff'],b(g,c){cyl(g,1.0,1.0,.025,c,0,0,0,{seg:32,ol:.02});for(let i=0;i<5;i++){const a=i/5*TAU;box(g,.5,.03,.16,'#ffd45c',Math.cos(a)*.3,0,Math.sin(a)*.3,{ry:-a,ol:false});}cyl(g,.2,.2,.03,'#ffd45c',0,0,0,{seg:16,ol:false});for(let i=0;i<8;i++){const a=i/8*TAU+.3;cyl(g,.05,.05,.03,'#ffffff',Math.cos(a)*.75,0,Math.sin(a)*.75,{seg:8,ol:false});}}},
@@ -639,7 +653,7 @@ Object.assign(FURN,{
     const geo=new THREE.ExtrudeGeometry(sh,{depth:.07,bevelEnabled:true,bevelSize:.015,bevelThickness:.015,bevelSegments:1});geo.translate(0,0,-.035);
     const st=new THREE.Mesh(geo,toon({color:'#ffd45c',emissive:new THREE.Color('#ffb800'),emissiveIntensity:.55}));st.position.y=1.55;g.add(st);sparkles(g,1.3);}}});
 const BUY_FURN=['bed','bunkbed','sofa','armchair','beanbag','chair','table','desk','computer','shelf','shellshelf','dresser','wardrobe','mirror','tv','gaming','lamp','clock','easel','fireplace','rug','rugsq','fridge','stove','sink','cupboard','cupboardn','drawers','cornercup','tallcup','wallcup','washer','bath','piano','xmastree','teddy','toybox','petbed','tank',
-  'canopybed','daybed','crib','carbed','cornersofa','loveseat','stool','barstool','rocking','eggchair','woodbench','pouf','coffeetable','sidetable','diningtable','roundtable','nightstand','vanity','floorlamp','tablelamp','starlamp','neon','lantern','rughearts','rugstripe','rugstar','doormat','palm','monstera','orchid','herbs','bamboo','hangplant','cubeshelf','cornershelf','chest','coatrack','shoerack','laddershelf','island','oven','dishwasher','coffeecorner','trolley','spicerack','shower','toilet','towelrack','bathmat','laundry','slide','playtent','blocks','toytrain','drumkit','chalkboard','bigvase','candles','photoframe','wallclock','bunting','snowglobe','cuckoo','poster','sunlounger','parasol','birdbath','bbq','flamingo','picnictable','discofloor','discoball'];   /* 🛋️ run 4, job 13: 72 new pieces */
+  'canopybed','daybed','crib','carbed','cornersofa','loveseat','stool','barstool','rocking','eggchair','woodbench','pouf','coffeetable','sidetable','diningtable','roundtable','nightstand','vanity','floorlamp','tablelamp','starlamp','ceillamp','chandelier','paperglobe','mushpendant','neon','lantern','rughearts','rugstripe','rugstar','doormat','palm','monstera','orchid','herbs','bamboo','hangplant','cubeshelf','cornershelf','chest','coatrack','shoerack','laddershelf','island','oven','dishwasher','coffeecorner','trolley','spicerack','shower','toilet','towelrack','bathmat','laundry','slide','playtent','blocks','toytrain','drumkit','chalkboard','bigvase','candles','photoframe','wallclock','bunting','snowglobe','cuckoo','poster','sunlounger','parasol','birdbath','bbq','flamingo','picnictable','discofloor','discoball'];   /* 🛋️ run 4, job 13: 72 new pieces */
 const FLOWER_SHOP=['flowers','tulips','rosebush','sunflower','lavender','fern','bonsai','plant','cactus'];
 function drawCatTV(x,t,on){const W=216,H=120,k=x.canvas.width/W;x.setTransform(k,0,0,k,0,0);x.globalAlpha=1;x.globalCompositeOperation='source-over';
   if(!on){x.fillStyle='#20263d';x.fillRect(0,0,W,H);x.fillStyle='rgba(255,255,255,.04)';for(let i=0;i<H;i+=4)x.fillRect(0,i,W,2);
@@ -718,18 +732,20 @@ function drawCatTV(x,t,on){const W=216,H=120,k=x.canvas.width/W;x.setTransform(k
     x.lineWidth=.9;x.beginPath();for(const sd of[-1,1]){x.moveTo(sd*12,3.5);x.lineTo(sd*24,1.5);x.moveTo(sd*12,5.8);x.lineTo(sd*24,7.5);}x.stroke();}
   x.restore();x.restore();x.restore();
   // floating music notes
-  x.font='700 12px "Baloo 2","Trebuchet MS",sans-serif';x.textAlign='center';
+  x.font='700 12px "CozyCoin","Baloo 2","Trebuchet MS",sans-serif';x.textAlign='center';
   for(let i=0;i<4;i++){const p=(t*.45+i*.25)%1,nx=cx+(i%2?40:-40)+Math.sin(p*6+i)*5,ny=82-p*62;x.fillStyle='rgba(255,255,255,'+(1-p).toFixed(2)+')';x.fillText(i%2?'\u266b':'\u266a',nx,ny);}
   // LIVE badge
   x.fillStyle='rgba(0,0,0,.45)';x.beginPath();if(x.roundRect)x.roundRect(176,4,34,12,3);else x.rect(176,4,34,12);x.fill();
   if(ph<.6){x.fillStyle='#ff3b5c';x.beginPath();x.arc(183,10,2.8,0,7);x.fill();}
-  x.fillStyle='#fff';x.font='800 8px "Baloo 2","Trebuchet MS",sans-serif';x.textAlign='left';x.fillText('LIVE',188,13.2);
+  x.fillStyle='#fff';x.font='800 8px "CozyCoin","Baloo 2","Trebuchet MS",sans-serif';x.textAlign='left';x.fillText('LIVE',188,13.2);
   // meme caption
   const cap=['HANDS UP!','VIBE CHECK','THE FLOSS!','SPIN!','JUMP JUMP!'][mv],pop=1+.35*Math.max(0,1-mp*8);
-  x.save();x.translate(108,113);x.scale(pop,pop);x.font='800 14px "Baloo 2","Trebuchet MS",sans-serif';x.textAlign='center';x.lineJoin='round';
+  x.save();x.translate(108,113);x.scale(pop,pop);x.font='800 14px "CozyCoin","Baloo 2","Trebuchet MS",sans-serif';x.textAlign='center';x.lineJoin='round';
   x.lineWidth=3.2;x.strokeStyle='#1d1430';x.strokeText(cap,0,0);x.fillStyle='#fff';x.fillText(cap,0,0);x.restore();
 }
-function buildFurn(t,c,ceiling){const g=new THREE.Group();const F=FURN[t];F.b(g,c||(F.cols?F.cols[0]:null),ceiling);return g;}
+function buildFurn(t,c,ceiling){const g=new THREE.Group();const F=FURN[t];F.b(g,c||(F.cols?F.cols[0]:null),ceiling);
+  if(F.ceil&&ceiling){const b=new THREE.Box3().setFromObject(g),dy=ceiling-b.max.y;if(Math.abs(dy)>.001)for(const o of g.children)o.position.y+=dy;}   /* (27 Nov: a ceiling lamp hangs from the room's real ceiling: 3.2 m rooms and 3.6 m wide rooms alike, never through it or floating under it) */
+  return g;}
 
 /* ---- food ---- */
 const FOODS={
@@ -844,7 +860,7 @@ function mailbox(g,x,z,ry){const p=new THREE.Group();p.position.set(x,0,z);p.rot
 
 /* ---- building parts ---- */
 function windowAt(g,x,y,z,ry,fc='#ffffff',w=1,h=1.25,dc){const p=new THREE.Group();p.position.set(x,y,z);p.rotation.y=ry;g.add(p);
-  box(p,w+.18,h+.18,.14,fc,0,-.09,0);{const pm=box(p,w,h,.04,null,0,0,.085,{mat:dc&&dc.view?PANE:WINM,ol:false});if(dc&&dc.view)paneFor(pm,x,y,z);}   /* (dc.view: a window seen from inside shows the painted view) */
+  box(p,w+.18,h+.18,.14,fc,0,-.09,0);{const pm=box(p,w,h,.04,null,0,0,.085,{mat:dc&&dc.view?PANE:WINM,ol:false});if(dc&&dc.view)paneFor(pm,x,y,z,ry,w);}   /* (dc.view: a window seen from inside shows the painted view) */
   box(p,.06,h,.03,fc,0,0,.11,{ol:false});box(p,w,.06,.03,fc,0,h/2-.03,.11,{ol:false});box(p,w+.34,.09,.22,fc,0,-.18,.09,{ol:.02});
   /* 🏡 cozy extras (town buildings): shutters, a little lintel on top, a flower box under the sill */
   if(dc){if(dc.sh)for(const s of[-1,1])if(s!==dc.ns)box(p,.32,h+.12,.06,dc.sh,s*(w/2+.27),-.06,.04,{ol:.015});
@@ -901,7 +917,7 @@ function buildingIn(g,o){
     const sm=signPlane(o.sign,bw-.3,.8,o.signBg||'#ffffff',o.signFg||'#3d2c5e');sm.position.set(0,3.75,.2);p.add(sm);}   /* 2 cm in front of its board (run 4, job 5) */
 }
 function windowIn(g,x,y,z,ry,cur='#ff9ec4'){const p=new THREE.Group();p.position.set(x,y,z);p.rotation.y=ry;g.add(p);
-  box(p,1.6,1.5,.08,'#ffffff',0,-.09,0);paneFor(box(p,1.4,1.3,.1,null,0,0,0,{mat:PANE,ol:false}),x,y,z);
+  box(p,1.6,1.5,.08,'#ffffff',0,-.09,0);paneFor(box(p,1.4,1.3,.1,null,0,0,0,{mat:PANE,ol:false}),x,y,z,ry);
   box(p,.06,1.3,.12,'#ffffff',0,0,0,{ol:false});box(p,1.4,.06,.12,'#ffffff',0,.62,0,{ol:false});
   box(p,1.8,.1,.24,'#ffffff',0,-.16,.1,{ol:.02});
   for(const s of[-1,1])box(p,.34,1.75,.06,cur,s*.98,-.2,.13,{ol:.015});

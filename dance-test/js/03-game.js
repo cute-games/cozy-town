@@ -13,7 +13,7 @@ function realMs(){return Date.now()+CLK.off;}
 const gameMs=()=>realMs()+CLK.sk;   /* 🌙 the one clock's own time: the real time plus every night skipped so far (pets and farm update, stage 1) */
 function clockAt(ms){const k=Math.floor((ms-CLK.EP)/CLK.DAY),r=(ms-CLK.EP-k*CLK.DAY)/1000;return{day:k+1,time:r<210?r/30:r<810?7+(r-210)*14/600:21+(r-810)/30};}
 function msAt(day,time){const r=time<7?time*30:time<21?210+(time-7)*600/14:810+(time-21)*30;return CLK.EP+(day-1)*CLK.DAY+r*1000;}
-const clockNow=()=>clockAt(gameMs());
+const clockNow=()=>LAMP_TEST?Object.assign(clockAt(gameMs()),{time:20}):clockAt(gameMs());   /* lamp test: always 20:00 */
 function clockSync(){if(!S)return false;const c=clockNow();HOUR=hourLen(c.time);if(c.day===S.day){if(Math.abs(c.time-S.time)>.1)hudT=1;S.time=c.time;return false;}   /* (run 4 finish: after a jump of the clock, a phone waking up, the chip is right at once, not half a second later) */const d0=S.day;S.day=c.day;S.time=c.time;dayJump(d0);return true;}   /* true = a new day began */
 function dayJump(d0){if(!S.garden)return;for(const st of S.garden)if(st&&st.seed&&st.g<1&&st.w>0&&st.w<S.day)st.g=1;}   /* 🌱 a plant watered on a day that has passed finished growing */
 function clockLoad(){for(const k in BUS_DAY)delete BUS_DAY[k];if(!S.intro){const c=clockNow();S.day=c.day;S.time=c.time;busWelcome();}else clockSync();}   /* a new player starts at the real time; an old save jumps once to the shared day */
@@ -73,7 +73,7 @@ function saveMigrate(){if((S.sv|0)>=SAVE_V)return;const o=(k,v)=>{if(!S[k]||type
 
 /* ---- saving: this device + your claude.ai account ---- */
 const LS='cozytown-save-1';
-let SAVEOFF=false;   /* 📦 true = this page writes no more saves: a moved-in game (or a new start) is on its way, the reload must not write the old game back */
+let SAVEOFF=LAMP_TEST;   /* 📦 true = this page writes no more saves: a moved-in game (or a new start) is on its way, the reload must not write the old game back */
 function readLocal(){try{return JSON.parse(localStorage.getItem(LS));}catch(e){return null;}}
 function snap(){let loc=CUR?CUR.id:'city',x=P.x,z=P.z,yaw=P.yaw;
   if(P.sit&&P.sit.bk)[x,z,yaw]=P.sit.bk;   /* in bed: save the spot beside the bed, not the pillow */
@@ -140,7 +140,7 @@ function updSky(){
   if(NGLOW){NGLOW.uniforms.op.value=nf;NGLOW.visible=out&&nf>.01;}
   skyArc(sunAng(h),SKYP.pk,SUN_T);skyArc(sunAng(h)-Math.PI,SKYP.mpk,MOON_T);const es=SUN_T.y,em=MOON_T.y,ov=out?WX.ov:0;
   {const so=sstep(-.04,-.2,es)*(1-(out?WX.sky:0));stars.material.opacity=so;stars.visible=out&&so>.01;}   /* (run 4 finish: no stars through a grey rainy sky; sky update: they come out as the sun goes 2° to 12° below the horizon) */
-  PANE.color.set('#ffffff').lerp(skyU.bot.value,.25+.55*nf).lerp(_c2.set('#b9bfcc'),.5*(WX.sky||0)).lerp(_c3.set('#2a3463'),.6*nf);   /* 🖼️ the painted window views: warm at sunset, dark blue at night (the night sky's own colour was still too bright behind the glass), greyer in grey weather */
+  PANE.userData.n.value=nf;PANE.color.set('#ffffff').lerp(skyU.bot.value,.25+.55*nf).lerp(_c2.set('#b9bfcc'),.5*(WX.sky||0)).lerp(_c3.set('#2a3463'),.6*nf);   /* 🖼️ the painted window views: warm at sunset, dark blue at night (the night sky's own colour was still too bright behind the glass), greyer in grey weather */
   if(out){const hal=HOL.cur==='halloween'?nf:0;if(hal>0){skyU.top.value.lerp(_c2.set('#3b1d5e'),hal*.55);skyU.bot.value.lerp(_c2.set('#5b2a7a'),hal*.5);FOG.color.copy(skyU.bot.value);}FOG.near=lerp(60,34,hal);FOG.far=lerp(340,230,hal);
     const gk=WX.sky;if(gk>0){skyU.top.value.lerp(wxCol(WX_SKY,0,_c2).lerp(_c1.set('#181b28'),nf),gk);skyU.bot.value.lerp(wxCol(WX_SKY,1,_c2).lerp(_c1.set('#2b2f42'),nf),gk);FOG.color.copy(skyU.bot.value);FOG.near*=1-.35*gk;FOG.far*=1-.3*gk;}}   /* 🎃 Halloween nights: a purple sky and closer fog; 🌧️ grey weather: a proper grey sky, never blue under rain (run 4, item 2) */
   {const gk=out?WX.sky:0,U=CLOUD.uniforms,warm=sstep(-.04,.04,es)*(1-sstep(.1,.4,es))*(1-gk);U.top.value.set('#ffffff').lerp(wxCol(WX_CLD,0,_c2),gk).lerp(_c2.set('#ffe2c8'),.5*warm).lerp(_c1.set('#9aa1c8').lerp(_c3.set('#3c4152'),gk),nf);
@@ -1122,7 +1122,7 @@ let NGLOW=null,CARGLOW=null;const LAMPXZ=[];
 function glowMat(){if(NGLOW)return NGLOW;const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d'),gr=x.createRadialGradient(32,32,0,32,32,32);
   gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.3,'rgba(255,255,255,.45)');gr.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gr;x.fillRect(0,0,64,64);
   NGLOW=new THREE.ShaderMaterial({uniforms:{map:{value:new THREE.CanvasTexture(c)},op:{value:0}},transparent:true,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,
-    vertexShader:'attribute vec2 cor;attribute vec3 tint;varying vec2 vU;varying vec3 vC;void main(){vU=uv;vC=tint;vec4 p=modelViewMatrix*vec4(position,1.);p.xy+=cor;p.z+=length(cor)*.7;gl_Position=projectionMatrix*p;}',
+    vertexShader:'attribute vec2 cor;attribute vec3 tint;varying vec2 vU;varying vec3 vC;void main(){vU=uv;vC=tint;vec4 p=modelViewMatrix*vec4(position,1.);p.xyz-=normalize(p.xyz)*min(length(cor)*.7,length(p.xyz)*.5);p.xy+=cor;gl_Position=projectionMatrix*p;}',   /* 💡 street lamp glows sat beside their lamps, more so near the screen edges (owner, 25 Nov): the glow now moves toward you along the line to your eye, so it stays on the lamp */
     fragmentShader:'uniform sampler2D map;uniform float op;varying vec2 vU;varying vec3 vC;void main(){gl_FragColor=vec4(vC*texture2D(map,vU).a*op,1.);}'});
   NGLOW.visible=false;return NGLOW;}
 /* list of glows: [x,y,z,size,tint] always turns to the camera, [x,y,z,w,d,tint] lies flat on the ground */
@@ -1963,7 +1963,35 @@ function renderTank(){const it=TK.it,F=FURN.snaketank,off=it.c==='#5a5f72';openP
   <div class="row"><button class="btn ${off?'white':'mint'}" data-a="tank:on">💡 On</button><button class="btn ${off?'mint':'white'}" data-a="tank:off">🌙 Off</button></div>
   <div class="swrow">${F.cols.slice(0,8).map((c,i)=>`<button class="sw${it.c===c?' on':''}" style="background:${c}" data-a="tank:${i}" aria-label="${TANK_LIGHT[c][2]}"></button>`).join('')}</div>
   <div class="row"><button class="btn white" data-a="close">Bye!</button></div>`,{bottom:true,onClose:()=>{TK=null;}});}
-function setLamp(rec){rec.g.traverse(o=>{if(o.userData.shade)o.material.emissiveIntensity=rec.it.on?.6:0;});}
+function setLamp(rec){rec.g.traverse(o=>{if(o.userData.shade)o.material.emissiveIntensity=rec.it.on?.6:0;});lampPool(rec.g,!!rec.it.on,rec.it.c);}
+/* 💡 lamps light the room (lamp update, slice 1): every switched-on lamp lays a soft pool of light in its own colour on the floor
+   (one shared picture, almost free to draw), and the 4 lamps nearest you also get a real light that lights you, pets and furniture.
+   The 4 real lights always exist indoors and are only moved and dimmed, so switching a lamp never makes the game rebuild its shaders.
+   Brighter in the evening and at night; homes (yours, flats, friends', job houses) and any room with lamps get dark at night, lamps or not (owner, 26 Nov: dark without lamps), so switching lamps on lights them up; shops keep their own lights. Nothing is saved: on/off was saved before. */
+let LPOOL_T=null;const LITS=[],LAMPS_N=4,_lv=new THREE.Vector3(),_cool=new THREE.Color('#c4a6ee'),_cool2=new THREE.Color('#3a3f63');   /* (a sprite halo glows round every lit shade too) */
+function lampPool(g,on,ic){let m=g.userData.pool;
+  if(!m){if(!LPOOL_T){const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d'),gr=x.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.3,'rgba(255,255,255,.7)');gr.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gr;x.fillRect(0,0,64,64);LPOOL_T=new THREE.CanvasTexture(c);}
+    let sh=null;g.traverse(o=>{if(!sh&&o.userData.shade)sh=o;});if(!sh)return;
+    const col=new THREE.Color(ic||(sh.material.map?'#d9e0ff':sh.material.color.getHex()));   /* (26 Nov, owner: red shade = red light) the light is the shade's own colour, no warm mix */
+    m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({map:LPOOL_T,color:col,transparent:true,depthWrite:false,opacity:.3}));
+    m.rotation.x=-Math.PI/2;m.position.y=.025;m.scale.setScalar(3.4);m.renderOrder=2;m.raycast=()=>{};g.add(m);g.userData.pool=m;g.userData.shadeM=sh;g.userData.lcol=col;
+    const h=new THREE.Sprite(new THREE.SpriteMaterial({map:LPOOL_T,color:col,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,opacity:.5}));h.raycast=()=>{};sh.getWorldPosition(_lv);g.worldToLocal(_lv);h.position.copy(_lv);h.scale.setScalar(.75);g.add(h);g.userData.halo=h;}
+  m.visible=on;g.userData.halo.visible=on;g.userData.lampOn=on;}
+function lampTick(){
+  if(!LITS.length)for(let i=0;i<LAMPS_N;i++){const l=new THREE.PointLight('#ffffff',0,4.3,2);l.visible=false;scene.add(l);LITS.push(l);}
+  if(LAMP_TEST&&!lampTick.went&&PLAYING&&CUR&&CUR.id!=='home'){lampTick.went=1;enter('home');}
+  if(LAMP_TEST&&!lampTick.demo&&CUR&&CUR.id==='home'&&typeof addHomeItem==='function'){lampTick.demo=1;let n=0;for(const [t,c,x,z] of [['floorlamp','#ff9ec4',3.2,-4.1],['starlamp','#8fd3ff',-4.6,1.5],['tablelamp','#7fdcb5',4.4,2.2],['ceillamp','#ffd45c',-1.5,-1.5]])addHomeItem({u:'zzlamptest'+(n++),t,c,x,z,r:0,on:1});for(const r of HOME_ITEMS.values())if(r.g.userData.pool!==undefined||(FURN[r.it.t]&&FURN[r.it.t].use==='lamp'))setLamp(r);toast('💡 Lamp test: 20:00, 4 test lamps added. Nothing here is saved.',5);}
+  const inn=!!CUR&&CUR.type!=='out';for(const l of LITS)l.visible=inn;if(!inn)return;
+  const nf=nightF(S?S.time:clockNow().time),k=.45+.55*nf,fl=CUR.fls&&CUR.fls.length>1?flOf(CUR,P.z):0,on=[];let any=0;
+  for(const g of CUR.items?CUR.items.children:[])if(g.userData.pool&&++any&&g.userData.lampOn&&(g.userData.fl|0)===fl){g.userData.pool.material.opacity=.14+.38*nf;g.userData.pool.scale.setScalar(3.2);g.userData.halo.material.opacity=.05+.15*nf;{const m=g.userData.shadeM.material;if(m.userData.eb==null)m.userData.eb=m.emissiveIntensity;m.emissiveIntensity=m.userData.eb*(.35+.95*nf);}   /* (26 Nov critic) lit lamps glow more at night */g.userData.shadeM.getWorldPosition(_lv);g.userData.ld=(_lv.x-P.x)**2+(_lv.z-P.z)**2;g.userData.lp=_lv.clone();on.push(g);}
+  on.sort((a,b)=>a.userData.ld-b.userData.ld);
+  for(let i=0;i<LAMPS_N;i++){const l=LITS[i],g=on[i];if(!g){l.intensity=0;continue;}l.position.copy(g.userData.lp);l.position.y-=.45;l.color.copy(g.userData.lcol);l.intensity=1.8*k;}
+  const dim=(any||HOMEISH(CUR.id))&&nf>0;for(const ce of CEILS)if(ce.parent&&ce.material.color){ce.material.color.copy(ce.userData.c0);if(HOMEISH(CUR.id))ce.material.color.multiplyScalar(.9);if(dim)ce.material.color.lerp(_cool2,.8*nf);}
+  if(dim){hemi.intensity*=1-.6*nf;sun.intensity*=1-.5*nf;lamp.intensity*=1-.8*nf;hemi.color.lerp(_cool,.45*nf);hemi.groundColor.lerp(_cool2,.35*nf);}
+  /* 🌗 lamp shadows for free: at night the room's one shadow light (the sun's, already there) comes from the nearest lamp, in its colour,
+     so chairs, pets and you throw shadows away from the lamp. No extra shadow pictures are drawn. */
+  const g0=on[0];if(g0&&nf>0){_lv.set(g0.userData.lp.x-CUR.ox,0,g0.userData.lp.z-(CUR.oz+(CUR.fls&&CUR.fls.length>1?UPZ*fl:0)));const d=_lv.length();if(d>.05)_lv.multiplyScalar(1/d);_lv.y=1.25;_lv.normalize();sun.shadow.normalBias=Math.max(sun.shadow.normalBias,.3);   /* (26 Nov, owner: shadows jumpy and scratchy on walls) the light comes from the lamp's side of the room's middle, not your side, so it no longer swings as you walk; steeper and with more bias so walls don't stripe */
+    SUND.lerp(_lv,nf).normalize();sun.color.lerp(g0.userData.lcol,.6*nf);sun.intensity=lerp(sun.intensity,.3,nf);}}
 function rebuildHome(){for(const u of [...HOME_ITEMS.keys()])removeHomeItem(u);for(const it of S.home.items)addHomeItem(it);WALL_M.color.set(S.home.wall);setFloor(S.home.floor);}
 /* ---- the big house: Decorating level 10 + BIG_PRICE coins (a big dream: about a week of work) ---- */
 const BIG_PRICE=2500;
@@ -2334,7 +2362,7 @@ function setLoc(id){CUR=LOC[id];P.cy=0;for(const k in LOC)LOC[k].g.visible=LOC[k
   FOG.near=out?60:900;FOG.far=out?340:1000;LOC.home.items.visible=id==='home';if(LOC.client)LOC.client.items.visible=id==='client';if(LOC.visit)LOC.visit.items.visible=id==='visit';
   for(const k of KEEPERS)k.p.root.visible=k.L===CUR;for(const a of PEN)a.m.root.visible=CUR.id==='pets';
   if(LOC.clothes&&LOC.clothes.manq)for(const m of LOC.clothes.manq)m.visible=id==='clothes';
-  $('bDeco').hidden=id!=='home';renderer.setClearColor(id==='studio'?'#fff4fa':'#000000');updSky();toastLeave(id);}
+  $('bDeco').hidden=id!=='home';renderer.setClearColor(id==='studio'?'#fff4fa':'#000000');paneLook();updSky();toastLeave(id);}
 function bringFollowers(quiet){let n=0;P.hd=P.yaw+Math.PI;for(const f of FRIEND_ACTORS)if(f.mode==='follow')f.loc=null;for(const p of PET_ACTORS)if(!p.d.stay&&!petWaitOut(p))p.loc=null;   /* placed one by one below (bear and seal may wait at the door) */
   for(const f of FRIEND_ACTORS)if(f.mode==='follow'){nearMe(f,++n);
     if(CUR.id==='home'&&!quiet)homeVisit(f);}
@@ -2536,7 +2564,7 @@ function decoEnd(){if(DECO.placing)decoCancel();DECO.on=false;DX().L().grid.visi
 function renderBar(){const b=$('bar');b.hidden=!DECO.on;if(!DECO.on)return;
   if(DECO.placing)b.innerHTML=`<button class="btn sky" data-d="turn">🔄 Turn</button><button class="btn mint" data-d="place" ${DECO.valid?'':'disabled'}>✅ Put it here</button><button class="btn white" data-d="cancel">✖ Cancel</button>`;
   else if(DX()===CLX)b.innerHTML=`<button class="btn butter${dsItems().length?'':' dsPulse'}" data-d="furn">🛋️ Furniture</button>${DECO.sel?`<div class="brow"><button class="btn sky" data-d="move">✋ Move</button><button class="btn lilac" data-d="away">🗑️ Remove</button></div>`:''}<button class="btn mint" data-d="finish">🎉 Finished!</button><button class="btn white sm" data-d="leave">🚪 Leave</button>`;
-  else b.innerHTML=`<button class="btn butter" data-d="shop">🛍️ Shop</button>${DECO.sel?`<button class="btn sky" data-d="move">✋ Move it</button><button class="btn lilac" data-d="away">📦 Put away</button>`:'<button class="btn lilac" data-d="paint">🎨 House colour</button>'}<button class="btn mint" data-d="done">✅ Done</button>`;}   /* 🎨 run 4, item 23 */
+  else b.innerHTML=`<button class="btn butter" data-d="shop">🛍️ Shop</button><button class="btn white" data-d="mine">📦 My stuff${S.home.store.length?` <span class="cnt">${S.home.store.length}</span>`:''}</button>${DECO.sel?`<button class="btn sky" data-d="move">✋ Move it</button><button class="btn lilac" data-d="away">📦 Put away</button>${canRecol(DECO.sel)?'<button class="btn white" data-d="recolsel">🎨 🪙10</button>':''}${sellBtn(DECO.sel,'sellsel','data-d')}`:'<button class="btn lilac" data-d="paint">🎨 House colour</button>'}<button class="btn mint" data-d="done">✅ Done</button>`;}   /* 🎨 run 4, item 23 */
 function startPlacing(it){DECO.placing=it;DECO.r=it.r||0;selMark(null);
   const g=buildFurn(furnOf(it),it.c);g.traverse(o=>{if(!o.isMesh)return;if(o.material===OL||o.material.side===THREE.BackSide){o.visible=false;return;}const m=o.material.clone();m.transparent=true;m.opacity=.72;if(m.emissive)m.emissive.set('#000000');o.material=m;});
   const F=FURN[it.t];const fp=new THREE.Mesh(new THREE.PlaneGeometry(F.w,F.d),new THREE.MeshBasicMaterial({color:'#5fd4b0',transparent:true,opacity:.45,depthWrite:false}));fp.rotation.x=-Math.PI/2;fp.position.y=.03;g.add(fp);g.userData.fp=fp;
@@ -2552,6 +2580,7 @@ function decoUpdate(){
     DECO.ghost.position.set(L.ox+x,0,L.oz+z);DECO.ghost.rotation.y=DECO.r*Math.PI/2;
     const R=fpRect(it.t,x,z,DECO.r);let ok=true;
     if(F.hang&&!kitOnWall(it.t,x,z,DECO.r,W,D))ok=false;   /* a wall cupboard hangs on a wall */
+    if(F.ceil)for(const o of X.list()){if(FURN[o.t].flat||FURN[o.t].ceil||(X.on&&!X.on(o))||furnH(furnOf(o))<furnLo(it.t)-.05)continue;const Q=fpRect(o.t,o.x,o.z,o.r);if(R.x1<Q.x2-.01&&R.x2>Q.x1+.01&&R.z1<Q.z2-.01&&R.z2>Q.z1+.01){ok=false;break;}}   /* 💡 a ceiling lamp hangs over beds, sofas and tables, not into anything that reaches up to it */
     if(!F.flat&&!F.hang){for(const o of X.list()){if(FURN[o.t].flat||FURN[o.t].hang||(X.on&&!X.on(o)))continue;const Q=fpRect(o.t,o.x,o.z,o.r);if(R.x1<Q.x2-.01&&R.x2>Q.x1+.01&&R.z1<Q.z2-.01&&R.z2>Q.z1+.01){ok=false;break;}}
       const px=P.x-L.ox,pz=P.z-L.oz;if(px>R.x1-.32&&px<R.x2+.32&&pz>R.z1-.32&&pz<R.z2+.32)ok=false;
       if(X.blocked(R))ok=false;}
@@ -2561,6 +2590,27 @@ function decoUpdate(){
 }
 function decoTap(cx,cy){if(DECO.placing)return;const X=DX();NDC.set(cx/innerWidth*2-1,-(cy/innerHeight)*2+1);RAY.setFromCamera(NDC,camera);const hits=RAY.intersectObjects(X.L().items.children,true);
   if(hits.length&&hits[0].distance<8){let o=hits[0].object;while(o&&!o.userData.u)o=o.parent;if(o){const rec=X.map().get(o.userData.u);if(rec){selMark(rec.it);renderBar();}}}}
+/* 🪙 selling back (26 Nov, owner): anything sells for half its shop price, from 📦 My stuff (bar or shop) or straight from the room.
+   No sentences: the button shows the coins and a red −50% tag. Safety: the first tap arms it (it turns into ✓ 🪙N for 3 s), the second tap sells. */
+const SELL={u:null,t:0};
+const sellLocked=it=>{const F=FURN[furnOf(it)];return!F||!!F.gold||!F.p;};   /* (26 Nov, owner) unique gifts can't be sold: the golden prizes and free one-offs like the teacher's globe; sunflowers, pots and the rest sell */
+const sellPrice=it=>sellLocked(it)?0:Math.floor(FURN[furnOf(it)].p/2);
+function sellBtn(it,act,attr='data-a',arg=''){const n=sellPrice(it);if(!n)return sellLocked(it)?'<span class="sellb lock" aria-label="Can\'t be sold">🔒</span>':'';const on=SELL.u===it.u&&performance.now()-SELL.t<3000;
+  return`<button class="btn ${on?'coral':'white'} sellb" ${attr}="${act}${arg}">${on?'✓ ':'💰 '}${n}<span class="off50">-50%</span></button>`;}
+function sellTap(it,from){if(!it)return;const n=sellPrice(it);if(!n)return;
+  if(!(SELL.u===it.u&&performance.now()-SELL.t<3000)){SELL.u=it.u;SELL.t=performance.now();SFX.tap();setTimeout(()=>{if(SELL.u===it.u&&performance.now()-SELL.t>=3000){SELL.u=null;from==='room'?renderBar():(UI.open&&renderCatalog());}},3100);from==='room'?renderBar():renderCatalog();return;}
+  SELL.u=null;if(from==='room'){const X=DX();if(X!==HOMEX)return;const L=X.list();const i=L.indexOf(it);if(i<0)return;L.splice(i,1);X.rm(it.u);selMark(null);}
+  else{const i=S.home.store.indexOf(it);if(i<0)return;S.home.store.splice(i,1);}
+  S.coins+=n;SFX.coin();floatText('+'+n+' 🪙',P.x-Math.sin(P.yaw)*1.5,1.6,P.z-Math.cos(P.yaw)*1.5,{h:.6});change();from==='room'?renderBar():renderCatalog();}
+/* 🎨 recolour (26 Nov, owner): you pick a colour when buying; later any thing with colours can get a new one for 10 coins, from 📦 My stuff or straight from the room */
+const RECOL_P=10;const canRecol=it=>{const F=FURN[furnOf(it)];return!!(F&&F.cols&&F.cols.length>1&&!it.sh);};
+function recolOpen(it,from){if(!canRecol(it))return;const F=FURN[furnOf(it)];RECOL.it=it;RECOL.from=from;
+  openPanel(`<div class="hd"><h2>🎨 ${F.n}</h2><div class="chip">🪙 <b>${S.coins}</b></div><button class="btn x" data-a="close" aria-label="Close">✕</button></div>
+    <div class="recol"><img class="mth" src="${thumb(furnOf(it),it.c)}" alt=""><div class="swrow">${F.cols.map(c=>`<button class="sw ${c===it.c?'on':''}" style="background:${c}" data-a="recol:${c}" aria-label="Colour" ${c===it.c||S.coins<RECOL_P?'disabled':''}></button>`).join('')}</div>
+    <div class="recolp">🪙 ${RECOL_P}</div></div>`);}
+const RECOL={it:null,from:null};
+
+const FURN_H={},FURN_L={};function furnBox(t){if(FURN_H[t]==null){const b=new THREE.Box3().setFromObject(buildFurn(t));FURN_H[t]=b.max.y;FURN_L[t]=b.min.y;}}function furnH(t){furnBox(t);return FURN_H[t];}function furnLo(t){furnBox(t);return FURN_L[t];}   /* how tall a thing stands (for ceiling lamps) */
 function selMark(it){DECO.sel=it;if(DECO.mark){scene.remove(DECO.mark);DECO.mark=null;}
   if(it){const L=DX().L(),R=fpRect(it.t,it.x,it.z,it.r);const m=new THREE.Mesh(new THREE.PlaneGeometry(R.x2-R.x1+.3,R.z2-R.z1+.3),new THREE.MeshBasicMaterial({color:'#ffd45c',transparent:true,opacity:.55,depthWrite:false}));
     m.rotation.x=-Math.PI/2;m.position.set(L.ox+it.x,.035,L.oz+it.z);scene.add(m);DECO.mark=m;}}
@@ -2576,7 +2626,7 @@ function decoMove(){const X=DX(),it=DECO.sel;if(!it)return;const L=X.list();L.sp
 function decoAway(){const X=DX(),it=DECO.sel;if(!it)return;const L=X.list();L.splice(L.indexOf(it),1);X.rm(it.u);selMark(null);SFX.pop();
   if(X===HOMEX){delete it.f;S.home.store.push(it);toast('Put away. Find it in 🛍️ Shop → My stuff.');}else{dcardUpd();jobHud(true);}change();renderBar();}
 $('bar').addEventListener('click',e=>{const b=e.target.closest('[data-d]');if(!b||b.disabled)return;SFX.tap();
-  ({turn:decoTurn,place:decoPlace,cancel:decoCancel,shop:()=>openCatalog('buy'),move:decoMove,away:decoAway,done:decoEnd,paint:openHousePaint,furn:()=>openPhone('furn'),finish:dsFinishAsk,leave:()=>exitClient()})[b.dataset.d]();});
+  ({turn:decoTurn,place:decoPlace,cancel:decoCancel,shop:()=>openCatalog('buy'),mine:()=>openCatalog('mine'),sellsel:()=>sellTap(DECO.sel,'room'),recolsel:()=>recolOpen(DECO.sel,'room'),move:decoMove,away:decoAway,done:decoEnd,paint:openHousePaint,furn:()=>openPhone('furn'),finish:dsFinishAsk,leave:()=>exitClient()})[b.dataset.d]();});
 /* 🐴 the farm's life (pets and farm update, stage 6; rules-riding, rules-farm-chores, story-ieva-stan, story-riders, screens-riding, screens-market-sell,
    moves-farm-*, moves-horse-*). Ten farm horses nobody owns (4 in the paddock, 5 in the two stables' stalls, 1 lesson horse by Stan), the farm animals (baby or
    adult, wandering round their spots in their own groups; where they stand comes from the one clock, so friends see the same), Ieva grooming by the stable,

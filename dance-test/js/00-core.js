@@ -1,6 +1,36 @@
 
 'use strict';
 /* ================= core ================= */
+/* 📱↔ phones play sideways only (27 Nov 2026, owner: "run game in horizontal only, no pause, no other choice").
+   A phone held upright still shows the game sideways: the whole page is turned a quarter, and the sizes, touches, boxes and screen-size rules the game reads are turned with it, so all the code below sees a sideways screen. iPads and computers are never turned. */
+const ROT=(()=>{const R={on:false,W:0},find=(o,k)=>{while(o){const d=Object.getOwnPropertyDescriptor(o,k);if(d)return d;o=Object.getPrototypeOf(o);}return null;};
+  const iw=find(window,'innerWidth'),ih=find(window,'innerHeight'),rw=()=>iw.get.call(window),rh=()=>ih.get.call(window);
+  const phone=()=>{try{return matchMediaRaw('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<=500;}catch(e){return false;}};
+  const matchMediaRaw=window.matchMedia.bind(window);
+  const swap=t=>t.replace(/width|height|portrait|landscape|pan-x|pan-y|(d|s|l)?v(w|h)\b/g,m=>({width:'height',height:'width',portrait:'landscape',landscape:'portrait','pan-x':'pan-y','pan-y':'pan-x'})[m]||m.replace(/v([wh])$/,(a,b)=>'v'+(b==='w'?'h':'w')));
+  Object.defineProperty(window,'innerWidth',{configurable:true,get:()=>R.on?rh():rw()});
+  Object.defineProperty(window,'innerHeight',{configurable:true,get:()=>R.on?rw():rh()});
+  window.matchMedia=q=>matchMediaRaw(R.on?swap(q):q);
+  for(const P of [MouseEvent.prototype,window.Touch&&Touch.prototype].filter(Boolean)){const gx=find(P,'clientX').get,gy=find(P,'clientY').get;
+    Object.defineProperty(P,'clientX',{configurable:true,get(){return R.on?gy.call(this):gx.call(this);}});
+    Object.defineProperty(P,'clientY',{configurable:true,get(){return R.on?R.W-gx.call(this):gy.call(this);}});}
+  const gbr=Element.prototype.getBoundingClientRect;
+  Element.prototype.getBoundingClientRect=function(){const r=gbr.call(this);return R.on?new DOMRect(r.top,R.W-r.right,r.height,r.width):r;};
+  {const cw=find(Element.prototype,'clientWidth').get,ch=find(Element.prototype,'clientHeight').get,de=()=>document.documentElement;   /* the page's own size (the panel's room above the keyboard) */
+    Object.defineProperty(Element.prototype,'clientWidth',{configurable:true,get(){return R.on&&this===de()?ch.call(this):cw.call(this);}});
+    Object.defineProperty(Element.prototype,'clientHeight',{configurable:true,get(){return R.on&&this===de()?cw.call(this):ch.call(this);}});}
+  const efp=document.elementFromPoint.bind(document);document.elementFromPoint=(x,y)=>R.on?efp(R.W-y,x):efp(x,y);
+  function css(){for(const sh of document.styleSheets){let rs;try{rs=sh.cssRules;}catch(e){continue;}walk(rs);}}
+  function walk(rs){for(const r of rs){if(r.media&&r.cssRules){try{r.media.mediaText=swap(r.media.mediaText);}catch(e){}walk(r.cssRules);}else if(r.cssRules)walk(r.cssRules);
+    if(r.style)for(let i=0;i<r.style.length;i++){const k=r.style[i],v=r.style.getPropertyValue(k);if(/v[wh]\b|pan-[xy]/.test(v))r.style.setProperty(k,swap(v),r.style.getPropertyPriority(k));}}}
+  function apply(){const on=phone()&&rh()>rw(),b=document.body;R.W=rw();
+    if(on!==R.on){R.on=on;css();document.documentElement.classList.toggle('rot',on);}
+    if(b)b.style.cssText=on?`position:fixed;left:0;top:0;width:${rh()}px;height:${rw()}px;transform-origin:0 0;transform:translate(${rw()}px,0) rotate(90deg)`:'';}
+  try{new MutationObserver(ms=>{if(!R.on)return;for(const m of ms)for(const n of m.addedNodes)if(n.sheet){try{walk(n.sheet.cssRules);}catch(e){}}}).observe(document.documentElement,{childList:true,subtree:true});}catch(e){}   /* a style the game adds later is turned too */
+  apply();window.addEventListener('resize',()=>{const was=R.on;apply();},true);window.addEventListener('orientationchange',()=>setTimeout(apply,0),true);
+  R.apply=apply;return R;})();
+const LAMP_TEST=location.hash==='#lamptest';   /* 💡 lamp test door (test copy only): evening clock, 4 demo lamps at home, nothing saved, offline */
+if(LAMP_TEST&&window.WEBNET)window.WEBNET.on=false;
 const DN_TEST=location.hash==='#dancetest';
 const $=id=>document.getElementById(id);
 const clamp=(v,a,b)=>v<a?a:v>b?b:v;
@@ -8,7 +38,8 @@ const lerp=(a,b,t)=>a+(b-a)*t;
 const rand=(a,b)=>a+Math.random()*(b-a);
 const pick=a=>a[(Math.random()*a.length)|0];
 const TAU=Math.PI*2;
-const FONT='"Baloo 2","Trebuchet MS","Arial Rounded MT Bold",sans-serif';
+const FONT='"CozyCoin","Baloo 2","Trebuchet MS","Arial Rounded MT Bold",sans-serif';
+try{document.fonts&&document.fonts.load('16px CozyCoin','🪙');}catch(e){}
 const INK='#2e2347';
 function angLerp(a,b,t){const d=((b-a+Math.PI)%TAU+TAU)%TAU-Math.PI;return a+d*t;}
 function seeded(seed){let s=(Math.imul((seed|0)+7,2654435761)>>>0)||1;return()=>{s^=s<<13;s>>>=0;s^=s>>>17;s^=s<<5;s>>>=0;return s/4294967296;};}
@@ -19,30 +50,121 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 let renderer,scene,camera,hemi,sun,lamp,skyMesh,skyU,stars,sunSprite,moonSprite,FOG,outside,clouds=[];
 const TREES=[];   /* 🌳 every round tree in town (x, z, size, its group): the autumn leaves fall from the crowns near you (run 4, item 18) */
 let GRAD=null,OL=null,OLP=null,WIN,LAMP,WATER,PANE,GLOW,CLOUD,OLC,SWIN,WINM;
-/* 🖼️ the painted view in a window seen from inside (24 Nov, the owner: "fake, but painterly"): sky, clouds, hills, then 0 town roofs, 1 park trees and a pond,
-   2 a meadow with a fence and a barn; soft brush dabs over every shape and a glass gleam. Painted once, side by side on one small canvas, so every window is one material
-   (one draw per room, like the plain glass before); updSky tints it for the time of day */
-function paneView(x,k){const N=256,r=seeded(41+k*17);x.save();x.translate(k*N,0);x.beginPath();x.rect(0,0,N,N);x.clip();
+/* 🖼️ the painted view in a window seen from inside (24 Nov, the owner: "fake, but painterly"; 25 Nov, the owner: it shows what really stands outside that wall, painted simply).
+   One canvas of 4 x 4 pictures and one material (one draw per room, like the plain glass before): across = the wall the window is in (its turn), down = the floor (0 to 3).
+   The windows of one wall share one wide picture, each a little further along it, like one landscape seen through several windows. paneLook paints the pictures of the place you
+   step into (flats, a friend's house and the houses you decorate are one room for many buildings, so it cannot be done once at the start): sky, clouds, mountains, hills, then
+   the real roads, park, field, water, trees and buildings that stand that way (the game's own lists; the park, the yards on the lane and the Tree Park piece by piece), near ones big, far ones small, seen from higher on upper floors; soft brush
+   dabs over every shape. The glass itself (sheen, the slide of the picture as you move) is PANE's shader. Nothing per frame in the game loop; updSky tints the material for the time of day */
+let PANE_LV=0;   /* the floor being built, where floors stand side by side (houses, the vet, the flats) */
+const PV={x:null,t:null};
+function paneAtlas(){const c=document.createElement('canvas');c.width=2048;c.height=1024;PV.x=c.getContext('2d');PV.x.fillStyle='#bfe3f7';PV.x.fillRect(0,0,2048,1024);PV.t=new THREE.CanvasTexture(c);PV.t.anisotropy=4;return PV.t;}
+const paneFor=(m,x,y,z,ry,w=1.4)=>{const di=(Math.round(ry/(Math.PI/2))%4+4)%4,lv=clamp(PANE_LV+Math.round((y-1)/3.2),0,3),uw=.5*w/1.4,u0=.5+clamp((x*Math.cos(ry)-z*Math.sin(ry))*.027,-.24,.24)-uw/2,u=m.geometry.attributes.uv;m.geometry.setAttribute('pane',u.clone());   /* (pane: the glass's own 0..1 across and up, for the sheen and the frame's shade) */
+  for(let i=0;i<u.count;i++)u.setXY(i,(di+u0+u.getX(i)*uw)/4,(3-lv+.002+u.getY(i)*.996)/4);return m;};   /* this window's part of its wall's picture */
+/* what really stands in town, on the lane and at the farm: buildings [x,z,w,d,h,wall,accent,kind: 0 block, 1 shop with an awning, 2 house with a roof, 3 block with a sign], trees, ground shapes [corners, colour, white lines, grass] */
+function paneWorld(){const B=[],T=[],G=[],M=[],Q=[],FN=[[-38,8.4,-24.2,8.4],[-19.8,8.4,-8.3,8.4],[-8.3,8.4,-8.3,19.4],[-8.3,24.6,-8.3,37.8],[-40.4,10,-40.4,38.6],[-38.6,40.6,-9.4,40.6]],C=LOC.city,
+    bx=(x,z,w,d,h,c,y=0)=>Q.push([0,x,z,w,d,h,c,y]),rf=(x,z,w,d,h,c,y)=>Q.push([3,x,z,w,d,h,c,y]),ln=(x1,y1,z1,x2,y2,z2,wd,c)=>Q.push([1,x1,y1,z1,x2,y2,z2,wd,c]),bl=(x,y,z,r,c)=>Q.push([2,x,y,z,r,c]),   /* props: a box, a pointed roof, a pole or bar, a ball */
+    R=(x1,z1,x2,z2)=>[[x1,z1],[x2,z1],[x2,z2],[x1,z2]],D=(cx,cz,rad)=>{const p=[];for(let i=0;i<14;i++)p.push([cx+Math.cos(i/14*TAU)*rad,cz+Math.sin(i/14*TAU)*rad]);return p;};
+  const PX={market:[4.6,'#ff7aa8',1],cafe:[4.2,'#5fd4b0',1],pets:[9.6,'#ffd45c',1],flowers:[4.2,'#b79cff',1],school:[7.2,'#ff7aa8',3],toys:[4.6,'#7cc8ff',1],bakery:[4.4,'#ffd45c',1],library:[6.6,'#5fa8ff',3],icecream:[4.2,'#ff9ec4',1],
+    fire:[5.2,'#ffffff',3],clothes:[4.4,'#b79cff',1],salon:[4.4,'#ff9ec4',1],pizza:[4.4,'#ff6b6b',1],vet:[6.6,'#8a5fd6',1]};
+  const BX=[[3.6,'#6aa9ff',2],[9.6,0,0],[12.6,0,0],[9.6,0,0],[3.6,'#ff7aa8',2],[3.6,'#5fa8ff',2],[3.6,'#ff8a6b',2],[3.6,'#9b7cf0',2],[3.6,'#ff9ec4',2],[3.6,'#5fd4b0',2],[9.6,0,0]];
+  for(const p of PLACES)if(PX[p.id])B.push([p.x,p.z,p.w,p.d,PX[p.id][0],p.id==='fire'?'#ff6b6b':p.c,PX[p.id][1],PX[p.id][2]]);
+  BLDS.forEach((b,i)=>B.push([b[0],b[1],b[2],b[3],BX[i][0],b[4],BX[i][1],BX[i][2]]));
+  for(const lp of(C&&C.lane)||[]){const o=LANE.own[lp.j];if(o){const pal=LANE_PAL[hashStr(o.nm.toLowerCase())%LANE_PAL.length],fl=clamp(o.fl||(o.big?2:1),1,6);B.push([lp.hx,lp.hz,9,7,3.8+3.2*(fl-1),o.col||pal[0],pal[1],2]);}}
+  for(const [k,x,z,,s] of FARMD.p){if(k==='farm.barn')B.push([x,z,7.9,6.2,6,'#e0675d','#b8473f',2]);else if(k==='farm.stable')B.push([x,z,9,4.4,3.4,'#c98f5e','#9a6a43',2]);else if(k==='mtn')M.push([x,z]);
+    else if(k==='pine'||k==='tree'||k.startsWith('nat.'))T.push([x,z,s*1.2,k==='pine'||k.startsWith('nat.fir')]);}
+  mapTrees().forEach(([x,z,r],i)=>{if(!farmZone(x,z))T.push([x,z,clamp(r/1.9,.9,2.4),i%9<4]);});   /* the forest belt round the town */
+  for(let t=-78;t<=78;t+=6)if(t%12&&[-50,0,50].every(c=>Math.abs(t-c)>=8))for(const c of[-50,0,50])for(const s of[-1,1])T.push([t,c+s*4.75,1,0],[c+s*4.75,t,1,0]);   /* the street trees */
+  for(const [x,z] of[[-37.6,9.2],[-11.5,16],[-39.2,13.4],[-37.6,27.7],[-11.5,28],[-16,37.5],[-26,37.5],[-20,35.5],[-36,37.5],[-12.5,37.5]])T.push([x,z,1,0]);   /* the park's trees */
+  G.push([R(-40.4,8.4,-8.3,40.6),'#7fd070',0,1],[D(-22,22,10),'#f6e2b8'],[R(-23.5,8.2,-20.5,14.2),'#f6e2b8'],[R(-13.8,20.5,-7.8,23.5),'#f6e2b8'],[R(-40,59,-10,78),'#79cf68',1,1],[D(69,69,8),'#b9a98f'],[D(69,69,7.5),'#8fd3f0'],[D(36.2,-36.2,2.1),'#8fd3f0']);   /* the park, its fountain square and gate paths, the football field, the lake, the duck pond (FN: the park's iron fence) */
+  for(let i=1;i<MAP_FROAD.length;i++){const [ax,az]=MAP_FROAD[i-1],[bx,bz]=MAP_FROAD[i],l=Math.hypot(bx-ax,bz-az)/2.2,nx=(bz-az)/l,nz=(ax-bx)/l;G.push([[[ax+nx,az+nz],[bx+nx,bz+nz],[bx-nx,bz-nz],[ax-nx,az-nz]],'#e6d2a8']);}   /* the farm road */
+  for(const c of[-50,0,50])G.push([R(c?-84:laneEnd(),c-4,84,c+4),'#8c90b4'],[R(c-4,c<0?-93:-84,c+4,84),'#8c90b4']);   /* the roads (the middle one goes on as Friends Lane) */
+  /* 🌳 OUR park (25 Nov, the owner): every piece where buildCity, buildFountain, foodTruck, buildBoard and the Pet Show area put it, in its own colours */
+  {const S1='#ece4f6',W1='#d6f2ff';G.push([D(-22,22,4.85),S1]);bx(-22,22,9.4,9.4,.66,S1);Q.push([4,D(-22,22,4.4),'#8fd3f0',.62]);bx(-22,22,4.3,4.3,1.12,W1,.6);bx(-22,22,3.6,3.6,.45,S1,1.3);bx(-22,22,2.1,2.1,1.45,W1,1.72);bx(-22,22,1.9,1.9,.3,S1,2.9);bl(-22,3.7,22,.24,'#ff9ec4');}   /* the fountain: basin, water, two bowls with their water curtains, the pink ball */
+  for(const [x,z] of[[-24.2,8.4],[-19.8,8.4],[-8.3,19.4],[-8.3,24.6]]){bx(x,z,.5,.5,1.6,'#e9e0f7');bl(x,1.8,z,.22,'#ff9ec4');}   /* the gate posts */
+  for(const [a,b] of[[22,25],[23,26],[24,26]]){const [ax,az]=WP[a],[ex,ez]=WP[b],l=Math.hypot(ex-ax,ez-az)/.9,nx=(ez-az)/l,nz=(ax-ex)/l;G.push([[[ax+nx,az+nz],[ex+nx,ez+nz],[ex-nx,ez-nz],[ax-nx,az-nz]],'#f6e2b8']);}   /* its three sand paths */
+  T.push([-14.2,10.4,1.45,0]);bx(-17.3,10.6,2.3,.4,1.25,'#b77a4c',.8);rf(-17.3,10.6,2.7,.6,.66,'#ff8a6b',2.41);for(const s of[-1,1])ln(-17.3+s,0,10.6,-17.3+s,2.3,10.6,.15,'#9b6b4a');   /* the old oak and the ideas board */
+  {const x=TRUCK.x,z=TRUCK.z;bx(x-.5,z,5,2.2,1.9,'#ff8a6b',.5);bx(x-.5,z,5.1,2.3,.12,'#ffffff',2.4);bx(x+.35,z+1.05,2.3,.1,.95,'#7cc8ff',1.15);bx(x+.35,z+1.62,2.5,1,.1,'#ff6b6b',2.2);bx(x+.35,z+1,2.6,.1,.96,'#ff6b6b',2.5);for(const a of[-1.75,1.45])bl(x+a,.38,z+1.1,.38,'#3d2c5e');}   /* the food truck: body, roof, window, awning, sign, wheels */
+  bx(-39,31.9,1.2,1.2,1.8,'#ffd45c');ln(-39,1.8,32.5,-39,.05,35.2,.9,'#ff7aa8');   /* the slide */
+  for(const a of[-30.8,-27.2])ln(a,0,37.4,a,2.5,37.4,.12,'#7cc8ff');ln(-30.9,2.5,37.4,-27.1,2.5,37.4,.14,'#7cc8ff');for(const a of[-29.8,-28.2]){ln(a,2.45,37.4,a,.55,37.4,.05,'#3d2c5e');bx(a,37.4,.6,.3,.08,'#ff8a6b',.5);}   /* the swings */
+  {const e=[];for(let i=0;i<16;i++)e.push([-35+Math.cos(i/16*TAU)*5.46,22+Math.sin(i/16*TAU)*7.8]);G.push([e,'#f2dcae']);const sh=(C&&C.show)||{},bb=(k,c,y,h)=>{const b=sh[k];if(b)bx((b[0]+b[1])/2,(b[2]+b[3])/2,b[1]-b[0],b[3]-b[2],h||b[4]-(y||0),c,y);};
+    bb('show.stage','#b77a4c',0,.55);bb('show.stage','#2a3a8c',.55);if(sh['show.stage']){const b=sh['show.stage'];bx(b[1]+.05,22,.1,2.5,.55,'#ffd45c',2.35);for(const a of[-.8,.8])bl(b[1]+.06,1.45,22+a,.3,'#1d2866');}bb('show.podium','#2f47b0');bb('show.judges','#2f47b0');   /* the Pet Show: sand lawn, stage with its yellow banner and paws, podium, judges' table */
+    for(let i=0;i<=8;i++){const a=-Math.PI*.3+i/8*Math.PI*.6,x=-36.2+Math.cos(a)*5.2,z=22+Math.sin(a)*5.2;if(Math.abs(z-22)>=1.2){ln(x,0,z,x,.75,z,.11,'#ffd45c');if(i<8){const a2=a+Math.PI*.075,z2=22+Math.sin(a2)*5.2;if(Math.abs(z2-22)>=1.2)ln(x,.6,z,-36.2+Math.cos(a2)*5.2,.6,z2,.04,'#ff7aa8');}}}}   /* its gold posts and pink rope */
+  bx(-16.2,8.15,3.7,.14,2.2,'#fff6e8');bx(-16.2,7.6,4.1,1.7,.3,'#ffc4a3',2.2);for(const s of[-1,1])ln(-16.2+s*1.8,0,7,-16.2+s*1.8,2.25,7,.14,'#8fe3c4');   /* the bus stop by the north gate */
+  for(const b of BENCHES)if(b.loc==='city'){const t=Math.abs(Math.sin(b.ry))>.7;bx(b.x,b.z,t?.5:1.6,t?1.6:.5,.52,'#e0905e',.42);}   /* every bench in town */
+  for(const [x,z] of LAMPXZ){ln(x,0,z,x,3,z,.14,'#5a5f8c');bl(x,3.21,z,.19,'#fff1b8');}   /* every street lamp */
+  for(const b of(C&&C.beds)||[])if(!b.yard){bx(b.x,b.z,1.8,1,.22,'#9b6b4a');for(const [a,c] of[[-.55,'#ff7aa8'],[0,'#ffd45c'],[.55,'#ffffff']])bl(b.x+a,.46,b.z,.13,c);}   /* the park's flower beds */
+  /* 🌲 the Tree Park: its log fence, the platforms on their tall trees, the tower tree, the checkpoint flags */
+  if(typeof TP!=='undefined'&&TP.pl.length){for(const [a,b,c,d] of[[80,-42,92,-42],[92,-42,92,-60],[92,-60,144,-60],[144,-60,144,-31],[144,-31,80.4,-31]])FN.push([a,b,c,d,'#b98a5e']);G.push([R(92,-56.5,98.4,-34.7),'#d9b98a']);T.push([TP_TOWER[0],TP_TOWER[1],3.2,0,2.8]);
+    for(const p of TP.pl){if(p.i>=0&&!p.posts.length)T.push([p.x,p.z,(p.h+4.6)/3.1,0,2.1]);bx(p.x,p.z,p.w,p.d,.3,'#c99a66',Math.max(0,p.h-.3));if(p.cp){ln(p.x,p.h,p.z,p.x,p.h+1.75,p.z,.08,'#8f6244');bx(p.x+.3,p.z,.7,.1,.5,'#ffd45c',p.h+1.2);}}}
+  /* 🚜 the farm's windmill and its FARM arch (the barn and stables are in the buildings) */
+  for(const [k,x,z] of FARMD.p){if(k==='farm.windmill'){bx(x,z,2.6,2.6,5.2,'#c98f5e');rf(x,z,3,3,1.6,'#b8473f',5.2);for(const [a,b] of[[1,1],[1,-1]])ln(x-2.6*a,5.2-2.6*b,z,x+2.6*a,5.2+2.6*b,z,.35,'#f7efe2');}
+    else if(k==='farm.arch'){for(const s of[-1,1])ln(x,0,z+s*3.05,x,4.2,z+s*3.05,.4,'#9a6a43');bx(x,z,.3,6.6,.9,'#c98f5e',3.6);}}
+  /* 🏡 the yards on Friends Lane: fences, garden beds with what grows, the shed, the big pets' homes, training gear, from the save (yours) or the friend's presence (theirs) */
+  for(const lp of(C&&C.lane)||[]){const o=LANE.own[lp.j];if(!o)continue;const me=o.k===laneMe(),yd=me?null:/^[1-3][1-3][a-o]{0,15}[TPD]{0,3}$/.test(o.yd||'')?o.yd:'11',gl=me?yLv('garden'):+yd[0],pl=me?yLv('pet'):+yd[1],
+      homes=me?(S.yard&&S.yard.home)||[]:[...yd.replace(/[^TPD]/g,'')].map(c=>BHOME_IDS[BHOME_L.indexOf(c)]),ng=me?((S.yard&&S.yard.gear)||[]).length:yd.slice(2).replace(/[TPD]/g,'').length,grow={};
+    if(me)(S.garden||[]).forEach((p,i)=>{if(p&&p.seed)grow[i]=1;});else for(const row of(o.gd||'').split(';'))if(row)grow[+row.split(',')[0]]=1;
+    const P=(x,z)=>lotPt(lp.j,x,z),back=yardBack(gl,pl),GC=['#ffffff','#ffd6e0','#fff1b8'][gl-1],PC=['#ffffff','#c9f2e3','#c9f2e3'][pl-1],fn=(a,b,c,d,col)=>FN.push([...P(a,b),...P(c,d),col]),gq=(x1,z1,x2,z2,c)=>G.push([[P(x1,z1),P(x2,z1),P(x2,z2),P(x1,z2)],c,0,1]);
+    gq(-22.9,Math.min(back,-24.55),-10.6,-18.55,'#a2e48a');for(const [a,b,c,d] of[[-21.6,-8.2,-17.9,-8.2],[-16.1,-8.2,-12.4,-8.2],[-21.6,-8.2,-21.6,-11.3],[-12.4,-8.2,-12.4,-11.3],[-23,-18.5,-21.6,-18.5]])fn(a,b,c,d,'#ffffff');
+    if(pl>=3){fn(-23,-18.5,-23,-29,GC);fn(-23,-29,-13.3,-29,GC);fn(-11.5,-29,-10.5,-29,PC);fn(-10.5,-29,-10.5,-18.5,PC);fn(-23,-29,-23,-35);fn(-23,-35,-10.5,-35);fn(-10.5,-35,-10.5,-29);gq(-22.95,-34.95,-10.55,-29.05,'#9fd98a');}
+    else{fn(-23,-18.5,-23,back,GC);fn(-23,back,-17.2,back,GC);fn(-17.2,back,-10.5,back,PC);fn(-10.5,back,-10.5,-18.5,PC);}
+    for(const [i,x,z] of YARD_PLOTS.concat(YARD_BEDS2)){if(i>=36&&gl<(i<39?2:3))continue;const [a,b]=P(x,z),h=BED_TOP[gl-1];bx(a,b,1.8,1.2,h,['#b07a52','#e0905e','#d9645a'][gl-1]);Q.push([4,[[a-.8,b-.5],[a+.8,b-.5],[a+.8,b+.5],[a-.8,b+.5]],'#8a5a3c',h]);if(grow[i])for(const k of[-.55,0,.55])bl(a+k,h+.14,b,.14,'#5fbf74');}
+    {const [a,b]=P(-13.4,-23.3);bx(a,b,1.6,1.4,2,'#ffd6e0');rf(a,b,1.9,1.8,.75,'#ff7aa8',2);const [c,d]=P(-13.75,-22.56);bx(c,d,.7,.06,1.6,'#5fd4b0');}   /* the seed shed and its door */
+    for(const [x,z] of[[-19.8,-10.6],[-14.2,-10.6]]){const [a,b]=P(x,z);bx(a,b,3,.9,.22,'#9b6b4a');for(const [k,c] of[[-1,'#ff7aa8'],[0,'#ffd45c'],[1,'#ffffff']])bl(a+k,.46,b,.13,c);}   /* the two flower beds by the door */
+    for(const id of homes){const H=BHOME[id];if(!H)continue;const [a,b]=P(H.x,H.z);if(id==='tree'){ln(a,0,b,a,6.6,b,1.1,'#7a4a32');for(const [dx,dy,r] of[[0,7.6,2.7],[-2,6.8,1.7],[2.1,6.9,1.8]])bl(a+dx,dy,b,r,'#2e8b3d');}
+      else if(id==='pond'){G.push([D(a,b,2),'#b8b4c4'],[D(a,b,1.6),'#8fd3f0']);}else{bx(a,b,2.6,2.2,1,'#a7a3b5');bl(a,1,b,1.3,'#a7a3b5');bl(a,.5,b+(lp.s<0?1:-1)*1.1,.5,'#3d3550');}}   /* the climbing tree, the pond, the cave den */
+    for(let k=0;k<Math.min(ng,3);k++){const sl=GEAR_SLOTS[k],[a,b]=P(sl.x,sl.z);for(const s of[-1,1])ln(a+s*sl.w*.35,0,b,a+s*sl.w*.35,.9,b,.1,'#7cc8ff');ln(a-sl.w*.35,.7,b,a+sl.w*.35,.7,b,.1,'#ffd45c');}}   /* training gear: one small frame per piece (not each piece's own shape) */
+  return{B,T,G,M,FN,Q};}
+/* one wall's picture: seen from (vx,vz), looking along (ox,oz) with (rx,rz) to the right, from floor lv */
+function paneView(x,ci,lv,vx,vz,ox,oz,rx,rz,W,own){const N=256,F=183,e=1.6+3.2*lv,hy=150+14*lv,r=seeded(41+ci*17+Math.round(vx)*7+Math.round(vz)*13),sn=WX.cover||0,gc=c=>sn?mixC(c,'#eef4f8',sn*.85):c;x.save();   /* (gc: the ground under snow) */
+  x.translate(ci*512,lv*N);x.beginPath();x.rect(0,0,512,N);x.clip();
   const dab=(cx,cy,rw,rh,col,n,a,sz)=>{x.fillStyle=col;for(let i=0;i<n;i++){x.globalAlpha=a*(.5+r()*.5);x.beginPath();x.ellipse(cx+(r()-.5)*rw*2,cy+(r()-.5)*rh*2,sz*(.6+r()*.8),sz*(.35+r()*.4),r()*Math.PI,0,Math.PI*2);x.fill();}x.globalAlpha=1;};
-  const blob=(cx,cy,rad,col,hi,lo)=>{x.fillStyle=col;x.beginPath();x.arc(cx,cy,rad,0,Math.PI*2);x.fill();dab(cx-rad*.25,cy-rad*.3,rad*.45,rad*.35,hi,10,.5,rad*.28);dab(cx+rad*.2,cy+rad*.35,rad*.5,rad*.25,lo,10,.45,rad*.26);};
-  const hill=(y0,amp,f,ph,col,hi)=>{x.fillStyle=col;x.beginPath();x.moveTo(0,N);for(let i=0;i<=N;i+=8)x.lineTo(i,y0-amp*Math.sin(i/N*Math.PI*f+ph)-amp*.4*Math.sin(i/N*Math.PI*f*2.3+ph*2));x.lineTo(N,N);x.fill();for(let i=0;i<26;i++){const px=r()*N;dab(px,y0-amp*Math.sin(px/N*Math.PI*f+ph)+10+r()*30,6,6,hi,2,.4,7);}};
-  let g=x.createLinearGradient(0,0,0,N*.62);g.addColorStop(0,'#8fcdf3');g.addColorStop(1,'#e9f7ff');x.fillStyle=g;x.fillRect(0,0,N,N);
-  for(let i=0;i<3;i++){const cx=30+r()*200,cy=24+r()*50;for(let j=0;j<6;j++)blob(cx+(j-2.5)*13+r()*6,cy+(r()-.5)*8,11+r()*9,'#ffffff','#ffffff','#e4eef9');}
-  hill(150,14,1.3,r()*3,'#b8dfb0','#cdeac4');hill(176,12,1.8,r()*3,'#94cf8e','#a9dc9f');
-  const tree=(tx,ty,s)=>{x.fillStyle='#8a5a3c';x.fillRect(tx-2*s,ty,4*s,14*s);blob(tx,ty-4*s,13*s,'#6cbf6a','#8fd884','#4f9e58');};
-  if(k===0){const H=['#ffd6e0','#fff1b8','#dff2ea','#e6dbff','#ffe3c2'],R=['#ff8a8a','#b79cff','#5fd4b0','#ff9ec4','#ffb36b'];
-    for(let i=0;i<5;i++){const hx=14+i*50+r()*10,hw=34+r()*8,hh=30+r()*14,hy=188;x.fillStyle=H[i];x.fillRect(hx,hy-hh,hw,hh);x.fillStyle=R[i];x.beginPath();x.moveTo(hx-5,hy-hh);x.lineTo(hx+hw/2,hy-hh-18);x.lineTo(hx+hw+5,hy-hh);x.fill();
-      dab(hx+hw/2,hy-hh-6,hw*.3,5,'#ffffff',4,.25,5);x.fillStyle='#ffe9a8';x.fillRect(hx+hw*.25,hy-hh*.6,7,8);x.fillRect(hx+hw*.6,hy-hh*.6,7,8);}
-    tree(232,170,.9);tree(8,176,.8);}
-  else if(k===1){tree(40,150,1.5);tree(120,160,1.1);tree(210,146,1.6);x.fillStyle='#8fd3f0';x.beginPath();x.ellipse(150,214,62,14,0,0,Math.PI*2);x.fill();dab(150,210,40,4,'#ffffff',8,.35,6);}
-  else{x.strokeStyle='#ffffff';x.lineWidth=4;x.beginPath();x.moveTo(0,206);x.lineTo(N,200);x.moveTo(0,222);x.lineTo(N,216);x.stroke();x.fillStyle='#ffffff';for(let i=6;i<N;i+=24)x.fillRect(i,194,5,36);
-    x.fillStyle='#e0645a';x.fillRect(150,140,56,42);x.fillStyle='#b8473f';x.beginPath();x.moveTo(144,140);x.lineTo(178,114);x.lineTo(212,140);x.fill();x.fillStyle='#ffffff';x.fillRect(170,156,16,26);tree(40,160,1.1);}
-  x.fillStyle='#7cc679';x.fillRect(0,232,N,N-232);dab(128,244,128,10,'#94d68a',60,.5,6);for(let i=0;i<22;i++)dab(r()*N,236+r()*16,1,1,['#ffffff','#ffd45c','#ff9ec4'][i%3],1,.9,2.4);
-  dab(128,128,128,128,'#ffffff',90,.05,10);   /* the painter's soft brush over all of it */
-  x.globalAlpha=.22;x.fillStyle='#ffffff';for(const [a,w] of[[40,26],[84,9]]){x.beginPath();x.moveTo(a,0);x.lineTo(a+w,0);x.lineTo(a+w-90,N);x.lineTo(a-90,N);x.fill();}x.globalAlpha=1;   /* the glass gleam */
+  const blob=(cx,cy,rad,col,hi,lo)=>{x.fillStyle=col;x.beginPath();x.arc(cx,cy,rad,0,Math.PI*2);x.fill();const n=clamp(rad/1.5|0,1,10);dab(cx-rad*.25,cy-rad*.3,rad*.45,rad*.35,hi,n,.5,rad*.28);dab(cx+rad*.2,cy+rad*.35,rad*.5,rad*.25,lo,n,.45,rad*.26);};
+  const hill=(y0,amp,f,ph,col,hi)=>{x.fillStyle=col;x.beginPath();x.moveTo(0,N);for(let i=0;i<=512;i+=8)x.lineTo(i,y0-amp*Math.sin(i/N*Math.PI*f+ph)-amp*.4*Math.sin(i/N*Math.PI*f*2.3+ph*2));x.lineTo(512,N);x.fill();for(let i=0;i<40;i++){const px=r()*512;dab(px,y0-amp*Math.sin(px/N*Math.PI*f+ph)+10+r()*20,6,6,hi,2,.4,7);}};
+  const pr=(wx,wz)=>[(wx-vx)*rx+(wz-vz)*rz,(wx-vx)*ox+(wz-vz)*oz],Y=(h,d)=>hy+F*(e-h)/d;   /* a spot in the world: [metres to the right, metres away]; how high on the picture */
+  let g=x.createLinearGradient(0,0,0,hy);g.addColorStop(0,'#8fcdf3');g.addColorStop(1,'#e9f7ff');x.fillStyle=g;x.fillRect(0,0,512,N);
+  for(let i=0;i<5;i++){const cx=20+i*100+r()*70,cy=18+r()*(hy-90);for(let j=0;j<6;j++)blob(cx+(j-2.5)*13+r()*6,cy+(r()-.5)*8,11+r()*9,'#ffffff','#ffffff','#e4eef9');}
+  for(const [mx,mz] of W.M){const [l,d]=pr(mx,mz);if(d<30)continue;const s=F/d,cx=256+l*s,yb=Y(0,d);for(const [dx,rw,h,c] of[[0,15,17,'#9fb59a'],[5,9,10,'#b3c4ad']]){x.fillStyle=c;x.beginPath();x.moveTo(cx+(dx-rw)*s,yb);x.lineTo(cx+dx*s,yb-h*s);x.lineTo(cx+(dx+rw)*s,yb);x.fill();}
+    dab(cx,yb-13*s,3*s,3*s,'#ffffff',4,.35,2.5*s);}   /* the mountains north of the town and the farm */
+  hill(hy-4,14,1.3,r()*3,gc('#b8dfb0'),gc('#cdeac4'));hill(hy+8,9,1.8,r()*3,gc('#94cf8e'),gc('#a9dc9f'));x.fillStyle=gc('#7cc679');x.fillRect(0,hy+12,512,N);dab(256,hy+60,256,44,gc('#94d68a'),90,.5,6);
+  if(sn<.3)for(let i=0;i<30;i++)dab(r()*512,hy+50+r()*(N-hy-50),1,1,['#ffffff','#ffd45c','#ff9ec4'][i%3],1,.9,2.4);
+  for(const [pts,col,line,grass] of W.G){const q=pts.map(p=>pr(p[0],p[1])),o=[];for(let i=0;i<q.length;i++){const a=q[i],b=q[(i+1)%q.length];if(a[1]>=1.5)o.push(a);if((a[1]>=1.5)!==(b[1]>=1.5)){const t=(1.5-a[1])/(b[1]-a[1]);o.push([a[0]+(b[0]-a[0])*t,1.5]);}}
+    if(o.length<3)continue;x.fillStyle=grass?gc(col):col;x.beginPath();for(const [l,d] of o)x.lineTo(256+F*l/d,Y(0,d));x.closePath();x.fill();if(line){x.strokeStyle='#ffffff';x.lineWidth=1.5;x.stroke();}}
+  const th=[];let ti=0;   /* trees (in the season's colours) and buildings, the far ones first */
+  for(const [tx,tz,ts,pine,cr] of W.T){const tc=pine?PINE_COLS[ti++%PINE_COLS.length]:TREE_COLS[ti++%TREE_COLS.length],[l,d]=pr(tx,tz);if(d<7||d>150)continue;const s=F/d,cx=256+l*s;if(cx<-40||cx>552)continue;th.push([d,()=>{const yb=Y(0,d),h=ts*s;x.fillStyle='#8a5a3c';x.fillRect(cx-(cr?.45*s:.18*h),yb-2.4*h,cr?.9*s:.36*h,2.4*h);
+      if(pine){x.fillStyle=tc;for(const [w,a,b] of[[1.5,.8,2.7],[1.15,1.8,3.6],[.8,2.7,4.4]]){x.beginPath();x.moveTo(cx-w*h,yb-a*h);x.lineTo(cx,yb-b*h);x.lineTo(cx+w*h,yb-a*h);x.fill();}dab(cx,yb-2.6*h,.5*h,h,mixC(tc,'#ffffff',.25),clamp(h/2|0,1,6),.4,.4*h);}
+      else blob(cx,yb-3.1*h,cr?cr*s:1.45*h,tc,mixC(tc,'#ffffff',.3),mixC(tc,'#3d2c5e',.22));}]);}
+  for(const [x1,z1,x2,z2,fc] of W.FN){let a=pr(x1,z1),b=pr(x2,z2);if(a[1]<b[1])[a,b]=[b,a];if(a[1]<3||b[1]>150)continue;if(b[1]<3)b=[b[0]+(a[0]-b[0])*(3-b[1])/(a[1]-b[1]),3];
+    th.push([b[1],()=>{x.strokeStyle=fc||'#3c6b58';const n=Math.ceil(Math.hypot(a[0]-b[0],a[1]-b[1])/1.4);for(let i=0;i<=n;i++){const l=b[0]+(a[0]-b[0])*i/n,d=b[1]+(a[1]-b[1])*i/n,X=256+F*l/d;x.lineWidth=clamp(F/d*.07,.5,3);x.beginPath();x.moveTo(X,Y(0,d));x.lineTo(X,Y(1.2,d));x.stroke();}
+      for(const h of[.2,1.05]){x.lineWidth=clamp(F/b[1]*.06,.5,2.5);x.beginPath();x.moveTo(256+F*b[0]/b[1],Y(h,b[1]));x.lineTo(256+F*a[0]/a[1],Y(h,a[1]));x.stroke();}}]);}
+  for(const q of W.Q){const k=q[0];
+    if(k===1){const a=pr(q[1],q[3]),b=pr(q[4],q[6]),d=Math.min(a[1],b[1]);if(d<1.2||d>110)continue;th.push([d,()=>{x.strokeStyle=q[8];x.lineWidth=Math.max(.7,q[7]*F/d);x.beginPath();x.moveTo(256+F*a[0]/a[1],Y(q[2],a[1]));x.lineTo(256+F*b[0]/b[1],Y(q[5],b[1]));x.stroke();}]);}
+    else if(k===2){const [l,d]=pr(q[1],q[3]);if(d<1.2||d>110)continue;th.push([d-.02,()=>{x.fillStyle=q[5];x.beginPath();x.arc(256+F*l/d,Y(q[2],d),Math.max(.8,q[4]*F/d),0,TAU);x.fill();}]);}
+    else if(k===4){const p=q[1].map(v=>pr(v[0],v[1]));if(p.some(v=>v[1]<1.5))continue;th.push([p.reduce((s,v)=>s+v[1],0)/p.length,()=>{x.fillStyle=q[2];x.beginPath();for(const [l,d] of p)x.lineTo(256+F*l/d,Y(q[3],d));x.fill();}]);}
+    else{const [l,dc]=pr(q[1],q[2]),d=dc-(Math.abs(ox)*q[3]+Math.abs(oz)*q[4])/2,er=(Math.abs(rx)*q[3]+Math.abs(rz)*q[4])/2;if(d<1.2||d>150)continue;const s=F/d,x0=256+(l-er)*s,w=2*er*s;if(x0>530||x0+w<-18||w<.7)continue;
+      th.push([d,()=>{const yb=Y(q[7],d),yt=Y(q[7]+q[5],d);x.fillStyle=q[6];x.strokeStyle='rgba(61,44,94,.3)';x.lineWidth=.8;x.beginPath();if(k===3){x.moveTo(x0,yb);x.lineTo(x0+w/2,yt);x.lineTo(x0+w,yb);}else x.rect(x0,yt,w,yb-yt);x.closePath();x.fill();if(w>5)x.stroke();if(w>12)dab(x0+w/2,(yt+yb)/2,w/2,(yb-yt)/2,'#ffffff',3,.2,clamp(w/9,2,10));}]);}}
+  for(const b of W.B){if(b===own)continue;const [l,dc]=pr(b[0],b[1]),eo=(Math.abs(ox)*b[2]+Math.abs(oz)*b[3])/2,er=(Math.abs(rx)*b[2]+Math.abs(rz)*b[3])/2;if(dc<1.5||dc-eo>150)continue;const d=Math.max(dc-eo,1.5),s=F/d,x0=256+(l-er)*s,w=2*er*s;if(x0>542||x0+w<-30)continue;
+    th.push([d,()=>{const [,,,,h,c,a,k]=b,yb=Y(0,d),yt=Y(h,d),H=m=>Y(m,d),mid=x0+w/2,wm=2*er,ink='rgba(61,44,94,.3)';
+      const win=(cx,h0,ww,hh)=>{x.fillStyle='#ffffff';x.fillRect(cx-ww*s/2-1,H(h0+hh)-1,ww*s+2,hh*s+2);x.fillStyle='#9fd4f2';x.fillRect(cx-ww*s/2,H(h0+hh),ww*s,hh*s);};
+      x.fillStyle=c;x.fillRect(x0,yt,w,yb-yt);dab(mid,(yt+yb)/2,w/2,(yb-yt)/2,'#ffffff',clamp(w/10|0,3,22),.22,clamp(w/9,3,14));x.strokeStyle=ink;x.lineWidth=1.2;x.strokeRect(x0,yt,w,yb-yt);
+      const n=Math.max(1,Math.round(wm/3.2));if(w>=14)for(let h0=k===1?4.6:1;h0+1.5<h;h0+=3.2)for(let i=0;i<n;i++)win(x0+(i+.5)*w/n,h0,1,1.25);
+      if(k===2){x.fillStyle=a;x.beginPath();x.moveTo(x0-.5*s,yt);x.lineTo(mid,H(h+2.5));x.lineTo(x0+w+.5*s,yt);x.closePath();x.fill();x.stroke();dab(mid,H(h+.9),w*.25,.5*s,'#ffffff',4,.25,clamp(w/12,2,10));}
+      else{x.fillStyle=ink;x.fillRect(x0,yt,w,Math.max(1.5,.3*s));}
+      if(k===1){x.fillStyle='#ffffff';x.fillRect(mid-.9*s,H(2.3),1.8*s,2.3*s);x.fillStyle='#9fd4f2';x.fillRect(mid-.75*s,H(2.15),1.5*s,2.15*s);if(wm>6)for(const sd of[-1,1])win(mid+sd*wm*.32*s,.8,wm*.2,1.4);
+        x.fillStyle=a;x.fillRect(x0-.3*s,H(3.2),w+.6*s,.75*s);dab(mid,H(2.85),w/2,.2*s,'#ffffff',clamp(w/14|0,2,10),.3,clamp(.3*s,1.5,8));if(h>=4.2){x.fillStyle='#ffffff';x.fillRect(mid-Math.min(wm-1,7)*s/2,H(4.2),Math.min(wm-1,7)*s,.85*s);}}
+      if(k===3){const sw=Math.min(wm*.5,7)*s;x.fillStyle='#ffffff';x.fillRect(mid-sw/2-1,H(h*.82)-1,sw+2,1.1*s+2);x.fillStyle=a;x.fillRect(mid-sw/2,H(h*.82),sw,1.1*s);}}]);}
+  th.sort((p,q)=>q[0]-p[0]);for(const t of th)t[1]();
+  dab(256,128,256,128,'#ffffff',90,.035,10);   /* the painter's soft brush over all of it (lighter since 25 Nov: it read as canvas) */
   x.restore();}
-function paneAtlas(){const c=document.createElement('canvas');c.width=1024;c.height=256;const x=c.getContext('2d');for(let k=0;k<3;k++)paneView(x,k);const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t;}
-const paneFor=(m,x,y,z)=>{const k=Math.abs(Math.round(x*3.1+y*1.7+z*2.3))%3,u=m.geometry.attributes.uv;for(let i=0;i<u.count;i++)u.setX(i,(k+u.getX(i))/4);return m;};   /* this window's view: its quarter of the canvas */
+/* paint the views of the place you are in: which real building it is (mapMe: the door you came in by), which way each of its walls faces out there */
+function paneLook(){const L=CUR,x=PV.x;if(!L||L.type!=='in'||!x)return;
+  const use=new Set();for(const g of[L.g,...(L.fls||[]).map(f=>f.g)])g.traverse(o=>{if(o.material===PANE){const u=o.geometry.attributes.uv;for(let i=0;i<u.count;i++)use.add((u.getX(i)*4|0)+4*(3-(u.getY(i)*4|0)));}});
+  if(!use.size)return;
+  const id=L.id,dk=DOORS[id.startsWith('apt')?'apt1':id.startsWith('cl_')?'school':id],A=mapMe(),dl=A.yaw-(dk&&dk.inside?dk.inside[2]:0)-Math.PI,W=paneWorld();   /* dl: the turn from the room to the real building (the room's door wall is the building's door side) */
+  let own=null,od=6;for(const b of W.B){const d=Math.hypot(A.x-clamp(A.x,b[0]-b[2]/2,b[0]+b[2]/2),A.z-clamp(A.z,b[1]-b[3]/2,b[1]+b[3]/2));if(d<od){od=d;own=b;}}
+  const o=own||[A.x+Math.sin(A.yaw)*4,A.z+Math.cos(A.yaw)*4,8,8];
+  for(const c of use){const ci=c%4,lv=c>>2,yw=ci*Math.PI/2+dl,ox=Math.round(-Math.sin(yw)),oz=Math.round(-Math.cos(yw)),vx=o[0]+ox*o[2]/2,vz=o[1]+oz*o[3]/2;paneView(x,ci,lv,vx,vz,ox,oz,-oz,ox,W,own);}
+  PV.t.needsUpdate=true;}
 const MATS=new Map();
 /* 🧱 a wall almost edge-on to the sun (run 4, item 17): the shadow map cannot tell lit from shadowed there and drew pale diagonal streaks on it (the "white smear"), while the toon shade
    would light it at the middle tone; so within 7° of edge-on the side facing the sun counts as lit and the side facing away as shadowed, blending into the real shadow test beyond that */
@@ -63,7 +185,21 @@ function initMaterials(gl2){
   WIN=toon({color:'#9fd4f2',emissive:new THREE.Color('#ffc66b'),emissiveIntensity:0});SWIN=toon({color:'#9fd4f2',emissive:new THREE.Color('#ffc66b'),emissiveIntensity:0});WINM=WIN;   /* SWIN: shop glass, dim at night while closed */
   LAMP=toon({color:'#fff6d6',emissive:new THREE.Color('#ffd27a'),emissiveIntensity:0});
   WATER=toon({color:'#7fd8ff',emissive:new THREE.Color('#3aa6e0'),emissiveIntensity:.3,transparent:true,opacity:.9});
-  PANE=new THREE.MeshBasicMaterial({color:'#ffffff',map:paneAtlas()});PANE.userData.uv=1;   /* 🖼️ windows inside show a painted storybook view of outside (24 Nov, owner) */
+  PANE=new THREE.MeshBasicMaterial({color:'#ffffff',map:paneAtlas()});PANE.userData.uv=1;PANE.userData.n={value:0};
+  /* 🪟 glass, not a painting (25 Nov, the owner): the picture lies far behind the pane, so it slides against the frame as you move or look (worked out in the shader from where
+     the camera is, nothing per window in the game loop); on the pane itself a cool tint, two soft sheen streaks that slide a little with the view, a brighter top, the frame's
+     shade along the inner edge, paler when seen from the side, and at night a faint warm glow of the room low on the glass (paneN: how much night, set by updSky) */
+  PANE.onBeforeCompile=sh=>{sh.uniforms.paneN=PANE.userData.n;   /* (the camera's place comes from viewMatrix: three sets no cameraPosition for this kind of material) */
+    sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nattribute vec2 pane;varying vec3 vPane;').replace('#include <uv_vertex>',`#include <uv_vertex>
+      {vec3 wp=(modelMatrix*vec4(position,1.)).xyz,wn=normalize(mat3(modelMatrix)*normal),vt=viewMatrix[3].xyz,dv=wp+vec3(dot(viewMatrix[0].xyz,vt),dot(viewMatrix[1].xyz,vt),dot(viewMatrix[2].xyz,vt));
+       vec2 t=clamp(vec2(dot(dv.xz,vec2(wn.z,-wn.x)),dv.y)/max(-dot(dv,wn),.6),-1.3,1.3),c0=floor(vUv*4.)*.25;
+       vUv=clamp(vUv+t*vec2(.049,.098),c0+.003,c0+.247);vPane=vec3(pane,t.x);}`);
+    sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vPane;uniform float paneN;').replace('#include <map_fragment>',`#include <map_fragment>
+      {vec2 q=vPane.xy;float e=min(min(q.x,1.-q.x),min(q.y,1.-q.y)),d=q.x*.8+q.y*.55-vPane.z*.22,day=1.-.75*paneN;vec3 c=diffuseColor.rgb*vec3(.93,.975,1.);
+       c=mix(c,vec3(.86,.94,1.)*(1.-.8*paneN),clamp(abs(vPane.z)*.22,0.,.3));
+       c+=day*((1.-smoothstep(0.,.09,abs(d-.45)))*.14+(1.-smoothstep(0.,.035,abs(d-.64)))*.1+.05*smoothstep(.55,1.,q.y));
+       c+=vec3(1.,.74,.42)*paneN*.2*(1.-smoothstep(0.,.42,length((q-vec2(.5-vPane.z*.12,.16))*vec2(1.,1.5))));
+       diffuseColor.rgb=c*(1.-.28*(1.-smoothstep(0.,.09,e)));}`);};   /* 🖼️ windows inside show a painted storybook view of outside (24 Nov, owner) */
   GLOW=new THREE.MeshBasicMaterial({color:'#fff3c4'});
   CLOUD=new THREE.ShaderMaterial({uniforms:{top:{value:new THREE.Color('#ffffff')},bot:{value:new THREE.Color('#dde4f0')}},   /* ☁️ soft puffs (run 4, item 18): a gentle top-to-bottom shade set by updSky, no outline, no hard dark faces */
     vertexShader:'varying float vy;void main(){vy=normalize(mat3(modelMatrix)*normal).y;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
@@ -100,7 +236,7 @@ function bake(root,shadow=true,chunk=0,frame=null){const _v=new THREE.Vector3();
     const g=new THREE.BufferGeometry();
     g.setAttribute('position',src.attributes.position.clone());
     g.setAttribute('normal',src.attributes.normal.clone());
-    g.applyMatrix4(new THREE.Matrix4().multiplyMatrices(inv,o.matrixWorld));if(o.material.userData.uv)g.setAttribute('uv',src.attributes.uv.clone());   /* (the painted window views keep their picture when baked) */
+    g.applyMatrix4(new THREE.Matrix4().multiplyMatrices(inv,o.matrixWorld));if(o.material.userData.uv){g.setAttribute('uv',src.attributes.uv.clone());g.setAttribute('pane',src.attributes.pane.clone());}   /* (the painted window views keep their picture when baked) */
     const vc=!!o.material.userData.plain;
     if(vc){const n=g.attributes.position.count,C=new Float32Array(n*3),c=o.material.color;for(let i=0;i<n;i++){C[i*3]=c.r;C[i*3+1]=c.g;C[i*3+2]=c.b;}g.setAttribute('color',new THREE.BufferAttribute(C,3));}
     let k=vc?'vc':o.material.uuid;if(chunk){o.getWorldPosition(_v);k+=':'+Math.floor(_v.x/chunk)+','+Math.floor(_v.z/chunk);}
@@ -111,9 +247,9 @@ function bake(root,shadow=true,chunk=0,frame=null){const _v=new THREE.Vector3();
   const out=[];
   for(const {m,l,vc} of buckets.values()){
     let n=0;for(const g of l)n+=g.attributes.position.count;
-    const P=new Float32Array(n*3),N=new Float32Array(n*3),Cc=vc?new Float32Array(n*3):null,U=m.userData.uv?new Float32Array(n*2):null;let off=0;
-    for(const g of l){P.set(g.attributes.position.array,off*3);N.set(g.attributes.normal.array,off*3);if(Cc)Cc.set(g.attributes.color.array,off*3);if(U)U.set(g.attributes.uv.array,off*2);off+=g.attributes.position.count;g.dispose();}
-    const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(P,3));geo.setAttribute('normal',new THREE.BufferAttribute(N,3));if(Cc)geo.setAttribute('color',new THREE.BufferAttribute(Cc,3));if(U)geo.setAttribute('uv',new THREE.BufferAttribute(U,2));geo.computeBoundingSphere();
+    const P=new Float32Array(n*3),N=new Float32Array(n*3),Cc=vc?new Float32Array(n*3):null,U=m.userData.uv?new Float32Array(n*2):null,U2=U?new Float32Array(n*2):null;let off=0;
+    for(const g of l){P.set(g.attributes.position.array,off*3);N.set(g.attributes.normal.array,off*3);if(Cc)Cc.set(g.attributes.color.array,off*3);if(U){U.set(g.attributes.uv.array,off*2);U2.set(g.attributes.pane.array,off*2);}off+=g.attributes.position.count;g.dispose();}
+    const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(P,3));geo.setAttribute('normal',new THREE.BufferAttribute(N,3));if(Cc)geo.setAttribute('color',new THREE.BufferAttribute(Cc,3));if(U){geo.setAttribute('uv',new THREE.BufferAttribute(U,2));geo.setAttribute('pane',new THREE.BufferAttribute(U2,2));}geo.computeBoundingSphere();
     const mesh=new THREE.Mesh(geo,m);const isOL=m.side===THREE.BackSide;if(rel)rel.decompose(mesh.position,mesh.quaternion,mesh.scale);
     mesh.castShadow=shadow&&!isOL&&!m.transparent;mesh.receiveShadow=!isOL;root.add(mesh);out.push(mesh);
   }
@@ -200,7 +336,7 @@ function signPlane(text,w,h,bg,fg,pad){text=String(text).replace(/️/g,'');   /
 }
 /* 🔤 signs drawn before the round game font arrived are drawn again once it is there (slow internet: the font may come after the town is built) */
 let FONTQ=null;
-function fontLate(fn){try{if(!document.fonts||document.fonts.check(`800 40px ${FONT}`))return;if(!FONTQ){FONTQ=[];document.fonts.load('800 40px "Baloo 2"').then(()=>{const q=FONTQ;FONTQ=null;INKM.clear();for(const f of q)try{f();}catch(e){}}).catch(()=>{FONTQ=null;});}FONTQ.push(fn);}catch(e){}}
+function fontLate(fn){try{if(!document.fonts||document.fonts.check(`800 40px ${FONT}`))return;if(!FONTQ){FONTQ=[];document.fonts.load('800 40px "CozyCoin","Baloo 2"').then(()=>{const q=FONTQ;FONTQ=null;INKM.clear();for(const f of q)try{f();}catch(e){}}).catch(()=>{FONTQ=null;});}FONTQ.push(fn);}catch(e){}}
 const FLOATS=[];
 function floatText(text,x,y,z,o={}){const s=label(text,o.h||.4,{bg:null,bw:0,pad:14,fg:o.fg||'#3d2c5e',stroke:'#ffffff',strokeW:12,size:50,fit:false});s.position.set(x,y,z);if(o.top){s.material.depthTest=false;s.renderOrder=9;}scene.add(s);FLOATS.push({s,t:0,life:o.life||1.4});}
 function updFloats(dt){for(let i=FLOATS.length-1;i>=0;i--){const f=FLOATS[i];f.t+=dt;f.s.position.y+=dt*.55;f.s.material.opacity=1-Math.max(0,(f.t/f.life-.55)*2.2);if(f.t>=f.life){scene.remove(f.s);f.s.material.map.dispose();f.s.material.dispose();FLOATS.splice(i,1);}}}
@@ -322,7 +458,7 @@ function keepClear(me){const K=[],add=(el,w)=>{if(el&&el!==me){const r=boxOf(el)
   return K;}
 function hudLow(){let b=0;for(const id of['stats','busTip','tnHud','fbHud','topbtns']){const r=boxOf($(id));if(r)b=Math.max(b,r.bottom);}return b;}   /* the bottom of the top HUD row */
 function leftBox(){let r0=null;for(const el of $('left').children){const r=boxOf(el);if(r)r0=r0?{right:Math.max(r0.right,r.right),bottom:Math.max(r0.bottom,r.bottom)}:{right:r.right,bottom:r.bottom};}return r0||{right:0,bottom:0};}
-function visH(){const v=window.visualViewport;return v&&v.height>50?Math.min(innerHeight,Math.round(v.offsetTop+v.height)):innerHeight;}   /* the screen height you can see: above the on-screen keyboard while typing */
+function visH(){if(ROT.on)return innerHeight;const v=window.visualViewport;return v&&v.height>50?Math.min(innerHeight,Math.round(v.offsetTop+v.height)):innerHeight;}   /* the screen height you can see: above the on-screen keyboard while typing */
 function spotFor(w,h,wish,K){const W=innerWidth,H=visH();let best=null,bc=Infinity;
   for(const c of wish){if(!c||!isFinite(c[0])||!isFinite(c[1]))continue;const x=clamp(c[0]-w/2,6,Math.max(6,W-w-6)),y=clamp(c[1],6,Math.max(6,H-h-6));let s=0;
     for(const [r,k] of K){const ox=Math.min(x+w,r.right)-Math.max(x,r.left),oy=Math.min(y+h,r.bottom)-Math.max(y,r.top);if(ox>0&&oy>0)s+=ox*oy*k;}
