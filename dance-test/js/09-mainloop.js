@@ -828,7 +828,7 @@ function dnDiscoStart(f,ball,style){
     void main(){
       float axial=smoothstep(.012,.105,rayLength)*(1.-smoothstep(.75,1.,rayLength));
       float across=pow(abs(dot(normalize(raySide),normalize(cameraPosition-rayPoint))),2.4);
-      gl_FragColor=vec4(ink,min(.39,axial*across*power*.39));
+      gl_FragColor=vec4(ink,min(.72,axial*across*power*.6));
     }`;
   for(const color of ink){
     const material=new THREE.ShaderMaterial({vertexShader,fragmentShader,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,
@@ -884,7 +884,7 @@ function dnDiscoTick(fx,t,calm,wave,down){
     const dx=(room.ox+(dir.x<0?-W:W)-pos.x)/dir.x;
     const dz=(oz+(dir.z<0?-H:H)-pos.z)/dir.z;
     const length=Math.min(dx,dz,(.06-pos.y)/dir.y);
-    const ray=disco.rays[i],width=length*(i===2?.17:.138);
+    const ray=disco.rays[i],width=length*(i===2?.24:.2);   /* (27 Nov: wider, brighter rays that read by day) */
     ray.position.copy(pos);ray.quaternion.setFromUnitVectors(disco.down,dir);
     ray.scale.set(width,length,width);
     ray.material.uniforms.power.value=beam*(i===2?.72:1);
@@ -903,7 +903,8 @@ function dnSpots(f,style,id){
       }
     });
     const spotM=style.lights.map(color=>new THREE.MeshBasicMaterial({color,transparent:true,opacity:.42,depthWrite:false}));
-    const tileM=style.lights.map(color=>toon({color,emissive:new THREE.Color(color),emissiveIntensity:.31}));
+    const tileM=style.lights.map(color=>{const m=new THREE.MeshBasicMaterial({color:new THREE.Color(color).offsetHSL(0,.25,.02)});m.userData.base=m.color.clone();return m;});   /* (27 Nov: lit tiles shine at full colour, not shaded) */
+    const dimM=original.map(m=>{const c=m.clone();if(c.color)c.color.multiplyScalar(.62);return c;});   /* the dark beat tiles */
     for(let side=0;side<2;side++){
       const spots=new THREE.InstancedMesh(geo,spotM[side],11);spots.frustumCulled=false;
       for(let i=0;i<11;i++){
@@ -930,7 +931,7 @@ function dnSpots(f,style,id){
       fixture.position.z=clamp(f.z-c.dz*back,oz-(room.D||HOMED)+.42,oz+(room.D||HOMED)-.42);
       fixture.userData.fl=f.fl;room.vf=-1;
     }
-    g.userData.funky={id,room:f.L,geo,tiles,tileSet:new Set(tiles),original,spotM,tileM,step:-1,ball,mount,
+    g.userData.funky={id,room:f.L,geo,tiles,tileSet:new Set(tiles),original,dimM,spotM,tileM,step:-1,ball,mount,
       night:nightF(clockNow().time),clockSample:0,down:0,disco:dnDiscoStart(f,ball,style)};
   }else{
     const colors=['#ff4d8d','#7cc8ff','#ffd45c','#5fd4b0','#b79cff'];
@@ -979,13 +980,13 @@ function dnFunkyLights(t,profile){
   const boost=streak>=50?.33:streak>=25?.24:streak>=10?.15:0;
   const flash=calm?.24*wave:(.78+boost)*wave+.56*down;
   fx.spotM[0].opacity=Math.min(.96,.31+flash*.46);fx.spotM[1].opacity=Math.min(.96,.35+flash*.42);
-  fx.tileM[0].emissiveIntensity=.5+flash*1.5;fx.tileM[1].emissiveIntensity=.46+flash*1.5;   /* (27 Nov, owner: the floor gives off more light) */
+  for(let k=0;k<2;k++){const m=fx.tileM[k];m.color.copy(m.userData.base).multiplyScalar(Math.min(1.25,.72+.5*flash));}   /* (27 Nov, owner: the floor gives off more light) */
   const step=calm?0:Math.max(0,beat);
   if(step!==fx.step){
     fx.step=step;
     for(let i=0;i<fx.tiles.length;i++){
       const col=i%6,row=Math.floor(i/6),lane=(row+col+step)%4;
-      fx.tiles[i].material=lane<2?fx.tileM[lane]:fx.original[i];
+      fx.tiles[i].material=lane<2?fx.tileM[lane]:(fx.dimM?fx.dimM[i]:fx.original[i]);
     }
   }
 }
@@ -1739,7 +1740,7 @@ function dnLaneLayout(F){
   }
   const half=Math.max(F.sides[0].size*.5,F.sides[0].key*.5);
   F.wordHeight=clamp(Math.min(h*.090,w*.090),23,big?69:62);
-  F.comboHeight=clamp(Math.min(h*.14,w*.15),34,120);   /* (27 Nov: the combo count reads from across the room) */
+  F.comboHeight=clamp(Math.min(h*.14,w*.15),50,120);   /* (27 Nov: the combo count reads from across the room) */
   F.safe=safe;
   F.bandBottom=up?h:h-safeBottom;
   F.scoreBottom=score.bottom;
@@ -2029,7 +2030,7 @@ function dnLaneLabel(g,F,L,side,now,calm){
     // this dancer's shoulder. Reserve that footprint before drawing notes.
     const shoulder=space<Math.min(200,w*.17);
     const cap=shoulder?Math.min(w*.37,Math.max(L.headRight-L.headLeft+14,w*.14)):space;
-    const scale=Math.min(1,Math.max(.62,(cap-9)/desired));   /* (27 Nov: the combo count and the word stay a readable size) */
+    const scale=Math.min(1,Math.max(.75,(cap-9)/desired));   /* (27 Nov: the combo count and the word stay a readable size) */
     const wordW=naturalW*scale*entry,wordH=naturalH*scale*entry*(1-.19*sag);
     const pop=calm?1:1+.12*(1-dnEase((milestone?milestoneAge:age)/.25));
     const cw=comboW*scale*pop,ch=comboH*scale*pop;
@@ -2345,7 +2346,7 @@ function dnStageTick(t){
     const lit=D.spots.userData.funky,theme=DN_COMBO_EFFECTS[tint];
     for(let i=0;i<2;i++){
       const ink=theme?(i?theme.alt:theme.ink):D.style.lights[i];
-      lit.spotM[i].color.set(ink);lit.tileM[i].emissive.set(ink);lit.tileM[i].color.set(ink);
+      lit.spotM[i].color.set(ink);lit.tileM[i].color.set(ink).offsetHSL(0,.25,.02);lit.tileM[i].userData.base=lit.tileM[i].color.clone();
     }
   }
   dnConfettiTick(fx,calm?-1:t-fx.sweepAt,1.62);
