@@ -2382,7 +2382,7 @@ function setupInput(){
     if(e.code==='KeyB')openBag();if(e.code==='KeyP')openPhone();if(e.code==='KeyM')openPhone('map');if(e.code==='KeyR'&&DECO.placing)decoTurn();});
   if(!TOUCHY){addEventListener('mousemove',e=>{if(document.pointerLockElement!==T)return;if(!mlCan()){document.exitPointerLock();return;}const k=.0028*SET.look;ballLookMine();P.yaw-=e.movementX*k;P.pitch=clamp(P.pitch-e.movementY*k,-1.25,1.25);});
     setInterval(()=>{const on=document.pointerLockElement===T;if(on&&!mlCan())document.exitPointerLock();const h=$('mlHint');if(h)h.hidden=on||!mlCan();},200);}
-  addEventListener('keyup',e=>{IN.keys[e.code]=false;if(KC.key&&(e.code==='KeyE'||e.code==='Enter'))ballLet();});
+  addEventListener('keyup',e=>{IN.keys[e.code]=false;if(DANCE.on&&DN_KEYS[e.code]!==undefined)dnRelease(DN_KEYS[e.code]);if(KC.key&&(e.code==='KeyE'||e.code==='Enter'))ballLet();});
   addEventListener('blur',()=>{IN.keys={};KC.on=false;});
 }
 /* 🔍 no page zoom while playing. iOS ignores user-scalable=no, so: Safari's pinch (gesture events) is stopped, a two-finger move is stopped
