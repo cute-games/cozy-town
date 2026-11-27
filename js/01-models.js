@@ -743,7 +743,9 @@ function drawCatTV(x,t,on){const W=216,H=120,k=x.canvas.width/W;x.setTransform(k
   x.save();x.translate(108,113);x.scale(pop,pop);x.font='800 14px "CozyCoin","Baloo 2","Trebuchet MS",sans-serif';x.textAlign='center';x.lineJoin='round';
   x.lineWidth=3.2;x.strokeStyle='#1d1430';x.strokeText(cap,0,0);x.fillStyle='#fff';x.fillText(cap,0,0);x.restore();
 }
-function buildFurn(t,c,ceiling){const g=new THREE.Group();const F=FURN[t];F.b(g,c||(F.cols?F.cols[0]:null),ceiling);return g;}
+function buildFurn(t,c,ceiling){const g=new THREE.Group();const F=FURN[t];F.b(g,c||(F.cols?F.cols[0]:null),ceiling);
+  if(F.ceil&&ceiling){const b=new THREE.Box3().setFromObject(g),dy=ceiling-b.max.y;if(Math.abs(dy)>.001)for(const o of g.children)o.position.y+=dy;}   /* (27 Nov: a ceiling lamp hangs from the room's real ceiling: 3.2 m rooms and 3.6 m wide rooms alike, never through it or floating under it) */
+  return g;}
 
 /* ---- food ---- */
 const FOODS={
