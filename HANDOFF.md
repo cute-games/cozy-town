@@ -1,19 +1,19 @@
-# HANDOFF — read this first (one page; updated 25 Nov 2026: the night of 24-25 Nov is live; the Foreman file is `FOREMAN.md` on branch `claude/foreman-handoff`)
+# HANDOFF — read this first (one page; updated 27 Nov 2026)
 
-## Where things stand (25 Nov 2026)
-- **Live: `main` = 79f7803, stamp 2026112506 (mini-map zoom row + window views with glass, 25 Nov), joined game 2,484,521 bytes.** Backups: `backup-2026-11-25e` (2198a6f), `backup-2026-11-25` (c974534), `backup-2026-11-25c` (ad8827f, main before #34).
-- Merged in the night of 24-25 Nov: #29 Pet Shop taller top floor + painted windows in all interiors; #30 house paint works and costs 150 coins, friends see the colour, calm duck and owl;
-  #31 Tree Park parkour obby in town; #32 horses ride anywhere and walk home in groups; #34 friends (accept, remove, block), texts, voice calls, world chat.
-- **#34 rests until the owner pastes the new Firebase rules** (`tools/social/FIREBASE-STEPS.md`, rules `tools/social/firebase-rules.json`): until then the Friends app says "Coming soon".
-  Its tests: `tools/social/` (rules_test.js 138, logic_test.js 34, sdk_shapes.js 13, test_social.py 109). **Pull request #33 (another version of the same) must NOT be merged**: with its rules
-  a stranger can become a child's friend and read texts (the comment on #33 has the list).
-- First full check of main after #30-#32 (655069d, 25 Nov): nothing new broken. Open and older than that night: P8, P9, P29, P36 FAIL the same on ffeb0b3 (cause not found; P9/P29/P36 compare
-  with an "older version"); C4: the mini-map button overlaps its zoom buttons on iPad landscape (a player can see it); the pfu stage's lines P11-P24 fail as a "Page.goto timeout" cascade
-  inside the stage and PASS alone (`PFU_ONLY=`); P25 breaks at page `p25-A-new-0` on this kind of machine (kit problem); P19 needs a GPU.
-- Kit commit ad8827f (C2b and P17 rewritten for the park in town) went straight to main by mistake (kit files only). Push with `git push origin HEAD:refs/heads/<branch>`, never a plain `git push`
-  from a branch made from `origin/main`.
-- Not verified on real devices: everything from that night (iPad Safari microphone and sound for calls, real Firebase rules, speed with the obby in town, how the horses and the waddle feel).
-- Music: the pick page "Pick the Music" has play buttons for all 49 songs; only Yes picks go into the game later, as separate files (see FOREMAN.md).
+## Where things stand (27 Nov 2026)
+- **Live: `main` = b6c97f8 (PR #63, stamp 2026112620, 26 Nov 22:2x)**: lamps (colour light, night dimming, 4 ceiling lamps), My stuff tab, sell 50%, recolour 10 coins, CozyCoin font,
+  mini-map tidy, dance-off to slice 12b + Windows shader fix. Owner skipped the full check. Backup: `backup-2026-11-26` (= main before #63).
+- **Branch `claude/fix-mm-cards` = PR #64 (not merged, stamp 2026112701)**: − + font fix, sell chip/card names; bus news as texts from Rosie (`rosieBus` in 02-world), no "Next bus" pill;
+  notepad hidden (`#pad{display:none}`, data kept); `dnLeave` resets camera zoom/fov (the "wide glitch"); phones sideways only (`ROT` shim at the top of 00-core: turns body,
+  innerWidth/Height, clientX/Y, getBoundingClientRect, elementFromPoint, matchMedia and @media/vw-vh rules); compact sideways-phone bars + 🗺️ fold chip (`#bFold`, 08-hud) + joystick left.
+  Kit harness `center()` maps taps for ROT (in /home/claude/w/gh4 and rel2 copies; put it into the kit zip and list it old → new). Full check running in /home/claude/w/rel2.
+- Dance: ChatGPT (Codex chat, local) builds slice 13 on `chatgpt/dance-game` (arrows pass through, judgements by the dancer, dude..., disco + night, beat bounce). Check it in the owner's Edge.
+- Dance Map maker live at `dance-map/` (+ `tools/dance-map/analyse.py`, librosa): the game does not load maps yet. Owner maps the cat song to show the style.
+- Shop icons: mock (3D thumbs on round pads) shown; owner wants "simplified drawing of a 3D picture" - waiting a/b/c. Shop look: tabs by kind (picked a).
+- Emoji set same on every device: asked, no answer. Pet shadows thrown far from pets (floating snake): not fixed. Nibbles tag over the run button on iPad: not fixed.
+- **Next job: the easel (owner 27 Nov, "go")**. Plan: buyable item `easel`; tap → drawing card (8 colours, 3 brushes, eraser, undo, clear, done); a drawing = small JPEG
+  (256x192, ~10 KB) kept in the save (cap 12, oldest asked before delete); a "Framed drawing" wall item showing it (canvas texture); send to an online friend through the
+  texts (#34: only after the owner pastes the Firebase rules; size cap; arrives in My stuff). Effort max (saves + online). Red-team the plan first.
 
 ## Older (2 Nov 2026 and before)
 - **Horses in town** (24 Nov, branch `claude/horse-town`, stamp 2026112497+): ride anywhere in town (door = "horses wait outside"; the lesson stays at the farm);
@@ -58,3 +58,7 @@ pet brain, yard/gear, vet, big pets/`PACKM`/`packBuild`, Pet Show, farm). 3. The
 ## Open / not verified (all in `tools/PFU-REPORT.md` 6, 11, 12)
 - Real iPad: P19 (30+ fps, 2 players) and P25 (first load); C1-WK, F3 (after upload), G (real devices, sounds, friends together).
 - Older items stay open: G4-205/222, G4-279, G4-285, run 4's 15 grade-1 marks (`tools/RUN-4-REPORT.md`).
+- Kit v7 changes 27 Nov (in `cozy-check-v7.zip`, old → new): N35 "Notepad switch: off hides it, on brings it back" → "Notepad gone (owner 27 Nov): never shown, no Settings switch, pages kept";
+  N41 "the pill shows the next bus with its weekday" → "Rosie texts the next bus with its weekday at the stop"; P3 "the pill" → "Rosie's text at the stop"; N36 ceiling lamps built for a 3.2 m room
+  (same 3.2 m limit); harness `center()`, `book_swipe` and C3's joystick drag map their touch points for an upright phone (ROT); harness can serve `music/` from `COZY_REPO` (off by default: the dance
+  clock then waits on real audio and N39 hangs).

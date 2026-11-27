@@ -1,6 +1,34 @@
 
 'use strict';
 /* ================= core ================= */
+/* 📱↔ phones play sideways only (27 Nov 2026, owner: "run game in horizontal only, no pause, no other choice").
+   A phone held upright still shows the game sideways: the whole page is turned a quarter, and the sizes, touches, boxes and screen-size rules the game reads are turned with it, so all the code below sees a sideways screen. iPads and computers are never turned. */
+const ROT=(()=>{const R={on:false,W:0},find=(o,k)=>{while(o){const d=Object.getOwnPropertyDescriptor(o,k);if(d)return d;o=Object.getPrototypeOf(o);}return null;};
+  const iw=find(window,'innerWidth'),ih=find(window,'innerHeight'),rw=()=>iw.get.call(window),rh=()=>ih.get.call(window);
+  const phone=()=>{try{return matchMediaRaw('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<=500;}catch(e){return false;}};
+  const matchMediaRaw=window.matchMedia.bind(window);
+  const swap=t=>t.replace(/width|height|portrait|landscape|pan-x|pan-y|(d|s|l)?v(w|h)\b/g,m=>({width:'height',height:'width',portrait:'landscape',landscape:'portrait','pan-x':'pan-y','pan-y':'pan-x'})[m]||m.replace(/v([wh])$/,(a,b)=>'v'+(b==='w'?'h':'w')));
+  Object.defineProperty(window,'innerWidth',{configurable:true,get:()=>R.on?rh():rw()});
+  Object.defineProperty(window,'innerHeight',{configurable:true,get:()=>R.on?rw():rh()});
+  window.matchMedia=q=>matchMediaRaw(R.on?swap(q):q);
+  for(const P of [MouseEvent.prototype,window.Touch&&Touch.prototype].filter(Boolean)){const gx=find(P,'clientX').get,gy=find(P,'clientY').get;
+    Object.defineProperty(P,'clientX',{configurable:true,get(){return R.on?gy.call(this):gx.call(this);}});
+    Object.defineProperty(P,'clientY',{configurable:true,get(){return R.on?R.W-gx.call(this):gy.call(this);}});}
+  const gbr=Element.prototype.getBoundingClientRect;
+  Element.prototype.getBoundingClientRect=function(){const r=gbr.call(this);return R.on?new DOMRect(r.top,R.W-r.right,r.height,r.width):r;};
+  {const cw=find(Element.prototype,'clientWidth').get,ch=find(Element.prototype,'clientHeight').get,de=()=>document.documentElement;   /* the page's own size (the panel's room above the keyboard) */
+    Object.defineProperty(Element.prototype,'clientWidth',{configurable:true,get(){return R.on&&this===de()?ch.call(this):cw.call(this);}});
+    Object.defineProperty(Element.prototype,'clientHeight',{configurable:true,get(){return R.on&&this===de()?cw.call(this):ch.call(this);}});}
+  const efp=document.elementFromPoint.bind(document);document.elementFromPoint=(x,y)=>R.on?efp(R.W-y,x):efp(x,y);
+  function css(){for(const sh of document.styleSheets){let rs;try{rs=sh.cssRules;}catch(e){continue;}walk(rs);}}
+  function walk(rs){for(const r of rs){if(r.media&&r.cssRules){try{r.media.mediaText=swap(r.media.mediaText);}catch(e){}walk(r.cssRules);}else if(r.cssRules)walk(r.cssRules);
+    if(r.style)for(let i=0;i<r.style.length;i++){const k=r.style[i],v=r.style.getPropertyValue(k);if(/v[wh]\b|pan-[xy]/.test(v))r.style.setProperty(k,swap(v),r.style.getPropertyPriority(k));}}}
+  function apply(){const on=phone()&&rh()>rw(),b=document.body;R.W=rw();
+    if(on!==R.on){R.on=on;css();document.documentElement.classList.toggle('rot',on);}
+    if(b)b.style.cssText=on?`position:fixed;left:0;top:0;width:${rh()}px;height:${rw()}px;transform-origin:0 0;transform:translate(${rw()}px,0) rotate(90deg)`:'';}
+  try{new MutationObserver(ms=>{if(!R.on)return;for(const m of ms)for(const n of m.addedNodes)if(n.sheet){try{walk(n.sheet.cssRules);}catch(e){}}}).observe(document.documentElement,{childList:true,subtree:true});}catch(e){}   /* a style the game adds later is turned too */
+  apply();window.addEventListener('resize',()=>{const was=R.on;apply();},true);window.addEventListener('orientationchange',()=>setTimeout(apply,0),true);
+  R.apply=apply;return R;})();
 const LAMP_TEST=location.hash==='#lamptest';   /* 💡 lamp test door (test copy only): evening clock, 4 demo lamps at home, nothing saved, offline */
 if(LAMP_TEST&&window.WEBNET)window.WEBNET.on=false;
 const DN_TEST=location.hash==='#dancetest';
@@ -430,7 +458,7 @@ function keepClear(me){const K=[],add=(el,w)=>{if(el&&el!==me){const r=boxOf(el)
   return K;}
 function hudLow(){let b=0;for(const id of['stats','busTip','tnHud','fbHud','topbtns']){const r=boxOf($(id));if(r)b=Math.max(b,r.bottom);}return b;}   /* the bottom of the top HUD row */
 function leftBox(){let r0=null;for(const el of $('left').children){const r=boxOf(el);if(r)r0=r0?{right:Math.max(r0.right,r.right),bottom:Math.max(r0.bottom,r.bottom)}:{right:r.right,bottom:r.bottom};}return r0||{right:0,bottom:0};}
-function visH(){const v=window.visualViewport;return v&&v.height>50?Math.min(innerHeight,Math.round(v.offsetTop+v.height)):innerHeight;}   /* the screen height you can see: above the on-screen keyboard while typing */
+function visH(){if(ROT.on)return innerHeight;const v=window.visualViewport;return v&&v.height>50?Math.min(innerHeight,Math.round(v.offsetTop+v.height)):innerHeight;}   /* the screen height you can see: above the on-screen keyboard while typing */
 function spotFor(w,h,wish,K){const W=innerWidth,H=visH();let best=null,bc=Infinity;
   for(const c of wish){if(!c||!isFinite(c[0])||!isFinite(c[1]))continue;const x=clamp(c[0]-w/2,6,Math.max(6,W-w-6)),y=clamp(c[1],6,Math.max(6,H-h-6));let s=0;
     for(const [r,k] of K){const ox=Math.min(x+w,r.right)-Math.max(x,r.left),oy=Math.min(y+h,r.bottom)-Math.max(y,r.top);if(ox>0&&oy>0)s+=ox*oy*k;}
