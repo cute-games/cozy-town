@@ -421,6 +421,7 @@ function openSettings(){const fromTitle=!PLAYING;
       <output id="danceLatencyValue" for="danceLatency" style="min-width:65px;text-align:right;color:#3d2c5e">${dnLatency()} ms</output></span>
     </div>
     <div class="opt"><span>Dance arrow travel</span><span class="row" style="margin:0"><button class="btn ${!SET.danceUp?'butter':'white'}" data-a="dnopt:down" aria-pressed="${!SET.danceUp}">Down ↓</button><button class="btn ${SET.danceUp?'butter':'white'}" data-a="dnopt:up" aria-pressed="${!!SET.danceUp}">Up ↑</button></span></div>
+    <div class="opt"><span>Dance level</span><span class="row" style="margin:0"><button class="btn ${SET.danceEasy?'butter':'white'}" data-a="dnopt:easy" aria-pressed="${!!SET.danceEasy}">Easy</button><button class="btn ${!SET.danceEasy?'butter':'white'}" data-a="dnopt:hard" aria-pressed="${!SET.danceEasy}">Hard</button></span></div>
     <div class="opt"><span>Dance arrow size</span><span class="row" style="margin:0"><button class="btn ${SET.danceSmall?'butter':'white'}" data-a="dnopt:standard" aria-pressed="${!!SET.danceSmall}">Standard</button><button class="btn ${!SET.danceSmall?'butter':'white'}" data-a="dnopt:large" aria-pressed="${!SET.danceSmall}">Large</button></span></div>
     <div class="opt"><span>Dance motion</span><span class="row" style="margin:0"><button class="btn ${!SET.danceCalm?'butter':'white'}" data-a="dnopt:regular" aria-pressed="${!SET.danceCalm}">Regular</button><button class="btn ${SET.danceCalm?'butter':'white'}" data-a="dnopt:calm" aria-pressed="${!!SET.danceCalm}">Calm</button></span></div>
     <div class="opt"><span>Graphics</span><span class="row" style="margin:0"><button class="btn ${SET.gfx==='nice'?'butter':'white'}" data-a="sgfx:nice">Pretty</button><button class="btn ${SET.gfx==='fast'?'butter':'white'}" data-a="sgfx:fast">Fast</button></span></div>
@@ -454,6 +455,7 @@ let WIPE=false;
 ACT.dnopt=v=>{
   if(v==='up'||v==='down')SET.danceUp=v==='up';
   if(v==='standard'||v==='large')SET.danceSmall=v==='standard';
+  if(v==='easy'||v==='hard')SET.danceEasy=v==='easy';   /* 🎵 27 Nov: the one who starts a dance picks its level for both */
   if(v==='calm'||v==='regular')SET.danceCalm=v==='calm';
   if(DANCE.laneFx)DANCE.laneFx.dirty=true;
   $('dnHud')?.classList.toggle('dnCalm',dnCalm());

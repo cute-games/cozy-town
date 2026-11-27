@@ -294,13 +294,18 @@ const DN_LOOP_BUILD=2026112508,DN_FAST_PREFIX='beat3s-',DN_STEADY_PREFIX='beat3n
 const DN_CHART_BUILD=2026112601,DN_AUTHORED_FAST='beat4s-',DN_AUTHORED_STEADY='beat4n-';
 /* 🎵 (27 Nov 2026, owner: map the arrows to the music's accents) charts made by tools/dance-map/chart2.py from the song's own accent list: every big accent has an arrow at its exact time, loud bars get more, meow = up, on the beat the pad goes round (left, down, right, up), between beats the tune's way. New round ids beat5n-/beat5s- once both dancers have this version; older partners keep beat4 */
 const DN_MAP_BUILD=2026112710,DN_MAPPED_FAST='beat5s-',DN_MAPPED_STEADY='beat5n-',DN_MAPPED={"steady":[[0.624,0,0],[0.889,1,0],[2.748,2,1],[4.075,1,0],[5.403,2,0],[6.199,1,0],[7.261,1,0],[8.058,2,0],[8.588,2,0],[9.385,3,0],[10.447,3,0],[10.978,0,0],[11.243,3,0],[11.509,0,0],[11.774,3,0],[12.571,3,0],[14.695,0,0],[15.226,0,0],[16.022,2,0],[16.553,2,0],[16.819,1,0],[17.615,2,0],[18.942,1,0],[19.739,2,0],[21.066,1,0],[22.394,2,0],[23.19,1,0],[24.252,1,0],[25.049,2,0],[25.58,2,0],[27.173,0,0],[27.438,0,0],[27.969,3,0],[28.235,0,0],[28.5,3,0],[28.765,1,0],[29.562,1,0],[30.624,2,0],[31.686,1,0],[32.748,0,0],[33.544,2,0],[33.81,1,0],[34.606,2,0],[34.872,1,0],[36.73,2,1],[38.058,1,0],[39.119,2,0],[40.181,1,0],[41.243,1,0],[42.04,2,0],[42.571,2,0],[43.367,3,0],[44.429,3,0],[44.96,0,0],[45.226,3,0],[45.491,0,0],[45.757,3,0],[46.553,3,0],[48.412,2,0],[48.677,1,0],[50.004,2,0],[50.535,2,0],[50.801,1,0],[51.597,2,0],[52.925,1,0],[53.721,2,0],[55.049,1,0],[56.376,2,0],[57.173,1,0],[58.235,1,0],[59.031,2,0],[59.562,2,0],[61.155,0,0],[61.42,0,0],[61.951,3,0],[62.217,0,0],[62.482,3,0],[62.748,1,0],[63.544,1,0],[64.606,2,0],[65.668,1,0],[67.261,2,0],[67.527,2,0],[67.792,1,0],[68.589,2,0],[68.854,1,0],[70.712,2,1],[71.243,2,0],[73.367,1,0],[74.164,1,0],[75.226,2,0],[76.022,2,0],[76.553,1,0],[77.35,0,0],[78.412,0,0],[78.943,3,0],[79.208,0,0],[79.473,3,0],[79.739,0,0],[80.535,0,0],[82.394,2,0],[82.659,1,0],[83.987,2,0],[84.518,2,0]],"fast":[[0.624,0,0],[0.889,1,0],[1.022,3,0],[1.951,1,0],[2.748,2,0],[3.279,2,0],[3.942,1,0],[4.075,2,0],[5.137,2,0],[5.403,0,0],[6.199,1,0],[6.465,1,0],[6.863,2,0],[6.996,2,0],[7.261,1,0],[8.058,1,0],[8.323,2,0],[8.588,2,0],[9.385,3,0],[9.518,0,0],[9.783,2,0],[10.447,1,0],[10.978,3,0],[11.243,0,0],[11.376,3,0],[11.509,0,0],[11.774,3,0],[12.571,3,0],[13.102,0,0],[13.5,0,0],[14.695,3,0],[15.093,3,0],[15.226,0,0],[15.358,0,0],[16.022,2,0],[16.553,2,0],[16.819,1,0],[17.615,2,0],[18.677,1,0],[18.942,2,0],[19.208,2,0],[19.739,1,0],[20.668,2,0],[20.934,1,0],[21.066,2,0],[22.394,2,0],[22.925,1,0],[23.19,2,0],[23.854,2,0],[24.252,1,0],[24.783,0,0],[25.049,0,0],[25.314,3,0],[25.58,3,0],[26.509,0,0],[26.774,3,0],[27.173,0,0],[27.438,3,0],[27.969,0,0],[28.235,3,0],[28.367,0,0],[28.5,3,0],[28.765,1,0],[29.562,1,0],[29.827,2,0],[30.624,2,0],[31.553,1,0],[31.686,2,0],[32.084,2,0],[32.35,1,0],[33.544,2,0],[33.677,0,0],[33.81,1,0],[34.739,2,0],[35.004,1,0],[35.535,1,0],[35.801,2,0],[36.996,2,0],[37.527,1,0],[37.792,2,0],[39.518,2,0],[39.783,1,0],[40.049,1,0],[40.447,2,0],[41.509,3,0],[41.774,3,0],[42.04,0,0],[42.571,2,0],[42.836,0,0],[43.5,1,0],[43.766,3,0],[44.031,1,0],[44.296,1,0],[44.562,0,0],[45.093,0,0],[45.491,3,0],[45.757,3,0],[46.553,0,0],[46.819,2,0],[47.748,1,0],[48.279,1,0],[48.81,2,0],[49.208,1,0],[49.341,1,0],[49.606,2,0],[50.535,1,0],[50.801,2,0],[51.465,2,0],[51.73,1,0],[53.323,2,0],[53.589,1,0],[54.252,1,0],[54.518,2,0],[55.314,2,0],[56.111,1,0],[56.509,1,0],[56.907,3,0],[57.173,3,0],[57.305,2,0],[57.438,1,0],[58.102,2,0],[58.367,0,0],[58.5,1,0],[59.031,3,0],[59.296,0,0],[59.96,3,0],[60.226,0,0],[60.358,0,0],[60.491,3,0],[61.155,3,0],[62.084,0,0],[62.881,3,0],[63.544,3,0],[64.075,0,0],[64.473,2,0],[65.004,1,0],[65.934,2,0],[66.199,1,0],[66.597,2,0],[66.863,1,0],[68.058,2,0],[68.589,1,0],[68.721,0,0],[69.783,2,0],[70.447,2,0],[70.58,1,0],[70.712,3,1],[71.642,3,0],[71.907,0,0],[72.305,0,0],[72.571,3,0],[72.836,3,0],[73.235,2,0],[73.5,0,0],[73.766,1,0],[74.429,3,0],[74.96,0,0],[75.358,3,0],[75.491,0,0],[75.624,0,0],[75.889,3,0],[76.553,3,0],[77.084,0,0],[77.35,2,0],[78.013,3,0],[78.279,1,0],[79.208,1,0],[80.137,2,0],[80.403,2,0],[81.066,1,0],[81.332,2,0],[82.261,1,0],[82.792,2,0],[83.19,2,0],[83.721,1,0],[83.987,2,0],[84.385,2,0],[84.65,1,0]]};
+/* 🎵 (27 Nov 2026, owner: 1 a b c) charts from tools/dance-map/chart3.py: each of the 5 loops lays the arrows out its own way and gets a little busier, long sounds are hold arrows
+   ([t,lane,double,hold seconds]), and an Easy and a Hard chart per song. The player who starts the dance picks the level (Settings › Dance level) and both get the same chart;
+   a partner on an older version gets the beat5 chart as before. */
+const DN_HOLD_BUILD=2026112720,DN_CHARTS6={"steady":{"easy":[[1.595,0,0,0],[3.708,1,0,0],[5.048,2,0,0],[5.843,0,0,0],[7.17,1,0,0],[7.702,0,0,0],[9.02,2,0,0],[10.09,0,0,0],[11.685,1,0,0],[13.543,2,0,0],[14.34,2,0,0],[15.143,1,0,0.58],[16.198,2,0,0],[16.758,1,0,0.766],[18.587,2,0,0],[20.7,1,0,0],[22.038,2,0,0],[22.835,3,0,0],[24.16,1,0,0],[24.692,2,0,0],[26.01,2,0,0],[27.08,1,0,0],[28.675,1,0,0],[30.532,2,0,0],[31.33,2,0,0],[32.133,1,0,0.58],[33.188,2,0,0],[33.767,1,0,0.766],[35.578,2,0,0],[37.69,3,0,0],[39.028,1,0,0],[39.825,1,0,0],[41.153,3,0,0],[41.682,2,0,0],[43.002,2,0,0],[44.072,1,0,0],[45.665,3,0,0],[47.525,2,0,0],[48.322,2,0,0],[49.125,3,0,0.557],[50.18,2,0,0],[50.74,3,0,0.789],[52.57,2,0,0],[54.68,3,0,0],[56.02,0,0,0],[56.818,1,0,0],[58.142,3,0,0],[58.675,0,0,0],[59.992,2,0,0],[61.062,3,0,0],[62.657,3,0,0],[64.515,2,0,0],[65.312,0,0,0],[66.115,3,0,0.58],[67.17,2,0,0],[67.75,3,0,0.766],[69.56,2,0,0],[71.672,0,0,0],[73.01,2,0,0],[73.808,3,0,0],[75.135,0,0,0],[75.665,1,0,0],[76.985,2,0,0],[78.055,3,0,0],[79.647,0,0,0],[81.507,2,0,0],[82.305,2,0,0],[83.108,0,0,0.58],[84.162,2,0,0]],"hard":[[1.595,0,0,0],[3.708,1,0,0],[5.048,2,0,0],[5.843,0,0,0],[6.107,1,0,0.511],[7.17,0,0,0],[7.702,3,0,0],[9.02,2,0,0],[10.09,0,0,0],[10.387,1,0,0.58],[11.33,2,0,0],[11.685,0,0,0],[13.543,2,0,0],[14.34,2,0,0],[14.602,1,0,0],[15.143,0,0,0.58],[16.198,2,0,0.511],[18.587,1,0,0],[20.7,1,0,0],[22.038,2,0,0],[22.835,3,0,0],[23.1,1,0,0.488],[24.16,3,0,0],[24.692,2,0,0],[26.01,2,0,0],[27.08,1,0,0],[28.323,2,0,0],[28.675,1,0,0],[30.532,2,0,0],[31.33,2,0,0],[31.595,1,0,0],[32.133,3,0,0.58],[33.188,2,0,0],[33.767,1,0,0.766],[35.578,2,0,0],[37.69,3,0,0],[39.028,1,0,0],[39.825,1,0,0],[40.09,3,0,0.488],[41.153,1,0,0],[41.682,2,0,0],[43.002,2,0,0],[44.072,1,0,0],[44.37,3,0,0.557],[45.312,2,0,0],[45.665,1,0,0],[47.525,2,0,0],[48.322,2,0,0],[48.585,3,0,0],[49.125,1,0,0.557],[50.18,2,0,0.511],[52.57,3,0,0],[54.68,3,0,0],[56.02,0,0,0],[56.818,1,0,0],[57.083,3,0,0.511],[58.142,0,0,0],[58.675,1,0,0],[59.992,2,0,0],[61.062,3,0,0],[61.343,3,0,0.58],[62.3,2,0,0],[62.657,0,0,0],[64.515,2,0,0],[65.312,0,0,0],[65.578,3,0,0],[66.115,0,0,0.58],[67.17,2,0,0.511],[69.56,0,0,0],[71.672,0,0,0],[73.01,2,0,0],[73.808,3,0,0],[74.073,0,0,0.511],[75.135,1,0,0],[75.665,3,0,0],[76.985,2,0,0],[78.055,3,0,0],[78.353,0,0,0.58],[79.295,2,0,0],[79.647,3,0,0],[81.507,2,0,0],[82.305,2,0,0],[82.567,0,0,0],[83.108,1,0,0.58],[84.162,2,0,0.488]]},"fast":{"easy":[[1.595,0,0,0],[3.708,1,0,0],[5.048,2,0,0],[5.843,0,0,0],[7.17,1,0,0],[7.702,0,0,0],[9.02,2,0,0],[10.09,0,0,0],[11.685,1,0,0],[13.543,2,0,0],[14.34,2,0,0],[15.143,1,0,0.58],[16.198,2,0,0],[16.758,1,0,0.766],[18.587,2,0,0],[20.7,1,0,0],[22.038,2,0,0],[22.835,3,0,0],[24.16,1,0,0],[24.692,2,0,0],[26.01,2,0,0],[27.08,1,0,0],[28.675,1,0,0],[30.532,2,0,0],[31.33,2,0,0],[32.133,1,0,0.58],[33.188,2,0,0],[33.767,1,0,0.743],[35.498,2,0,0],[37.487,3,0,0],[38.745,2,0,0],[39.49,1,0,0],[40.745,3,0,0],[41.255,2,0,0],[42.502,2,0,0],[43.51,1,0,0],[45.005,3,0,0],[46.76,2,0,0],[47.523,1,0,0],[48.27,3,0,0.557],[49.27,2,0,0],[49.82,3,0,0.673],[51.43,2,0,0],[53.325,3,0,0],[54.523,2,0,0],[55.242,0,0,0],[56.42,3,0,0],[56.89,1,0,0],[58.078,2,0,0],[59.028,1,0,0],[60.445,3,0,0],[62.108,2,0,0],[62.81,3,0,0],[63.532,3,0,0.557],[64.485,0,0,0],[66.6,2,0,0],[68.495,0,0,0],[69.692,1,0,0],[70.412,3,0,0],[71.59,0,0,0],[72.062,2,0,0],[73.248,2,0,0],[74.198,3,0,0],[75.615,0,0,0],[77.278,2,0,0],[77.983,2,0,0],[79.655,1,0,0],[81.772,0,0,0],[83.668,0,0,0]],"hard":[[0.8,0,0,0],[1.595,1,0,0],[2.66,1,0,0],[3.708,2,0,0],[5.048,2,1,0],[5.843,0,0,0],[6.107,1,0,0.511],[7.17,0,1,0],[7.702,3,0,0],[8.268,0,0,0],[9.02,2,0,0],[9.295,1,0,0],[10.09,0,0,0],[10.387,1,0,0.58],[11.33,2,0,0],[11.685,0,0,0],[13.543,2,0,0],[14.34,2,0,0],[14.602,1,0,0],[15.143,0,0,0.58],[16.198,2,0,0.511],[17.79,2,0,0],[18.587,1,0,0],[19.65,1,0,0],[20.7,2,0,0],[22.038,2,1,0],[22.835,3,0,0],[23.1,1,0,0.488],[24.16,3,1,0],[24.692,2,0,0],[25.267,1,0,0],[26.01,2,0,0],[26.285,1,0,0],[27.08,1,0,0],[27.823,2,0,0],[28.323,2,0,0],[28.675,3,0,0],[30.532,2,0,0],[31.33,2,0,0],[31.595,1,0,0],[32.133,3,0,0.58],[33.188,2,0,0],[33.767,1,0,0.743],[34.74,2,0,0],[35.498,3,0,0],[36.498,3,0,0],[36.742,1,0,0],[37.487,3,0,0],[38.745,2,1,0],[39.49,1,0,0],[39.745,3,0,0.464],[40.745,1,1,0],[41.255,2,0,0],[41.8,3,0,0],[42.502,2,0,0],[42.748,3,0,0],[43.51,1,0,0],[43.782,3,0,0.534],[44.678,2,0,0],[45.005,1,0,0],[46.042,1,0,0],[46.76,2,0,0],[47.523,1,1,0],[47.758,3,0,0],[48.27,1,0,0.557],[49.27,2,0,0.488],[51.43,3,1,0],[52.385,3,0,0],[53.325,2,0,0],[54.523,2,0,0],[55.242,0,0,0],[55.472,3,0,0],[56.42,3,0,0],[56.89,1,0,0],[57.398,2,0,0],[58.078,2,0,0],[58.31,3,0,0],[59.028,1,0,0],[59.292,3,0,0.488],[60.133,2,0,0],[60.445,0,0,0],[61.428,1,0,0],[62.108,2,0,0],[62.81,3,0,0],[63.045,3,0,0],[63.532,0,0,0.557],[64.485,1,0,0],[64.825,3,0,0],[65.895,2,0,0],[66.6,0,1,0],[67.558,1,0,0],[68.495,2,0,0],[69.692,1,0,0],[69.925,3,0,0],[70.412,0,0,0],[70.642,0,0,0.464],[71.59,1,0,0],[72.062,2,0,0],[72.575,0,0,0],[73.248,2,0,0],[73.48,0,0,0],[74.198,1,0,0],[74.445,2,0,0],[74.868,2,0,0],[75.302,1,0,0],[75.615,3,0,0],[77.278,2,0,0],[77.983,2,0,0],[78.215,0,0,0],[78.705,2,0,0.511],[79.655,2,0,0],[79.97,3,0,0],[81.067,2,0,0],[81.772,0,0,0],[82.728,0,0,0],[82.968,2,0,0],[83.668,0,0,0],[83.918,0,0,0]]}};
+const dnLevelOf=r=>typeof r==='string'&&/^beat6[ns][eh]-/.test(r)?{song:r[5]==='s'?'fast':'steady',hard:r[6]==='h'}:null;
 const DN_PITCH=typeof HTMLMediaElement!=='undefined'&&
   ('preservesPitch' in HTMLMediaElement.prototype?'preservesPitch':
     'webkitPreservesPitch' in HTMLMediaElement.prototype?'webkitPreservesPitch':'');
 function dnProfile(r){
   if(typeof r!=='string')return null;
-  if(r.startsWith(DN_FAST_PREFIX)||r.startsWith(DN_AUTHORED_FAST)||r.startsWith(DN_MAPPED_FAST))return DN_LOOP.profiles.fast;
-  return r.startsWith(DN_STEADY_PREFIX)||r.startsWith(DN_AUTHORED_STEADY)||r.startsWith(DN_MAPPED_STEADY)?DN_LOOP.profiles.steady:null;
+  if(r.startsWith(DN_FAST_PREFIX)||r.startsWith(DN_AUTHORED_FAST)||r.startsWith(DN_MAPPED_FAST)||r.startsWith('beat6s'))return DN_LOOP.profiles.fast;
+  return r.startsWith(DN_STEADY_PREFIX)||r.startsWith(DN_AUTHORED_STEADY)||r.startsWith(DN_MAPPED_STEADY)||r.startsWith('beat6n')?DN_LOOP.profiles.steady:null;
 }
 const dnOnBeat=r=>typeof r==='string'&&(r.startsWith(DN_BEAT_PREFIX)||r.startsWith(DN_FX_PREFIX)||!!dnProfile(r));
 function dnRoundId(a,pitch=!!DN_PITCH){
@@ -308,7 +313,7 @@ function dnRoundId(a,pitch=!!DN_PITCH){
   if(!(a.v>=DN_BEAT_BUILD))return base;
   // Older spectators can still index the 20-arrow classic chart to read a move.
   const fast=pitch&&a.dp;
-  const prefix=a.v>=DN_MAP_BUILD?(fast?DN_MAPPED_FAST:DN_MAPPED_STEADY):a.v>=DN_CHART_BUILD?(fast?DN_AUTHORED_FAST:DN_AUTHORED_STEADY):
+  const prefix=a.v>=DN_HOLD_BUILD?'beat6'+(fast?'s':'n')+(SET.danceEasy?'e':'h')+'-':a.v>=DN_MAP_BUILD?(fast?DN_MAPPED_FAST:DN_MAPPED_STEADY):a.v>=DN_CHART_BUILD?(fast?DN_AUTHORED_FAST:DN_AUTHORED_STEADY):
     a.v>=DN_LOOP_BUILD?(fast?DN_FAST_PREFIX:DN_STEADY_PREFIX):a.v>=DN_FX_BUILD?DN_FX_PREFIX:DN_BEAT_PREFIX;
   let r=prefix+base,n=0;
   while(new Set(dnClassic(r).map(note=>note.d)).size<4)r=prefix+base+'-'+(++n);
@@ -357,6 +362,7 @@ function dnAccents(profile,seed){
   return out;
 }
 function dnChartRows(r){
+  const lv=dnLevelOf(r);if(lv)return DN_CHARTS6[lv.song][lv.hard?'hard':'easy'];
   return r.startsWith(DN_MAPPED_FAST)?DN_MAPPED.fast:r.startsWith(DN_MAPPED_STEADY)?DN_MAPPED.steady:r.startsWith(DN_AUTHORED_FAST)?DN_AUTHORED.fast:r.startsWith(DN_AUTHORED_STEADY)?DN_AUTHORED.steady:null;
 }
 function dnChart(r){
@@ -365,14 +371,14 @@ function dnChart(r){
   const starts=seed>>>10,seen=[0,0,0,0];
   const chart=dnChartRows(r);
   // Chart timestamps and dnClock are both relative to the end of the MP3 preroll.
-  const notes=chart?chart.flatMap(([time,lane,double])=>double?[{time,lane},{time,lane:3-lane}]:[{time,lane}]):
+  const notes=chart?chart.flatMap(([time,lane,double,len])=>double?[{time,lane},{time,lane:3-lane}]:[{time,lane,len}]):
     profile?dnAccents(profile,seed):DanceChart.makeChart(DN_TRACK,3,seed);
   return notes.map((note,i)=>{
     const d=note.lane;
     let move=i%DN_N;
     for(let n=0;n<DN_N;n++,move=(move+1)%DN_N)if(classic[move].d===d)break;
     const variant=style?style.moves[d][((starts>>>d)+seen[d]++)&1]:d;
-    return {t:note.time,d,move,variant,kind:note.kind};
+    return {t:note.time,d,move,variant,kind:note.kind,len:note.len||0};
   });
 }
 /* Only Funky is playable in this slice. The catalogue groups the remaining songs for later rounds. */
@@ -732,8 +738,8 @@ function dnCardAnswer(ok){const c=DANCE.card;if(!c)return;DANCE.card=null;const 
   if(ok&&a&&a.dn&&a.dn.r===c.r&&a.dn.st==='ask'){audioInit();if(dnOnBeat(c.r))dnPrime();SFX.yay();DANCE.mine={r:c.r,w:c.peer,st:'go',s:0,sc:0,mv:-1,k:0,ld:0};DANCE.partner=c.peer;DANCE.partnerNm=c.nm;toast('💃 Get ready…',2);}
   else{DANCE.mine={r:c.r,w:c.peer,st:'no',s:0,sc:0,mv:-1,k:0,ld:0};setTimeout(()=>{if(DANCE.mine&&DANCE.mine.st==='no')DANCE.mine=null;},6000);if(ok)toast('💛 Too late, the music stopped. Ask them!',2.6);}}
 function dnBegin(s,a,left){if(DANCE.res)dnLeave();const f=dnFloor();if(!f){dnCancel();return;}DANCE.on=true;DANCE.s=s;if(DANCE.mine)DANCE.mine.s=s;DANCE.r=DANCE.mine.r;DANCE.partner=a.peer;DANCE.partnerNm=a.nm;DANCE.left=left;DANCE.beat=dnOnBeat(DANCE.r);DANCE.style=dnStyle(DANCE.r);DANCE.profile=dnProfile(DANCE.r);
-  DANCE.pat=dnChart(DANCE.r).map(q=>({t:q.t,d:q.d,move:q.move,variant:q.variant,kind:q.kind,j:0}));
-  DANCE.combo=0;DANCE.first=0;DANCE.popT=0;DANCE.didGo=false;
+  DANCE.pat=dnChart(DANCE.r).map(q=>({t:q.t,d:q.d,move:q.move,variant:q.variant,kind:q.kind,len:q.len||0,j:0}));
+  DANCE.combo=0;DANCE.first=0;DANCE.popT=0;DANCE.didGo=false;DANCE.holds={};
   DANCE.tallies=[dnTally(),dnTally()];DANCE.otherNotes=new Uint8Array(DANCE.pat.length);
   DANCE.peerRead={hits:0,score:0,note:-1};
   DANCE.newPoints=DN_TEST||a.v>=DN_RATINGS_BUILD;
@@ -1100,6 +1106,7 @@ function dnPerfectPending(L){
 /* A press reads the playback clock directly, including between animation frames. */
 function dnExpire(t){
   const D=DANCE;
+  if(D.holds)for(const d in D.holds)if(t>=D.holds[d].end)dnHoldDone(+d,t);
   for(;D.first<D.pat.length;D.first++){
     const q=D.pat[D.first];
     if(q.j)continue;
@@ -1118,9 +1125,9 @@ function dnRate(side,grade,d,t,knownCombo=0,offset=0){
   dnLaneFeedback(side,grade,d,t,combo,offset);
 }
 function dnPeerFeedback(wire,t){
-  const D=DANCE,read=D.peerRead,hits=wire.k,score=wire.sc;
+  const D=DANCE,read=D.peerRead,hits=wire.k,score=wire.sc,hb=Number.isFinite(wire.hb)?wire.hb:0;
   if(!Number.isInteger(hits)||!Number.isFinite(score)||hits<=read.hits||hits>D.pat.length)return;
-  const count=hits-read.hits,delta=score-read.score;
+  const count=hits-read.hits,delta=score-read.score-(hb-(read.hb||0));read.hb=hb;
   const note=D.pat[wire.m];
   const fresh=note&&wire.m!==read.note&&Math.abs(t-note.t)<1.5;
   if(fresh){
@@ -1155,6 +1162,7 @@ function dnPress(d){
   const note=D.pat[best],pts=D.style?(grade===DN_OK&&!D.newPoints?10:DN_RATINGS[grade].points):
     D.beat?DanceJudge.judge(bd,DN_WIN).points:bd<.1?15:10;
   note.j=1;D.sc+=pts;D.mine.sc=D.sc;D.mine.k++;D.lastHit=best;
+  if(D.style&&note.len>0){note.h=1;D.holds[d]={note,end:note.t+note.len};}   /* 🎵 a hold arrow: keep holding to the end of its tail */
   if(D.style){
     dnRate(0,grade,d,t,0,t-note.t);
     dnRememberMove(D.mine,note,best,D.combo,t,D.profile,D.pat);
@@ -1167,6 +1175,21 @@ function dnPress(d){
     tone(2093,.075,'sine',.043,.015,2637);
   }else if(D.style&&grade===DN_OK)tone(437,.052,'sine',.046,0,363);
   else SFX.pop();
+}
+/* 🎵 (27 Nov 2026, owner: hold notes) a hold is pressed like any arrow; held to the end of its tail it gives 10 points a second and keeps the combo,
+   let go early and it is a What? (the combo stops). Keys: the arrow key held down. Touch: the finger stays on the button. */
+const DN_HOLD_POINTS=10;
+function dnDanceNow(){const D=DANCE,shared=D.beat?(realMs()-D.s)/1000:D.t;return D.profile?dnClock(shared):shared;}
+function dnHoldDone(d,t){
+  const D=DANCE,h=D.holds&&D.holds[d];if(!h)return;delete D.holds[d];
+  const pts=Math.round(h.note.len*DN_HOLD_POINTS);h.note.h=2;D.sc+=pts;if(D.mine){D.mine.sc=D.sc;D.mine.hb=(D.mine.hb||0)+pts;}   /* hb: hold points, so a partner can tell them from a hit's points */
+  tone(880,.06,'triangle',.07,0,1320);tone(1320,.09,'sine',.05,.03,1760);
+}
+function dnRelease(d){
+  const D=DANCE,h=D.holds&&D.holds[d];if(!D.on||!h)return;
+  const t=dnDanceNow();
+  if(t>=h.end-.12){dnHoldDone(d,t);return;}
+  delete D.holds[d];h.note.h=-1;dnRate(0,DN_WHAT,d,t);
 }
 /* the moves: a lean left or right, a crouch, both arms up (u = how far into the move) */
 function dnPose(p,k,u,t,type){if(type){dnFunkyPoseLegacy(p,k,u,t);return;}const s=Math.sin(Math.PI*clamp(u,0,1)),b=p.b;b.rotation.z=0;b.position.y=.03*Math.sin(t*7);p.head.rotation.z=0;for(const l of p.legs)l.position.y=.62;
@@ -1457,9 +1480,12 @@ function dnHud(show){
 <div id="dnBtns"><div class="dnKeys">${dnTouchButton(0)}${dnTouchButton(1)}</div><div class="dnKeys">${dnTouchButton(2)}${dnTouchButton(3)}</div></div>`;
     document.body.appendChild(h);
     addEventListener('pointerdown',dnTouchInput,true);
+    const lift=e=>{const m=DANCE.fingers,lane=m&&m.get(e.pointerId);if(lane===undefined)return;m.delete(e.pointerId);dnRelease(lane);};
+    addEventListener('pointerup',lift,true);addEventListener('pointercancel',lift,true);
     h.addEventListener('pointerdown',e=>{
       const b=e.target.closest('[data-a^="dnp:"]');if(!b)return;
-      e.preventDefault();e.stopPropagation();audioInit();dnPress(Number(b.dataset.a[4]));
+      e.preventDefault();e.stopPropagation();audioInit();const lane=Number(b.dataset.a[4]);dnPress(lane);
+      DANCE.fingers=DANCE.fingers||new Map();DANCE.fingers.set(e.pointerId,lane);
       b.classList.add('on');setTimeout(()=>b.classList.remove('on'),120);
     });
   }
@@ -1664,7 +1690,7 @@ function dnLaneStart(){
       pt:new THREE.Vector3(),width:0,height:0,dirty:true,me:$('dnMeS'),you:$('dnYouS'),bar:$('dnFill')};
   }
   const F=D.laneFx;
-  const damageSize=(D.pat.length*2+96)*4;
+  const damageSize=(D.pat.length*3+96)*4;   /* (27 Nov: hold tails add one box each) */
   if(!F.damage||F.damage.length<damageSize)F.damage=new Int32Array(damageSize);
   F.damageUsed=0;F.first=0;F.lastMe=-1;F.lastYou=-1;F.lastBar='';F.tug=0;F.dirty=true;
   F.comboSeen=F.comboShown=-100;F.comboOpacity=0;F.comboPulse.style.opacity='0';
@@ -1999,8 +2025,18 @@ function dnLaneSide(g,F,L,side,t,now,calm){
   }
   const note=L.noteSize;
   for(let j=start;j<i;j++){
-    const n=notes[j];if(side?D.otherNotes[j]===1:n.j===1)continue;
-    const until=n.t-t;
+    const n=notes[j],until=n.t-t;
+    if(n.len>0){   /* 🎵 a hold arrow's tail runs to the end of the long sound; while you hold it the tail drains into the target */
+      const held=!side&&n.j===1&&n.h===1,gone=side?D.otherNotes[j]===1:n.j===1&&!held;
+      if(!gone&&until+n.len>-.05){
+        const f=L.size,x=L.x[n.d],y0=held?line:line-until*F.travel,y1=line-(until+n.len)*F.travel,top=Math.min(y0,y1),h=Math.abs(y1-y0),w=f*.56,r=w/2;
+        dnLaneDamage(F,x,(y0+y1)/2,w/2+6,h/2+f*.3);
+        g.globalAlpha=(held?1:.85)*dim*(side?.85:1);g.beginPath();g.roundRect?g.roundRect(x-w/2,top-r,w,h+r,r):g.rect(x-w/2,top-r,w,h+r);
+        g.fillStyle=DN_NOTE_INK[n.d];g.fill();g.lineWidth=Math.max(3,f*.06);g.strokeStyle='#3d2c5e';g.stroke();   /* the same dark outline as the arrows */
+        g.globalAlpha=(held?.95:.6)*dim;g.fillStyle='#fffcee';g.fillRect(x-w*.1,top,w*.2,Math.max(0,h-f*.3));
+      }
+    }
+    if(side?D.otherNotes[j]===1:n.j===1)continue;
     const y=line-until*F.travel,x=L.x[n.d];
     if(y+note*.5<F.bandTop||y-note*.5>F.bandBottom)continue;
     /* (27 Nov, owner: arrows vanished just before the targets and never passed through) every arrow is drawn the whole way, the same size as its target, and keeps going past it; nothing hides it */
@@ -2123,7 +2159,7 @@ function dnLaneDraw(now=performance.now()/1000){
   // The score bar is a DOM layer above this canvas, so an overshooting
   // arrow can slide behind its edge without a discontinuity.
   F.captionUsed=0;
-  while(F.first<D.pat.length&&D.pat[F.first].t+F.exitAge<t)F.first++;
+  while(F.first<D.pat.length&&D.pat[F.first].t+(D.pat[F.first].len||0)+F.exitAge<t)F.first++;
   if(!calm)dnComboBurst(g,F,t);
   const celebration=D.stageFx.celebrate;
   if(celebration!==F.comboSeen){F.comboSeen=celebration;F.comboShown=now;}
@@ -2413,7 +2449,7 @@ function dnTestBoot(){
 function dnTestRound(f){
   P.x=f.x;P.z=f.z;P.yaw=Math.PI;
   audioInit();
-  const r=dnRoundId({v:DN_MAP_BUILD,dp:!!DN_PITCH}),bot={peer:'dancetest-bot',nm:'Dance Buddy',av:null,
+  const r=dnRoundId({v:DN_HOLD_BUILD,dp:!!DN_PITCH}),bot={peer:'dancetest-bot',nm:'Dance Buddy',av:null,
     dn:{r,st:'go',sc:0,mv:-1,ld:0,k:0}};
   bot.av=makePerson(lookToPerson({hair:'#704d2d',top:'#7fdcb5',style:'short',eyes:'happy',bottom:'#37a4fc'}));
   bakePerson(bot.av);scene.add(bot.av.root);
@@ -2460,6 +2496,7 @@ function dnBotTick(bot,t){
     dnRate(1,e.grade,e.d,t,0,e.t-note.t);
     dn.sc+=DN_RATINGS[e.grade].points;
     dn.k++;
+    if(note.len>0){const hp=Math.round(note.len*DN_HOLD_POINTS);dn.sc+=hp;dn.hb=(dn.hb||0)+hp;}   /* the test buddy always holds to the end */
     dnRememberMove(dn,note,e.i,D.tallies[1].combo,e.t,D.profile,D.pat);
   }
 }
