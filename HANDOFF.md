@@ -1,5 +1,17 @@
 # HANDOFF — read this first (one page; updated 27 Nov 2026)
 
+## NEXT JOB: song selection + the whole way into the dance (owner's decisions, 27 Nov 2026)
+- Owner's verdict on the dance test: 8/10, "very good"; mapping can get more precise later.
+- Live main: #64 (2026112702) and #77 (2026112703, phones: no corner map, 🗺️ chip opens the big map). Backups backup-2026-11-27c/d.
+- Flow: Dance! spot → practice alone (Dance Buddy bot) or invite a friend → both pick song + level (Easy/Hard) → screen shows both picks, a pointer ticks between them faster/slower → random pick ("boom"); one player's pick can win at most 2 times in a row (3rd time the other's pick wins) → 3-2-1 → dance → score screen: Again / Other song / Done.
+- Practice is always possible (also with friends around); practice rounds give no coins.
+- Global high-score table per song (open questions: split by Easy/Hard? do practice rounds count? ask after the owner picks songs).
+- Songs: 4 to start, picked by the owner with the 🕺 button on "Pick the Music" (https://claude.ai/artifact/TrHuYLAzRNLuAykyYJTxq8, database collection `dance4`; Yes picks in `picks`). Page now plays only the artists' own files (no AI-made long drafts; 4 songs got their full file: Hella Bumps 0:59, Ludum Dare 0:59, Talking Cute 2:32, Dance Field 0:55). Tallbeard songs are short loops (14-35 s); Week 30 has Rough + Smoov (most likely all he made; zip not kept). Owner does NOT want AI-made music.
+- Round length: decide with the owner after the 4 songs are picked. Each song needs very good mapping (chart3.py pipeline, per-song checks).
+- Settings › Dance level moves into the song screen (one place to choose).
+- Older-version partners keep getting Alley Cat (round-id prefixes by a.v).
+- Plan is agreed in outline, not built. Start: read the owner's 4 picks from `dance4`, then a short plan with the song-screen mockup.
+
 ## Dance branch `claude/dance-pass` (27 Nov 2026, stamp 2026112720) — test copy only, NOT live
 - Live main is PR #64 (2026112702). PR #77 `claude/phone-map` (no corner map on phones, 🗺️ chip opens the big map, kit N26 rewritten) waits for the owner's "merge #77".
 - This branch (worktree was /tmp/dfx) = Codex dance work + owner picks: arrows fall down, see-through, pass through; flashy floor/rays; score screen = banner + one card per dancer (`dnResultCards`, CSS at the end of css/style-1.css, "🏆" comments); camera = soft push on each bar (`fx.push`), no tilt.
