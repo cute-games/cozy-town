@@ -1712,10 +1712,10 @@ function visFill(hm){const L=LOC.visit;if(!L||!hm||typeof hm!=='object')return;
   L.wallM.color.set(HEX.test(hm.w)?hm.w:'#ffd6e0');const fk=FLOORS[hm.f]?hm.f:'wood';
   if(L.fk!==fk){L.fk=fk;if(L.floorM.map)L.floorM.map.dispose();L.floorM.map=floorTex(fk);L.floorM.needsUpdate=true;}L.floorM.map.repeat.set(L.W/2,L.D/2);
   for(const c of [...L.items.children])L.items.remove(c);L.dcols.length=0;L.inter=L.inter.filter(i=>i.vdoor);
-  const rows=[];L.vf=-1;for(let fl=0;fl<(L.fls?L.fls.length:1);fl++){const v=hm[fl===0?'i':fl===1?'u':'u'+fl];if(typeof v==='string'&&v)for(const row of v.split(';').slice(0,160))rows.push([row,fl]);}
+  const rows=[];L.vf=-1;L.danceFurniture=(L.danceFurniture||0)+1;for(let fl=0;fl<(L.fls?L.fls.length:1);fl++){const v=hm[fl===0?'i':fl===1?'u':'u'+fl];if(typeof v==='string'&&v)for(const row of v.split(';').slice(0,160))rows.push([row,fl]);}
   for(const [row,fl] of rows){const [t,c,xs,zs,rs,on,sn]=row.split(','),shl=t==='shelf'&&/^s\d+$/.test(sn||''),F=FURN[t];if(!F)continue;const x=+xs,z=+zs,r=(+rs||0)&3,ox=L.ox,oz=L.oz+UPZ*fl;
     if(!Number.isFinite(x)||!Number.isFinite(z)||Math.abs(x)>L.W||Math.abs(z)>L.D)continue;
-    const g=buildFurn(shl?'shellshelf':t,HEX.test(c)?c:null);g.position.set(ox+x,0,oz+z);g.rotation.y=r*Math.PI/2;g.traverse(o=>{if(o.isMesh&&o.material!==OL){o.castShadow=true;o.receiveShadow=true;}});g.userData.fl=fl;g.userData.row={t,x,z,r,fl};L.items.add(g);
+    const g=buildFurn(shl?'shellshelf':t,HEX.test(c)?c:null,L.ceiling);g.position.set(ox+x,0,oz+z);g.rotation.y=r*Math.PI/2;g.traverse(o=>{if(o.isMesh&&o.material!==OL){o.castShadow=true;o.receiveShadow=true;}});g.userData.fl=fl;g.userData.row={t,x,z,r,fl};L.items.add(g);
     if(shl)shelfShow(g,+sn.slice(1));   /* 🐚 their shells, not yours */
     if(F.use==='lamp')setLamp({g,it:{on:on==='1'}});
     const R=fpRect(t,x,z,r),rect={x1:ox+R.x1,z1:oz+R.z1,x2:ox+R.x2,z2:oz+R.z2};if(!F.flat)L.dcols.push(rect);
@@ -1942,7 +1942,7 @@ function wish(){if(S.coins<1){SFX.no();toast('You need 1 🪙 to make a wish.');
 /* ---- home furniture ---- */
 function fpRect(t,x,z,r){const F=FURN[t],sw=(r%2)?F.d:F.w,sd=(r%2)?F.w:F.d;return{x1:x-sw/2,x2:x+sw/2,z1:z-sd/2,z2:z+sd/2};}
 function addHomeItem(it){
-  const L=LOC.home,F=FURN[furnOf(it)],up=clamp(it.f|0,0,(L.fls?L.fls.length:1)-1),ox=L.ox,oz=L.oz+UPZ*up;const g=buildFurn(furnOf(it),it.c);g.position.set(ox+it.x,0,oz+it.z);g.rotation.y=it.r*Math.PI/2;
+  const L=LOC.home,F=FURN[furnOf(it)],up=clamp(it.f|0,0,(L.fls?L.fls.length:1)-1),ox=L.ox,oz=L.oz+UPZ*up;const g=buildFurn(furnOf(it),it.c,L.ceiling);g.position.set(ox+it.x,0,oz+it.z);g.rotation.y=it.r*Math.PI/2;
   g.traverse(o=>{if(o.isMesh&&o.material!==OL){o.castShadow=true;o.receiveShadow=true;}});g.userData.u=it.u;g.userData.fl=up;L.items.add(g);L.vf=-1;
   const rec={it,g,col:null,inter:null};
   if(!F.flat&&!F.hang){const R=fpRect(it.t,it.x,it.z,it.r);rec.col={x1:ox+R.x1,z1:oz+R.z1,x2:ox+R.x2,z2:oz+R.z2};L.dcols.push(rec.col);}
@@ -1951,9 +1951,10 @@ function addHomeItem(it){
       label:()=>({tank:'Glass tank',sleep:'Sleep',sit:'Sit down',tv:rec.on?'Turn off the TV':'Watch TV',lamp:it.on?'Turn off the lamp':'Turn on the lamp',piano:'Play the piano',fridge:'Grab a snack',bath:'Take a bubble bath',cook:'Cook something',dress:'Change your look',shells:'Look at your shells',bowl:S.yard&&S.yard.bw>0?'The bowl is full':'Fill the bowl'}[F.use]),
       act:()=>useFurn(rec,fx,fz)};L.inter.push(rec.inter);
     if(F.use==='lamp')setLamp(rec);}
+  if(it.t==='discofloor'||it.t==='discoball')L.danceFurniture=(L.danceFurniture||0)+1;
   HOME_ITEMS.set(it.u,rec);return rec;
 }
-function removeHomeItem(u){const L=LOC.home,rec=HOME_ITEMS.get(u);if(!rec)return;L.items.remove(rec.g);if(rec.col)L.dcols.splice(L.dcols.indexOf(rec.col),1);if(rec.inter)L.inter.splice(L.inter.indexOf(rec.inter),1);HOME_ITEMS.delete(u);}
+function removeHomeItem(u){const L=LOC.home,rec=HOME_ITEMS.get(u);if(!rec)return;L.items.remove(rec.g);if(rec.it.t==='discofloor'||rec.it.t==='discoball')L.danceFurniture=(L.danceFurniture||0)+1;if(rec.col)L.dcols.splice(L.dcols.indexOf(rec.col),1);if(rec.inter)L.inter.splice(L.inter.indexOf(rec.inter),1);HOME_ITEMS.delete(u);}
 /* 🐍 the glass tank (screens-snake-tank): the light on or off and 8 colours, the same round buttons as a pet's colour; saved with your house (the piece's colour),
    so friends see it. it.lc = the last colour while the light is off */
 function openTank(rec){TK=rec;renderTank();}
@@ -2263,7 +2264,7 @@ function awResume(){const m=$('tMsg');if(m)m.remove();document.body.classList.re
    Newer on the title: save and reload at once. Newer while playing: a "✨ New Cozy Town update!" button; tap = save, then reload.
    Loop guard: at most one automatic reload per new version per session (sessionStorage + the ?u= address), so a server that
    still sends the old file can never cause a reload loop: the button shows instead. No internet = no reload, nothing changes. */
-const UPD={on:!!(window.WEBNET&&window.WEBNET.on)&&!window.claude&&/^https?:$/.test(location.protocol),el:null,me:'',came:'',last:-1e9,fail:-1e9,busy:false,go:false,newer:null,iv:0,K:'cozytown-update'};
+const UPD={on:!DN_TEST&&!!(window.WEBNET&&window.WEBNET.on)&&!window.claude&&/^https?:$/.test(location.protocol),el:null,me:'',came:'',last:-1e9,fail:-1e9,busy:false,go:false,newer:null,iv:0,K:'cozytown-update'};
 function updHash(s){let h=2166136261;for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),16777619);return(h>>>0).toString(36)+'.'+s.length.toString(36);}
 function updMine(){if(UPD.me==='')UPD.me=(s=>s?COZY_BUILD+':'+updHash(s.text.replace(/\r\n?/g,'\n')):null)(UPD.el||[...document.scripts].find(x=>x.text.includes('const COZY_BUILD=')));return UPD.me;}   /* this copy: stamp + its game script */
 function updRead(t){t=t.replace(/\r\n?/g,'\n');const k=t.indexOf('const COZY_BUILD='),s=k<0?-1:t.lastIndexOf('<script',k),a=s<0?-1:t.indexOf('>',s)+1,b=a<1?-1:t.indexOf('<\/script>',k);if(b<0)return null;   /* the file online: the same two things */
@@ -2369,7 +2370,8 @@ function setupInput(){
     else if(e.pointerId===IN.look.id){IN.look.id=null;const cl=IN.look.cls;if(e.type==='pointerup'&&IN.look.moved<(cl?40:12)&&performance.now()-IN.look.t<(cl?700:350))tapAt(e.clientX,e.clientY);}};
   T.addEventListener('pointerup',up);T.addEventListener('pointercancel',up);
   addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT'||document.body.classList.contains('away'))return;IN.keys[e.code]=true;
-    if(DANCE.on&&/^Arrow(Left|Right|Up|Down)$/.test(e.code)){e.preventDefault();dnPress({ArrowLeft:0,ArrowDown:1,ArrowUp:2,ArrowRight:3}[e.code]);return;}   /* 🕺 the dance-off takes the arrows (run 4, job 17) */   /* away title: keys only press Play */
+    if(DANCE.on&&DN_KEYS[e.code]!==undefined){e.preventDefault();if(!e.repeat||!DANCE.style)dnPress(DN_KEYS[e.code]);return;}   /* 🕺 the dance-off takes the arrows (run 4, job 17) */   /* away title: keys only press Play */
+    if(DN_TEST)return;
     if(e.code==='Escape'){if(UI.open&&!UI.lock)closePanel();else if(DECO.placing)decoCancel();return;}
     if(MAPV.on&&UI.open&&mapKeys(e))return;   /* 🗺️ + − zoom, arrows move the map, M closes it */
     if(CUT&&CUT.show&&(e.code==='Space'||e.code==='Enter'||e.code==='KeyE')){e.preventDefault();ACT.pstap();return;}

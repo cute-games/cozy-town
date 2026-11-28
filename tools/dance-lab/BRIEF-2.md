@@ -1,0 +1,29 @@
+# Dance-off in the REAL game — brief 2 (25 Nov 2026)
+
+The owner's verdict on the Dance Lab: wrong target. He does not want a separate page. He wants the cool songs, arrows, lights and hit effects **inside Cozy Town's own dance-off**. The lab's `chart.js`, `judge.js`, the song data and the effect ideas are the parts to move in.
+
+Read `CLAUDE.md` and `HANDOFF.md` first and follow them (surgical changes, old saves keep working, the 55 online-part lines unchanged, nothing shared between players from `Math.random`, joined game up to 3.0 MB, never read the js files whole: search them).
+
+## How the dance-off works today (js/09-mainloop.js, search `dnPattern`, `dnBegin`, `dnTick`, `dnPress`, `dnHud`, `dnHudTick`, `dnHudPop`, `dnSpots`, `dnPose`, `dnCam`, `dnPeer`, `dnEnd`; constants `DN_N`, `DN_LEAD`, `DN_WIN`, `DN_T0`, `DN_GAP`, `DN_COL`)
+- Two players at a house party stand on the dance floor in the 3D room; one asks, the other says yes; both get the same 20 arrows from `dnPattern(r)` (seeded by the round id `r`), one arrow every 1.15 s, no music; hit window 0.28 s, Perfect within 0.10 s (15 or 10 points); the 3D dancers do the pose of the arrow they hit (`dnPose`); coloured mirror-ball spots turn on the floor; score bar; result card; coins for the first 3 rounds a day. Scores and moves travel in presence (`dn` object: st, r, s, sc, mv, ld, k).
+- Players on an older version must still be able to dance with players on the new one (same arrows for the same round id) — or the new version must fall back to the old pattern when the partner's version is older. Say which you chose and prove it.
+
+## What to build IN THE GAME
+1. **Music**: the round plays one of the 11 picked songs. Files stay OUT of the joined game: put them in a new top-level folder `music/` (copy from `tools/dance-lab/songs/`), loaded only when a round starts (an `<audio>` element, primed inside the tap that says yes / asks). The song (and version) is picked from the round id with the seeded hash, so both players get the same one; send nothing new if the hash is enough. If the file fails to load or sound is blocked, the round still runs silently exactly on time.
+2. **Arrows on the beat**: charts come from the song's beat grid (`songs-data` values: bpm, firstBeat, duration) + the round id seed, via the lab's `makeChart`. Level 3 for now. Both players' clocks: the round start time `s` is already shared; the arrow times must come from that shared start, not from each device's audio clock (audio only follows; if audio drifts more than 80 ms, nudge `audio.currentTime`).
+3. **Hit effects on the arrow lane** (`dnHud*`): receptors that glow, colour bursts, Perfect / Good / Late-but-OK / Miss words, combo counter, a soft grey puff for a miss. Keep the scoring the game has (15 / 10), keep 44 px+ touch buttons, keep the layout rules the kit checks (no overlaps on iPad, iPhone both ways, PC).
+4. **Lights in the 3D room, a look per song**: each song has its own two light colours and one moving 3D decoration set that fits its name, built with the game's own helpers in js/00-core.js (`box`, `cyl`, `sph`, `cone`, `prism`, outline option) and a small piece budget (≤ 40 meshes per song, shared materials, removed and disposed at the end like `dnSpotsOff`): e.g. Alley Cat = neon sign + two toon cats bobbing on bins beside the floor; Penguin Town = snow falling + sliding penguins; Heart-Shaped = floating hearts; Cloak of Darkness = candles + friendly bats; Never Miss = targets; Crushing It = confetti cannons; Piecemeal = puzzle pieces; Talking Cute / Dance Field = chunky pixel blocks; Hella Bumps = bouncing speakers; Ludum Dare = two little planets. Plus for all: the mirror-ball spots pulse on the beat in the song's colours, two sweeping spotlights (cones, additive, no real shadow lights), floor tiles lighting up, a light burst on a 3-Perfect streak. Friends watching see the same (it is all derived from the round id and shared clock).
+5. **Kid-safe**: no full-screen flash faster than 3 a second; the game's existing settings decide calm mode if one exists (search for a reduced-motion or "Pretty" setting), otherwise follow `prefers-reduced-motion`.
+6. **Speed**: weak iPads matter. No per-frame allocations in the round, no new lights that cast shadows, audio decode off the main path.
+
+## A FAST TEST for the owner (he will not set up two players)
+Add a test-only door that needs no second player: when the page URL ends with `#dancetest` the game, after loading, puts the player in their home on the dance floor and starts a dance-off against a seeded bot partner (about 80% hits) with a small panel: next song / previous song, version, restart. This door must do nothing without that exact hash, must not write to the save (`change()` not called, no coins, no XP) and must not go online. It is a tool: keep it small.
+
+## Checks before you finish
+- Node tests for chart and judging still PASS; add: same round id → same song and same chart on two runs.
+- Join the game (`python3 tools/split/split.py join . <dir>/game.html --edited`), open it headless with `#dancetest` at 1180×820, 820×1180, 844×390 and 1920×1080; play every song on a bot-vs-bot run for its full length; zero page errors; one screenshot per song mid-round that you actually look at; fps measured for the heaviest song.
+- Refresh file version tags (join then split, see HANDOFF.md), bump `COZY_BUILD` above the value in index.html, run `tools/split/check_split.py`. Joined size reported (limit 3.0 MB; `music/` is outside it).
+- Do NOT run or change the big kit; list which kit lines about the dance-off (search the kit for "dance") you expect to need a rewrite and why.
+
+## Git
+Branch `chatgpt/dance-game` from `chatgpt/dance-lab`. Pull request against `claude/dance-lab-base` (NOT main). Do not merge. Report: what changed (item: old → new), what each song shows, test output as printed, NOT VERIFIED list (sound, real iPad, two real players).
